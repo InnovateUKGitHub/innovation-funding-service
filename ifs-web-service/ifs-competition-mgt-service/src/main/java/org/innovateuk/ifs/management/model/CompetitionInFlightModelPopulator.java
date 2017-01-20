@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.application.service.MilestoneService;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
@@ -20,12 +22,18 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class CompetitionInFlightModelPopulator {
 
     @Autowired
+    private AssessmentRestService assessmentRestService;
+
+    @Autowired
     private MilestoneService milestoneService;
 
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition) {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competition.getId());
+
+        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId()).getSuccessObject();
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
         return new CompetitionInFlightViewModel(competition,
-                simpleMap(milestones, MilestonesRowViewModel::new));
+                simpleMap(milestones, MilestonesRowViewModel::new),
+                changesSinceLastNotify);
     }
 }

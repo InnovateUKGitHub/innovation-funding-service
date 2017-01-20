@@ -23,8 +23,9 @@ public class CompetitionInFlightViewModel {
     private String lead;
     private BigDecimal funding;
     private List<MilestonesRowViewModel> milestones;
+    private long changesSinceLastNotify;
 
-    public CompetitionInFlightViewModel(CompetitionResource competitionResource, List<MilestonesRowViewModel> milestones) {
+    public CompetitionInFlightViewModel(CompetitionResource competitionResource, List<MilestonesRowViewModel> milestones, long changesSinceLastNotify) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
@@ -35,7 +36,7 @@ public class CompetitionInFlightViewModel {
         this.lead = competitionResource.getLeadTechnologistName();
         this.funding = competitionResource.getFunders().stream().map(CompetitionFunderResource::getFunderBudget).reduce(BigDecimal.ZERO, BigDecimal::add);
         this.milestones = milestones;
-
+        this.changesSinceLastNotify = changesSinceLastNotify;
     }
 
     public Long getCompetitionId() {
@@ -76,5 +77,9 @@ public class CompetitionInFlightViewModel {
 
     public List<MilestonesRowViewModel> getMilestones() {
         return milestones;
+    }
+
+    public long getChangesSinceLastNotify() {
+        return changesSinceLastNotify;
     }
 }
