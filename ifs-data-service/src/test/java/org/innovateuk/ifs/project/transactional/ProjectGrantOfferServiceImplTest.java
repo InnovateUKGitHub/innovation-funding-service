@@ -483,7 +483,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Competition comp = newCompetition()
                 .withName("Test Comp")
                 .build();
-        Organisation o1 = organisation(BUSINESS, "Org1");
+        Organisation o1 = organisation(BUSINESS, "OrgLeader");
         Organisation o2 = organisation(BUSINESS, "Org2");
         Organisation o3 = organisation(BUSINESS, "Org3");
 
@@ -556,7 +556,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("ProjectTitle", "project 1");
         templateArgs.put("LeadContact", "ab cd");
         templateArgs.put("ApplicationNumber", 3L);
-        templateArgs.put("LeadOrgName", "Org1");
+        templateArgs.put("LeadOrgName", "OrgLeader");
         templateArgs.put("CompetitionName", "Test Comp");
         templateArgs.put("Address1", "InnovateUK");
         templateArgs.put("Address2", "Northstar House");
@@ -668,7 +668,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     public void testGenerateGrantOfferLetterOtherDocsNotApproved() {
 
         Competition comp = newCompetition().withName("Test Comp").build();
-        Organisation o1 = newOrganisation().withName("Org1").build();
+        Organisation o1 = newOrganisation().withName("OrgLeader").build();
         Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
         User u = newUser().withFirstName("ab").withLastName("cd").build();
         ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o1).withUser(u).withRole(leadAppRole).build();
