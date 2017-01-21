@@ -4,11 +4,13 @@ Documentation     INFUND-736: As an applicant I want to be able to add all the f
 ...               INFUND-438: As an applicant and I am filling in the finance details I want a fully working Other funding section
 ...
 ...               INFUND-45: As an applicant and I am on the application form on an open application, I expect the form to help me fill in financial details, so I can have a clear overview and less chance of making mistakes
-Suite Setup       Run keywords    log in and create new application if there is not one already with complete application details
-...               AND    Applicant navigates to the finances of the Robot application
+...
+...               INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links within the Finances section of my application
+Suite Setup       log in and create new application if there is not one already with complete application details
 Suite Teardown    mark application details incomplete the user closes the browser
-Force Tags        HappyPath    Applicant  Pending
+Force Tags        HappyPath    Applicant
 Resource          ../../../../resources/defaultResources.robot
+Resource          FinanceSection_Commons.robot
 
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    Alice
@@ -17,18 +19,14 @@ ${OTHER_FUNDING_DATE}    12-2008
 
 *** Test Cases ***
 Labour
-    [Documentation]    INFUND-192
-    ...
-    ...    Acceptance tests for the Labour section calculations
-    ...
-    ...    INFUND-736
-    ...
-    ...    INFUND-1256
+    [Documentation]    INFUND-192, INFUND-736, INFUND-1256, INFUND-6390
     [Tags]
+    [Setup]  Applicant navigates to the finances of the Robot application
+    Given the user clicks the button/link  link=Your project costs
     When the Applicant fills in the Labour costs for two rows
     Then Totals should be correct    css=#section-total-9    £ 104,348    css=[data-mirror="#section-total-9"]    £ 104,348
     And the user clicks the button/link    name=remove_cost
-    The row should be removed    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
+    And The row should be removed    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input
     And the user reloads the page
     Then Totals should be correct    css=#section-total-9    £ 52,174    css=[data-mirror="#section-total-9"]    £ 52,174
     And the applicant edits the working days field
@@ -36,23 +34,15 @@ Labour
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Labour")
 
 Overhead costs
-    [Documentation]    INFUND-192
-    ...
-    ...    Acceptance tests for the Overhead costs section calculations
-    ...
-    ...    INFUND-736z
+    [Documentation]    INFUND-192, INFUND-736, INFUND-6390
+    [Tags]
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
-    And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
+    And the user clicks the button/link     jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    And user selects the admin costs    overheads-type-29    CUSTOM_RATE
-    And the user enters text to a text field    css=[id$="customRate"]    30
-    Then admin costs total should be correct    id=section-total-10-custom    £ 14,400
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
-    [Documentation]    INFUND-192
-    ...
-    ...    INFUND-736
+    [Documentation]    INFUND-192, INFUND-736, INFUND-6390
     [Tags]
     When the Applicant fills the Materials fields
     Then Totals should be correct    css=#section-total-11    £ 2,000    css=[data-mirror="#section-total-11"]    £ 2,000
@@ -62,7 +52,7 @@ Materials
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Materials")
 
 Capital usage
-    [Documentation]    INFUND-736
+    [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the applicant fills the 'capital usage' field
     Then Totals should be correct    css=#section-total-12    £ 200    css=[data-mirror="#section-total-12"]    £ 200
@@ -73,7 +63,7 @@ Capital usage
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
 Capital usage - negative total
-    [Documentation]    INFUND-4879
+    [Documentation]    INFUND-4879, INFUND-6390
     [Tags]
     When the applicant fills the 'capital usage' field to a negative value
     Then Totals should be correct    css=#section-total-12    £ 0    css=[data-mirror="#section-total-12"]    £ 0
@@ -81,9 +71,7 @@ Capital usage - negative total
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Capital usage")
 
 Subcontracting costs
-    [Documentation]    INFUND-192
-    ...    INFUND-736
-    ...    INFUND-2303
+    [Documentation]    INFUND-192, INFUND-736, INFUND-2303, INFUND-6390
     [Tags]
     When the applicant edits the Subcontracting costs section
     Then Totals should be correct    css=#section-total-13    £ 200    css=[aria-controls="collapsible-4"] [data-mirror]    £ 200
@@ -93,7 +81,7 @@ Subcontracting costs
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
 
 Travel and subsistence
-    [Documentation]    INFUND-736
+    [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the Applicant fills the Travel fields
     Then Totals should be correct    css=#section-total-14    £ 2,000    css=[data-mirror="#section-total-14"]    £ 2,000
@@ -103,34 +91,13 @@ Travel and subsistence
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
 
 Other costs
-    [Documentation]    INFUND-736
+    [Documentation]    INFUND-736, INFUND-6390
     [Tags]
     When the applicant adds one row for the other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Other Costs")
-
-Other Funding
-    [Documentation]    INFUND-438, INFUND-2257, INFUND-3196
-    [Tags]    Failing
-    #TODO INFUND-5394
-    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
-    Then the user should not see the element    jQuery=button:contains(Add another source of funding)
-    And the applicant selects 'Yes' and fills two rows
-    Then the total of the other funding should be correct
-    And the applicant can leave the 'Your finances' page but the details are still saved
-    And the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No)
-    Then the user should not see the element    jQuery=button:contains(Add another source of funding)
-    And the applicant cannot see the 'other funding' details
-    Then the user reloads the page
-    Given the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(Yes)
-    Then the total of the other funding should be correct
-
-Funding level
-    [Tags]
-    Then auto-save should work for the "Grant" field
-    And the grant value should be correct in the finance summary page
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
@@ -147,13 +114,12 @@ the Applicant fills in the Labour costs for two rows
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(2) input    120000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(4) input    100
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(1) input    test
-    the user moves focus to the element    css=.app-submit-btn
 
 the applicant edits the working days field
     the user should see the element    css=[name^="labour-labourDaysYearly"]
     the user clears the text from the element    css=[name^="labour-labourDaysYearly"]
     the user enters text to a text field    css=[name^="labour-labourDaysYearly"]    250
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element     jQuery=button:contains("Labour")
     wait for autosave
 
 the Applicant fills the Materials fields
@@ -168,11 +134,11 @@ the Applicant fills the Materials fields
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element     jQuery=button:contains("Materials")
 
 the applicant edits the Subcontracting costs section
-    the user clicks the button/link    jQuery=button:contains("Subcontracting costs")
-    the user should see the text in the page    Subcontractor name
+    the user clicks the button/link           jQuery=button:contains("Subcontracting costs")
+    the user should see the text in the page  Subcontractor name
     the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=subcontractingCost]    100
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    test1
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    test2
@@ -184,10 +150,10 @@ the applicant edits the Subcontracting costs section
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="subcontracting-role"]    test3
     the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    100
     the user enters text to a text field    css=#collapsible-4 .form-row:nth-child(1) input[id$=name]    test
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element     jQuery=button:contains("Subcontracting costs")
 
 the applicant fills the 'capital usage' field
-    the user clicks the button/link    jQuery=button:contains("Capital usage")
+    the user clicks the button/link         jQuery=button:contains("Capital usage")
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    900
@@ -205,10 +171,10 @@ the applicant fills the 'capital usage' field
     the user enters text to a text field    css=.form-row:nth-child(2) .form-finances-capital-usage-depreciation    10
     the user enters text to a text field    css=.form-row:nth-child(2) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(2) label:contains(Existing)
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element    jQuery=button:contains("Capital usage")
 
 the applicant fills the 'capital usage' field to a negative value
-    the user clicks the button/link    jQuery=button:contains("Capital usage")
+    the user clicks the button/link         jQuery=button:contains("Capital usage")
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-npv    1000
     the user enters text to a text field    css=.form-row:nth-child(1) .form-finances-capital-usage-residual-value    9000
@@ -216,7 +182,7 @@ the applicant fills the 'capital usage' field to a negative value
     the user enters text to a text field    css=.form-finances-capital-usage-depreciation    11
     the user enters text to a text field    css=.form-row:nth-child(1) [name^="capital_usage-description"]    Test
     the user clicks the button/link    jQuery=.form-row:nth-child(1) label:contains(Existing)
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element     jQuery=button:contains("Capital usage")
 
 the Applicant fills the Travel fields
     the user clicks the button/link    jQuery=button:contains("Travel and subsistence")
@@ -230,11 +196,10 @@ the Applicant fills the Travel fields
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    100
     the user enters text to a text field    css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    test
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element     jQuery=button:contains("Travel and subsistence")
 
 the applicant adds one row for the other costs
     the user clicks the button/link    jQuery=button:contains("Other Costs")
-    #the user clicks the button/link    jQuery=button:contains(Add another cost)
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
@@ -242,7 +207,7 @@ the applicant adds one row for the other costs
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) textarea    test
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element     jQuery=button:contains("Other Costs")
 
 the total of the other funding should be correct
     the user should see the element    id=other-funding-total
@@ -276,7 +241,7 @@ The applicant selects 'Yes' and fills two rows
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(3) input    ${OTHER_FUNDING_AMOUNT}
     the user should see the element    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(2) td:nth-of-type(1) input    ${OTHER_FUNDING_SOURCE}
-    the user moves focus to the element    css=.app-submit-btn
+    the user moves focus to the element     jQuery=button:contains(Add another source of funding)
 
 Totals should be correct
     [Arguments]    ${TOTAL_FIELD}    ${FIELD_VALUE}    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
@@ -285,14 +250,8 @@ Totals should be correct
     Textfield Value Should Be    ${TOTAL_FIELD}    ${FIELD_VALUE}
     Wait Until Element Contains    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
 
-User selects the admin costs
-    [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    the user clicks the button/link    xpath=//input[@type='radio' and starts-with(@name, '${RADIO_BUTTON}') and (@value='${SELECTION}' or @id='${SELECTION}')]/ancestor::label
-    the user moves focus to the element    css=.app-submit-btn
-
 Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
-    the user moves focus to the element    css=.app-submit-btn
     the user should see the element    ${ADMIN_TOTAL}
     Textfield Value Should Be    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
     Element Should Contain    jQuery=button:contains("Overhead costs")    ${ADMIN_VALUE}
@@ -301,20 +260,6 @@ the grant value should be correct in the finance summary page
     The user navigates to the next page
     the user should see the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)
     Wait Until Element Contains    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
-
-auto-save should work for the "Grant" field
-    the user clears the text from the element    id=cost-financegrantclaim
-    the user moves focus to the element    jQuery= button:contains('Save and return')
-    wait for autosave
-    the user enters text to a text field    id=cost-financegrantclaim    25
-    the user moves focus to the element    jQuery= button:contains('Save and return')
-    wait for autosave
-    the user reloads the page
-    Run Keyword And Ignore Error    confirm action
-    the user moves focus to the element    jQuery= button:contains('Save and return')
-    the user should see the element    id=cost-financegrantclaim
-    ${input_value} =    Get Value    id=cost-financegrantclaim
-    Should Be Equal As Strings    ${input_value}    25
 
 The user navigates to the next page
     The user clicks the button/link    css=.next .pagination-label
