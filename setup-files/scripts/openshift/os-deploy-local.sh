@@ -13,6 +13,7 @@ sed -i.bak "s/<<SHIB-ADDRESS>>/$HOST/g" os-files-tmp/*.yml
 sed -i.bak "s/<<ADMIN-ADDRESS>>/admin.$HOST/g" os-files-tmp/*.yml
 
 sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*.yml
+sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/init/*.yml
 
 # Build & tag Shib
 rm -rf shibboleth
@@ -20,7 +21,10 @@ cp -r setup-files/scripts/docker/shibboleth shibboleth
 sed -i.bak "s/<<HOSTNAME>>/$HOST/g" shibboleth/*
 docker build -t worth/shibboleth:1.0-$ENV shibboleth/
 
-docker build -t worth/shib-init:1.0-$ENV setup-files/scripts/openshift/shib-init
+rm -rf shib-init
+cp -r setup-files/scripts/openshift/shib-init shib-init
+sed -i.bak "s/<<SHIB-ADDRESS>>/$HOST/g" shib-init/*.sh
+docker build -t worth/shib-init:1.0-$ENV shib-init
 
 # Re-tag other images
 docker tag worth/data-service:1.0-SNAPSHOT \
@@ -40,16 +44,11 @@ docker tag worth/application-service:1.0-SNAPSHOT \
 oc new-project $ENV
 rm -rf os-files-tmp/1-aws-registry-secret.yml
 rm -rf os-files-tmp/11-scc.yml
-#oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
 
 oc create -f os-files-tmp/
-
-# Cleanup
-rm -rf os-files-tmp
-rm -rf shibboleth
-
-oc create -f os-files/robot-tests/7-selenium-grid.yml
-oc create -f os-files/robot-tests/8-robot.yml
+oc create -f os-files-tmp/robot-tests/7-selenium-grid.yml
+oc create -f os-files-tmp/robot-tests/8-robot.yml
 
 SERVICE_STATUS=404
 while [ ${SERVICE_STATUS} -ne "200" ]
@@ -60,5 +59,10 @@ do
     sleep 5s
 done
 
-oc create -f os-files/init/6-shib-init.yml
+oc create -f os-files-tmp/init/6-shib-init.yml
 oc get routes
+
+# Cleanup
+rm -rf os-files-tmp
+rm -rf shibboleth
+rm -rf shib-init

@@ -20,7 +20,7 @@ function addUserToShibboleth {
 
       echo "Adding User ${emailAddress} from MySQL in Shibboleth"
 
-      response=$(curl -s -k -d "{\"email\": \"${emailAddress}\",\"password\": \"Passw0rd\"}" -H 'Content-type: application/json' -H "api-key: 1234567890" https://$SHIB_PORT_443_TCP_ADDR/regapi/identities/)
+      response=$(curl -s -k -d "{\"email\": \"${emailAddress}\",\"password\": \"Passw0rd\"}" -H 'Content-type: application/json' -H "api-key: 1234567890" https://<<SHIB-ADDRESS>>/regapi/identities/)
       uuid=$(echo ${response} | sed 's/.*"uuid":"\([^"]*\)".*/\1/g')
       executeMySQLCommand "update user set uid='${uuid}' where email='${emailAddress}';"
 
@@ -28,7 +28,7 @@ function addUserToShibboleth {
 
       if [ "${userStatus}" == "ACTIVE" ]; then
         echo "User ${emailAddress} is active in MySQL, so activating them in Shibboleth"
-        curl -s -X PUT -k -H 'Content-type: application/json' -H "api-key: 1234567890" https://shib/regapi/identities/${uuid}/activateUser
+        curl -s -X PUT -k -H 'Content-type: application/json' -H "api-key: 1234567890" https://<<SHIB-ADDRESS>>/regapi/identities/${uuid}/activateUser
       fi
 
     fi
