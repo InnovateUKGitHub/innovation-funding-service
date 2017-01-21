@@ -26,7 +26,7 @@ items:
           - name: GRID_TIMEOUT
             value: "100000"
         - image: selenium/node-chrome-debug:3.0.1-dysprosium
-          name: selenium-grid
+          name: chrome-1
           ports:
           - containerPort: 5900
           env:
@@ -60,6 +60,7 @@ items:
       port: 4444
       targetPort: 4444
     selector:
-      deploymentconfig: hub
+      deploymentconfig: selenium-grid
   status:
     loadBalancer: {}
+

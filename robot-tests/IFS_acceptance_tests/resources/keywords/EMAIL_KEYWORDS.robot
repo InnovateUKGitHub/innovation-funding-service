@@ -32,7 +32,7 @@ the user reads his email from the second default mailbox
 
 the user reads his email locally
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    Open Mailbox    server=imap    port=143    user=smtp    password=smtp    is_secure=False
     ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
     log    ${subject}
     check pattern in email    ${email_to_test}    ${pattern}
@@ -96,7 +96,7 @@ the user reads his email from the second default mailbox and clicks the link
 
 the user reads his email and clicks the link locally
     [Arguments]    ${recipient}    ${subject}    ${pattern}
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    Open Mailbox    server=imap    port=143    user=smtp    password=smtp    is_secure=False
     ${email_to_test}=  wait for email    sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=90
     log    ${subject}
     the user reads the email and clicks the link    ${email_to_test}    ${pattern}
@@ -163,7 +163,7 @@ delete the emails from the default remote test mailbox
 
 
 delete the emails from the local test mailbox
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
+    Open Mailbox    server=imap    port=143    user=smtp    password=smtp    is_secure=False
     Delete All Emails
     close mailbox
 

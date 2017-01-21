@@ -24,17 +24,35 @@ items:
           ports:
           - containerPort: 143
           resources: {}
-        - image: camptocamp/smtp-sink
-          name: smtp
           volumeMounts:
           - name: smtp-maildir-storage
             mountPath: /home/smtp/Maildir
+        - image: camptocamp/smtp-sink
+          name: smtp
+          ports:
+          - containerPort: 25
+          lifecycle:
+            postStart:
+              exec:
+                command:
+                  - "sh"
+                  - "-c"
+                  - >
+                    maildirmake test &&
+                    mv test/* Maildir/ &&
+                    chown -R smtp:smtp Maildir/
           resources: {}
+          volumeMounts:
+          - name: smtp-maildir-storage
+            mountPath: /home/smtp/Maildir
         - image: camptocamp/sqwebmail
           name: webmail
           ports:
           - containerPort: 80
           resources: {}
+          volumeMounts:
+          - name: smtp-maildir-storage
+            mountPath: /home/smtp/Maildir
         volumes:
         - emptyDir: {}
           name: smtp-maildir-storage
@@ -49,6 +67,9 @@ items:
     name: imap
   spec:
     ports:
+    - name: 25-tcp
+      port: 25
+      targetPort: 25
     - name: 80-tcp
       port: 80
       targetPort: 80
@@ -59,3 +80,14 @@ items:
       deploymentconfig: imap
   status:
     loadBalancer: {}
+- apiVersion: v1
+  kind: Route
+  metadata:
+    name: imap
+  spec:
+    host: imap
+    port:
+      targetPort: 80-tcp
+    to:
+      kind: Service
+      name: imap

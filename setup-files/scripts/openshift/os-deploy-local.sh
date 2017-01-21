@@ -40,7 +40,7 @@ docker tag worth/application-service:1.0-SNAPSHOT \
 oc new-project $ENV
 rm -rf os-files-tmp/1-aws-registry-secret.yml
 rm -rf os-files-tmp/11-scc.yml
-oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+#oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
 
 oc create -f os-files-tmp/
 
@@ -48,6 +48,8 @@ oc create -f os-files-tmp/
 rm -rf os-files-tmp
 rm -rf shibboleth
 
+oc create -f os-files/robot-tests/7-selenium-grid.yml
+oc create -f os-files/robot-tests/8-robot.yml
 
 SERVICE_STATUS=404
 while [ ${SERVICE_STATUS} -ne "200" ]

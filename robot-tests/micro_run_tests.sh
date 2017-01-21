@@ -51,7 +51,7 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data_1:/tmp/testing.pdf
+    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data_1 :/tmp/testing.pdf
 
     echo "***********Making the quarantined directory ***************"
     docker exec innovationfundingservice_data_1 mkdir -p ${virusScanQuarantinedFolder}
@@ -160,7 +160,7 @@ function startPybot() {
     -v UPLOAD_FOLDER:${uploadFileDir} \
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
-    -v REMOTE_URL:'http://127.0.0.1:4444/wd/hub' \
+    -v REMOTE_URL:'http://hub:4444/wd/hub' \
     $includeHappyPath \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }

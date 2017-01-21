@@ -30,7 +30,7 @@ items:
 - apiVersion: v1
   kind: Service
   metadata:
-    name: shib
+    name: <<SHIB-ADDRESS>>
   spec:
     ports:
     - name: 389-tcp
@@ -55,4 +55,4 @@ items:
       termination: passthrough
     to:
       kind: Service
-      name: shib
+      name: <<SHIB-ADDRESS>>

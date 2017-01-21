@@ -5,6 +5,8 @@ RUN apt-get update && \
     apt-get install -y curl && \
     apt-get install -y python-pip && \
     apt-get install -y xvfb && \
+    apt-get install -y rsync && \
+    apt-get install -y telnet && \
     rm -rf /var/lib/apt/lists/*
 
 RUN pip install robotframework && \
@@ -22,4 +24,6 @@ RUN pip install robotframework && \
 WORKDIR robot-tests
 COPY ./ ./
 
-CMD ["./micro_run_tests.sh", "-qhp"]
+#CMD ["./micro_run_tests.sh", "-qhp"]
+CMD ["sleep", "10000000000000"]
+
