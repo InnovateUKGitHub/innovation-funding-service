@@ -47,7 +47,6 @@ items:
   status:
     loadBalancer: {}
 
- Routes not required for development
 - apiVersion: v1
   kind: Route
   metadata:

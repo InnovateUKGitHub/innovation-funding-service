@@ -46,13 +46,12 @@ items:
     ports:
     - name: 443-tcp
       port: 443
-      targetPort: 443
+      targetPort: 9443
     selector:
       deploymentconfig: shib
   status:
     loadBalancer: {}
 
- Routes not required for development
 - apiVersion: v1
   kind: Route
   metadata:
