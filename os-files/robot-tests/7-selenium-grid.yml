@@ -25,8 +25,26 @@ items:
             value: "90000"
           - name: GRID_TIMEOUT
             value: "100000"
+    test: false
+    triggers:
+    - type: ConfigChange
+  status: {}
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    name: chrome
+  spec:
+    replicas: 4
+    selector:
+      deploymentconfig: chrome
+    template:
+      metadata:
+        labels:
+          deploymentconfig: chrome
+      spec:
+        containers:
         - image: selenium/node-chrome-debug:3.0.1-dysprosium
-          name: chrome-1
+          name: chrome
           ports:
           - containerPort: 5900
           env:
@@ -37,7 +55,7 @@ items:
           - name: NODE_REGISTER_CYCLE
             value: "600"
           - name: HUB_PORT_4444_TCP_ADDR
-            value: "127.0.0.1"
+            value: "hub"
           - name: HUB_PORT_4444_TCP_PORT
             value: "4444"
           - name: DBUS_SESSION_BUS_ADDRESS

@@ -81,6 +81,19 @@ items:
   status:
     loadBalancer: {}
 - apiVersion: v1
+  kind: Service
+  metadata:
+    name: smtp
+  spec:
+    ports:
+    - name: 25-tcp
+      port: 25
+      targetPort: 25
+    selector:
+      deploymentconfig: imap
+  status:
+    loadBalancer: {}
+- apiVersion: v1
   kind: Route
   metadata:
     name: imap
