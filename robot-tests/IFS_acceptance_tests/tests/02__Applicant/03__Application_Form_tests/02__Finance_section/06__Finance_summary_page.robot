@@ -15,7 +15,7 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant  Pending
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
-Resource          FinanceSection_Commons.robot
+Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}

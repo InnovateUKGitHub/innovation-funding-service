@@ -10,7 +10,7 @@ Suite Setup       log in and create new application if there is not one already 
 Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        HappyPath    Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          FinanceSection_Commons.robot
+Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
 ${OTHER_FUNDING_SOURCE}    Alice
