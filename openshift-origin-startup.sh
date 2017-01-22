@@ -34,7 +34,8 @@ oc cluster up && {
 
   echo Waiting for pods to startup...
   c=0
-  while [ "$(oc get pods|awk '/Running/ {c++} END {print c}')" != "12" ]
+#  while [ "$(oc get pods|awk '/Running/ {c++} END {print c}')" != "12" ]
+  while [ "$(oc get pods|awk '/Running/ {c++} END {print c}')" != "11" ]
   do
     sleep 2
     ((c++))
@@ -65,7 +66,7 @@ oc cluster up && {
   }
 
   echo Waiting some time for the IFS app to initialise...
-  sleep 120
+  sleep 180
 
   echo "Refreshing ldap with users in ifs db"
   docker exec -it $ldap /usr/local/bin/ldap-delete-all-users.sh
