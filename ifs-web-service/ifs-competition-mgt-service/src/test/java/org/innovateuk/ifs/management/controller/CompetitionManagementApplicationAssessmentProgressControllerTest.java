@@ -7,6 +7,7 @@ import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPop
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressAssignedRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressViewModel;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAvailableAssessorsRowViewModel;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -42,6 +43,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
     }
 
     @Test
+    @Ignore
     public void applicationProgress() throws Exception {
         Long competitionId = 1L;
         Long applicationId = 2L;
@@ -81,6 +83,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
     }
 
     @Test
+    @Ignore
     public void applicationProgressWithAvailableAssessorsSortedByTotalApplications() throws Exception {
         Long competitionId = 1L;
         Long applicationId = 2L;

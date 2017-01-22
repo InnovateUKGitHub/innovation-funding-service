@@ -292,6 +292,7 @@ public class ApplicationResource {
         this.researchCategories = researchCategories;
     }
 
+    @JsonIgnore
     public Long getResearchCategoryId() {
         return researchCategoryId;
     }
