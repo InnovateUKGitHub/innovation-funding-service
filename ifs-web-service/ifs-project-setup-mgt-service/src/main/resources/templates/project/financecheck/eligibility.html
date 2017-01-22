@@ -67,13 +67,14 @@
             </h3>
             <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
                 <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
-                    <!--/*
-                    viewmode=approved; generates the inputs as text,
-                    viewmode=readonly, generates readonly inputs,
-                    viewmode=edit, generates the editable inputs + repeating row elements)
-                    */-->
-                    <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')"/>
-
+                    <th:block th:if="${formInput.type.displayableFinanceType}">
+                        <!--/*
+                        viewmode=approved; generates the inputs as text,
+                        viewmode=readonly, generates readonly inputs,
+                        viewmode=edit, generates the editable inputs + repeating row elements)
+                        */-->
+                        <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')" th:with="formInputIndex=(${status.index})" />
+                    </th:block>
                 </th:block>
             </div>
         </section>
@@ -107,7 +108,7 @@
             <div class="form-group" id="add-rag-rating">
                 <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>
                 <select th:field="*{eligibilityStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
-                    <option value="UNSET" th:selected="${form.eligibilityStatus == null}">--</option>
+                    <option value="UNSET" th:selected="${eligibilityForm.eligibilityStatus == null}">--</option>
                     <option value="GREEN">Green</option>
                     <option value="AMBER">Amber</option>
                     <option value="RED">Red</option>

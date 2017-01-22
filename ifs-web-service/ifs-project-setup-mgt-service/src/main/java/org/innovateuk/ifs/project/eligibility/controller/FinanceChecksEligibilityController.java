@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.application.resource.SectionType.FINANCE;
+import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -204,7 +204,7 @@ public class FinanceChecksEligibilityController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
-        SectionResource section = simpleFilter(allSections, s -> s.getType().equals(FINANCE)).get(0);
+        SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
 
