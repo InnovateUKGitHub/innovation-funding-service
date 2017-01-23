@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.finance.service;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -89,6 +90,11 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
+    public RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/organisation/" + organisationId + "/financeDetails", ProjectFinanceResource.class);
+    }
+
+    @Override
     public RestResult<ViabilityResource> getViability(Long projectId, Long organisationId) {
         return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
     }
@@ -126,5 +132,15 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
         String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report/" + confirmed;
         return postWithRestResult(url);
+    }
+
+    @Override
+    public RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId) {
+        return getWithRestResult(projectFinanceRestURL + "/financeTotals/" + applicationId, projectFinanceResourceListType());
+    }
+
+    @Override
+    public RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId) {
+        throw new NotImplementedException("Adding of project finance organisation will usually not be necessary as they are added when project is created");
     }
 }
