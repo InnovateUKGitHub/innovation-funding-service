@@ -125,4 +125,7 @@ public interface ProjectService {
     ServiceResult<Boolean> isSignedGrantOfferLetterApproved(Long projectId);
 
     ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
+
+    boolean userIsProjectManagerOf(Long userId, Long projectId);
+
 }

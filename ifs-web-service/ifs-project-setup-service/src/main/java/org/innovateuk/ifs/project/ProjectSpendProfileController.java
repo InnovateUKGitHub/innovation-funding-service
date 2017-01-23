@@ -150,18 +150,23 @@ public class ProjectSpendProfileController {
             return doEditSpendProfile(model, form, organisationId, loggedInUser, project, originalTableWithUpdatedCosts);
         };
 
-        final String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + (isProjectManager(loggedInUser, projectId) ? "/review" : "");
 
         spendProfileCostValidator.validate(form.getTable(), bindingResult);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             SpendProfileTableResource spendProfileTableResource = projectFinanceService.getSpendProfileTable(projectId, organisationId);
             spendProfileTableResource.setMonthlyCostsPerCategoryMap(form.getTable().getMonthlyCostsPerCategoryMap()); // update existing resource with user entered fields
-
             ServiceResult<Void> result = projectFinanceService.saveSpendProfile(projectId, organisationId, spendProfileTableResource);
-
-            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView, () -> successView);
+            return validationHandler.addAnyErrors(result).failNowOrSucceedWith(failureView,
+                    () -> saveSpendProfileSuccessView(projectId, organisationId, loggedInUser.getId()));
         });
+    }
+
+
+    private final String saveSpendProfileSuccessView(Long projectId, Long organisationId, Long userId) {
+        final String urlSuffix = projectService.userIsProjectManagerOf(userId, projectId) ? "/review" : "";
+        return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
+
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION') && hasPermission(#projectId, 'MARK_SPEND_PROFILE_INCOMPLETE')")
