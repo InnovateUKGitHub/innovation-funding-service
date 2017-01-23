@@ -91,9 +91,6 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
 
     @Override
     public RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId) {
-        if(projectId == null || organisationId == null){
-            return null;
-        }
         return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/organisation/" + organisationId + "/financeDetails", ProjectFinanceResource.class);
     }
 
