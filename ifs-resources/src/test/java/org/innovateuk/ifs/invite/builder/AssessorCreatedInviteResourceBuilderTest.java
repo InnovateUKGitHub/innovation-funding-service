@@ -50,7 +50,8 @@ public class AssessorCreatedInviteResourceBuilderTest {
                 newInnovationAreaResource()
                         .withName("Urban Living", "Advanced Therapies")
                         .build(2)
-        };        Boolean[] expectedCompliants = {TRUE, FALSE};
+        };
+        Boolean[] expectedCompliants = {TRUE, FALSE};
         String[] expectedEmails = {"email1", "email2"};
         Long[] expectedInviteIds = {1L,2L};
 
