@@ -1,8 +1,6 @@
 #!/bin/sh
 set -e
 
-# oc cluster up
-
 ENV=test
 HOST=ifs-local-dev
 
@@ -21,10 +19,14 @@ cp -r setup-files/scripts/docker/shibboleth shibboleth
 sed -i.bak "s/<<HOSTNAME>>/$HOST/g" shibboleth/*
 docker build -t worth/shibboleth:1.0-$ENV shibboleth/
 
+# Build & tag Shib-Init
 rm -rf shib-init
 cp -r setup-files/scripts/openshift/shib-init shib-init
 sed -i.bak "s/<<SHIB-ADDRESS>>/$HOST/g" shib-init/*.sh
 docker build -t worth/shib-init:1.0-$ENV shib-init
+
+# Robot tests
+docker build -t 721685138178.dkr.ecr.eu-west-1.amazonaws.com/worth/robot-framework:1.0-$ENV robot-tests
 
 # Re-tag other images
 docker tag worth/data-service:1.0-SNAPSHOT \
@@ -43,8 +45,7 @@ docker tag worth/application-service:1.0-SNAPSHOT \
 # Deploy
 oc new-project $ENV
 rm -rf os-files-tmp/1-aws-registry-secret.yml
-rm -rf os-files-tmp/11-scc.yml
-#oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
+oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
 
 oc create -f os-files-tmp/
 oc create -f os-files-tmp/robot-tests/7-selenium-grid.yml

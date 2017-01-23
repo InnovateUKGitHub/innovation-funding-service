@@ -24,6 +24,6 @@ RUN pip install robotframework && \
 WORKDIR robot-tests
 COPY ./ ./
 
-#CMD ["./micro_run_tests.sh", "-qhp"]
-CMD ["sleep", "10000000000000"]
+CMD ["./micro_run_tests.sh", "-qhp"]
+#CMD ["sleep", "10000000000000"]
 

@@ -125,6 +125,11 @@ task osDeployLocal(type:Exec) {
     args = [project.version]
 }
 
+task osTestRemote(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-test-remote.sh'
+    args = [project.version]
+}
+
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
     commandLine './micro_run_tests.sh', '-hnw'
