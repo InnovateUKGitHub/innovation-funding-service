@@ -27,10 +27,8 @@
             <div class="grid-row extra-margin">
                 <div class="column-quarter">
                     <h3 class="heading-small">Partners</h3>
-                    <ul th:remove="all-but-first">
+                    <ul>
                         <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
-                        <li>Biotech Corp</li>
-                        <li>Unversity of Cardiff</li>
                     </ul>
                 </div>
                 <div class="column-quarter">
