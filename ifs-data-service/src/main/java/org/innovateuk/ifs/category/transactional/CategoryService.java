@@ -16,7 +16,7 @@ public interface CategoryService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'assessor')")
     ServiceResult<List<InnovationSectorResource>> getInnovationSectors();
 
-    @NotSecured(value = "Anyone can see a category resources as reference data", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'assessor', 'applicant')")
     ServiceResult<List<ResearchCategoryResource>> getResearchCategories();
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
