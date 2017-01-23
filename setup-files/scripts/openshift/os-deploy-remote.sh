@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-ENV=lf-project4
+ENV=lf-project5
 HOST=dev.ifs-test-clusters.com
 
 # Set up remote registry and project name params

@@ -227,7 +227,7 @@ rootDir=`pwd`
 
 dataServiceCodeDir="${rootDir}/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
-webBase="ifs-local-dev"
+webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/upload_files"
 baseFileStorage="/tmp/uploads"
