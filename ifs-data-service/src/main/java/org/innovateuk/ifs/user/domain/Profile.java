@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.user.domain;
 
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.ProfileInnovationAreaLink;
 import org.innovateuk.ifs.commons.util.AuditableEntity;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -8,6 +10,9 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * A {@link User}'s profile with their {@link Address}, skills areas and signed {@link Contract}.
@@ -24,6 +29,9 @@ public class Profile extends AuditableEntity {
 
     @Column(name = "skills_areas")
     private String skillsAreas;
+
+    @OneToMany(mappedBy = "profile", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ProfileInnovationAreaLink> innovationAreas = new HashSet<>();
 
     @Enumerated(EnumType.STRING)
     private BusinessType businessType;
@@ -69,6 +77,25 @@ public class Profile extends AuditableEntity {
         this.skillsAreas = skillsAreas;
     }
 
+    public Set<InnovationArea> getInnovationAreas() {
+        return innovationAreas.stream().map(ProfileInnovationAreaLink::getCategory).collect(Collectors.toSet());
+    }
+
+    public void addInnovationArea(InnovationArea innovationArea) {
+        if (innovationArea == null) {
+            throw new NullPointerException("innovationArea cannot be null");
+        }
+        innovationAreas.add(new ProfileInnovationAreaLink(this, innovationArea));
+    }
+
+    public void addInnovationAreas(Set<InnovationArea> innovationAreas) {
+        Set<ProfileInnovationAreaLink> innovationAreaLinks = innovationAreas.stream()
+                .map(innovationArea -> new ProfileInnovationAreaLink(this, innovationArea))
+                .collect(Collectors.toSet());
+
+        this.innovationAreas.addAll(innovationAreaLinks);
+    }
+
     public BusinessType getBusinessType() {
         return businessType;
     }
@@ -93,6 +120,15 @@ public class Profile extends AuditableEntity {
         this.contractSignedDate = contractSignedDate;
     }
 
+    // TODO the profile belongs to a User so should the User be a member?
+    public boolean isCompliant(User user) {
+        boolean skillsComplete = skillsAreas != null;
+        boolean affiliationsComplete = user != null && user.getAffiliations() != null
+                && !user.getAffiliations().isEmpty();
+        boolean contractComplete = contractSignedDate != null;
+        return skillsComplete && affiliationsComplete && contractComplete;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -109,6 +145,7 @@ public class Profile extends AuditableEntity {
                 .append(id, profile.id)
                 .append(address, profile.address)
                 .append(skillsAreas, profile.skillsAreas)
+                .append(innovationAreas, profile.innovationAreas)
                 .append(businessType, profile.businessType)
                 .append(contract, profile.contract)
                 .append(contractSignedDate, profile.contractSignedDate)
@@ -121,6 +158,7 @@ public class Profile extends AuditableEntity {
                 .append(id)
                 .append(address)
                 .append(skillsAreas)
+                .append(innovationAreas)
                 .append(businessType)
                 .append(contract)
                 .append(contractSignedDate)

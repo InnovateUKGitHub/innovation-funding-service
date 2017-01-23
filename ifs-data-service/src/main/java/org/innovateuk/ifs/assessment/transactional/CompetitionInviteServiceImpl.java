@@ -25,7 +25,9 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -36,6 +38,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -43,6 +46,7 @@ import java.util.Optional;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
@@ -101,6 +105,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private NotificationSender notificationSender;
@@ -187,10 +194,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     availableAssessor.setEmail(assessor.getEmail());
                     availableAssessor.setName(assessor.getName());
                     availableAssessor.setBusinessType(getBusinessType(assessor));
-                    availableAssessor.setCompliant(assessor.isProfileCompliant());
+                    Profile profile = profileRepository.findOne(assessor.getProfileId());
+                    availableAssessor.setCompliant(profile.isCompliant(assessor));
                     availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
-                    // TODO INFUND-6865 Users should have innovation areas
-                    availableAssessor.setInnovationArea(null);
+                    availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
                     return availableAssessor;
                 }).collect(toList()));
     }
@@ -198,7 +205,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
         return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
-                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreaForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
+                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreasForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
     }
 
     @Override
@@ -212,10 +219,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
                     if (participant.getUser() != null) {
                         assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
-                        assessorInviteOverview.setCompliant(participant.getUser().isProfileCompliant());
-                        // TODO INFUND-6865 Users should have innovation areas
-                        assessorInviteOverview.setInnovationArea(null);
+                        Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
+                        assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
+                        assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
+                    } else {
+                        assessorInviteOverview.setInnovationAreas(asList(innovationAreaMapper.mapToResource(participant.getInvite().getInnovationArea())));
                     }
+
                     return assessorInviteOverview;
                 }));
     }
@@ -279,7 +289,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private BusinessType getBusinessType(User assessor) {
-        return (assessor.getProfile() != null) ? assessor.getProfile().getBusinessType() : null;
+        Profile profile = profileRepository.findOne(assessor.getProfileId());
+        return (profile != null) ? profile.getBusinessType() : null;
     }
 
     private boolean wasInviteCreated(String email, long competitionId) {
@@ -426,15 +437,22 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private boolean isUserCompliant(CompetitionInvite competitionInvite) {
-        return competitionInvite.getUser() != null && competitionInvite.getUser().isProfileCompliant();
+        if (competitionInvite == null || competitionInvite.getUser() == null) {
+            return false;
+        }
+        Profile profile = profileRepository.findOne(competitionInvite.getUser().getProfileId());
+        return profile.isCompliant(competitionInvite.getUser());
     }
 
-    private InnovationAreaResource getInnovationAreaForInvite(CompetitionInvite competitionInvite) {
+    private List<InnovationAreaResource> getInnovationAreasForInvite(CompetitionInvite competitionInvite) {
         boolean inviteForNewUser = competitionInvite.getUser() == null;
+
         if (inviteForNewUser) {
-            return innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea());
+            return asList(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
+        } else {
+            return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
+                    .map(innovationAreaMapper::mapToResource)
+                    .collect(toList());
         }
-        // TODO INFUND-6865 User should have an innovation area
-        return null;
     }
 }

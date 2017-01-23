@@ -23,8 +23,4 @@ public abstract class CategoryResourceBuilder<T extends CategoryResource, B exte
     public B withName(String... names) {
         return withArraySetFieldByReflection("name", names);
     }
-
-    public B withType(CategoryType... types) {
-        return withArraySetFieldByReflection("type", types);
-    }
 }

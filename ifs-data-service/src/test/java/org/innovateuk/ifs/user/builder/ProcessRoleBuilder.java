@@ -63,34 +63,17 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
     }
 
     public ProcessRoleBuilder withApplication(Application... applications) {
-        return withArray((application, processRole) -> processRole.setApplication(application), applications);
+        return withArray((application, processRole) -> {
+                processRole.setApplicationId(application.getId());
+                application.addUserApplicationRole(processRole);
+           }, applications);
     }
 
     public ProcessRoleBuilder withOrganisation(Organisation... organisations) {
-        return withArray((organisation, processRole) -> setField("organisation", organisation, processRole), organisations);
+        return withArray((organisation, processRole) -> setField("organisationId", organisation.getId(), processRole), organisations);
     }
 
     public ProcessRoleBuilder withUser(User... users) {
         return withArray(BuilderAmendFunctions::setUser, users);
-    }
-
-    @Override
-    public void postProcess(int index, ProcessRole processRole) {
-
-        // now add back-refs where appropriate
-        User user = processRole.getUser();
-        if (user != null && !user.getProcessRoles().contains(processRole)) {
-            user.addUserApplicationRole(processRole);
-        }
-
-        Application application = processRole.getApplication();
-        if (application != null){
-            if (application.getProcessRoles() == null){
-                application.setProcessRoles(new ArrayList<>());
-            }
-            if (!application.getProcessRoles().contains(processRole)){
-                application.addUserApplicationRole(processRole);
-            }
-        }
     }
 }

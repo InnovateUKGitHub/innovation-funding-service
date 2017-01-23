@@ -40,6 +40,10 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-7119 GOL status for Internal user
 ...
 ...               INFUND-6977 As a lead partner I want to be given back edit rights to the Spend Profile so that I can manage further edits if they have been rejected by Innovate UK
+...
+...               INFUND-6907 Internal server error if tried to save SP with a validation error in it
+...
+...               INFUND-6852 When partner submits SP, he should get a popup Submit-Cancel, before is Submitted
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -124,7 +128,7 @@ Lead Partner can see Spend profile summary
     Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765
+    [Documentation]    INFUND-3765, INFUND-6907
     [Tags]    #HappyPath
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
@@ -147,6 +151,11 @@ Lead partner can edit his spend profile with invalid values
     When the user enters text to a text field          css=#row-24-2    35.25
     And the user moves focus to the element            css=#row-25-2
     Then the user should see the text in the page      This field can only accept whole numbers
+    When the user enters text to a text field          css=#row-24-2    abcd
+    And the user moves focus to the element            css=#row-25-2
+    Then the user should see the text in the page      Unable to submit spend profile
+    When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
+    Then the user should not see the text in the page  internal server error
     When the user enters text to a text field          css=#row-26-2    200
     And the user moves focus to the element            css=#row-26-1
     And the user should not see the element            jQuery=.error-summary-list li:contains("This field should be 0 or higher")
@@ -237,10 +246,17 @@ Non-lead partner can see correct project start date and duration
     And the user should see the text in the page     June 2017
     And the user should see the text in the page     ${project_duration} months
 
+Industrial partner can choose cancel on the dialogue
+    [Documentation]    INFUND-6852
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    Then the user should see the element    jQuery=a:contains("Send to lead partner")
+
 Non-lead partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link             jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link             jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link             jQuery=.button:contains("Send")
     Then the user should see the text in the page    We have reviewed and confirmed your project costs
     And the user should not see the element          css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -325,10 +341,17 @@ Academic partner edits spend profile and this updates on the table
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(1) td:nth-of-type(1)    3
     And element should contain    css=.spend-profile-table tbody tr:nth-of-type(2) td:nth-of-type(3)    0
 
+Academic partner can choose cancel on the dialogue
+    [Documentation]    INFUND-6852
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link     jQuery=.button:contains("Cancel")
+    Then the user should see the element    jQuery=a:contains("Send to lead partner")
+
 Academic partner marks Spend Profile as complete
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
-    When the user clicks the button/link           jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link           jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
     Then the user should see the text in the page  We have reviewed and confirmed your project costs
     And the user should not see the element        css=table a[type="number"]    # checking here that the table has become read-only
 
@@ -421,7 +444,8 @@ Partner can receive edit rights to his SP
     Then the user should see the element    jQuery=li.require-action:nth-child(6)
     When the user clicks the button/link    link=Spend profile
     Then the user should see the element    jQuery=.button:contains("Edit spend profile")
-    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
 
 Project Manager can submit the project's spend profiles
     [Documentation]    INFUND-3767
@@ -593,7 +617,8 @@ Industrial partner receives edit rights and can submit their spend profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     When the user clicks the button/link    link=Spend profile
-    And the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    And the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
@@ -609,7 +634,8 @@ Academic partner receives edit rights and can submit their spend profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
-    When the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
+    And the user clicks the button/link    jQuery=.button:contains("Send")
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status

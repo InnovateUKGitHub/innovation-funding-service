@@ -6,6 +6,7 @@ import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
+import org.innovateuk.ifs.user.transactional.BaseUserService;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserProfileService;
 import org.innovateuk.ifs.user.transactional.UserService;
@@ -42,6 +43,9 @@ public class UserController {
     private static final Log LOG = LogFactory.getLog(UserController.class);
 
     @Autowired
+    private BaseUserService baseUserService;
+
+    @Autowired
     private UserService userService;
 
     @Autowired
@@ -55,22 +59,22 @@ public class UserController {
 
     @RequestMapping("/uid/{uid}")
     public RestResult<UserResource> getUserByUid(@PathVariable("uid") final String uid) {
-        return userService.getUserResourceByUid(uid).toGetResponse();
+        return baseUserService.getUserResourceByUid(uid).toGetResponse();
     }
 
     @RequestMapping("/id/{id}")
     public RestResult<UserResource> getUserById(@PathVariable("id") final Long id) {
-        return userService.getUserById(id).toGetResponse();
+        return baseUserService.getUserById(id).toGetResponse();
     }
 
     @RequestMapping("/findByRole/{userRoleName}")
     public RestResult<List<UserResource>> findByRole(@PathVariable("userRoleName") final String userRoleName) {
-        return userService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
+        return baseUserService.findByProcessRole(UserRoleType.fromName(userRoleName)).toGetResponse();
     }
 
     @RequestMapping("/findAll/")
     public RestResult<List<UserResource>> findAll() {
-        return userService.findAll().toGetResponse();
+        return baseUserService.findAll().toGetResponse();
     }
 
     @RequestMapping("/findByEmail/{email}/")

@@ -19,7 +19,8 @@ IFS.application.financeSpecifics = (function () {
         supportCostInTotal: {
           'NONE': '#section-total-10-labour-cost-none',
           'DEFAULT_PERCENTAGE': '#section-total-10-default',
-          'CUSTOM_RATE': '#section-total-10-custom'
+          'CUSTOM_RATE': '#section-total-10-custom',
+          'TOTAL': '#section-total-10-calculate-formatted'
         },
         allTotals: '[id*="section-total-10"]',
         totalCostInHeaders: '[data-mirror="#section-total-10"]'
@@ -59,9 +60,7 @@ IFS.application.financeSpecifics = (function () {
     resetOtherAdministrationTotal: function (element) {
       // reset the totals for all other sections in administraton costs
       var radio = jQuery(element).closest('[data-target]')
-      var section = jQuery('#' + jQuery(radio).attr('data-target'))
       var otherRadios = radio.prevAll('[data-target]').add(radio.nextAll('[data-target]'))
-
       otherRadios.each(function () {
         var section = jQuery('#' + jQuery(this).attr('data-target'))
         var totalField = section.find(s.administrationCostTotal.allTotals)
@@ -70,10 +69,14 @@ IFS.application.financeSpecifics = (function () {
         totalField.attr('data-old-id', id).removeAttr('id').val('£ 0').attr('data-calculation-rawvalue', 0)
       })
 
+      var section = jQuery('#' + jQuery(radio).attr('data-target'))
       section.find('[data-old-id]').each(function () {
-        var id = jQuery(this).attr('data-old-id')
+        var el = jQuery(this)
+        var id = el.attr('data-old-id')
+        var financeFields = el.attr('data-calculation-fields')
         jQuery(this).attr('id', id).removeAttr('data-old-id')
         jQuery('#section-total-9').trigger('updateFinances')
+        jQuery(financeFields).trigger('updateFinances')
       })
     },
     initFunderOrgSizeFeedback: function () {

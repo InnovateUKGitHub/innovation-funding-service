@@ -79,7 +79,7 @@ public class ApplicationContributorController{
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
+        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
@@ -137,7 +137,7 @@ public class ApplicationContributorController{
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
+        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
@@ -231,7 +231,7 @@ public class ApplicationContributorController{
                                      HttpServletResponse response) {
         ApplicationResource application = applicationService.getById(applicationId);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        OrganisationResource organisationResource = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisation());
+        OrganisationResource organisationResource = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
         // User should never be able to set the organisation name or id of the lead-organisation.
         contributorsForm.getOrganisations().get(0).setOrganisationName(organisationResource.getName());
         contributorsForm.getOrganisations().get(0).setOrganisationId(organisationResource.getId());

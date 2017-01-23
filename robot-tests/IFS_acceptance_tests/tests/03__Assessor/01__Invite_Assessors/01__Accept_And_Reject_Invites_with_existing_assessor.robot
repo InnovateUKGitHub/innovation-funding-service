@@ -107,7 +107,7 @@ Existing assessor: Accept invitation from the invite link
     And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    12 January 2068 to 28 January 2068: Assessment period
-    And the user should see the text in the page    taking place at 15 January 2016.
+    And the user should see the text in the page    taking place at 15 April 2016.
     And the user should see the text in the page    100 per application.
     When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then the user should see the text in the page    Your email address is linked to an existing account.
@@ -135,7 +135,8 @@ Upcoming competition should be visible
     And The user clicks the button/link    link=Back to assessor dashboard
     Then The user should see the text in the page    Upcoming competitions to assess
 
-When the assessment period starts the comp moves to the comp for assessment
+The assessment period starts the comp moves to the comp for assessment
+    [Documentation]
     [Tags]    MySQL    HappyPath
     [Setup]    Connect to Database    @{database}
     Given the assessment start period changes in the db in the past

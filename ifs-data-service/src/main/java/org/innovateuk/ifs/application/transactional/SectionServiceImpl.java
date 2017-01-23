@@ -83,7 +83,9 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                                         p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) ||
                                         p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName())
                 )
-                .map(ProcessRole::getOrganisation).collect(toList());
+                .map(processRole -> {
+                    return organisationRepository.findOne(processRole.getOrganisationId());
+                }).collect(toList());
         Map<Long, Set<Long>> organisationMap = new HashMap<>();
         for (Organisation organisation : organisations) {
             Set<Long> completedSections = new LinkedHashSet<>();
@@ -125,23 +127,35 @@ public class SectionServiceImpl extends BaseTransactionalService implements Sect
                                                                          final Long markedAsCompleteById) {
         LOG.debug(String.format("markSectionAsComplete %s / %s / %s ", sectionId, applicationId, markedAsCompleteById));
         return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
-            Set<Long> questions = collectAllQuestionFrom(section);
-
             List<ValidationMessages> sectionIsValid = validationUtil.isSectionValid(markedAsCompleteById, section, application);
 
             if (sectionIsValid.isEmpty()) {
                 LOG.debug("======= SECTION IS VALID =======");
-                questions.forEach(q -> {
-                    questionService.markAsComplete(new QuestionApplicationCompositeId(q, applicationId), markedAsCompleteById);
-                    // Assign back to lead applicant.
-                    questionService.assign(new QuestionApplicationCompositeId(q, applicationId), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
-                });
+                markSectionAsComplete(section, application, markedAsCompleteById);
             } else {
                 LOG.debug("======= SECTION IS INVALID =======   " + sectionIsValid.size());
             }
             return serviceSuccess(sectionIsValid);
         });
     }
+
+    @Override
+    public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        return find(section(sectionId), application(applicationId)).andOnSuccess((section, application) -> {
+            markSectionAsComplete(section, application, markedAsCompleteById);
+            return serviceSuccess();
+        });
+    }
+
+    private void markSectionAsComplete(Section section, Application application, Long markedAsCompleteById) {
+        Set<Long> questions = collectAllQuestionFrom(section);
+        questions.forEach(q -> {
+            questionService.markAsComplete(new QuestionApplicationCompositeId(q, application.getId()), markedAsCompleteById);
+            // Assign back to lead applicant.
+            questionService.assign(new QuestionApplicationCompositeId(q, application.getId()), application.getLeadApplicantProcessRole().getId(), markedAsCompleteById);
+        });
+    }
+
 
     @Override
     public ServiceResult<Void> markSectionAsInComplete(final Long sectionId,
