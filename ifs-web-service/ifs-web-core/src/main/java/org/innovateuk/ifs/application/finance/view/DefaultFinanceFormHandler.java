@@ -15,6 +15,7 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
@@ -144,6 +145,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         return financeRowService.addWithoutPersisting(applicationFinance.getId(), questionId);
+    }
+
+    @Override
+    public FinanceRowItem addProjectCostWithoutPersisting(Long projectId, Long organisationId, Long questionId) {
+        ProjectFinanceResource projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
+        return financeRowService.addProjectCostWithoutPersisting(projectFinanceResource.getId(), questionId);
     }
 
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
