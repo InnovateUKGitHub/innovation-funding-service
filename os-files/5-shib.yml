@@ -22,9 +22,9 @@ items:
           name: shib
           env:
           - name: SPHOST
-            value: ifs-local-dev
+            value: something.domain
           - name: IDPHOST
-            value: idp
+            value: auth.something.domain
           - name: HTTPSPORT
             value: "9443"
           - name: HTTPPORT
@@ -57,7 +57,7 @@ items:
   metadata:
     name: shib
   spec:
-    host: ifs-local-dev
+    host: something.domain
     port:
       targetPort: 443-tcp
     tls:
