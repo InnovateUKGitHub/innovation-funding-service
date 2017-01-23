@@ -209,7 +209,7 @@
             <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" th:remove="tag" />
           </p>
           <p th:if="${currentProject}">
-            <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
+            <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
           </p>
     </div>
 	  <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">
