@@ -17,8 +17,7 @@ import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
-public class
-ApplicationResourceBuilder extends BaseBuilder<ApplicationResource, ApplicationResourceBuilder> {
+public class ApplicationResourceBuilder extends BaseBuilder<ApplicationResource, ApplicationResourceBuilder> {
 
     private ApplicationResourceBuilder(List<BiConsumer<Integer, ApplicationResource>> multiActions) {
         super(multiActions);
