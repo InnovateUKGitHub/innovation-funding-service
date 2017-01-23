@@ -5,10 +5,7 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.Invite;
-import org.innovateuk.ifs.invite.domain.RejectionReason;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -21,10 +18,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInviteWithoutId;
-import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
@@ -202,8 +200,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .withCompetition(competitions.get(0), competitions.get(1))
                         .withInnovationArea(innovationArea)
                         .withStatus(SENT)
-                        .build(2)
-        );
+                        .build(2));
+
         flushAndClearSession();
 
         List<CompetitionParticipant> retrievedParticipants = repository.getByCompetitionIdAndRole(competitions.get(0).getId(), ASSESSOR);
@@ -211,6 +209,33 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertNotNull(retrievedParticipants);
         assertEquals(1, retrievedParticipants.size());
         assertEqualParticipants(savedParticipants.get(0), retrievedParticipants.get(0));
+    }
+
+    @Test
+    public void getByCompetitionIdAndRoleAndStatus() {
+        List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
+
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2", "name3")
+                        .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
+                        .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(0), competitions.get(1))
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(3));
+
+        // Now accept one of the invites
+        CompetitionParticipant competitionParticipantToAccept = savedParticipants.get(1);
+        competitionParticipantToAccept.getInvite().open();
+        competitionParticipantToAccept.acceptAndAssignUser(user);
+
+        flushAndClearSession();
+
+        List<CompetitionParticipant> retrievedParticipants = repository.getByCompetitionIdAndRoleAndStatus(1L, ASSESSOR, ParticipantStatus.ACCEPTED);
+
+        assertNotNull(retrievedParticipants);
+        assertEqualParticipants(singletonList(competitionParticipantToAccept), retrievedParticipants);
     }
 
     @Test
@@ -228,8 +253,8 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
                         .withCompetition(competitions.get(0), competitions.get(1), competitions.get(0))
                         .withInnovationArea(innovationArea)
                         .withStatus(SENT)
-                        .build(3)
-        );
+                        .build(3));
+
         flushAndClearSession();
 
         List<CompetitionParticipant> retrievedParticipants = repository.getByInviteEmail("test1@test.com");

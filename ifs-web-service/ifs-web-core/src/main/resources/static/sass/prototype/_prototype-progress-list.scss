@@ -1,0 +1,273 @@
+/*-------- Progress list -------------*/
+.progress-list{
+  background-color: $panel-colour;
+  margin: 20px 0 50px;
+  padding: 15px;
+  > .heading-medium {
+    margin-top: 0;
+  }
+  > ul > li {
+    margin-top: 10px;
+    padding: 15px 19px 15px 30px;
+    background-color: $white;
+    border: 1px solid $border-colour;
+    overflow: auto;
+    .task{
+      float: left;
+      width: 75%;
+      vertical-align: top;
+      font-size: 17px;
+      .heading-small {
+        margin-top: 0;
+      }
+      span {
+        font-size: 16px;
+        @include media-down(mobile) {
+          font-size: 14px;
+        }
+      }
+      @include media-down(mobile) {
+        float: none;
+        width: 100%;
+        margin-bottom: 15px;
+        font-size: 15px;
+      }
+      .label-holder {
+        float: left;
+        height: 45px;
+        margin-top: 10px;
+        @include media-down(mobile) {
+          margin-top: 5px;
+        }
+      }
+      &.task-half-width {
+        width: 50%;
+        @include media-down(mobile) {
+          width: 100%;
+        }
+      }
+    }
+    .action-required {
+      float: left;
+      width: 75%;
+      margin-top: 30px;
+      vertical-align: top;
+      strong {
+        @extend  %action-required;
+        padding-left: 20px;
+        font-size: 17px;
+        @include media-down(mobile) {
+          font-size: 15px;
+        }
+      }
+      @include media-down(mobile) {
+        width: 50%;
+        margin-top: 0;
+        vertical-align: middle;
+      }
+    }
+    .notification {
+      float: left;
+      width: 25%;
+      vertical-align: middle;
+      text-align: center;
+      font-size: 17px;
+      @include media-down(mobile) {
+        font-size: 15px;
+      }
+      strong, a {
+        display: block;
+        margin-top: 15px;
+        text-align: center;
+        @include media-down(mobile) {
+          text-align: left;
+          margin-top: 0;
+        }
+      }
+      .pending {
+        color: $secondary-text-colour;
+      }
+    }
+    .status {
+      float: right;
+      width: 24%;
+      vertical-align: middle;
+      text-align: center;
+      .deadline {
+        display: block;
+        text-align: center;
+        color: $red;
+        font-size: 15px;
+        font-weight: bold;
+        margin-top: 0;
+        @include media-down(mobile) {
+          font-size: 13px;
+        }
+      }
+      .awaiting {
+        @extend .deadline;
+        color: $secondary-text-colour;
+      }
+      .score {
+        .percent {
+          font-size: 35px;
+          display: block;
+          text-align: center;
+        }
+        > span {
+          display: block;
+          text-align: center;
+          font-size: 15px;
+          color: $secondary-text-colour;
+          @include media-down(mobile) {
+            font-size: 13px;
+            margin-top: 0;
+          }
+        }
+        strong {
+          display: block;
+          text-align: center;
+          font-size: 17px;
+          @include media-down(mobile) {
+            font-size: 15px;
+          }
+        }
+      }
+      > strong, a {
+        display: block;
+        margin-top: 15px;
+        font-size: 17px;
+        text-align: center;
+        font-weight: bold;
+        @include media-down(mobile) {
+          font-size: 15px;
+          margin-top: 0;
+        }
+      }
+      > span {
+        display: block;
+        margin-top: 15px;
+        font-size: 17px;
+        text-align: center;
+        @include media-down(mobile) {
+          font-size: 15px;
+          margin-top: 0;
+        }
+      }
+      .negative-text {
+        color: $red;
+      }
+      @include media-down(mobile) {
+        width: 50%;
+      }
+    }
+    .assessment-period {
+      float: right;
+      width: 24%;
+      h4, dl {
+        font-size: 17px;
+        @include media-down(mobile) {
+          font-size: 15px;
+        }
+      }
+
+    }
+    .status-complete {
+      position: absolute;
+      bottom: 50%;
+      right: 10px;
+      margin-bottom: -10px;
+      span {
+        @extend %icon-tick;
+        padding-left: 20px;
+        background-size: 14px;
+        background-position: left center;
+        color: $button-colour;
+        font-weight: bold;
+        font-size: 17px;
+        @include media-down(mobile) {
+          font-size: 15px;
+        }
+      }
+      @include media-down(mobile) {
+        position: static;
+        margin: 10px 0;
+        text-align: right;
+      }
+    }
+    .status-action-required {
+      @extend .status-complete;
+      span {
+        @extend %action-required;
+        color: $text-colour
+      }
+    }
+    &.positive {
+      border-right: 5px solid $button-colour;
+      padding: 15px 15px 15px 30px;
+      .status > strong {
+        color: $button-colour;
+      }
+      .score > strong {
+        color: $button-colour;
+      }
+      .score .percent {
+        color: $text-colour
+      }
+    }
+    &.negative {
+      border-right: 5px solid $red;
+      padding: 15px 15px 15px 30px;
+      .score > strong {
+        color: $red;
+      }
+      .score .percent {
+        color: $text-colour
+      }
+    }
+  }
+}
+.project-setup-progress-list {
+  @extend  .progress-list;
+  background-color: $white;
+  margin: 30px 0 50px;
+  padding: 0;
+  > ul > li {
+    position: relative;
+    &.read-only {
+      background-color: $highlight-colour;
+      color: $secondary-text-colour;
+    }
+    .task {
+      overflow: hidden;
+      .heading-action-required {
+        @extend  %action-required;
+        position: relative;
+        left: -20px;
+        padding-left: 20px;
+        background-size: 14px;
+        background-position: left center;
+      }
+      ul li {
+        float: left;
+        margin: 10px 20px 0 0;
+        @include media-down(mobile) {
+          float: none;
+          margin: 5px 20px 0 0;
+        }
+      }
+      .list-bullet li {
+        float: none;
+        margin-right: 0;
+      }
+    }
+    .status {
+      @include media-down(mobile) {
+        width: 100%;
+        span {
+          text-align: right;
+        }
+      }
+    }
+  }
+}

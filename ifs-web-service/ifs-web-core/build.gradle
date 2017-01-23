@@ -2,12 +2,19 @@ jar {
     baseName = 'ifs-web-core'
 }
 
+configurations {
+    providedRuntime
+}
+
 dependencies {
+    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4:3.0.1.RELEASE"
+    compile "org.thymeleaf:thymeleaf-spring4:${thymeleafVersion}"
+    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:3.0.0.RELEASE"
     compile "org.springframework.boot:spring-boot-starter-security"
-    compile "org.thymeleaf.extras:thymeleaf-extras-springsecurity4"
-    compile "org.thymeleaf:thymeleaf-spring4:2.1.4.RELEASE"
+    providedRuntime "org.springframework.boot:spring-boot-starter-tomcat"
+    compile "org.springframework.plugin:spring-plugin-core"
+    compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310"
     compile "org.springframework.boot:spring-boot-starter-aop"
-    compile "org.thymeleaf.extras:thymeleaf-extras-java8time:2.1.0.RELEASE"
     compile "javax.servlet:javax.servlet-api:3.1.0"
     compile "com.jayway.jsonpath:json-path"
     compile "com.google.guava:guava:16.0.1"
@@ -18,6 +25,8 @@ dependencies {
     compile "org.apache.httpcomponents:httpclient:4.5.1"
     compile "org.apache.httpcomponents:httpasyncclient:4.1.1"
     compile 'org.jsoup:jsoup:1.9.1'
+
+    compile "com.google.guava:guava:16.0.1"
 
     // inter-project dependencies
     compile project(":ifs-resources")
@@ -34,6 +43,12 @@ dependencies {
 
 // enabling Spring dev tools has security consequences so only do so for local development
 ext.ifsEnableDevTools = (project.hasProperty("cloud") && project.cloud == "development")
+
+project.properties['idp.rest.key'] ?:"123456789"
+ext.csrfEncryptionPassword=project.properties['ifs.csrf.encryption.password'] ?: "edd14b4c-6bbd-43df-807d-1d80276bce97"
+ext.encryptionSalt=project.properties['ifs.csrf.encryption.salt'] ?: "fa7814848e5f2691"
+
+ext.ifsWebSystemUserUid=project.properties['ifs.web.system.user.id'] ?: "8394d970-b250-4b15-9621-3534325691b4"
 
 processResources {
     filesMatching("*.properties") {

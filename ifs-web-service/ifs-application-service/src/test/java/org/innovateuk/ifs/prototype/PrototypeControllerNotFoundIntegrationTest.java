@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.prototype;
 
-import org.innovateuk.ifs.BaseWebIntegrationTest;
+import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;

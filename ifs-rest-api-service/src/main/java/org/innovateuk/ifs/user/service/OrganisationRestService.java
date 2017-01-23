@@ -15,6 +15,7 @@ public interface OrganisationRestService {
     RestResult<List<OrganisationResource>> getOrganisationsByApplicationId(Long applicationId);
     RestResult<OrganisationResource> getOrganisationById(Long organisationId);
     RestResult<OrganisationResource> getOrganisationByIdForAnonymousUserFlow(Long organisationId);
+    RestResult<OrganisationResource> getOrganisationByUserId(Long userId);
     RestResult<OrganisationResource> create(OrganisationResource organisation);
     RestResult<OrganisationResource> update(OrganisationResource organisation);
     RestResult<OrganisationResource> updateNameAndRegistration(OrganisationResource organisation);

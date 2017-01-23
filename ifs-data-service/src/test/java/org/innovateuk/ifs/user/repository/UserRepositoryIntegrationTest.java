@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.junit.Test;
@@ -14,13 +13,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.BuilderAmendFunctions.*;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.*;
 
 public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<UserRepository> {
@@ -32,10 +32,10 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Autowired
-    private InnovationAreaRepository innovationAreaRepository;
+    private UserMapper userMapper;
 
     @Autowired
-    private UserMapper userMapper;
+    protected ProfileRepository profileRepository;
 
     @Test
     public void test_findAll() {
@@ -73,14 +73,16 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         loginSteveSmith();
 
         // Create a new user
-        User newUser = repository.save(new User("New", "User", "new@example.com", "", new ArrayList<>(), "my-uid"));
-        newUser.setProfile(newProfile()
+        User newUser = repository.save(new User("New", "User", "new@example.com", "","my-uid"));
+        Profile profile = newProfile()
                 .withId((Long)null)
                 .withAddress(newAddress()
                         .withId((Long)null)
                         .withAddressLine1("Electric Works")
                         .build())
-                .build());
+                .build();
+        profileRepository.save(profile);
+        newUser.setProfileId(profile.getId());
         assertNotNull(newUser.getId());
 
         // Fetch the list of users and assert that the count has increased and the new user is present in the list of expected users
@@ -92,17 +94,18 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertTrue(emailAddresses.containsAll(expectedUsers));
 
         User savedNewUser = repository.findByEmail("new@example.com").get();
-        assertEquals("Electric Works", savedNewUser.getProfile().getAddress().getAddressLine1());
-        assertEquals(userMapper.mapToDomain(getSteveSmith()), savedNewUser.getProfile().getCreatedBy());
-        assertEquals(userMapper.mapToDomain(getSteveSmith()), savedNewUser.getProfile().getModifiedBy());
-        assertNotNull(savedNewUser.getProfile().getModifiedBy());
+        Profile savedProfile = profileRepository.findOne(savedNewUser.getProfileId());
+        assertEquals("Electric Works", savedProfile.getAddress().getAddressLine1());
+        assertEquals(userMapper.mapToDomain(getSteveSmith()), savedProfile.getCreatedBy());
+        assertEquals(userMapper.mapToDomain(getSteveSmith()), savedProfile.getModifiedBy());
+        assertNotNull(savedProfile.getModifiedBy());
     }
 
     @Test
     @Rollback
     public void test_deleteNewUser() {
         // Create a new user
-        User newUser = repository.save(new User("New", "User", "new@example.com", "", new ArrayList<>(), "my-uid"));
+        User newUser = repository.save(new User("New", "User", "new@example.com", "", "my-uid"));
 
         // and immediately delete them
         repository.delete(newUser.getId());
@@ -125,17 +128,16 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void saveWithInnovationArea() {
-        InnovationArea innovationArea = innovationAreaRepository.findByName("Earth Observation");
+    public void findByIdAndRolesName() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, ASSESSOR.getName());
 
-        User user = newUser().with(id(null)).withUid("my-uid").withInnovationArea(innovationArea).build();
+        assertTrue(user.isPresent());
+    }
 
-        User savedUser = repository.save(user);
+    @Test
+    public void findByIdAndRolesName_wrongRole() throws Exception {
+        Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
 
-        flushAndClearSession();
-
-        User retrievedUser = repository.findOne(savedUser.getId());
-
-        assertTrue(retrievedUser.getInnovationAreas().contains(innovationArea));
+        assertFalse(user.isPresent());
     }
 }

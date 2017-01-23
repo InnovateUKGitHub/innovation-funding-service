@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -28,6 +29,9 @@ public class UserPermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     private static List<String> CONSORTIUM_ROLES = asList(LEADAPPLICANT.getName(), COLLABORATOR.getName());
 
@@ -135,12 +139,13 @@ public class UserPermissionRules {
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
-        return simpleMap(applicableProcessRoles, ProcessRole::getApplication);
+        return simpleMap(applicableProcessRoles, processRole -> {
+            return applicationRepository.findOne(processRole.getApplicationId());
+        });
     }
 
     private List<ProcessRole> getFilteredProcessRoles(UserResource user, Predicate<ProcessRole> filter) {
-        List<Long> applicationRoles = user.getProcessRoles();
-        List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
+        List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
         return simpleFilter(processRoles, filter);
     }
 

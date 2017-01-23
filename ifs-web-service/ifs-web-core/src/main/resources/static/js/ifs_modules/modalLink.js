@@ -44,7 +44,10 @@ IFS.core.modal = (function () {
       button = jQuery(button)
       var formValid = IFS.core.modal.checkForInputErrors(button)
       var target = jQuery(event.target).attr('data-js-modal')
+      var modalFormUrl = jQuery(event.target).attr('data-modal-form-url')
+
       target = jQuery('.' + target)
+
       if (target.length) {
         event.preventDefault()
         if ((formValid) && (button.is('[aria-disabled="true"]') === false)) {
@@ -61,6 +64,11 @@ IFS.core.modal = (function () {
       }
 
       if (target.find('form').length) {
+        // update the form url of the modal if a data- attribute exists
+        if (modalFormUrl !== undefined) {
+          target.find('form').attr('action', modalFormUrl)
+        }
+
         target.find('form').on('submit', function (event) {
           // Validate the modal form fields before submitting
           // @requires: formValidation.js

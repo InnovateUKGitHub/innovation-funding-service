@@ -154,7 +154,7 @@
                         <tr th:each="assessor : ${model.assessors}">
                             <td><span th:text="${assessor.name}">John Barnes</span></td>
                             <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Industry</td>
-                            <td th:text="${assessor.innovationArea}">Electronics, sensors &amp; photonics, Materials</td>
+                            <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
                             <td>
                                 <span class="yes" th:if="${assessor.compliant}">Yes</span>
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
@@ -163,6 +163,9 @@
                                 <button class="button button-secondary" name="add" th:value="${assessor.email}" th:unless="${assessor.added}">Add<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
                                 <button class="button button-secondary" name="remove" th:value="${assessor.email}" th:if="${assessor.added}">Remove<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
                             </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(model.assessors)}">
+                            <td colspan="5">There were no available assessors found.</td>
                         </tr>
                     </tbody>
                 </table>

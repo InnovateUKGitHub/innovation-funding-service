@@ -45,6 +45,12 @@ public class SectionServiceImpl implements SectionService {
     }
 
     @Override
+    public void markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        LOG.debug(String.format("mark section as not required %s / %s /%s ", sectionId, applicationId, markedAsCompleteById));
+        sectionRestService.markAsNotRequired(sectionId, applicationId, markedAsCompleteById).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public void markAsInComplete(Long sectionId, Long applicationId, Long markedAsInCompleteById) {
         LOG.debug(String.format("mark section as incomplete %s / %s /%s ", sectionId, applicationId, markedAsInCompleteById));
         sectionRestService.markAsInComplete(sectionId, applicationId, markedAsInCompleteById);

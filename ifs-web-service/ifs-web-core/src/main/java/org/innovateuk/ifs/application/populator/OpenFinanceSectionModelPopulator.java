@@ -5,10 +5,7 @@ import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.QuestionService;
-import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
@@ -29,10 +26,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Future;
 
 import static java.util.Collections.singletonList;
@@ -43,6 +37,7 @@ import static java.util.Collections.singletonList;
 @Component
 public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
+
 
     @Autowired
     private FormInputResponseService formInputResponseService;
@@ -83,26 +78,31 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                 section, true, section.getId(), user, isSubFinanceSection(section));
         SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
 
-        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition) || SectionType.FINANCE.equals(section.getType()));
         sectionApplicationViewModel.setCurrentApplication(application);
         sectionApplicationViewModel.setCurrentCompetition(competition);
 
         addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
         addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
+        addFundingSection(openFinanceSectionViewModel, application.getCompetition());
+
+        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openFinanceSectionViewModel.getSectionsMarkedAsComplete())
+                || SectionType.FINANCE.equals(section.getType()));
 
         form.setBindingResult(bindingResult);
         form.setObjectErrors(bindingResult.getAllErrors());
 
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
-        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId());
+        //TODO INFUND-7482 use finance view model when its complete.
+        Integer organisationGrantClaimPercentage = (Integer) model.asMap().get("organisationGrantClaimPercentage");
+        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), organisationGrantClaimPercentage);
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
         return openFinanceSectionViewModel;
     }
 
-    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId) {
+    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Integer organisationGrantClaimPercentage) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
         Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
@@ -116,6 +116,13 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         viewModel.setFundingSectionLocked(!(organisationSizeComplete && applicationDetailsComplete));
         viewModel.setApplicationDetailsQuestionId(applicationDetailsQuestion.getId());
         viewModel.setYourOrganisationSectionId(allSections.stream().filter(filterSection -> SectionType.ORGANISATION_FINANCES.equals(filterSection.getType())).findFirst().map(SectionResource::getId).orElse(null));
+
+
+        boolean yourFundingComplete = false;
+        if (viewModel.getSectionsMarkedAsComplete() != null) {
+            yourFundingComplete = viewModel.getSectionsMarkedAsComplete().contains(allSections.stream().filter(filterSection -> SectionType.FUNDING_FINANCES.equals(filterSection.getType())).map(SectionResource::getId).findFirst().orElse(-1L));
+        }
+        viewModel.setNotRequestingFunding(yourFundingComplete && organisationSizeComplete && organisationGrantClaimPercentage != null && organisationGrantClaimPercentage == 0);
     }
 
 
@@ -210,6 +217,10 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
                 .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
 
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
+    }
+
+    private void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {
+        viewModel.setFundingSection(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).stream().findFirst().orElse(null));
     }
 
     //TODO - INFUND-7482 - remove usages of Model model

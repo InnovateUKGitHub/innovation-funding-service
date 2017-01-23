@@ -2,11 +2,13 @@ package org.innovateuk.ifs.invite.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AssessorInviteOverviewResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
+import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
@@ -35,8 +37,8 @@ public class AssessorInviteOverviewResourceBuilder extends BaseBuilder<AssessorI
         return withArraySetFieldByReflection("name", value);
     }
 
-    public AssessorInviteOverviewResourceBuilder withInnovationArea(CategoryResource... value) {
-        return withArraySetFieldByReflection("innovationArea", value);
+    public AssessorInviteOverviewResourceBuilder withInnovationAreas(List<InnovationAreaResource>... value) {
+        return withArraySetFieldByReflection("innovationAreas", value);
     }
 
     public AssessorInviteOverviewResourceBuilder withCompliant(Boolean... value) {

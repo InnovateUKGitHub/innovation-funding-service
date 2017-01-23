@@ -16,7 +16,9 @@
 
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${(param.edit == null ? '/prototypes/1177-assessor-skills' : '/prototypes/1247-assessor-view-doi')})" th:unless="${param.version != null and param.version[0] == 'v2'}" th:remove="tag" />
 
-    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
+    <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" th:unless="${param.status != null and param.status[0] == 'edit'}" />
+
+    <th:block th:if="${param.status != null and param.status[0] == 'edit'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Declaration of interest'}, ${'/prototypes/5230-assessor-doi?version=v2'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -40,17 +42,17 @@
 
 			<div class="form-group">
 				<label for="doi-principal-employer" class="form-label-bold">Prinicipal employer</label>
-				<input name="doi-principal-employer" id="doi-principal-employer" class="form-control width-full" th:value="(${param.edit != null} ? 'Company A' : '')"/>
+				<input name="doi-principal-employer" id="doi-principal-employer" class="form-control width-full" th:value="(${param.status != null and param.status[0] == 'edit'} ? 'ASDF solutions ' : '')"/>
 			</div>
 
 			<div class="form-group">
 				<label for="doi-principal-employer-role" class="form-label-bold">Role</label>
-				<input name="doi-principal-employer-role" id="doi-principal-employer-role" class="form-control width-full" th:value="(${param.edit != null} ? 'Job Role X' : '')"/>
+				<input name="doi-principal-employer-role" id="doi-principal-employer-role" class="form-control width-full" th:value="(${param.status != null and param.status[0] == 'edit'} ? 'CEO' : '')"/>
 			</div>
 
 			<div class="form-group">
 				<label for="doi-affiliations" class="form-label-bold">Professional affiliations</label>
-				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">Company affiliation example</div></textarea>
+				<textarea name="doi-affiliations" id="doi-affiliations" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">None declared</div></textarea>
 			</div>
 		</fieldset>
 
@@ -62,7 +64,7 @@
 			<div class="form-group">
 				<fieldset class="inline">
 					<label class="block-label selection-button-radio" for="appointments-1">
-						<input id="appointments-1" name="appointments-group" value="Yes" type="radio" />
+						<input id="appointments-1" name="appointments-group" value="Yes" type="radio" th:checked="${param.status != null and param.status[0] == 'edit'}" />
 						Yes
 					</label>
 					<label class="block-label selection-button-radio" for="appointments-2">
@@ -73,10 +75,9 @@
 			</div>
 
 
-			<div class="visuallyhidden" id="add-appointments">
+			<div class="visuallyhidden extra-margin-bottom" id="add-appointments">
 
-				<div class="table-overflow">
-
+				<!-- <div class="table-overflow">
 					<table>
 						<thead>
 							<tr>
@@ -87,10 +88,10 @@
 						<tbody>
 							<tr>
 								<td>
-									<input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" aria-labelledby="doi-label-appointments-organisation" class="form-control width-full" />
+									<input type="text" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" id="doi-appointments-organisation" name="doi-appointments-organisation" aria-labelledby="doi-label-appointments-organisation" class="form-control width-full" />
 								</td>
 								<td>
-									<input type="text" id="doi-appointments-position" name="doi-appointments-position" aria-labelledby="doi-label-appointments-position" class="form-control width-full" />
+									<input type="text" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" id="doi-appointments-position" name="doi-appointments-position" aria-labelledby="doi-label-appointments-position" class="form-control width-full" />
 								</td>
 								<td>
 									<a href="#">Add another position</a>
@@ -98,8 +99,53 @@
 							</tr>
 						</tbody>
 					</table>
+				</div> -->
 
-				</div>
+        <div class="grid-row">
+          <div class="column-one-third">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-appointments-organisation">Organisation</label>
+              <input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" />
+            </div>
+          </div>
+          <div class="column-one-third">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-appointments-position">Position</label>
+              <input type="text" id="doi-appointments-position" name="doi-appointments-position" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" />
+            </div>
+          </div>
+          <div class="column-one-third extra-margin-top alignright">
+            <div class="form-group">
+              <a href="#">Remove</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- <div class="grid-row section-divide">
+          <div class="column-one-third">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-appointments-organisation">Organisation</label>
+              <input type="text" id="doi-appointments-organisation" name="doi-appointments-organisation" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Aptrans Ltd' : '')}" />
+            </div>
+          </div>
+          <div class="column-one-third">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-appointments-position">Position</label>
+              <input type="text" id="doi-appointments-position" name="doi-appointments-position" class="form-control width-full" th:value="${(param.status != null and param.status[0] == 'edit' ? 'Executive consultant' : '')}" />
+            </div>
+          </div>
+          <div class="column-one-third extra-margin-top alignright">
+            <div class="form-group">
+              <a href="#">Remove</a>
+            </div>
+          </div>
+        </div> -->
+
+        <div class="grid-row section-divide">
+          <div class="column-full alignright">
+            <a href="#">Add another position</a>
+          </div>
+        </div>
 
 			</div>
 
@@ -110,7 +156,7 @@
 				<div class="form-group">
 					<fieldset class="inline">
 						<label class="block-label selection-button-radio" for="pecuniary-1">
-							<input id="pecuniary-1" name="pecuniary-group" value="Yes" type="radio" />
+							<input id="pecuniary-1" name="pecuniary-group" value="Yes" type="radio" th:checked="${param.status != null and param.status[0] == 'edit'}" />
 							Yes
 						</label>
 						<label class="block-label selection-button-radio" for="pecuniary-2">
@@ -120,9 +166,10 @@
 					</fieldset>
 				</div>
 
-				<div id="add-pecuniary" class="visuallyhidden">
+				<div id="add-pecuniary" class="visuallyhidden extra-margin-bottom">
 					<label for="doi-pecuniary" class="form-label-bold">Please describe these interests?</label>
-					<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full"></textarea>
+					<textarea name="doi-pecuniary" id="doi-pecuniary" cols="30" rows="3" class="form-control width-full" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Delectus rerum velit, alias fugit aliquam rem eveniet, deleniti praesentium non, quos vel dicta animi. Est dolores, quibusdam cum saepe suscipit! Itaque.' : '')}">
+					</textarea>
 				</div>
 
 			</div>
@@ -142,13 +189,13 @@
 						Yes
 					</label>
 					<label class="block-label selection-button-radio" for="family-2">
-						<input id="family-2" name="family-group" value="No" type="radio" />
+						<input id="family-2" name="family-group" value="No" type="radio" th:checked="${param.status != null and param.status[0] == 'edit'}" />
 						No
 					</label>
 				</fieldset>
 			</div>
 
-			<div id="add-family" class="extra-margin-bottom visuallyhidden">
+			<!-- <div id="add-family" class="extra-margin-bottom visuallyhidden">
 
 				<table>
 					<thead>
@@ -176,7 +223,40 @@
 					</tbody>
 				</table>
 
-			</div>
+			</div> -->
+      <div id="add-family" class="extra-margin-bottom visuallyhidden">
+        <div class="grid-row">
+          <div class="column-one-quarter">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-family-relation">Relation</label>
+              <input type="text" id="doi-family-relation" name="doi-family-relation" class="form-control width-full" />
+            </div>
+          </div>
+          <div class="column-one-quarter">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-family-organisation">Organisation</label>
+              <input type="text" id="doi-family-organisation" name="doi-family-organisation" class="form-control width-full" />
+            </div>
+          </div>
+          <div class="column-one-quarter">
+            <div class="form-group">
+              <label class="form-label-bold" for="doi-family-position">Position</label>
+              <input type="text" id="doi-family-position" name="doi-family-position" class="form-control width-full" />
+            </div>
+          </div>
+          <div class="column-one-quarter extra-margin-top alignright">
+            <div class="form-group">
+              <a href="#">Remove</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid-row section-divide">
+          <div class="column-full alignright">
+            <a href="#">Add another family member</a>
+          </div>
+        </div>
+      </div>
 
 		</fieldset>
 
@@ -193,20 +273,20 @@
 						Yes
 					</label>
 					<label class="block-label selection-button-radio" for="family-pecuniary-2">
-						<input id="family-pecuniary-2" name="family-pecuniary-group" value="No" type="radio" />
+						<input id="family-pecuniary-2" name="family-pecuniary-group" value="No" type="radio"  th:checked="${param.status != null and param.status[0] == 'edit'}" />
 						No
 					</label>
 				</fieldset>
 			</div>
 
-			<div class="form-group visuallyhidden" id="add-family-pecuniary">
+			<div class="form-group visuallyhidden extra-margin-bottom" id="add-family-pecuniary">
 				<label for="doi-close-pecuniary" class="form-label-bold">Please describe these interests</label>
-				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.edit != null}" th:remove="tag">N/A</div></textarea>
+				<textarea name="doi-close-pecuniary" id="doi-close-pecuniary" cols="30" rows="3" class="form-control width-full"><div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">N/A</div></textarea>
 			</div>
 
 		</fieldset>
 
-		<div class="form-block">
+		<div class="form-block extra-margin-bottom">
 			<label class="block-label selection-button-checkbox" for="confirm-doi">
 				<input id="confirm-doi" type="checkbox" value="" />
 				I confirm that for the financial year ending 31 March 2017 the above represents an accurate account of my interests outside Innovate UK
@@ -221,12 +301,15 @@
 				<input type="hidden" name="user" value="assessor" />
 			</th:block>
 
-			<button class="button button-large extra-margin" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites':'/prototypes/1176-assessor-contracts')}">Save and continue</button>
+			<button class="button button-large extra-margin" th:formaction="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-dashboard-invites':'/prototypes/1176-assessor-contracts')}" th:unless="${param.status != null and param.status[0] == 'edit'}">Save and continue</button>
 
 		</div>
 
-		<div th:if="${param.edit != null}" th:remove="tag">
-			<button class="button button-large extra-margin" formaction="/prototypes/1247-assessor-view-doi">Save changes</button>
+		<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
+			<div class="extra-margin">
+			  <button class="button button-large" formaction="/prototypes/5230-assessor-doi?version=v2">Save and return to your declaration of interest</button>
+			  <a href="/prototypes/5230-assessor-doi?version=v2" class="button-link-style">Cancel</a>
+			</div>
 		</div>
 
 	</form>
@@ -240,47 +323,62 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery('input[name=appointments-group]').on('click',function(e){
 
-		if ( jQuery(this).val() == 'Yes' ) {
-			jQuery('#add-appointments').removeClass('visuallyhidden');
-		}else{
-			jQuery('#add-appointments').addClass('visuallyhidden');
-		}
+  jQuery(document).ready(function(){
 
-	});
+    if ( jQuery('#appointments-1').is(':checked')) {
+      jQuery('#add-appointments').removeClass('visuallyhidden');
+    }else{
+      jQuery('#add-appointments').addClass('visuallyhidden');
+    }
 
-	jQuery('input[name=pecuniary-group]').on('click',function(e){
+    if ( jQuery('#pecuniary-1').is(':checked')) {
+      jQuery('#add-pecuniary').removeClass('visuallyhidden');
+    }else{
+      jQuery('#add-pecuniary').addClass('visuallyhidden');
+    }
 
-		if ( jQuery(this).val() == 'Yes' ) {
-			jQuery('#add-pecuniary').removeClass('visuallyhidden');
-		}else{
-			jQuery('#add-pecuniary').addClass('visuallyhidden');
-		}
+  	jQuery('input[name=appointments-group]').on('click',function(e){
 
-	});
+  		if ( jQuery(this).val() == 'Yes' ) {
+  			jQuery('#add-appointments').removeClass('visuallyhidden');
+  		}else{
+  			jQuery('#add-appointments').addClass('visuallyhidden');
+  		}
 
-	jQuery('input[name=family-group]').on('click',function(e){
+  	});
 
-		if ( jQuery(this).val() == 'Yes' ) {
-			jQuery('#add-family').removeClass('visuallyhidden');
-		}else{
-			jQuery('#add-family').addClass('visuallyhidden');
-		}
+  	jQuery('input[name=pecuniary-group]').on('click',function(e){
 
-	});
+  		if ( jQuery(this).val() == 'Yes' ) {
+  			jQuery('#add-pecuniary').removeClass('visuallyhidden');
+  		}else{
+  			jQuery('#add-pecuniary').addClass('visuallyhidden');
+  		}
 
-	jQuery('input[name=family-pecuniary-group]').on('click',function(e){
+  	});
 
-		if ( jQuery(this).val() == 'Yes' ) {
-			jQuery('#add-family-pecuniary').removeClass('visuallyhidden');
-		}else{
-			jQuery('#add-family-pecuniary').addClass('visuallyhidden');
-		}
+  	jQuery('input[name=family-group]').on('click',function(e){
 
-	});
+  		if ( jQuery(this).val() == 'Yes' ) {
+  			jQuery('#add-family').removeClass('visuallyhidden');
+  		}else{
+  			jQuery('#add-family').addClass('visuallyhidden');
+  		}
 
+  	});
 
+  	jQuery('input[name=family-pecuniary-group]').on('click',function(e){
+
+  		if ( jQuery(this).val() == 'Yes' ) {
+  			jQuery('#add-family-pecuniary').removeClass('visuallyhidden');
+  		}else{
+  			jQuery('#add-family-pecuniary').addClass('visuallyhidden');
+  		}
+
+  	});
+
+  });
 	// ]]>
 </script>
 </body>
