@@ -88,6 +88,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -533,10 +534,14 @@ public class BaseUnitTest {
         // Build the backing applications.
 
         List<ApplicationResource> applicationResources = asList(
-                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3)).withApplicationStatus(ApplicationStatusConstants.CREATED).build(),
-                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4)).withApplicationStatus(ApplicationStatusConstants.SUBMITTED).build(),
-                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5)).withApplicationStatus(ApplicationStatusConstants.APPROVED).build(),
-                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6)).withApplicationStatus(ApplicationStatusConstants.REJECTED).build()
+                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
+                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
+                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
+                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
@@ -657,7 +662,6 @@ public class BaseUnitTest {
 
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
-        application.setResearchCategories(EMPTY_SET);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
         Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
         FinanceRowCostCategory costCategory = new GrantClaimCategory();
