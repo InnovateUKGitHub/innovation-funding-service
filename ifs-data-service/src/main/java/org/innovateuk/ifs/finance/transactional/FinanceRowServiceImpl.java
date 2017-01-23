@@ -30,7 +30,6 @@ import org.innovateuk.ifs.finance.resource.*;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
@@ -151,6 +150,17 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
                     OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
                     FinanceRow cost = new ApplicationFinanceRow(applicationFinance, question);
                     return serviceSuccess(organisationFinanceHandler.costToCostItem((ApplicationFinanceRow)cost));
+                })
+        );
+    }
+
+    @Override
+    public ServiceResult<FinanceRowItem> addProjectCostWithoutPersisting(final Long projectFinanceId, final Long questionId) {
+        return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) ->
+                getProject(projectFinance.getProject().getId()).andOnSuccess(project -> {
+                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
+                    ProjectFinanceRow cost = new ProjectFinanceRow(projectFinance, question);
+                    return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
                 })
         );
     }
@@ -300,10 +310,6 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
                     return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
                 })
         );
-    }
-
-    private ServiceResult<Project> getProject(Long projectId) {
-        return find(projectRepository.findOne(projectId), notFoundError(Project.class, projectId));
     }
 
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
