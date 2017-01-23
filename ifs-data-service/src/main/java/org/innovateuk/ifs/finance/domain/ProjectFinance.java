@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.domain.Project;
@@ -31,15 +33,27 @@ public class ProjectFinance extends Finance {
     @JoinColumn(name="viabilityApprovalUserId", referencedColumnName="id")
     private User viabilityApprovalUser;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="eligibilityApprovalUserId", referencedColumnName="id")
+    private User eligibilityApprovalUser;
+
     @Enumerated(EnumType.STRING)
     private Viability viability = Viability.REVIEW;
+
+    @Enumerated(EnumType.STRING)
+    private Eligibility eligibility = Eligibility.REVIEW;
 
     private boolean creditReportConfirmed = false;
 
     @Enumerated(EnumType.STRING)
     private ViabilityStatus viabilityStatus = ViabilityStatus.UNSET;
 
+    @Enumerated(EnumType.STRING)
+    private EligibilityStatus eligibilityStatus = EligibilityStatus.UNSET;
+
     private LocalDate viabilityApprovalDate;
+
+    private LocalDate eligibilityApprovalDate;
 
     public ProjectFinance() {
     }
@@ -92,5 +106,37 @@ public class ProjectFinance extends Finance {
 
     public void setViabilityApprovalDate(LocalDate viabilityApprovalDate) {
         this.viabilityApprovalDate = viabilityApprovalDate;
+    }
+
+    public User getEligibilityApprovalUser() {
+        return eligibilityApprovalUser;
+    }
+
+    public void setEligibilityApprovalUser(User eligibilityApprovalUser) {
+        this.eligibilityApprovalUser = eligibilityApprovalUser;
+    }
+
+    public Eligibility getEligibility() {
+        return eligibility;
+    }
+
+    public void setEligibility(Eligibility eligibility) {
+        this.eligibility = eligibility;
+    }
+
+    public EligibilityStatus getEligibilityStatus() {
+        return eligibilityStatus;
+    }
+
+    public void setEligibilityStatus(EligibilityStatus eligibilityStatus) {
+        this.eligibilityStatus = eligibilityStatus;
+    }
+
+    public LocalDate getEligibilityApprovalDate() {
+        return eligibilityApprovalDate;
+    }
+
+    public void setEligibilityApprovalDate(LocalDate eligibilityApprovalDate) {
+        this.eligibilityApprovalDate = eligibilityApprovalDate;
     }
 }

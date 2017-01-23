@@ -74,6 +74,22 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void findByStateAndCompetition() {
+        AssessmentStates state = AssessmentStates.CREATED;
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN, COMP_EXEC);
+    }
+
+    @Test
+    public void countByStateAndCompetition() {
+        AssessmentStates state = AssessmentStates.CREATED;
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, COMP_EXEC);
+    }
+
+    @Test
     public void getTotalScore() {
         Long assessmentId = 1L;
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
@@ -161,6 +177,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         @Override
         public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
+            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+            return serviceSuccess(Integer.toUnsignedLong(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size()));
         }
 
         @Override

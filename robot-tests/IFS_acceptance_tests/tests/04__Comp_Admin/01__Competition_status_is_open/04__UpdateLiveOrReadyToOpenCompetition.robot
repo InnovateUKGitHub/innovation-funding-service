@@ -46,7 +46,7 @@ User can update initial details of a competition before notify date
 
 User cannot update initial details of a competition after notify date
     [Documentation]    INFUND-6661
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_OPEN_COMP}
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
     Given the user clicks the button/link    link=Initial details
     Then the user should not see the element    jQuery=.button:contains("Edit")
     And the user should not see the element    jQuery=.button:contains("Done")
@@ -199,7 +199,7 @@ Assessors page is not editable after Notifications Date
 Funding Information not editable after notifications date
     [Documentation]    INFUND-7183
     [Tags]
-    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/${IN_ASSESSMENT_COMPETITION}
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
     When The user clicks the button/link    link=Funding information
     And the user should see the element    jquery=h1:contains("Funding information")
     Then The user should not see the element    css = input

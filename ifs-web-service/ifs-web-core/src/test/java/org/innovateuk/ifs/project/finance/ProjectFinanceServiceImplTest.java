@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.finance;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -148,5 +151,28 @@ public class ProjectFinanceServiceImplTest {
         service.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN);
 
         verify(projectFinanceRestService).saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN);
+    }
+
+    @Test
+    public void testGetEligibility() {
+
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+
+        when(projectFinanceRestService.getEligibility(123L, 456L)).thenReturn(restSuccess(eligibility));
+
+        EligibilityResource result = service.getEligibility(123L, 456L);
+        assertEquals(eligibility, result);
+    }
+
+    @Test
+    public void testSaveEligibility() {
+
+        when(projectFinanceRestService.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.GREEN)).thenReturn(restSuccess());
+
+        ServiceResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.GREEN);
+
+        assertTrue(result.isSuccess());
+
+        verify(projectFinanceRestService).saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.GREEN);
     }
 }

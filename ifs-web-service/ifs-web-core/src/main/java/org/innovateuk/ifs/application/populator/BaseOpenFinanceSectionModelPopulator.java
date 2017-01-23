@@ -1,12 +1,11 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
-import org.innovateuk.ifs.application.service.*;
-import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
+import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionApplicationViewModel;
 import org.innovateuk.ifs.application.viewmodel.SectionAssignableViewModel;
@@ -17,16 +16,14 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.Future;
 
 import static java.util.Collections.singletonList;
@@ -35,9 +32,8 @@ import static java.util.Collections.singletonList;
  * Class for populating the model for the "Your Finances" section
  */
 @Component
-public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator {
+public abstract class BaseOpenFinanceSectionModelPopulator extends BaseSectionModelPopulator {
     public static final String MODEL_ATTRIBUTE_FORM = "form";
-
 
     @Autowired
     private FormInputResponseService formInputResponseService;
@@ -49,62 +45,17 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     private SectionService sectionService;
 
     @Autowired
+    private FormInputService formInputService;
+
+    @Autowired
     private ProcessRoleService processRoleService;
 
     @Autowired
     private OrganisationService organisationService;
 
-    @Autowired
-    private OrganisationRestService organisationRestService;
-
-    @Autowired
-    private FormInputService formInputService;
-
-    @Autowired
-    private CompetitionService competitionService;
-
-    @Autowired
-    private FinanceOverviewModelManager financeOverviewModelManager;
-
-    @Autowired
-    private FinanceHandler financeHandler;
-
-    @Override
-    public BaseSectionViewModel populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
-
-        OpenFinanceSectionViewModel openFinanceSectionViewModel = new OpenFinanceSectionViewModel(addNavigation(section, application.getId()),
-                section, true, section.getId(), user, isSubFinanceSection(section));
-        SectionApplicationViewModel sectionApplicationViewModel = new SectionApplicationViewModel();
-
-        sectionApplicationViewModel.setCurrentApplication(application);
-        sectionApplicationViewModel.setCurrentCompetition(competition);
-
-        addQuestionsDetails(openFinanceSectionViewModel, application, form);
-        addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
-        addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form);
-        addFundingSection(openFinanceSectionViewModel, application.getCompetition());
-
-        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openFinanceSectionViewModel.getSectionsMarkedAsComplete())
-                || SectionType.FINANCE.equals(section.getType()));
-
-        form.setBindingResult(bindingResult);
-        form.setObjectErrors(bindingResult.getAllErrors());
-
-        openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
-        //TODO INFUND-7482 use finance view model when its complete.
-        Integer organisationGrantClaimPercentage = (Integer) model.asMap().get("organisationGrantClaimPercentage");
-        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), organisationGrantClaimPercentage);
-
-        model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
-
-        return openFinanceSectionViewModel;
-    }
-
-    private void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Integer organisationGrantClaimPercentage) {
+    protected void populateSubSectionMenuOptions(OpenFinanceSectionViewModel viewModel, final List<SectionResource> allSections, Long userOrganisationId, Integer organisationGrantClaimPercentage) {
         QuestionResource applicationDetailsQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(viewModel.getApplication().getCurrentApplication().getCompetition(), FormInputType.APPLICATION_DETAILS).getSuccessObjectOrThrowException();
-        Map<Long, QuestionStatusResource>  questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
+        Map<Long, QuestionStatusResource> questionStatuses = questionService.getQuestionStatusesForApplicationAndOrganisation(viewModel.getApplication().getCurrentApplication().getId(), userOrganisationId);
         QuestionStatusResource applicationDetailsStatus = questionStatuses.get(applicationDetailsQuestion.getId());
 
         boolean organisationSizeComplete = false;
@@ -126,13 +77,13 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
     }
 
 
-    private Boolean isSubFinanceSection(SectionResource section) {
+    protected Boolean isSubFinanceSection(SectionResource section) {
         return SectionType.FINANCE.equals(section.getType().getParent().orElse(null));
     }
 
     private void addApplicationDetails(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel, ApplicationResource application,
                                        CompetitionResource competition, Long userId, SectionResource section,
-                                       ApplicationForm form, List<ProcessRoleResource> userApplicationRoles,
+                                       ApplicationForm form,
                                        List<SectionResource> allSections, List<FormInputResource> inputs,
                                        Optional<OrganisationResource> userOrganisation) {
 
@@ -156,7 +107,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         sectionApplicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
     }
 
-    private void addQuestionsDetails(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Form form) {
+    protected void addQuestionsDetails(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Form form) {
         List<FormInputResponseResource> responses = getFormInputResponses(application);
         Map<Long, FormInputResponseResource> mappedResponses = formInputResponseService.mapFormInputResponsesToFormInput(responses);
 
@@ -172,8 +123,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         form.setFormInput(values);
     }
 
-    private SectionAssignableViewModel addAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation,
-        Long userId, SectionResource currentSection) {
+    private SectionAssignableViewModel addAssignableDetails(ApplicationResource application, Optional<OrganisationResource> userOrganisation, Long userId, SectionResource currentSection) {
 
         if (isApplicationInViewMode(application, userOrganisation)) {
             return new SectionAssignableViewModel();
@@ -194,24 +144,21 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         sectionApplicationViewModel.setMarkedAsComplete(markedAsComplete);
     }
 
-    private void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel,
+    protected void addApplicationAndSections(OpenFinanceSectionViewModel viewModel, SectionApplicationViewModel sectionApplicationViewModel,
                                            ApplicationResource application,
                                             CompetitionResource competition,
                                             Long userId,
                                             SectionResource section,
                                             ApplicationForm form,
-                                            List<SectionResource> allSections) {
+                                            List<SectionResource> allSections, Optional<OrganisationResource> userOrganisation) {
         List<FormInputResource> inputs = formInputService.findApplicationInputsByCompetition(application.getCompetition());
-        List<ProcessRoleResource> userApplicationRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
-        Optional<OrganisationResource> userOrganisation = organisationService.getOrganisationForUser(userId, userApplicationRoles);
-
-        addSectionsMarkedAsComplete(viewModel, userApplicationRoles, userId, application, userOrganisation);
-        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, userApplicationRoles, allSections, inputs, userOrganisation);
+        addSectionsMarkedAsComplete(viewModel, application, userOrganisation);
+        addApplicationDetails(viewModel, sectionApplicationViewModel, application, competition, userId, section, form, allSections, inputs, userOrganisation);
 
         addSectionDetails(viewModel, section, inputs);
     }
 
-    private void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, List<ProcessRoleResource> userApplicationRoles, Long userId, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
+    protected void addSectionsMarkedAsComplete(OpenFinanceSectionViewModel viewModel, ApplicationResource application, Optional<OrganisationResource> userOrganisation) {
         Map<Long, Set<Long>> completedSectionsByOrganisation = sectionService.getCompletedSectionsByOrganisation(application.getId());
         Set<Long> sectionsMarkedAsComplete = completedSectionsByOrganisation.get(userOrganisation.map(OrganisationResource::getId)
                 .orElse(completedSectionsByOrganisation.keySet().stream().findFirst().orElse(-1L)));
@@ -219,16 +166,7 @@ public class OpenFinanceSectionModelPopulator extends BaseSectionModelPopulator 
         viewModel.setSectionsMarkedAsComplete(sectionsMarkedAsComplete);
     }
 
-    private void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {
+    protected void addFundingSection(OpenFinanceSectionViewModel viewModel, Long competitionId) {
         viewModel.setFundingSection(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).stream().findFirst().orElse(null));
-    }
-
-    //TODO - INFUND-7482 - remove usages of Model model
-    private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
-        Model model, ApplicationForm form) {
-
-        financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
-        String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
     }
 }

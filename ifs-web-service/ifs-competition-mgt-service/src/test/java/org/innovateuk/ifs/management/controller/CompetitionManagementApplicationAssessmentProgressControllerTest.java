@@ -6,9 +6,7 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressAssignedRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressViewModel;
-import org.innovateuk.ifs.management.viewmodel.ApplicationAvailableAssessorsRowViewModel;
+import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
@@ -62,17 +60,16 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
         when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn, available)));
 
-        List<ApplicationAssessmentProgressAssignedRowViewModel> expectedAssignedRows = setupExpectedAssignedRows();
-        List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = setupExpectedAvailableAssessors();
-
         ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
                 applicationId,
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
                 asList("Acme Ltd.", "IO Systems"),
-                expectedAssignedRows,
-                expectedAvailableAssessors
+                setupExpectedAssignedRows(),
+                setupExpectedRejectedRows(),
+                setupExpectedPreviouslyAssignedRows(),
+                setupExpectedAvailableAssessors()
         );
 
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
@@ -101,7 +98,6 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
         when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn, available)));
 
-        List<ApplicationAssessmentProgressAssignedRowViewModel> expectedAssignedRows = setupExpectedAssignedRows();
         List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = setupExpectedAvailableAssessors();
         sort(expectedAvailableAssessors, Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
 
@@ -111,7 +107,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 competitionId,
                 "Connected digital additive manufacturing",
                 asList("Acme Ltd.", "IO Systems"),
-                expectedAssignedRows,
+                setupExpectedAssignedRows(),
+                setupExpectedRejectedRows(),
+                setupExpectedPreviouslyAssignedRows(),
                 expectedAvailableAssessors
         );
 
@@ -173,6 +171,24 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
     }
 
+    @Test
+    public void withdrawAssessment() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
+
+        when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TITLE", competitionId, applicationId)));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
     private ApplicationAssessmentSummaryResource setupApplicationAssessmentSummaryResource(Long competitionId, Long applicationId) {
         return newApplicationAssessmentSummaryResource()
                 .withId(applicationId)
@@ -191,23 +207,24 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS, ACADEMIC, BUSINESS, ACADEMIC)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Infrastructure systems", "Earth Observation")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Internet of Things", "Open")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Creative Economy", "Bioscience")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Enhanced Food Quality", "Cyber Security")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("User Experience", "Resource efficiency")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Technical feasibility", "Medicines Technology")
-                                .build(2)
+                                .buildSet(2)
                 )
+                .withMostRecentAssessmentId(100L, 101L, 102L, 103L, 104L, 105L)
                 .withMostRecentAssessmentState(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED)
                 .withTotalApplicationsCount(6L, 4L, 5L, 7L, 6L, 3L)
                 .withAssignedCount(6L, 3L, 1L, 5L, 2L, 1L)
@@ -223,13 +240,13 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Infrastructure systems", "Earth Observation")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Internet of Things", "Open")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Creative Economy", "Bioscience")
-                                .build(2))
+                                .buildSet(2))
                 .withRejectReason("Conflict of interest", "Not available", "Not my area of expertise")
                 .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.", "No prior experience")
                 .withMostRecentAssessmentState(REJECTED)
@@ -247,13 +264,13 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Data", "Cyber Security")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("User Experience", "Precision Medicine")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Advanced Materials", "Nuclear")
-                                .build(2))
+                                .buildSet(2))
                 .withMostRecentAssessmentState(WITHDRAWN)
                 .withTotalApplicationsCount(24L, 2L, 5L)
                 .withAssignedCount(6L, 1L, 3L)
@@ -269,13 +286,13 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withBusinessType(ACADEMIC, BUSINESS, ACADEMIC)
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withName("Experimental development", "Infrastructure")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Electronics, Sensors and photonics", "Agri Productivity")
-                                .build(2),
+                                .buildSet(2),
                         newInnovationAreaResource()
                                 .withName("Manufacturing Readiness", "Offshore Renewable Energy")
-                                .build(2))
+                                .buildSet(2))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
                 .withAvailable(true)
                 .withTotalApplicationsCount(9L, 4L, 3L)
@@ -287,17 +304,38 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
     private List<ApplicationAssessmentProgressAssignedRowViewModel> setupExpectedAssignedRows() {
         return asList(
                 new ApplicationAssessmentProgressAssignedRowViewModel(1L, "William Adamson", 6, 6, BUSINESS,
-                        asList("Infrastructure systems", "Earth Observation"), false, false, false, false),
+                        asList("Infrastructure systems", "Earth Observation"), false, false, false, false, 100L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(2L, "Richard Bown", 4, 3, ACADEMIC,
-                        asList("Internet of Things", "Open"), true, false, false, false),
+                        asList("Internet of Things", "Open"), true, false, false, false, 101L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(3L, "Rachel Carr", 5, 1, BUSINESS,
-                        asList("Creative Economy", "Bioscience"), true, true, false, false),
+                        asList("Creative Economy", "Bioscience"), true, true, false, false, 102L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(4L, "Samantha Peacock", 7, 5, ACADEMIC,
-                        asList("Enhanced Food Quality", "Cyber Security"), true, true, true, false),
+                        asList("Enhanced Food Quality", "Cyber Security"), true, true, true, false, 103L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(5L, "Valerie Lloyd", 6, 2, BUSINESS,
-                        asList("User Experience", "Resource efficiency"), true, true, true, false),
+                        asList("User Experience", "Resource efficiency"), true, true, true, false, 104L),
                 new ApplicationAssessmentProgressAssignedRowViewModel(6L, "Gareth Morris", 3, 1, ACADEMIC,
-                        asList("Technical feasibility", "Medicines Technology"), true, true, true, true));
+                        asList("Technical feasibility", "Medicines Technology"), true, true, true, true, 105L));
+    }
+
+    private List<ApplicationAssessmentProgressRejectedRowViewModel> setupExpectedRejectedRows() {
+        return asList(
+                new ApplicationAssessmentProgressRejectedRowViewModel(7L, "Angela Casey", 6, 6, ACADEMIC,
+                        asList("Infrastructure systems", "Earth Observation"), "Conflict of interest", "Member of board of directors"),
+                new ApplicationAssessmentProgressRejectedRowViewModel(8L, "Anne Chadwick", 7, 4, BUSINESS,
+                        asList("Internet of Things", "Open"), "Not available", "I do like reviewing the applications to your competitions but please do not assign so many to me."),
+                new ApplicationAssessmentProgressRejectedRowViewModel(9L, "David Cherrie", 1, 1, ACADEMIC,
+                        asList("Creative Economy", "Bioscience"), "Not my area of expertise", "No prior experience"));
+    }
+
+    private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> setupExpectedPreviouslyAssignedRows() {
+        return asList(
+                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(10L, "Paul Cousins", 24, 6, BUSINESS,
+                        asList("Data", "Cyber Security")),
+                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(11L, "Graeme Crawford", 2, 1, ACADEMIC,
+                        asList("User Experience", "Precision Medicine")),
+                new ApplicationAssessmentProgressPreviouslyAssignedRowViewModel(12L, "Lawrence Currie", 5, 3, BUSINESS,
+                        asList("Advanced Materials", "Nuclear"))
+        );
     }
 
     private List<ApplicationAvailableAssessorsRowViewModel> setupExpectedAvailableAssessors() {
