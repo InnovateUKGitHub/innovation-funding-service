@@ -12,20 +12,20 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(
-        config = GlobalMapperConfig.class,
-        uses = {
-                OrganisationMapper.class,
-                ApplicationMapper.class,
-                FileEntryMapper.class
-        }
+    config = GlobalMapperConfig.class,
+    uses = {
+            OrganisationMapper.class,
+            ApplicationMapper.class,
+            FileEntryMapper.class
+    }
 )
 public abstract class ApplicationFinanceMapper extends BaseMapper<ApplicationFinance, ApplicationFinanceResource, Long> {
 
     @Mappings({
-            @Mapping(target = "financeOrganisationDetails", ignore = true ),
-            @Mapping(source = "application", target = "target")
+        @Mapping(target = "financeOrganisationDetails", ignore = true ),
+        @Mapping(source = "application", target = "target")
     })
-
+    
     @Override
     public abstract ApplicationFinanceResource mapToResource(ApplicationFinance domain);
 

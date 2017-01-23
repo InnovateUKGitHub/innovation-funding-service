@@ -241,7 +241,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param("formInput[1]", "Some Value...")
+                .param("formInput[1]", "Some Value...")
 
         )
                 .andExpect(status().is3xxRedirection());
@@ -268,7 +268,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(applicationService.getById(application.getId())).thenReturn(application);
         mockMvc.perform(
                 post("/application/1/form/question/1")
-                        .param(ApplicationFormController.ASSIGN_QUESTION_PARAM, "1_2")
+                    .param(ApplicationFormController.ASSIGN_QUESTION_PARAM, "1_2")
 
         )
                 .andExpect(status().is3xxRedirection());
@@ -318,7 +318,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         ValidationMessages costItemMessages = new ValidationMessages();
         when(financeRowService.add(anyLong(),anyLong(), any())).thenReturn(costItemMessages);
         mockMvc.perform(
-                get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
+            get("/application/{applicationId}/form/remove_cost/{costId}", application.getId(), costId)
         );
     }
 
@@ -666,7 +666,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param("fieldName", fieldName)
                         .param("value", value)
         ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"true\"}"));
+        		.andExpect(content().json("{\"success\":\"true\"}"));
 
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
@@ -710,7 +710,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void testSaveFormElementApplicationDuration() throws Exception {
+     public void testSaveFormElementApplicationDuration() throws Exception {
         String value = "12";
         String fieldName = "application.durationInMonths";
 
@@ -893,7 +893,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     //TODO: Change this to AutosaveElementException
     @Test
-    public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
+     public void testSaveFormElementApplicationAttributeInvalidDay() throws Exception {
         String questionId= "application_details-startdate_day";
         String fieldName = "application.startDate.dayOfMonth";
         String value = "35";
@@ -906,7 +906,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .contentType(MediaType.APPLICATION_JSON)
                         .accept(MediaType.APPLICATION_JSON)
         ).andExpect(status().isOk())
-                .andExpect(content().json("{\"success\":\"false\"}"));
+        		.andExpect(content().json("{\"success\":\"false\"}"));
     }
 
     @Test
@@ -1109,7 +1109,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
         ).andExpect(status().is2xxSuccessful())
-                .andExpect(model().hasNoErrors());
+        .andExpect(model().hasNoErrors());
 
         verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
     }

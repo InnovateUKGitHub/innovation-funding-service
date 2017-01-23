@@ -25,7 +25,7 @@ public class ApplicationFinance extends Finance {
     private FileEntry financeFileEntry;
 
     public ApplicationFinance() {
-        // no-arg constructor
+    	// no-arg constructor
     }
 
     public ApplicationFinance(Application application, Organisation organisation) {

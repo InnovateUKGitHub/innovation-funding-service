@@ -89,6 +89,7 @@ public class POJOTest {
             AssessorInviteToSendResource.class,
             Address.class,
             OrganisationType.class,
+            Application.class,
             ApplicationStatus.class,
             FileEntry.class,
             FormValidator.class,
@@ -121,6 +122,7 @@ public class POJOTest {
             SpendProfileResource.class,
             SpendProfileTableResource.class,
             ViabilityResource.class,
+            EligibilityResource.class,
             CompetitionFunderResource.class,
             CompetitionCountResource.class,
             LocalDateResource.class,
@@ -154,30 +156,31 @@ public class POJOTest {
             NewUserStagedInviteResource.class,
             ExistingUserStagedInviteResource.class,
             NewUserStagedInviteListResource.class,
-            CompetitionSetupFinanceResource.class,
-            ApplicationCountSummaryResource.class
-    );
+            ApplicationCountSummaryResource.class,
+            AssessmentCreateResource.class,
+            CompetitionSetupFinanceResource.class
+            );
 
     @Before
     public void setup() {
         classes = PojoClassFactory.getPojoClassesRecursively(POJO_PACKAGE, new FilterPackages(classesToTest));
 
         validator = ValidatorBuilder.create()
-                .with(
-                        new GetterMustExistRule(),
-                        new SetterMustExistRule(),
-                        new NoNestedClassRule(),
-                        new NoStaticExceptFinalRule(),
-                        new SerializableMustHaveSerialVersionUIDRule(),
-                        new NoFieldShadowingRule(),
-                        new NoPublicFieldsExceptStaticFinalRule(),
-                        new TestClassMustBeProperlyNamedRule()
-                )
-                .with(
-                        new SetterTester(),
-                        new GetterTester()
-                )
-                .build();
+            .with(
+                new GetterMustExistRule(),
+                new SetterMustExistRule(),
+                new NoNestedClassRule(),
+                new NoStaticExceptFinalRule(),
+                new SerializableMustHaveSerialVersionUIDRule(),
+                new NoFieldShadowingRule(),
+                new NoPublicFieldsExceptStaticFinalRule(),
+                new TestClassMustBeProperlyNamedRule()
+            )
+            .with(
+                new SetterTester(),
+                new GetterTester()
+            )
+            .build();
     }
 
     @Test
