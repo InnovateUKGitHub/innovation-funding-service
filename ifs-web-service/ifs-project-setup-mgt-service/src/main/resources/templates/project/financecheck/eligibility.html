@@ -65,15 +65,17 @@
                 <span th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
                 <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
             </h3>
-            <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
-                <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
-                    <th:block th:if="${formInput.type.displayableFinanceType}">
-                        <!--/*
-                        viewmode=approved; generates the inputs as text,
-                        viewmode=readonly, generates readonly inputs,
-                        viewmode=edit, generates the editable inputs + repeating row elements)
-                        */-->
-                        <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')" th:with="formInputIndex=(${status.index})" />
+            <th:block th:with="viewmode=${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly'">
+                <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
+                    <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
+                        <th:block th:if="${formInput.type.displayableFinanceType}">
+                            <!--/*
+                            viewmode=approved; generates the inputs as text,
+                            viewmode=readonly, generates readonly inputs,
+                            viewmode=edit, generates the editable inputs + repeating row elements)
+                            */-->
+                            <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" th:with="formInputIndex=(${status.index})" />
+                        </th:block>
                     </th:block>
                 </th:block>
                 <div class="alignright-button">
