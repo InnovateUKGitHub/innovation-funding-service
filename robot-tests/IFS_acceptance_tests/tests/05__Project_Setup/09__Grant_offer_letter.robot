@@ -140,8 +140,8 @@ Comp Admin user uploads new grant offer letter
     And the user should see the element    jQuery=button.button-secondary:contains("Remove")
     When the user uploads a file           annex  ${valid_pdf}
     And the user clicks the button/link    id=send-gol
-    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
-    Then the user should not see the element  jQuery=.button:contains("Send to project team")
+    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
+    Then the user should not see the element  jQuery=.button:contains("Publish to project team")
     And the user should not see the element   jQuery=button.button-secondary:contains("Remove")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting   # GOL
