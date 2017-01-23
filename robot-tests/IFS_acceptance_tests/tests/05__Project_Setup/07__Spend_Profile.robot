@@ -447,7 +447,7 @@ Partner can receive edit rights to his SP
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
     And the user clicks the button/link    jQuery=.button:contains("Submit")
 
-Project Manager can submit the project's spend profiles
+Project Manager can send the project's spend profiles
     [Documentation]    INFUND-3767
     [Tags]    HappyPath
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
@@ -455,7 +455,7 @@ Project Manager can submit the project's spend profiles
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=.button:contains("Cancel")
-    When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Submit"]
+    When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 PM's Spend profile Summary page gets updated after submit
     [Documentation]    INFUND-3766
@@ -642,14 +642,14 @@ Academic partner receives edit rights and can submit their spend profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
 
 
-Lead partner can submit the combined spend profile
+Lead partner can send the combined spend profile
     [Documentation]    INFUND-6977
     [Setup]    log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user navigates to the page     ${external_spendprofile_summary}
     When the user clicks the button/link     jQuery=.button:contains("Review and send total project profile")
     Then the user clicks the button/link     jQuery=.button:contains("Send project spend profile")
     And the user should see the element      jQuery=.button:contains("Cancel")
-    When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Submit"]
+    When the user clicks the button/link     jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 
 Project Finance is able to Approve Spend Profile

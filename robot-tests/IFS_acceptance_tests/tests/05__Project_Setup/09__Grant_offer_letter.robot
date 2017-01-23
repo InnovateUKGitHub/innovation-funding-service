@@ -484,7 +484,7 @@ all partners submit their Spend Profile
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    jQuery=.button:contains("Review and send total project")
     the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
-    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Submit"]
+    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}
