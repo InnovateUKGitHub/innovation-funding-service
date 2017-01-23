@@ -105,7 +105,7 @@ public class FinanceChecksEligibilityController {
             eligibilityForm = getEligibilityForm(eligibility);
         }
 
-        model.addAttribute("model", getViewModel(projectId, organisationId, model, eligibility));
+        model.addAttribute("model", getViewModel(projectId, organisationId, eligibility));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
         model.addAttribute("form", form);
@@ -120,7 +120,7 @@ public class FinanceChecksEligibilityController {
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityStatus(), confirmEligibilityChecked);
     }
 
-    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, Model model, EligibilityResource eligibility) {
+    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, EligibilityResource eligibility) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
 
