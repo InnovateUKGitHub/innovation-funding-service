@@ -8,7 +8,7 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 public class ManageApplicationsRowViewModel {
     private Long id;
     private String title;
-    private String leadOrganisation;
+    private Long leadOrganisation;
     private long assessors;
     private long accepted;
     private long completed;
@@ -16,7 +16,7 @@ public class ManageApplicationsRowViewModel {
     public ManageApplicationsRowViewModel(ApplicationCountSummaryResource applicationCountSummaryResource) {
         this.id = applicationCountSummaryResource.getId();
         this.title = applicationCountSummaryResource.getName();
-        this.leadOrganisation = applicationCountSummaryResource.getLeadOrganisation();
+        this.leadOrganisation = applicationCountSummaryResource.getLeadOrganisationId();
         this.assessors = applicationCountSummaryResource.getAssessors();
         this.accepted = applicationCountSummaryResource.getAccepted();
         this.completed = applicationCountSummaryResource.getSubmitted();
@@ -38,11 +38,11 @@ public class ManageApplicationsRowViewModel {
         this.title = title;
     }
 
-    public String getLeadOrganisation() {
+    public Long getLeadOrganisation() {
         return leadOrganisation;
     }
 
-    public void setLeadOrganisation(String leadOrganisation) {
+    public void setLeadOrganisation(Long leadOrganisation) {
         this.leadOrganisation = leadOrganisation;
     }
 

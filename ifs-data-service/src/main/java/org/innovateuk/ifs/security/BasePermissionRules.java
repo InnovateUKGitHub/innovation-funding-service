@@ -92,7 +92,7 @@ public abstract class BasePermissionRules {
         Project project = projectRepository.findOne(projectId);
         Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
         ProcessRole leadApplicantProcessRole = processRoleRepository.findOneByApplicationIdAndRoleId(project.getApplication().getId(), leadApplicantRole.getId());
-        Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
+        Organisation leadOrganisation = organisationRepository.findOne(leadApplicantProcessRole.getOrganisationId());
 
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, leadOrganisation.getId(), PROJECT_PARTNER);
         return partnerProjectUser != null;

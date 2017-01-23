@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.finance.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -95,6 +98,20 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
 
         String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
                 "/viability/" + viability.name() + "/" + viabilityRagRating.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/eligibility", EligibilityResource.class);
+    }
+
+    @Override
+    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
+
+        String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/eligibility/" + eligibility.name() + "/" + eligibilityStatus.name();
 
         return postWithRestResult(postUrl, Void.class);
     }

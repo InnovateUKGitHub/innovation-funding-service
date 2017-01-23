@@ -122,6 +122,7 @@ public class POJOTest {
             SpendProfileResource.class,
             SpendProfileTableResource.class,
             ViabilityResource.class,
+            EligibilityResource.class,
             CompetitionFunderResource.class,
             CompetitionCountResource.class,
             LocalDateResource.class,
@@ -155,8 +156,9 @@ public class POJOTest {
             NewUserStagedInviteResource.class,
             ExistingUserStagedInviteResource.class,
             NewUserStagedInviteListResource.class,
-            CompetitionSetupFinanceResource.class,
-            ApplicationCountSummaryResource.class
+            ApplicationCountSummaryResource.class,
+            AssessmentCreateResource.class,
+            CompetitionSetupFinanceResource.class
             );
 
     @Before

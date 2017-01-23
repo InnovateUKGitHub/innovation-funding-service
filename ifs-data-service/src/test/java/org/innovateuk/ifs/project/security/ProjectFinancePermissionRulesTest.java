@@ -62,6 +62,40 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
     }
 
     @Test
+    public void testProjectFinanceUserCanViewEligibility() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
+    public void testProjectFinanceUserCanSaveEligibility() {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        allGlobalRoleUsers.forEach(user -> {
+            if (user.equals(projectFinanceUser())) {
+                assertTrue(rules.projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, user));
+            } else {
+                assertFalse(rules.projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, user));
+            }
+        });
+    }
+
+    @Test
     public void testLeadPartnerCanIncompleteAnySpendProfile() throws Exception {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();

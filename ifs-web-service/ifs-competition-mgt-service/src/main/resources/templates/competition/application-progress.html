@@ -5,6 +5,8 @@
     </head>
 
     <body th:with="context='comp-management'" class="competition-management competition-setup">
+        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+        <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" th:remove="tag" />
         <div th:include="fragments/layout :: body-start" th:remove="tag" />
         <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
@@ -25,10 +27,8 @@
             <div class="grid-row extra-margin">
                 <div class="column-quarter">
                     <h3 class="heading-small">Partners</h3>
-                    <ul th:ignore="all-but-first">
+                    <ul>
                         <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
-                        <li>Biotech Corp</li>
-                        <li>Unversity of Cardiff</li>
                     </ul>
                 </div>
                 <div class="column-quarter">
@@ -43,7 +43,7 @@
             <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -55,34 +55,37 @@
                             <th class="aligncentre" scope="col">Accepted</th>
                             <th class="aligncentre" scope="col">Started</th>
                             <th class="aligncentre" scope="col">Submitted</th>
-                            <th scope="col"><span class="visuallyhidden">Remove</span></th>
+                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="assigned : ${model.assigned}">
-                            <td><a href="#" th:text="${assigned.name}">Oliver Romero</a></td>
-                            <td th:text="${assigned.businessType}">Academic</td>
-                            <td th:text="${#strings.listJoin(assigned.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
-                            <td class="aligncentre" th:text="${assigned.totalApplicationsCount}">6</td>
-                            <td class="aligncentre" th:text="${assigned.assignedCount}">4</td>
+                        <tr th:each="assessor : ${model.assigned}">
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">Oliver Romero</a></td>
+                            <td th:text="${assessor.businessType}">Academic</td>
+                            <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
+                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
+                            <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.notified} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assigned.notified} ? 'tag' : 'all'" class="yes">Yes</span>
+                                <span th:remove="${assessor.notified} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assessor.notified} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.accepted} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assigned.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
+                                <span th:remove="${assessor.accepted} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assessor.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.started} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assigned.started} ? 'tag' : 'all'" class="yes">Yes</span>
+                                <span th:remove="${assessor.started} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assessor.started} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
                             <td class="aligncentre">
-                                <span th:remove="${assigned.submitted} ? 'all' : 'tag'">-</span>
-                                <span th:remove="${assigned.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
+                                <span th:remove="${assessor.submitted} ? 'all' : 'tag'">-</span>
+                                <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
                             <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" data-js-modal="remove-assigned-assessor" th:unless="${assigned.submitted}">Remove</a>
+                                <a class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
+                                href="#"
+                                th:attr="data-modal-form-url=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId})}"
+                                th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assigned)}">
@@ -91,28 +94,11 @@
                     </tbody>
                 </table>
             </div>
-            <div class="remove-assigned-assessor" role="dialog" aria-hidden="true" style="margin-top: -174px;">
-                <button class="js-close close" aria-label="Close Popup">X</button>
-                <div>
 
-                    <h2 class="heading-medium no-margin">Are you sure you want to remove this Assessor from the application?</h2>
+            <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
-                    <p>When you click <strong>Remove and notify</strong> the application will be removed from the assessor and they will be notified of the removal straight away.</p>
-                    <p>If they have started the assessment of this application, their assessment will be <strong>permanently deleted</strong> when you click <strong>Remove and notify</strong>.</p>
-                    <hr />
-
-                    <div class="alignright-button">
-                        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-                        <a class="button js-close" href="#" id="prototype-remove-started">Remove and notify</a>
-                    </div>
-                </div>
-            </div>
-
-            <!--/* TODO INFUND-7047
-            <h2 class="heading-medium">Rejected (1)</h2>
-
-            <div class="table-overflow">
-                <table id="application-list">
+            <div class="table-overflow" th:if="${#lists.size(model.rejected) > 0}">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -124,24 +110,24 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                            <td>Business</td>
-                            <td>Biophysics and soft matter physics</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">4</td>
-                            <td><strong>Too many assignments</strong><br />You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</td>
+                    <tr th:each="assessor : ${model.rejected}">
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">Irving Wolfe</a></td>
+                            <td th:text="${assessor.businessType}">Academic</td>
+                            <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
+                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
+                            <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
+                            <td><strong th:text="${assessor.rejectReason}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            */-->
 
-            <!--/* TODO INFUND-7048
-            <h2 class="heading-medium">Previously assigned (0)</h2>
+            <p th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
 
-            <div class="table-overflow">
-                <table id="application-list">
+            <h2 class="heading-medium" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
+
+            <div class="table-overflow" th:if="${#lists.size(model.previouslyAssigned) > 0}">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -149,50 +135,21 @@
                             <th scope="col">Innovation area</th>
                             <th class="aligncentre" scope="col">Total applications</th>
                             <th class="aligncentre" scope="col">Assigned</th>
-                            <th class="aligncentre" scope="col">Notified</th>
-                            <th scope="col"><span class="visuallyhidden">Re-assign</span></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr id="prototype-previous-row-zero">
-                            <td colspan="6">There are no assessors previously assigned to this application.</td>
-                        </tr>
-                        <tr id="prototype-previous-row-one">
-                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                            <td>Business</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre"><span class="yes">Yes</span></td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" id="prototype-row-one-reassign">Re-assign</a>
-                            </td>
-                        </tr>
-                        <tr id="prototype-previous-row-two">
-                            <td><a href="/prototypes/5229-assessor-profile">Bob Smith</a></td>
-                            <td>Business</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre"><span class="yes">Yes</span></td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" id="prototype-row-two-reassign">Re-assign</a>
-                            </td>
-                        </tr>
-                        <tr id="prototype-previous-row-three">
-                            <td><a href="/prototypes/5229-assessor-profile">Brian Smith</a></td>
-                            <td>Business</td>
-                            <td>Electronics, sensors &amp; photonics, Materials</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">3</td>
-                            <td class="aligncentre"><span class="yes">Yes</span></td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin" id="prototype-row-three-reassign">Re-assign</a>
-                            </td>
+                        <tr th:each="assessor : ${model.previouslyAssigned}">
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">Dave Smith</a></td>
+                            <td th:text="${assessor.businessType}">Business</td>
+                            <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
+                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
+                            <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
+
+            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">There are no assessors previously assigned to this application.</p>
 
             <h2 class="heading-medium">Available assessors</h2>
 
@@ -265,31 +222,30 @@
             </div>
             */-->
 
-            <!--/* TODO INFUND-7233
             <div class="grid-row sorting">
                 <div class="column-two-thirds">
-                    <h4><span class="heading-xlarge no-margin available">20</span> <strong>Assessors</strong></h4>
+                    <p><span class="heading-xlarge no-margin" th:text="${#lists.size(model.available)}">20</span> <span class="heading-small">Assessors</span></p>
                 </div>
 
                 <div class="column-third alignright">
                     <div class="form-group">
-                        <form>
+                        <form method="get" th:object="${form}">
                             <label for="sort-by">Sort by</label>
-                            <select name="sort-by" id="sort-by" class="form-control">
-                                <option value="Title">Assessor Name</option>
-                                <option value="Skill">Skill areas</option>
-                                <option value="Total applications">Total applications</option>
-                                <option value="Assigned applications">Assigned applications</option>
-                                <option value="Accepted applications">Submitted applications</option>
+                            <select th:field="*{sortField}" name="sort" id="sort-by" class="js-auto-submit form-control"
+                                    required="required"
+                                    th:attr="data-required-errormessage=#{validation.availableAssessorsForm.selectedSortField.required}">
+                                <option th:each="sortType : ${T(org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType).values()}"
+                                        th:value="${sortType}"
+                                        th:text="${sortType.label}">value</option>
                             </select>
-                            <button class="button button-secondary button-small" type="submit">Sort</button>
+                            <button class="button button-secondary button-small js-hidden" type="submit">Sort</button>
                         </form>
                     </div>
                 </div>
             </div>
 
             <div class="table-overflow">
-                <table id="application-list">
+                <table>
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -301,70 +257,25 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Bill Knightly</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">1</td>
+                        <tr th:each="assessor : ${model.available}">
+                            <td><a th:href="${'/'}" th:text="${assessor.name}">John Barnes</a></td>
+                            <td th:text="${assessor.skillAreas}">skills</td>
+                            <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">4</td>
+                            <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>
+                            <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
+                                <form method="post"
+                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}?sortField={sortField}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, sortField=${form.sortField})}">
+                                    <button type="submit" class="button-secondary no-margin">Assign</button>
+                                </form>
                             </td>
                         </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Oliver Romero</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">6</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">1</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Jeffrey Carlson</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="aligncentre">0</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Bill Limp</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">9</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Dave Smith</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">4</td>
-                            <td class="aligncentre">1</td>
-                            <td class="aligncentre">1</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><a href="/prototypes/5229-assessor-profile">Irving Wolfe</a></td>
-                            <td>Lorem, Ipsum dolor, Sit amet, Consectetur adipiscing elit, Aenean euismod bibendum laoreet, Proin gravida dolor, St amet lacus accumsan, Eet viverra justo commodo, Proin sodales pulvinar tempor, Cum sociis, Natoque</td>
-                            <td class="aligncentre">9</td>
-                            <td class="aligncentre">5</td>
-                            <td class="aligncentre">2</td>
-                            <td class="alignright">
-                                <a href="#" class="button-secondary no-margin">Assign</a>
-                            </td>
+                        <tr th:if="${#lists.isEmpty(model.available)}">
+                            <td colspan="6">There were no available assessors found.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            */-->
 
             <!--/* TODO ??
             <ul class="pagination">

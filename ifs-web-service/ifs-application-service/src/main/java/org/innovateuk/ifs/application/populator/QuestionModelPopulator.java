@@ -260,7 +260,7 @@ public class QuestionModelPopulator extends BaseModelPopulator {
 
         return userApplicationRoles.stream()
                 .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-                .map(uar -> organisationService.getOrganisationById(uar.getOrganisation()))
+                .map(uar -> organisationService.getOrganisationById(uar.getOrganisationId()))
                 .findFirst();
     }
 

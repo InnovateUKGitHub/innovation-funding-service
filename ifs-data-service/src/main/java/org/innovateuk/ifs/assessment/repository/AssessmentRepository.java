@@ -28,13 +28,17 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
     @Override
     Assessment findOneByParticipantId(Long participantId);
 
+    List<Assessment> findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
+
     Optional<Assessment> findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(Long userId, Long applicationId);
 
     long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
 
     long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long applicationId, Set<State> states);
 
-    List<Assessment> findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(Long userId, Long competitionId);
+    List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+
+    long countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
 
     @Query(value = "SELECT CASE WHEN COUNT(fi.id) = 0" +
             "  THEN 'TRUE'" +

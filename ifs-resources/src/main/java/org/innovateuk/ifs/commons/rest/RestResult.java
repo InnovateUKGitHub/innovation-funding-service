@@ -181,6 +181,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new InviteAlreadySentException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(ASSESSMENT_CREATE_FAILED)) {
+            throw new ApplicationAssessorAssignException(error.getErrorKey(), error.getArguments());
+        }
+
         throw new RuntimeException();
     }
 

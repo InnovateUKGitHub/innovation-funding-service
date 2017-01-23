@@ -29,7 +29,7 @@ public class AssessmentDataBuilder extends BaseDataBuilder<Void, AssessmentDataB
             Role assessorRole = roleRepository.findOneByName(UserRoleType.ASSESSOR.getName());
             Organisation organisation = organisationRepository.findOneByName("Innovate UK");
 
-            ProcessRole processRole = new ProcessRole(assessor, application, assessorRole, organisation);
+            ProcessRole processRole = new ProcessRole(assessor, application.getId(), assessorRole, organisation.getId());
             ProcessRole newProcessRole = processRoleRepository.save(processRole);
 
             ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, state.getBackingState());

@@ -124,13 +124,13 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
             addMappedSectionsDetails(openSectionViewModel, application, competition, section, userOrganisation, allSections, formInputResources, sectionService.filterParentSections(allSections));
         }
 
+        addCompletedDetails(openSectionViewModel, sectionApplicationViewModel, application, userOrganisation, allSections);
+
         openSectionViewModel.setSectionAssignableViewModel(addAssignableDetails(application, userOrganisation, userId, section));
-        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition));
+        sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openSectionViewModel.getSectionsMarkedAsComplete()));
         sectionApplicationViewModel.setCurrentApplication(application);
         sectionApplicationViewModel.setCurrentCompetition(competition);
         sectionApplicationViewModel.setUserOrganisation(userOrganisation.orElse(null));
-
-        addCompletedDetails(openSectionViewModel, sectionApplicationViewModel, application, userOrganisation, allSections);
     }
 
     private void addOrganisationDetails(OpenSectionViewModel viewModel, ApplicationResource application, List<ProcessRoleResource> userApplicationRoles) {
@@ -288,7 +288,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         return userApplicationRoles.stream()
             .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName())
                 || uar.getRoleName().equals(UserApplicationRole.COLLABORATOR.getRoleName()))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
             .collect(Collectors.toCollection(supplier));
     }
 
@@ -307,7 +307,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         return userApplicationRoles.stream()
             .filter(uar -> uar.getRoleName().equals(UserApplicationRole.LEAD_APPLICANT.getRoleName()))
-            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisation()).getSuccessObjectOrThrowException())
+            .map(uar -> organisationRestService.getOrganisationById(uar.getOrganisationId()).getSuccessObjectOrThrowException())
             .findFirst();
     }
 }
