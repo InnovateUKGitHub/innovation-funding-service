@@ -98,7 +98,7 @@ items:
   metadata:
     name: imap
   spec:
-    host: imap
+    host: <<IMAP-ADDRESS>>
     port:
       targetPort: 80-tcp
     to:

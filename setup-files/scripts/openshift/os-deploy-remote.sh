@@ -11,6 +11,7 @@ sed -i.bak "s#worth/#721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/#g" os-f
 sed -i.bak "s#worth/#721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/#g" os-files-tmp/init/*.yml
 sed -i.bak "s#worth/#721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/#g" os-files-tmp/robot-tests/*.yml
 sed -i.bak "s/<<SHIB-ADDRESS>>/$ENV.$HOST/g" os-files-tmp/*.yml
+sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$ENV.$HOST/g" os-files-tmp/*.yml
 sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$ENV.$HOST/g" os-files-tmp/*.yml
 
 sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*.yml
