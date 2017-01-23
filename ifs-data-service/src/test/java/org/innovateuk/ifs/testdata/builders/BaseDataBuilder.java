@@ -75,6 +75,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     public static final String INNOVATE_UK_ORG_NAME = "Innovate UK";
 
     protected ServiceLocator serviceLocator;
+    protected BaseUserService baseUserService;
     protected UserService userService;
     protected CompetitionService competitionService;
     protected CompetitionTypeRepository competitionTypeRepository;
@@ -85,6 +86,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionSetupService competitionSetupService;
     protected OrganisationService organisationService;
     protected UserRepository userRepository;
+    protected ProfileRepository profileRepository;
     protected RegistrationService registrationService;
     protected RoleRepository roleRepository;
     protected OrganisationRepository organisationRepository;
@@ -185,6 +187,9 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
         this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
         this.userProfileService = serviceLocator.getBean(UserProfileService.class);
+        this.baseUserService = serviceLocator.getBean(BaseUserService.class);
+        this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
+
     }
 
     @Override
@@ -201,7 +206,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource retrieveUserById(Long id) {
-        return doAs(systemRegistrar(), () -> userService.getUserById(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccessObjectOrThrowException());
     }
 
     protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {

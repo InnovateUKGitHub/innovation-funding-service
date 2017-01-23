@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.builder.CompetitionBuilder;
 import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -16,6 +17,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import static org.assertj.core.util.Lists.emptyList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
 import static org.innovateuk.ifs.documentation.CompetitionResourceDocs.competitionResourceBuilder;
@@ -218,6 +220,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         final Long competitionId = 1L;
 
         when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.findByStateAndCompetition(AssessmentStates.CREATED, competitionId)).thenReturn(serviceSuccess(emptyList()));
 
         mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
                 .andExpect(status().isOk())

@@ -4,7 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.model.ManageApplicationsPopulator;
+import org.innovateuk.ifs.management.model.ManageApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ManageApplicationsViewModel;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
 
     @InjectMocks
     @Spy
-    private ManageApplicationsPopulator manageApplicationsPopulator;
+    private ManageApplicationsModelPopulator manageApplicationsPopulator;
 
     @Override
     protected ApplicationAssessmentManagementController supplyControllerUnderTest() {
@@ -41,7 +41,7 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
 
         List<ApplicationCountSummaryResource> summaryResources = newApplicationCountSummaryResource()
                 .withName("one", "two")
-                .withLeadOrganisation("org1", "org2")
+                .withLeadOrganisationId(1L, 2L)
                 .withAccepted(2L, 3L)
                 .withAssessors(3L, 4L)
                 .withSubmitted(1L, 2L).build(2);
@@ -64,7 +64,5 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
         assertEquals(3L, model.getApplications().get(1).getAccepted());
         assertEquals(4L, model.getApplications().get(1).getAssessors());
         assertEquals(2L, model.getApplications().get(1).getCompleted());
-
-
     }
 }

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -214,6 +215,8 @@ public class BaseUnitTest {
     public CookieUtil cookieUtil;
     @Mock
     public CategoryService categoryServiceMock;
+    @Mock
+    public AssessmentRestService assessmentRestService;
 
     @Spy
     @InjectMocks
@@ -511,9 +514,9 @@ public class BaseUnitTest {
     }
 
     public void setupUserRoles() {
-        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName(), null);
+        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName());
         assessorRole.setUrl("assessor/dashboard");
-        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName(), null);
+        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName());
         applicantRole.setUrl("applicant/dashboard");
         applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
@@ -580,9 +583,6 @@ public class BaseUnitTest {
         applicationResources.get(1).setCompetition(competitionResource.getId());
         applicationResources.get(2).setCompetition(competitionResource.getId());
         applicationResources.get(3).setCompetition(competitionResource.getId());
-
-        loggedInUser.setProcessRoles(asList(processRole1.getId(), processRole2.getId(),processRole3.getId(), processRole4.getId()));
-        users.get(0).setProcessRoles(asList(processRole5.getId()));
         applications = applicationResources;
 
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
@@ -610,7 +610,7 @@ public class BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(1).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(2).getId())).thenReturn(completedMap);
 
-        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication()))));
+        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplicationId()))));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
