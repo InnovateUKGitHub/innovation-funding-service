@@ -28,22 +28,6 @@ public class AssessorProfileResourceBuilder extends BaseBuilder<AssessorProfileR
         super(newActions);
     }
 
-//    public AssessorProfileResourceBuilder withInnovationAreas(List<InnovationAreaResource>... innovationAreas) {
-//        return withArraySetFieldByReflection("innovationAreas", innovationAreas);
-//    }
-//
-//    public AssessorProfileResourceBuilder withBusinessType(BusinessType... businessTypes) {
-//        return withArraySetFieldByReflection("businessType", businessTypes);
-//    }
-//
-//    public AssessorProfileResourceBuilder withSkillsAreas(String... skillsAreas) {
-//        return withArraySetFieldByReflection("skillsAreas", skillsAreas);
-//    }
-//
-//    public AssessorProfileResourceBuilder withAffiliations(List<AffiliationResource>... affiliations) {
-//        return withArraySetFieldByReflection("affiliations", affiliations);
-//    }
-
     public AssessorProfileResourceBuilder withUser(UserResource... users) {
         return withArraySetFieldByReflection("user", users);
     }
