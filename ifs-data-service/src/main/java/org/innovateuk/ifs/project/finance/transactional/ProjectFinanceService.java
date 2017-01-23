@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.finance.transactional;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -59,6 +62,12 @@ public interface ProjectFinanceService {
 
     @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_VIABILITY')")
     ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'VIEW_ELIGIBILITY')")
+    ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId);
+
+    @PreAuthorize("hasPermission(#projectOrganisationCompositeId, 'SAVE_ELIGIBILITY')")
+    ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityStatus eligibilityStatus);
 
     @PreAuthorize("hasPermission(#projectId, 'SAVE_CREDIT_REPORT')")
     ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent);

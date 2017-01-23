@@ -3,13 +3,18 @@ package org.innovateuk.ifs.project.finance.controller;
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
 import org.junit.Test;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.io.IOException;
 import java.io.StringWriter;
@@ -24,6 +29,7 @@ import java.util.stream.IntStream;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
@@ -211,6 +217,7 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedViabilityResource)));
     }
+
     @Test
     public void testSaveViability() throws Exception {
         Long projectId = 1L;
@@ -223,6 +230,41 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
         when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityStatus)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityStatus}", projectId, organisationId, viability, viabilityStatus))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testGetEligibility() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        EligibilityResource expectedEligibilityResource = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        expectedEligibilityResource.setEligibilityApprovalDate(LocalDate.now());
+        expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
+        expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.getEligibility(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedEligibilityResource));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/eligibility", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedEligibilityResource)));
+    }
+
+    @Test
+    public void testSaveEligibility() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        Eligibility eligibility = Eligibility.APPROVED;
+        EligibilityStatus eligibilityStatus = EligibilityStatus.GREEN;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityStatus)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityStatus}", projectId, organisationId, eligibility, eligibilityStatus))
                 .andExpect(status().isOk());
     }
 
@@ -251,6 +293,19 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
                 .andExpect(status().isOk());
 
         verify(projectFinanceServiceMock).saveCreditReport(projectId, organisationId, true);
+    }
+
+    @Test
+    public void testFinanceDetails() throws Exception {
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
+
+        when(financeRowServiceMock.financeChecksDetails(123L, 456L)).thenReturn(serviceSuccess(projectFinanceResource));
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/project/{projectId}/organisation/{organisationId}/financeDetails", "123", "456"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectFinanceResource)));
+
+        verify(financeRowServiceMock).financeChecksDetails(123L, 456L);
     }
 
     @Override

@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -217,6 +220,34 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
     }
 
     @Test
+    public void testGetEligibility() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.getEligibility(projectOrganisationCompositeId),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testSaveEligibility() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityStatus.RED),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
     public void testGetCreditReport() {
         assertAccessDenied(() -> classUnderTest.getCreditReport(1L, 2L),
                 () -> {
@@ -287,6 +318,16 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         @Override
         public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
             return null;
         }
 

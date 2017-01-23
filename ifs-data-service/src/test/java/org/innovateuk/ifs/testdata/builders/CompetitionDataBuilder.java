@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -141,7 +140,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
-        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE));
+        return asCompAdmin(data -> {
+            shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
+
+        });
     }
 
     public CompetitionDataBuilder moveCompetitionIntoFundersPanelStatus() {
@@ -164,7 +166,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                     getSuccessObjectOrThrowException();
 
-            projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions));
+            projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException();
         });
     }
 
@@ -219,24 +221,28 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, OPEN_DATE);
     }
 
+    public CompetitionDataBuilder withBriefingDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, BRIEFING_EVENT);
+    }
+
     public CompetitionDataBuilder withSubmissionDate(LocalDateTime date) {
         return withMilestoneUpdate(date, SUBMISSION_DATE);
     }
 
-    public CompetitionDataBuilder withFundersPanelDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, FUNDERS_PANEL);
+    public CompetitionDataBuilder withAllocateAssesorsDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ALLOCATE_ASSESSORS);
     }
 
-    public CompetitionDataBuilder withFundersPanelEndDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, NOTIFICATIONS);
-    }
-
-    public CompetitionDataBuilder withAssessorAcceptsDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
+    public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
     }
 
     public CompetitionDataBuilder withAssessorsNotifiedDate(LocalDateTime date) {
         return withMilestoneUpdate(date, ASSESSORS_NOTIFIED);
+    }
+
+    public CompetitionDataBuilder withAssessorAcceptsDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
     }
 
     public CompetitionDataBuilder withAssessorEndDate(LocalDateTime date) {
@@ -247,8 +253,27 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
     }
 
-    public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
+    public CompetitionDataBuilder withLineDrawDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, LINE_DRAW);
+    }
+
+    public CompetitionDataBuilder withAsessmentPanelDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSMENT_PANEL);
+    }
+
+    public CompetitionDataBuilder withPanelDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, PANEL_DATE);
+    }
+
+    public CompetitionDataBuilder withFundersPanelDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, FUNDERS_PANEL);
+    }
+
+    public CompetitionDataBuilder withFundersPanelEndDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, NOTIFICATIONS);
+    }
+    public CompetitionDataBuilder withReleaseFeedbackDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, RELEASE_FEEDBACK);
     }
 
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {

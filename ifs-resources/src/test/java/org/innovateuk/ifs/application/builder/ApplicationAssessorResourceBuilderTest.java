@@ -7,6 +7,7 @@ import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Set;
 
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
@@ -24,13 +25,14 @@ public class ApplicationAssessorResourceBuilderTest {
         String expectedFirstName = "firstName";
         String expectedLastName = "lastName";
         BusinessType expectedBusinessType = ACADEMIC;
-        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
+        Set<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
                 .withName("Early Stage Manufacturing", "Bioscience")
-                .build(2);
+                .buildSet(2);
         String expectedSkillAreas = "skillAreas";
         String expectedRejectReason = "rejectReason";
         String expectedRejectComment = "rejectComment";
         boolean expectedAvailable = true;
+        Long expectedMostRecentAssessmentId = 1L;
         AssessmentStates expectedMostRecentAssessmentState = ACCEPTED;
         long expectedTotalApplicationsCount = 10;
         long expectedAssignedCount = 20;
@@ -46,6 +48,7 @@ public class ApplicationAssessorResourceBuilderTest {
                 .withRejectReason(expectedRejectReason)
                 .withRejectComment(expectedRejectComment)
                 .withAvailable(expectedAvailable)
+                .withMostRecentAssessmentId(expectedMostRecentAssessmentId)
                 .withMostRecentAssessmentState(expectedMostRecentAssessmentState)
                 .withTotalApplicationsCount(expectedTotalApplicationsCount)
                 .withAssignedCount(expectedAssignedCount)
@@ -61,6 +64,7 @@ public class ApplicationAssessorResourceBuilderTest {
         assertEquals(expectedRejectReason, applicationAssessorResource.getRejectReason());
         assertEquals(expectedRejectComment, applicationAssessorResource.getRejectComment());
         assertEquals(expectedAvailable, applicationAssessorResource.isAvailable());
+        assertEquals(expectedMostRecentAssessmentId, applicationAssessorResource.getMostRecentAssessmentId());
         assertEquals(expectedMostRecentAssessmentState, applicationAssessorResource.getMostRecentAssessmentState());
         assertEquals(expectedTotalApplicationsCount, applicationAssessorResource.getTotalApplicationsCount());
         assertEquals(expectedAssignedCount, applicationAssessorResource.getAssignedCount());
@@ -73,18 +77,19 @@ public class ApplicationAssessorResourceBuilderTest {
         String[] expectedFirstNames = {"firstName1", "firstName2"};
         String[] expectedLastNames = {"lastName1", "lastName2"};
         BusinessType[] expectedBusinessTypes = {BUSINESS, ACADEMIC};
-        @SuppressWarnings("unchecked") List<InnovationAreaResource>[] expectedInnovationAreas = new List[]{
+        @SuppressWarnings("unchecked") Set<InnovationAreaResource>[] expectedInnovationAreas = new Set[]{
                 newInnovationAreaResource()
                         .withName("Creative economy", "Offshore Renewable Energy")
-                        .build(2),
+                        .buildSet(2),
                 newInnovationAreaResource()
                         .withName("Urban Living", "Advanced Therapies")
-                        .build(2)
+                        .buildSet(2)
         };
         String[] expectedSkillAreas = {"skillAreas1", "skillAreas2"};
         String[] expectedRejectReasons = {"rejectReason1", "rejectReason2"};
         String[] expectedRejectComments = {"rejectComment1", "rejectComment2"};
         Boolean[] expectedAvailable = {true, false};
+        Long[] expectedMostRecentAssessmentIds = {1L, 2L};
         AssessmentStates[] expectedMostRecentAssessmentStates = {ACCEPTED, OPEN};
         Long[] expectedTotalApplicationsCount = {10L, 11L};
         Long[] expectedAssignedCount = {20L, 21L};
@@ -100,6 +105,7 @@ public class ApplicationAssessorResourceBuilderTest {
                 .withRejectReason(expectedRejectReasons)
                 .withRejectComment(expectedRejectComments)
                 .withAvailable(expectedAvailable)
+                .withMostRecentAssessmentId(expectedMostRecentAssessmentIds)
                 .withMostRecentAssessmentState(expectedMostRecentAssessmentStates)
                 .withTotalApplicationsCount(expectedTotalApplicationsCount)
                 .withAssignedCount(expectedAssignedCount)
@@ -116,6 +122,7 @@ public class ApplicationAssessorResourceBuilderTest {
         assertEquals(expectedRejectReasons[0], first.getRejectReason());
         assertEquals(expectedRejectComments[0], first.getRejectComment());
         assertEquals(expectedAvailable[0], first.isAvailable());
+        assertEquals(expectedMostRecentAssessmentIds[0], first.getMostRecentAssessmentId());
         assertEquals(expectedMostRecentAssessmentStates[0], first.getMostRecentAssessmentState());
         assertEquals(expectedTotalApplicationsCount[0].intValue(), first.getTotalApplicationsCount());
         assertEquals(expectedAssignedCount[0].intValue(), first.getAssignedCount());
@@ -131,6 +138,7 @@ public class ApplicationAssessorResourceBuilderTest {
         assertEquals(expectedRejectReasons[1], second.getRejectReason());
         assertEquals(expectedRejectComments[1], second.getRejectComment());
         assertEquals(expectedAvailable[1], second.isAvailable());
+        assertEquals(expectedMostRecentAssessmentIds[1], second.getMostRecentAssessmentId());
         assertEquals(expectedMostRecentAssessmentStates[1], second.getMostRecentAssessmentState());
         assertEquals(expectedTotalApplicationsCount[1].intValue(), second.getTotalApplicationsCount());
         assertEquals(expectedAssignedCount[1].intValue(), second.getAssignedCount());
