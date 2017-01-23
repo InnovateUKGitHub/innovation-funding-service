@@ -294,85 +294,87 @@
     </th:block>
     <!-- =========================== repeating rows - Materials  =========================== -->
 
-    <th:block th:fragment="materials_row"  th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
-        <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''">
-                <label th:for="${'cost-materials-'+costIdentifier+'-item'}">
-                    <span class="visuallyhidden">Item</span>
-                    <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
-                </label>
-                <input type="text"
-                       class="form-control width-full"
-                       th:name="${'materials-item-' + question.id + '-' + costIdentifier}"
-                       th:id="${'cost-materials-'+costIdentifier+'-item'}"
-                       th:value="${cost.getItem()}"
-                       th:readonly="${viewmode == 'readonly'}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"
-                       required="required"
-                       maxlength="255" />
-            </td>
-            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''">
-              <label th:for="${'cost-materials-'+costIdentifier+'-quantity'}">
-                  <span class="visuallyhidden">Quantity</span>
-                  <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" />
-              </label>
-                <input type="number"
-                       class="form-control width-full"
-                       th:name="${'materials-quantity-' + question.id + '-' + costIdentifier}"
-                       th:id="${'cost-materials-'+costIdentifier+'-quantity'}"
-                       placeholder="0"
-                       ifs:nonZeroValue="${cost.getQuantity()}"
-                       th:readonly="${viewmode == 'readonly'}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"
-                       min="1"
-                       max="999999999"
-                       required="required"
-                       th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
-                       />
-            </td>
-            <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
-                <label th:for="${'cost-materials-'+costIdentifier+'-cost'}">
-                    <span class="visuallyhidden">Cost Per Item</span>
-                    <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
-                </label>
-                <input type="number"
-                       class="form-control width-full"
-                       th:name="${'materials-cost-' + question.id + '-' + costIdentifier}"
-                       th:id="${'cost-materials-'+costIdentifier+'-cost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
-                       th:readonly="${viewmode == 'readonly'}"
-                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
-                       placeholder="0"
-                       min="1"
-                       max="9999999999999999999"
-                       required="required"
-                       th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
-            </td>
-            <td>
-              <label th:for="${'cost-materials-'+costIdentifier+'-materialTotal'}">
-                  <span class="visuallyhidden">Total</span>
-              </label>
-                <input type="text"
-                       class="alignright form-control width-full"
-                       th:name="${'materials-total-' + question.id + '-' + costIdentifier}"
-                       th:attr="data-calculation-fields='#'+${'cost-materials-'+costIdentifier+'-quantity'}+',#'+${'cost-materials-'+costIdentifier+'-cost'},data-calculation-rawvalue=${cost.total}"
-                       th:id="${'cost-materials-'+costIdentifier+'-materialTotal'}"
-                       data-calculation-operations="*"
-                       readonly="readonly"
-                       th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
-                        />
-            </td>
-            <td class="alignright buttoncolumn remove" th:if="${viewmode == 'edit'}">
-                <button th:unless="${cost.id == null}"
-                        type="submit"
-                        name="remove_cost"
-                        th:value="${cost.id}"
-                        th:class="'buttonlink js-remove-row'"
-                        th:attrappend="formaction='&#35;question-'+${question.id}">Remove
-                </button>
-                <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
-            </td>
-        </tr>
+    <th:block th:fragment="materials_row">
+        <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
+            <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
+                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''">
+                    <label th:for="${'cost-materials-'+costIdentifier+'-item'}">
+                        <span class="visuallyhidden">Item</span>
+                        <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
+                    </label>
+                    <input type="text"
+                           class="form-control width-full"
+                           th:name="${'materials-item-' + question.id + '-' + costIdentifier}"
+                           th:id="${'cost-materials-'+costIdentifier+'-item'}"
+                           th:value="${cost.getItem()}"
+                           th:readonly="${viewmode == 'readonly'}"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"
+                           required="required"
+                           maxlength="255" />
+                </td>
+                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''">
+                  <label th:for="${'cost-materials-'+costIdentifier+'-quantity'}">
+                      <span class="visuallyhidden">Quantity</span>
+                      <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" />
+                  </label>
+                    <input type="number"
+                           class="form-control width-full"
+                           th:name="${'materials-quantity-' + question.id + '-' + costIdentifier}"
+                           th:id="${'cost-materials-'+costIdentifier+'-quantity'}"
+                           placeholder="0"
+                           ifs:nonZeroValue="${cost.getQuantity()}"
+                           th:readonly="${viewmode == 'readonly'}"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"
+                           min="1"
+                           max="999999999"
+                           required="required"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
+                           />
+                </td>
+                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
+                    <label th:for="${'cost-materials-'+costIdentifier+'-cost'}">
+                        <span class="visuallyhidden">Cost Per Item</span>
+                        <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
+                    </label>
+                    <input type="number"
+                           class="form-control width-full"
+                           th:name="${'materials-cost-' + question.id + '-' + costIdentifier}"
+                           th:id="${'cost-materials-'+costIdentifier+'-cost'}"
+                           ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+                           th:readonly="${viewmode == 'readonly'}"
+                           th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
+                           placeholder="0"
+                           min="1"
+                           max="9999999999999999999"
+                           required="required"
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
+                </td>
+                <td>
+                  <label th:for="${'cost-materials-'+costIdentifier+'-materialTotal'}">
+                      <span class="visuallyhidden">Total</span>
+                  </label>
+                    <input type="text"
+                           class="alignright form-control width-full"
+                           th:name="${'materials-total-' + question.id + '-' + costIdentifier}"
+                           th:attr="data-calculation-fields='#'+${'cost-materials-'+costIdentifier+'-quantity'}+',#'+${'cost-materials-'+costIdentifier+'-cost'},data-calculation-rawvalue=${cost.total}"
+                           th:id="${'cost-materials-'+costIdentifier+'-materialTotal'}"
+                           data-calculation-operations="*"
+                           readonly="readonly"
+                           th:value="'£ ' + ${#numbers.formatDecimal(cost.total, 0, 0)}"
+                            />
+                </td>
+                <td class="alignright buttoncolumn remove" th:if="${viewmode == 'edit'}">
+                    <button th:unless="${cost.id == null}"
+                            type="submit"
+                            name="remove_cost"
+                            th:value="${cost.id}"
+                            th:class="'buttonlink js-remove-row'"
+                            th:attrappend="formaction='&#35;question-'+${question.id}">Remove
+                    </button>
+                    <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
+                </td>
+            </tr>
+        </th:block>
     </th:block>
 
     <!-- ===========================Form: capital usage =========================== -->
@@ -438,7 +440,8 @@
 
     <!-- ===========================Form: capital usage repeating row =========================== -->
 
-    <th:block th:fragment="capital_usage_row" th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
+    <th:block th:fragment="capital_usage_row">
+        <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <div th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}" class="form-row">
                 <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'error' : ''">
                     <label th:for="${'cost-capital_usage-'+costIdentifier+'-description'}">
@@ -578,6 +581,7 @@
                     <span class="buttonplaceholder"></span>
                 </th:block>
             </div>
+        </th:block>
     </th:block>
 
     <!-- ===========================Form: subcontracting cost =========================== -->
@@ -636,7 +640,8 @@
 
     </th:block>
 
-    <th:block th:fragment="subcontracting_row" th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
+    <th:block th:fragment="subcontracting_row">
+        <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <div class="form-row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
             <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'error' : ''">
                 <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-name'}">
@@ -707,6 +712,7 @@
                 <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
             </th:block>
         </div>
+        </th:block>
     </th:block>
 
     <!-- ===========================Form: travel cost =========================== -->
@@ -783,7 +789,8 @@
     </th:block>
     <!-- ===========================repeating rows : travel cost =========================== -->
 
-    <th:block th:fragment="travel_row" th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}" >
+    <th:block th:fragment="travel_row">
+        <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
               <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''">
                 <label th:for="${'cost-travel-'+costIdentifier+'-item'}">
@@ -860,6 +867,7 @@
                 <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
             </td>
         </tr>
+        </th:block>
     </th:block>
 
     <!-- ===========================Form: other cost =========================== -->
@@ -926,7 +934,8 @@
     </th:block>
 
 
-    <th:block th:fragment="other_costs_row" th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
+    <th:block th:fragment="other_costs_row">
+        <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
             <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-description]}')} ? 'error' : ''">
                 <label th:for="${'cost-'+ type + '-'+costIdentifier+'-description'}">
@@ -964,6 +973,7 @@
                 <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
             </td>
         </tr>
+        </th:block>
     </th:block>
 
 
