@@ -158,7 +158,7 @@ public class ApplicationModelPopulatorTest {
         ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
         when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
 
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competitionId, applicationId, user, model, form);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competitionId, applicationId, user, model, form, organisationId);
 
         //verify model attributes
         verify(model).addAttribute("currentUser", user);
@@ -166,6 +166,6 @@ public class ApplicationModelPopulatorTest {
 
         //Verify model calls
         verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
-        verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, null);
+        verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }

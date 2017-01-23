@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.controller;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -119,6 +122,23 @@ public class ProjectFinanceController {
                                           @PathVariable("viabilityStatus") final ViabilityStatus viabilityStatus) {
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         return projectFinanceService.saveViability(projectOrganisationCompositeId, viability, viabilityStatus).toPostResponse();
+    }
+
+    @RequestMapping("/{projectId}/partner-organisation/{organisationId}/eligibility")
+    public RestResult<EligibilityResource> getEligibility(@PathVariable("projectId") final Long projectId,
+                                                          @PathVariable("organisationId") final Long organisationId) {
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.getEligibility(projectOrganisationCompositeId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityStatus}", method = POST)
+    public RestResult<Void> saveEligibility(@PathVariable("projectId") final Long projectId,
+                                            @PathVariable("organisationId") final Long organisationId,
+                                            @PathVariable("eligibility") final Eligibility eligibility,
+                                            @PathVariable("eligibilityStatus") final EligibilityStatus eligibilityStatus) {
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        return projectFinanceService.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityStatus).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/credit-report/{reportPresent}", method = POST)

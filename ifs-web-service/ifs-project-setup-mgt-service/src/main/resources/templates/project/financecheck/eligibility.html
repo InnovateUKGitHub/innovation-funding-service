@@ -22,6 +22,12 @@
         </h1>
     </div>
 
+    <th:block th:if="${model.isShowApprovalMessage()}">
+        <div class="success-alert">
+            <p>The partner's finance eligibility has been approved by <span th:text="${model.getApproverName()}"/>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+        </div>
+    </th:block>
+
     <h2 class="heading-medium">Finances Overview</h2>
     <div class="table-overflow">
         <table class="table-overview">
@@ -55,19 +61,19 @@
         <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
         <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h3>
-                <span th:text="${subSection.getName()}" th:remove="tag" />
-                <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
-                <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}" />
+                <th:block th:text="${subSection.getName()}" />
+                <span th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
+                <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
             </h3>
-            <th:block th:with="viewmode=${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly'">
-                <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
-                    <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
+            <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
+                <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
+                    <th:block th:if="${formInput.type.displayableFinanceType}">
                         <!--/*
                         viewmode=approved; generates the inputs as text,
                         viewmode=readonly, generates readonly inputs,
                         viewmode=edit, generates the editable inputs + repeating row elements)
                         */-->
-                        <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode=${viewmode})" />
+                        <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')" th:with="formInputIndex=(${status.index})" />
                     </th:block>
                 </th:block>
                 <div class="alignright-button">
@@ -93,29 +99,34 @@
     </form>
     <input type="hidden" id="cacheTest" value="" />
 
-    <!--/* ACTIVATE WHEN STARTING ON INFUND-4839
-    <form class="extra-margin">
-        <h3 class="heading-medium">Approve eligible costs</h3>
-        <p>After making any necessary changes, eligible costs should be approved.</p>
-        <p>If changes are made, make sure the applicant has reviewed and understand all changes before you approve.</p>
-        <div class="form-group">
-            <label class="block-label selection-button-checkbox" for="project-eligible" data-target="add-rag-rating">
-              <input id="project-eligible" type="checkbox" data-disable-button-until-checked="#confirm-button" name="CHANGE_THIS" />
-                  These funding costs have been reviewed and are acceptable
-            </label>
-        </div>
-        <div class="form-group" id="add-rag-rating">
-            <label for="rag-rating" class="form-label">Please enter the RAG rating for this viability review</label>
-            <select id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
-              <option value="UNSET" selected="selected"></option>
-              <option value="GREEN">Green</option>
-              <option value="AMBER">Amber</option>
-              <option value="RED">Red</option>
-            </select>
-        </div>
-        <button type="button" data-js-modal="modal-confirm-eligibility" class="button" id="confirm-button">Approve eligible costs</button>
-        <th:block  th:include="fragments/modals :: modal-confirm-eligibility" />
-    </form> */-->
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}">
+
+        <th:block th:unless="${model.isReadOnly()}">
+            <h2 class="heading-medium">Approve eligibility</h2>
+            <p>After making any necessary changes, eligible costs should be approved.</p>
+            <p>If changes are made, make sure the applicant has reviewed and understand all changes before you approve.</p>
+            <div class="form-group">
+                <label class="block-label selection-button-checkbox" for="project-eligible" data-target="add-rag-rating">
+                    <input  id="project-eligible" type="checkbox" th:field="*{confirmEligibilityChecked}" data-disable-button-until-checked="#confirm-button" />These funding costs have been reviewed and are acceptable
+                </label>
+            </div>
+            <div class="form-group" id="add-rag-rating">
+                <label for="rag-rating" class="form-label">Please enter the RAG rating for this eligibility review</label>
+                <select th:field="*{eligibilityStatus}" id="rag-rating" class="form-control" data-disable-button-until-checked="#confirm-button">
+                    <option value="UNSET" th:selected="${eligibilityForm.eligibilityStatus == null}">--</option>
+                    <option value="GREEN">Green</option>
+                    <option value="AMBER">Amber</option>
+                    <option value="RED">Red</option>
+                </select>
+            </div>
+            <button type="button" data-js-modal="modal-confirm-eligibility" class="button" id="confirm-button">Approve eligible costs</button>
+            <th:block  th:include="fragments/modals :: modal-confirm-eligibility" />
+        </th:block>
+        <hr/>
+        <button th:if="${model.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
+        <a th:if="${model.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
+    </form>
+
     <th:block th:include="fragments/layout :: main-content-end" />
 </main>
 <th:block th:include="fragments/layout :: footer" />

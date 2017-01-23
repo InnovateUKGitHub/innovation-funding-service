@@ -164,6 +164,16 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
+        public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
+            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
+        }
+
+        @Override
+        public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+            return serviceSuccess(Integer.toUnsignedLong(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size()));
+        }
+
+        @Override
         public ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId) {
             return null;
         }

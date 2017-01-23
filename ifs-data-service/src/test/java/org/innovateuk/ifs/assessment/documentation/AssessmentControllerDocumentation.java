@@ -3,14 +3,8 @@ package org.innovateuk.ifs.assessment.documentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentController;
-import org.innovateuk.ifs.assessment.resource.ApplicationRejectionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentSubmissionsResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
-import org.junit.Before;
+import org.innovateuk.ifs.assessment.resource.*;
 import org.junit.Test;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
 
@@ -27,8 +21,6 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -126,7 +118,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("id of the assessment for which to recommend")
+                                parameterWithName("id").description("Id of the assessment for which to recommend")
                         ),
                         requestFields(assessmentFundingDecisionResourceFields)
                 ));
@@ -161,7 +153,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("id of the assessment for which to accept")
+                                parameterWithName("id").description("Id of the assessment for which to accept")
                         )
                 ));
     }
@@ -176,7 +168,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("id of the assessment for which to withdraw")
+                                parameterWithName("id").description("Id of the assessment for which to withdraw")
                         )
                 ));
     }
@@ -191,7 +183,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
-                                parameterWithName("id").description("id of the asssessment for which to notify")
+                                parameterWithName("id").description("Id of the assessment for which to notify")
                         )
                 ));
     }
@@ -205,6 +197,6 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 .contentType(APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(assessmentSubmissions)))
                 .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",requestFields(assessmentSubmissionsFields)));
+                .andDo(document("assessment/{method-name}", requestFields(assessmentSubmissionsFields)));
     }
 }

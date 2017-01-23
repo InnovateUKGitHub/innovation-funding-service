@@ -128,7 +128,9 @@ public class CompetitionManagementApplicationController extends BaseController {
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
             organisationDetailsModelPopulator.populateModel(model, application.getId());
-            applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+
+            // Having to pass getImpersonateOrganisationId here because look at the horrible code inside addOrganisationAndUserFinanceDetails with impersonation org id :(
+            applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, form.getImpersonateOrganisationId());
             addAppendices(applicationId, responses, model);
 
             model.addAttribute("form", form);

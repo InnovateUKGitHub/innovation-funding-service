@@ -93,6 +93,7 @@ public class OpenProjectFinanceSectionModelPopulator extends BaseOpenFinanceSect
         return openFinanceSectionViewModel;
     }
 
+    //TODO - INFUND-7482 - remove usages of Model model
     private void addOrganisationAndUserProjectFinanceDetails(Long competitionId, Long projectId, List<QuestionResource> costsQuestions, UserResource user,
                                                       Model model, ApplicationForm form, String organisationType, Long organisationId) {
         projectFinanceOverviewModelManager.addFinanceDetails(model, competitionId, projectId);

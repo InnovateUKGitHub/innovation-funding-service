@@ -96,7 +96,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         }
 
-        String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
+        String organisationType = organisationService.getOrganisationType(userId, applicationId);
         
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());

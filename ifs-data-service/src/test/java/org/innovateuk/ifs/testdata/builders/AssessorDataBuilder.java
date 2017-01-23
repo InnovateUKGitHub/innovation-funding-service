@@ -133,7 +133,7 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
 
             profile.addInnovationAreas(additionalInnovationAreas);
 
-            userRepository.save(user);
+            profileRepository.save(profile);
 
             if (skillAreas.isEmpty() || businessType == null) {
                 return;

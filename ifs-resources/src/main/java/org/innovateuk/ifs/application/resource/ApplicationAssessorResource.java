@@ -6,7 +6,7 @@ import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
-import java.util.List;
+import java.util.Set;
 
 import static java.util.EnumSet.complementOf;
 import static java.util.EnumSet.of;
@@ -21,11 +21,12 @@ public class ApplicationAssessorResource {
     private String firstName;
     private String lastName;
     private BusinessType businessType;
-    private List<InnovationAreaResource> innovationAreas;
+    private Set<InnovationAreaResource> innovationAreas;
     private String skillAreas;
     private String rejectReason;
     private String rejectComment;
     private boolean available;
+    private Long mostRecentAssessmentId;
     private AssessmentStates mostRecentAssessmentState;
     private long totalApplicationsCount;
     private long assignedCount;
@@ -38,11 +39,12 @@ public class ApplicationAssessorResource {
                                        String firstName,
                                        String lastName,
                                        BusinessType businessType,
-                                       List<InnovationAreaResource> innovationAreas,
+                                       Set<InnovationAreaResource> innovationAreas,
                                        String skillAreas,
                                        String rejectReason,
                                        String rejectComment,
                                        boolean available,
+                                       Long mostRecentAssessmentId,
                                        AssessmentStates mostRecentAssessmentState,
                                        long totalApplicationsCount,
                                        long assignedCount,
@@ -56,6 +58,7 @@ public class ApplicationAssessorResource {
         this.rejectReason = rejectReason;
         this.rejectComment = rejectComment;
         this.available = available;
+        this.mostRecentAssessmentId = mostRecentAssessmentId;
         this.mostRecentAssessmentState = mostRecentAssessmentState;
         this.totalApplicationsCount = totalApplicationsCount;
         this.assignedCount = assignedCount;
@@ -94,11 +97,11 @@ public class ApplicationAssessorResource {
         this.businessType = businessType;
     }
 
-    public List<InnovationAreaResource> getInnovationAreas() {
+    public Set<InnovationAreaResource> getInnovationAreas() {
         return innovationAreas;
     }
 
-    public void setInnovationAreas(List<InnovationAreaResource> innovationAreas) {
+    public void setInnovationAreas(Set<InnovationAreaResource> innovationAreas) {
         this.innovationAreas = innovationAreas;
     }
 
@@ -132,6 +135,14 @@ public class ApplicationAssessorResource {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public Long getMostRecentAssessmentId() {
+        return mostRecentAssessmentId;
+    }
+
+    public void setMostRecentAssessmentId(Long mostRecentAssessmentId) {
+        this.mostRecentAssessmentId = mostRecentAssessmentId;
     }
 
     public AssessmentStates getMostRecentAssessmentState() {
@@ -219,6 +230,7 @@ public class ApplicationAssessorResource {
                 .append(skillAreas, that.skillAreas)
                 .append(rejectReason, that.rejectReason)
                 .append(rejectComment, that.rejectComment)
+                .append(mostRecentAssessmentId, that.mostRecentAssessmentId)
                 .append(mostRecentAssessmentState, that.mostRecentAssessmentState)
                 .isEquals();
     }
@@ -235,6 +247,7 @@ public class ApplicationAssessorResource {
                 .append(rejectReason)
                 .append(rejectComment)
                 .append(available)
+                .append(mostRecentAssessmentId)
                 .append(mostRecentAssessmentState)
                 .append(totalApplicationsCount)
                 .append(assignedCount)
