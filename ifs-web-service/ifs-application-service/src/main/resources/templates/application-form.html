@@ -107,12 +107,15 @@
 
             <input type="hidden" id="application_id" th:value="${model.application.currentApplication.id}"/>
             <input type="hidden" id="competition_id" th:value="${model.application.currentCompetition.id}"/>
-            <div th:if="${model.application.allReadOnly}" th:remove="tag">
-                <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
-            </div>
-            <div th:unless="${model.application.allReadOnly}" th:remove="tag">
-                <button th:unless="${model.currentSection != null and model.subFinanceSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
-            </div>
+
+            <th:block th:if="${model.showReturnButtons}">
+                <div th:if="${model.application.allReadOnly}" th:remove="tag">
+                    <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
+                </div>
+                <div th:unless="${model.application.allReadOnly}" th:remove="tag">
+                    <button th:unless="${model.currentSection != null}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+                </div>
+            </th:block>
 
             <ul class="pagination" th:if="${model.navigation.hasNavigation}">
                 <li class="prev" th:if="${model.navigation.previousUrl}">
