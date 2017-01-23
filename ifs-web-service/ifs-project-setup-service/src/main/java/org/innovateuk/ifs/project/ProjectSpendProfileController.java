@@ -150,7 +150,7 @@ public class ProjectSpendProfileController {
             return doEditSpendProfile(model, form, organisationId, loggedInUser, project, originalTableWithUpdatedCosts);
         };
 
-        String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile";
+        final String successView = "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + (isProjectManager(loggedInUser, projectId) ? "/review" : "");
 
         spendProfileCostValidator.validate(form.getTable(), bindingResult);
 
@@ -327,8 +327,12 @@ public class ProjectSpendProfileController {
     }
 
     private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
+        return projectService.getProjectUsersForProject(projectId).stream().filter(pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName())).findFirst();
+    }
+
+    private boolean isProjectManager(UserResource user, Long projectId) {
+        return getProjectManager(projectId)
+                .map(projectManager -> projectManager.getUser().equals(user.getId())).orElse(false);
     }
 
     private Map<String, Boolean> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {
@@ -358,5 +362,7 @@ public class ProjectSpendProfileController {
 
         return leadPartner.isPresent();
     }
+
+
 
 }
