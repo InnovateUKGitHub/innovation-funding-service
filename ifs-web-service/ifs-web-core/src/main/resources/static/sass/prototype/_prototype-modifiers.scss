@@ -47,6 +47,13 @@
   }
 }
 
+/*--- Borders ---*/
+
+.section-divide{
+  border-top: 1px solid $border-colour;
+  padding-top: $gutter-half; 
+}
+
 /*-- Hiding text - used for labels in tables where input uses aria-labelledby --*/
 
 .visibility-hidden{

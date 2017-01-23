@@ -36,6 +36,10 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long applicationId, Set<State> states);
 
+    List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+
+    long countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+
     @Query(value = "SELECT CASE WHEN COUNT(fi.id) = 0" +
             "  THEN 'TRUE'" +
             "       ELSE 'FALSE' END AS feedback_complete " +

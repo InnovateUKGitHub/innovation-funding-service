@@ -20,6 +20,7 @@ public class ApplicationAssessorResourceDocs {
             fieldWithPath("skillAreas").description("Skills of the user"),
             fieldWithPath("rejectReason").description("The reason for rejecting the application"),
             fieldWithPath("rejectComment").description("Any other comments about the reason why this application is being rejected"),
+            fieldWithPath("mostRecentAssessmentId").description("Assessment id of the most recent assessment for the user for the requested application"),
             fieldWithPath("mostRecentAssessmentState").description("Assessment state of the most recent assessment for the user for the requested application"),
             fieldWithPath("totalApplicationsCount").description("Total count of applications assigned to this user for all competitions currently in assessment"),
             fieldWithPath("assignedCount").description("Count of applications assigned to this user for the requested competition including those already submitted"),
@@ -34,6 +35,7 @@ public class ApplicationAssessorResourceDocs {
             .withSkillAreas("Human computer interaction, Wearables, IoT", "Solar Power, Genetics, Recycling")
             .withRejectReason("Conflict of interest", "Not available")
             .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.")
+            .withMostRecentAssessmentId(1L)
             .withMostRecentAssessmentState(READY_TO_SUBMIT, REJECTED)
             .withTotalApplicationsCount(6L, 8L)
             .withAssignedCount(4L, 6L)

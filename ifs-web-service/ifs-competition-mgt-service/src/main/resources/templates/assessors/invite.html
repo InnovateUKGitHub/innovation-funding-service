@@ -205,7 +205,7 @@
                         <tr th:each="assessor : ${model.assessors}">
                             <td><span th:text="${assessor.name}">Dave Smith</span></td>
                             <td th:text="${assessor.email}">dave@email.com</td>
-                            <td th:text="${assessor.innovationArea}">Earth Observation</td>
+                            <td th:text="${assessor.innovationAreas}">Earth Observation</td>
                             <td>
                                 <span class="yes" th:if="${assessor.compliant}">Yes</span>
                                 <span class="no" th:unless="${assessor.compliant}">No</span>

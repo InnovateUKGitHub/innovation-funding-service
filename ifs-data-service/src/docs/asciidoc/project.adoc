@@ -471,6 +471,30 @@ include::{snippets}/project/save-viability/http-response.adoc[]
 ===== Curl Example
 include::{snippets}/project/save-viability/curl-request.adoc[]
 
+=== Get Eligibility
+==== Success
+===== Request
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/http-request.adoc[]
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/http-response.adoc[]
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/response-fields.adoc[]
+
+===== Curl Example
+include::{snippets}/project/partner-organisation/eligibility/get-eligibility/curl-request.adoc[]
+
+=== Save Eligibility
+==== Success
+===== Request
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/http-request.adoc[]
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/path-parameters.adoc[]
+
+===== Response
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/http-response.adoc[]
+
+===== Curl Example
+include::{snippets}/project/partner-organisation/eligibility/save-eligibility/curl-request.adoc[]
 
 === Is Credit Report confirmed?
 ==== Success
@@ -669,24 +693,24 @@ include::{snippets}/project/is-send-grant-offer-letter-allowed/curl-request.adoc
 === Get Grant Offer Letter Workflow State
 ==== Success
 ===== Request
-include::{snippets}/project/get-grant-offer-letter-workflow-state/http-request.adoc[]
-include::{snippets}/project/get-grant-offer-letter-workflow-state/path-parameters.adoc[]
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/http-request.adoc[]
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/path-parameters.adoc[]
 
 ===== Response
-include::{snippets}/project/get-grant-offer-letter-workflow-state/http-response.adoc[]
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/http-response.adoc[]
 
 ===== Curl Example
-include::{snippets}/project/get-grant-offer-letter-workflow-state/curl-request.adoc[]
+include::{snippets}/project/grant-offer-letter/state/get-grant-offer-letter-workflow-state/curl-request.adoc[]
 
 === Get Finance Check Eligibility
 ==== Success
 ===== Request
-include::{snippets}/project/get-finance-check-eligibility/http-request.adoc[]
-include::{snippets}/project/get-finance-check-eligibility/path-parameters.adoc[]
+include::{snippets}/project/get-finance-check-eligibility-details/http-request.adoc[]
+include::{snippets}/project/get-finance-check-eligibility-details/path-parameters.adoc[]
 
 ===== Response
-include::{snippets}/project/get-finance-check-eligibility/http-response.adoc[]
-include::{snippets}/project/get-finance-check-eligibility/response-fields.adoc[]
+include::{snippets}/project/get-finance-check-eligibility-details/http-response.adoc[]
+include::{snippets}/project/get-finance-check-eligibility-details/response-fields.adoc[]
 
 ===== Curl Example
-include::{snippets}/project/get-finance-check-eligibility/curl-request.adoc[]
+include::{snippets}/project/get-finance-check-eligibility-details/curl-request.adoc[]

@@ -8,6 +8,7 @@ ${CA_Live}           ${server}/management/dashboard/live
 
 *** Keywords ***
 the user edits the assessed question information
+    the user enters text to a text field    id=question.maxWords    100
     the user enters text to a text field    id=question.scoreTotal    100
     the user enters text to a text field    id=question.assessmentGuidance    Business opportunity guidance
     the user clicks the button/link    jQuery=Button:contains("+Add guidance row")

@@ -214,10 +214,11 @@
 </th:block>
 
 
-<!-- =========================== Warnings and panels =========================== -->
+<!-- =========================== Progress list =========================== -->
 
 <th:block th:fragment="prot-progress-list">
-  <h2 class="heading-large">My Dashboard</h2>
+  <!-- Applicant dashboard -->
+  <h2 class="heading-large">Your Dashboard</h2>
   <div class="progress-list">
     <h3 class="heading-medium">Projects in setup</h3>
     <ul>
@@ -286,6 +287,17 @@
       </li>
       <li>
         <div class="task">
+          <h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
+          <span>Application number: 0000002</span>
+        </div>
+        <div class="status">
+          <img src="../images/icons/icon-awaiting-assessment.svg" width="70" height="70" alt="Awaiting assessment" />
+          <span class="awaiting">Awaiting assessment</span>
+          <strong>Application submitted</strong>
+        </div>
+      </li>
+      <li>
+        <div class="task">
           <h4 class="heading-small"><a href="#">Task 3</a></h4>
           <span>Application number: 0000008</span>
         </div>
@@ -325,6 +337,8 @@
   </div>
 
   <hr />
+
+  <!-- Assessor dashboard  -->
 
   <h2 class="heading-large">Technology inspired</h2>
   <div class="progress-list">
@@ -406,6 +420,8 @@
   </form>
 
   <hr />
+
+  <!-- Comp setup dashboard -->
 
   <h2 class="heading-large no-margin-bottom">Project setup status</h2>
   <p class="subtitle no-margin">00000024: Sensing &amp; Control network using the lighting infrastructure</p>

@@ -14,7 +14,6 @@ include::{snippets}/competition-setup-finance/save/curl-request.adoc[]
 ==== Request
 include::{snippets}/competition-setup-finance/get-by-competition/http-request.adoc[]
 include::{snippets}/competition-setup-finance/get-by-competition/path-parameters.adoc[]
-include::{snippets}/competition-setup-finance/get-by-competition/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competition-setup-finance/get-by-competition/http-response.adoc[]
