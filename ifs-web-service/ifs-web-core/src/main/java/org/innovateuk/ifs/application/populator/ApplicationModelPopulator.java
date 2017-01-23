@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.application.populator;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
@@ -17,6 +16,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -43,7 +43,7 @@ public class ApplicationModelPopulator {
     protected SectionService sectionService;
 
     @Autowired
-    protected FinanceOverviewModelManager financeOverviewModelManager;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
     protected OrganisationService organisationService;
@@ -55,7 +55,7 @@ public class ApplicationModelPopulator {
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Autowired
-    private FinanceService financeService;
+    protected UserRestService userRestService;
 
     public ApplicationResource addApplicationAndSections(ApplicationResource application,
                                                          CompetitionResource competition,
@@ -136,25 +136,25 @@ public class ApplicationModelPopulator {
         return userService.isLeadApplicant(userId, application);
     }
 
-    public void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
-                                                     Model model, ApplicationForm form) {
+    public void addOrganisationAndUserFinanceDetails(Long competitionId,
+                                                     Long applicationId,
+                                                     UserResource user,
+                                                     Model model,
+                                                     ApplicationForm form,
+                                                     Long organisationId) {
         model.addAttribute("currentUser", user);
 
         SectionResource financeSection = sectionService.getFinanceSection(competitionId);
         boolean hasFinanceSection = financeSection != null;
 
         if(hasFinanceSection) {
-            financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
 
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSection.getId(), QuestionType.COST);
-
-            if(!form.isAdminMode()){
+            // NOTE: This code is terrible.  It does nothing if none of below two conditions don't match.  This is not my code RB.
+            if(!form.isAdminMode() || organisationId != null) {
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
-            } else if(form.getImpersonateOrganisationId() != null){
-                // find user in the organisation we want to impersonate.
-                String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
+                financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
             }
         }
     }

@@ -140,4 +140,17 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntry)));
     }
+
+    @Test
+    public void testFinanceDetails() throws Exception {
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
+
+        when(financeRowServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
+
+        mockMvc.perform(get("/applicationfinance/financeDetails/{applicationId}/{organisationId}", "123", "456"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(applicationFinanceResource)));
+
+        verify(financeRowServiceMock).financeDetails(123L, 456L);
+    }
 }

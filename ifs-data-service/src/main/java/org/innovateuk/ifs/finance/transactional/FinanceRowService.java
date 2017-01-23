@@ -48,6 +48,10 @@ public interface FinanceRowService {
     @PreAuthorize("hasPermission(#applicationFinanceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'ADD_COST')")
     ServiceResult<FinanceRowItem> addCostWithoutPersisting(@P("applicationFinanceId") Long applicationFinanceId, Long questionId);
 
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Internal finance users can update the finance checks details")
+    ServiceResult<FinanceRowItem> addProjectCostWithoutPersisting(final Long projectFinanceId, final Long questionId);
+
     @PreAuthorize("hasPermission(#costId, 'org.innovateuk.ifs.finance.domain.FinanceRow', 'UPDATE')")
     ServiceResult<FinanceRowItem> updateCost(@P("costId")Long costId, FinanceRowItem newCostItem);
 
