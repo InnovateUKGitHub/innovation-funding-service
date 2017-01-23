@@ -2,6 +2,9 @@ package org.innovateuk.ifs.competition.domain;
 
 import javax.persistence.*;
 
+/**
+ * Entity to represent the searchable keywords for competition.
+ */
 @Entity
 public class Keyword {
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.publiccontent.resource;
 
 /**
- * Created by luke.harper on 23/01/2017.
+ * Enum to represent various statuses for a public content sections.
  */
 public enum PublicContentStatus {
     IN_PROGRESS,

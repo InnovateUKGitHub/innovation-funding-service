@@ -3,6 +3,9 @@ package org.innovateuk.ifs.competition.domain;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
+/**
+ * Entity that represents the public content associated to a dated event.
+ */
 @Entity
 public class ContentEvent {
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.publiccontent.resource;
 
 /**
- * Created by luke.harper on 23/01/2017.
+ * Enum to represent the competition setup sections displayed for public content.
  */
 public enum PublicContentSection {
     SEARCH,

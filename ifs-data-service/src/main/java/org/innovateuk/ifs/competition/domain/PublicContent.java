@@ -6,6 +6,9 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * Entity to represent the competitions content that is visible to the public.
+ */
 @Entity
 public class PublicContent {
 

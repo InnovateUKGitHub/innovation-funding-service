@@ -6,6 +6,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus
 import javax.persistence.*;
 import java.util.List;
 
+/**
+ * Entity that represents a section of content visible to the public.
+ */
 @Entity
 public class ContentSection {
 
