@@ -17,10 +17,7 @@ import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.Section;
-import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
-import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.resource.PageResource;
+import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.*;
@@ -63,11 +60,10 @@ import org.junit.Test;
 import java.lang.reflect.Modifier;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class POJOTest {
     // Configured for expectation, so we know when a class gets added or removed.
-    private static final int EXPECTED_RESOURCES = 37;
+    private static final int EXPECTED_RESOURCES = 38;
 
     // The package to test
     private static final String POJO_PACKAGE = "org.innovateuk.ifs";
@@ -80,6 +76,7 @@ public class POJOTest {
             Alert.class,
             AlertResource.class,
             ApplicationAssessmentSummaryResource.class,
+            ApplicationAssessorResource.class,
             ApplicationRejectionResource.class,
             AssessmentFundingDecisionResource.class,
             AssessorFormInputResponse.class,
@@ -143,6 +140,7 @@ public class POJOTest {
             PartnerOrganisationResource.class,
             SpendProfileCSVResource.class,
             FinanceCheckSummaryResource.class,
+            FinanceCheckEligibilityResource.class,
             FinanceCheckPartnerStatusResource.class,
             SpendProfileCSVResource.class,
             ContractResource.class,

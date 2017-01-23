@@ -26,6 +26,12 @@ The user can Invite Assessors
     And the user should see the element    link=Invite
     [Teardown]    The user clicks the button/link    link=Competition
 
+The user can Manage Applications
+    [Documentation]    INFUND-7042
+    When the user clicks the button/Link    jQuery=a:contains("Manage applications")
+    Then The user should see the text in the page    Assign assessors to applications.
+    [Teardown]    The user clicks the button/link    link=Manage assessments
+
 The user can Notify Assessors
     [Documentation]    INFUND-6458
     [Tags]

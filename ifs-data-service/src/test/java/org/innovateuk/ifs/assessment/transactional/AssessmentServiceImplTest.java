@@ -15,6 +15,9 @@ import org.mockito.Mock;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
@@ -26,9 +29,6 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
@@ -52,6 +52,22 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
         AssessmentResource found = assessmentService.findById(assessmentId).getSuccessObject();
+
+        assertSame(expected, found);
+        verify(assessmentRepositoryMock, only()).findOne(assessmentId);
+    }
+
+    @Test
+    public void findAssignableById() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment().build();
+        AssessmentResource expected = newAssessmentResource().build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
+
+        AssessmentResource found = assessmentService.findAssignableById(assessmentId).getSuccessObject();
 
         assertSame(expected, found);
         verify(assessmentRepositoryMock, only()).findOne(assessmentId);
@@ -182,6 +198,92 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
         inOrder.verify(assessmentWorkflowHandler).rejectInvitation(assessment, applicationRejectionResource);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessment() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowHandler.withdrawAssessment(assessment)).thenReturn(true);
+
+        ServiceResult<Void> result = assessmentService.withdrawAssessment(assessmentId);
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowHandler).withdrawAssessment(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessment_eventNotAccepted() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowHandler.withdrawAssessment(assessment)).thenReturn(false);
+
+        ServiceResult<Void> result = assessmentService.withdrawAssessment(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(ASSESSMENT_WITHDRAW_FAILED));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowHandler).withdrawAssessment(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void notifyAssessor() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, CREATED.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowHandler.notify(assessment)).thenReturn(true);
+
+        ServiceResult<Void> result = assessmentService.notify(assessmentId);
+        assertTrue(result.isSuccess());
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowHandler).notify(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void notifyAssessor_eventNotAccepted() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withId(assessmentId)
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, CREATED.getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentWorkflowHandler.notify(assessment)).thenReturn(false);
+
+        ServiceResult<Void> result = assessmentService.notify(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(ASSESSMENT_NOTIFY_FAILED));
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentWorkflowHandler).notify(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 

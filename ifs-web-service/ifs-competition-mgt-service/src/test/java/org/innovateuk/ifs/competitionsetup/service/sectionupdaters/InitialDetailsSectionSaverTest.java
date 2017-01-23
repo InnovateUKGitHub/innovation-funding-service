@@ -4,8 +4,7 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
-import org.innovateuk.ifs.category.builder.CategoryResourceBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -26,6 +25,7 @@ import java.util.stream.Collectors;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -73,7 +73,7 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 
-        CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().withId(innovationAreaId).build();
+        InnovationAreaResource innovationArea = newInnovationAreaResource().withId(innovationAreaId).build();
         competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
 
         List<MilestoneResource> milestones = new ArrayList<>();
@@ -88,7 +88,7 @@ public class InitialDetailsSectionSaverTest {
         competition.setSetupComplete(false);
 
         when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(milestones);
-        when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
+        when(categoryService.getInnovationAreasBySector(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
 

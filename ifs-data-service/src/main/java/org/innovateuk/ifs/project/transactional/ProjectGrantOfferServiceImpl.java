@@ -51,6 +51,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -76,6 +77,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public static final Long DEFAULT_GOL_SIZE = 1L;
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
+    public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
     @Autowired
     private ProjectRepository projectRepository;
@@ -225,7 +227,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return projectFinanceService.getSpendProfileStatusByProjectId(projectId).andOnSuccess(approval -> {
             if(approval == ApprovalType.APPROVED) {
                 return getProject(projectId).andOnSuccess(project -> {
-                    if (project.getOtherDocumentsApproved() != null && project.getOtherDocumentsApproved()) {
+                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
 
                         FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
                         return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
@@ -256,7 +258,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         templateReplacements.put("CompetitionName", project.getApplication().getCompetition().getName());
         templateReplacements.put("ProjectTitle", project.getName());
         templateReplacements.put("ProjectStartDate", project.getTargetStartDate() != null ?
-                project.getTargetStartDate().toString() : "");
+                project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
         templateReplacements.put("TableData", getYearlyGOLProfileTable(project));

@@ -11,7 +11,13 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               INFUND-6411 As a member of the competitions team, I can add a non-registered assessor to my invite list so...
 ...
+...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so...
+...
+...               INFUND-6448 As a member of the competitions team, I can remove an assessor from the invite list so...
+...
 ...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so I know if they have accepted, declined or still awaiting repsonse
+...
+...               INFUND-6389 As a member of the competitions team I can see the innovation sector and innovation area(s) on the Invite assessors dashboard  so that I can invite appropriate assessors
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -28,7 +34,7 @@ The User can Add and Remove Assessors
     And The user clicks the button/link    link=Invite
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
-    And The user should see the element    jQuery=tr:nth-child(1) .no
+    And The user should see the element    jQuery=tr:nth-child(1) .yes
     #TODO Add an extra check for the innovation area when INFUND-6865 is ready
     When The user clicks the button/link    link=Find
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove)
@@ -36,13 +42,26 @@ The User can Add and Remove Assessors
     Then The user should not see the text in the page    will.smith@gmail.com
     [Teardown]    The user clicks the button/link    link=Find
 
+Innovation sector and area are correct
+    [Documentation]    INFUND-6389
+    [Tags]
+    Given the user should see the element    jQuery=.heading-secondary:contains("Sustainable living models for the future")
+    And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation sector")
+    And the user should see the element    jQuery=.standard-definition-list dt:contains("Innovation area")
+    And the user should see the element    jQuery=.standard-definition-list dd:contains("Materials and manufacturing")
+    And the user should see the element    jQuery=.standard-definition-list dd:contains("Earth Observation")
+
 Remove users from the list
     [Documentation]    INFUND-7354
+    ...
+    ...    INFUND-6448
     When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
     And The user clicks the button/link    link=Invite
     And The user should see the text in the page    will.smith@gmail.com
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove from list)
     Then The user should not see the text in the page    will.smith@gmail.com
+    And The user clicks the button/link    link=Find
+    And the user should see the element    jQuery=tr:nth-child(1) button:contains(Add)
     [Teardown]    The user clicks the button/link    link=Find
 
 Invite Individual Assessors
@@ -70,6 +89,8 @@ Invite non-registered assessors server side validations
 
 Invite non-registered users
     [Documentation]    INFUND-6411
+    ...
+    ...    INFUND-6448
     [Tags]
     When The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
@@ -82,6 +103,7 @@ Invite non-registered users
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Olivier Giroud)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(worth.email.test+OlivierGiroud@gmail.com)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Data)
+    And The user should see the element    jQuery=tr:nth-child(1) button:contains(Remove from list)
 
 Assessor overview information
     [Documentation]    INFUND-6450
