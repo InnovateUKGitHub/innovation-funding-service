@@ -46,6 +46,26 @@ Calculations for the first collaborator
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
 
+Your Finance includes Finance summary table for lead applicant
+    [Documentation]    INFUND-6893
+    [Tags]    HappyPath
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
+     When the user navigates to the page    ${DASHBOARD_URL}
+     And the user clicks the button/link    link=Robot test application
+     And the user clicks the button/link    link=Your finances
+     Then The user should see the text in the page     Finance summary
+     And the finance summary table in Your Finances has correct values for lead
+
+Your Finance inludes Finance summary table for collaborator
+     [Documentation]    INFUND-6893
+     [Tags]    HappyPath
+     [Setup]  log in as a different user    &{collaborator2_credentials}
+      When the user navigates to the page    ${DASHBOARD_URL}
+      And the user clicks the button/link    link=Robot test application
+      And the user clicks the button/link    link=Your finances
+      Then The user should see the text in the page     Finance summary
+      And the finance summary table in Your Finances has correct values for collaborator
+
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]    HappyPath
@@ -99,6 +119,8 @@ Alert should not show If research participation is below the maximum level
     Then the user should see the text in the page    The participation levels of this project are within the required range
     [Teardown]
 
+
+
 *** Keywords ***
 the finance Project cost breakdown calculations should be correct
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £385
@@ -114,6 +136,32 @@ the finance summary calculations should be correct
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £58,529
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £2,468
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £141,172
+
+the finance summary table in Your Finances has correct values for lead
+    the user sees the text in the element    Total project costs
+    the user sees the text in the element
+    the user sees the text in the element    % Grant
+    the user sees the text in the element
+    the user sees the text in the element    Funding sought
+    the user sees the text in the element
+    the user sees the text in the element    Other public sector funding
+    the user sees the text in the element
+    the user sees the text in the element    Contribution to project
+    the user sees the text in the element
+
+the finance summary table in Your Finances has correct values for collaborator
+    the user sees the text in the element    Total project costs
+    the user sees the text in the element
+    the user sees the text in the element    % Grant
+    the user sees the text in the element
+    the user sees the text in the element    Funding sought
+    the user sees the text in the element
+    the user sees the text in the element    Other public sector funding
+    the user sees the text in the element
+    the user sees the text in the element    Contribution to project
+    the user sees the text in the element
+
+
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
