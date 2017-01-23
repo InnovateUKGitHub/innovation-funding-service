@@ -45,7 +45,7 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
     // TODO DW - INFUND-1555 - handle rest results
     public void addFinanceDetails(Model model, Long competitionId, Long projectId) {
         addFinanceSections(competitionId, model);
-        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationProjectFinanceOverview(financeService, projectId);
+        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationProjectFinanceOverviewImpl(financeService, projectId);
         model.addAttribute("financeTotal", organisationFinanceOverview.getTotal());
         model.addAttribute("financeTotalPerType", organisationFinanceOverview.getTotalPerType());
         Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();

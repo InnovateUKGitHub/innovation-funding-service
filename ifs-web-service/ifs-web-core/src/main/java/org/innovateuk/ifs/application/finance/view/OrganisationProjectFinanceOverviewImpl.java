@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Configurable
-public class OrganisationProjectFinanceOverview implements OrganisationFinanceOverview {
+public class OrganisationProjectFinanceOverviewImpl implements OrganisationFinanceOverview {
 
     private Long projectId;
     private List<ProjectFinanceResource> projectFinances = new ArrayList<>();
@@ -24,11 +24,11 @@ public class OrganisationProjectFinanceOverview implements OrganisationFinanceOv
     private FinanceService financeService;
 
 
-    public OrganisationProjectFinanceOverview() {
+    public OrganisationProjectFinanceOverviewImpl() {
     	// no-arg constructor
     }
 
-    public OrganisationProjectFinanceOverview(FinanceService financeService, Long projectId) {
+    public OrganisationProjectFinanceOverviewImpl(FinanceService financeService, Long projectId) {
         this.projectId = projectId;
         this.financeService = financeService;
         initializeOrganisationFinances();

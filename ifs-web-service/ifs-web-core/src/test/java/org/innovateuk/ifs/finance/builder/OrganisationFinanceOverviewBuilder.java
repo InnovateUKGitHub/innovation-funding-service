@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.finance.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverview;
+import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 
@@ -29,7 +29,7 @@ public class OrganisationFinanceOverviewBuilder extends BaseBuilder<Organisation
 
     @Override
     protected OrganisationFinanceOverview createInitial() {
-        return new OrganisationApplicationFinanceOverview();
+        return new OrganisationApplicationFinanceOverviewImpl();
     }
 
     public OrganisationFinanceOverviewBuilder withApplicationId(Long... applicationIds) {
