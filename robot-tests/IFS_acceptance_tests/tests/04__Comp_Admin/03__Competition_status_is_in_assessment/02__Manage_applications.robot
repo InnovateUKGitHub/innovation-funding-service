@@ -24,6 +24,20 @@ The user can click the View Progress button
     And the user should see the text in the page    University of Bath
     And the user should see the text in the page    Cardiff University
 
+The user can see the assigned list
+    [Documentation]    INFUND-7230
+    [Tags]
+    Given the user should see the text in the page    Assigned (2)
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(1):contains("Paul Plum")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(2):contains("ACADEMIC")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living, Infrastructure")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("8")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("4")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("Yes")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(7):contains("Yes")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(8):contains("-")
+    And the user should see the element    jQuery=tr:eq(1) td:nth-child(9):contains("-")
+
 The user can click the review applicaton button
     [Documentation]    INFUND-7046
     [Tags]
