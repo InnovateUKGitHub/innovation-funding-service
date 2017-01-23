@@ -45,6 +45,7 @@ public class InnovationAreaResource extends CategoryResource {
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
                 .append(sector, that.sector)
+                .append(sectorName, that.sectorName)
                 .isEquals();
     }
 
@@ -53,6 +54,7 @@ public class InnovationAreaResource extends CategoryResource {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(sector)
+                .append(sectorName)
                 .toHashCode();
     }
 }
