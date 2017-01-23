@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.finance.view.jes;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.form.AcademicFinance;
 import org.innovateuk.ifs.application.finance.model.AcademicFinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
@@ -36,7 +37,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
     FinanceService financeService;
 
     @Override
-    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
+    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
         if (applicationFinanceResource != null) {
@@ -64,8 +65,8 @@ public class JESFinanceModelManager implements FinanceModelManager {
     }
 
     @Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, FinanceRowType costType) {
-
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
+        throw new NotImplementedException("JES forms dont have any cost data.");
     }
 
     protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {

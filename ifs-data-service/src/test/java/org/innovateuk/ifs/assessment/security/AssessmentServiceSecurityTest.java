@@ -74,6 +74,22 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
+    public void findByStateAndCompetition() {
+        AssessmentStates state = AssessmentStates.CREATED;
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN, COMP_EXEC);
+    }
+
+    @Test
+    public void countByStateAndCompetition() {
+        AssessmentStates state = AssessmentStates.CREATED;
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, COMP_EXEC);
+    }
+
+    @Test
     public void getTotalScore() {
         Long assessmentId = 1L;
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());

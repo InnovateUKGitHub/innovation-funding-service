@@ -51,10 +51,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.workflow.ProcessOutcomeService;
 import org.junit.Before;
@@ -185,9 +182,11 @@ public class BaseUnitTest {
     @Mock
     public DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
+    public DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
+    @Mock
     public FinanceHandler financeHandler;
     @Mock
-    public FinanceOverviewModelManager financeOverviewModelManager;
+    public ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
     @Mock
     public FinanceFormHandler financeFormHandler;
     @Mock
@@ -216,6 +215,8 @@ public class BaseUnitTest {
     public CookieUtil cookieUtil;
     @Mock
     public CategoryService categoryServiceMock;
+    @Mock
+    public UserRestService userRestServiceMock;
     @Mock
     public AssessmentRestService assessmentRestService;
     @Mock
