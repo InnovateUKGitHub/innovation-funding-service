@@ -292,7 +292,8 @@ public class ProjectSpendProfileController {
         return new ProjectSpendProfileViewModel(projectResource, organisationResource, spendProfileTableResource, summary,
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
-                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation, userHasProjectManagerRole(loggedInUser, projectResource.getId()),
+                spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation,
+                projectService.userIsProjectManagerOf(loggedInUser.getId(), projectResource.getId()),
                 isApproved(projectResource.getId()), leadPartner);
     }
 
@@ -303,7 +304,7 @@ public class ProjectSpendProfileController {
     }
 
     private ProjectSpendProfileProjectSummaryViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
-                                                                                                   final UserResource loggedInUser) {
+                                                                                      final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
@@ -324,20 +325,6 @@ public class ProjectSpendProfileController {
     private boolean isApproved(final Long projectId) {
         ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
         return COMPLETE.equals(teamStatus.getLeadPartnerStatus().getSpendProfileStatus());
-    }
-
-    private boolean userHasProjectManagerRole(UserResource user, Long projectId) {
-        Optional<ProjectUserResource> existingProjectManager = getProjectManager(projectId);
-        return existingProjectManager.isPresent() && existingProjectManager.get().getUser().equals(user.getId());
-    }
-
-    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        return projectService.getProjectUsersForProject(projectId).stream().filter(pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName())).findFirst();
-    }
-
-    private boolean isProjectManager(UserResource user, Long projectId) {
-        return getProjectManager(projectId)
-                .map(projectManager -> projectManager.getUser().equals(user.getId())).orElse(false);
     }
 
     private Map<String, Boolean> determineEditablePartners(Long projectId, List<OrganisationResource> partnerOrganisations, final UserResource loggedInUser) {

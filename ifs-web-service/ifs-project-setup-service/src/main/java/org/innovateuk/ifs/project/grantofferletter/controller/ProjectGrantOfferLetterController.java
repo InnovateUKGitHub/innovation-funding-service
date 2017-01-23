@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
+import static java.util.function.Function.identity;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
@@ -159,10 +160,9 @@ public class ProjectGrantOfferLetterController {
 
         Boolean grantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
 
-        boolean isProjectManager = getProjectManager(projectId)
-                .map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
+        boolean isProjectManager = projectService.userIsProjectManagerOf(loggedInUser.getId(), projectId);
 
-        boolean isGrantOfferLetterSent = projectService.isGrantOfferLetterAlreadySent(projectId).isSuccess() ? projectService.isGrantOfferLetterAlreadySent(projectId).getSuccessObject() : false;
+        boolean isGrantOfferLetterSent = projectService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
 
         return new ProjectGrantOfferLetterViewModel(projectId, project.getName(),
                 leadPartner,
@@ -194,10 +194,4 @@ public class ProjectGrantOfferLetterController {
             throw new ObjectNotFoundException("Could not find Collaboration Agreement for project " + projectId, singletonList(projectId));
         }
     }
-
-    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
-    }
-
 }
