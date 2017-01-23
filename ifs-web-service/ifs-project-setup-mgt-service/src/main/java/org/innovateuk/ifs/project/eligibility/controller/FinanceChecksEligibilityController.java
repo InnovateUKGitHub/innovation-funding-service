@@ -1,5 +1,9 @@
 package org.innovateuk.ifs.project.eligibility.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.application.finance.service.FinanceRowService;
+import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
@@ -13,6 +17,8 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -25,7 +31,9 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +41,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -53,6 +62,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 public class FinanceChecksEligibilityController {
 
     private static final String FORM_ATTR_NAME = "form";
+    private static final String ADD_COST = "add_cost";
+    private static final String QUESTION_ID = "questionId";
+    public static final String APPLICATION_ID = "applicationId";
 
     @Autowired
     private FinanceCheckService financeCheckService;
@@ -83,6 +95,12 @@ public class FinanceChecksEligibilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
+
+    @Autowired
+    private FinanceHandler financeHandler;
+
+    @Autowired
+    private FinanceRowService financeRowService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
@@ -136,6 +154,39 @@ public class FinanceChecksEligibilityController {
                 application.getFormattedId(), leadPartnerOrganisation, project.getId(),
                 eligibilityApproved, eligibility.getEligibilityStatus(), eligibility.getEligibilityApprovalUserFirstName(),
                 eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate());
+    }
+
+    @RequestMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
+    public String addCostRow(@ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+                             BindingResult bindingResult,
+                             Model model,
+                             @PathVariable("projectId") Long projectId,
+                             @PathVariable("organisationId") Long organisationId,
+                             @PathVariable(QUESTION_ID) final Long questionId,
+                             HttpServletRequest request) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
+
+        FinanceRowItem costItem = addCost(organisationType, projectId, questionId, request);
+        FinanceRowType costType = costItem.getCostType();
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
+
+        form.setBindingResult(bindingResult);
+        return String.format("finance/finance :: %s_row", costType.getType());
+    }
+
+    @RequestMapping(value = "/remove_cost/{costId}")
+    public @ResponseBody
+    String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
+        financeRowService.delete(costId);
+        AjaxResult ajaxResult = new AjaxResult(HttpStatus.OK, "true");
+        ObjectMapper mapper = new ObjectMapper();
+        return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
+    }
+
+    private FinanceRowItem addCost(String orgType, Long projectId, Long questionId, HttpServletRequest request) {
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        return financeHandler.getFinanceFormHandler(orgType).addProjectCostWithoutPersisting(projectId, user.getId(), questionId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
