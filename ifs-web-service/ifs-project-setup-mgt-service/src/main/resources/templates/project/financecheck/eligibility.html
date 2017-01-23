@@ -61,10 +61,9 @@
         <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
         <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h3>
-                <span th:text="${subSection.getName()}" th:remove="tag" />
-                <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
-                <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}" />
-                <!--<span class="section-percentage" th:attr="data-mirror='#section-percentage-'+${subSection.id}"/>-->
+                <th:block th:text="${subSection.getName()}" />
+                <span th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
+                <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
             </h3>
             <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
                 <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
