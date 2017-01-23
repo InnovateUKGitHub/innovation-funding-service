@@ -57,8 +57,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller is for allowing internal users to view and update application finances entered by applicants
- * It is only used by the workaround in place for adding finance check eligible totals currently.  It wil in future
- * be repalced by different controller.
+ * It is only used by the workaround in place for adding finance check eligible totals currently.  It will in future
+ * be replaced by different controller.
  */
 @Controller
 @RequestMapping("/project/{projectId}/finance-check")
