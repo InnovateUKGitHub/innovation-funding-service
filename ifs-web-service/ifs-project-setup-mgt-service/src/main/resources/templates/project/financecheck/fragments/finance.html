@@ -99,6 +99,12 @@
                                type="text"
                                th:id="${'section-total-'+subSection.id}"
                                th:value="'£ ' + ${costCategory.getTotal() != null ? #numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT') : 0}" />
+
+                        <!--<input class="visuallyhidden"-->
+                               <!--readonly="readonly"-->
+                               <!--type="text"-->
+                               <!--th:id="${'section-percentage-'+subSection.id}"-->
+                               <!--th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),model.eligibilityOverview.totalCost) + '%' : 0}" />-->
                     </div>
                 </div>
             </th:block>

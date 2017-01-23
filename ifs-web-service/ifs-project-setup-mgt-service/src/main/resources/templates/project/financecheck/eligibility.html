@@ -64,6 +64,7 @@
                 <span th:text="${subSection.getName()}" th:remove="tag" />
                 <span th:attr="data-mirror='#section-total-'+${subSection.id}" />
                 <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}" />
+                <!--<span class="section-percentage" th:attr="data-mirror='#section-percentage-'+${subSection.id}"/>-->
             </h3>
             <div th:remove="tag" th:each="question : ${subsectionQuestions.get(subSection.id)}">
                 <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
