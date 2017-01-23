@@ -10,8 +10,8 @@ import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -77,9 +77,9 @@ public class FinanceChecksEligibilityController {
 
     private FinanceChecksEligibilityForm getEligibilityForm(EligibilityResource eligibility) {
 
-        boolean confirmEligibilityChecked = eligibility.getEligibilityStatus() != EligibilityStatus.UNSET;
+        boolean confirmEligibilityChecked = eligibility.getEligibilityRagStatus() != EligibilityRagStatus.UNSET;
 
-        return new FinanceChecksEligibilityForm(eligibility.getEligibilityStatus(), confirmEligibilityChecked);
+        return new FinanceChecksEligibilityForm(eligibility.getEligibilityRagStatus(), confirmEligibilityChecked);
     }
 
     private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, EligibilityResource eligibility) {
@@ -98,7 +98,7 @@ public class FinanceChecksEligibilityController {
 
         return new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
                 application.getFormattedId(), leadPartnerOrganisation, project.getId(),
-                eligibilityApproved, eligibility.getEligibilityStatus(), eligibility.getEligibilityApprovalUserFirstName(),
+                eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
                 eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate());
     }
 
@@ -136,7 +136,7 @@ public class FinanceChecksEligibilityController {
 
         Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, form);
 
-        EligibilityStatus statusToSend = getRagStatus(form);
+        EligibilityRagStatus statusToSend = getRagStatus(form);
 
         ServiceResult<Void> saveEligibilityResult = financeService.saveEligibility(projectId, organisationId, eligibility, statusToSend);
 
@@ -146,13 +146,13 @@ public class FinanceChecksEligibilityController {
 
     }
 
-    private EligibilityStatus getRagStatus(FinanceChecksEligibilityForm form) {
-        EligibilityStatus statusToSend;
+    private EligibilityRagStatus getRagStatus(FinanceChecksEligibilityForm form) {
+        EligibilityRagStatus statusToSend;
 
         if (form.isConfirmEligibilityChecked()) {
-            statusToSend = form.getEligibilityStatus();
+            statusToSend = form.getEligibilityRagStatus();
         } else {
-            statusToSend = EligibilityStatus.UNSET;
+            statusToSend = EligibilityRagStatus.UNSET;
         }
         return statusToSend;
     }

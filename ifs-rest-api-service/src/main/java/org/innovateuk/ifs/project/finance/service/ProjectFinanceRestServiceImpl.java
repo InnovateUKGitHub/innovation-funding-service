@@ -4,11 +4,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -94,10 +94,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
-    public RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
+    public RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/viability/" + viability.name() + "/" + viabilityRagRating.name();
+                "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
 
         return postWithRestResult(postUrl, Void.class);
     }
@@ -108,10 +108,10 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
-    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
+    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/eligibility/" + eligibility.name() + "/" + eligibilityStatus.name();
+                "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
 
         return postWithRestResult(postUrl, Void.class);
     }

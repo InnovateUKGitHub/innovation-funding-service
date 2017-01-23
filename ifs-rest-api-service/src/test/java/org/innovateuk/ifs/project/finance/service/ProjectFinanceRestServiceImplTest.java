@@ -4,11 +4,11 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
@@ -161,25 +161,25 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testGetViability() {
 
-        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
+        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
 
         setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/viability", ViabilityResource.class, viability);
 
         RestResult<ViabilityResource> results = service.getViability(123L, 456L);
 
         assertEquals(Viability.APPROVED, results.getSuccessObject().getViability());
-        assertEquals(ViabilityStatus.GREEN, results.getSuccessObject().getViabilityStatus());
+        assertEquals(ViabilityRagStatus.GREEN, results.getSuccessObject().getViabilityRagStatus());
     }
 
     @Test
     public void testSaveViability() {
 
         String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/viability/" +
-                Viability.APPROVED.name() + "/" + ViabilityStatus.RED.name();
+                Viability.APPROVED.name() + "/" + ViabilityRagStatus.RED.name();
 
         setupPostWithRestResultExpectations(postUrl, OK);
 
-        RestResult<Void> result = service.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.RED);
+        RestResult<Void> result = service.saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.RED);
 
         assertTrue(result.isSuccess());
 
@@ -189,25 +189,25 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     @Test
     public void testGetEligibility() {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
 
         setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/eligibility", EligibilityResource.class, eligibility);
 
         RestResult<EligibilityResource> results = service.getEligibility(123L, 456L);
 
         assertEquals(Eligibility.APPROVED, results.getSuccessObject().getEligibility());
-        assertEquals(EligibilityStatus.GREEN, results.getSuccessObject().getEligibilityStatus());
+        assertEquals(EligibilityRagStatus.GREEN, results.getSuccessObject().getEligibilityRagStatus());
     }
 
     @Test
     public void testSaveEligibility() {
 
         String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/eligibility/" +
-                Eligibility.APPROVED.name() + "/" + EligibilityStatus.RED.name();
+                Eligibility.APPROVED.name() + "/" + EligibilityRagStatus.RED.name();
 
         setupPostWithRestResultExpectations(postUrl, OK);
 
-        RestResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.RED);
+        RestResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.RED);
 
         assertTrue(result.isSuccess());
 
