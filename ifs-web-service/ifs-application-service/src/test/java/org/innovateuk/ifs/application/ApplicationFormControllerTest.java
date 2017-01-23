@@ -477,6 +477,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
                         .param("application.name", "")
+                        .param("application.researchCategoryId", "")
                         .param("application.resubmission", "")
                         .param("application.startDate", "")
                         .param("application.startDate.year", "")
@@ -487,6 +488,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertEquals("NotBlank", bindingResult.getFieldError("application.name").getCode());
+        assertEquals("NotNull", bindingResult.getFieldError("application.researchCategoryId").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.durationInMonths").getCode());
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
