@@ -3,7 +3,6 @@ package org.innovateuk.ifs.competitionsetup.form;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
@@ -18,7 +17,6 @@ public class FunderRowForm {
 
     @Min(value=0, message = "{validation.additionalinfoform.funderbudget.min}")
     @NotNull(message = "{validation.additionalinfoform.funderbudget.required}")
-    @Digits(integer = 8, fraction = 2, message = "{validation.additionalinfoform.funderbudget.invalid}")
     private BigInteger funderBudget;
 
     @NotNull
