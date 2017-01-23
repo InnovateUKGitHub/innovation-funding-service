@@ -28,7 +28,7 @@
 
         <th:block th:if="${form != null}" th:object="${form}">
             <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-                <h2 class="heading-medium error-summary-heading">Unable to submit spend profile.</h2>
+                <h2 class="heading-medium error-summary-heading">Unable to send spend profile.</h2>
                 Please review
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
@@ -38,7 +38,7 @@
 
         <div class="error-summary" th:if="${form == null}"
              th:unless="${#lists.isEmpty(model.table.validationMessages.errors)}">
-            <h2 class="heading-medium error-summary-heading">You cannot send us your spend profile. Your total costs are higher than the eligible project costs.</h2>
+            <h2 class="heading-medium error-summary-heading">You cannot submit your spend profile. Your total costs are higher than the eligible project costs.</h2>
             Please review
             <ul class="error-summary-list">
                 <li th:each="err : ${model.table.validationMessages.errors}" th:text="${err.arguments[0]}"></li>
@@ -316,10 +316,10 @@
                 <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
                 <th:block th:unless="${#lists.size(model.table.validationMessages.errors) > 0}">
                 <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                   class="button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Send to lead partner</a>
+                   class="button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
                 </th:block>
                 <th:block th:if="${#lists.size(model.table.validationMessages.errors) > 0}">
-                    <button disabled="disabled" class="button extra-margin">Send to lead partner</button>
+                    <button disabled="disabled" class="button extra-margin">Submit to lead partner</button>
                 </th:block>
             </th:block>
 
