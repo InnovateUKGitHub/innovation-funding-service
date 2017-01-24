@@ -28,6 +28,7 @@ import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -104,6 +105,9 @@ public class ApplicationController {
     @Autowired
     private FormInputService formInputService;
 
+    @Autowired
+    private UserRestService userRestService;
+
 
     public static String redirectToApplication(ApplicationResource application){
         return "redirect:/application/"+application.getId();
@@ -140,9 +144,10 @@ public class ApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         SectionResource section = sectionService.getById(sectionId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
         model.addAttribute("ableToSubmitApplication", ableToSubmitApplication(user, application));
         return "application-details";
     }
@@ -163,8 +168,11 @@ public class ApplicationController {
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), model, form);
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
 
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
+        applicationModelPopulator.addResearchCategoryId(application, model);
+
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
         if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
@@ -310,8 +318,10 @@ public class ApplicationController {
         Long questionId = questionService.extractQuestionProcessRoleIdFromAssignSubmit(request);
         Optional<QuestionResource> question = getQuestion(currentSection, questionId);
 
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
+
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), currentSection, question.map(QuestionResource::getId), model, form);
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
 
         model.addAttribute("currentUser", user);
         model.addAttribute("section", currentSection.orElse(null));

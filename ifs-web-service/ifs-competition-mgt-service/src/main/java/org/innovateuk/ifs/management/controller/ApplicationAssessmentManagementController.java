@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
-import org.innovateuk.ifs.management.model.ManageApplicationsPopulator;
+import org.innovateuk.ifs.management.model.ManageApplicationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,7 +28,7 @@ public class ApplicationAssessmentManagementController {
     private CompetitionsRestService competitionsRestService;
 
     @Autowired
-    private ManageApplicationsPopulator manageApplicationsPopulator;
+    private ManageApplicationsModelPopulator manageApplicationsPopulator;
 
     @RequestMapping(method = RequestMethod.GET)
     public String manageApplications(Model model, @PathVariable("competitionId") long competitionId) {

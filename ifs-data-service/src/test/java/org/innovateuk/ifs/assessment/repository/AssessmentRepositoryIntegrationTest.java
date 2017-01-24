@@ -20,6 +20,7 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -76,6 +77,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void findAll() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
@@ -132,6 +134,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void findFirstByParticipantUserIdAndTargetIdOrderByIdDesc() throws Exception {
         Long applicationId = 1L;
 
@@ -151,6 +154,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void countByParticipantUserIdAndActivityStateStateNotIn() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
@@ -167,6 +171,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
@@ -183,6 +188,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
@@ -210,6 +216,30 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
             assertEquals("Expected the assessments to be ordered by id after ordering by ActivityState",
                     ids.stream().sorted().collect(toList()), ids);
         });
+    }
+
+    @Test
+    public void findByActivityStateStateAndTargetCompetitionId() throws Exception {
+        State state = State.CREATED;
+        Application application = applicationRepository.findOne(1L);
+
+        List<Assessment> found = repository
+                .findByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
+
+        assertEquals(1, found.size());
+        assertEquals(state, found.get(0).getActivityState().getBackingState());
+        assertEquals(application.getCompetition().getId(), found.get(0).getTarget().getCompetition().getId());
+    }
+
+    @Test
+    public void countByActivityStateStateAndTargetCompetitionId() throws Exception {
+        State state = State.CREATED;
+        Application application = applicationRepository.findOne(1L);
+
+        long found = repository
+                .countByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
+
+        assertEquals(1L, found);
     }
 
     @Test

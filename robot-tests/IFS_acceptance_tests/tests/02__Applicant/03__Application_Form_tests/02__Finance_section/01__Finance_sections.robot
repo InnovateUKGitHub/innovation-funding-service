@@ -13,7 +13,7 @@ Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
-Resource          FinanceSection_Commons.robot
+Resource          ../../FinanceSection_Commons.robot
 
 *** Test Cases ***
 Finance sub-sections

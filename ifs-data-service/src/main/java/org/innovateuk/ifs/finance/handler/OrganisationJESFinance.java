@@ -144,6 +144,12 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
     }
 
     @Override
+    public FinanceRowItem costToCostItem(ProjectFinanceRow cost) {
+        FinanceRowHandler financeRowHandler = new JESCostHandler();
+        return financeRowHandler.toCostItem(cost);
+    }
+
+    @Override
     public FinanceRowHandler getCostHandler(FinanceRowType costType) {
         return new JESCostHandler();
     }

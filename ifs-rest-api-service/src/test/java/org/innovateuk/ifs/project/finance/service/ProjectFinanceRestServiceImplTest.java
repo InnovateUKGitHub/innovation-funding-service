@@ -3,6 +3,9 @@ package org.innovateuk.ifs.project.finance.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
 import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
@@ -184,6 +187,34 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
     }
 
     @Test
+    public void testGetEligibility() {
+
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/eligibility", EligibilityResource.class, eligibility);
+
+        RestResult<EligibilityResource> results = service.getEligibility(123L, 456L);
+
+        assertEquals(Eligibility.APPROVED, results.getSuccessObject().getEligibility());
+        assertEquals(EligibilityStatus.GREEN, results.getSuccessObject().getEligibilityStatus());
+    }
+
+    @Test
+    public void testSaveEligibility() {
+
+        String postUrl = projectFinanceRestURL + "/123/partner-organisation/456/eligibility/" +
+                Eligibility.APPROVED.name() + "/" + EligibilityStatus.RED.name();
+
+        setupPostWithRestResultExpectations(postUrl, OK);
+
+        RestResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.RED);
+
+        assertTrue(result.isSuccess());
+
+        setupPostWithRestResultVerifications(postUrl, Void.class);
+    }
+
+    @Test
     public void testIsCreditReportConfirmed() {
 
         setupGetWithRestResultExpectations(projectFinanceRestURL + "/123/partner-organisation/456/credit-report", Boolean.class, true);
@@ -201,5 +232,21 @@ public class ProjectFinanceRestServiceImplTest extends BaseRestServiceUnitTest<P
         assertTrue(result.isSuccess());
 
         setupPostWithRestResultVerifications(postUrl, Void.class);
+    }
+
+    @Test
+    public void testGetProjectFinance() {
+
+        Long projectId = 123L;
+
+        Long organisationId = 456L;
+
+        ProjectFinanceResource expectedResult = newProjectFinanceResource().build();
+
+        setupGetWithRestResultExpectations(projectFinanceRestURL + "/" + projectId + "/organisation/" + organisationId + "/financeDetails", ProjectFinanceResource.class, expectedResult);
+
+        RestResult<ProjectFinanceResource> result = service.getProjectFinance(projectId, organisationId);
+
+        assertEquals(expectedResult, result.getSuccessObject());
     }
 }

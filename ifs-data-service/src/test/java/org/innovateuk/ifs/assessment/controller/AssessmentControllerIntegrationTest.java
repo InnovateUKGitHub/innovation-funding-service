@@ -3,8 +3,10 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -117,6 +119,18 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
         List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
         assertEquals(4, assessmentResources.size());
+    }
+
+    @Test
+    public void countByStateAndCompetition() throws Exception {
+        AssessmentStates state = CREATED;
+        Long competitionId = 1L;
+
+        loginCompAdmin();
+        RestResult<Long> result = controller.countByStateAndCompetition(state, competitionId);
+        assertTrue(result.isSuccess());
+        long count = result.getSuccessObject();
+        assertEquals(1L, count);
     }
 
     @Test

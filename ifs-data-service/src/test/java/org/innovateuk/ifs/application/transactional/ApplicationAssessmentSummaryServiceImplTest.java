@@ -18,20 +18,20 @@ import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.junit.Test;
 import org.mockito.InOrder;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
 import static java.util.EnumSet.of;
-import static java.util.Optional.ofNullable;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
+import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
+import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -66,8 +66,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetition(competition)
                 .build();
 
-        List<Profile> participantProfiles = newProfile().
-                withId(1L, 2L, 3L).
+        Profile[] profiles = newProfile().
                 withBusinessType(BUSINESS, ACADEMIC, BUSINESS).
                 withSkillsAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components").
                 withInnovationArea(
@@ -83,30 +82,38 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                                 .withId(3L)
                                 .withName("Electronics, Sensors and photonics")
                                 .build()).
-                build(3);
+                buildArray(3, Profile.class);
+
+        Map<Long, Profile> participantProfiles = Stream.of(profiles).collect(toMap(Profile::getId, identity()));
+
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
                 .withUser(newUser()
                         .withId(1L, 2L, 3L)
                         .withFirstName("John", "Dave", "Richard")
                         .withLastName("Barnes", "Smith", "Turner")
-                        .withProfile(
-                                participantProfiles.get(0), participantProfiles.get(1), participantProfiles.get(2)
-                        )
+                        .withProfile(profiles)
                         .buildArray(3, User.class))
                 .withStatus(ACCEPTED)
                 .withCompetition(competition)
                 .build(3);
 
-        Map<Long, Assessment> assessmentsForParticipants = asMap(
+        Map<Long, Optional<Assessment>> assessmentsForParticipants = asMap(
+                1L,
                 // Intentionally leaving the first user without an assessment to make them available
+                Optional.empty(),
                 2L,
-                newAssessment()
+                Optional.of(newAssessment()
                         .withActivityState(buildActivityStateWithState(PENDING))
-                        .build(),
+                        .build()),
                 3L,
-                newAssessment()
-                        .withActivityState(buildActivityStateWithState(OPEN))
-                        .build());
+                Optional.of(newAssessment()
+                        .withActivityState(buildActivityStateWithState(REJECTED))
+                        .withProcessOutcome(newProcessOutcome()
+                                .withOutcomeType(REJECT.getType())
+                                .withDescription("Conflict of interest")
+                                .withComment("Member of board of directors")
+                                .build(1))
+                        .build()));
 
         Map<Long, Long> totalApplicationCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
         Map<Long, Long> assignedCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
@@ -120,23 +127,34 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withInnovationAreas(newInnovationAreaResource()
                                 .withId(1L)
                                 .withName("Emerging Tech and Industries")
-                                .build(1),
+                                .buildSet(1),
                         newInnovationAreaResource()
                                 .withId(2L)
                                 .withName("Robotics and AS")
-                                .build(1),
+                                .buildSet(1),
                         newInnovationAreaResource()
                                 .withId(3L)
                                 .withName("Electronics, Sensors and photonics")
-                                .build(1))
+                                .buildSet(1))
                 .withAvailable(true, false, false)
-                .withMostRecentAssessmentState(null, PENDING, OPEN)
+                .withMostRecentAssessmentId(assessmentsForParticipants.get(1L).map(Assessment::getId).orElse(null),
+                        assessmentsForParticipants.get(2L).map(Assessment::getId).orElse(null),
+                        assessmentsForParticipants.get(3L).map(Assessment::getId).orElse(null))
+                .withMostRecentAssessmentState(assessmentsForParticipants.get(1L).map(Assessment::getActivityState).orElse(null),
+                        assessmentsForParticipants.get(2L).map(Assessment::getActivityState).orElse(null),
+                        assessmentsForParticipants.get(3L).map(Assessment::getActivityState).orElse(null))
                 .withTotalApplicationsCount(totalApplicationCountsForParticipants.get(1L),
                         totalApplicationCountsForParticipants.get(2L),
                         totalApplicationCountsForParticipants.get(3L))
-                .withAssignedCount(assignedCountsForParticipants.get(1L), assignedCountsForParticipants.get(2L), assignedCountsForParticipants.get(3L))
-                .withSubmittedCount(submittedCountsForParticipants.get(1L), submittedCountsForParticipants.get(2L), submittedCountsForParticipants.get(3L))
+                .withAssignedCount(assignedCountsForParticipants.get(1L),
+                        assignedCountsForParticipants.get(2L),
+                        assignedCountsForParticipants.get(3L))
+                .withSubmittedCount(submittedCountsForParticipants.get(1L),
+                        submittedCountsForParticipants.get(2L),
+                        submittedCountsForParticipants.get(3L))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
+                .withRejectReason(null, null, "Conflict of interest")
+                .withRejectComment(null, null, "Member of board of directors")
                 .build(3);
 
         EnumSet<AssessmentStates> assessmentStatesThatAreUnassigned = of(REJECTED, WITHDRAWN);
@@ -146,9 +164,9 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
         when(competitionParticipantRepositoryMock
                 .getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED)).thenReturn(competitionParticipants);
-        when(profileRepositoryMock.findOne(participantProfiles.get(0).getId())).thenReturn(participantProfiles.get(0));
-        when(profileRepositoryMock.findOne(participantProfiles.get(1).getId())).thenReturn(participantProfiles.get(1));
-        when(profileRepositoryMock.findOne(participantProfiles.get(2).getId())).thenReturn(participantProfiles.get(2));
+
+        Stream.of(profiles).forEach(profile -> when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile));
+
         when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class)))
                 .then(invocation -> {
                     InnovationArea argument = invocation.getArgumentAt(0, InnovationArea.class);
@@ -158,7 +176,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                             .build();
                 });
         when(assessmentRepositoryMock.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(isA(Long.class), eq(application.getId())))
-                .then(invocation -> ofNullable(assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class))));
+                .then(invocation -> assessmentsForParticipants.get(invocation.getArgumentAt(0, Long.class)));
 
         when(assessmentRepositoryMock.countByParticipantUserIdAndActivityStateStateNotIn(
                 isA(Long.class), eq(getBackingStates(assessmentStatesThatAreUnassigned))))
@@ -176,14 +194,16 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         assertEquals(expected, found);
 
-        InOrder inOrder = inOrder(applicationRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, assessmentRepositoryMock);
+        InOrder inOrder = inOrder(applicationRepositoryMock, competitionParticipantRepositoryMock, innovationAreaMapperMock, assessmentRepositoryMock, profileRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
         inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRoleAndStatus(competition.getId(), CompetitionParticipantRole.ASSESSOR, ACCEPTED);
         competitionParticipants.forEach(competitionParticipant -> {
             Long userId = competitionParticipant.getUser().getId();
+            Long profileId = competitionParticipant.getUser().getProfileId();
             inOrder.verify(assessmentRepositoryMock)
                     .findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(userId, application.getId());
-            profileRepositoryMock.findOne(competitionParticipant.getUser().getProfileId()).getInnovationAreas().forEach(
+            inOrder.verify(profileRepositoryMock).findOne(profileId);
+            participantProfiles.get(profileId).getInnovationAreas().forEach(
                     innovationArea -> inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea));
             inOrder.verify(assessmentRepositoryMock)
                     .countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(assessmentStatesThatAreUnassigned));

@@ -538,6 +538,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected NotificationSender notificationSender;
 
     @Mock
+    protected ActivityStateRepository activityStateRepositoryMock;
+
+    @Mock
     protected UsersRolesService usersRolesServiceMock;
 
     @Before

@@ -13,6 +13,7 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
@@ -49,10 +50,7 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.workflow.ProcessOutcomeService;
 import org.junit.Before;
@@ -80,14 +78,14 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -103,6 +101,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
@@ -183,9 +182,11 @@ public class BaseUnitTest {
     @Mock
     public DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
+    public DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
+    @Mock
     public FinanceHandler financeHandler;
     @Mock
-    public FinanceOverviewModelManager financeOverviewModelManager;
+    public ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
     @Mock
     public FinanceFormHandler financeFormHandler;
     @Mock
@@ -214,6 +215,10 @@ public class BaseUnitTest {
     public CookieUtil cookieUtil;
     @Mock
     public CategoryService categoryServiceMock;
+    @Mock
+    public UserRestService userRestServiceMock;
+    @Mock
+    public AssessmentRestService assessmentRestService;
 
     @Spy
     @InjectMocks
@@ -530,10 +535,14 @@ public class BaseUnitTest {
         // Build the backing applications.
 
         List<ApplicationResource> applicationResources = asList(
-                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3)).withApplicationStatus(ApplicationStatusConstants.CREATED).build(),
-                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4)).withApplicationStatus(ApplicationStatusConstants.SUBMITTED).build(),
-                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5)).withApplicationStatus(ApplicationStatusConstants.APPROVED).build(),
-                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6)).withApplicationStatus(ApplicationStatusConstants.REJECTED).build()
+                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
+                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
+                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
+                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
