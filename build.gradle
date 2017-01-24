@@ -130,6 +130,11 @@ task osTestRemote(type:Exec) {
     args = [openshiftEnv]
 }
 
+task osStopTests(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
+    args = [openshiftEnv]
+}
+
 task happyRobotTests(type:Exec) {
     workingDir 'robot-tests'
     commandLine './micro_run_tests.sh', '-hnw'
