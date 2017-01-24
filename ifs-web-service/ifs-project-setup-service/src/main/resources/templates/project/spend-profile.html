@@ -313,13 +313,13 @@
                 <a class="button button-secondary extra-margin"
                    th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit(projectId=${model.projectId},organisationId=${model.organisationId})}">Edit spend profile</a>
 
-                <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
+                <p class="extra-margin">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will send all costs to Innovate UK.</p>
                 <th:block th:unless="${#lists.size(model.table.validationMessages.errors) > 0}">
                 <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/confirm(projectId=${model.projectId},organisationId=${model.organisationId})}"
-                   class="button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Send to lead partner</a>
+                   class="button extra-margin" data-js-modal="modal-confirm-spend-profile-submit">Submit to lead partner</a>
                 </th:block>
                 <th:block th:if="${#lists.size(model.table.validationMessages.errors) > 0}">
-                    <button disabled="disabled" class="button extra-margin">Send to lead partner</button>
+                    <button disabled="disabled" class="button extra-margin">Submit to lead partner</button>
                 </th:block>
             </th:block>
 

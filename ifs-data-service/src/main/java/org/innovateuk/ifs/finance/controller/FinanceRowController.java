@@ -79,4 +79,11 @@ public class FinanceRowController {
     public RestResult<Void> delete(@PathVariable("costId") final Long costId) {
         return financeRowService.deleteCost(costId).toDeleteResponse();
     }
+
+    @RequestMapping("/project/add-without-persisting/{projectFinanceId}/{questionId}")
+    public RestResult<FinanceRowItem> addProjectCostWithoutPersisting(
+            @PathVariable("projectFinanceId") final Long projectFinanceId,
+            @PathVariable("questionId") final Long questionId) {
+        return financeRowService.addProjectCostWithoutPersisting(projectFinanceId, questionId).toPostCreateResponse();
+    }
 }

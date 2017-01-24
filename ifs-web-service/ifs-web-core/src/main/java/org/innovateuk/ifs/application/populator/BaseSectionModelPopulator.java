@@ -53,7 +53,7 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
-    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections);
+    public abstract BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId);
 
     protected NavigationViewModel addNavigation(SectionResource section, Long applicationId) {
         return applicationNavigationPopulator.addNavigation(section, applicationId);
@@ -144,6 +144,6 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> input.getId().equals(id));
+        return simpleFilter(list, input -> input.getQuestion().equals(id));
     }
 }

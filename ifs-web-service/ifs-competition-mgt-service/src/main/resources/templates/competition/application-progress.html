@@ -83,9 +83,12 @@
                             </td>
                             <td class="alignright">
                                 <a class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
-                                href="#"
-                                th:attr="data-modal-form-url=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId})}"
-                                th:unless="${assessor.submitted}">Remove</a>
+                                   th:href="${removeActionNonJs}"
+                                   th:attr="data-modal-form-action=${removeAction}"
+                                   th:with="
+                                   removeAction=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},sortField=${form.sortField})},
+                                   removeActionNonJs=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},sortField=${form.sortField})}"
+                                   th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assigned)}">
@@ -265,7 +268,7 @@
                             <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
                                 <form method="post"
-                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}?sortField={sortField}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, sortField=${form.sortField})}">
+                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, sortField=${form.sortField})}">
                                     <button type="submit" class="button-secondary no-margin">Assign</button>
                                 </form>
                             </td>

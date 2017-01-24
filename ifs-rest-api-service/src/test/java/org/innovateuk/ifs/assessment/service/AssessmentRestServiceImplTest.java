@@ -66,6 +66,17 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
+    public void countByStateAndCompetition() throws Exception {
+        Long expected = 2L;
+
+        AssessmentStates state = AssessmentStates.CREATED;
+        Long competitionId = 2L;
+
+        setupGetWithRestResultExpectations(format("%s/state/%s/competition/%s/count", assessmentRestURL, state, competitionId), Long.TYPE, expected);
+        assertSame(expected, service.countByStateAndCompetition(state, competitionId).getSuccessObject());
+    }
+
+    @Test
     public void getTotalScore() throws Exception {
         AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource().build();
 
