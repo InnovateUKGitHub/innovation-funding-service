@@ -41,7 +41,6 @@ public class ApplicationCountSummaryResourceBuilder extends BaseBuilder<Applicat
         return withArraySetFieldByReflection("leadOrganisation", leadOrganisations);
     }
 
-    @SuppressWarnings("varargs")
     public ApplicationCountSummaryResourceBuilder withAssessors(Long... assessors) {
         return withArraySetFieldByReflection("assessors", assessors);
     }
