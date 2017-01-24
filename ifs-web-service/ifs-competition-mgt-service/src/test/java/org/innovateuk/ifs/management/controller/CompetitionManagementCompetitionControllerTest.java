@@ -77,6 +77,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals("Technology inspired", model.getCompetitionName());
 
         verify(competitionService, only()).getById(competition.getId());
+        verify(assessmentRestService, only()).countByStateAndCompetition(AssessmentStates.CREATED, competition.getId());
     }
 
     @Test

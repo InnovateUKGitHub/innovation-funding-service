@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
+import org.innovateuk.ifs.application.domain.Question;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -24,6 +26,11 @@ public class ProjectFinanceRow extends FinanceRow<ProjectFinance> {
 
     public ProjectFinanceRow(ProjectFinance target) {
         this.target = target;
+    }
+
+    public ProjectFinanceRow(ProjectFinance projectFinance, Question question) {
+        super(question);
+        this.target = projectFinance;
     }
 
     @Override

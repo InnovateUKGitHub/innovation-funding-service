@@ -48,14 +48,14 @@
     <div class="remove-assigned-assessor-modal" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
 
-        <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-form" th:remove="tag" />
+        <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-form (action='#')" th:remove="tag" />
     </div>
 </div>
 
 
 <!-- ======== Assessment - remove assigned assessor form for modal and non-js page ======= -->
-<div th:fragment="comp-setup-remove-assigned-assessor-form">
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" novalidate="novalidate">
+<div th:fragment="comp-setup-remove-assigned-assessor-form (action)">
+    <form th:action="${action}" method="post" novalidate="novalidate">
         <h2 class="heading-medium no-margin">Are you sure you want to remove this Assessor from the application?</h2>
 
         <p>When you click <strong>Remove and notify</strong> the application will be removed from the assessor and they will be notified of the removal straight away.</p>

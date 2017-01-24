@@ -108,6 +108,10 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this), true) })
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this), true) })
 
+      jQuery('body').on('change', '[data-set-section-valid]', function () {
+        var section = jQuery(this).attr('data-set-section-valid')
+        IFS.core.formValidation.setSectionValid(section)
+      })
       // set data attribute on date fields
       // which has the combined value of the dates
       // and also makes sure that other vaidation doesn't get triggered
@@ -596,6 +600,26 @@ IFS.core.formValidation = (function () {
         jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
       }
       jQuery(window).trigger('updateWysiwygPosition')
+    },
+    setSectionValid: function (section) {
+      section = jQuery(section)
+      section.removeClass('error')
+      var inputs = section.find('.field-error')
+
+      //  remove error messages from section + error summary
+      section.find('.error-message').each(function () {
+        var errorMessage = jQuery(this)
+        var content = errorMessage.text()
+        jQuery('.error-summary-list li:contains(' + content + ')').first().remove()
+        errorMessage.remove()
+      })
+
+      jQuery.each(inputs, function () {
+        jQuery(this).removeClass('field-error').val('')
+        if (s.html5validationMode) {
+          this.setCustomValidity('')
+        }
+      })
     },
     getIdentifier: function (el) {
       if (el.is('[data-date]')) {
