@@ -1169,5 +1169,4 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
             notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }
-
 }
