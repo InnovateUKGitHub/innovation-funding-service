@@ -3,8 +3,14 @@ package org.innovateuk.ifs.util;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.partitioningBy;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static java.util.stream.Collectors.groupingBy;
@@ -60,9 +66,9 @@ public final class MapFunctions {
 
         Map<R, List<T>> grouped = list.stream().collect(groupingBy(groupFn));
         Map<R, Integer> numberOfOccurrancesByGrouping =
-                simpleToMap(new ArrayList<>(grouped.entrySet()), Map.Entry::getKey, entry -> entry.getValue().size());
+                simpleToMap(new ArrayList<>(grouped.entrySet()), Entry::getKey, entry -> entry.getValue().size());
 
-        List<Map.Entry<R, Integer>> entries = new ArrayList<>(numberOfOccurrancesByGrouping.entrySet());
+        List<Entry<R, Integer>> entries = new ArrayList<>(numberOfOccurrancesByGrouping.entrySet());
         entries.sort((entry1, entry2) -> entry2.getValue().compareTo(entry1.getValue()));
         LinkedHashMap<R, Integer> sortedMap = new LinkedHashMap<>();
         entries.forEach(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
@@ -120,4 +126,26 @@ public final class MapFunctions {
         map2.forEach((key, value) -> combined.put(key, value));
         return combined;
     }
+
+    /**
+     * Partitions a map based upon a given predicate for the entries, and returns the two maps in a Pair, with the "true" list being the
+     * key (left) and the "false" list being the value (right)
+     *
+     * @param map
+     * @param test
+     * @param <T>
+     * @return
+     */
+    public static <T, S> Pair<Map<T, S>, Map<T, S>> simplePartition(Map<T, S> map, Predicate<Entry<T, S>> test) {
+        if (map == null || map.isEmpty()) {
+            return Pair.of(emptyMap(), emptyMap());
+        }
+
+        Map<Boolean, List<Entry<T, S>>> partitioned = map.entrySet().stream().collect(partitioningBy(test));
+        Map<T, S> left = partitioned.get(true).stream().collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        Map<T, S> right = partitioned.get(false).stream().collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+        return Pair.of(left, right);
+    }
+
+
 }

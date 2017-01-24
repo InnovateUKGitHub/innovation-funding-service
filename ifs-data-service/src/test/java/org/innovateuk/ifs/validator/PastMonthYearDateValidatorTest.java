@@ -6,9 +6,6 @@ import org.junit.Test;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 import static java.time.LocalDateTime.now;
 import static java.time.format.DateTimeFormatter.ofPattern;
 import static org.innovateuk.ifs.validator.ValidatorTestUtil.getBindingResult;
@@ -23,7 +20,7 @@ public class PastMonthYearDateValidatorTest {
 
     @Before
     public void setUp() {
-        validator = new PastMonthYearDateValidator();
+        validator = new PastMMYYYYValidator();
         formInputResponse = new FormInputResponse();
         bindingResult = getBindingResult(formInputResponse);
     }

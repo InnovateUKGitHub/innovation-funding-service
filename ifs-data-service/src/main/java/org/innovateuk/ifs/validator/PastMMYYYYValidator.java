@@ -6,16 +6,11 @@ import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 
-import java.math.BigDecimal;
-import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.time.temporal.ChronoField;
 import java.time.temporal.TemporalAccessor;
-import java.time.temporal.TemporalField;
 
-import static java.math.BigDecimal.ZERO;
 import static java.time.temporal.ChronoField.MONTH_OF_YEAR;
 import static java.time.temporal.ChronoField.YEAR;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
@@ -25,8 +20,8 @@ import static org.innovateuk.ifs.commons.rest.ValidationMessages.rejectValue;
  * Format MM-YYYY
  */
 @Component
-public class PastMonthYearDateValidator extends BaseValidator {
-    private static final Log LOG = LogFactory.getLog(PastMonthYearDateValidator.class);
+public class PastMMYYYYValidator extends BaseValidator {
+    private static final Log LOG = LogFactory.getLog(PastMMYYYYValidator.class);
     private static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy");
 
     @Override
