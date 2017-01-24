@@ -69,8 +69,8 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     @Override
     public void configure(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
         transitions
-                .withExternal()
-                    .source(CREATED).target(CREATED)
+                .withInternal()
+                    .source(CREATED)
                     .event(WITHDRAW)
                     .action(withdrawCreatedAction)
                     .and()

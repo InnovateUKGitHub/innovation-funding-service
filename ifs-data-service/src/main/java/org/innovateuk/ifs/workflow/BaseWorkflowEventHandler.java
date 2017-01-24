@@ -71,6 +71,8 @@ public abstract class BaseWorkflowEventHandler<ProcessType extends Process<Parti
             ActivityState newState = activityStateRepository.findOneByActivityTypeAndState(getActivityType(), state.getId().getBackingState());
             processToUpdate.setActivityState(newState);
             processToUpdate.setProcessEvent(message.getPayload().getType());
+
+            getProcessRepository().save(processToUpdate);
         }
     }
 
