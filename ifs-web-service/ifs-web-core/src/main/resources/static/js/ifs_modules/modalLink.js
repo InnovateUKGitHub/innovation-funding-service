@@ -44,7 +44,7 @@ IFS.core.modal = (function () {
       button = jQuery(button)
       var formValid = IFS.core.modal.checkForInputErrors(button)
       var target = jQuery(event.target).attr('data-js-modal')
-      var modalFormUrl = jQuery(event.target).attr('data-modal-form-url')
+      var modalFormAction = jQuery(event.target).attr('data-modal-form-action')
 
       target = jQuery('.' + target)
 
@@ -65,8 +65,8 @@ IFS.core.modal = (function () {
 
       if (target.find('form').length) {
         // update the form url of the modal if a data- attribute exists
-        if (modalFormUrl !== undefined) {
-          target.find('form').attr('action', modalFormUrl)
+        if (modalFormAction !== undefined) {
+          target.find('form').attr('action', modalFormAction)
         }
 
         target.find('form').on('submit', function (event) {

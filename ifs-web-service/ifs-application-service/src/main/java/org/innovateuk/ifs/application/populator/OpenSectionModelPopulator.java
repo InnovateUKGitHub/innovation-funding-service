@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
@@ -79,13 +79,13 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     private InviteRestService inviteRestService;
 
     @Autowired
-    private FinanceOverviewModelManager financeOverviewModelManager;
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Autowired
     private FinanceHandler financeHandler;
 
     @Override
-    public BaseSectionViewModel populateModel(final ApplicationForm form, final Model model, final ApplicationResource application, final SectionResource section, final UserResource user, final BindingResult bindingResult, final List<SectionResource> allSections){
+    public BaseSectionViewModel populateModel(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long organisationId){
         CompetitionResource competition = competitionService.getById(application.getCompetition());
 
         OpenSectionViewModel openSectionViewModel = new OpenSectionViewModel();
@@ -93,7 +93,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         if(null != competition) {
             addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
-            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, allSections);
+            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, allSections, organisationId);
         }
 
         form.setBindingResult(bindingResult);
@@ -260,7 +260,8 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
     //TODO - INFUND-7482 - remove usages of Model model
     private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
-                                                      Model model, ApplicationForm form, List<SectionResource> allSections) {
+                                                      Model model, ApplicationForm form, List<SectionResource> allSections,
+                                                      Long organisationId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         List<SectionResource> financeSections = getSectionsByType(allSections, FINANCE);
 
@@ -269,12 +270,12 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
         if(hasFinanceSection) {
         	
             List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(financeSections.get(0).getId(), QuestionType.COST);
-        	
-            financeOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+
+            applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
             if(!form.isAdminMode()){
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 if(competitionResource.isOpen()) {
-                    financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
+                    financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
                 }
             }
         }

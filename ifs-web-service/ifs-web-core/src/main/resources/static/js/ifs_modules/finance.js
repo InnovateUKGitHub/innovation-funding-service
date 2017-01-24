@@ -102,19 +102,30 @@ IFS.core.finance = (function () {
 
       element.attr('data-calculation-rawvalue', calculatedValue)
 
-      var formatted = IFS.core.finance.formatCurrency(Math.round(calculatedValue))
+      var format = element.is('[data-calculation-format]') ? element.attr('data-calculation-format') : 'currency'
+      var formattedNumber = ''
+
+      if (format === 'percentage') {
+        formattedNumber = IFS.core.finance.formatPercentage(calculatedValue)
+      } else if (format === 'currency') {
+        formattedNumber = IFS.core.finance.formatCurrency(calculatedValue)
+      }
+
       if (element.is('input')) {
-        element.val(formatted)
+        element.val(formattedNumber)
       } else {
-        element.text(formatted)
+        element.text(formattedNumber)
       }
       element.trigger('change')
     },
     formatCurrency: function (total) {
-      total = parseFloat(total, 10)
       total = total.toFixed()
       total = total.replace(/(\d)(?=(\d{3})+\b)/g, '$1,')
-      return '£ ' + total.toString()
+      return '£ ' + total
+    },
+    formatPercentage: function (total) {
+      total = total.toFixed()
+      return total + '%'
     }
   }
 })()

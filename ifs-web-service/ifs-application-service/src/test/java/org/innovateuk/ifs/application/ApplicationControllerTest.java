@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
@@ -259,6 +260,8 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
@@ -288,6 +291,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(app.getId())).thenReturn(restSuccess(fileEntry));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
 
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
@@ -370,6 +376,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
 
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
