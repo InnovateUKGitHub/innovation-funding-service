@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Send Grant Offer Letter'" th:remove="tag" />
 </head>
 <body th:with="context='project-management'" class="project-management grant-offer-letter">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
@@ -152,7 +152,7 @@
 
     <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
         <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
-            Send to project team
+            Publish to project team
         </button>
     </th:block>
 

@@ -328,7 +328,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     }
 
     @Test
-    public void testInviteFinanceContactFails() throws Exception {
+    public void testInviteFinanceContact() throws Exception {
         long competitionId = 1L;
         long applicationId = 16L;
         long projectId = 4L;
@@ -337,7 +337,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         long invitedUserId = 2L;
 
         String invitedUserName = "test";
-        String invitedUserEmail = "test@";
+        String invitedUserEmail = "test@test.com";
 
         ProjectResource projectResource = newProjectResource().withId(projectId).withApplication(applicationId).build();
         OrganisationResource leadOrganisation = newOrganisationResource().withName("Lead Organisation").build();
@@ -390,7 +390,6 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 param("userId", invitedUserId + "").
                 param("name", invitedUserName).
                 param("email", invitedUserEmail).
-                param("financeContact", "-1").
                 param("inviteStatus", testStatus.toString()).
                 param("organisation", organisationId + "")).
                 andExpect(status().isOk()).

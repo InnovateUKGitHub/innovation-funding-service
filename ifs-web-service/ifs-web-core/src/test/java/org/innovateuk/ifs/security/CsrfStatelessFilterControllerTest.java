@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.security;
 
+import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.config.IfSThymeleafDialect;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -38,9 +39,9 @@ import java.time.Instant;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.UUID.randomUUID;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -215,8 +216,7 @@ public class CsrfStatelessFilterControllerTest {
      * Using a unique @Profile to make sure that all of the @Bean methods are bypassed unless the profile is active,
      * which will only be the case for this integration test.
      * Without this restriction, these beans clash with the real ones during the running of
-     * other {@link org.innovateuk.ifs.commons.BaseIntegrationTest} integration tests which load the main Spring
-     * application configuration as well as this one.
+     * other {@link BaseWebIntegrationTest} integration tests which load the main Spring application configuration as well as this one.
      * </p>
      */
     @Configuration

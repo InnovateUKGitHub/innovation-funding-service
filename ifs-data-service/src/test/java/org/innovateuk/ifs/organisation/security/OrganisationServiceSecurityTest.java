@@ -76,20 +76,6 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
     }
 
     @Test
-    public void testGetPrimaryForUser() {
-        assertAccessDenied(() -> classUnderTest.findById(1L), () -> {
-            verify(rules).systemRegistrationUserCanSeeOrganisationsNotYetConnectedToApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules).memberOfOrganisationCanViewOwnOrganisation(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules).usersCanViewOrganisationsOnTheirOwnApplications(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules).compAdminsCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules).projectFinanceUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules).systemRegistrationUserCanSeeAllOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verify(rules).projectPartnerUserCanSeePartnerOrganisationsWithinTheirProjects(isA(OrganisationResource.class), eq(getLoggedInUser()));
-            verifyNoMoreInteractions(rules);
-        });
-    }
-
-    @Test
     public void testCreate() {
         assertAccessDenied(() -> classUnderTest.create(newOrganisationResource().build()), () -> {
             verify(rules).systemRegistrationUserCanCreateOrganisations(isA(OrganisationResource.class), eq(getLoggedInUser()));
@@ -156,7 +142,7 @@ public class OrganisationServiceSecurityTest extends BaseServiceSecurityTest<Org
 
         @Override
         public ServiceResult<OrganisationResource> getPrimaryForUser(Long userId) {
-            return serviceSuccess(newOrganisationResource().build());
+            return null;
         }
 
         @Override

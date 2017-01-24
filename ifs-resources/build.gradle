@@ -11,5 +11,3 @@ dependencies {
 
     testCompile "net.sf.opencsv:opencsv:2.3"
 }
-
-bootRepackage.enabled=false

@@ -1,42 +1,47 @@
 package org.innovateuk.ifs.application.controller;
 
-import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
+import org.flywaydb.core.Flyway;
 import org.junit.After;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
+
+import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.fail;
 
 public class DatabasePatchingTest extends BaseIntegrationTest {
 
-    private static final String[] PATCH_FOLDERS_TO_BE_RUN_ON_PROD = {"db/migration", "db/setup"};
-
     @Value("${flyway.url}")
-    private String databaseUrl;
+    public String databaseUrl;
 
     @Value("${flyway.user}")
-    private String databaseUser;
+    public String databaseUser;
 
     @Value("${flyway.password}")
-    private String databasePassword;
+    public String databasePassword;
 
     @Value("${flyway.locations}")
-    private String locations;
+    public String locations;
 
-    @After
-    public void recreateDatabase(){
-        cleanAndMigrateDatabaseWithPatches(locations.split("\\s*,\\s*"));
-    }
+    private static final String SCHEMA_SCRIPT_DIRECTORY_NAME = "migration";
 
     @Test
-    public void testProductionPatches() throws Exception {
+    public void test() throws Exception {
+        ArrayList<String[]> locations = new ArrayList<>();
+        locations.add(new String[]{"db/migration"});
+        locations.add(new String[]{"db/migration", "db/setup"});
+        locations.add(new String[]{"db/migration", "db/setup", "db/webtest"});
+        locations.add(new String[]{"db/migration", "db/setup", "db/development"});
+        locations.add(new String[]{"db/migration", "db/setup", "db/integration"});
 
-        try {
-            cleanAndMigrateDatabaseWithPatches(PATCH_FOLDERS_TO_BE_RUN_ON_PROD);
-        } catch (Exception e){
-            fail("Exception thrown migrating with script directories: " + asList(PATCH_FOLDERS_TO_BE_RUN_ON_PROD) + e.getMessage());
+        for (String[] location : locations) {
+            try {
+                cleanAndMigrateDatabaseWithPatches(location);
+            } catch (Exception e){
+                fail("Exception thrown migrating with script directories: " + asList(location) + e.getMessage());
+            }
         }
     }
 
@@ -47,4 +52,11 @@ public class DatabasePatchingTest extends BaseIntegrationTest {
         f.clean();
         f.migrate();
     }
+
+    @After
+    public void recreateDatabase(){
+        cleanAndMigrateDatabaseWithPatches(locations.split("\\s*,\\s*"));
+    }
+
+
 }
