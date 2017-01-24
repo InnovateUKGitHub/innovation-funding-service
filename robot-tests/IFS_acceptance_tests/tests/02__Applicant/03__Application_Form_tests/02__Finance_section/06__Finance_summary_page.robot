@@ -15,6 +15,7 @@ Suite Teardown    the user closes the browser
 Force Tags        Applicant  Pending
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
+Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
@@ -44,16 +45,11 @@ Calculations for the first collaborator
     And the finance Project cost breakdown calculations should be correct
     And the applicant enters a bigger funding amount
     Then the contribution to project and funding sought should be 0 and not a negative number
-    [Teardown]    The user closes the browser
 
 Red warning should show when the finances are incomplete
-    [Documentation]    INFUND-927
-    ...
-    ...    INFUND-894
-    ...
-    ...    INFUND-446
+    [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]    HappyPath
-    [Setup]    Guest user log-in    &{lead_applicant_credentials}
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     And the user clicks the button/link    link=Finances overview
@@ -63,9 +59,8 @@ Red warning should show when the finances are incomplete
 
 Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
-    [Tags]  Pending
-    #TODO Pending due to INFUND-6390 will update ticket onces finances update is merged.
-    [Setup]    Make the finances ready for mark as complete
+    [Tags]
+    [Setup]
     When the user marks the finances as complete
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     And the user clicks the button/link    link=Finances overview

@@ -28,7 +28,7 @@
 
         <th:block th:if="${form != null}" th:object="${form}">
             <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
-                <h2 class="heading-medium error-summary-heading">Unable to send spend profile.</h2>
+                <h2 class="heading-medium error-summary-heading">Unable to submit spend profile.</h2>
                 Please review
                 <ul class="error-summary-list">
                     <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>

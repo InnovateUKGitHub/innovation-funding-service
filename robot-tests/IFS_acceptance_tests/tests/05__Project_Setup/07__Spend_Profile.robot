@@ -44,6 +44,10 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6907 Internal server error if tried to save SP with a validation error in it
 ...
 ...               INFUND-6852 When partner submits SP, he should get a popup Submit-Cancel, before is Submitted
+...
+...               INFUND-6801 Show text instead of Id - Spend Profile - Error Summary
+...
+...               INFUND-6138 Partners should be able to see the correct status of SP so to take action
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -83,10 +87,15 @@ Project Finance generates the Spend Profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
 Lead partner can view spend profile page
-    [Documentation]    INFUND-3970
+    [Documentation]    INFUND-3970, INFUND-6138
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
+    When the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should see the element      jQuery=li.require-action:nth-child(6)
     When the user clicks the button/link     link=Spend profile
     And the user clicks the button/link      link=${Katz_Name}
     Then the user should not see an error in the page
@@ -128,13 +137,13 @@ Lead Partner can see Spend profile summary
     Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765, INFUND-6907
+    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801
     [Tags]    #HappyPath
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
     When the user enters text to a text field          css=#row-24-0    2899
     And the user moves focus to the element            css=#row-24-2
-    Then the user should see the text in the page      Unable to send spend profile.
+    Then the user should see the text in the page      Unable to submit spend profile.
     And the user should see the text in the page       Your total costs are higher than your eligible costs
     Then the field has value                           css=#row-total-24    £ 10,669
     And the user should see the element                jQuery=.cell-error #row-total-24
@@ -153,7 +162,7 @@ Lead partner can edit his spend profile with invalid values
     Then the user should see the text in the page      This field can only accept whole numbers
     When the user enters text to a text field          css=#row-24-2    abcd
     And the user moves focus to the element            css=#row-25-2
-    Then the user should see the text in the page      Unable to send spend profile
+    Then the user should see the text in the page      Unable to submit spend profile
     When the user clicks the button/link               jQuery=.button:contains("Save and return to spend profile overview")
     Then the user should not see the text in the page  internal server error
     When the user enters text to a text field          css=#row-26-2    200
@@ -207,13 +216,19 @@ Project Manager can see Spend Profile in Progress
     And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(1) td:nth-child(2):contains("In progress")
 
 Lead partner marks spend profile as complete
-    [Documentation]    INFUND-3765
+    [Documentation]    INFUND-3765, INFUND-6138
     [Tags]    HappyPath
     [Setup]    Log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     Given the user navigates to the page       ${external_spendprofile_summary}/review
     When the user clicks the button/link       jQuery=.button:contains("Mark as complete")
     Then the user should not see the element   jQuery=.success-alert p:contains("Your spend profile is marked as complete. You can still edit this page.")
     And the user should not see the element    css=table a[type="number"]    # checking here that the table has become read-only
+    When the user clicks the button/link            link=Project setup status
+    And the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should see the element             jQuery=li.require-action:nth-child(6)
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -230,11 +245,16 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 
 Non-lead partner can view spend profile page
-    [Documentation]    INFUND-3970
+    [Documentation]    INFUND-3970, INFUND-6138
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
-    When the user clicks the button/link            link=Spend profile
+    When the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should see the element             jQuery=li.require-action:nth-child(6)
+    When the user clicks the button/link             link=Spend profile
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
@@ -269,10 +289,15 @@ Status updates for industrial user after spend profile submission
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
 Project Manager doesn't have the option to send spend profiles until all partners have marked as complete
-    [Documentation]    INFUND-3767
+    [Documentation]    INFUND-3767, INFUND-6138
     [Tags]
     [Setup]    log in as a different user       ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link       link=${PS_SP_APPLICATION_HEADER}
+    And the user clicks the button/link             link=What's the status of each of my partners?
+    Then the user should see the text in the page    Project team status
+    And the user should see the element              jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
+    When the user clicks the button/link             link=Project setup status
+    Then the user should see the element             jQuery=li.require-action:nth-child(6)
     When the user clicks the button/link        link=Spend profile
     Then the user should not see the element    jQuery=.button:contains("Review and send total project")
     #The complete name of the button is anyways not selected. Please use the short version of it.
