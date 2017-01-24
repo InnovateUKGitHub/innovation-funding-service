@@ -487,7 +487,6 @@ PM's Spend profile Summary page gets updated after submit
     [Tags]
     Given the user navigates to the page     ${external_spendprofile_summary}
     Then the user should see the element     jQuery=.success-alert.extra-margin-bottom p:contains("All project spend profiles have been sent to Innovate UK.")
-    And the user should see the element      link=Total project profile spend
     And the user should not see the element  jQuery=.button:contains("Submit project spend profile")
 
 Status updates after spend profile submitted

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -91,6 +92,14 @@ public abstract class BaseTransactionalService  {
 
     protected Supplier<ServiceResult<Application>> application(final Long id) {
         return () -> getApplication(id);
+    }
+
+    protected Supplier<ServiceResult<Project>> project(final Long id) {
+        return () -> getProject(id);
+    }
+
+    protected ServiceResult<Project> getProject(final Long id) {
+        return find(projectRepository.findOne(id), notFoundError(Project.class, id));
     }
 
     protected final Supplier<ServiceResult<Application>> openApplication(long applicationId) {

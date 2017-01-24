@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.user.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.*;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -135,6 +135,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile) {
         return userRestService.updateUserProfile(userId, userProfile).toServiceResult();
+    }
+
+    @Override
+    public Long getUserOrganisationId(Long userId, Long applicationId) {
+        ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
+        return userApplicationRole.getOrganisationId();
     }
 
     @Override
