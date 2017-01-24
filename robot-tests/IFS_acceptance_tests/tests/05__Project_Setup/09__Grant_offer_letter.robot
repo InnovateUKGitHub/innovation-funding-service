@@ -471,20 +471,20 @@ project finance approves Viability for
 all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
-    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
-        And the user clicks the button/link    jQuery=.button:contains("Send")
+    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Cogilith_Id}/spend-profile
-    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
-        And the user clicks the button/link    jQuery=.button:contains("Send")
+    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Review and submit total project")
-    the user clicks the button/link    jQuery=.button:contains("Submit project spend profile")
-    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Submit"]
+    the user clicks the button/link    jQuery=.button:contains("Review and send total project")
+    the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
+    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}
