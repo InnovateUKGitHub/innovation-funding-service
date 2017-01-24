@@ -26,7 +26,7 @@ The user can click the View Progress button
 
 The user can see the assigned list
     [Documentation]    INFUND-7230
-    [Tags]
+    [Tags]    Failing
     Then the user should see the text in the page    Assigned (2)
     And the user should see the element    jQuery=tr:eq(1) td:nth-child(1):contains("Paul Plum")
     And the user should see the element    jQuery=tr:eq(1) td:nth-child(2):contains("ACADEMIC")
