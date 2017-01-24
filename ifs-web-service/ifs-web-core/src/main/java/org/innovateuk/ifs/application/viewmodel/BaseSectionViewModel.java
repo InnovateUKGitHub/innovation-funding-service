@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceViewModel;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
@@ -36,6 +38,8 @@ public abstract class BaseSectionViewModel {
     protected Map<Long, List<FormInputResource>> subSectionQuestionFormInputs;
     protected Set<Long> sectionsMarkedAsComplete;
 
+    protected BaseFinanceViewModel financeViewModel;
+    protected BaseFinanceOverviewViewModel financeOverviewViewModel;
     protected SectionAssignableViewModel sectionAssignableViewModel;
     protected NavigationViewModel navigationViewModel;
     protected SectionApplicationViewModel sectionApplicationViewModel;
@@ -251,5 +255,29 @@ public abstract class BaseSectionViewModel {
 
     public Boolean isShowReturnButtons() {
         return !isSubFinanceSection();
+    }
+
+    public BaseFinanceViewModel getFinanceViewModel() {
+        return financeViewModel;
+    }
+
+    public void setFinanceViewModel(BaseFinanceViewModel financeViewModel) {
+        this.financeViewModel = financeViewModel;
+    }
+
+    public BaseFinanceViewModel getFinance() {
+        return getFinanceViewModel();
+    }
+
+    public BaseFinanceOverviewViewModel getFinanceOverviewViewModel() {
+        return financeOverviewViewModel;
+    }
+
+    public void setFinanceOverviewViewModel(BaseFinanceOverviewViewModel financeOverviewViewModel) {
+        this.financeOverviewViewModel = financeOverviewViewModel;
+    }
+
+    public BaseFinanceOverviewViewModel getFinanceOverview() {
+        return getFinanceOverviewViewModel();
     }
 }

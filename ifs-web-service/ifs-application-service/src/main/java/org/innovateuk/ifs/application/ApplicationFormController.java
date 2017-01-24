@@ -269,30 +269,6 @@ public class ApplicationFormController {
         applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);
     }
 
-
-    private void addFormAttributes(ApplicationResource application,
-                                   CompetitionResource competition,
-                                   Optional<SectionResource> section,
-                                   UserResource user, Model model,
-                                   ApplicationForm form, Optional<QuestionResource> question,
-                                   Optional<List<FormInputResource>> formInputs,
-                                   List<ProcessRoleResource> userApplicationRoles){
-        applicationModelPopulator.addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
-        organisationDetailsViewModelPopulator.populateModel(application.getId(), userApplicationRoles);
-        Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
-
-        if(question.isPresent()) {
-            questionFormInputs.put(question.get().getId(), formInputs.orElse(null));
-        }
-        model.addAttribute("currentQuestion", question.orElse(null));
-        model.addAttribute("questionFormInputs", questionFormInputs);
-        model.addAttribute("currentUser", user);
-        model.addAttribute("form", form);
-        if(question.isPresent()) {
-            model.addAttribute("title", question.get().getShortName());
-        }
-    }
-
     @ProfileExecution
     @RequestMapping(value = {QUESTION_URL + "{"+QUESTION_ID+"}", QUESTION_URL + "edit/{"+QUESTION_ID+"}"}, method = RequestMethod.POST)
     public String questionFormSubmit(@Valid @ModelAttribute(MODEL_ATTRIBUTE_FORM) ApplicationForm form,
