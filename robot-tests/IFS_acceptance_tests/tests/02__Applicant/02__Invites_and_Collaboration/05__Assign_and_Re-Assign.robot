@@ -197,7 +197,9 @@ Lead selects Research Area
     #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     Then the user should see the element       jQuery=legend:contains("Research category")
     When the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    Then the user clicks the button/link      css=button.buttonlink
+    And the applicant completes the application details
+    #Then the user clicks the button/link      css=button.buttonlink
+    And The user clicks the button/link        css=button.button-secondary.app-submit-btn
     #    When the user navigates to his finances page
     #    Then the user should not see the element  jQuery=.error-summary
     # This is not yet working, due to upcomign functionality.
