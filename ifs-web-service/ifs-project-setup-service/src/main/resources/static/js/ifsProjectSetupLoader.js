@@ -23,10 +23,5 @@ IFS.projectSetup.loadOrder = {
       IFS.core.finance.init()
       IFS.projectSetup.spendProfile.init()
     }
-  },
-  common: {
-    init: function () {
-      IFS.projectSetup.clearInputs.init()
-    }
   }
 }

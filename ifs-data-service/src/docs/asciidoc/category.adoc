@@ -1,6 +1,7 @@
 === Retrieve innovation areas
 ==== Request
 include::{snippets}/category/find-innovation-areas/http-request.adoc[]
+include::{snippets}/category/find-innovation-areas/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/category/find-innovation-areas/http-response.adoc[]
@@ -12,6 +13,7 @@ include::{snippets}/category/find-innovation-areas/curl-request.adoc[]
 === Retrieve innovation sectors
 ==== Request
 include::{snippets}/category/find-innovation-sectors/http-request.adoc[]
+include::{snippets}/category/find-innovation-sectors/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/category/find-innovation-sectors/http-response.adoc[]
@@ -23,6 +25,7 @@ include::{snippets}/category/find-innovation-sectors/curl-request.adoc[]
 === Retrieve research categories
 ==== Request
 include::{snippets}/category/find-research-categories/http-request.adoc[]
+include::{snippets}/category/find-research-categories/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/category/find-research-categories/http-response.adoc[]
