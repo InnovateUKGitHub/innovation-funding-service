@@ -69,10 +69,6 @@ public class ProcessRoleBuilder extends BaseBuilder<ProcessRole, ProcessRoleBuil
            }, applications);
     }
 
-    public ProcessRoleBuilder withOrganisation(Organisation... organisations) {
-        return withArray((organisation, processRole) -> setField("organisationId", organisation.getId(), processRole), organisations);
-    }
-
     public ProcessRoleBuilder withOrganisationId(Long... organisationIds) {
         return withArraySetFieldByReflection("organisationId", organisationIds);
     }

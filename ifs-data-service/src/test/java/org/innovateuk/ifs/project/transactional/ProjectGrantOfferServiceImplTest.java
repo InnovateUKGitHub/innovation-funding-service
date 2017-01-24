@@ -204,7 +204,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 build();
 
         leadApplicantProcessRole = newProcessRole().
-                withOrganisation(organisations.get(0)).
+                withOrganisationId(organisations.get(0).getId()).
                 withRole(leadApplicantRole).
                 withUser(user).
                 build();
@@ -494,7 +494,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withLastName("cd")
                 .build();
         ProcessRole leadAppProcessRole = newProcessRole()
-                .withOrganisation(o1)
+                .withOrganisationId(o1.getId())
                 .withUser(u)
                 .withRole(leadAppRole)
                 .build();
@@ -671,7 +671,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Organisation o1 = newOrganisation().withName("OrgLeader").build();
         Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
         User u = newUser().withFirstName("ab").withLastName("cd").build();
-        ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o1).withUser(u).withRole(leadAppRole).build();
+        ProcessRole leadAppProcessRole = newProcessRole().withOrganisationId(o1.getId()).withUser(u).withRole(leadAppRole).build();
         Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
         ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o1).build();
         PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
