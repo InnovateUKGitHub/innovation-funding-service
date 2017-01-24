@@ -56,7 +56,7 @@
 
                 <div th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}" th:remove="tag">
                     <th:block th:if="${financeView != null}" th:with="formInputsForQuestion=(${model.questionFormInputs?.get(question?.id)})">
-                        <div class="question" th:each="formInput, status : $formInputsForQuestion" th:id="'form-input-'+${formInput.getId()}"
+                        <div class="question" th:each="formInput, status : ${formInputsForQuestion}" th:id="'form-input-'+${formInput.getId()}"
                              th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
                              <th:block th:if="${model.isSection}">
                                 <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
