@@ -278,6 +278,11 @@ public class ProjectController {
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 
+    @RequestMapping(value = "/{projectId}/project-manager", method = GET)
+    public RestResult<ProjectUserResource> getProjectManager(@PathVariable(value = "projectId") Long projectId) {
+        return projectService.getProjectManager(projectId).toGetResponse();
+    }
+
     @RequestMapping(value = "/{projectId}/status", method = GET)
     public RestResult<ProjectStatusResource> getStatus(@PathVariable(value = "projectId") Long projectId) {
         return projectStatusService.getProjectStatusByProjectId(projectId).toGetResponse();

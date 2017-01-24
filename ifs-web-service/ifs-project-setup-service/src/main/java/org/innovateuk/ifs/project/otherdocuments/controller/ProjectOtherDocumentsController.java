@@ -196,7 +196,7 @@ public class ProjectOtherDocumentsController {
 
         boolean leadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
 
-        boolean isProjectManager = projectService.userIsProjectManagerOf(loggedInUser.getId(), projectId);
+        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
 
         boolean isSubmitAllowed = projectService.isOtherDocumentSubmitAllowed(projectId);
 

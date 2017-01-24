@@ -81,6 +81,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
+//import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
@@ -92,9 +93,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
-
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
-
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     @Autowired
@@ -273,8 +272,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-        List<ProjectUser> projectUsers = getProjectUsersByProjectId(projectId);
-        return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
+        return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId), projectUserMapper::mapToResource));
     }
 
     @Override
@@ -1164,8 +1162,12 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
-
     }
 
+    @Override
+    public final ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
+            notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
+    }
 
 }

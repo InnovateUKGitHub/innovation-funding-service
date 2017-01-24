@@ -160,7 +160,7 @@ public class ProjectGrantOfferLetterController {
 
         Boolean grantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
 
-        boolean isProjectManager = projectService.userIsProjectManagerOf(loggedInUser.getId(), projectId);
+        boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
 
         boolean isGrantOfferLetterSent = projectService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
 

@@ -339,14 +339,12 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public boolean userIsProjectManagerOf(Long userId, Long projectId) {
-        return getProjectManager(projectId)
-                .map(projectManager -> projectManager.getUser().equals(userId)).orElse(false);
+    public Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        return projectRestService.getProjectManager(projectId).toServiceResult().getOptionalSuccessObject();
     }
 
-    private final Optional<ProjectUserResource> getProjectManager(Long projectId) {
-        //Todo Nuno create endpoint to just get the project manager
-        return getProjectUsersForProject(projectId).stream()
-                .filter(pu -> pu.getRoleName().equals(PROJECT_MANAGER.getName())).findFirst();
+    @Override
+    public final Boolean isProjectManager(Long userId, Long projectId) {
+        return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
     }
 }

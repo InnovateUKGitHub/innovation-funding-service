@@ -679,6 +679,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             return null;
         }
 
+        @Override
+        public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+            return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
+        }
+
     }
 }
 

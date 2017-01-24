@@ -126,6 +126,7 @@ public interface ProjectService {
 
     ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId);
 
-    boolean userIsProjectManagerOf(Long userId, Long projectId);
+    Optional<ProjectUserResource> getProjectManager(Long projectId);
 
+    Boolean isProjectManager(Long userId, Long projectId);
 }

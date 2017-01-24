@@ -164,7 +164,7 @@ public class ProjectSpendProfileController {
 
 
     private final String saveSpendProfileSuccessView(Long projectId, Long organisationId, Long userId) {
-        final String urlSuffix = projectService.userIsProjectManagerOf(userId, projectId) ? "/review" : "";
+        final String urlSuffix = projectService.isProjectManager(userId, projectId) ? "/review" : "";
         return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
 
     }
@@ -293,7 +293,7 @@ public class ProjectSpendProfileController {
                 spendProfileTableResource.getMarkedAsComplete(), categoryToActualTotal, totalForEachMonth,
                 totalOfAllActualTotals, totalOfAllEligibleTotals, projectResource.getSpendProfileSubmittedDate() != null, spendProfileTableResource.getCostCategoryGroupMap(),
                 spendProfileTableResource.getCostCategoryResourceMap(), isResearch, isUserPartOfThisOrganisation,
-                projectService.userIsProjectManagerOf(loggedInUser.getId(), projectResource.getId()),
+                projectService.isProjectManager(loggedInUser.getId(), projectResource.getId()),
                 isApproved(projectResource.getId()), leadPartner);
     }
 
