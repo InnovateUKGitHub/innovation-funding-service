@@ -167,26 +167,12 @@
                     <h2 class="heading-medium">Actions</h2>
                     <div class="grid-row dashboard-actions">
                         <div class="column-third">
-                            <a class="button"
-                               th:classappend="${(model.competitionStatus.name() == 'READY_TO_OPEN' ? 'disabled' : '')}"
-                               th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications</a>
-                        </div>
-                        <!--/*
-                        <div class="column-third">
-                            <button type="submit"
-                                    th:formaction="@{/competition/{competitionId}/notify-assessors(competitionId=${model.competitionId})}"
-                                    th:disabled="${!(model.competitionStatus.name() == 'CLOSED' or (model.competitionStatus.name() == 'IN_ASSESSMENT' and model.changesSinceLastNotify > 0))}"
-                                    class="button button-large">Notify assessors
+                            <button type="submit" class="button button-large"
+                                    th:disabled="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
+                                    th:formaction="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
+                                    th:formmethod="get">Applications
                             </button>
                         </div>
-                        <div class="column-third">
-                            <button type="submit"
-                                    th:formaction="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"
-                                    th:disabled="${model.competitionStatus.name() != 'IN_ASSESSMENT'}"
-                                    class="button button-large">Close assessment
-                            </button>
-                        </div>
-                        */-->
                     </div>
 
                     <div class="grid-row dashboard-actions">
@@ -215,19 +201,22 @@
                                th:classappend="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT' ? 'disabled' : '')}"
                                href="#">Funding decision</a>
                         </div>
+                        <!--
                         <div class="column-third">
                             <a class="button" href="#">Manage funding notifications</a>
                         </div>
                         <div class="column-third">
                             <a class="button" href="#">Release feedback</a>
                         </div>
+                        -->
                     </div>
                 </div>
                 <div class="column-third">
                     <h2 class="heading-medium extra-margin-top">Competition milestones</h2>
                     <ul class="comp-timeline-status">
                         <th:block th:each="milestone : ${model.milestones}">
-                            <li th:class="${(milestone.passed ? 'done' : 'not-done')}">
+                            <li th:if="${milestone.milestoneType.presetDate}"
+                                th:class="${(milestone.passed ? 'done' : 'not-done')}">
                                 <h3 class="heading-small" th:text="${milestone.milestoneType.milestoneDescription}">
                                     Milestone</h3>
                                 <p th:text="${milestone.dateTime} ? ${#temporals.format(milestone.dateTime, 'dd MMMM yyyy')}">
@@ -245,6 +234,16 @@
                                         th:formaction="@{/competition/{competitionId}/close-assessment(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}"
                                         class="button button-large">Close assessment
+                                </button>
+                                <button type="submit"
+                                        th:case="'FUNDERS_PANEL'"
+                                        th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
+                                        class="button button-large">Manage funding notifications
+                                </button>
+                                <button type="submit"
+                                        th:case="'RELEASE_FEEDBACK'"
+                                        th:if="${model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
+                                        class="button button-large">Release feedback
                                 </button>
                             </th:block>
                         </th:block>
