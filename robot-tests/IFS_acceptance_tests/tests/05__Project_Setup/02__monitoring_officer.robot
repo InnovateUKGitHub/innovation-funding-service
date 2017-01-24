@@ -83,7 +83,7 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
-    [Teardown]  the user clicks the button/link     link=Competition dashboard
+    [Teardown]  the user clicks the button/link     link=Projects in setup
 
 
 MO server-side validation
