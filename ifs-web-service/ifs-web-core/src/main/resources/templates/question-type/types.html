@@ -126,11 +126,13 @@
                     </div>
 
                     <fieldset>
+                        <!--
                         <div class="message-alert extra-margin-bottom" th:unless="${readonly}">
                             <h2 class="heading-small no-margin">Research category determines funding</h2>
                             <p>The research category is used to calculate the funding for all collaborators in the application.</p>
                             <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
                         </div>
+                        -->
                         <div class="form-group" th:classappend="${#fields.hasErrors('*{application.researchCategoryId}')} ? 'error'">
                             <legend>
                                 <span class="form-label-bold">Research category</span>
