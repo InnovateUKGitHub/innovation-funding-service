@@ -93,8 +93,8 @@ public class InviteAssessorProfileModelPopulatorTest {
                 inviteAssessorProfileModelPopulator.populateModel(assessorId, competitionId);
 
         InOrder inOrder = inOrder(competitionService, assessorRestService);
-        verify(competitionService).getById(competitionId);
-        verify(assessorRestService).getAssessorProfile(assessorId);
+        inOrder.verify(competitionService).getById(competitionId);
+        inOrder.verify(assessorRestService).getAssessorProfile(assessorId);
         inOrder.verifyNoMoreInteractions();
 
         assertEquals(expectedCompetition, viewModel.getCompetition());
