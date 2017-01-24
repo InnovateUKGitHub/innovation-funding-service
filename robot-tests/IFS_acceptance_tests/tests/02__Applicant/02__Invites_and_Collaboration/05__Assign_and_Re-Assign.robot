@@ -181,23 +181,23 @@ Appendices are assigned along with the question
 Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
-    Given the user navigates to his finances page
-    Then The user should see the element     jQuery=p:contains("You must give your project a research area in application details")
+    Given the user navigates to his finances page    Assign test
+    Then The user should see the element     jQuery=p:contains("You must give your project a research category in application details")
 
 Lead selects Research Area
     [Documentation]  INFUND-6823
     [Tags]  Email
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
-    Given the user navigates to his finances page
+    Given the user navigates to his finances page    Assign test
     Then the user should see the element      jQuery=p:contains("You must give your project a research category in application details")
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
-    Then the user should see the element      jQuery=h2:contains("Research category determines funding")
-    And the user should see the element       jQuery=legend:contains("Research area")
+    #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
+    Then the user should see the element       jQuery=legend:contains("Research category")
     When the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    Then the user clicks the button/link      link=Mark as complete
+    Then the user clicks the button/link      css=button.buttonlink
     #    When the user navigates to his finances page
     #    Then the user should not see the element  jQuery=.error-summary
     # This is not yet working, due to upcomign functionality.
@@ -267,6 +267,7 @@ Lead applicant should be able to remove the registered partner
     And the user should not see the element    link= Assign test
 
 *** Keywords ***
+
 the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
