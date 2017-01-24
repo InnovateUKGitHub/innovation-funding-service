@@ -6,32 +6,41 @@ import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.BuilderAmendFunctions.id;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
-import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessorProfileResourceDocs {
     public static final FieldDescriptor[] assessorProfileResourceFields = {
-            fieldWithPath("title").description("title of the user"),
-            fieldWithPath("firstName").description("first name of the user"),
-            fieldWithPath("lastName").description("last name of the user"),
-            fieldWithPath("phoneNumber").description("telephone number of the user"),
-            fieldWithPath("gender").description("gender of the user"),
-            fieldWithPath("disability").description("disability of the user"),
-            fieldWithPath("ethnicity").description("ethnic group of the user"),
-            fieldWithPath("address").description("assess of the user"),
-            fieldWithPath("email").description("email address of the user"),
-            fieldWithPath("innovationAreas").description("innovation areas for the user"),
-            fieldWithPath("businessType").description("business type of assessor"),
-            fieldWithPath("skillsAreas").description("skills areas for the assessor"),
-            fieldWithPath("affiliations").description("affiliations for the assessor")
+            fieldWithPath("user.id").description("Id of the user"),
+            fieldWithPath("user.uid").description("Unique id returned from the authentication identity provider when the user is created"),
+            fieldWithPath("user.title").description("Title of the user"),
+            fieldWithPath("user.firstName").description("First name of the user"),
+            fieldWithPath("user.lastName").description("Last name of the user"),
+            fieldWithPath("user.inviteName").description("Not used"),
+            fieldWithPath("user.phoneNumber").description("Telephone number of the user"),
+            fieldWithPath("user.imageUrl").description("Not used"),
+            fieldWithPath("user.email").description("Email address of the user"),
+            fieldWithPath("user.password").description("Password of the user"),
+            fieldWithPath("user.status").description("Status of the user"),
+            fieldWithPath("user.roles").description("Roles that the user is associated with"),
+            fieldWithPath("user.gender").description("Gender of the user"),
+            fieldWithPath("user.disability").description("Disability of the user"),
+            fieldWithPath("user.ethnicity").description("Ethnic group of the user"),
+            fieldWithPath("user.profileId").description("Profile id of the user"),
+            fieldWithPath("user.inviteName").description("Invite name of the user"),
+            fieldWithPath("user.inviteName").description("Invite name of the user"),
+            fieldWithPath("profile.address").description("Assess of the user"),
+            fieldWithPath("profile.innovationAreas").description("Innovation areas for the user"),
+            fieldWithPath("profile.businessType").description("Business type of assessor"),
+            fieldWithPath("profile.skillsAreas").description("Skills areas for the assessor"),
+            fieldWithPath("profile.affiliations").description("Affiliations for the assessor")
     };
 
     public static final AssessorProfileResourceBuilder assessorProfileResourceBuilder = newAssessorProfileResource()
@@ -40,16 +49,22 @@ public class AssessorProfileResourceDocs {
                             .withTitle("Mr")
                             .withFirstName("First")
                             .withLastName("Last")
+                            .withEmail("test@test.com")
                             .withPhoneNumber("012434 567890")
                             .withGender(Gender.MALE)
                             .withDisability(Disability.NOT_STATED)
-//                            .withEthnicity(newEthnicityResource().with(id(1L)).build())
-                            .withEmail("test@test.com")
+                            .withEthnicity(1L)
                             .build()
             )
             .withProfile(
                     newProfileResource()
-                            .withAddress(newAddressResource().withAddressLine1("Electric Works").withTown("Sheffield").withPostcode("S1 2BJ").build())
+                            .withAddress(
+                                    newAddressResource()
+                                            .withAddressLine1("Electric Works")
+                                            .withTown("Sheffield")
+                                            .withPostcode("S1 2BJ")
+                                            .build()
+                            )
                             .withSkillsAreas("Forensic analysis")
                             .withBusinessType(BusinessType.ACADEMIC)
                             .withInnovationAreas(
@@ -69,6 +84,6 @@ public class AssessorProfileResourceDocs {
                                             .withPosition("Professor")
                                             .build(1)
                             )
-                    .build()
+                            .build()
             );
 }

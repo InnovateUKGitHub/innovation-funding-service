@@ -244,7 +244,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         when(userProfileServiceMock.getUserProfile(userId)).thenReturn(serviceSuccess(profileDetails));
 
-        mockMvc.perform(get("/user/id/{id}/getUser", userId))
+        mockMvc.perform(get("/user/id/{id}/getUserProfile", userId))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(

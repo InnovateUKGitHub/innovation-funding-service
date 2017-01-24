@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.user.domain.Profile;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.AffiliationMapper;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.mapstruct.Mapper;
@@ -14,7 +13,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 /**
- * Mapper between {@link User} and {@link ProfileResource}.
+ * Mapper between {@link Profile} and {@link ProfileResource}.
  */
 @Mapper(
         config = GlobalMapperConfig.class,
@@ -27,7 +26,7 @@ import org.mapstruct.Mappings;
 )
 public abstract class AssessorProfileMapper extends BaseMapper<Profile, ProfileResource, Long> {
     @Mappings({
-            @Mapping(target = "affiliations", ignore = true ),
+            @Mapping(target = "affiliations", ignore = true),
     })
     @Override
     public abstract ProfileResource mapToResource(Profile domain);
