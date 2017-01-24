@@ -1,5 +1,6 @@
 #!/bin/bash
 # A Munro: Startup openshift origin and load in some pods
+# 24 Jan 2017: Added improved pods startup check.
 
 s=0
 for i in \
@@ -34,9 +35,9 @@ oc cluster up && {
 
   echo Waiting for pods to startup...
   c=0
-#  while [ "$(oc get pods|awk '/Running/ {c++} END {print c}')" != "12" ]
-  while [ "$(oc get pods|awk '/Running/ {c++} END {print c}')" != "11" ]
+  while [ ! -z "$(oc get pods|awk '/deploy/')" -a ! -z "$(oc get pods|awk '$2 !~ /Running/')" ]
   do
+    oc get pods # debug
     sleep 2
     ((c++))
     [ $c -eq 15 ] && {
