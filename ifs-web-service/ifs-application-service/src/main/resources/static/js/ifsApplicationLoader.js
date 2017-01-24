@@ -27,7 +27,6 @@ IFS.application.loadOrder = {
   'app-form': {
     init: function () {
       IFS.core.unsavedChanges.init()
-      IFS.application.repeatableRows.init()
       IFS.core.repeatableFinanceRows.init()
     }
   },
