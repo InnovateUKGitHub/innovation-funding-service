@@ -180,7 +180,7 @@ Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
     Given the user navigates to his finances page
-    Then the user should see the element  jQuery=.error-summary
+    Then The user should see the element     jQuery=p:contains("You must give your project a research area in application details")
 
 Lead selects Research Area
     [Documentation]  INFUND-6823
@@ -188,11 +188,11 @@ Lead selects Research Area
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to his finances page
-    Then the user should see the element      jQuery=.error-summary
+    Then the user should see the element      jQuery=p:contains("You must give your project a research category in application details")
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
-    When the user clicks the button/link      Application details
-    Then the user should see the element      jQuery=h2:contains("Research area determines funding")
+    When the user clicks the button/link      link=Application details
+    Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     And the user should see the element       jQuery=legend:contains("Research area")
     When the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
     Then the user clicks the button/link      link=Mark as complete
@@ -205,7 +205,7 @@ Lead marks finances as complete
     [Documentation]    INFUND-3016
     ...
     ...    This test depends on the previous test suite to run first
-    [Tags]  Pending
+    [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link  link=Assign test
     And the applicant completes the application details
