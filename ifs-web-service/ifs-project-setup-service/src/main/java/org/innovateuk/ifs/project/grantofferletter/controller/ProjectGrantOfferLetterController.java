@@ -161,6 +161,8 @@ public class ProjectGrantOfferLetterController {
         Boolean grantOfferLetterApproved = projectService.isSignedGrantOfferLetterApproved(projectId).getSuccessObject();
 
         boolean isProjectManager = projectService.isProjectManager(loggedInUser.getId(), projectId);
+                //getProjectManager(projectId).map(projectManager -> loggedInUser.getId().equals(projectManager.getUser())).orElse(false);
+        //projectService.isProjectManager(loggedInUser.getId(), projectId); //here
 
         boolean isGrantOfferLetterSent = projectService.isGrantOfferLetterAlreadySent(projectId).getOptionalSuccessObject().map(identity()).orElse(false);
 
@@ -193,5 +195,11 @@ public class ProjectGrantOfferLetterController {
         } else {
             throw new ObjectNotFoundException("Could not find Collaboration Agreement for project " + projectId, singletonList(projectId));
         }
+    }
+
+
+    private Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+        return simpleFindFirst(projectUsers, pu -> PROJECT_MANAGER.getName().equals(pu.getRoleName()));
     }
 }

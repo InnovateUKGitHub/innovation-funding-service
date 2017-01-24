@@ -54,14 +54,11 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         FileEntryResource additionalContractFile = newFileEntryResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.isProjectManager(userId, projectId)).thenReturn(true);
         when(projectService.isUserLeadPartner(projectId, userId)).thenReturn(true);
         when(projectService.getSignedGrantOfferLetterFileDetails(projectId)).thenReturn(Optional.of(signedGrantOfferLetter));
         when(projectService.getGrantOfferFileDetails(projectId)).thenReturn(Optional.of(grantOfferLetter));
         when(projectService.getAdditionalContractFileDetails(projectId)).thenReturn(Optional.of(additionalContractFile));
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(newProjectUserResource()
-                .withRoleName(UserRoleType.PROJECT_MANAGER)
-                .withUser(userId)
-                .build(1));
         when(projectService.isGrantOfferLetterAlreadySent(projectId)).thenReturn(serviceSuccess(Boolean.TRUE));
 	    when(projectService.isSignedGrantOfferLetterApproved(projectId)).thenReturn(serviceSuccess(Boolean.FALSE));
 
