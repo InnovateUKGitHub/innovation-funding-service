@@ -46,12 +46,10 @@ public class ApplicationStatisticsBuilder extends BaseBuilder<ApplicationStatist
         return withArraySetFieldByReflection("competition", competitions);
     }
 
-    @SuppressWarnings("varargs")
     public ApplicationStatisticsBuilder withProcessRoles(List<ProcessRole>... processRoles) {
         return withArraySetFieldByReflection("processRoles", processRoles);
     }
 
-    @SuppressWarnings("varargs")
     public ApplicationStatisticsBuilder withAssessments(List<Assessment>... assessments) {
         return withArraySetFieldByReflection("assessments", assessments);
     }

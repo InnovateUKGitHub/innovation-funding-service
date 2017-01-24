@@ -38,11 +38,11 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
         List<Organisation> organisations = organisationRepository.findAll(simpleMap(applicationStatistics, ApplicationStatistics::getLeadOrganisationId));
 
-        return serviceSuccess(simpleMap(applicationStatistics, application -> {
-            ApplicationCountSummaryResource summaryResource = applicationCountSummaryMapper.mapToResource(application);
+        return serviceSuccess(simpleMap(applicationStatistics, applicationStats -> {
+            ApplicationCountSummaryResource summaryResource = applicationCountSummaryMapper.mapToResource(applicationStats);
             summaryResource.setLeadOrganisation(
                     organisations.stream()
-                            .filter(organisation -> organisation.getId().equals(application.getLeadOrganisationId()))
+                            .filter(organisation -> organisation.getId().equals(applicationStats.getLeadOrganisationId()))
                             .findFirst()
                             .map(Organisation::getName)
                             .orElse("")

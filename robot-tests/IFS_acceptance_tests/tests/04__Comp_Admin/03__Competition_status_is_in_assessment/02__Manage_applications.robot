@@ -12,7 +12,7 @@ View the list off the applications
     [Documentation]    INFUND-7042
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Manage applications")
-    Then the user should see the element    jQuery=tr:nth-child(1) td:contains(Wessex University)
+    Then the user should see the element    jQuery=tr:nth-child(1) td:contains(Everyday Im Juggling Ltd)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Rainfall)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(1)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(0)

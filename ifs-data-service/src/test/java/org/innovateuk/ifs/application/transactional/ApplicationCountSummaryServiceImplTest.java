@@ -16,6 +16,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilde
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.inOrder;
@@ -37,6 +38,10 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         Role leadApplicationRole = newRole()
                 .withType(LEADAPPLICANT)
                 .build();
+        Role applicantRole = newRole()
+                .withType(APPLICANT)
+                .build();
+
         List<Organisation> leadOrganisations = newOrganisation()
                 .withId(1L, 2L)
                 .withName("Lead Org 1", "Lead Org 2")
@@ -45,24 +50,29 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()
                 .withProcessRoles(
                         newProcessRole()
-                                .withRole(leadApplicationRole)
-                                .withOrganisationId(1L)
-                                .build(1),
+                                .withRole(applicantRole, leadApplicationRole)
+                                .withOrganisationId(2L, 1L)
+                                .build(2),
                         newProcessRole()
-                                .withRole(leadApplicationRole)
-                                .withOrganisationId(2L)
-                                .build(1)
+                                .withRole(leadApplicationRole, applicantRole)
+                                .withOrganisationId(2L, 3L)
+                                .build(2)
                 )
                 .build(2);
 
-        List<ApplicationCountSummaryResource> summaryResources = newApplicationCountSummaryResource()
+        List<ApplicationCountSummaryResource> returnedResources = newApplicationCountSummaryResource()
+                .withId(3L, 4L)
+                .build(2);
+
+        List<ApplicationCountSummaryResource> expectedSummaryResources = newApplicationCountSummaryResource()
+                .withId(3L, 4L)
                 .withLeadOrganisation("Lead Org 1", "Lead Org 2")
                 .build(2);
 
         when(applicationStatisticsRepositoryMock.findByCompetition(competitionId)).thenReturn(applicationStatistics);
-        when(applicationCountSummaryMapperMock.mapToResource(applicationStatistics.get(0))).thenReturn(summaryResources.get(0));
-        when(applicationCountSummaryMapperMock.mapToResource(applicationStatistics.get(1))).thenReturn(summaryResources.get(1));
         when(organisationRepositoryMock.findAll(asList(1L, 2L))).thenReturn(leadOrganisations);
+        when(applicationCountSummaryMapperMock.mapToResource(applicationStatistics.get(0))).thenReturn(returnedResources.get(0));
+        when(applicationCountSummaryMapperMock.mapToResource(applicationStatistics.get(1))).thenReturn(returnedResources.get(1));
 
         List<ApplicationCountSummaryResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId).getSuccessObject();
 
@@ -72,6 +82,6 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         inOrder.verify(applicationCountSummaryMapperMock).mapToResource(applicationStatistics.get(0));
         inOrder.verify(applicationCountSummaryMapperMock).mapToResource(applicationStatistics.get(1));
 
-        assertEquals(summaryResources, result);
+        assertEquals(expectedSummaryResources, result);
     }
 }
