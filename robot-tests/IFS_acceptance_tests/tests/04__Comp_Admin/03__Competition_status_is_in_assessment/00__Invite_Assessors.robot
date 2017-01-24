@@ -38,7 +38,7 @@ The User can Add and Remove Assessors
     Then The user should see the text in the page    will.smith@gmail.com
     And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=tr:nth-child(1) .yes
-    #TODO Add an extra check for the innovation area when INFUND-6865 is ready
+    And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(3):contains("Precision Medicine, Advanced Materials, Energy Systems")
     When The user clicks the button/link    link=Find
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove)
     And The user clicks the button/link    link=Invite
