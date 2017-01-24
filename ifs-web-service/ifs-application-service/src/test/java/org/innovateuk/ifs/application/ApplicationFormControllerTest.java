@@ -727,6 +727,22 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void testSaveFormElementApplicationResearchCategory() throws Exception {
+        String value = "1";
+        String fieldName = "application.researchCategoryId";
+
+        mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"true\"}"));
+
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+    }
+
+    @Test
      public void testSaveFormElementApplicationDuration() throws Exception {
         String value = "12";
         String fieldName = "application.durationInMonths";
