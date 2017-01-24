@@ -45,7 +45,7 @@ public abstract class BaseWorkflowHandlerIntegrationTest<WorkflowHandlerType, Pr
 
         repositoriesToMock.forEach(repositoryClass -> {
             Repository mock = mock(repositoryClass);
-            mocks.put(repositoryClass, Pair.of(mock, null));
+            mocks.put(repositoryClass, Pair.of(mock, applicationContext.getBean(repositoryClass)));
         });
 
         setRepositoriesOnWorkflowComponents(mockSelector);

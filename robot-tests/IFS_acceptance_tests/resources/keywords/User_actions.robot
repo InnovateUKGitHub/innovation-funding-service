@@ -33,7 +33,9 @@ The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
     wait until element is not visible    ${NOT_VISIBLE_ELEMENT}
 
-
+the user should get a new print window
+    [Arguments]  ${title}
+    Select Window    Title=${title}
 
 The user should see the browser notification
     [Arguments]    ${MESSAGE}
