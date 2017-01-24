@@ -80,7 +80,7 @@
                 </th:block>
                 <div class="alignright-button">
                     <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
-                    <button th:if="${viewmode=='edit'}" class="button">Save</button>
+                    <button th:if="${viewmode=='edit'}" name="confirm-eligibility" class="button">Save</button>
                 </div>
             </th:block>
         </section>
@@ -100,7 +100,7 @@
         </div>
     </form>
     <input type="hidden" id="cacheTest" value="" />
-
+    <input type="hidden" id="projectId" th:value="${model.projectId}" />
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}">
 
         <th:block th:unless="${model.isReadOnly()}">

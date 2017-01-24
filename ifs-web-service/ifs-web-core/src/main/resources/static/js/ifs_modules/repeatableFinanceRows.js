@@ -19,13 +19,25 @@ IFS.core.repeatableFinanceRows = (function () {
         IFS.core.repeatableFinanceRows.persistUnsavedRow(name, newFieldId)
       })
     },
-
     getAjaxUrl: function (el) {
-      var url = ''
-      if (typeof (jQuery(el).val()) !== 'undefined' && typeof (jQuery(el).attr('name')) !== 'undefined' && jQuery('#application_id').length === 1) {
-        var applicationId = jQuery('#application_id').val()
-        url = window.location.protocol + '//' + window.location.host + '/application/' + applicationId + '/form/' + jQuery(el).attr('name') + '/' + jQuery(el).val()
+      var inst = jQuery(el)
+      var elValue = inst.val()
+      var elName = inst.prop('name')
+      var hasValue = typeof (elValue) !== 'undefined'
+      var hasName = typeof (elName) !== 'undefined'
+
+      if (hasName && hasValue) {
+        var host = window.location.protocol + '//' + window.location.host
+        var url = ''
+        if (jQuery('#application_id').length === 1) {
+          url = host + '/application/' + jQuery('#application_id').val() + '/form/' + elName + '/' + elValue
+        }
+        if (jQuery('#projectId').length === 1) {
+          // todo replace 22 with a dynamic value
+          url = host + '/project-setup-management/project/' + jQuery('#projectId').val() + '/finance-check/organisation/22/eligibility/' + elName + '/' + elValue
+        }
       }
+
       return url
     },
     addRow: function (el, event) {
