@@ -114,9 +114,6 @@ public class Competition implements ProcessActivity {
 
     private boolean template = false;
 
-    @OneToOne(mappedBy="competition")
-    private PublicContent publicContent;
-
     public Competition() {
         setupComplete = false;
     }
@@ -564,15 +561,6 @@ public class Competition implements ProcessActivity {
     public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
-
-    public PublicContent getPublicContent() {
-        return publicContent;
-    }
-
-    public void setPublicContent(PublicContent publicContent) {
-        this.publicContent = publicContent;
-    }
-
     public void notifyAssessors(LocalDateTime date) {
         if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
             throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +

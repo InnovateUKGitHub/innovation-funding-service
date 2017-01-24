@@ -5,7 +5,7 @@ import org.innovateuk.ifs.file.domain.FileEntry;
 import javax.persistence.*;
 
 @Entity
-public class Content {
+public class ContentGroup {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

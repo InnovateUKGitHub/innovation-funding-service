@@ -16,9 +16,7 @@ public class PublicContent {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "competition_id", referencedColumnName = "id")
-    private Competition competition;
+    private Long competitionId;
 
     private LocalDateTime publishDate;
 
@@ -53,12 +51,12 @@ public class PublicContent {
         this.id = id;
     }
 
-    public Competition getCompetition() {
-        return competition;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
     }
 
     public LocalDateTime getPublishDate() {
