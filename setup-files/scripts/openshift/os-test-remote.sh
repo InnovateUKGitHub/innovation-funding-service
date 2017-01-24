@@ -1,8 +1,10 @@
 #!/bin/sh
 set -e
 
-ENV=lf-project5
+ENV=$1
 HOST=dev.ifs-test-clusters.com
+
+echo "Deploying tests to the $ENV Openshift environment"
 
 # Set up remote registry and project name params
 rm -rf os-files-tmp

@@ -117,7 +117,7 @@ dockerCompose {
 
 task osDeployRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-deploy-remote.sh'
-    args = [project.version]
+    args = [openshiftEnv]
 }
 
 task osDeployLocal(type:Exec) {
@@ -127,7 +127,7 @@ task osDeployLocal(type:Exec) {
 
 task osTestRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
-    args = [project.version]
+    args = [openshiftEnv]
 }
 
 task happyRobotTests(type:Exec) {
