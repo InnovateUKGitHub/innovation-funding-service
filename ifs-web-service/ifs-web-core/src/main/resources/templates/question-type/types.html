@@ -133,8 +133,8 @@
                         </div>
                         <div class="form-group" th:classappend="${#fields.hasErrors('*{application.researchCategoryId}')} ? 'error'">
                             <legend>
-                                <span class="form-label-bold">Research area</span>
-                                <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Please confirm the research area for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" th:remove="tag" />
+                                <span class="form-label-bold">Research category</span>
+                                <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Please confirm the research category for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" th:remove="tag" />
                                 <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategoryId')" th:remove="tag" />
                             </legend>
 
