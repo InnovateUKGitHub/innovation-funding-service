@@ -29,6 +29,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.test.util.ReflectionTestUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -200,9 +201,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
-        Profile expectedProfile = newProfile().withId(7L).build();
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
-
         User expectedCreatedUser = createLambdaMatcher(user -> {
 
             assertNull(user.getId());
@@ -222,7 +220,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
-            assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;
         });
@@ -361,9 +358,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(compAdminRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
-        Profile expectedProfile = newProfile().withId(7L).build();
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
-
         User expectedCreatedUser = createLambdaMatcher(user -> {
 
             assertNull(user.getId());
@@ -380,7 +374,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
-            assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;
         });
@@ -454,9 +447,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         when(roleRepositoryMock.findOneByName(PROJECT_FINANCE.getName())).thenReturn(projectFinanceRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
 
-        Profile expectedProfile = newProfile().withId(7L).build();
-        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
-
         User expectedCreatedUser = createLambdaMatcher(user -> {
 
             assertNull(user.getId());
@@ -473,7 +463,6 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
             assertEquals(1, orgs.size());
             assertEquals(selectedOrganisation, orgs.get(0));
-            assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;
         });

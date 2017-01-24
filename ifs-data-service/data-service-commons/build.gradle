@@ -1,3 +1,5 @@
+defaultTasks 'clean', 'jar'
+
 def targetBuildFile = project.hasProperty("profile") ? "${project.profile}-build.gradle" : "docker-build.gradle"
 if (file(targetBuildFile).exists()) {
     apply from: targetBuildFile

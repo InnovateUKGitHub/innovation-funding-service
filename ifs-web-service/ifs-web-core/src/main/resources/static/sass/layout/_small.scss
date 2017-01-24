@@ -171,10 +171,6 @@ input[type="button"] {
       color: #000;
       text-decoration: none;
     }
-
-    @include ie-lte(8) {
-      border-bottom: none;
-    }
   }
 
   &.button-small {

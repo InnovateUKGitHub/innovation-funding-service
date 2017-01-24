@@ -161,17 +161,6 @@
         width: 50%;
       }
     }
-    .assessment-period {
-      float: right;
-      width: 24%;
-      h4, dl {
-        font-size: 17px;
-        @include media-down(mobile) {
-          font-size: 15px;
-        }
-      }
-
-    }
     .status-complete {
       position: absolute;
       bottom: 50%;
