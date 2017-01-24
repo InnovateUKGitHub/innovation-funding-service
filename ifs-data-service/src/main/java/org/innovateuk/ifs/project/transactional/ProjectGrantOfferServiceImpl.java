@@ -247,21 +247,17 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
-    private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(Project project) {
-        final String leadOrganisation = organisationRepository.findOne(project.getApplication().getLeadOrganisationId()).getName();
-        final List<String> organisations = project.getPartnerOrganisations().stream()
-                .filter(po -> !po.isLeadOrganisation()).map(po -> po.getOrganisation().getName())
-                .sorted().collect(toList());
-        organisations.add(0, leadOrganisation);
-        return organisations;
-    }
-
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
-        templateReplacements.put("SortedOrganisations", organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(project));
+        YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTable(project);
+        final List<String> organisations = yearlyGolProfileTable.getYearEligibleCostTotal().keySet().stream()
+                .filter(po -> !po.equals(leadOrganisation.getName()))
+                .sorted().collect(toList());
+        organisations.add(0, leadOrganisation.getName());
+        templateReplacements.put("SortedOrganisations", organisations);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
         templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
@@ -276,7 +272,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
-        templateReplacements.put("TableData", getYearlyGOLProfileTable(project));
+        templateReplacements.put("TableData", yearlyGolProfileTable);
         return templateReplacements;
     }
 
