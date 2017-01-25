@@ -89,7 +89,6 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
-
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
@@ -1028,7 +1027,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
         ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
-
             pm.setUser(leadPartnerUser.getUser());
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
@@ -1165,7 +1163,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     @Override
-    public final ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
         return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
             notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
     }

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ProjectUserRepository extends PagingAndSortingRepository<ProjectUser, Long> {
 

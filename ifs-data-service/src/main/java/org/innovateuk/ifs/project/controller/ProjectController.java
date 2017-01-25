@@ -274,7 +274,7 @@ public class ProjectController {
 
     @RequestMapping(value = "/{projectId}/team-status", method = GET)
     public RestResult<ProjectTeamStatusResource> getTeamStatus(@PathVariable(value = "projectId") Long projectId,
-                                                               @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
+                                       @RequestParam(value = "filterByUserId", required = false) Long filterByUserId) {
         return projectService.getProjectTeamStatus(projectId, ofNullable(filterByUserId)).toGetResponse();
     }
 

@@ -121,6 +121,7 @@ public class ProjectUserResource {
         this.invite = invite;
     }
 
+    @JsonIgnore
     public boolean isUser(Long anUserId) {
         return user.equals(anUserId);
     }
