@@ -60,41 +60,6 @@
         </div>
     </div>
 
-    <!-- =========================== Form: year end =========================== -->
-    <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
-        <th:block th:with="value=(*{formInput[__${formInput.id}__]})">
-            <th:block th:with="year=(${#strings.substringAfter(value, '-')}), month=(${#strings.substringBefore(value, '-')})">
-        <input class="form-control width-medium"
-               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-               th:id="${formInput.id}+'.MMYYYY.month'"
-               th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
-               th:value="${month}"
-               required="true"
-               type="number"
-        />
-        <input class="form-control width-medium"
-               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-               th:id="${formInput.id}+'.MMYYYY.year'"
-               th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
-               th:value="${year}"
-               required="true"
-               type="number"
-        />
-            </th:block>
-        </th:block>
-    </div>
-
-
-    <!-- =========================== Form: financial row =========================== -->
-    <div th:fragment="financial_overview_row"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
-        <div th:if="${previousFormInput == null or previousFormInput.type.nameLower != 'financial_overview_row'}">
-            This is the first element in the financial rows
-        </div>
-        <div th:if="${nextFormInput == null or nextFormInput.type.nameLower != 'financial_overview_row'}">
-            This is the last element in the financial rows
-        </div>
-    </div>
-
     <!-- =========================== Form: Staff Turnover =========================== -->
     <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
@@ -115,7 +80,7 @@
     </div>
 
     <!-- =========================== Form: Staff Count =========================== -->
-    <div th:fragment="financial_staff_count" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
             <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
@@ -133,8 +98,58 @@
         />
     </div>
 
-    <!-- =========================== Form: Staff Count =========================== -->
-    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+    <!-- =========================== Form: Financial Year End =========================== -->
+    <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <th:block th:with="value=(*{formInput[__${formInput.id}__]})">
+            <th:block th:with="year=(${#strings.substringAfter(value, '-')}), month=(${#strings.substringBefore(value, '-')})">
+                <input class="form-control width-medium"
+                       th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:id="${formInput.id}+'.MMYYYY.month'"
+                       th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
+                       th:value="${month}"
+                       required="true"
+                       type="number"
+                />
+                <input class="form-control width-medium"
+                       th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                       th:id="${formInput.id}+'.MMYYYY.year'"
+                       th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
+                       th:value="${year}"
+                       required="true"
+                       type="number"
+                />
+            </th:block>
+        </th:block>
+    </div>
+
+    <!-- =========================== Form: Financial Row =========================== -->
+    <div th:fragment="financial_overview_row"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <div th:if="${previousFormInput == null or previousFormInput.type.nameLower != 'financial_overview_row'}">
+            This is the first element in the financial rows
+        </div>
+
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+            <span th:text="${formInput.description}"/>
+            <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+            <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        </label>
+        <input class="form-control width-medium"
+               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               th:id="${formInput.id}"
+               th:name="'formInput['+${formInput.id}+']'"
+               th:value="*{formInput[__${formInput.id}__]}"
+               required="true"
+               min="-2147483647"
+               max="2147483647"
+               type="number"
+        />
+        <div th:if="${nextFormInput == null or nextFormInput.type.nameLower != 'financial_overview_row'}">
+            This is the last element in the financial rows
+        </div>
+    </div>
+
+    <!-- =========================== Form: Financial Staff Count =========================== -->
+    <div th:fragment="financial_staff_count" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
             <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
