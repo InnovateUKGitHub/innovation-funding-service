@@ -36,6 +36,6 @@ The user can Notify Assessors
     [Documentation]    INFUND-6458
     [Tags]
     When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
-    Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
+    Then The user should see the text in the page    In assessment
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=12;
