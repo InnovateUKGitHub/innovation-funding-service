@@ -473,7 +473,7 @@
                       <div class="form-group">
                           <label for="grouped-innovation-area" class="form-label-bold">Innovation area</label>
 
-                          <p class="form-hint">The innovation area will remain the same until you click 'Add assessor(s) to list' button.</p>
+                          <p class="form-hint">The innovation area will remain the same until you click 'Add assessors to list' button.</p>
 
                           <select class="form-control" required="required" aria-labelledby="innovation-area" id="grouped-innovation-area" data-required-errormessage="Please select an innovation area." name="selectedInnovationArea">
                               <option value="">Please select an innovation area</option>
@@ -501,8 +501,8 @@
                           </select>
                       </div>
 
-                      <div class="table-overflow">
-                          <table>
+                      <div class="table-display-stacked">
+                          <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" >
                               <thead>
                                   <tr>
                                       <th id="invite-label-assessor-name" scope="col">Name</th>
@@ -510,40 +510,46 @@
                                       <th scope="col"><span class="visuallyhidden">Remove</span></th>
                                   </tr>
                               </thead>
+                              <tfoot>
+                                <tr data-tablesaw-no-labels>
+                                  <td colspan="3" class="alignright">
+                                    <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
+                                  </td>
+                                </tr>
+                              </tfoot>
                               <tbody>
                                   <tr>
-                                      <td class="width-40-percent">
+                                      <td>
                                           <input type="text" id="assessor-name-one" name="assessor-name-one" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                       </td>
-                                      <td class="width-40-percent">
+                                      <td>
                                           <input type="text" id="assessor-email-one" name="assessor-email-one" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                       </td>
-                                      <td class="width-20-percent">
+                                      <td>
 
                                       </td>
                                   </tr>
                                   <tr id="prototype-assessor-row-two">
-                                      <td class="width-40-percent">
+                                      <td>
                                           <input type="text" id="assessor-name-two" name="assessor-name-two" aria-labelledby="invite-label-assessor-name" class="form-control width-full" />
                                       </td>
-                                      <td class="width-40-percent">
+                                      <td>
                                           <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                       </td>
-                                      <td class="alignright width-20-percent">
+                                      <td class="alignright">
                                           <a href="#" id="prototype-remove-two">Remove</a>
                                       </td>
                                   </tr>
                               </tbody>
                           </table>
-                          <div class="alignright">
-                              <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
-                          </div>
-                      </div>
+
+                        </div>
+
 
                       <div class="alignright extra-margin-top">
                           <input type="hidden" name="status" value="invite-new" />
                           <input type="hidden" name="tab" value="invite" />
-                          <a class="button no-margin " id="prototype-add-assessors">Add assessor(s) to list</a>
+                          <a class="button no-margin " id="prototype-add-assessors">Add assessors to list</a>
                       </div>
                   </form>
               </div>
