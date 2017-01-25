@@ -6,6 +6,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 
 /**
@@ -21,7 +22,7 @@ public class CompetitionInFlightViewModel {
     private String innovationArea;
     private String executive;
     private String lead;
-    private BigDecimal funding;
+    private BigInteger funding;
     private List<MilestonesRowViewModel> milestones;
     private long changesSinceLastNotify;
 
@@ -34,7 +35,7 @@ public class CompetitionInFlightViewModel {
         this.innovationArea = StringUtils.join(competitionResource.getInnovationAreaNames(), ", ");
         this.executive = competitionResource.getExecutiveName();
         this.lead = competitionResource.getLeadTechnologistName();
-        this.funding = competitionResource.getFunders().stream().map(CompetitionFunderResource::getFunderBudget).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.funding = competitionResource.getFunders().stream().map(CompetitionFunderResource::getFunderBudget).reduce(BigInteger.ZERO, BigInteger::add);
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
     }
@@ -71,7 +72,7 @@ public class CompetitionInFlightViewModel {
         return lead;
     }
 
-    public BigDecimal getFunding() {
+    public BigInteger getFunding() {
         return funding;
     }
 

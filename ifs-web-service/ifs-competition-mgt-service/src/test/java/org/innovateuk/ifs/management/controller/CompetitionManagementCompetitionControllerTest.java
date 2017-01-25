@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
-import org.innovateuk.ifs.management.model.CompetitionClosedModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.junit.Test;
@@ -37,10 +36,6 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Spy
     @InjectMocks
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
-
-    @Spy
-    @InjectMocks
-    private CompetitionClosedModelPopulator competitionClosedModelPopulator;
 
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {

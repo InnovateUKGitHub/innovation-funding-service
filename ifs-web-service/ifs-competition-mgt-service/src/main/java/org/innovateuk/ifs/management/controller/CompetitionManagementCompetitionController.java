@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.management.model.CompetitionClosedModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -26,15 +25,12 @@ public class CompetitionManagementCompetitionController {
     private CompetitionService competitionService;
 
     @Autowired
-    private CompetitionClosedModelPopulator competitionClosedModelPopulator;
-
-    @Autowired
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String competition(Model model, @PathVariable("competitionId") Long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        if (EnumSet.of(READY_TO_OPEN,OPEN,CLOSED,IN_ASSESSMENT,FUNDERS_PANEL,ASSESSOR_FEEDBACK).contains(competition.getCompetitionStatus())) {
+        if (EnumSet.of(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competition.getCompetitionStatus())) {
             model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition));
             return "competition/competition-in-flight";
         } else {
