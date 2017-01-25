@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competition.resource;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 public class CompetitionFunderResource {
 
     private Long id;
     private String funder;
-    private BigDecimal funderBudget;
+    private BigInteger funderBudget;
     private Boolean coFunder;
     private Long competitionId;
 
@@ -27,11 +27,11 @@ public class CompetitionFunderResource {
         this.funder = funder;
     }
 
-    public BigDecimal getFunderBudget() {
+    public BigInteger getFunderBudget() {
         return funderBudget;
     }
 
-    public void setFunderBudget(BigDecimal funderBudget) {
+    public void setFunderBudget(BigInteger funderBudget) {
         this.funderBudget = funderBudget;
     }
 

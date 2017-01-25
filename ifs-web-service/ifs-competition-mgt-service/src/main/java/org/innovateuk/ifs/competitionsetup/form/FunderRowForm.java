@@ -3,10 +3,9 @@ package org.innovateuk.ifs.competitionsetup.form;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 /**
  * Form representing a row in the funders table.
@@ -18,8 +17,7 @@ public class FunderRowForm {
 
     @Min(value=0, message = "{validation.additionalinfoform.funderbudget.min}")
     @NotNull(message = "{validation.additionalinfoform.funderbudget.required}")
-    @Digits(integer = 8, fraction = 2, message = "{validation.additionalinfoform.funderbudget.invalid}")
-    private BigDecimal funderBudget;
+    private BigInteger funderBudget;
 
     @NotNull
     private Boolean coFunder;
@@ -42,11 +40,11 @@ public class FunderRowForm {
         this.funder = funder;
     }
 
-    public BigDecimal getFunderBudget() {
+    public BigInteger getFunderBudget() {
         return funderBudget;
     }
 
-    public void setFunderBudget(BigDecimal funderBudget) {
+    public void setFunderBudget(BigInteger funderBudget) {
         this.funderBudget = funderBudget;
     }
 
