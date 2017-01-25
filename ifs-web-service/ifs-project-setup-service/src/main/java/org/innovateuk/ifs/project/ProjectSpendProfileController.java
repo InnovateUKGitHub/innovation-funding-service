@@ -27,18 +27,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CANNOT_MARK_AS_COMPLETE_BECAUSE_SPEND_HIGHER_THAN_ELIGIBLE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -50,9 +44,9 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/" + ProjectSpendProfileController.BASE_DIR + "/{projectId}/partner-organisation/{organisationId}/spend-profile")
 public class ProjectSpendProfileController {
 
-    private static final String FORM_ATTR_NAME = "form";
     public static final String BASE_DIR = "project";
     public static final String REVIEW_TEMPLATE_NAME = "spend-profile-review";
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private ProjectService projectService;
@@ -117,12 +111,10 @@ public class ProjectSpendProfileController {
 
         if (!spendProfileTableResource.getMarkedAsComplete()) {
             model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
-
             return validationHandler.failNowOrSucceedWith(() -> BASE_DIR + "/spend-profile", () -> BASE_DIR + "/spend-profile");
         } else {
             ServiceResult<Void> result = markSpendProfileIncomplete(projectId, organisationId);
             return validationHandler.addAnyErrors(result).failNowOrSucceedWith(() -> failureView, () -> {
-
                 model.addAttribute("model", buildSpendProfileViewModel(projectResource, organisationId, spendProfileTableResource, loggedInUser));
                 return BASE_DIR + "/spend-profile";
             });
@@ -214,8 +206,8 @@ public class ProjectSpendProfileController {
         spendProfileTableResource.getMonthlyCostsPerCategoryMap().keySet().forEach(key -> {
             List<BigDecimal> monthlyCostNullsReplacedWithZeros = new ArrayList();
             boolean monthlyCostNullsReplaced = false;
-            for (BigDecimal mon : spendProfileTableResource.getMonthlyCostsPerCategoryMap().get(key) ) {
-                if(null == mon) {
+            for (BigDecimal mon : spendProfileTableResource.getMonthlyCostsPerCategoryMap().get(key)) {
+                if (null == mon) {
                     monthlyCostNullsReplaced = true;
                     monthlyCostNullsReplacedWithZeros.add(BigDecimal.ZERO);
                 } else {
@@ -304,7 +296,7 @@ public class ProjectSpendProfileController {
     }
 
     private ProjectSpendProfileProjectSummaryViewModel populateSpendProfileProjectManagerViewModel(final Long projectId,
-                                                                                      final UserResource loggedInUser) {
+                                                                                                   final UserResource loggedInUser) {
         ProjectResource projectResource = projectService.getById(projectId);
 
         List<OrganisationResource> partnerOrganisations = projectService.getPartnerOrganisationsForProject(projectId);
@@ -337,7 +329,6 @@ public class ProjectSpendProfileController {
     }
 
     private boolean isUserPartOfThisOrganisation(final Long projectId, final Long organisationId, final UserResource loggedInUser) {
-
         List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
         Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectUsers, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId())
                 && projectUserResource.getOrganisation().equals(organisationId)
@@ -348,13 +339,6 @@ public class ProjectSpendProfileController {
     }
 
     private boolean isUserPartOfLeadOrganisation(final Long projectId, final UserResource loggedInUser) {
-
-        List<ProjectUserResource> leadPartners = projectService.getLeadPartners(projectId);
-        Optional<ProjectUserResource> leadPartner = simpleFindFirst(leadPartners, projectUserResource -> projectUserResource.getUser().equals(loggedInUser.getId()));
-
-        return leadPartner.isPresent();
+        return projectService.getLeadPartners(projectId).stream().anyMatch(pu -> pu.isUser(loggedInUser.getId()));
     }
-
-
-
 }
