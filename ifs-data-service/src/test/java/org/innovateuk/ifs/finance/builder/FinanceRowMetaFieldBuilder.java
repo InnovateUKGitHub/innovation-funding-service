@@ -30,6 +30,14 @@ public class FinanceRowMetaFieldBuilder extends BaseBuilder<FinanceRowMetaField,
         return new FinanceRowMetaFieldBuilder(actions);
     }
 
+    public FinanceRowMetaFieldBuilder withTitle(String title) {
+        return with(metaField -> metaField.setTitle(title));
+    }
+
+    public FinanceRowMetaFieldBuilder withType(String type) {
+        return with(metaField -> metaField.setType(type));
+    }
+
     @Override
     protected FinanceRowMetaField createInitial() {
         return new FinanceRowMetaField();

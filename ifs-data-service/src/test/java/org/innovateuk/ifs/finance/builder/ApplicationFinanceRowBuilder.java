@@ -30,6 +30,11 @@ public class ApplicationFinanceRowBuilder extends BaseFinanceRowBuilder<Applicat
         return new ApplicationFinanceRowBuilder(actions);
     }
 
+
+    public ApplicationFinanceRowBuilder withTarget(ApplicationFinance applicationFinance) {
+        return with(financeRow -> financeRow.setTarget(applicationFinance));
+    }
+
     @Override
     protected ApplicationFinanceRow createInitial() {
         return new ApplicationFinanceRow();

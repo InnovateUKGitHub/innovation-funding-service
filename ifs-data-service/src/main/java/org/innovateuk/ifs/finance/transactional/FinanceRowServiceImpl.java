@@ -46,7 +46,6 @@ import java.util.function.Supplier;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_TEAM_STATUS_APPLICATION_FINANCE_RECORD_FOR_APPLICATION_ORGANISATION_DOES_NOT_EXIST;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -493,10 +492,11 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
             return;
         }
         newMetaValue.setFinanceRowId(savedCost.getId());
-        find(financeRowMetaValueRepository.financeRowIdAndFinanceRowMetaFieldId(savedCost.getId(), newMetaValue.getFinanceRowMetaField().getId()), notFoundError(FinanceRowMetaValue.class, newMetaValue.getId()))
-                .andOnSuccessReturnVoid(currentMetaValue -> updateCostValue(currentMetaValue, newMetaValue))
+
+        getMetaValueByFieldForFinanceRow(newMetaValue, savedCost)
+                .andOnSuccessReturnVoid(currentMetaValue ->  {    updateCostValue(currentMetaValue, newMetaValue);})
                 .andOnFailure(() -> {   createCostValue(newMetaValue, savedCost);
-                                        return serviceSuccess(GENERAL_NOT_FOUND); });
+                                        return serviceSuccess(); });
 
     }
 
@@ -517,6 +517,9 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         return () -> getQuestion(questionId);
     }
 
+    private ServiceResult<FinanceRowMetaValue> getMetaValueByFieldForFinanceRow(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
+        return find(financeRowMetaValueRepository.financeRowIdAndFinanceRowMetaFieldId(savedCost.getId(), newMetaValue.getFinanceRowMetaField().getId()), notFoundError(FinanceRowMetaValue.class, newMetaValue.getId()));
+    }
 
     private ServiceResult<Question> getQuestion(Long questionId) {
         return find(questionRepository.findOne(questionId), notFoundError(Question.class));
