@@ -184,10 +184,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     @Override
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
-        applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
-    }
 
+        // Do nothing if this update request is as a result of a research category change but no application finances
+        // have been entered yet.
+
+        if (applicationFinanceResource != null || !fieldName.equals("application.researchCategoryId")) {
+            updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
+            applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
+        }
+    }
 
     private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value, Long competitionId, Long userId) {
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
@@ -197,6 +202,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                 handleOrganisationSizeChange(applicationFinance, competitionId, userId, applicationFinance.getOrganisationSize(), newValue);
                 applicationFinance.setOrganisationSize(newValue);
                 break;
+            case "application.researchCategoryId":
+                handleResearchCategoryChange(applicationFinance, competitionId, userId);
+                break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
         }
@@ -204,23 +212,32 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, OrganisationSize oldValue, OrganisationSize newValue) {
         if(null != oldValue && !oldValue.equals(newValue)) {
-            Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
-                    .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
-                    .findFirst();
+            resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+        }
+    }
 
-            //set your funding section to marked as in complete
-            sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
-                    .forEach(fundingSection ->
+    private void handleResearchCategoryChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+        resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+    }
+
+    private void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+
+        Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
+                .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
+                .findFirst();
+
+        //set your funding section to marked as in complete
+        sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
+                .forEach(fundingSection ->
                         sectionService.markAsInComplete(fundingSection.getId(),
                                 applicationFinance.getApplication(),
                                 (processRole.isPresent() ? processRole.get().getId() : null))
-                    );
+                );
 
-            //reset your funding level
-            QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-            financeRowService.add(applicationFinance.getId(), financeQuestion.getId(), applicationFinance.getGrantClaim());
-        }
+        //reset your funding level
+        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+        applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+        financeRowService.add(applicationFinance.getId(), financeQuestion.getId(), applicationFinance.getGrantClaim());
     }
 
     private List<Either<FinanceRowItem, ValidationMessages>> getFinanceRowItems(Map<String, String[]> params, Long applicationFinanceId) {

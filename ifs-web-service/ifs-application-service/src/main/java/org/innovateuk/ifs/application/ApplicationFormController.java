@@ -1001,7 +1001,12 @@ public class ApplicationFormController {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
-        	// this does not need id
+
+            if (fieldName.equals("application.researchCategoryId") && organisationType.equalsIgnoreCase("business")) {
+                financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
+            }
+
+            // this does not need id
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
