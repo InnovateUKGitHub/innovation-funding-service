@@ -93,7 +93,7 @@ public class ApplicationStatistics {
     }
 
     public long getAccepted() {
-        return assessments.stream().filter(a -> !(a.isInState(PENDING) || a.isInState(REJECTED) || a.isInState(WITHDRAWN))).count();
+        return assessments.stream().filter(a -> !(a.isInState(PENDING) || a.isInState(REJECTED) || a.isInState(WITHDRAWN) || a.isInState(CREATED))).count();
     }
 
     public long getSubmitted() {
