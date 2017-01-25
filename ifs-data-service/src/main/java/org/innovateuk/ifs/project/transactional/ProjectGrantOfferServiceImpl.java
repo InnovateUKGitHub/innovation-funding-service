@@ -56,6 +56,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
+
+import static java.util.stream.Collectors.toCollection;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -247,16 +249,22 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
+    private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
+        final List<String> organisations = organisationNames.stream()
+                .filter(po -> !po.equals(leadOrganisation.getName()))
+                .sorted().collect(toList());
+        organisations.add(0, leadOrganisation.getName());
+        return organisations;
+    }
+
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
         final Map<String, Object> templateReplacements = new HashMap<>();
         final List<String> addresses = getAddresses(project);
-        YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTable(project);
-        final List<String> organisations = yearlyGolProfileTable.getYearEligibleCostTotal().keySet().stream()
-                .filter(po -> !po.equals(leadOrganisation.getName()))
-                .sorted().collect(toList());
-        organisations.add(0, leadOrganisation.getName());
+        List<String> organisationNames = new LinkedList<>();
+        YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(project, leadOrganisation, organisationNames);
+        final List<String> organisations = organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(organisationNames, leadOrganisation);
         templateReplacements.put("SortedOrganisations", organisations);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
@@ -413,7 +421,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return GOL_TEMPLATES_PATH;
     }
 
-    private YearlyGOLProfileTable getYearlyGOLProfileTable(Project project) {
+    private YearlyGOLProfileTable getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(Project project, Organisation leadOrganisation, List<String> includedOrganisationNames) {
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
         Map<String, List<String>> organisationYearsMap = new LinkedHashMap<>();
         Map<String, List<BigDecimal>> organisationEligibleCostTotal = new HashMap<>();
@@ -437,11 +445,12 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         Map<String, BigDecimal> yearlyGrantAllocationTotal = spendProfileTableCalculator.createYearlyGrantAllocationTotal(projectMapper.mapToResource(project),
                 monthlyCostsPerOrganisationMap, months, financeCheckSummary.getTotalPercentageGrant());
 
-        List<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
+        Set<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
                 !organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
+                        && !organisation.getName().equals(leadOrganisation.getName())
                         && organisationAndGrantPercentageMap.get(organisation.getName()).equals(0)
                         && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
-                .collect(toList());
+                .collect(toCollection(HashSet::new));
         organisationsExcludedFromGrantOfferLetter.forEach(excludedOrganisation -> {
             organisationAndGrantPercentageMap.remove(excludedOrganisation.getName());
             organisationYearsMap.remove(excludedOrganisation.getName());
@@ -450,6 +459,13 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             yearEligibleCostTotal.remove(excludedOrganisation.getName());
             yearlyGrantAllocationTotal.remove(excludedOrganisation.getName());
         });
+
+        includedOrganisationNames.clear();
+        List<Organisation> includedOrganisations = project.getOrganisations().stream().filter(organisation ->
+                !organisationsExcludedFromGrantOfferLetter.contains(organisation))
+                .collect(toList());
+
+        includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(includedOrg.getName()));
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,

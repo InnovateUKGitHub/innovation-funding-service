@@ -1,98 +1,385 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
 <head>
     <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
+
 <body class="app-dashboard">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+    <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+    <div th:include="fragments/layout :: body-start" th:remove="tag" />
+    <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+    <main id="content">
+        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <h1 class="heading-xlarge">
+          <span class="heading-secondary">0102468: Technology inspired</span>
+          Application team
+        </h1>
+
+        <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project.</p>
+
+        <p>To change the lead applicant for this application please contact Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
+
+        <style>
+
+        @media (max-width:639px){
+          .grid-table-style .grid-row.table-head div[class^="column"]{
+            display: none;
+          }
+        }
+
+        @media (min-width:640px){
+
+          .grid-table-style{
+            display: table;
+            width: 100%;
+            min-width: 960px;
+          }
+
+          .grid-table-style h2{
+            display: table-row;
+          }
+
+          .grid-table-style .grid-row{
+            border: 1px solid blue;
+            display: table-row;
+          }
+
+          .grid-table-style .grid-row.table-head div[class^="column"]{
+            border-bottom: 1px solid black;
+            font-weight: bold;
+            display: table-cell;
+          }
+
+          div[class^="column"]{
+            display: table-cell;
+            border-bottom: 1px solid #e4e4e4;
+            vertical-align: middle;
+            padding: .63158em 1.05263em .47368em 0;
+          }
+
+          .grid-row:last-child div[class^="column"]{
+            border-bottom: none;
+          }
+
+          div[class^="column"] p{
+            padding: 0;
+            margin: 0;
+          }
+
+          div[class^="column"] h3{
+            display: none;
+          }
+
+          div[class^="column"] h3{
+            display: none;
+          }
+
+          .grid-table-style .grid-row.table-head div[class^="column"] h3{
+            display: block;
+          }
+
+          .tablesaw-stack th .tablesaw-cell-label{
+            background: red;
+          }
+
+        }
+
+        </style>
 
 
 
-	<!-- HARDCODED PROTOTYPE HTML -->
-  	 <div class="hgroup" style="padding-top: 20px">
-        <p class="subtitle no-margin-bottom">Technology inspired - Application number: 12347353</p>
-        <h1 class="heading-xlarge no-margin-top">Application team</h1>
-    </div>
+          <section class="grid-table-style">
+            <h2 class="heading-large">Empire Ltd - Lead organisation</h2>
 
-    <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
+            <div class="grid-row table-head">
+              <div class="column-third">
+                <h3 class="heading-small">Applicant</h3>
+              </div>
+              <div class="column-third">
+                <h3 class="heading-small">Email</h3>
+              </div>
+              <div class="column-third">
+                <h3 class="heading-small">Status</h3>
+              </div>
+            </div>
 
-    <p>To change the lead applicant for this application please contact Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
+            <div class="grid-row section-divide">
+              <div class="column-third">
+                <h3 class="heading-small">Applicant 1</h3>
+                <p>Steve Smith</p>
+              </div>
+              <div class="column-third">
+                <h3 class="heading-small">Email</h3>
+                <p>steve.smith@empire.com</p>
+              </div>
+              <div class="column-third">
+                <h3 class="heading-small">Status</h3>
+                <p>Lead</p>
+              </div>
+            </div>
 
-    <h2 class="heading-medium">Acme Ltd. <small>(Lead organisation)</small></h2>
-    <ul class="list list-bullet">
-        <li><a href="mailto:robwaite@acme.org.uk">Rob Waite</a> <small>(Lead applicant)</small></li>
-        <li><a href="mailto:rogeraxe@acme.org.uk">Roger Axe</a> <small>(pending)</small> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
-        <li><a href="mailto:ssmiths@acme.org.uk">Steven Smiths</a> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
-    </ul>
-    <h2 class="heading-medium">Worth Systems</h2>
-    <ul class="list list-bullet">
-        <li><a href="mailto:efurcic@worth.systems">Elvis Furcic</a> <small>(pending)</small> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
-        <li><a href="mailto:chris@worth.systems">Christopher Johnson</a> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
-    </ul>
-    <h2 class="heading-medium">IO systems <small>(pending)</small> <small> - <a href="#" data-js-modal="modal-submit-remove-organisation">Remove organisation</a></small></h2>
-    <ul class="list list-bullet">
-        <li><a href="mailto:John@io.systems">John Dull</a> <small>(pending)</small> - <small><a href="#" data-js-modal="modal-submit-remove-collaborator">Remove</a></small></li>
-    </ul>
+            <div class="grid-row section-divide">
+              <div class="column-third">
+                <h3 class="heading-small">Applicant 2</h3>
+                <p>Paul Davidson</p>
+              </div>
+              <div class="column-third">
+                <h3 class="heading-small">Email</h3>
+                <p>paul.davidson@empire.com</p>
+              </div>
+              <div class="column-third">
+                <p>-</p>
+              </div>
+            </div>
 
-    <p><a href="./633-application-invite.html" class="button">Invite new contributors</a></p>
+            <div class="grid-row section-divide">
+              <div class="column-third">
+                <a href="#">Edit Empire Ltd</a>
+              </div>
+            </div>
+          </section>
+
+          <div class="table-display-stacked">
+            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+              <thead>
+                <tr>
+                  <th>Applicant</th>
+                  <th>Email</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Steve Smith</td>
+                  <td>steve.smith@empire.com</td>
+                  <td>Lead</td>
+                </tr>
+                <tr>
+                  <td>Steve Smith</td>
+                  <td>steve.smith@empire.com</td>
+                  <td>Lead</td>
+                </tr>
+                <tr>
+                  <td>Steve Smith</td>
+                  <td>steve.smith@empire.com</td>
+                  <td>Lead</td>
+                </tr>
+              </tbody>
+            </table>
+          <div>
 
 
-    <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">
-    <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-        <h2 class="heading-medium no-margin">Removing collaborator</h2>
-        <p>Are you sure you wish to remove this collaborator from this application.</p>
-        <p>This step cannot be undone.</p>
-        <hr />
-        <div class="grid-row extra-margin">
-            <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
-                <input type="hidden" value="6" name="applicationInviteId" />
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large" name="publish" value="publish" type="submit">Remove</button>
-                </div>
-          </form>
+
+        <!-- <section class="extra-margin-top">
+          <h2 class="heading-large">Ludlow</h2>
+
+          <div class="grid-row section-divide">
+            <div class="column-one-third">
+              <h3 class="heading-small no-margin">Applicant 1</h3>
+              <p>Jessica Doe</p>
+            </div>
+            <div class="column-one-third">
+              <h3 class="heading-small no-margin">Email</h3>
+              <p>j.doeh@ludlow.com</p>
+            </div>
+          </div>
+
+          <div class="grid-row section-divide">
+            <div class="column-one-third">
+              <h3 class="heading-small no-margin">Applicant 2</h3>
+              <p>Ryan Dell</p>
+            </div>
+            <div class="column-one-third">
+              <h3 class="heading-small no-margin">Email</h3>
+              <p>r.dell@ludlow.com</p>
+            </div>
+            <div class="column-one-third">
+              <h3 class="heading-small no-margin">Status</h3>
+              <p>Invite pending</p>
+            </div>
+          </div>
+
+          <div class="grid-row section-divide">
+            <div class="column-full">
+              <a href="#">Edit Ludlow</a>
+            </div>
+          </div>
+        </section>
+
+
+        <section>
+          <h2 class="heading-large">EGGS</h2>
+
+          <div class="grid-row section-divide">
+            <div class="column-one-third">
+              <h3 class="heading-small no-margin">Applicant 1</h3>
+              <p>Jessica Doe</p>
+            </div>
+            <div class="column-one-third">
+              <h3 class="heading-small no-margin">Email</h3>
+              <p>j.doeh@ludlow.com</p>
+            </div>
+          </div>
+
+          <div class="grid-row section-divide">
+            <div class="column-full">
+              <a href="#">Edit EGGS</a>
+            </div>
+          </div>
+        </section> -->
+
+
+        <p class="extra-margin-top">Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances</p>
+
+        <p><a href="#">Add partner organisation</a></p>
+
+        <p class="extra-margin-top"><a href="/prototypes/635-application-overview" class="button">Return to application</a></p>
+
+
+        <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">
+            <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+            <h2 class="heading-medium no-margin">Removing collaborator</h2>
+            <p>Are you sure you wish to remove this collaborator from this application.</p>
+            <p>This step cannot be undone.</p>
+            <hr />
+            <div class="grid-row extra-margin">
+                <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
+                    <input type="hidden" value="6" name="applicationInviteId" />
+                    <div class="column-half">
+                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                    </div>
+                    <div class="column-half alignright-button">
+                        <button class="button large" name="publish" value="publish" type="submit">Remove</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <div class="modal-submit-remove-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
-    <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-        <h2 class="heading-medium no-margin">Remove organisation and collaborator</h2>
-        <p>Are you sure you wish to remove this organisation from this application?</p>
-        <p>This will remove all collaborators and delete the organisations financial details.</p>
-        <hr />
-        <div class="grid-row extra-margin">
-            <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
-                <input type="hidden" value="6" name="applicationInviteId" />
-                <div class="column-half">
-                    <button type="button" class="js-close buttonlink large">Cancel</button>
-                </div>
-                <div class="column-half alignright-button">
-                    <button class="button large" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
-                </div>
-          </form>
+        <div class="modal-submit-remove-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
+            <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+            <h2 class="heading-medium no-margin">Remove organisation and collaborator</h2>
+            <p>Are you sure you wish to remove this organisation from this application?</p>
+            <p>This will remove all collaborators and delete the organisations financial details.</p>
+            <hr />
+            <div class="grid-row extra-margin">
+                <form method="get" id="submit-remove-collaborator-form" th:action="${#httpServletRequest.requestURI}">
+                    <input type="hidden" value="6" name="applicationInviteId" />
+                    <div class="column-half">
+                        <button type="button" class="js-close buttonlink large">Cancel</button>
+                    </div>
+                    <div class="column-half alignright-button">
+                        <button class="button large" name="publish" value="publish" type="submit">Remove organisation and collaborator</button>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
 
 
+    <div class="table-display-stacked">
+      <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+            <thead>
+              <tr>
+                <th scope="col">Movie Title 1</th>
+                <th scope="col">Rank 2</th>
+                <th scope="col">Year 3</th>
+                <th scope="col"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
+                <th scope="col">Gross</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>
+                <td>1</td>
+                <td>2009</td>
+                <td>83%</td>
+                <td>$2.7B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Titanic_(1997_film)">Titanic</a></td>
+                <td>2</td>
+                <td>1997</td>
+                <td>88%</td>
+                <td>$2.1B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/The_Avengers_(2012_film)">The Avengers</a></td>
+                <td>3</td>
+                <td>2012</td>
+                <td>92%</td>
+                <td>$1.5B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Harry_Potter_and_the_Deathly_Hallows_%E2%80%93_Part_2">Harry Potter and the Deathly Hallows—Part 2</a></td>
+                <td>4</td>
+                <td>2011</td>
+                <td>96%</td>
+                <td>$1.3B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Frozen_(2013_film)">Frozen</a></td>
+                <td>5</td>
+                <td>2013</td>
+                <td>89%</td>
+                <td>$1.2B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Iron_Man_3">Iron Man 3</a></td>
+                <td>6</td>
+                <td>2013</td>
+                <td>78%</td>
+                <td>$1.2B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Transformers:_Dark_of_the_Moon">Transformers: Dark of the Moon</a></td>
+                <td>7</td>
+                <td>2011</td>
+                <td>36%</td>
+                <td>$1.1B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/The_Lord_of_the_Rings:_The_Return_of_the_King">The Lord of the Rings: The Return of the King</a></td>
+                <td>8</td>
+                <td>2003</td>
+                <td>95%</td>
+                <td>$1.1B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Skyfall">Skyfall</a></td>
+                <td>9</td>
+                <td>2012</td>
+                <td>92%</td>
+                <td>$1.1B</td>
+              </tr>
+              <tr>
+                <td class="title"><a href="http://en.wikipedia.org/wiki/Transformers:_Age_of_Extinction">Transformers: Age of Extinction</a></td>
+                <td>10</td>
+                <td>2014</td>
+                <td>18%</td>
+                <td>$1.0B</td>
+              </tr>
+            </tbody>
+          </table>
+      </div>
+        <!-- END OFHARDCODED PROTOTYPE HTML -->
 
-  	<!-- END OFHARDCODED PROTOTYPE HTML -->
+        <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    </main>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-</main>
+    <div th:include="fragments/layout :: footer" th:remove="tag" />
+    <div th:include="fragments/layout :: body-end" th:remove="tag" />
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+    <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+    <script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
 </body>
+
 </html>

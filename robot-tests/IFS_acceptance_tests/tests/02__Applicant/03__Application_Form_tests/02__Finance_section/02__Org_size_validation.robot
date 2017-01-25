@@ -14,7 +14,7 @@ ${incorrect_funding_level_message}    This field should be
 *** Test Cases ***
 Small org can't have more than 70% funding level
     [Documentation]    INFUND-1110
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link        link=Your organisation
     Then the user selects the radio button       financePosition-organisationSize  financePosition-organisationSize-SMALL
