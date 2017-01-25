@@ -18,6 +18,7 @@ import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -41,6 +42,7 @@ import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -136,7 +138,7 @@ public class ApplicationFormController {
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -176,6 +178,12 @@ public class ApplicationFormController {
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     @Autowired
     private OverheadFileSaver overheadFileSaver;
@@ -238,21 +246,31 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
+        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
+
+        populateSection(model, form, bindingResult, request, application, user, organisationId, section, allSections);
 
         return APPLICATION_FORM;
     }
 
-    private void populateSection(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long applicationId, HttpServletRequest request) {
+    private void populateSection(Model model,
+                                 ApplicationForm form,
+                                 BindingResult bindingResult,
+                                 HttpServletRequest request,
+                                 ApplicationResource application,
+                                 UserResource user,
+                                 Long organisationId,
+                                 SectionResource section,
+                                 List<SectionResource> allSections) {
         if(SectionType.GENERAL.equals(section.getType())
                 || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
-            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
-            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);
     }
 
 
@@ -391,17 +409,17 @@ public class ApplicationFormController {
         FinanceRowItem costItem = addCost(applicationId, questionId, request);
         FinanceRowType costType = costItem.getCostType();
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, costType);
+
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row", costType.getType());
     }
-
-
 
     @RequestMapping(value = "/remove_cost/{costId}")
     public @ResponseBody String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
@@ -709,6 +727,7 @@ public class ApplicationFormController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = sectionService.getById(sectionId);
+        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
 
         model.addAttribute("form", form);
 
@@ -725,7 +744,7 @@ public class ApplicationFormController {
 
         if(saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)){
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
+            populateSection(model, form, bindingResult, request, application, user, organisationId, section, allSections);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId, Optional.of(section.getType()));
@@ -1064,6 +1083,12 @@ public class ApplicationFormController {
             applicationService.save(application);
         } else if (fieldName.equals("application.previousApplicationTitle")) {
             application.setPreviousApplicationTitle(value);
+            applicationService.save(application);
+        } else if (fieldName.equals("application.researchCategoryId")) {
+            Long catId = Long.parseLong(value);
+            Set<ResearchCategoryResource> cats =
+                    categoryService.getResearchCategories().stream().filter(cat -> cat.getId().equals(catId)).collect(Collectors.toSet());
+            application.setResearchCategories(cats);
             applicationService.save(application);
         }
         return errors;

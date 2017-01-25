@@ -1,19 +1,19 @@
 package org.innovateuk.ifs.util;
 
-import org.innovateuk.ifs.config.IfSThymeleafDialect;
+import org.innovateuk.ifs.config.IfsThymeleafExpressionObjectFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static org.innovateuk.ifs.util.StringFunctions.countWords;
 import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.util.StringFunctions.countWords;
 
 /**
  * This class provides utility methods that can be used in replacement for lengthy OGNL or SpringEL expressions in Thymeleaf.
  * <p>
  * These methods are offered by the #ifsUtil utility object in Thymeleaf variable expressions.
  * <p>
- * #ifsUtil is added to the evaluation context by {@link IfSThymeleafDialect}.
+ * #ifsUtil is added to the evaluation context by {@link IfsThymeleafExpressionObjectFactory}.
  */
 public class ThymeleafUtil {
 
@@ -42,5 +42,9 @@ public class ThymeleafUtil {
      */
     public int wordsRemaining(Integer maxWordCount, String content) {
         return ofNullable(maxWordCount).map(maxWordCountValue -> maxWordCountValue - countWords(content)).orElse(0);
+    }
+
+    public long calculatePercentage(long part, long total){
+        return Math.round(part * 100.0/total);
     }
 }

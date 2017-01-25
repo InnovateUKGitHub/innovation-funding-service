@@ -40,9 +40,6 @@
            You may view these profiles.</p>
         <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
             You may view these profiles.</p>
-
-        <a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
-
     </div>
 
 
@@ -97,7 +94,7 @@
         <p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must
             make sure they fit the timelines of your project plan.</p>
 
-        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and submit total project profile
+        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project profile
             spend</a>
 
     </div>

@@ -33,18 +33,20 @@
                 </ul>
             </div>
 
+
             <div class="question" th:if="${model.currentQuestionFormInputs != null}" th:each="formInput, status : ${model.currentQuestionFormInputs}" th:id="'form-input-'+${formInput.id}"
                  th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
                  questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                  currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
                  pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
-                 applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant})">
+                 applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}),
+                 researchCategories=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategories : null}),
+                 rsCategoryId=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategoryId : null})">
 
                 <th:block th:if="${formInput.type.displayableQuestionType}">
                     <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                 </th:block>
             </div>
-
 
             <th:block th:if="${model.currentSection != null and model.sectionQuestions != null}">
                 <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
@@ -62,10 +64,11 @@
                                 <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
                                                 markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
                                                 subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
-                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}), readonly=${model.application.allReadOnly},
+                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
+                                                researchCategories=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategories : null}),
+                                                rsCategoryId=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategoryId : null}),
                                                 previousFormInput=(${status.index &gt; 0 ? formInputsForQuestion.get(status.index - 1) : null}),
                                                 nextFormInput=(${status.index &lt; status.size - 1? formInputsForQuestion.get(status.index + 1) : null})">
-
                                 <th:block th:if="${formInput.type.displayableQuestionType}">
                                     <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                                 </th:block>

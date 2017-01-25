@@ -1,12 +1,6 @@
 package org.innovateuk.ifs.project.finance.resource;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
-import static java.util.Arrays.asList;
 
 /**
  * A resource object to return finance check eligibility data for a project (per partner organisations).

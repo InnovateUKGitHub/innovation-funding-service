@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application.populator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.UserApplicationRole;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -74,6 +75,12 @@ public class QuestionModelPopulator extends BaseModelPopulator {
     @Autowired
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private FinanceService financeService;
+
     public QuestionViewModel populateModel(final Long questionId, final Long applicationId, final UserResource user, final Model model,
                                            final ApplicationForm form, final QuestionOrganisationDetailsViewModel organisationDetailsViewModel) {
         QuestionResource question = questionService.getById(questionId);
@@ -117,8 +124,6 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         return questionViewModel;
     }
 
-
-
     private QuestionApplicationViewModel addApplicationDetails(ApplicationResource application,
                                                                CompetitionResource competition,
                                                                Long userId,
@@ -141,6 +146,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
         );
 
         addApplicationFormDetailInputs(application, form);
+
+        questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());
+        questionApplicationViewModel.setResearchCategoryId(application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
 
         return questionApplicationViewModel;
     }

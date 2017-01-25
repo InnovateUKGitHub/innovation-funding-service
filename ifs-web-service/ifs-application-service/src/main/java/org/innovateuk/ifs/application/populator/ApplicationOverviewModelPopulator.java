@@ -62,6 +62,8 @@ public class ApplicationOverviewModelPopulator {
     private AssessorFeedbackRestService assessorFeedbackRestService;
     @Autowired
     private ProjectService projectService;
+    @Autowired
+    private CategoryService categoryService;
     
     public void populateModel(Long applicationId, Long userId, ApplicationForm form, Model model){
         ApplicationResource application = applicationService.getById(applicationId);
@@ -90,6 +92,7 @@ public class ApplicationOverviewModelPopulator {
 
         FileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application);
         model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
+        model.addAttribute("researchCategories", categoryService.getResearchCategories());
     }
     
     private void addSections(Model model, CompetitionResource competition) {
