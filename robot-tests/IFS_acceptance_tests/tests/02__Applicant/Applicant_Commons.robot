@@ -6,6 +6,8 @@ Resource    ../../resources/defaultResources.robot
 *** Keywords ***
 the applicant completes the application details
     the user clicks the button/link    link=Application details
+    the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
+    the user selects the radio button     application.researchCategoryId   financePosition-cat-35
     the user clicks the button/link    jQuery=label[for="resubmission-no"]
     Clear Element Text    id=application_details-startdate_day
     The user enters text to a text field    id=application_details-startdate_day    18

@@ -196,14 +196,11 @@ Lead selects Research Area
     When the user clicks the button/link      link=Application details
     #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     Then the user should see the element       jQuery=legend:contains("Research category")
-    When the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    And the applicant completes the application details
-    #Then the user clicks the button/link      css=button.buttonlink
-    And The user clicks the button/link        css=button.button-secondary.app-submit-btn
+    And the user selects the radio button     application.researchCategoryId   financePosition-cat-35
+    #And the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
     #    When the user navigates to his finances page
     #    Then the user should not see the element  jQuery=.error-summary
     # This is not yet working, due to upcomign functionality.
-
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
