@@ -95,6 +95,9 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     @Mock
     private CategoryService categoryService;
 
+    @Mock
+    private FinanceService financeService;
+
     private Long questionId;
     private Long applicationId;
     private Long competitionId;
@@ -111,6 +114,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
     private List<FormInputResource> formInputs;
     private List<ProcessRoleResource> userApplicationRoles;
     private List<ResearchCategoryResource> researchCategories;
+    private ApplicationFinanceResource applicationFinanceResource;
 
     @Before
     public void setUp() {
@@ -130,6 +134,7 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         form = new ApplicationForm();
         formInputs = newFormInputResource().build(10);
         organisationDetailsViewModel = new QuestionOrganisationDetailsViewModel();
+        newApplicationFinanceResource().build();
 
         userApplicationRoles = newProcessRoleResource()
             .withApplication(applicationId)
@@ -172,5 +177,6 @@ public class QuestionModelPopulatorTest extends BaseUnitTestMocksTest {
         when(userService.getLeadApplicantProcessRoleOrNull(application)).thenReturn(newProcessRoleResource().withUser(user).build());
         when(userService.findById(user.getId())).thenReturn(user);
         when(categoryService.getResearchCategories()).thenReturn(researchCategories);
+        when(financeService.getApplicationFinanceDetails(user.getId(), applicationId, organisationId)).thenReturn(applicationFinanceResource);
     }
 }
