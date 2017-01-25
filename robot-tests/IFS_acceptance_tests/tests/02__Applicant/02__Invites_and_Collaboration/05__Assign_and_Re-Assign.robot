@@ -181,27 +181,26 @@ Appendices are assigned along with the question
 Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
-    Given the user navigates to his finances page
-    Then The user should see the element     jQuery=p:contains("You must give your project a research area in application details")
+    Given the user navigates to his finances page    Assign test
+    Then The user should see the element     jQuery=p:contains("You must give your project a research category in application details")
 
 Lead selects Research Area
     [Documentation]  INFUND-6823
     [Tags]  Email
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
-    Given the user navigates to his finances page
+    Given the user navigates to his finances page    Assign test
     Then the user should see the element      jQuery=p:contains("You must give your project a research category in application details")
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
-    Then the user should see the element      jQuery=h2:contains("Research category determines funding")
-    And the user should see the element       jQuery=legend:contains("Research area")
-    When the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    Then the user clicks the button/link      link=Mark as complete
+    #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
+    Then the user should see the element       jQuery=legend:contains("Research category")
+    And the user selects the radio button     application.researchCategoryId   financePosition-cat-35
+    #And the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
     #    When the user navigates to his finances page
     #    Then the user should not see the element  jQuery=.error-summary
     # This is not yet working, due to upcomign functionality.
-
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
@@ -267,6 +266,21 @@ Lead applicant should be able to remove the registered partner
     And the user should not see the element    link= Assign test
 
 *** Keywords ***
+the applicant completes the application details
+    the user clicks the button/link    link=Application details
+    the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
+    the user selects the radio button     application.researchCategoryId   financePosition-cat-35
+    the user clicks the button/link    jQuery=label[for="resubmission-no"]
+    Clear Element Text    id=application_details-startdate_day
+    The user enters text to a text field    id=application_details-startdate_day    18
+    Clear Element Text    id=application_details-startdate_year
+    The user enters text to a text field    id=application_details-startdate_year    2018
+    Clear Element Text    id=application_details-startdate_month
+    The user enters text to a text field    id=application_details-startdate_month    11
+    The user enters text to a text field    id=application_details-duration    20
+    the user selects the radio button    application.resubmission    false
+    the user clicks the button/link    name=mark_as_complete
+
 the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
