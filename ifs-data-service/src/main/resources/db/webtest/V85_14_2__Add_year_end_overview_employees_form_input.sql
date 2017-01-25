@@ -1,3 +1,4 @@
+-- TODO after baselining the data set remove this script as it will now be covered in webtestsupport
 -- Add a form input under the organisation size question for all competitions and templates. Default is inactive.
 -- Financial Year End. Get the form input type and then do an insert for every organisation size question.
 SET @financial_year_end_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_YEAR_END');
