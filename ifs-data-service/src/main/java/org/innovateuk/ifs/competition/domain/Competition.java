@@ -9,7 +9,6 @@ import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.InnovationSector;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
 
@@ -562,8 +561,6 @@ public class Competition implements ProcessActivity {
     public void setUseResubmissionQuestion(boolean useResubmissionQuestion) {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
-
-
     public void notifyAssessors(LocalDateTime date) {
         if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
             throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +

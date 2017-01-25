@@ -66,8 +66,8 @@ public class ApplicationStatistics {
     }
 
     @JsonIgnore
-    public Long getLeadOrganisation() {
-        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
+    public Long getLeadOrganisationId() {
+        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
     @JsonIgnore
@@ -89,11 +89,11 @@ public class ApplicationStatistics {
     }
 
     public long getAssessors() {
-        return assessments.stream().filter(a -> !a.isInState(REJECTED)).count();
+        return assessments.stream().filter(a -> !a.isInState(REJECTED) && !a.isInState(WITHDRAWN)).count();
     }
 
     public long getAccepted() {
-        return assessments.stream().filter(a -> !(a.isInState(PENDING) || a.isInState(REJECTED))).count();
+        return assessments.stream().filter(a -> !(a.isInState(PENDING) || a.isInState(REJECTED) || a.isInState(WITHDRAWN))).count();
     }
 
     public long getSubmitted() {

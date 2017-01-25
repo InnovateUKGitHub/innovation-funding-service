@@ -22,7 +22,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Ignore("Ignored to investigate failures on Bamboo")
 public class AssessmentControllerIntegrationTest extends BaseControllerIntegrationTest<AssessmentController> {
 
     @Before
