@@ -41,7 +41,7 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
 
         List<ApplicationCountSummaryResource> summaryResources = newApplicationCountSummaryResource()
                 .withName("one", "two")
-                .withLeadOrganisationId(1L, 2L)
+                .withLeadOrganisation("Lead Org 1", "Lead Org 2")
                 .withAccepted(2L, 3L)
                 .withAssessors(3L, 4L)
                 .withSubmitted(1L, 2L).build(2);
@@ -60,9 +60,11 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
         assertEquals(2L, model.getApplications().get(0).getAccepted());
         assertEquals(3L, model.getApplications().get(0).getAssessors());
         assertEquals(1L, model.getApplications().get(0).getCompleted());
+        assertEquals("Lead Org 1", model.getApplications().get(0).getLeadOrganisation());
 
         assertEquals(3L, model.getApplications().get(1).getAccepted());
         assertEquals(4L, model.getApplications().get(1).getAssessors());
         assertEquals(2L, model.getApplications().get(1).getCompleted());
+        assertEquals("Lead Org 2", model.getApplications().get(1).getLeadOrganisation());
     }
 }

@@ -66,6 +66,12 @@ subprojects {
     jar {
         manifest.attributes provider: 'gradle'
     }
+
+    test {
+        beforeTest { desc ->
+            println "Executing test ${desc.className}.${desc.name}"
+        }
+    }
 }
 
 buildscript {

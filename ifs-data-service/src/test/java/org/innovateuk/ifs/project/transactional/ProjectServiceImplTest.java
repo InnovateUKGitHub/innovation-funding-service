@@ -158,7 +158,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 build();
 
         leadApplicantProcessRole = newProcessRole().
-                withOrganisation(organisation).
+                withOrganisationId(organisation.getId()).
                 withRole(leadApplicantRole).
                 withUser(user).
                 build();
@@ -1287,7 +1287,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testInviteProjectFinanceUser(){
         InviteProjectResource invite = newInviteProjectResource().build();
         ProcessRole[] roles = newProcessRole()
-                .withOrganisation(o)
+                .withOrganisationId(o.getId())
                 .withRole(LEADAPPLICANT)
                 .build(1)
                 .toArray(new ProcessRole[0]);

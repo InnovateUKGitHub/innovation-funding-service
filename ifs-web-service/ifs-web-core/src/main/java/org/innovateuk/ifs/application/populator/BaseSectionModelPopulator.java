@@ -144,6 +144,6 @@ abstract class BaseSectionModelPopulator extends BaseModelPopulator {
     }
 
     private List<FormInputResource> findFormInputByQuestion(final Long id, final List<FormInputResource> list) {
-        return simpleFilter(list, input -> input.getId().equals(id));
+        return simpleFilter(list, input -> input.getQuestion().equals(id));
     }
 }

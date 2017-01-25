@@ -12,6 +12,8 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-6887 Duplicate validation error message in bank details section of PS
 ...
 ...               INFUND-7109 Bank Details Status - Internal user
+...
+...               INFUND-6482 Extra validation message showing on fields
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -75,11 +77,12 @@ Bank details server side validations
     And the user should see an error    You need to select a billing address before you can continue.
 
 Bank details client side validations
-    [Documentation]    INFUND-3010, INFUND-6887
+    [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482
     [Tags]    HappyPath
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
+    And the user should not see the text in the page    Please correct this field
     And the user should see an error    Please enter a valid account number
     When the user enters text to a text field    name=accountNumber    abcdefgh
     And the user moves focus away from the element    name=accountNumber
@@ -89,6 +92,7 @@ Bank details client side validations
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
     And the user should not see the text in the page    Please enter a valid account number.
+    And the user should not see the text in the page    Please correct this field
     When the user enters text to a text field    name=sortCode    12345
     And the user moves focus away from the element    name=sortCode
     Then the user should see an error    Please enter a valid sort code.

@@ -7,7 +7,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
-import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -270,10 +269,14 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     }
 
     private void assertWorkflowStateChangeForWithdrawnFromCreated(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {
-        assertWorkflowStateChange(handlerMethod, assessmentSupplier, WITHDRAWN, (assessment) -> {
-            verify(assessmentRepositoryMock).delete(assessment);
-            verify(processRoleRepositoryMock).delete(assessment.getParticipant());
-        });
+        Assessment assessment = assessmentSupplier.get();
+
+        // now call the method under test
+        assertTrue(handlerMethod.apply(assessment));
+
+        verify(assessmentRepositoryMock).delete(assessment);
+        verify(processRoleRepositoryMock).delete(assessment.getParticipant());
+        verifyNoMoreInteractionsWithMocks();
     }
 
     private void assertWorkflowStateChangeForWithdrawn(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {

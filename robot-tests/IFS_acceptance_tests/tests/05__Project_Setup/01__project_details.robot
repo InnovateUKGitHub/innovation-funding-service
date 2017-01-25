@@ -40,6 +40,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-6781 Spend Profile is accessible before preliminary sections are completed
 ...
 ...               INFUND-7174 Not eligible partner should not have access to his Bank details page
+...
+...               INFUND-6882 Email validation done when valid is input selected for PM selection in project details
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -246,7 +248,7 @@ Inviting project manager server side validations
     And the user should see the text in the page    Please enter an email address.
 
 Inviting project manager client side validations
-    [Documentation]    INFUND-3483
+    [Documentation]    INFUND-3483, INFUND-6882
     [Tags]
     When the user enters text to a text field    id=name-project-manager    John Smith
     And the user moves focus to the element    jQuery=.button:contains("Save")
@@ -255,7 +257,11 @@ Inviting project manager client side validations
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter a valid email address.
-    When the user enters text to a text field    id=email-project-manager    test@example.com
+    When the user selects the radio button    projectManager    projectManager1
+    Then the user should not see the text in the page    Please enter an email address.
+    And the user should not see the text in the page    Please enter a valid name.
+    When the user selects the radio button    projectManager    new
+    And the user enters text to a text field    id=email-project-manager    test@example.com
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page    Please enter a valid name.
