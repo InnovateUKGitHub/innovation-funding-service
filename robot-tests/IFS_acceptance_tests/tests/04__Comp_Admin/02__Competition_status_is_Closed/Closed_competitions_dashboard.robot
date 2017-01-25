@@ -13,7 +13,7 @@ Resource          ../../../resources/defaultResources.robot
 The user should be able to navigate to the Closed dashboard
     [Documentation]    INFUND-6599
     When The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
-    Then the user should see the element    link=Applications
+    Then the user should see the element    jQuery=.button:contains("Applications")
     and the user should see the element    jQuery=.button:contains("Notify assessors")
     and the user should see the element    link=Invite assessors
 
@@ -28,7 +28,7 @@ The user can Invite Assessors
 
 The user can Manage Applications
     [Documentation]    INFUND-7042
-    When the user clicks the button/Link    jQuery=a:contains("Manage applications")
+    When the user clicks the button/Link    jQuery=.button:contains("Manage applications")
     Then The user should see the text in the page    Assign assessors to applications.
     [Teardown]    The user clicks the button/link    link=Manage assessments
 

@@ -116,7 +116,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         Long competitionId = 1L;
         mockMvc.perform(post("/competition/{competitionId}/close-assessment", competitionId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dashboard"));
+                .andExpect(redirectedUrl("/competition/"+ competitionId));
         verify(competitionService, only()).closeAssessment(competitionId);
     }
 
@@ -125,7 +125,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         Long competitionId = 1L;
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/dashboard"));
+                .andExpect(redirectedUrl("/competition/" + competitionId));
         verify(competitionService, only()).notifyAssessors(competitionId);
     }
 }
