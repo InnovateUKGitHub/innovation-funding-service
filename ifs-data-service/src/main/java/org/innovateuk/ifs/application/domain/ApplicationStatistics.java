@@ -66,8 +66,8 @@ public class ApplicationStatistics {
     }
 
     @JsonIgnore
-    public Long getLeadOrganisation() {
-        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
+    public Long getLeadOrganisationId() {
+        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
     @JsonIgnore
