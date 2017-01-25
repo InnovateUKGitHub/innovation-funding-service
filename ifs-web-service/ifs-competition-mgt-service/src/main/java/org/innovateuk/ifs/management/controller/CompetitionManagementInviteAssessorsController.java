@@ -149,7 +149,6 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/overview";
     }
 
-
     @RequestMapping(value = "/profile/{assessorId}", method = RequestMethod.GET)
     public String profile(Model model,
                           @PathVariable("competitionId") Long competitionId,

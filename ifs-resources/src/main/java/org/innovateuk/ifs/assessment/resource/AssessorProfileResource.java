@@ -3,10 +3,13 @@ package org.innovateuk.ifs.assessment.resource;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 
+/**
+ * DTO to encapsulate an Assessors profile view.
+ */
 public class AssessorProfileResource {
 
     private UserResource user;
-    private ProfileResource profile; // TODO the naming of this resource is confusing, too many users, to many profiles
+    private ProfileResource profile;
 
     public AssessorProfileResource() {
         // default constructor
@@ -23,14 +26,5 @@ public class AssessorProfileResource {
 
     public ProfileResource getProfile() {
         return profile;
-    }
-
-    // TODO we can remove the setters once POJOTest is removed
-    public void setUser(UserResource user) {
-        this.user = user;
-    }
-
-    public void setProfile(ProfileResource profile) {
-        this.profile = profile;
     }
 }

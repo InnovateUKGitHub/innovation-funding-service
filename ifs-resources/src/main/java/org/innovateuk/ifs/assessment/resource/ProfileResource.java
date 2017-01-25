@@ -10,12 +10,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * DTO to encapsulate an Assessors profile view.
+ * DTO for a User's {@code Profile}.
  */
 public class ProfileResource {
 
     private List<InnovationAreaResource> innovationAreas = new ArrayList<>();
-
     private BusinessType businessType;
     private String skillsAreas;
     private List<AffiliationResource> affiliations = new ArrayList<>();
@@ -53,7 +52,6 @@ public class ProfileResource {
         this.affiliations = affiliations;
     }
 
-
     public AddressResource getAddress() {
         return address;
     }
@@ -71,20 +69,22 @@ public class ProfileResource {
         ProfileResource that = (ProfileResource) o;
 
         return new EqualsBuilder()
-                .appendSuper(super.equals(o))
                 .append(innovationAreas, that.innovationAreas)
                 .append(businessType, that.businessType)
                 .append(skillsAreas, that.skillsAreas)
+                .append(affiliations, that.affiliations)
+                .append(address, that.address)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .appendSuper(super.hashCode())
                 .append(innovationAreas)
                 .append(businessType)
                 .append(skillsAreas)
+                .append(affiliations)
+                .append(address)
                 .toHashCode();
     }
 }

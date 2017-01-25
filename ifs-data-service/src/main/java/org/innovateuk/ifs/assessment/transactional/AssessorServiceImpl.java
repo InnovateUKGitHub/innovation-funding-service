@@ -87,8 +87,7 @@ public class AssessorServiceImpl implements AssessorService {
                 .andOnSuccess(user -> getProfile(user.getProfileId())
                         .andOnSuccessReturn(
                                 profile -> {
-                                    // TODO this isn't nice
-                                    // it seams  likely that affiliations will move on to Profile, so this would get neater
+                                    // TODO INFUND-7750 - tidy up assessor profile DTOs
                                     UserResource userResource = userMapper.mapToResource(user);
                                     ProfileResource profileResource = assessorProfileMapper.mapToResource(profile);
                                     profileResource.setAffiliations(affiliationMapper.mapToResource(user.getAffiliations()));
