@@ -62,8 +62,8 @@ public class QuestionViewModel {
         return Collections.emptyList();
     }
 
-    public Object getCurrentSection() {
-        return null;
+    public Boolean getHasCurrentQuestionFormInputs() {
+        return !questionFormInputs.isEmpty();
     }
 
     public SortedSet<OrganisationResource> getAcademicOrganisations() {

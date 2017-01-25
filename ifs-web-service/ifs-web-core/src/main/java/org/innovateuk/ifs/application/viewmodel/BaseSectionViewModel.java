@@ -280,4 +280,16 @@ public abstract class BaseSectionViewModel {
     public BaseFinanceOverviewViewModel getFinanceOverview() {
         return getFinanceOverviewViewModel();
     }
+
+    public Boolean getHasFinanceView() {
+        if (null == financeViewModel) {
+            return Boolean.FALSE;
+        }
+
+        if(null == getFinanceViewModel().getFinanceView()) {
+            return Boolean.FALSE;
+        }
+
+        return Boolean.TRUE;
+    }
 }

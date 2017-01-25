@@ -33,7 +33,7 @@
                 </ul>
             </div>
 
-            <div class="question" th:if="${model.currentQuestionFormInputs != null}" th:each="formInput, status : ${model.currentQuestionFormInputs}" th:id="'form-input-'+${formInput.id}"
+            <div class="question" th:if="${model.hasCurrentQuestionFormInputs}" th:each="formInput, status : ${model.currentQuestionFormInputs}" th:id="'form-input-'+${formInput.id}"
                  th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}), question=(${model.currentQuestion}),
                  questionAssignee=(${model.assignable.questionAssignee}), markedAsComplete=(${model.application.markedAsComplete}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
                  currentApplication=(${model.application.currentApplication}), currentUser=(${model.currentUser}), assignableUsers=(${model.assignable.assignableUsers}),
@@ -46,16 +46,16 @@
             </div>
 
 
-            <th:block th:if="${model.currentSection != null and model.sectionQuestions != null}">
+            <th:block th:if="${model.isSection}">
                 <p class="subtitle" th:if="${model.currentSection.getDescription()}" th:text="${model.currentSection.getDescription()}" />
-                <th:block th:unless="${financeView != null}">
+                <th:block th:unless="${model.hasFinanceView}">
                     <div class="warning-alert">
                         This competition has already closed, you are no longer able to submit your application.
                     </div>
                 </th:block>
 
                 <div th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}" th:remove="tag">
-                    <th:block th:if="${financeView != null}">
+                    <th:block th:if="${model.hasFinanceView}">
                         <div class="question" th:each="formInput, status : ${model.questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
                              th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
                              <th:block th:if="${model.isSection}">
@@ -68,8 +68,9 @@
                                     <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                                 </th:block>
 
-                                <th:block th:if="${formInput.type.isDisplayableFinanceType(financeView)}">
-                                    <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
+                                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView)}"
+                                          th:with="organisationFinance=(${model.finance.organisationFinance})">
+                                    <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
                                 </th:block>
 
                                 <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
@@ -88,7 +89,10 @@
                                 <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
                                                 markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput})">
                                     <div th:replace="question-type/types :: ${formInput.type.nameLower}"></div>
-                                    <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}"></div>
+
+                                    <th:block th:with="organisationFinance=(${model.finance.organisationFinance})">
+                                        <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}"></div>
+                                    </th:block>
                                 </th:block>
                             </th:block>
                         </div>
@@ -109,7 +113,7 @@
                     <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
                 </div>
                 <div th:unless="${model.application.allReadOnly}" th:remove="tag">
-                    <button th:unless="${model.currentSection != null}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
+                    <button th:unless="${model.isSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
                 </div>
             </th:block>
 
