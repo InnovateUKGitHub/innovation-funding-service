@@ -20,6 +20,7 @@ import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Rollback;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -76,6 +77,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void findAll() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
@@ -132,6 +134,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void findFirstByParticipantUserIdAndTargetIdOrderByIdDesc() throws Exception {
         Long applicationId = 1L;
 
@@ -151,6 +154,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void countByParticipantUserIdAndActivityStateStateNotIn() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
@@ -167,6 +171,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();
@@ -183,6 +188,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    @Rollback
     public void findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc() throws Exception {
         assessorFormInputResponseRepository.deleteAll();
         repository.deleteAll();

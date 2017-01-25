@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -53,6 +54,9 @@ public class ApplicationSectionAndQuestionModelPopulator {
 
     @Autowired
     protected OrganisationService organisationService;
+
+    @Autowired
+    private CategoryService categoryService;
 
     public void addMappedSectionsDetails(Model model, ApplicationResource application, CompetitionResource competition,
                                          Optional<SectionResource> currentSection,
@@ -152,6 +156,7 @@ public class ApplicationSectionAndQuestionModelPopulator {
         model.addAttribute("completedSectionsByOrganisation", completedSectionsByOrganisation);
         model.addAttribute("sectionsMarkedAsComplete", sectionsMarkedAsComplete);
         model.addAttribute("allQuestionsCompleted", sectionService.allSectionsMarkedAsComplete(application.getId()));
+        model.addAttribute("researchCategories", categoryService.getResearchCategories());
 
         addFinanceDetails(model, application);
 

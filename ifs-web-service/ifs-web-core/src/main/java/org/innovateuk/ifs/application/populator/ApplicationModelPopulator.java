@@ -159,6 +159,16 @@ public class ApplicationModelPopulator {
         }
     }
 
+    public void addResearchCategoryId(ApplicationResource application, Model model) {
+
+        model.addAttribute("rsCategoryId", application.getResearchCategories().stream().findFirst().map(cat -> cat.getId()).orElse(null));
+    }
+
+    public void addResearchCategoryName(ApplicationResource application, Model model) {
+
+        model.addAttribute("researchCategoryName", application.getResearchCategories().stream().findFirst().map(cat -> cat.getName()).orElse(""));
+    }
+
     public Optional<OrganisationResource> getUserOrganisation(Long userId, List<ProcessRoleResource> userApplicationRoles) {
 
         return userApplicationRoles.stream()
