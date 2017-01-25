@@ -2168,11 +2168,11 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     public void testGetProjectManager() {
         final Long projectId = 123L;
         final Project project = newProject().withId(projectId).build();
-        final ProjectUser expectedProjectManager = newProjectUser().withProject(project).withRole(PROJECT_MANAGER).build();
-        final ProjectUserResource expectedProjectManagerResource = newProjectUserResource().withProject(projectId).withRoleName(PROJECT_MANAGER.getName()).build();
+        final ProjectUser projectManager = newProjectUser().withProject(project).withRole(PROJECT_MANAGER).build();
+        final ProjectUserResource projectManagerResource = newProjectUserResource().withProject(projectId).withRoleName(PROJECT_MANAGER.getName()).build();
 
-        when(projectUserMapperMock.mapToResource(expectedProjectManager)).thenReturn(expectedProjectManagerResource);
-        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(expectedProjectManager);
+        when(projectUserMapperMock.mapToResource(projectManager)).thenReturn(projectManagerResource);
+        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(projectManager);
 
         ServiceResult<ProjectUserResource> foundProjectManager = service.getProjectManager(projectId);
         assertTrue(foundProjectManager.isSuccess());
