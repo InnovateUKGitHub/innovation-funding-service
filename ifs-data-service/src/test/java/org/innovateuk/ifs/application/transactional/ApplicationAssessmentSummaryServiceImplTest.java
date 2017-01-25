@@ -44,6 +44,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -228,7 +229,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
-                        .withOrganisation(organisations)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
                         .buildArray(4, ProcessRole.class))
                 .build();
 

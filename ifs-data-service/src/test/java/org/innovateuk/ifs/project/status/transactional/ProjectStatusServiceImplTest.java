@@ -107,7 +107,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         /**
          * Create 3 applications, one for each org, with process roles
          */
-        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(leadApplicantRole, applicantRole, applicantRole).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
+        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(leadApplicantRole, applicantRole, applicantRole).withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).build(3);
         List<Application> applications = newApplication().withCompetition(competition).withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2)).build(3);
 
         /**
@@ -599,7 +599,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         ProcessRole processRole = newProcessRole().
                 withRole(role).
                 withApplication(application).
-                withOrganisation(organisation).
+                withOrganisationId(organisation.getId()).
                 build();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
         Project project = newProject().

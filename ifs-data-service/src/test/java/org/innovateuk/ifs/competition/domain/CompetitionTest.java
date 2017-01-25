@@ -10,6 +10,7 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,7 +80,7 @@ public class CompetitionTest {
         Funder1.setId(1L);
         Funder1.setCompetition(competition);
         Funder1.setFunder("Funder1");
-        Funder1.setFunderBudget(new BigDecimal(1));
+        Funder1.setFunderBudget(BigInteger.valueOf(1));
         Funder1.setCoFunder(false);
         returnList.add(Funder1);
 
@@ -88,7 +89,7 @@ public class CompetitionTest {
         coFunder1.setId(1L);
         coFunder1.setCompetition(competition);
         coFunder1.setFunder("CoFunder1");
-        coFunder1.setFunderBudget(new BigDecimal(1));
+        coFunder1.setFunderBudget(BigInteger.valueOf(1));
         coFunder1.setCoFunder(true);
         returnList.add(coFunder1);
 
@@ -96,7 +97,7 @@ public class CompetitionTest {
         coFunder2.setId(2L);
         coFunder2.setCompetition(competition);
         coFunder2.setFunder("CoFunder2");
-        coFunder2.setFunderBudget(new BigDecimal(2));
+        coFunder2.setFunderBudget(BigInteger.valueOf(2));
         coFunder1.setCoFunder(true);
         returnList.add(coFunder2);
 
