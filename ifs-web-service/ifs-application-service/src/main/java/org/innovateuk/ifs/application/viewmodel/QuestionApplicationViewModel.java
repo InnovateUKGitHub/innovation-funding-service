@@ -1,21 +1,26 @@
 package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
+import java.util.List;
 import java.util.Set;
 
 /**
  * ViewModel for the application part of the question
  */
 public class QuestionApplicationViewModel {
+
     private Set<Long> markedAsComplete;
     private Boolean allReadOnly;
     private OrganisationResource leadOrganisation;
     private ApplicationResource currentApplication;
     private CompetitionResource currentCompetition;
     private OrganisationResource userOrganisation;
+    private List<ResearchCategoryResource> researchCategories;
+    private Long researchCategoryId;
 
     public QuestionApplicationViewModel(Set<Long> markedAsComplete, Boolean allReadOnly, ApplicationResource currentApplication,
                                         CompetitionResource competitionResource, OrganisationResource userOrganisation) {
@@ -60,5 +65,21 @@ public class QuestionApplicationViewModel {
 
     public Boolean getApplicationIsReadOnly() {
         return !currentCompetition.isOpen() || !currentApplication.isOpen();
+    }
+
+    public List<ResearchCategoryResource> getResearchCategories() {
+        return researchCategories;
+    }
+
+    public void setResearchCategories(List<ResearchCategoryResource> researchCategories) {
+        this.researchCategories = researchCategories;
+    }
+
+    public Long getResearchCategoryId() {
+        return researchCategoryId;
+    }
+
+    public void setResearchCategoryId(Long researchCategoryId) {
+        this.researchCategoryId = researchCategoryId;
     }
 }

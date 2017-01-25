@@ -696,15 +696,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         });
     }
 
-    private Supplier<ServiceResult<Project>> project(Long id) {
-        return () -> getProject(id);
-    }
-
-    private ServiceResult<Project> getProject(Long id) {
-        return find(projectRepository.findOne(id), notFoundError(Project.class, id));
-    }
-
-
     private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
         return spendProfileRepository.findByProjectId(projectId);
     }

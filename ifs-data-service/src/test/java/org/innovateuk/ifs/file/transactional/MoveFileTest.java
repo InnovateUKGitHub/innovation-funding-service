@@ -57,9 +57,11 @@ public class MoveFileTest {
 
     @Test
     public void testMoveFileNormal() throws IOException {
-        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents);
-        from.createFile(newFileEntry().with(id(124l)).build(), tempFileWithContents);
-        from.createFile(newFileEntry().with(id(125l)).build(), tempFileWithContents);
+
+        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+        from.createFile(newFileEntry().with(id(124l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+        from.createFile(newFileEntry().with(id(125l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+
         final List<String> namesFrom = from.all().stream().map(path -> path.getValue()).collect(toList());
         assertEquals(3, namesFrom.size());
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(from, to, false);
@@ -71,8 +73,10 @@ public class MoveFileTest {
 
     @Test
     public void testMoveFileAlreadyExists() throws IOException {
-        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents);
-        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents);
+
+        from.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(from, to, false);
         assertTrue(listServiceResult.isFailure());
         assertTrue(listServiceResult.getFailure().is(CommonFailureKeys.FILES_DUPLICATE_FILE_MOVED));
@@ -81,7 +85,9 @@ public class MoveFileTest {
     @Test
     public void testMoveAlreadyMovedFileWhenNotExpected() throws IOException {
         try {
-            to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents);
+
+            to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+
             final FileStorageStrategy reportsNonExistentFile = new AllWaysReportsFile123EvenWhenItDoesNotExist(rootFolder + "reportsNonExistentFile", "BaseFolder");
             final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(reportsNonExistentFile, to, false);
             assertTrue(listServiceResult.isFailure());
@@ -96,7 +102,8 @@ public class MoveFileTest {
         // To represent an already move file we generate a file in the to location and get the from location to
         // report a file to move over to that location that does not exist. This simulates a move already having occurred
         // We also so a normal copy to ensure that that continues to work.
-        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents);
+        to.createFile(newFileEntry().with(id(123l)).build(), tempFileWithContents).getSuccessObjectOrThrowException();
+
         final FileStorageStrategy reportsNonExistentFile = new AllWaysReportsFile123EvenWhenItDoesNotExist(rootFolder + "reportsNonExistentFile", "BaseFolder");
         reportsNonExistentFile.createFile(newFileEntry().with(id(124l)).build(), tempFileWithContents); // A legit file
         final ServiceResult<List<File>> listServiceResult = MoveFiles.moveAllFiles(reportsNonExistentFile , to, true); // Ignore already moved errors

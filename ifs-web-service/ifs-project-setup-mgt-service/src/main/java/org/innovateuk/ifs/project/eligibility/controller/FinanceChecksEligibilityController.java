@@ -1,9 +1,17 @@
 package org.innovateuk.ifs.project.eligibility.controller;
 
+import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
@@ -16,6 +24,7 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -25,8 +34,13 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
+import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -38,38 +52,62 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 @RequestMapping("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility")
 public class FinanceChecksEligibilityController {
 
-    @Autowired
-    private ProjectService projectService;
-
-    @Autowired
-    private ApplicationService applicationService;
+    private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private FinanceCheckService financeCheckService;
 
     @Autowired
-    private ProjectFinanceService financeService;
+    private OrganisationService organisationService;
 
     @Autowired
-    private OrganisationService organisationService;
+    private OpenProjectFinanceSectionModelPopulator openFinanceSectionModel;
+
+    @Autowired
+    private UserAuthenticationService userAuthenticationService;
+
+    @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private ApplicationService applicationService;
+
+    @Autowired
+    private ProjectService projectService;
+
+    @Autowired
+    private ApplicationModelPopulator applicationModelPopulator;
+
+    @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
+    private ProjectFinanceService financeService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
     public String viewEligibility(@PathVariable("projectId") Long projectId,
-                                  @PathVariable("organisationId") Long organisationId, Model model) {
-
-        return doViewEligibility(projectId, organisationId, model, null);
+                                  @PathVariable("organisationId") Long organisationId,
+                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+                                  BindingResult bindingResult,
+                                  Model model,
+                                  HttpServletRequest request) {
+        return doViewEligibility(projectId, organisationId, model, null, form, bindingResult, request);
     }
 
-    private String doViewEligibility(Long projectId, Long organisationId, Model model, FinanceChecksEligibilityForm form) {
+    private String doViewEligibility(Long projectId, Long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult, HttpServletRequest request) {
+
+        poulateProjectFinanceDetails(projectId, organisationId, form, bindingResult, model, request);
 
         EligibilityResource eligibility = financeService.getEligibility(projectId, organisationId);
 
-        if (form == null) {
-            form = getEligibilityForm(eligibility);
+        if (eligibilityForm == null) {
+            eligibilityForm = getEligibilityForm(eligibility);
         }
 
         model.addAttribute("model", getViewModel(projectId, organisationId, eligibility));
+
+        model.addAttribute("eligibilityForm", eligibilityForm);
         model.addAttribute("form", form);
 
         return "project/financecheck/eligibility";
@@ -83,8 +121,6 @@ public class FinanceChecksEligibilityController {
     }
 
     private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, EligibilityResource eligibility) {
-
-
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
 
@@ -106,37 +142,41 @@ public class FinanceChecksEligibilityController {
     @RequestMapping(method = POST, params = "confirm-eligibility")
     public String confirmEligibility(@PathVariable("projectId") Long projectId,
                                      @PathVariable("organisationId") Long organisationId,
-                                     @ModelAttribute("form") FinanceChecksEligibilityForm form,
+                                     @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                                      @SuppressWarnings("unused") BindingResult bindingResult,
+                                     @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
                                      ValidationHandler validationHandler,
-                                     Model model) {
+                                     Model model,
+                                     HttpServletRequest request) {
 
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        return doSaveEligibility(projectId, organisationId, Eligibility.APPROVED, form, validationHandler, model, successView);
+        return doSaveEligibility(projectId, organisationId, Eligibility.APPROVED, eligibilityForm, form, validationHandler, successView, bindingResult, request, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = POST, params = "save-and-continue")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
-                                  @ModelAttribute("form") FinanceChecksEligibilityForm form,
+                                  @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+                                  @ModelAttribute("eligibilityForm") FinanceChecksEligibilityForm eligibilityForm,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,
-                                  Model model) {
+                                  Model model,
+                                  HttpServletRequest request) {
 
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveEligibility(projectId, organisationId, Eligibility.REVIEW, form, validationHandler, model, successView);
+        return doSaveEligibility(projectId, organisationId, Eligibility.REVIEW, eligibilityForm, form, validationHandler, successView, bindingResult, request, model);
     }
 
-    private String doSaveEligibility(Long projectId, Long organisationId, Eligibility eligibility, FinanceChecksEligibilityForm form,
-                                     ValidationHandler validationHandler, Model model, Supplier<String> successView) {
+    private String doSaveEligibility(Long projectId, Long organisationId, Eligibility eligibility, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form,
+                                     ValidationHandler validationHandler, Supplier<String> successView, BindingResult bindingResult, HttpServletRequest request, Model model) {
 
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, form);
+        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, form, bindingResult, request);
 
-        EligibilityRagStatus statusToSend = getRagStatus(form);
+        EligibilityRagStatus statusToSend = getRagStatus(eligibilityForm);
 
         ServiceResult<Void> saveEligibilityResult = financeService.saveEligibility(projectId, organisationId, eligibility, statusToSend);
 
@@ -155,5 +195,25 @@ public class FinanceChecksEligibilityController {
             statusToSend = EligibilityRagStatus.UNSET;
         }
         return statusToSend;
+    }
+
+    private void poulateProjectFinanceDetails(Long projectId, Long organisationId, ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request){
+        ProjectResource project = projectService.getById(projectId);
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
+
+        addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
+
+        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+
+        model.addAttribute("project", project);
+    }
+
+    private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
+        applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
     }
 }

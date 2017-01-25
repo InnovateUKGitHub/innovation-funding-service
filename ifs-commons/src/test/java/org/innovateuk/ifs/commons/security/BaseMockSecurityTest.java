@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.commons.security;
 
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
 import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.ListOfOwnerAndMethod;
 import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassToPermissionsToPermissionsMethods;
 import org.innovateuk.ifs.commons.security.CustomPermissionEvaluator.PermissionedObjectClassesToListOfLookup;
@@ -35,7 +34,7 @@ import static org.mockito.Mockito.mock;
  * that individual PermissionRule methods are being called (on their owning mocks)
  */
 
-public abstract class BaseMockSecurityTest extends BaseWebIntegrationTest {
+public abstract class BaseMockSecurityTest extends BaseIntegrationTest {
 
     @Autowired
     protected GenericApplicationContext applicationContext;
