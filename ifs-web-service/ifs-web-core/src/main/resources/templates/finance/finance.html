@@ -32,7 +32,7 @@
     </div>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <div th:fragment="organisation_size" th:if="${organisationType?.name == 'Business'}" th:remove="tag">
+    <div th:fragment="organisation_size" th:if="${model.finance.organisationType.name == 'Business'}" th:remove="tag">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>

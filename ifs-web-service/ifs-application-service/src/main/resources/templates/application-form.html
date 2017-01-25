@@ -73,7 +73,8 @@
                                 </th:block>
 
                                 <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView)}"
-                                          th:with="organisationFinance=(${model.finance.organisationFinance})">
+                                          th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
+                                                   organisationFinanceTotal=(${model.finance.organisationFinanceTotal})">
                                     <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
                                 </th:block>
 
@@ -89,21 +90,14 @@
 
                                 </th:block>
                             </th:block>
-                            <th:block th:unless="${model.isSection}">
-                                <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
-                                                markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput})">
-                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}"></div>
-
-                                    <th:block th:with="organisationFinance=(${model.finance.organisationFinance})">
-                                        <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}"></div>
-                                    </th:block>
-                                </th:block>
-                            </th:block>
                         </div>
                     </th:block>
                 </div>
 
-                <div th:replace="finance/your-finances-sub-sections :: your_finances" />
+                <th:block>
+                    <div th:replace="finance/your-finances-sub-sections :: your_finances" />
+                </th:block>
+
                 <div th:replace="finance/your-finances-sub-sections :: agree_terms" />
                 <div th:replace="finance/your-finances-sub-sections :: subsection_buttons" />
 
