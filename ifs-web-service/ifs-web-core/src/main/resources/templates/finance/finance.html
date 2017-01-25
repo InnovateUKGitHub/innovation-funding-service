@@ -100,6 +100,7 @@
 
     <!-- =========================== Form: Financial Year End =========================== -->
     <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        Form: Financial Year End
         <th:block th:with="value=(*{formInput[__${formInput.id}__]})">
             <th:block th:with="year=(${#strings.substringAfter(value, '-')}), month=(${#strings.substringBefore(value, '-')})">
                 <input class="form-control width-medium"
@@ -125,7 +126,7 @@
     <!-- =========================== Form: Financial Row =========================== -->
     <div th:fragment="financial_overview_row"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <div th:if="${previousFormInput == null or previousFormInput.type.nameLower != 'financial_overview_row'}">
-            This is the first element in the financial rows
+            This is the first element in the financial rows - out the title here?
         </div>
 
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
