@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 public class ApplicationCountSummaryResource {
     private Long id;
     private String name;
-    private Long leadOrganisationId;
+    private String leadOrganisation;
     private long assessors;
     private long accepted;
     private long submitted;
@@ -30,12 +30,12 @@ public class ApplicationCountSummaryResource {
         this.name = name;
     }
 
-    public Long getLeadOrganisationId() {
-        return leadOrganisationId;
+    public String getLeadOrganisation() {
+        return leadOrganisation;
     }
 
-    public void setLeadOrganisationId(Long leadOrganisationId) {
-        this.leadOrganisationId = leadOrganisationId;
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
     }
 
     public long getAssessors() {
@@ -76,7 +76,7 @@ public class ApplicationCountSummaryResource {
                 .append(submitted, that.submitted)
                 .append(id, that.id)
                 .append(name, that.name)
-                .append(leadOrganisationId, that.leadOrganisationId)
+                .append(leadOrganisation, that.leadOrganisation)
                 .isEquals();
     }
 
@@ -85,7 +85,7 @@ public class ApplicationCountSummaryResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(name)
-                .append(leadOrganisationId)
+                .append(leadOrganisation)
                 .append(assessors)
                 .append(accepted)
                 .append(submitted)

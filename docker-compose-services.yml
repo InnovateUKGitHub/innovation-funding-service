@@ -1,9 +1,7 @@
 version: '2'
 services:
   shib:
-    build:
-      context: setup-files/scripts/docker/shibboleth
-      dockerfile: Dockerfile
+    image: innovateuk/shibboleth:1.0-SNAPSHOT
     cap_add:
       - SYS_PTRACE
     ports:
