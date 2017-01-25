@@ -74,7 +74,7 @@ public class CompetitionController {
         return competitionService.closeAssessment(id).toPutResponse();
     }
 
-    @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/initialiseForCompetitionId-form/{competitionTypeId}", method = RequestMethod.POST)
     public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId, @PathVariable("competitionTypeId") Long competitionType) {
         return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
     }

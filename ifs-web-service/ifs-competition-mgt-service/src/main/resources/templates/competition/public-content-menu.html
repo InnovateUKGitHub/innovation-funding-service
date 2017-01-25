@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+</head>
+<body th:with="context='comp-management'" class="competition-management competition-setup">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+        <!-- Link back -->
+        <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
+
+        <div class="page-title">
+            <div th:include="fragments/elements :: competition-title (competition=${model.competition})" th:remove="tag" />
+            <h1 class="heading-xlarge">Public content</h1>
+        </div>
+
+        <ul class="task-list">
+            <th:block th:each="section : ${model.sections}">
+                <li><div class="task"><h2 class="heading-small"><a th:text="${section.type.text}"></a></h2></div></li>
+            </th:block>
+        </ul>
+        <p><small th:text="${'Last published ' + model.publishDateText}"></small></p>
+        <div class="grid-row">
+            <div class="column-half">
+                <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
+            </div>
+            <div class="column-half alignright">
+                <button class="button-secondary disabled no-margin" name="publish">Publish public content</button>
+            </div>
+        </div>
+        <hr />
+    </form>
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

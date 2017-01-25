@@ -57,6 +57,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     COMPETITION_NO_TEMPLATE(CONFLICT),
 
     /**
+     * Public content
+     */
+    PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH(BAD_REQUEST),
+
+    /**
      * Notifications
      */
     NOTIFICATIONS_UNABLE_TO_SEND_SINGLE(INTERNAL_SERVER_ERROR),

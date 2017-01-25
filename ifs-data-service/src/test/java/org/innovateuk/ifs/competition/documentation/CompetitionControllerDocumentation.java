@@ -191,7 +191,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         Long competitionTypeId = 3L;
         when(competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionTypeId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/competition/{competitionId}/initialise-form/{competitionTypeId}", competitionId, competitionTypeId))
+        mockMvc.perform(post("/competition/{competitionId}/initialiseForCompetitionId-form/{competitionTypeId}", competitionId, competitionTypeId))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
