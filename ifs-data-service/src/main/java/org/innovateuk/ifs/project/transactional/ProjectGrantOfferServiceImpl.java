@@ -249,6 +249,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
+    private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
+        final List<String> organisations = organisationNames.stream()
+                .filter(po -> !po.equals(leadOrganisation.getName()))
+                .sorted().collect(toList());
+        organisations.add(0, leadOrganisation.getName());
+        return organisations;
+    }
+
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
@@ -256,10 +264,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         final List<String> addresses = getAddresses(project);
         List<String> organisationNames = new LinkedList<>();
         YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(project, leadOrganisation, organisationNames);
-        final List<String> organisations = organisationNames.stream()
-                .filter(po -> !po.equals(leadOrganisation.getName()))
-                .sorted().collect(toList());
-        organisations.add(0, leadOrganisation.getName());
+        final List<String> organisations = organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(organisationNames, leadOrganisation);
         templateReplacements.put("SortedOrganisations", organisations);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
