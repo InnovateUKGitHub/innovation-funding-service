@@ -29,6 +29,8 @@ public interface CompetitionInviteRestService {
 
     RestResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
 
+    RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
+
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
     RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competionId);

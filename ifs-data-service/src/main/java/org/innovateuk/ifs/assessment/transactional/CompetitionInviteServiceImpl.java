@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.CompetitionInviteStatisticsMapper;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
@@ -12,11 +13,14 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.domain.CompetitionInviteStatistics;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
+import org.innovateuk.ifs.invite.repository.CompetitionInviteStatisticsRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
@@ -92,6 +96,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
+    private CompetitionInviteStatisticsRepository competitionInviteStatisticsRepository;
+
+    @Autowired
     private CompetitionInviteMapper competitionInviteMapper;
 
     @Autowired
@@ -102,6 +109,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
+
+    @Autowired
+    private CompetitionInviteStatisticsMapper competitionInviteStatisticsMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -206,6 +216,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
         return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
                 new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreasForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
+    }
+
+    @Override
+    public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
+        return find(competitionInviteStatisticsRepository.findOne(competitionId), notFoundError(CompetitionInviteStatistics.class, competitionId))
+                .andOnSuccessReturn(competitionInviteStatisticsMapper::mapToResource);
+
     }
 
     @Override

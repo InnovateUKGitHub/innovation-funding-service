@@ -9,10 +9,10 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
 
     private Long competitionId;
     private String competitionName;
-    private int assessorsInvited;
-    private int assessorsAccepted;
-    private int assessorsDeclined;
-    private int assessorsStaged;
+    private long assessorsInvited;
+    private long assessorsAccepted;
+    private long assessorsDeclined;
+    private long assessorsStaged;
     private String innovationSector;
     private String innovationArea;
     private List<ViewModelRowType> assessors;
@@ -36,35 +36,35 @@ public abstract class InviteAssessorsViewModel<ViewModelRowType extends InviteAs
         this.competitionName = competitionName;
     }
 
-    public int getAssessorsInvited() {
+    public long getAssessorsInvited() {
         return assessorsInvited;
     }
 
-    public void setAssessorsInvited(int assessorsInvited) {
+    public void setAssessorsInvited(long assessorsInvited) {
         this.assessorsInvited = assessorsInvited;
     }
 
-    public int getAssessorsAccepted() {
+    public long getAssessorsAccepted() {
         return assessorsAccepted;
     }
 
-    public void setAssessorsAccepted(int assessorsAccepted) {
+    public void setAssessorsAccepted(long assessorsAccepted) {
         this.assessorsAccepted = assessorsAccepted;
     }
 
-    public int getAssessorsDeclined() {
+    public long getAssessorsDeclined() {
         return assessorsDeclined;
     }
 
-    public void setAssessorsDeclined(int assessorsDeclined) {
+    public void setAssessorsDeclined(long assessorsDeclined) {
         this.assessorsDeclined = assessorsDeclined;
     }
 
-    public int getAssessorsStaged() {
+    public long getAssessorsStaged() {
         return assessorsStaged;
     }
 
-    public void setAssessorsStaged(int assessorsStaged) {
+    public void setAssessorsStaged(long assessorsStaged) {
         this.assessorsStaged = assessorsStaged;
     }
 

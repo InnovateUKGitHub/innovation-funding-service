@@ -64,6 +64,11 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getInviteStatistics", competitionId), CompetitionInviteStatisticsResource.class);
+    }
+
+    @Override
     public RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite) {
         return postWithRestResult(format("%s/%s", competitionInviteRestUrl, "inviteUser"), existingUserStagedInvite, CompetitionInviteResource.class);
     }
