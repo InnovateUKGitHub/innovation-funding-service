@@ -19,7 +19,7 @@ function addUserToShibboleth {
 
       echo "Adding User ${emailAddress} from MySQL in Shibboleth"
 
-      response=$(curl -s -k -d "{\"email\": \"${emailAddress}\",\"password\": \"Passw0rd\"}" -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/)
+      response=$(curl -s -k -d "{\"email\": \"${emailAddress}\",\"password\": \"Passw0rd\"}" -H 'Content-type: application/json' -H "api-key: 1234567890" https://auth.local-dev:9443/regapi/identities/)
       uuid=$(echo ${response} | sed 's/.*"uuid":"\([^"]*\)".*/\1/g')
       executeMySQLCommand "update user set uid='${uuid}' where email='${emailAddress}';"
 
@@ -27,7 +27,7 @@ function addUserToShibboleth {
 
       if [ "${userStatus}" == "ACTIVE" ]; then
         echo "User ${emailAddress} is active in MySQL, so activating them in Shibboleth"
-        curl -s -X PUT -k -H 'Content-type: application/json' -H "api-key: 1234567890" https://ifs-local-dev/regapi/identities/${uuid}/activateUser
+        curl -s -X PUT -k -H 'Content-type: application/json' -H "api-key: 1234567890" https://auth.local-dev:9443/regapi/identities/${uuid}/activateUser
       fi
 
     fi
@@ -47,11 +47,7 @@ END
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
-for item in $( docker-compose ps -q shib ); do
-    docker cp _delete-shib-users-remote.sh ${item}:/tmp/_delete-shib-users-remote.sh
-done
-
-docker-compose exec -T shib /tmp/_delete-shib-users-remote.sh
+docker-compose -f ../../../docker-compose-services.yml exec -T ldap /usr/local/bin/ldap-delete-all-users.sh
 
 for user in $(mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null); do
     addUserToShibboleth ${user} &

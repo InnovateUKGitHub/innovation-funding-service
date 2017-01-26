@@ -177,7 +177,7 @@ function startPybot() {
     -v UPLOAD_FOLDER:${uploadFileDir} \
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
-    -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
+    -v REMOTE_URL:'http://ifs.local-dev:4444/wd/hub' \
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
@@ -206,10 +206,10 @@ function runTests() {
 
       if [ "$(uname)" == "Darwin" ];
       then
-        open "vnc://root:secret@ifs-local-dev:"${vncport}
+        open "vnc://root:secret@ifs.local-dev:"${vncport}
       fi
       echo "**********For remote desktop please use this url in your vnc client**********"
-        echo  "vnc://root:secret@ifs-local-dev:"${vncport}
+        echo  "vnc://root:secret@ifs.local-dev:"${vncport}
     fi
 
     for job in `jobs -p`
@@ -246,7 +246,7 @@ rootDir=`pwd`
 
 dataServiceCodeDir="${rootDir}/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
-webBase="ifs-local-dev"
+webBase="ifs.local-dev"
 
 uploadFileDir="${scriptDir}/upload_files"
 baseFileStorage="/tmp/uploads"
