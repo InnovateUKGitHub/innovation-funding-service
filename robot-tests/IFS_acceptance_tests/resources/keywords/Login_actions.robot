@@ -52,12 +52,13 @@ The guest user clicks the log-in button
     Click Button    css=button[name="_eventId_proceed"]
 
 The guest user opens the browser
+    Register Keyword To Run On Failure    Nothing
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'    Start Virtual Display    1920    1080
     Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'    Set Selenium Timeout    30
     Run keyword if    '${REMOTE_URL}' == 'http://ifs-local-dev:4444/wd/hub'    Set Selenium Timeout    10
-    Set Window Size          1920    8000
+    Set Window Size     1024    768
 
 TestTeardown User closes the browser
     Run keyword if    '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'    Get Sauce Labs Test Report
