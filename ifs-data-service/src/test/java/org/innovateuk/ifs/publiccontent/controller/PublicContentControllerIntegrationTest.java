@@ -11,17 +11,19 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import java.time.LocalDateTime;
 
-public class PublicContentControllerTest extends BaseControllerIntegrationTest<PublicContentController> {
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
+
+public class PublicContentControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentController> {
     private static final Long COMPETITION_ID = 1L;
 
     @Autowired
     private PublicContentRepository publicContentRepository;
 
     @Override
+    @Autowired
     protected void setControllerUnderTest(PublicContentController controller) {
         this.controller = controller;
     }
@@ -36,16 +38,29 @@ public class PublicContentControllerTest extends BaseControllerIntegrationTest<P
     @Test
     @Rollback
     public void testGetByCompetitionId() throws Exception {
-        PublicContent publicContent = PublicContentBuilder.newPublicContent().withCompetitionId(COMPETITION_ID).build();
-        publicContentRepository.save(publicContent);
+        PublicContent publicContent = publicContentRepository.save(PublicContentBuilder.newPublicContent().withCompetitionId(COMPETITION_ID).build());
         flushAndClearSession();
 
-        RestResult<PublicContentResource> result =controller.getCompetitionById(COMPETITION_ID);
+        RestResult<PublicContentResource> result = controller.getCompetitionById(COMPETITION_ID);
 
         assertTrue(result.isSuccess());
 
         assertThat(publicContent.getId(), equalTo(result.getSuccessObjectOrThrowException().getId()));
+    }
 
+    @Test
+    @Rollback
+    public void testPublishByCompetitionId() throws Exception {
+        LocalDateTime oldPublishDate = LocalDateTime.now().minusYears(1);
+        publicContentRepository.save(PublicContentBuilder.newPublicContent()
+                .withPublishDate(oldPublishDate)
+                .withCompetitionId(COMPETITION_ID).build());
+        flushAndClearSession();
 
+        RestResult<Void> result = controller.publishByCompetition(COMPETITION_ID);
+
+        assertTrue(result.isSuccess());
+        PublicContent publicContent =  publicContentRepository.findByCompetitionId(COMPETITION_ID);
+        assertTrue(publicContent.getPublishDate().isAfter(oldPublishDate));
     }
 }
