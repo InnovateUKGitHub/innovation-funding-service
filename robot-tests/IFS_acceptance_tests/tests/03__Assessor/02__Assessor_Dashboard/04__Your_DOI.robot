@@ -116,5 +116,5 @@ the user should see the correct inputs in the declaration form
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
-    wait until page contains element    jQuery=.error-message
-    Wait Until Page Contains    ${ERROR_TEXT}
+    IFS Wait Until page contains element    jQuery=.error-message
+    IFS Wait Until Page Contains    ${ERROR_TEXT}

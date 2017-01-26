@@ -162,7 +162,7 @@ Project partners cannot access this page
 *** Keywords ***
 the text box should be editable
     [Arguments]    ${text_field}
-    wait until element is visible    ${text_field}
+    IFS Wait Until element is visible    ${text_field}
     Element Should Be Enabled    ${text_field}
 
 all preliminary steps are completed

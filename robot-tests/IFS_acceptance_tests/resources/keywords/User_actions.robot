@@ -14,24 +14,24 @@ Create new application
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
-    wait until element is visible    ${BUTTON}
+    IFS Wait Until element is visible    ${BUTTON}
     Focus    ${BUTTON}
     wait for autosave
-    wait until keyword succeeds    30    200ms    click element    ${BUTTON}
+    IFS Wait Until Keyword Succeeds    30    200ms    click element    ${BUTTON}
 
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
-    Wait Until Page Does Not Contain    ${NOT_VISIBLE_TEXT}
+    IFS Wait Until Page Does Not Contain    ${NOT_VISIBLE_TEXT}
 
 
 The user should see the element
     [Arguments]    ${ELEMENT}
-    Wait Until Element Is Visible    ${ELEMENT}
+    IFS Wait Until Element Is Visible    ${ELEMENT}
 
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
-    wait until element is not visible    ${NOT_VISIBLE_ELEMENT}
+    IFS Wait Until element is not visible    ${NOT_VISIBLE_ELEMENT}
 
 the user should get a new print window
     [Arguments]  ${title}
@@ -45,8 +45,8 @@ The user should see the browser notification
 
 The user should see the notification
     [Arguments]    ${MESSAGE}
-    Wait Until Element Is Visible    css=div.event-alert
-    Wait Until Page Contains    ${MESSAGE}
+    IFS Wait Until Element Is Visible    css=div.event-alert
+    IFS Wait Until Page Contains    ${MESSAGE}
 
 The applicant assigns the question to the collaborator
     [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
@@ -57,7 +57,7 @@ The applicant assigns the question to the collaborator
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
-    Wait Until Element Is Not Visible    css=div.event-alert
+    IFS Wait Until Element Is Not Visible    css=div.event-alert
     The user clicks the button/link    css=.assign-button
     The user clicks the button/link    jQuery=button:contains("${NAME}")
     Reload Page
@@ -132,7 +132,7 @@ invite a new academic
 the user should see that the element is disabled
     [Arguments]    ${element}
     the user should not see an error in the page
-    wait until element is visible    ${element}
+    IFS Wait Until element is visible    ${element}
     element should be disabled    ${element}
 
 The user fills the empty question fields
@@ -173,8 +173,8 @@ The user checks the assessment fields
 
 The user should see the text in the element
     [Arguments]    ${element}    ${text}
-    wait until element is visible    ${element}
-    wait until element contains    ${element}    ${text}
+    IFS Wait Until element is visible    ${element}
+    IFS Wait Until element contains    ${element}    ${text}
     Page Should Not Contain    Error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
@@ -182,8 +182,8 @@ The user should see the text in the element
 
 The user should not see the text in the element
     [Arguments]    ${element}    ${text}
-    wait until element is visible    ${element}
-    wait until element does not contain    ${element}    ${text}
+    IFS Wait Until element is visible    ${element}
+    IFS Wait Until element does not contain    ${element}    ${text}
     Page Should Not Contain    Error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request

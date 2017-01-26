@@ -59,5 +59,5 @@ Same Operating address
 
 *** Keywords ***
 the backslash doesnt give errors
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    the user should see the element    id=addressForm.selectedPostcodeIndex
-    Run Keyword If    '${status}' == 'FAIL'    Wait Until Page Contains    No results were found
+    ${STATUS}    ${VALUE}=    IFS Run Keyword And Ignore Error    the user should see the element    id=addressForm.selectedPostcodeIndex
+    Run Keyword If    '${status}' == 'FAIL'    IFS Wait Until Page Contains    No results were found

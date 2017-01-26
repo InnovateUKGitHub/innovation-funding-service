@@ -97,7 +97,7 @@ the user marks the first section as incomplete
     The user clicks the button/link    name=mark_as_incomplete
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    IFS Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
@@ -134,6 +134,6 @@ the applicant marks the first section as complete
     the applicant completes the application details
 
 the applicant clicks the submit and then clicks the "close button" in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    IFS Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=button:contains("X")

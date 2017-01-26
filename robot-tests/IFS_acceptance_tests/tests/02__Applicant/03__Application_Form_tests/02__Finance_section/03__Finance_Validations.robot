@@ -283,7 +283,7 @@ the user reloads the page with validation errors
     wait for autosave
     the user reloads the page
     wait for autosave
-    run keyword and ignore error    confirm action
+    IFS Run Keyword And Ignore Error    confirm action
 
 
 the user enters invalid inputs in the other funding fields

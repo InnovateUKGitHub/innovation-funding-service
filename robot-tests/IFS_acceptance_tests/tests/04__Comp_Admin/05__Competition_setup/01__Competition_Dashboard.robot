@@ -118,7 +118,7 @@ Clearing filters should show all the competitions
 *** Keywords ***
 the total calculation should be correct
     [Documentation]    This keyword is for the total of the search results with or without second page
-    ${pagination}    ${VALUE}=    run keyword and ignore error    Element Should Be Visible    name=page
+    ${pagination}    ${VALUE}=    IFS Run Keyword And Ignore Error    Element Should Be Visible    name=page
     run keyword if    '${pagination}' == 'PASS'    check calculations on both pages
     run keyword if    '${pagination}' == 'FAIL'    check calculations on one page
 

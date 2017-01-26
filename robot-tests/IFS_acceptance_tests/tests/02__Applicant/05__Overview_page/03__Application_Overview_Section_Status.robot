@@ -39,8 +39,8 @@ Green check shows when finances are marked as complete
     When the user marks the finances as complete
     Then the user should see the element    jQuery=#section-6 .section:nth-child(1) img[src*="/images/field/field-done-right"]
     [Teardown]    Run keywords    Applicant navigates to the finances of the Robot application
-    ...    AND    Run Keyword And Ignore Error    Focus    jQuery=button:contains("Edit")
-    ...    AND    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
+    ...    AND    IFS Run Keyword And Ignore Error    Focus    jQuery=button:contains("Edit")
+    ...    AND    IFS Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")
 
 *** Keywords ***
 the user marks the finance section as not complete
@@ -57,4 +57,4 @@ the applicant can see that the economics benefit section is marked as complete
 the user makes sure that the finances section is not marked as complete
     the user navigates to the overview page of the Robot test application
     the user clicks the button/link    link=Your finances
-    run keyword and ignore error    the user clicks the button/link    jQuery=button:contains("Edit")
+    IFS Run Keyword And Ignore Error    the user clicks the button/link    jQuery=button:contains("Edit")

@@ -249,7 +249,7 @@ the user fills the empty question fields
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     focus    jQuery=.button[value="Save and close"]
-    wait until element is not visible    css=error-message
+    IFS Wait Until element is not visible    css=error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user fills the milestones with invalid data
@@ -388,9 +388,9 @@ the user should see the correct details in the eligibility form
 
 The user should not see the error text in the page
     [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
+    IFS Run Keyword And Ignore Error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
-    Wait Until Page Does Not Contain    ${ERROR_TEXT}
+    IFS Wait Until Page Does Not Contain    ${ERROR_TEXT}
 
 the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
@@ -440,8 +440,8 @@ The user navigates to the Validation competition
 
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
+    IFS Run Keyword And Ignore Error    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
     Wait for autosave
-    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    IFS Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
 

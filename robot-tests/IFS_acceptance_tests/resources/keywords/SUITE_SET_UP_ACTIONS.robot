@@ -4,19 +4,19 @@ Resource          ../defaultResources.robot
 *** Keywords ***
 log in and create new application if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Robot test application
+    ${STATUS}    ${VALUE}=    IFS Run Keyword And Ignore Error    Page Should Contain    Robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user
 
 log in and create new application for collaboration if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Invite robot test application
+    ${STATUS}    ${VALUE}=    IFS Run Keyword And Ignore Error    Page Should Contain    Invite robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new invite application with the same user
 
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
     Given Guest user log-in    &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Academic robot test application
+    ${STATUS}    ${VALUE}=    IFS Run Keyword And Ignore Error    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new academic application with the same user
     ...    AND    Delete the emails from both test mailboxes
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
@@ -66,7 +66,7 @@ the user marks every section but one as complete
 
 the user marks the section as complete
     [Arguments]    ${form-id}
-    Wait Until Element Is Visible    css=#form-input-${form-id} .editor
+    IFS Wait Until Element Is Visible    css=#form-input-${form-id} .editor
     Input Text    css=#form-input-${form-id} .editor    Entering text to allow valid mark as complete
     Mouse Out    css=#form-input-${form-id} .editor
     wait for autosave
@@ -160,13 +160,13 @@ Invite and accept the invitation
 
 The user redirects to the page
     [Arguments]    ${TEXT1}    ${TEXT2}
-    Wait Until Keyword Succeeds    10    500ms    Page Should Contain    ${TEXT1}
+    IFS Wait Until Keyword Succeeds    10    500ms    Page Should Contain    ${TEXT1}
     Page Should Contain    ${TEXT2}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Wait Until Element Is Visible    id=global-header
+    IFS Wait Until Element Is Visible    id=global-header
     Page Should Contain    BETA
 
 The user navigates to the summary page of the Robot test application
@@ -259,7 +259,7 @@ the user follows the flow to register their organisation
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
-    Wait Until Page Contains Element    link=terms and conditions
+    IFS Wait Until Page Contains Element    link=terms and conditions
     Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Input Text    id=firstName    Stuart
     Input Text    id=lastName    ANDERSON

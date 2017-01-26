@@ -1,5 +1,5 @@
 *** Keywords ***
-Capture Large Screenshot
-    Set Window Size     1920    8000
-    Capture Page Screenshot
-    Set Window Size     1024    768
+Capture Large Screenshot If Test Failed
+    Run Keyword Unless ${CURRENTLY_WAITING_UNTIL}      Set Window Size     1920    8000
+    Run Keyword Unless ${CURRENTLY_WAITING_UNTIL}      Capture Page Screenshot
+    Run Keyword Unless ${CURRENTLY_WAITING_UNTIL}      Set Window Size     1024    768

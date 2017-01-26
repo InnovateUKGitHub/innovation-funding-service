@@ -7,7 +7,7 @@ The user downloads the file
     ...     the file all in one package
     [Arguments]    ${user}    ${url}    ${filename}
     Run and Return RC    ./download.py ${user} ${short_password} ${url} ${filename}
-    wait until keyword succeeds    30s    200ms    Download should be done
+    IFS Wait Until Keyword Succeeds    30s    200ms    Download should be done
 
 
 Download should be done
@@ -45,6 +45,6 @@ the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}
     Reload Page
     Click Button    name=${name}
-    Wait Until Page Does Not Contain    Remove
+    IFS Wait Until Page Does Not Contain    Remove
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}

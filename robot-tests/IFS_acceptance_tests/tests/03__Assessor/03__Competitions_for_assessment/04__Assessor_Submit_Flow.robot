@@ -288,57 +288,57 @@ the user adds score and feedback for every question
     The user clicks the button/link    jQuery=label:contains(Yes)
     The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Potential market feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project exploitation feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Economic benefit feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Technical approach feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Innovation feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Risks feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project team feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Funding feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Adding value feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    IFS Wait Until page contains    Saving
     The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores
@@ -412,6 +412,6 @@ the progress of the applications should be correct
     Should Be Equal As Integers    ${TOTAL}    ${NUMBER_OF_APPLICATIONS}
 
 Count the applications
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Pending
+    ${STATUS}    ${VALUE}=    IFS Run Keyword And Ignore Error    Page Should Contain    Pending
     Run Keyword If    '${status}' == 'FAIL'    set test variable    ${NUMBER_OF_APPLICATIONS}    4
     Run Keyword If    '${status}' == 'PASS'    set test variable    ${NUMBER_OF_APPLICATIONS}    3
