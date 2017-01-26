@@ -90,7 +90,10 @@ def capture_page_screenshot_on_failure():
 
 
 def do_capture_page_screenshot():
-  s2l.set_window_size(1920, 8000)
+
+  height = s2l._current_browser().execute_script("return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, document.documentElement.scrollHeight, document.documentElement.offsetHeight);")
+
+  s2l.set_window_size(1920, height)
   warn("Capturing a screenshot")
   s2l.capture_page_screenshot()
   s2l.set_window_size(1920, 1080)
