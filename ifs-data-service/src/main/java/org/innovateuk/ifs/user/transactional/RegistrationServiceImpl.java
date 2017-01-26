@@ -34,6 +34,7 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static java.lang.String.format;
 import static java.time.LocalDateTime.now;
@@ -51,9 +52,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     final JsonNodeFactory factory = JsonNodeFactory.instance;
 
-    private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
-
-    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
+    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(UUID.randomUUID().toString());
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_USER
