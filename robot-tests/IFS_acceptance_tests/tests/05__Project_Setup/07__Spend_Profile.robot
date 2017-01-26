@@ -148,7 +148,6 @@ Lead partner can edit his spend profile with invalid values
     Then the field has value                           css=#row-total-24    £ 10,669
     And the user should see the element                jQuery=.cell-error #row-total-24
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
-    When the user clicks the button/link               link=${Katz_Name}
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
@@ -629,7 +628,6 @@ Lead partner can edit own spend profile and mark as complete
     And the user should see the text in the page    Your spend profile is marked as complete
     And the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
-    And the user clicks the button/link    link=${Katz_name}
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
 
 Industrial partner receives edit rights and can submit their spend profile

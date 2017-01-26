@@ -416,21 +416,15 @@ public class ProjectOtherDocumentsControllerTest extends BaseControllerMockMVCTe
     @Test
     public void testOtherDocumentsSubmitAllowedWhenAllFilesUploaded() throws Exception {
         long projectId = 123L;
-
         ProjectResource project = newProjectResource().withId(projectId).build();
 
-        List<ProjectUserResource> projectUsers = newProjectUserResource().
-                withUser(loggedInUser.getId()).
-                withRoleName(PROJECT_MANAGER.getName()).
-                build(1);
-
         when(projectService.getById(projectId)).thenReturn(project);
+        when(projectService.isProjectManager(loggedInUser.getId(), projectId)).thenReturn(true);
         when(projectService.getCollaborationAgreementFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getExploitationPlanFileDetails(projectId)).thenReturn(Optional.empty());
         when(projectService.getPartnerOrganisationsForProject(projectId)).thenReturn(emptyList());
         when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
         when(projectService.isOtherDocumentSubmitAllowed(projectId)).thenReturn(true);
-        when(projectService.getProjectUsersForProject(projectId)).thenReturn(projectUsers);
 
         MvcResult result = mockMvc.perform(
                 get("/project/123/partner/documents")).
