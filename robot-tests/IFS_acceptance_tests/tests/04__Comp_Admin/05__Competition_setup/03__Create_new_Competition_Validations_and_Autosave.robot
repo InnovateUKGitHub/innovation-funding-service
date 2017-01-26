@@ -369,7 +369,7 @@ the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id=funders0.funder
     Should Be Equal    ${input_value}    FunderName
     ${input_value} =    Get Value    id=0-funderBudget
-    Should Be Equal As Strings    ${input_value}    20000.00
+    Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id=pafNumber
     Should Be Equal As Strings    ${input_value}    2016
     ${input_value} =    Get Value    id=budgetCode
