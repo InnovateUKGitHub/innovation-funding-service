@@ -33,7 +33,7 @@
     </th:block>
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
+            <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
         </th:block>
         <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
             <th:block th:if="${!model.isSentToProjectTeam()}">
