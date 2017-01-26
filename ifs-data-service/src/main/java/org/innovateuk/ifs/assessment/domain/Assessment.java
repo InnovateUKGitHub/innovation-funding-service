@@ -85,6 +85,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         Assessment that = (Assessment) o;
 
         return new EqualsBuilder()
+                .appendSuper(super.equals(o))
                 .append(participant, that.participant)
                 .append(target, that.target)
                 .append(responses, that.responses)
@@ -94,6 +95,7 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .appendSuper(super.hashCode())
                 .append(participant)
                 .append(target)
                 .append(responses)

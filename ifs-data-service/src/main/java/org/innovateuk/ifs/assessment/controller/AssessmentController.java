@@ -62,7 +62,7 @@ public class AssessmentController {
 
     @RequestMapping(value = "/{id}/notify", method = PUT)
     public RestResult<Void> notify(@PathVariable("id") long id) {
-        return assessmentService.notify(id).toPutResponse();
+        return assessmentService.notifyAssessor(id).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/rejectInvitation", method = PUT)

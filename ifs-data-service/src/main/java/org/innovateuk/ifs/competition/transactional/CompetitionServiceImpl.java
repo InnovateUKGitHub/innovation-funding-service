@@ -168,9 +168,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     @Override
     public ServiceResult<Void> notifyAssessors(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
-        if (competition.getCompetitionStatus().equals(CompetitionStatus.CLOSED)) {
-            competition.notifyAssessors(LocalDateTime.now());
-        }
+        competition.notifyAssessors(LocalDateTime.now());
         return serviceSuccess();
     }
 }

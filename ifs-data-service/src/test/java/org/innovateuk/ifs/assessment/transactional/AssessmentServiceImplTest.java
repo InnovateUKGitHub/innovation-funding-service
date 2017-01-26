@@ -261,7 +261,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentWorkflowHandler.notify(assessment)).thenReturn(true);
 
-        ServiceResult<Void> result = assessmentService.notify(assessmentId);
+        ServiceResult<Void> result = assessmentService.notifyAssessor(assessmentId);
         assertTrue(result.isSuccess());
 
         InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
@@ -282,7 +282,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentWorkflowHandler.notify(assessment)).thenReturn(false);
 
-        ServiceResult<Void> result = assessmentService.notify(assessmentId);
+        ServiceResult<Void> result = assessmentService.notifyAssessor(assessmentId);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_NOTIFY_FAILED));
 
@@ -290,6 +290,50 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
         inOrder.verify(assessmentWorkflowHandler).notify(assessment);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void notifyAllAssessors() throws Exception {
+        State createdState = CREATED.getBackingState();
+        long competitionId = 1L;
+        List<Assessment> assessments = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, createdState))
+                .build(2);
+
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(CREATED.getBackingState(), competitionId))
+                .thenReturn(assessments);
+        when(assessmentWorkflowHandler.notify(isA(Assessment.class))).thenReturn(true);
+
+        ServiceResult<Void> serviceResult = assessmentService.notifyAllAssessors(competitionId);
+
+        verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(createdState, competitionId);
+        verify(assessmentWorkflowHandler, times(2)).notify(isA(Assessment.class));
+        verifyNoMoreInteractions(assessmentRepositoryMock, assessmentWorkflowHandler);
+
+        assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void notifyAllAssessors_eventNotAccepted() throws Exception {
+        State createdState = CREATED.getBackingState();
+        long competitionId = 1L;
+        List<Assessment> assessments = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, createdState))
+                .build(2);
+
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(CREATED.getBackingState(), competitionId))
+                .thenReturn(assessments);
+        when(assessmentWorkflowHandler.notify(assessments.get(0))).thenReturn(false);
+        when(assessmentWorkflowHandler.notify(assessments.get(1))).thenReturn(true);
+
+        ServiceResult<Void> serviceResult = assessmentService.notifyAllAssessors(competitionId);
+
+        verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(createdState, competitionId);
+        verify(assessmentWorkflowHandler).notify(assessments.get(0));
+        verify(assessmentWorkflowHandler).notify(assessments.get(1));
+        verifyNoMoreInteractions(assessmentRepositoryMock, assessmentWorkflowHandler);
+
+        assertTrue(serviceResult.isFailure());
     }
 
     @Test
@@ -518,7 +562,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState);
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
-        inOrder.verify(assessmentMapperMock).mapToResource(expectedAssessment);
+        inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
@@ -597,7 +641,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, CREATED.getBackingState());
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
-        inOrder.verify(assessmentMapperMock).mapToResource(expectedAssessment);
+        inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());

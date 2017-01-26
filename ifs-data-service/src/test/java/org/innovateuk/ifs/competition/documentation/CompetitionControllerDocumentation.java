@@ -220,7 +220,7 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
         final Long competitionId = 1L;
 
         when(competitionService.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
-        when(assessmentServiceMock.findByStateAndCompetition(AssessmentStates.CREATED, competitionId)).thenReturn(serviceSuccess(emptyList()));
+        when(assessmentServiceMock.notifyAllAssessors(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
                 .andExpect(status().isOk())

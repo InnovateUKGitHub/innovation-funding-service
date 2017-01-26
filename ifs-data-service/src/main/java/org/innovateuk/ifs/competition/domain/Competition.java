@@ -562,6 +562,10 @@ public class Competition implements ProcessActivity {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
     public void notifyAssessors(LocalDateTime date) {
+        if (getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT) {
+            return;
+        }
+
         if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
             throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +
                     getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +

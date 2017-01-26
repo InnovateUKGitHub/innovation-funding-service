@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.competition.controller;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.resource.*;
@@ -65,7 +63,8 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
+    public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource,
+                                                           @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
 
@@ -75,23 +74,27 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
-    public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId, @PathVariable("competitionTypeId") Long competitionType) {
+    public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId,
+                                           @PathVariable("competitionTypeId") Long competitionType) {
         return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
     }
 
 
     @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
-    public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
+    public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime,
+                                                      @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
 
     @RequestMapping("/sectionStatus/complete/{competitionId}/{section}")
-    public RestResult<Void> markSectionComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("section") final CompetitionSetupSection section) {
+    public RestResult<Void> markSectionComplete(@PathVariable("competitionId") final Long competitionId,
+                                                @PathVariable("section") final CompetitionSetupSection section) {
         return competitionSetupService.markSectionComplete(competitionId, section).toGetResponse();
     }
 
     @RequestMapping("/sectionStatus/incomplete/{competitionId}/{section}")
-    public RestResult<Void> markSectionInComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("section") final CompetitionSetupSection section) {
+    public RestResult<Void> markSectionInComplete(@PathVariable("competitionId") final Long competitionId,
+                                                  @PathVariable("section") final CompetitionSetupSection section) {
         return competitionSetupService.markSectionInComplete(competitionId, section).toGetResponse();
     }
 
@@ -111,13 +114,9 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}/notify-assessors", method = RequestMethod.PUT)
-    public RestResult<Void> notifyAssessors(@PathVariable("id") final Long id) {
-
-        assessmentService.findByStateAndCompetition(AssessmentStates.CREATED, id).getSuccessObject()
-                .stream()
-                .map(AssessmentResource::getId)
-                .forEach(assessmentService::notify);
-
-        return competitionService.notifyAssessors(id).toPutResponse();
+    public RestResult<Void> notifyAssessors(@PathVariable("id") final Long competitionId) {
+        return competitionService.notifyAssessors(competitionId)
+                .andOnSuccess(() -> assessmentService.notifyAllAssessors(competitionId))
+                .toPutResponse();
     }
 }

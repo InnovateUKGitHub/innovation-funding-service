@@ -177,7 +177,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     public void notifyAssessor() throws Exception {
         Long assessmentId = 1L;
 
-        when(assessmentServiceMock.notify(assessmentId)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.notifyAssessor(assessmentId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/notify", assessmentId))
                 .andExpect(status().isOk())

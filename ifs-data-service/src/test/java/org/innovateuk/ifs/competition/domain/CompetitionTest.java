@@ -17,7 +17,8 @@ import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CompetitionTest {
     private Competition competition;
@@ -154,7 +155,15 @@ public class CompetitionTest {
         competition.setFundersPanelDate(LocalDateTime.now().plusDays(1));
         assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
     }
-    
+
+    @Test(expected = IllegalStateException.class)
+    public void competitionStatusInAssessment_notMoreThanOnce() throws Exception {
+        competition.setEndDate(LocalDateTime.now().minusDays(3));
+        competition.notifyAssessors(LocalDateTime.now().minusDays(2));
+        competition.closeAssessment(LocalDateTime.now().minusDays(1));
+        competition.notifyAssessors(LocalDateTime.now());
+    }
+
     @Test
     public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent(){
         competition.setEndDate(LocalDateTime.now().minusDays(5));
