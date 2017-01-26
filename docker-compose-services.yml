@@ -7,12 +7,6 @@ services:
     ports:
       - "443:443"
       - "389:389"
-    links:
-      - application-service
-      - assessment-service
-      - competition-mgt-service
-      - project-setup-mgt-service
-      - project-setup-service
     networks:
       ifs:
         aliases:
@@ -20,41 +14,31 @@ services:
 
   application-service:
     image: worth/application-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
     networks:
       - ifs
     
 
   assessment-service:
     image: worth/assessment-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
     networks:
       - ifs
 
   competition-mgt-service:
     image: worth/competition-management-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
     networks:
       - ifs
 
   project-setup-mgt-service:
     image: worth/project-setup-management-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
     networks:
       - ifs
 
   project-setup-service:
     image: worth/project-setup-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
     networks:
       - ifs
 
-  data:
+  data-service:
     image: worth/data-service:1.0-SNAPSHOT
     networks:
       ifs:
