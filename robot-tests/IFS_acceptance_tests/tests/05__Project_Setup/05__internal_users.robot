@@ -9,6 +9,8 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...
 ...               INFUND-5300: As a Project Finance team member I want to have an equivalent dashboard to the Competitions team for Project Setup so that I can view the appropriate partners'
 ...                            statuses and access pages appropriate to my role
+...
+...               INFUND-7109 Bank Details Status - Internal user
 Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -41,10 +43,6 @@ Project Finance user can see the internal project summary page
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
-    And the user should not see an error in the page
-    And the user goes back to the previous page
-    And the user clicks the button/link    xpath=//a[contains(@href, 'project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details')]
-    And the user should not see an error in the page
     And the user goes back to the previous page
     And the user should not see the element    xpath=//a[contains(@href, '/project-setup-management/project/${INFORM_APPLICATION_1_PROJECT}/spend-profile/approval')]    # since the spend profile hasn't been generated yet - see INFUND-5144
 
@@ -83,12 +81,12 @@ Project Finance has a dashboard and can see projects in PS
     And the user should not see an error in the page
 
 Project Finance can see the status of projects in PS
-    [Documentation]  INFUND-5300
+    [Documentation]  INFUND-5300, INFUND-7109
     [Tags]
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
+    And the user should not see the element  jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
 
 

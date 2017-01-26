@@ -1,5 +1,5 @@
 allprojects {
-    group 'worth'
+    group 'innovateuk'
     version '1.0-SNAPSHOT'
 
     apply plugin: 'idea'
