@@ -711,8 +711,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
 
         verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
-        //verify(assessmentMapperMock).mapToResource(assessments.get(0));
-        //verify(assessmentMapperMock).mapToResource(assessments.get(1));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(0)));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(1)));
         verify(assessmentRepositoryMock).findOne(2L);
         verify(assessmentRepositoryMock).findOne(3L);
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
@@ -751,8 +751,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
 
         verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
-        //verify(assessmentMapperMock).mapToResource(assessments.get(0));
-        //verify(assessmentMapperMock).mapToResource(assessments.get(1));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(0)));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(1)));
         verify(assessmentRepositoryMock).findOne(2L);
         verify(assessmentRepositoryMock).findOne(3L);
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
@@ -792,8 +792,8 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
 
         verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
-        //verify(assessmentMapperMock).mapToResource(assessments.get(0));
-        //verify(assessmentMapperMock).mapToResource(assessments.get(1));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(0)));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(1)));
         verify(assessmentRepositoryMock).findOne(2L);
         verify(assessmentRepositoryMock).findOne(3L);
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
