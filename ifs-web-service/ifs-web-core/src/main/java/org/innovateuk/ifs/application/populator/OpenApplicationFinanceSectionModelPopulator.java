@@ -84,5 +84,6 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
         applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
         financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
+        model.addAttribute("organisationId", organisationId);
     }
 }
