@@ -219,6 +219,8 @@ public class BaseUnitTest {
     public UserRestService userRestServiceMock;
     @Mock
     public AssessmentRestService assessmentRestService;
+    @Mock
+    public MilestoneService milestoneServiceMock;
 
     @Spy
     @InjectMocks
