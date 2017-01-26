@@ -16,7 +16,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Configurable
-public class OrganisationApplicationFinanceOverview implements OrganisationFinanceOverview {
+public class OrganisationApplicationFinanceOverviewImpl implements OrganisationFinanceOverview {
 
     private Long applicationId;
     private List<ApplicationFinanceResource> applicationFinances = new ArrayList<>();
@@ -27,11 +27,11 @@ public class OrganisationApplicationFinanceOverview implements OrganisationFinan
     @Autowired
     private FileEntryRestService fileEntryService;
 
-    public OrganisationApplicationFinanceOverview() {
+    public OrganisationApplicationFinanceOverviewImpl() {
     	// no-arg constructor
     }
 
-    public OrganisationApplicationFinanceOverview(FinanceService financeService, FileEntryRestService fileEntryRestService, Long applicationId) {
+    public OrganisationApplicationFinanceOverviewImpl(FinanceService financeService, FileEntryRestService fileEntryRestService, Long applicationId) {
         this.applicationId = applicationId;
         this.financeService = financeService;
         this.fileEntryService = fileEntryRestService;

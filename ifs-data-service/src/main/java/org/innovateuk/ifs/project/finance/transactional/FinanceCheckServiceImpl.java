@@ -197,7 +197,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            Pair<Viability, ViabilityStatus> viability = getViability(org);
+            Pair<Viability, ViabilityRagStatus> viability = getViability(org);
 
             FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
@@ -211,14 +211,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private Pair<Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
+    private Pair<Viability, ViabilityRagStatus> getViability(PartnerOrganisation org) {
 
         ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
                 org.getProject().getId(), org.getOrganisation().getId());
 
         ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
 
-        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityStatus());
+        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityRagStatus());
 
     }
 

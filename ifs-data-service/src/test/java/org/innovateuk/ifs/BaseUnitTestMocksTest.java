@@ -321,6 +321,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected RoleMapper roleMapperMock;
 
     @Mock
+    protected ProcessRoleMapper processRoleMapperMock;
+
+    @Mock
     protected TokenService tokenServiceMock;
 
     @Mock
@@ -541,6 +544,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ActivityStateRepository activityStateRepositoryMock;
+
+    @Mock
+    protected UsersRolesService usersRolesServiceMock;
 
     @Before
     public void setupMockInjection() {

@@ -236,6 +236,11 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
+    public RestResult<ProjectUserResource> getProjectManager(Long projectId) {
+        return getWithRestResult(projectRestURL + "/" + projectId + "/project-manager", ProjectUserResource.class);
+    }
+
+    @Override
     public RestResult<Void> sendGrantOfferLetter(Long projectId) {
         return  postWithRestResult(projectRestURL + "/" + projectId + "/grant-offer/send", Void.class);
     }

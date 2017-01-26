@@ -40,6 +40,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-6781 Spend Profile is accessible before preliminary sections are completed
 ...
 ...               INFUND-7174 Not eligible partner should not have access to his Bank details page
+...
+...               INFUND-6882 Email validation done when valid is input selected for PM selection in project details
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -79,7 +81,7 @@ Status updates correctly for internal user's table
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting    #Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status    #MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting    #Bank details
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status    #Bank details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action    #Finance checks
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status    #Spend Profile
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting    #Other Docs
@@ -246,7 +248,7 @@ Inviting project manager server side validations
     And the user should see the text in the page    Please enter an email address.
 
 Inviting project manager client side validations
-    [Documentation]    INFUND-3483
+    [Documentation]    INFUND-3483, INFUND-6882
     [Tags]
     When the user enters text to a text field    id=name-project-manager    John Smith
     And the user moves focus to the element    jQuery=.button:contains("Save")
@@ -255,7 +257,11 @@ Inviting project manager client side validations
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter a valid name.
     And the user should see the text in the page    Please enter a valid email address.
-    When the user enters text to a text field    id=email-project-manager    test@example.com
+    When the user selects the radio button    projectManager    projectManager1
+    Then the user should not see the text in the page    Please enter an email address.
+    And the user should not see the text in the page    Please enter a valid name.
+    When the user selects the radio button    projectManager    new
+    And the user enters text to a text field    id=email-project-manager    test@example.com
     And the user moves focus to the element    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    Please enter an email address.
     And the user should not see the text in the page    Please enter a valid name.
@@ -394,14 +400,6 @@ Other partners can see who needs to provide Bank Details
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
     Then the user should see the element    jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
     And the user should see the element     jQuery=#table-project-status tr:nth-child(3) td:nth-child(4):contains("-")
-
-Project Finance should see the eligible partners
-    [Documentation]    INFUND-7090
-    [Tags]    HappyPath
-    [Setup]    log in as a different user   &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/review-all-bank-details
-    Then the user should see the element    jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}")
-    And the user should see the element     jQuery=tr:nth-child(2):contains("Not required")
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579

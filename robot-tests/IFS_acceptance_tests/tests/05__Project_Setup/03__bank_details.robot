@@ -10,6 +10,10 @@ Documentation     INFUND-3010 As a partner I want to be able to supply bank deta
 ...               INFUND-6018 Partner should see a flag in Bank Details, when he needs to take an action
 ...
 ...               INFUND-6887 Duplicate validation error message in bank details section of PS
+...
+...               INFUND-7109 Bank Details Status - Internal user
+...
+...               INFUND-6482 Extra validation message showing on fields
 Suite Setup       finance contacts are submitted by all users
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -39,10 +43,20 @@ Links to other sections in Project setup dependent on project details for partne
     And the user should not see the element       link = Grant offer letter
     [Teardown]  close any open browsers
 
+Project Finance should not be able to access bank details page
+    [Documentation]    INFUND-7090, INFUND-7109
+    [Tags]    HappyPath
+    [Setup]    Guest user log-in   &{internal_finance_credentials}
+    Given the user navigates to the page and gets a custom error message   ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details    You do not have the necessary permissions for your request
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
+    Then the user should not see the element   jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.action
+    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.waiting
+    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.ok
+
 Bank details page
     [Documentation]    INFUND-3010, INFUND-6018
     [Tags]    HappyPath
-    Given guest user log-in                 ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
+    Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link=${PS_BD_APPLICATION_HEADER}
     Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
     When the user clicks the button/link    link=What's the status of each of my partners?
@@ -63,11 +77,12 @@ Bank details server side validations
     And the user should see an error    You need to select a billing address before you can continue.
 
 Bank details client side validations
-    [Documentation]    INFUND-3010, INFUND-6887
+    [Documentation]    INFUND-3010, INFUND-6887, INFUND-6482
     [Tags]    HappyPath
     When the user enters text to a text field    name=accountNumber    1234567
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
+    And the user should not see the text in the page    Please correct this field
     And the user should see an error    Please enter a valid account number
     When the user enters text to a text field    name=accountNumber    abcdefgh
     And the user moves focus away from the element    name=accountNumber
@@ -77,6 +92,7 @@ Bank details client side validations
     And the user moves focus away from the element    name=accountNumber
     Then the user should not see the text in the page    Please enter an account number.
     And the user should not see the text in the page    Please enter a valid account number.
+    And the user should not see the text in the page    Please correct this field
     When the user enters text to a text field    name=sortCode    12345
     And the user moves focus away from the element    name=sortCode
     Then the user should see an error    Please enter a valid sort code.
@@ -115,7 +131,7 @@ Bank details experian validations
     Then the user should see the text in the page    Bank account details are incorrect, please check and try again
 
 Bank details submission
-    [Documentation]    INFUND-3010, INFUND-2621
+    [Documentation]    INFUND-3010, INFUND-2621, INFUND-7109
     [Tags]    Experian    HappyPath
     # Please note that the bank details for these Experian tests are dummy data specifically chosen to elicit certain responses from the stub.
     When the user enters text to a text field         name=accountNumber    12345677
@@ -132,6 +148,9 @@ Bank details submission
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page      Project team status
     And the user should see the element               jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
+    When log in as a different user                   &{internal_finance_credentials}
+    And the user navigates to the page               ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
+    Then the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.action
 
 Bank details for Academic
     [Documentation]    INFUND-3010, INFUND-2621, INFUND 6018
@@ -221,7 +240,7 @@ Project Finance can see the progress of partners bank details
     [Tags]    HappyPath
     [Setup]  log in as a different user             &{internal_finance_credentials}
     Given the user navigates to the page            ${server}/project-setup-management/competition/${PS_BD_Competition_Id}/status
-    And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(1) td:nth-child(4) a
+    And the user clicks the button/link             jQuery=#table-project-status tr:nth-child(2) td:nth-child(4) a
     Then the user navigates to the page             ${server}/project-setup-management/project/${PS_BD_APPLICATION_PROJECT}/review-all-bank-details
     And the user should see the text in the page    This overview shows whether each partner has submitted their bank details
     Then the user should see the element            jQuery=tr:nth-child(1) td:nth-child(2):contains("Review required")
@@ -244,6 +263,7 @@ Project Finance can see the progress of partners bank details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
     Then the user clicks the button/link            link=Bank details
     [Teardown]  the user clicks the button/link     link=Competition Dashboard
+
 
 Project Finance can see Bank Details
     [Documentation]    INFUND-4903, INFUND-4903

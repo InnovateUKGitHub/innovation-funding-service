@@ -1,7 +1,5 @@
 #!/bin/bash
 
-eval $(docker-machine env default)
-
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
 
@@ -18,3 +16,5 @@ if [ -z "$filename" ]; then
 fi
 
 docker load < ${filename}
+
+docker build -t innovateuk/shibboleth:1.0-SNAPSHOT ../shibboleth

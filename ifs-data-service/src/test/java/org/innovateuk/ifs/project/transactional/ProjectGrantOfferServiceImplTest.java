@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.transactional;
 
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.address.builder.AddressBuilder;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.error.CommonErrors;
@@ -23,11 +22,9 @@ import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.domain.Role;
-import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
@@ -206,7 +203,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 build();
 
         leadApplicantProcessRole = newProcessRole().
-                withOrganisation(organisations.get(0)).
+                withOrganisationId(organisations.get(0).getId()).
                 withRole(leadApplicantRole).
                 withUser(user).
                 build();
@@ -452,7 +449,12 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(golWorkflowHandlerMock).removeGrantOfferLetter(project, internalUser);
         verify(fileServiceMock, never()).deleteFile(existingGOLFile.getId());
     }
-
+    private final Organisation organisation(OrganisationTypeEnum type, String name) {
+        return newOrganisation()
+                .withOrganisationType(type)
+                .withName(name)
+                .build();
+    }
     @Test
     public void testGenerateGrantOfferLetterIfReadySuccess() {
         FileEntryResource fileEntryResource = newFileEntryResource().
@@ -480,10 +482,10 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         Competition comp = newCompetition()
                 .withName("Test Comp")
                 .build();
-        Organisation o = newOrganisation()
-                .withOrganisationType(BUSINESS)
-                .withName("Org1")
-                .build();
+        Organisation o1 = organisation(BUSINESS, "OrgLeader");
+        Organisation o2 = organisation(BUSINESS, "Org2");
+        Organisation o3 = organisation(BUSINESS, "Org3");
+
         Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
                 .build();
         User u = newUser()
@@ -491,7 +493,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withLastName("cd")
                 .build();
         ProcessRole leadAppProcessRole = newProcessRole()
-                .withOrganisation(o)
+                .withOrganisationId(o1.getId())
                 .withUser(u)
                 .withRole(leadAppRole)
                 .build();
@@ -502,12 +504,25 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .build();
         ProjectUser pm = newProjectUser()
                 .withRole(PROJECT_MANAGER)
-                .withOrganisation(o)
+                .withOrganisation(o1)
                 .build();
+
         PartnerOrganisation po = newPartnerOrganisation()
-                .withOrganisation(o)
+                .withOrganisation(o1)
                 .withLeadOrganisation(true)
                 .build();
+
+        PartnerOrganisation po2 = newPartnerOrganisation()
+                .withOrganisation(o2)
+                .withLeadOrganisation(false)
+                .build();
+
+        PartnerOrganisation po3 = newPartnerOrganisation()
+                .withOrganisation(o3)
+                .withLeadOrganisation(false)
+                .build();
+
+
         Address address = newAddress()
                 .withAddressLine1("InnovateUK")
                 .withAddressLine2("Northstar House")
@@ -518,7 +533,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withOtherDocumentsApproved(ApprovalType.APPROVED)
                 .withName("project 1")
                 .withApplication(app)
-                .withPartnerOrganisations(asList(po))
+                .withPartnerOrganisations(asList(po3, po, po2))
                 .withProjectUsers(asList(pm))
                 .withDuration(10L)
                 .withAddress(address)
@@ -535,11 +550,12 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .build();
 
         Map<String, Object> templateArgs = new HashMap<String, Object>();
+        templateArgs.put("SortedOrganisations", asList(o1.getName(), o2.getName(), o3.getName()));
         templateArgs.put("ProjectLength", 10L);
         templateArgs.put("ProjectTitle", "project 1");
         templateArgs.put("LeadContact", "ab cd");
         templateArgs.put("ApplicationNumber", 3L);
-        templateArgs.put("LeadOrgName", "Org1");
+        templateArgs.put("LeadOrgName", "OrgLeader");
         templateArgs.put("CompetitionName", "Test Comp");
         templateArgs.put("Address1", "InnovateUK");
         templateArgs.put("Address2", "Northstar House");
@@ -547,22 +563,39 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         templateArgs.put("TownCity", "Swindon");
         templateArgs.put("PostCode", "SN1 1AA");
         templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
-        templateArgs.put("Date", LocalDateTime.now().toString()); // will never match generated value
+        templateArgs.put("Date", LocalDateTime.now().toString());
 
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
-        organisationAndGrantPercentageMap.put(o.getName(), new Integer("30"));
+        organisationAndGrantPercentageMap.put(o1.getName(), new Integer("30"));
+        organisationAndGrantPercentageMap.put(o2.getName(), new Integer("30"));
+        organisationAndGrantPercentageMap.put(o3.getName(), new Integer("30"));
+
         Map<String, List<String>> organisationYearsMap  = new HashMap<>();
-        organisationYearsMap.put(o.getName(), new LinkedList<>());
+        organisationYearsMap.put(o1.getName(), new LinkedList<>());
+        organisationYearsMap.put(o2.getName(), new LinkedList<>());
+        organisationYearsMap.put(o3.getName(), new LinkedList<>());
+
         Map<String, List<BigDecimal>> organisationEligibleCostTotal  = new HashMap<>();
-        organisationEligibleCostTotal.put(o.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+        organisationEligibleCostTotal.put(o1.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+        organisationEligibleCostTotal.put(o2.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+        organisationEligibleCostTotal.put(o3.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+
         Map<String, List<BigDecimal>> organisationGrantAllocationTotal  = new HashMap<>();
-        organisationGrantAllocationTotal.put(o.getName(), new LinkedList<>());
+        organisationGrantAllocationTotal.put(o1.getName(), new LinkedList<>());
+        organisationGrantAllocationTotal.put(o2.getName(), new LinkedList<>());
+        organisationGrantAllocationTotal.put(o3.getName(), new LinkedList<>());
+
         Map<String, BigDecimal> yearEligibleCostTotal  = new HashMap<>();
-        yearEligibleCostTotal.put(o.getName(), new BigDecimal("1"));
+        yearEligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
+        yearEligibleCostTotal.put(o2.getName(), new BigDecimal("1"));
+        yearEligibleCostTotal.put(o3.getName(), new BigDecimal("1"));
+
         Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
         YearlyGOLProfileTable expectedYearlyGOLProfileTable = new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
 
-        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
+        when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
+        when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
+        when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
         when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
@@ -572,10 +605,14 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
 
         when(organisationFinanceDelegateMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
-        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
 
         Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
-        eligibleCostTotal.put(o.getName(), new BigDecimal("1"));
+        eligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
+        eligibleCostTotal.put(o2.getName(), new BigDecimal("1"));
+        eligibleCostTotal.put(o3.getName(), new BigDecimal("1"));
         when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
@@ -583,6 +620,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
         verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
 
+        assertEquals(templateArgs.get("SortedOrganisations"), templateArgsCaptor.getAllValues().get(0).get("SortedOrganisations"));
         assertEquals(templateArgs.get("ProjectLength"), templateArgsCaptor.getAllValues().get(0).get("ProjectLength"));
         assertEquals(templateArgs.get("ProjectTitle"), templateArgsCaptor.getAllValues().get(0).get("ProjectTitle"));
         assertEquals(templateArgs.get("ProjectStartDate"), templateArgsCaptor.getAllValues().get(0).get("ProjectStartDate"));
@@ -611,9 +649,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         }
         String pdfHeader = "%PDF-1.4\n";
         assertEquals(pdfHeader, startOfGeneratedFileString.substring(0, pdfHeader.length()));
-
         assertTrue(result.isSuccess());
-
         assertTrue(compareYearlyGolProfileTable(expectedYearlyGOLProfileTable, (YearlyGOLProfileTable) templateArgsCaptor.getAllValues().get(0).get("TableData")));
     }
 
@@ -631,13 +667,13 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     public void testGenerateGrantOfferLetterOtherDocsNotApproved() {
 
         Competition comp = newCompetition().withName("Test Comp").build();
-        Organisation o = newOrganisation().withName("Org1").build();
+        Organisation o1 = newOrganisation().withName("OrgLeader").build();
         Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT).build();
         User u = newUser().withFirstName("ab").withLastName("cd").build();
-        ProcessRole leadAppProcessRole = newProcessRole().withOrganisation(o).withUser(u).withRole(leadAppRole).build();
+        ProcessRole leadAppProcessRole = newProcessRole().withOrganisationId(o1.getId()).withUser(u).withRole(leadAppRole).build();
         Application app = newApplication().withCompetition(comp).withProcessRoles(leadAppProcessRole).withId(3L).build();
-        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o).build();
-        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o).withLeadOrganisation(true).build();
+        ProjectUser pm = newProjectUser().withRole(PROJECT_MANAGER).withOrganisation(o1).build();
+        PartnerOrganisation po = PartnerOrganisationBuilder.newPartnerOrganisation().withOrganisation(o1).withLeadOrganisation(true).build();
         Project project = newProject().withOtherDocumentsApproved(ApprovalType.REJECTED).withApplication(app).withPartnerOrganisations(asList(po)).withProjectUsers(asList(pm)).withDuration(10L).build();
 
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
@@ -756,6 +792,210 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         verify(projectRepositoryMock).findOne(123L);
 
+        assertTrue(compareYearlyGolProfileTable(expectedYearlyGOLProfileTable, (YearlyGOLProfileTable) templateArgsCaptor.getAllValues().get(0).get("TableData")));
+    }
+
+    @Test
+    public void testGenerateGrantOfferLetterLeadPartnerNonAcademicWithNoFunding() {
+        FileEntryResource fileEntryResource = newFileEntryResource().
+                withFilesizeBytes(1024).
+                withMediaType("application/pdf").
+                withName("grant_offer_letter").
+                build();
+
+        FileEntry createdFile = newFileEntry().build();
+        Pair<File, FileEntry> fileEntryPair = Pair.of(new File("blah"), createdFile);
+
+        StringBuilder stringBuilder = new StringBuilder();
+        String htmlFile = stringBuilder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n")
+                .append("<html dir=\"ltr\" lang=\"en\">\n")
+                .append("<head>\n")
+                .append("<meta charset=\"UTF-8\"></meta>\n")
+                .append("</head>\n")
+                .append("<body>\n")
+                .append("<p>\n")
+                .append("${LeadContact}<br/>\n")
+                .append("</p>\n")
+                .append("</body>\n")
+                .append("</html>\n").toString();
+
+        Competition comp = newCompetition()
+                .withName("Test Comp")
+                .build();
+        Organisation o1 = organisation(BUSINESS, "OrgLeader");
+        Organisation o2 = organisation(BUSINESS, "Org2");
+        Organisation o3 = organisation(BUSINESS, "Org3");
+
+        Role leadAppRole = newRole(UserRoleType.LEADAPPLICANT)
+                .build();
+        User u = newUser()
+                .withFirstName("ab")
+                .withLastName("cd")
+                .build();
+        ProcessRole leadAppProcessRole = newProcessRole()
+                .withOrganisationId(o1.getId())
+                .withUser(u)
+                .withRole(leadAppRole)
+                .build();
+        Application app = newApplication()
+                .withCompetition(comp)
+                .withProcessRoles(leadAppProcessRole)
+                .withId(3L)
+                .build();
+        ProjectUser pm = newProjectUser()
+                .withRole(PROJECT_MANAGER)
+                .withOrganisation(o1)
+                .build();
+
+        PartnerOrganisation po = newPartnerOrganisation()
+                .withOrganisation(o1)
+                .withLeadOrganisation(true)
+                .build();
+
+        PartnerOrganisation po2 = newPartnerOrganisation()
+                .withOrganisation(o2)
+                .withLeadOrganisation(false)
+                .build();
+
+        PartnerOrganisation po3 = newPartnerOrganisation()
+                .withOrganisation(o3)
+                .withLeadOrganisation(false)
+                .build();
+
+
+        Address address = newAddress()
+                .withAddressLine1("InnovateUK")
+                .withAddressLine2("Northstar House")
+                .withTown("Swindon")
+                .withPostcode("SN1 1AA")
+                .build();
+        Project project = newProject()
+                .withOtherDocumentsApproved(ApprovalType.APPROVED)
+                .withName("project 1")
+                .withApplication(app)
+                .withPartnerOrganisations(asList(po3, po, po2))
+                .withProjectUsers(asList(pm))
+                .withDuration(10L)
+                .withAddress(address)
+                .withTargetStartDate(LocalDate.now())
+                .build();
+
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource()
+                .withGrantClaimPercentage(30)
+                .withApplication(456L)
+                .withOrganisation(3L)
+                .build();
+
+        ApplicationFinanceResource applicationFinanceResourceZeroGrantClaim = newApplicationFinanceResource()
+                .withGrantClaimPercentage(0)
+                .withApplication(456L)
+                .withOrganisation(3L)
+                .build();
+        FinanceCheckSummaryResource financeCheckSummaryResource = newFinanceCheckSummaryResource()
+                .withTotalPercentageGrant(BigDecimal.valueOf(25))
+                .build();
+
+        Map<String, Object> templateArgs = new HashMap<String, Object>();
+        templateArgs.put("SortedOrganisations", asList(o1.getName(), o2.getName(), o3.getName()));
+        templateArgs.put("ProjectLength", 10L);
+        templateArgs.put("ProjectTitle", "project 1");
+        templateArgs.put("LeadContact", "ab cd");
+        templateArgs.put("ApplicationNumber", 3L);
+        templateArgs.put("LeadOrgName", "OrgLeader");
+        templateArgs.put("CompetitionName", "Test Comp");
+        templateArgs.put("Address1", "InnovateUK");
+        templateArgs.put("Address2", "Northstar House");
+        templateArgs.put("Address3", "");
+        templateArgs.put("TownCity", "Swindon");
+        templateArgs.put("PostCode", "SN1 1AA");
+        templateArgs.put("ProjectStartDate",project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)));
+        templateArgs.put("Date", LocalDateTime.now().toString());
+
+        Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
+        organisationAndGrantPercentageMap.put(o1.getName(), new Integer("0"));
+        organisationAndGrantPercentageMap.put(o2.getName(), new Integer("30"));
+        organisationAndGrantPercentageMap.put(o3.getName(), new Integer("30"));
+
+        Map<String, List<String>> organisationYearsMap  = new HashMap<>();
+        organisationYearsMap.put(o1.getName(), new LinkedList<>());
+        organisationYearsMap.put(o2.getName(), new LinkedList<>());
+        organisationYearsMap.put(o3.getName(), new LinkedList<>());
+
+        Map<String, List<BigDecimal>> organisationEligibleCostTotal  = new HashMap<>();
+        organisationEligibleCostTotal.put(o1.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+        organisationEligibleCostTotal.put(o2.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+        organisationEligibleCostTotal.put(o3.getName(), asList(new BigDecimal("500"), new BigDecimal("100"), new BigDecimal("200")));
+
+        Map<String, List<BigDecimal>> organisationGrantAllocationTotal  = new HashMap<>();
+        organisationGrantAllocationTotal.put(o1.getName(), new LinkedList<>());
+        organisationGrantAllocationTotal.put(o2.getName(), new LinkedList<>());
+        organisationGrantAllocationTotal.put(o3.getName(), new LinkedList<>());
+
+        Map<String, BigDecimal> yearEligibleCostTotal  = new HashMap<>();
+        yearEligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
+        yearEligibleCostTotal.put(o2.getName(), new BigDecimal("1"));
+        yearEligibleCostTotal.put(o3.getName(), new BigDecimal("1"));
+
+        Map<String, BigDecimal> yearGrantAllocationTotal  = new HashMap<>();
+        YearlyGOLProfileTable expectedYearlyGOLProfileTable = new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap, organisationEligibleCostTotal, organisationGrantAllocationTotal, yearEligibleCostTotal, yearGrantAllocationTotal);
+
+        when(organisationRepositoryMock.findOne(o1.getId())).thenReturn(o1);
+        when(organisationRepositoryMock.findOne(o2.getId())).thenReturn(o2);
+        when(organisationRepositoryMock.findOne(o3.getId())).thenReturn(o3);
+        when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.APPROVED));
+        when(projectFinanceServiceMock.getSpendProfileTable(any(ProjectOrganisationCompositeId.class))).thenReturn(serviceSuccess(table));
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(rendererMock.renderTemplate(eq("common/grantoffer/grant_offer_letter.html"), any(Map.class))).thenReturn(ServiceResult.serviceSuccess(htmlFile));
+        when(fileServiceMock.createFile(any(FileEntryResource.class), any(Supplier.class))).thenReturn(ServiceResult.serviceSuccess(fileEntryPair));
+        when(fileEntryMapperMock.mapToResource(createdFile)).thenReturn(fileEntryResource);
+        when(financeCheckServiceMock.getFinanceCheckSummary(project.getId())).thenReturn(ServiceResult.serviceSuccess(financeCheckSummaryResource));
+
+        when(organisationFinanceDelegateMock.isUsingJesFinances(BUSINESS.name())).thenReturn(false);
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o1.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResourceZeroGrantClaim));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o2.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+        when(financeRowServiceMock.financeDetails(project.getApplication().getId(), o3.getId())).thenReturn(ServiceResult.serviceSuccess(applicationFinanceResource));
+
+        Map<String, BigDecimal> eligibleCostTotal = new HashMap<>();
+        eligibleCostTotal.put(o1.getName(), new BigDecimal("1"));
+        eligibleCostTotal.put(o2.getName(), new BigDecimal("1"));
+        eligibleCostTotal.put(o3.getName(), new BigDecimal("1"));
+        when(spendProfileTableCalculatorMock.createYearlyEligibleCostTotal(any(ProjectResource.class), any(Map.class), any(List.class))).thenReturn(eligibleCostTotal);
+
+        ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
+
+        verify(rendererMock).renderTemplate(templateCaptor.capture(), templateArgsCaptor.capture());
+        verify(fileServiceMock).createFile(fileEntryResCaptor.capture(), supplierCaptor.capture());
+
+        assertEquals(templateArgs.get("SortedOrganisations"), templateArgsCaptor.getAllValues().get(0).get("SortedOrganisations"));
+        assertEquals(templateArgs.get("ProjectLength"), templateArgsCaptor.getAllValues().get(0).get("ProjectLength"));
+        assertEquals(templateArgs.get("ProjectTitle"), templateArgsCaptor.getAllValues().get(0).get("ProjectTitle"));
+        assertEquals(templateArgs.get("ProjectStartDate"), templateArgsCaptor.getAllValues().get(0).get("ProjectStartDate"));
+        assertEquals(templateArgs.get("LeadContact"), templateArgsCaptor.getAllValues().get(0).get("LeadContact"));
+        assertEquals(templateArgs.get("ApplicationNumber"), templateArgsCaptor.getAllValues().get(0).get("ApplicationNumber"));
+        assertEquals(templateArgs.get("LeadOrgName"), templateArgsCaptor.getAllValues().get(0).get("LeadOrgName"));
+        assertEquals(templateArgs.get("CompetitionName"), templateArgsCaptor.getAllValues().get(0).get("CompetitionName"));
+        assertEquals(templateArgs.get("Address1"), templateArgsCaptor.getAllValues().get(0).get("Address1"));
+        assertEquals(templateArgs.get("Address2"), templateArgsCaptor.getAllValues().get(0).get("Address2"));
+        assertEquals(templateArgs.get("Address3"), templateArgsCaptor.getAllValues().get(0).get("Address3"));
+        assertEquals(templateArgs.get("TownCity"), templateArgsCaptor.getAllValues().get(0).get("TownCity"));
+        assertEquals(templateArgs.get("PostCode"), templateArgsCaptor.getAllValues().get(0).get("PostCode"));
+
+        assertEquals(fileEntryResource.getMediaType(), fileEntryResCaptor.getAllValues().get(0).getMediaType());
+        assertEquals(fileEntryResource.getName() + ".pdf", fileEntryResCaptor.getAllValues().get(0).getName());
+
+        String startOfGeneratedFileString = null;
+        try {
+            int n = supplierCaptor.getAllValues().get(0).get().available();
+            byte [] startOfGeneratedFile = new byte[n];
+            supplierCaptor.getAllValues().get(0).get().read(startOfGeneratedFile, 0, n <9 ? n : 9);
+            startOfGeneratedFileString = new String(startOfGeneratedFile, StandardCharsets.UTF_8);
+        }
+        catch(IOException e) {
+
+        }
+        String pdfHeader = "%PDF-1.4\n";
+        assertEquals(pdfHeader, startOfGeneratedFileString.substring(0, pdfHeader.length()));
+        assertTrue(result.isSuccess());
         assertTrue(compareYearlyGolProfileTable(expectedYearlyGOLProfileTable, (YearlyGOLProfileTable) templateArgsCaptor.getAllValues().get(0).get("TableData")));
     }
 

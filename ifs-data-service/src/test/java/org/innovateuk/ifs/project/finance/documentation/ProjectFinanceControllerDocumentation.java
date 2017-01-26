@@ -12,11 +12,11 @@ import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -381,7 +381,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
+        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
         expectedViabilityResource.setViabilityApprovalDate(LocalDate.now());
         expectedViabilityResource.setViabilityApprovalUserFirstName("Lee");
         expectedViabilityResource.setViabilityApprovalUserLastName("Bowman");
@@ -406,13 +406,13 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long projectId = 1L;
         Long organisationId = 2L;
         Viability viability = Viability.APPROVED;
-        ViabilityStatus viabilityStatus = ViabilityStatus.GREEN;
+        ViabilityRagStatus viabilityRagStatus = ViabilityRagStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityStatus)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityStatus}", projectId, organisationId, viability, viabilityStatus)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}", projectId, organisationId, viability, viabilityRagStatus)
         )
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
@@ -420,7 +420,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("projectId").description("Id of the project for which viability is being saved"),
                                 parameterWithName("organisationId").description("Organisation Id for which viability is being saved"),
                                 parameterWithName("viability").description("The viability being saved"),
-                                parameterWithName("viabilityStatus").description("The viability status being saved")
+                                parameterWithName("viabilityRagStatus").description("The viability RAG status being saved")
                         )
                 ));
     }
@@ -433,7 +433,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        EligibilityResource expectedEligibilityResource = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        EligibilityResource expectedEligibilityResource = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
         expectedEligibilityResource.setEligibilityApprovalDate(LocalDate.now());
         expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
         expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
@@ -460,13 +460,13 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long organisationId = 2L;
 
         Eligibility eligibility = Eligibility.APPROVED;
-        EligibilityStatus eligibilityStatus = EligibilityStatus.GREEN;
+        EligibilityRagStatus eligibilityRagStatus = EligibilityRagStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityStatus)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityStatus}", projectId, organisationId, eligibility, eligibilityStatus)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}", projectId, organisationId, eligibility, eligibilityRagStatus)
         )
                 .andExpect(status().isOk())
                 .andDo(document("project/partner-organisation/eligibility/{method-name}",
@@ -474,7 +474,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("projectId").description("Id of the project for which eligibility is being saved"),
                                 parameterWithName("organisationId").description("Organisation Id for which eligibility is being saved"),
                                 parameterWithName("eligibility").description("The eligibility being saved"),
-                                parameterWithName("eligibilityStatus").description("The eligibility status being saved")
+                                parameterWithName("eligibilityRagStatus").description("The eligibility RAG status being saved")
                         )
                 ));
     }
