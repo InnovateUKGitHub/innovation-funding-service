@@ -4,11 +4,11 @@ import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
@@ -135,7 +135,7 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testGetViability() {
 
-        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
+        ViabilityResource viability = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
 
         when(projectFinanceRestService.getViability(123L, 456L)).thenReturn(restSuccess(viability));
 
@@ -146,17 +146,17 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testSaveViability() {
 
-        when(projectFinanceRestService.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN)).thenReturn(restSuccess());
+        when(projectFinanceRestService.saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.GREEN)).thenReturn(restSuccess());
 
-        service.saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN);
+        service.saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.GREEN);
 
-        verify(projectFinanceRestService).saveViability(123L, 456L, Viability.APPROVED, ViabilityStatus.GREEN);
+        verify(projectFinanceRestService).saveViability(123L, 456L, Viability.APPROVED, ViabilityRagStatus.GREEN);
     }
 
     @Test
     public void testGetEligibility() {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
 
         when(projectFinanceRestService.getEligibility(123L, 456L)).thenReturn(restSuccess(eligibility));
 
@@ -167,12 +167,12 @@ public class ProjectFinanceServiceImplTest {
     @Test
     public void testSaveEligibility() {
 
-        when(projectFinanceRestService.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.GREEN)).thenReturn(restSuccess());
+        when(projectFinanceRestService.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.GREEN)).thenReturn(restSuccess());
 
-        ServiceResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.GREEN);
+        ServiceResult<Void> result = service.saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
 
         assertTrue(result.isSuccess());
 
-        verify(projectFinanceRestService).saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityStatus.GREEN);
+        verify(projectFinanceRestService).saveEligibility(123L, 456L, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
     }
 }

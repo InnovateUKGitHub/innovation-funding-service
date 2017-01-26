@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.project.eligibility.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 
 /**
  * Form backing the checkboxes and dropdowns on the Eligibility page
  */
 public class FinanceChecksEligibilityForm extends BaseBindingResultTarget {
 
-    private EligibilityStatus eligibilityStatus;
+    private EligibilityRagStatus eligibilityRagStatus;
 
     private boolean confirmEligibilityChecked;
 
@@ -16,17 +16,17 @@ public class FinanceChecksEligibilityForm extends BaseBindingResultTarget {
     FinanceChecksEligibilityForm() {
     }
 
-    public FinanceChecksEligibilityForm(EligibilityStatus eligibilityStatus, boolean confirmEligibilityChecked) {
-        this.eligibilityStatus = eligibilityStatus;
+    public FinanceChecksEligibilityForm(EligibilityRagStatus eligibilityRagStatus, boolean confirmEligibilityChecked) {
+        this.eligibilityRagStatus = eligibilityRagStatus;
         this.confirmEligibilityChecked = confirmEligibilityChecked;
     }
 
-    public EligibilityStatus getEligibilityStatus() {
-        return eligibilityStatus;
+    public EligibilityRagStatus getEligibilityRagStatus() {
+        return eligibilityRagStatus;
     }
 
-    public void setEligibilityStatus(EligibilityStatus eligibilityStatus) {
-        this.eligibilityStatus = eligibilityStatus;
+    public void setEligibilityRagStatus(EligibilityRagStatus eligibilityRagStatus) {
+        this.eligibilityRagStatus = eligibilityRagStatus;
     }
 
     public boolean isConfirmEligibilityChecked() {
