@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 
@@ -26,5 +28,27 @@ public class AssessorProfileResource {
 
     public ProfileResource getProfile() {
         return profile;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        AssessorProfileResource that = (AssessorProfileResource) o;
+
+        return new EqualsBuilder()
+                .append(user, that.user)
+                .append(profile, that.profile)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(user)
+                .append(profile)
+                .toHashCode();
     }
 }

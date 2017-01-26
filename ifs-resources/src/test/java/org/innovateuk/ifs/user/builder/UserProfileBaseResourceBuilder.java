@@ -19,38 +19,38 @@ public abstract class UserProfileBaseResourceBuilder<T extends UserProfileBaseRe
     }
 
     public S withTitle(String... titles) {
-        return withArray((title, userProfileResource) -> setField("title", title, userProfileResource), titles);
+        return withArraySetFieldByReflection("title", titles);
     }
 
     public S withFirstName(String... firstNames) {
-        return withArray((firstName, userProfileResource) -> setField("firstName", firstName, userProfileResource), firstNames);
+        return withArraySetFieldByReflection("firstName", firstNames);
     }
 
     public S withLastName(String... lastNames) {
-        return withArray((lastName, userProfileResource) -> setField("lastName", lastName, userProfileResource), lastNames);
+        return withArraySetFieldByReflection("lastName", lastNames);
     }
 
     public S withPhoneNumber(String... phoneNumbers) {
-        return withArray((phoneNumber, userProfileResource) -> setField("phoneNumber", phoneNumber, userProfileResource), phoneNumbers);
+        return withArraySetFieldByReflection("phoneNumber", phoneNumbers);
     }
 
     public S withGender(Gender... genders) {
-        return withArray((gender, userProfileResource) -> setField("gender", gender, userProfileResource), genders);
+        return withArraySetFieldByReflection("gender", genders);
     }
 
     public S withDisability(Disability... disabilities) {
-        return withArray((disability, userProfileResource) -> setField("disability", disability, userProfileResource), disabilities);
+        return withArraySetFieldByReflection("disability", disabilities);
     }
 
     public S withEthnicity(EthnicityResource... ethnicities) {
-        return withArray((ethnicity, userProfileResource) -> setField("ethnicity", ethnicity, userProfileResource), ethnicities);
+        return withArraySetFieldByReflection("ethnicity", ethnicities);
     }
 
     public S withAddress(AddressResource... addresses) {
-        return withArray((address, userProfileResource) -> setField("address", address, userProfileResource), addresses);
+        return withArraySetFieldByReflection("address", addresses);
     }
 
     public S withEmail(String... emails) {
-        return withArray((email, userProfileResource) -> setField("email", email, userProfileResource), emails);
+        return withArraySetFieldByReflection("email", emails);
     }
 }
