@@ -1,60 +1,79 @@
 version: '2'
 services:
+
   shib:
-    image: innovateuk/shibboleth:1.0-SNAPSHOT
-    cap_add:
-      - SYS_PTRACE
+    image: innovateuk/ifs-shib-sp:1.0-SNAPSHOT
     ports:
       - "443:443"
-      - "389:389"
-    links:
-      - application-service
-      - assessment-service
-      - competition-mgt-service
-      - project-setup-mgt-service
-      - project-setup-service
+    environment:
+      - "SPHOST=ifs.local-dev"
+      - "IDPHOST=auth.local-dev:9443"
+      - "HTTPSPORT=443"
+      - "HTTPPORT=80"
     networks:
       ifs:
         aliases:
-          - iuk-auth-localdev
+          - ifs.local-dev
 
-  application-service:
+  idp:
+    image: innovateuk/ifs-shib-idp:1.0-SNAPSHOT
+    ports:
+      - "9443:9443"
+    environment:
+      - "SPHOST=ifs.local-dev"
+      - "IDPHOST=auth.local-dev:9443"
+      - "HTTPSPORT=9443"
+      - "HTTPPORT=9080"
+    networks:
+      ifs:
+        aliases:
+          - auth.local-dev
+
+  ldap:
+    image: innovateuk/ifs-ldap:1.0-SNAPSHOT
+    ports:
+      - "389:389"
+    environment:
+      - "LDAPPORT=389"
+    networks:
+      ifs:
+
+  application-svc:
     image: worth/application-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    environment:
+      - 'SPRING_APPLICATION_JSON={"logout":{"url": "https://ifs.local-dev/Logout/"}}'
     networks:
       - ifs
-    
 
-  assessment-service:
+  assessment-svc:
     image: worth/assessment-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    environment:
+      - 'SPRING_APPLICATION_JSON={"logout":{"url": "https://ifs.local-dev/Logout/"}}'
     networks:
       - ifs
 
-  competition-mgt-service:
+  competition-mgt-svc:
     image: worth/competition-management-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    environment:
+      - 'SPRING_APPLICATION_JSON={"logout":{"url": "https://ifs.local-dev/Logout/"}}'
     networks:
       - ifs
 
-  project-setup-mgt-service:
+  project-setup-mgt-svc:
     image: worth/project-setup-management-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    environment:
+      - 'SPRING_APPLICATION_JSON={"logout":{"url": "https://ifs.local-dev/Logout/"}}'
     networks:
       - ifs
 
-  project-setup-service:
+  project-setup-svc:
     image: worth/project-setup-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    environment:
+      - 'SPRING_APPLICATION_JSON={"logout":{"url": "https://ifs.local-dev/Logout/"}}'
     networks:
       - ifs
 
-  data:
+  data-service:
     image: worth/data-service:1.0-SNAPSHOT
     networks:
       ifs:

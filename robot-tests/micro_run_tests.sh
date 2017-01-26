@@ -31,19 +31,19 @@ function section() {
 function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${storedFileFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${storedFileFolder}
 
     echo "***********Deleting any holding for scan files***************"
     echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${virusScanHoldingFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanHoldingFolder}
 
     echo "***********Deleting any quarantined files***************"
     echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${virusScanQuarantinedFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanQuarantinedFolder}
 
     echo "***********Deleting any scanned files***************"
     echo "virusScanScannedFolder: ${virusScanScannedFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${virusScanScannedFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanScannedFolder}
 }
 
 function addTestFiles() { 
@@ -51,15 +51,15 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data_1:/tmp/testing.pdf
+    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data-service_1:/tmp/testing.pdf
 
     echo "***********Making the quarantined directory ***************"
-    docker exec innovationfundingservice_data_1 mkdir -p ${virusScanQuarantinedFolder}
+    docker exec innovationfundingservice_data-service_1 mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker exec innovationfundingservice_data_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
+    docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    docker exec innovationfundingservice_data_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+    docker exec innovationfundingservice_data-service_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
     echo "***********Creating file entry for each db entry***********" 
     max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
@@ -67,7 +67,7 @@ function addTestFiles() {
     do 
       if [ "${i}" != "8" ]
       then
-        docker exec innovationfundingservice_data_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+        docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
       fi
     done
 }
@@ -160,7 +160,7 @@ function startPybot() {
     -v UPLOAD_FOLDER:${uploadFileDir} \
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
-    -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
+    -v REMOTE_URL:'http://ifs.local-dev:4444/wd/hub' \
     $includeHappyPath \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
@@ -187,10 +187,10 @@ function runTests() {
 
       if [ "$(uname)" == "Darwin" ];
       then
-        open "vnc://root:secret@ifs-local-dev:"${vncport}
+        open "vnc://root:secret@ifs.local-dev:"${vncport}
       fi
       echo "**********For remote desktop please use this url in your vnc client**********"
-        echo  "vnc://root:secret@ifs-local-dev:"${vncport}
+        echo  "vnc://root:secret@ifs.local-dev:"${vncport}
     fi
 
     for job in `jobs -p`
@@ -227,7 +227,7 @@ rootDir=`pwd`
 
 dataServiceCodeDir="${rootDir}/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
-webBase="ifs-local-dev"
+webBase="ifs.local-dev"
 
 uploadFileDir="${scriptDir}/upload_files"
 baseFileStorage="/tmp/uploads"
