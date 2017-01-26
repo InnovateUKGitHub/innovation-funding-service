@@ -4,9 +4,9 @@ import org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
-import static org.innovateuk.ifs.BuilderAmendFunctions.id;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
@@ -35,7 +35,7 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("user.ethnicity").description("Ethnic group of the user"),
             fieldWithPath("user.profileId").description("Profile id of the user"),
             fieldWithPath("user.inviteName").description("Invite name of the user"),
-            fieldWithPath("profile.address").description("Assess of the user"),
+            fieldWithPath("profile.address").description("Address of the user"),
             fieldWithPath("profile.innovationAreas").description("Innovation areas for the user"),
             fieldWithPath("profile.businessType").description("Business type of assessor"),
             fieldWithPath("profile.skillsAreas").description("Skills areas for the assessor"),
@@ -46,6 +46,7 @@ public class AssessorProfileResourceDocs {
             .withUser(
                     newUserResource()
                             .withTitle("Mr")
+                            .withUid("abcdefg")
                             .withFirstName("First")
                             .withLastName("Last")
                             .withEmail("test@test.com")
@@ -53,6 +54,9 @@ public class AssessorProfileResourceDocs {
                             .withGender(Gender.MALE)
                             .withDisability(Disability.NOT_STATED)
                             .withEthnicity(1L)
+                            .withProfile(2L)
+                            .withStatus(UserStatus.ACTIVE)
+                            .withInviteName("First Last")
                             .build()
             )
             .withProfile(
