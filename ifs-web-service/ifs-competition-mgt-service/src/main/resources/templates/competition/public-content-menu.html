@@ -43,18 +43,19 @@
                              height="30"
                              th:alt="'The &quot;'+${section.type.text}+'&quot; section is marked as done'"
                              th:title="'The &quot;'+${section.type.text}+'&quot; section is marked as done'"/>
-                        <span>Completed</span>
                     </div>
                 </li>
             </th:block>
         </ul>
-        <p><small th:text="${'Last published ' + model.publishDateText}"></small></p>
-        <div class="grid-row">
-            <div class="column-half">
-                <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
-            </div>
-            <div class="column-half alignright">
-                <button class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish public content</button>
+        <div class="extra-margin">
+            <p th:if="${model.hasBeenPublished()}"><small th:text="${'Last published ' + model.publishDateText}"></small></p>
+            <div class="grid-row">
+                <div class="column-half">
+                    <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>
+                </div>
+                <div class="column-half alignright">
+                    <button th:unless="${model.hasBeenPublished()}" class="button-secondary no-margin" th:disabled="${model.disablePublishButton()}" name="publish">Publish public content</button>
+                </div>
             </div>
         </div>
         <hr />
