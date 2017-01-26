@@ -42,6 +42,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
@@ -77,6 +78,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     private CompetitionResource competition;
 
+    private CompetitionInviteStatisticsResource inviteStatistics;
+
     @Override
     protected CompetitionManagementInviteAssessorsController supplyControllerUnderTest() {
         return new CompetitionManagementInviteAssessorsController();
@@ -94,7 +97,15 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
+        inviteStatistics = newCompetitionInviteStatisticsResource()
+                .withAccepted(46L)
+                .withInvited(23L)
+                .withInviteList(10L)
+                .withDeclined(52L)
+                .build();
+
         when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionInviteRestService.getInviteStatistics(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
     @Test
@@ -511,10 +522,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertStatistics(InviteAssessorsViewModel model) {
-        assertEquals(60, model.getAssessorsInvited());
-        assertEquals(23, model.getAssessorsAccepted());
-        assertEquals(3, model.getAssessorsDeclined());
-        assertEquals(6, model.getAssessorsStaged());
+        assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
+        assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
+        assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
+        assertEquals(inviteStatistics.getInviteList(), model.getAssessorsStaged());
     }
 
     private void assertAvailableAssessors(List<AvailableAssessorResource> expectedAvailableAssessors, MvcResult result) {

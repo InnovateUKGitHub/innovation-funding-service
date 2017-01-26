@@ -29,6 +29,7 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
@@ -376,6 +377,17 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .andExpect(content().json(toJson(expectedAssessorInviteOverviewResources)));
 
         verify(competitionInviteServiceMock, only()).getInvitationOverview(competitionId);
+    }
+
+    @Test
+    public void getInviteStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionInviteStatisticsResource expectedCompetitionInviteStatisticsResource = newCompetitionInviteStatisticsResource().build();
+        when(competitionInviteServiceMock.getInviteStatistics(competitionId)).thenReturn(serviceSuccess(expectedCompetitionInviteStatisticsResource));
+        mockMvc.perform(get("/competitioninvite/getInviteStatistics/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedCompetitionInviteStatisticsResource)));
+        verify(competitionInviteServiceMock, only()).getInviteStatistics(competitionId);
     }
 
     @Test

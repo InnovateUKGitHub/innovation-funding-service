@@ -14,10 +14,7 @@ import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
-import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
-import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
-import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
-import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.transactional.*;
@@ -245,6 +242,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteRepository competitionInviteRepositoryMock;
 
     @Mock
+    protected CompetitionInviteStatisticsRepository competitionInviteStatisticsRepositoryMock;
+
+    @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
 
     @Mock
@@ -408,6 +408,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InnovationAreaMapper innovationAreaMapperMock;
+
+    @Mock
+    protected CompetitionInviteStatisticsMapper competitionInviteStatisticsMapperMock;
 
     @Mock
     protected InnovationSectorMapper innovationSectorMapperMock;

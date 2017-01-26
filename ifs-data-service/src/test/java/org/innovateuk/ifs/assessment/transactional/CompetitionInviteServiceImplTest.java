@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import org.assertj.core.util.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -30,7 +29,9 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -41,6 +42,7 @@ import static java.util.Collections.*;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.assessment.builder.CompetitionInviteStatisticsBuilder.newCompetitionInviteStatistics;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -55,11 +57,11 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -839,11 +841,11 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
         User compliantUser = newUser()
                 .withAffiliations(newAffiliation()
-                    .withAffiliationType(EMPLOYER)
-                    .withOrganisation("Hive IT")
-                    .withPosition("Software Developer")
-                    .withExists(true)
-                    .build(1))
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
                 .withProfile(profile1)
                 .build();
 
@@ -983,6 +985,27 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verify(profileRepositoryMock, calls(2)).findOne(isA(Long.class));
         inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
 
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getInviteStatistics() throws Exception {
+        long competitionId = 1L;
+
+        CompetitionInviteStatistics competitionInviteStatistics = newCompetitionInviteStatistics()
+                .build();
+        CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
+                .build();
+
+        when(competitionInviteStatisticsRepositoryMock.findOne(competitionId)).thenReturn(competitionInviteStatistics);
+        when(competitionInviteStatisticsMapperMock.mapToResource(competitionInviteStatistics)).thenReturn(expected);
+
+        CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+
+        InOrder inOrder = inOrder(competitionInviteStatisticsRepositoryMock, competitionInviteStatisticsMapperMock);
+        inOrder.verify(competitionInviteStatisticsRepositoryMock).findOne(competitionId);
+        inOrder.verify(competitionInviteStatisticsMapperMock).mapToResource(competitionInviteStatistics);
         inOrder.verifyNoMoreInteractions();
     }
 

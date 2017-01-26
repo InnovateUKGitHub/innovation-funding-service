@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.invite.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 
@@ -27,6 +28,32 @@ public class CompetitionInviteStatistics {
     @OneToMany(mappedBy = "competition", fetch = FetchType.LAZY)
     @Where(clause = "competition_role = 'ASSESSOR'")
     private List<CompetitionParticipant> competitionParticipants;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @JsonIgnore
+    public List<CompetitionInvite> getCompetitionInvites() {
+        return competitionInvites;
+    }
+
+    public void setCompetitionInvites(List<CompetitionInvite> competitionInvites) {
+        this.competitionInvites = competitionInvites;
+    }
+
+    @JsonIgnore
+    public List<CompetitionParticipant> getCompetitionParticipants() {
+        return competitionParticipants;
+    }
+
+    public void setCompetitionParticipants(List<CompetitionParticipant> competitionParticipants) {
+        this.competitionParticipants = competitionParticipants;
+    }
 
     public long getInvited() {
         return competitionInvites.stream().filter(ci -> ci.getStatus() != CREATED).count();

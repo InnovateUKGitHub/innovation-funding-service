@@ -154,6 +154,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
     }
 
     @Test
+    public void getInviteStatistics() {
+        runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.getInviteStatistics(1L));
+    }
+
+    @Test
     public void inviteUser_existing() {
         runAsAllowedRoles(ASSESSOR_MANAGEMENT_ROLES, () -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()));
     }
@@ -247,6 +252,11 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
             return null;
         }
 
