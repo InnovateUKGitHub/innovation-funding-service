@@ -1,19 +1,11 @@
-package org.innovateuk.ifs.competition.domain;
+package org.innovateuk.ifs.competition.publiccontent.resource;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Entity to represent the competitions content that is visible to the public.
- */
-@Entity
-public class PublicContent {
+public class PublicContentResource {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     private Long competitionId;
@@ -28,20 +20,16 @@ public class PublicContent {
 
     private String projectSize;
 
-    @Column(length=5000)
     private String summary;
 
-    @Enumerated(EnumType.STRING)
     private FundingType fundingType;
 
-    @OneToMany(mappedBy="publicContent")
-    private List<ContentSection> contentSections;
+    private List<PublicContentSectionResource> contentSections;
 
-    @OneToMany(mappedBy="publicContent")
-    private List<Keyword> keywords;
+    private List<String> keywords;
 
-    @OneToMany(mappedBy="publicContent")
-    private List<ContentEvent> contentEvents;
+    //TODO events.
+
 
     public Long getId() {
         return id;
@@ -115,27 +103,19 @@ public class PublicContent {
         this.fundingType = fundingType;
     }
 
-    public List<ContentSection> getContentSections() {
+    public List<PublicContentSectionResource> getContentSections() {
         return contentSections;
     }
 
-    public void setContentSections(List<ContentSection> contentSections) {
+    public void setContentSections(List<PublicContentSectionResource> contentSections) {
         this.contentSections = contentSections;
     }
 
-    public List<Keyword> getKeywords() {
+    public List<String> getKeywords() {
         return keywords;
     }
 
-    public void setKeywords(List<Keyword> keywords) {
+    public void setKeywords(List<String> keywords) {
         this.keywords = keywords;
-    }
-
-    public List<ContentEvent> getContentEvents() {
-        return contentEvents;
-    }
-
-    public void setContentEvents(List<ContentEvent> contentEvents) {
-        this.contentEvents = contentEvents;
     }
 }

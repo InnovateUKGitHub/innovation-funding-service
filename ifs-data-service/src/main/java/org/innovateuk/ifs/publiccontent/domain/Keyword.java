@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competition.domain;
+package org.innovateuk.ifs.publiccontent.domain;
 
 import javax.persistence.*;
 

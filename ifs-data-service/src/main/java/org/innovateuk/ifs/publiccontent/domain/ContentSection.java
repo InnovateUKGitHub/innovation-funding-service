@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competition.domain;
+package org.innovateuk.ifs.publiccontent.domain;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
@@ -59,5 +59,13 @@ public class ContentSection {
 
     public void setContentGroup(List<ContentGroup> contentGroup) {
         this.contentGroup = contentGroup;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }
