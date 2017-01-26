@@ -81,8 +81,7 @@ public class CompetitionController {
 
 
     @RequestMapping(value = "/generateCompetitionCode/{id}", method = RequestMethod.POST)
-    public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime,
-                                                      @PathVariable("id") final Long id) {
+    public RestResult<String> generateCompetitionCode(@RequestBody LocalDateTime dateTime, @PathVariable("id") final Long id) {
         return competitionSetupService.generateCompetitionCode(id, dateTime).toGetResponse();
     }
 
@@ -116,7 +115,7 @@ public class CompetitionController {
     @RequestMapping(value = "/{id}/notify-assessors", method = RequestMethod.PUT)
     public RestResult<Void> notifyAssessors(@PathVariable("id") final Long competitionId) {
         return competitionService.notifyAssessors(competitionId)
-                .andOnSuccess(() -> assessmentService.notifyAllAssessors(competitionId))
+                .andOnSuccess(() -> assessmentService.notifyAssessorsByCompetition(competitionId))
                 .toPutResponse();
     }
 }

@@ -106,9 +106,9 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     }
 
     @Test
-    public void notifyAssessors() throws Exception {
+    public void notifyAsessorsByCompetition() throws Exception {
         long competitionId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAllAssessors(competitionId), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessorsByCompetition(competitionId), COMP_ADMIN, COMP_EXEC);
     }
 
     @Test
@@ -169,6 +169,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN, COMP_EXEC);
     }
 
+    @Test
+    public void notifyAssessorsByCompetition() {
+        long competitionId = 1L;
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessorsByCompetition(competitionId), COMP_ADMIN, COMP_EXEC);
+    }
+
     public static class TestAssessmentService implements AssessmentService {
         @Override
         public ServiceResult<AssessmentResource> findById(long id) {
@@ -226,7 +233,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Void> notifyAllAssessors(long competitionId) {
+        public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
             return null;
         }
 

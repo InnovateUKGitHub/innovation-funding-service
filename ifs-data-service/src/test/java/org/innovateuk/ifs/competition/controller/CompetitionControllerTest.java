@@ -21,13 +21,13 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         final Long competitionId = 1L;
 
         when(competitionServiceMock.notifyAssessors(competitionId)).thenReturn(serviceSuccess());
-        when(assessmentServiceMock.notifyAllAssessors(competitionId)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.notifyAssessorsByCompetition(competitionId)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/competition/{id}/notify-assessors", competitionId))
                 .andExpect(status().isOk());
 
         verify(competitionServiceMock, only()).notifyAssessors(competitionId);
-        verify(assessmentServiceMock).notifyAllAssessors(competitionId);
+        verify(assessmentServiceMock).notifyAssessorsByCompetition(competitionId);
     }
 
     @Test

@@ -18,14 +18,15 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.aggregate;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -59,18 +60,13 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
-        return serviceSuccess(simpleMap(
-                assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId),
-                assessmentMapper::mapToResource
-        ));
+        return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
     }
 
     @Override
     public ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId) {
-        return serviceSuccess(simpleMap(
-                assessmentRepository.findByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId),
-                assessmentMapper::mapToResource
-        ));
+        List<AssessmentResource> assessmentResources = simpleMap(assessmentRepository.findByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId), assessmentMapper::mapToResource);
+        return serviceSuccess(assessmentResources);
     }
 
     @Override
@@ -85,34 +81,33 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
-                .andOnSuccess(found -> {
-                    if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecision)) {
-                        return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
-                    }
-                    return serviceSuccess();
-                });
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecision)) {
+                return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
+            }
+            return serviceSuccess();
+        });
     }
 
     @Override
     public ServiceResult<Void> notifyAssessor(long assessmentId) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
-                .andOnSuccess(this::attemptNotifyAssessorsTransition);
+                .andOnSuccess(this::attemptNotifyAssessorTransition);
     }
 
     @Override
-    public ServiceResult<Void> notifyAllAssessors(long competitionId) {
-        return aggregate(simpleMap(
+    public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
+        return processAnyFailuresOrSucceed(simpleMap(
                 assessmentRepository.findByActivityStateStateAndTargetCompetitionId(
                         AssessmentStates.CREATED.getBackingState(),
                         competitionId
                 ),
-                this::attemptNotifyAssessorsTransition)
-        )
+                this::attemptNotifyAssessorTransition
+        ))
                 .andOnSuccessReturnVoid();
     }
 
-    private ServiceResult<Void> attemptNotifyAssessorsTransition(Assessment assessment) {
+    private ServiceResult<Void> attemptNotifyAssessorTransition(Assessment assessment) {
         if (!assessmentWorkflowHandler.notify(assessment)) {
             return serviceFailure(new Error(ASSESSMENT_NOTIFY_FAILED));
         }
@@ -122,35 +117,32 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<Void> rejectInvitation(long assessmentId, ApplicationRejectionResource applicationRejection) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
-                .andOnSuccess(found -> {
-                    if (!assessmentWorkflowHandler.rejectInvitation(found, applicationRejection)) {
-                        return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
-                    }
-                    return serviceSuccess();
-                });
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowHandler.rejectInvitation(found, applicationRejection)) {
+                return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
+            }
+            return serviceSuccess();
+        });
     }
 
     @Override
     public ServiceResult<Void> withdrawAssessment(long assessmentId) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
-                .andOnSuccess(found -> {
-                    if (!assessmentWorkflowHandler.withdrawAssessment(found)) {
-                        return serviceFailure(new Error(ASSESSMENT_WITHDRAW_FAILED));
-                    }
-                    return serviceSuccess();
-                });
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowHandler.withdrawAssessment(found)) {
+                return serviceFailure(new Error(ASSESSMENT_WITHDRAW_FAILED));
+            }
+            return serviceSuccess();
+        });
     }
 
     @Override
     public ServiceResult<Void> acceptInvitation(long assessmentId) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
-                .andOnSuccess(found -> {
-                    if (!assessmentWorkflowHandler.acceptInvitation(found)) {
-                        return serviceFailure(new Error(ASSESSMENT_ACCEPT_FAILED));
-                    }
-                    return serviceSuccess();
-                });
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
+            if (!assessmentWorkflowHandler.acceptInvitation(found)) {
+                return serviceFailure(new Error(ASSESSMENT_ACCEPT_FAILED));
+            }
+            return serviceSuccess();
+        });
     }
 
     @Override
