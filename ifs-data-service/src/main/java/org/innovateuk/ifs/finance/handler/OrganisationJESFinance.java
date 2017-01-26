@@ -131,10 +131,19 @@ public class OrganisationJESFinance implements OrganisationFinanceHandler {
 
     @Override
     public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
+        return buildFinanceRowHandler().toCost(costItem);
+    }
+
+    @Override
+    public ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem) {
+        return buildFinanceRowHandler().toProjectCost(costItem);
+    }
+
+    private FinanceRowHandler buildFinanceRowHandler(){
         FinanceRowHandler financeRowHandler = new JESCostHandler();
         List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
         financeRowHandler.setCostFields(financeRowMetaFields);
-        return financeRowHandler.toCost(costItem);
+        return financeRowHandler;
     }
 
     @Override

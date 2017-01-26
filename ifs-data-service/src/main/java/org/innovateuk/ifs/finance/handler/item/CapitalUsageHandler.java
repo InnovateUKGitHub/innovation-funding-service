@@ -31,6 +31,15 @@ public class CapitalUsageHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        if (costItem instanceof CapitalUsage) {
+            return mapCapitalUsageToProjectCost(costItem);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
     }
@@ -64,6 +73,18 @@ public class CapitalUsageHandler extends FinanceRowHandler {
     private ApplicationFinanceRow mapCapitalUsage(FinanceRowItem costItem) {
         CapitalUsage capitalUsage = (CapitalUsage) costItem;
         ApplicationFinanceRow capitalUsageCost = new ApplicationFinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
+                capitalUsage.getNpv(), null, null);
+        capitalUsageCost.addCostValues(
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_RESIDUAL_VALUE), String.valueOf(capitalUsage.getResidualValue())),
+                new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_UTILISATION), String.valueOf(capitalUsage.getUtilisation())));
+
+        return capitalUsageCost;
+    }
+
+    private ProjectFinanceRow mapCapitalUsageToProjectCost(FinanceRowItem costItem) {
+        CapitalUsage capitalUsage = (CapitalUsage) costItem;
+        ProjectFinanceRow capitalUsageCost = new ProjectFinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
         capitalUsageCost.addCostValues(
                 new FinanceRowMetaValue(capitalUsageCost, costFields.get(COST_FIELD_EXISTING), capitalUsage.getExisting()),

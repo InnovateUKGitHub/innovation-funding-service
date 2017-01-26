@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -9,6 +8,7 @@ import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
@@ -27,14 +27,14 @@ public class ProjectFinanceOverviewModelManager implements FinanceOverviewModelM
     private QuestionService questionService;
     private FormInputService formInputService;
     private FinanceHandler financeHandler;
-    private FinanceService financeService;
+    private ProjectFinanceService financeService;
 
     @Autowired
     public ProjectFinanceOverviewModelManager(SectionService sectionService,
                                               QuestionService questionService,
                                               FormInputService formInputService,
                                               FinanceHandler financeHandler,
-                                              FinanceService financeService) {
+                                              ProjectFinanceService financeService) {
         this.sectionService = sectionService;
         this.questionService = questionService;
         this.formInputService = formInputService;

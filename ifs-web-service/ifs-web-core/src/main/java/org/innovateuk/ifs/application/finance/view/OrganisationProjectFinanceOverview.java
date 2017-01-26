@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.finance.resource.BaseFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
 
@@ -21,14 +21,14 @@ public class OrganisationProjectFinanceOverview implements OrganisationFinanceOv
     private List<ProjectFinanceResource> projectFinances = new ArrayList<>();
 
     @Autowired
-    private FinanceService financeService;
+    private ProjectFinanceService financeService;
 
 
     public OrganisationProjectFinanceOverview() {
     	// no-arg constructor
     }
 
-    public OrganisationProjectFinanceOverview(FinanceService financeService, Long projectId) {
+    public OrganisationProjectFinanceOverview(ProjectFinanceService financeService, Long projectId) {
         this.projectId = projectId;
         this.financeService = financeService;
         initializeOrganisationFinances();

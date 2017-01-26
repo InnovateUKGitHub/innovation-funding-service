@@ -9,16 +9,15 @@ import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.OrganisationService;
-import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -38,12 +37,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -64,7 +62,6 @@ public class FinanceChecksEligibilityController {
     private static final String FORM_ATTR_NAME = "form";
     private static final String ADD_COST = "add_cost";
     private static final String QUESTION_ID = "questionId";
-    public static final String APPLICATION_ID = "applicationId";
 
     @Autowired
     private FinanceCheckService financeCheckService;
@@ -102,6 +99,9 @@ public class FinanceChecksEligibilityController {
     @Autowired
     private FinanceRowService financeRowService;
 
+    @Autowired
+    private QuestionService questionService;
+
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
     public String viewEligibility(@PathVariable("projectId") Long projectId,
@@ -123,7 +123,7 @@ public class FinanceChecksEligibilityController {
             eligibilityForm = getEligibilityForm(eligibility);
         }
 
-        model.addAttribute("model", getViewModel(projectId, organisationId, model, eligibility));
+        model.addAttribute("model", getViewModel(projectId, organisationId, eligibility));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
         model.addAttribute("form", form);
@@ -138,7 +138,7 @@ public class FinanceChecksEligibilityController {
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityStatus(), confirmEligibilityChecked);
     }
 
-    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, Model model, EligibilityResource eligibility) {
+    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, EligibilityResource eligibility) {
         ProjectResource project = projectService.getById(projectId);
         ApplicationResource application = applicationService.getById(project.getApplication());
 
@@ -167,7 +167,7 @@ public class FinanceChecksEligibilityController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
 
-        FinanceRowItem costItem = addCost(organisationType, projectId, questionId, request);
+        FinanceRowItem costItem = addCost(organisationType, organisationId, projectId, questionId);
         FinanceRowType costType = costItem.getCostType();
         financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
 
@@ -184,9 +184,56 @@ public class FinanceChecksEligibilityController {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
-    private FinanceRowItem addCost(String orgType, Long projectId, Long questionId, HttpServletRequest request) {
+    /**
+     * This method is for the post request when the users clicks the input[type=submit] button.
+     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
+     */
+    @ProfileExecution
+    @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.POST)
+    public String projectFinanceFormSubmit(@PathVariable("projectId") final Long projectId,
+                                           @PathVariable("organisationId") Long organisationId,
+                                           @PathVariable("sectionId") final Long sectionId,
+                                           @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
+                                           BindingResult bindingResult,
+                                           ValidationHandler validationHandler,
+                                           Model model,
+                                           HttpServletRequest request,
+                                           HttpServletResponse response) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+        String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        return financeHandler.getFinanceFormHandler(orgType).addProjectCostWithoutPersisting(projectId, user.getId(), questionId);
+
+        ValidationMessages saveApplicationErrors = saveProjectFinanceSection(applicationResource.getCompetition(), projectId, organisationType, user.getId(), request);
+
+        if(saveApplicationErrors.hasErrors()){
+            validationHandler.addAnyErrors(saveApplicationErrors);
+            return doViewEligibility(projectId, organisationId, model, null, form, bindingResult, request);
+        } else {
+            return getRedirectUrlToEligibility(projectId, organisationId);
+        }
+    }
+
+    private ValidationMessages saveProjectFinanceSection(Long competitionId,
+                                                         Long projectId,
+                                                         String organisationType,
+                                                         Long userId,
+                                                         HttpServletRequest request) {
+        ValidationMessages errors = new ValidationMessages();
+
+        ValidationMessages saveErrors = financeHandler.getProjectFinanceFormHandler(organisationType).update(request, userId, projectId, competitionId);
+
+        errors.addAll(saveErrors);
+
+        return errors;
+    }
+
+    private String getRedirectUrlToEligibility(Long projectId, Long organisationId){
+        return "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
+    }
+
+    private FinanceRowItem addCost(String orgType, Long organisationId, Long projectId, Long questionId) {
+        return financeHandler.getProjectFinanceFormHandler(orgType).addCostWithoutPersisting(projectId, organisationId, questionId);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")

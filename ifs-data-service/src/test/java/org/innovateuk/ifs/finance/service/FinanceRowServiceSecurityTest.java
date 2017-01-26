@@ -13,7 +13,6 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.security.*;
@@ -350,7 +349,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         nonProjectFinanceRoles.forEach(role -> {
             setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.addProjectCostWithoutPersisting(projectFinanceId, questionId);
+                classUnderTest.addCostWithoutPersisting(projectFinanceId, questionId);
                 Assert.fail("Should not have been able to add a project cost without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -447,11 +446,6 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 		}
 
         @Override
-        public ServiceResult<FinanceRowItem> addProjectCostWithoutPersisting(Long projectFinanceId, Long questionId) {
-            return null;
-        }
-
-        @Override
         public ServiceResult<ApplicationFinanceResource> getApplicationFinanceById(Long applicationFinanceId) {
             return serviceSuccess(newApplicationFinanceResource().build());
         }
@@ -498,21 +492,6 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectFinanceResource> updateProjectCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
             return null;
         }
     }

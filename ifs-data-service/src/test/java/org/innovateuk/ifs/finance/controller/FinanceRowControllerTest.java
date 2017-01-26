@@ -124,15 +124,4 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         verify(financeRowServiceMock, times(1)).deleteCost(123L);
     }
-
-    @Test
-    public void addProjectCostWithoutPersisting() throws Exception{
-
-        when(financeRowServiceMock.addProjectCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
-
-        mockMvc.perform(get("/cost/project/add-without-persisting/{projectFinanceId}/{questionId}", "123", "456"))
-                .andExpect(status().isCreated());
-
-        verify(financeRowServiceMock, times(1)).addProjectCostWithoutPersisting(123L, 456L);
-    }
 }

@@ -30,6 +30,17 @@ public class TravelCostHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        LOG.info("COST TRAVEL UPDATE");
+        if (costItem.getCostType().equals(FinanceRowType.TRAVEL)) {
+            TravelCost travel = (TravelCost) costItem;
+            cost = new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return buildRowItem(cost);
     }

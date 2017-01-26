@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -15,6 +14,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +34,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     private QuestionService questionService;
 
     @Autowired
-    private FinanceService financeService;
+    private ProjectFinanceService financeService;
 
     @Autowired
     private OrganisationTypeRestService organisationTypeService;
@@ -102,7 +102,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
 	        	FinanceRowType costType = costTypeForQuestion(question);
 	        	if(costType != null) {
 		        	FinanceRowCostCategory category = projectFinanceResource.getFinanceOrganisationDetails(costType);
-		            FinanceRowItem costItem = financeHandler.getFinanceFormHandler(organisationType).addProjectCostWithoutPersisting(projectId, organisationId, question.getId());
+		            FinanceRowItem costItem = financeHandler.getProjectFinanceFormHandler(organisationType).addCostWithoutPersisting(projectId, organisationId, question.getId());
 		        	category.addCost(costItem);
 	        	}
 	        }

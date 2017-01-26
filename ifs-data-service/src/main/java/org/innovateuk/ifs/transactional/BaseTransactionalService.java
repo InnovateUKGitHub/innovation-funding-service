@@ -3,9 +3,11 @@ package org.innovateuk.ifs.transactional;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
+import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.ApplicationStatusRepository;
+import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -73,6 +75,9 @@ public abstract class BaseTransactionalService  {
 
     @Autowired
     protected AddressTypeRepository addressTypeRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
         return () -> getProcessRole(processRoleId);
@@ -180,5 +185,13 @@ public abstract class BaseTransactionalService  {
         }
 
         return getUser(currentUser.getId());
+    }
+
+    protected Supplier<ServiceResult<Question>> question(Long questionId) {
+        return () -> getQuestion(questionId);
+    }
+
+    protected ServiceResult<Question> getQuestion(Long questionId) {
+        return find(questionRepository.findOne(questionId), notFoundError(Question.class));
     }
 }

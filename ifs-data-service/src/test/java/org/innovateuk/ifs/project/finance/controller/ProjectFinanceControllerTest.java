@@ -299,13 +299,13 @@ public class ProjectFinanceControllerTest extends BaseControllerMockMVCTest<Proj
     public void testFinanceDetails() throws Exception {
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
-        when(financeRowServiceMock.financeChecksDetails(123L, 456L)).thenReturn(serviceSuccess(projectFinanceResource));
+        when(projectFinanceRowServiceMock.financeChecksDetails(123L, 456L)).thenReturn(serviceSuccess(projectFinanceResource));
 
         mockMvc.perform(MockMvcRequestBuilders.get("/project/{projectId}/organisation/{organisationId}/financeDetails", "123", "456"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(projectFinanceResource)));
 
-        verify(financeRowServiceMock).financeChecksDetails(123L, 456L);
+        verify(projectFinanceRowServiceMock).financeChecksDetails(123L, 456L);
     }
 
     @Override
