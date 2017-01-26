@@ -128,7 +128,7 @@ public final class MapFunctions {
     }
 
     /**
-     * Partitions a map based upon a given predicate for the entries, and returns the two maps in a Pair, with the "true" list being the
+     * Partitions a map based upon a given predicate for the entries, and returns the two maps in a Pair, with the "true" map being the
      * key (left) and the "false" list being the value (right)
      *
      * @param map

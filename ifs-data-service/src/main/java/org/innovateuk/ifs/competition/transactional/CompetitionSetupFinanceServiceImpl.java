@@ -51,11 +51,11 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
 
         ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceResResult = find(isIncludeGrowthTableResult, getCompetition(compId)).
                 andOnSuccess((isIncludeGrowthTable, competition) -> {
-                    CompetitionSetupFinanceResource CompSetupFinanceRes = new CompetitionSetupFinanceResource();
-                    CompSetupFinanceRes.setIncludeGrowthTable(isIncludeGrowthTable);
-                    CompSetupFinanceRes.setFullApplicationFinance(competition.isFullApplicationFinance());
-                    CompSetupFinanceRes.setCompetitionId(compId);
-                    return serviceSuccess(CompSetupFinanceRes);
+                    CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
+                    compSetupFinanceRes.setIncludeGrowthTable(isIncludeGrowthTable);
+                    compSetupFinanceRes.setFullApplicationFinance(competition.isFullApplicationFinance());
+                    compSetupFinanceRes.setCompetitionId(compId);
+                    return serviceSuccess(compSetupFinanceRes);
                 });
         return compSetupFinanceResResult;
     }

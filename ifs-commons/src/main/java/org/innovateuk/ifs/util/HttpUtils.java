@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.util.MapFunctions.simplePartition;
 
 /**
  * A set of utilities for performing commonly used functions related to HTTP.
- * <p>
+ *
  * Created by dwatson on 01/10/15.
  */
 public final class HttpUtils {
