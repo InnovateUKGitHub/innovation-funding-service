@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import static java.util.Arrays.asList;
 
 /**
- * Form populator for the additional info competition setup section.
+ * Form modelpopulator for the additional info competition setup section.
  */
 @Service
 public class AdditionalInfoFormPopulator implements CompetitionSetupFormPopulator {

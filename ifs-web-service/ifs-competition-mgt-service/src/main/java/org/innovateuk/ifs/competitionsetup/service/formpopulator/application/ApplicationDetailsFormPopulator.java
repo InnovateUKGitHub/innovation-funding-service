@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * Form populator for the Application Details sub-section under the Application form of competition setup section.
+ * Form modelpopulator for the Application Details sub-section under the Application form of competition setup section.
  */
 @Service
 public class ApplicationDetailsFormPopulator implements CompetitionSetupSubsectionFormPopulator {

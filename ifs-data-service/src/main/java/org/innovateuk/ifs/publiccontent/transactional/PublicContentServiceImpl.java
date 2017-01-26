@@ -5,15 +5,18 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
+import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.PublicContentMapper;
 import org.innovateuk.ifs.publiccontent.repository.ContentSectionRepository;
+import org.innovateuk.ifs.publiccontent.repository.KeywordRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
@@ -33,6 +36,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     private PublicContentRepository publicContentRepository;
     @Autowired
     private ContentSectionRepository contentSectionRepository;
+    @Autowired
+    private KeywordRepository keywordRepository;
 
     @Autowired
     private PublicContentMapper publicContentMapper;
@@ -63,18 +68,77 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     @Override
     public ServiceResult<Void> publishByCompetitionId(Long competitionId) {
         return find(publicContentRepository.findByCompetitionId(competitionId), notFoundError(PublicContent.class, competitionId))
-                .andOnSuccess(publicContent -> {
-                    Optional<ContentSection> incompleteSection = publicContent.getContentSections().stream()
-                            .filter(section -> PublicContentStatus.IN_PROGRESS.equals(section.getStatus()))
-                            .findAny();
-
-                    if(incompleteSection.isPresent()) {
-                        return serviceFailure(PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH);
-                    } else {
-                        publicContent.setPublishDate(LocalDateTime.now());
-                        return serviceSuccess();
-                    }
-                });
+                .andOnSuccess(this::publish);
 
     }
+
+    private ServiceResult<Void> publish(PublicContent publicContent) {
+        if (allSectionsComplete(publicContent)) {
+            publicContent.setPublishDate(LocalDateTime.now());
+            return serviceSuccess();
+        } else {
+            return serviceFailure(PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH);
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSection section) {
+        PublicContent publicContent = publicContentRepository.save(publicContentMapper.mapToDomain(resource));
+
+        switch (section) {
+            case SEARCH:
+                saveKeywords(resource.getKeywords(), publicContent);
+                break;
+            case DATES:
+                saveContentEvent();
+                break;
+            default:
+                saveContentGroup();
+                break;
+        }
+
+        markSectionAsComplete(publicContent, section);
+
+        //If the public content has already been published then publish again.
+        if (allSectionsComplete(publicContent) && publicContent.getPublishDate() != null) {
+            publish(publicContent);
+        }
+
+        return serviceSuccess();
+    }
+
+
+    private void saveKeywords(List<String> keywords, PublicContent publicContent) {
+        keywordRepository.deleteByPublicContentId(publicContent.getId());
+        keywords.forEach(keyword -> {
+            Keyword entity = new Keyword();
+            entity.setKeyword(keyword);
+            entity.setPublicContent(publicContent);
+            keywordRepository.save(entity);
+        });
+    }
+
+    private void saveContentGroup() {
+
+    }
+
+    private void saveContentEvent() {
+
+    }
+
+    private void markSectionAsComplete(PublicContent publicContent, PublicContentSection sectionType) {
+        publicContent.getContentSections().stream()
+                .filter(section -> sectionType.equals(section.getType()))
+                .findAny()
+                .ifPresent(section -> section.setStatus(PublicContentStatus.COMPLETE));
+    }
+
+    private boolean allSectionsComplete(PublicContent publicContent) {
+        Optional<ContentSection> incompleteSection = publicContent.getContentSections().stream()
+                .filter(section -> PublicContentStatus.IN_PROGRESS.equals(section.getStatus()))
+                .findAny();
+
+        return !incompleteSection.isPresent();
+    }
+
 }
