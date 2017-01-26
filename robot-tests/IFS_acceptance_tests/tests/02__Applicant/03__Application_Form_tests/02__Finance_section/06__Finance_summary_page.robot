@@ -12,14 +12,14 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
-Force Tags        Applicant  Pending
+Force Tags        Applicant     Pending
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
 *** Variables ***
 ${OVERVIEW_PAGE_PROVIDING_SUSTAINABLE_CHILDCARE_APPLICATION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}
-${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/7
+${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/7  #Your finances page
 ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/section/8
 
 *** Test Cases ***
@@ -48,7 +48,7 @@ Calculations for the first collaborator
 
 Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
-    [Tags]    HappyPath
+    [Tags]    HappyPath     Pending
     [Setup]  log in as a different user    &{lead_applicant_credentials}
      When the user navigates to the page    ${DASHBOARD_URL}
      And the user clicks the button/link    link=Robot test application
@@ -58,7 +58,8 @@ Your Finance includes Finance summary table for lead applicant
 
 Your Finance inludes Finance summary table for collaborator
      [Documentation]    INFUND-6893
-     [Tags]    HappyPath
+     [Tags]    Pending
+     # Pending due to bug INFUND-7688.
      [Setup]  log in as a different user    &{collaborator2_credentials}
       When the user navigates to the page    ${DASHBOARD_URL}
       And the user clicks the button/link    link=Robot test application
@@ -138,30 +139,28 @@ the finance summary calculations should be correct
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £141,172
 
 the finance summary table in Your Finances has correct values for lead
-    the user sees the text in the element    Total project costs
-    the user sees the text in the element
-    the user sees the text in the element    % Grant
-    the user sees the text in the element
-    the user sees the text in the element    Funding sought
-    the user sees the text in the element
-    the user sees the text in the element    Other public sector funding
-    the user sees the text in the element
-    the user sees the text in the element    Contribution to project
-    the user sees the text in the element
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Total project costs
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(1)    59,900
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    % Grant
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(2)    0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Funding sought
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(3)    0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Other public sector funding
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(4)    0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Contribution to project
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(5)    59,900
 
 the finance summary table in Your Finances has correct values for collaborator
-    the user sees the text in the element    Total project costs
-    the user sees the text in the element
-    the user sees the text in the element    % Grant
-    the user sees the text in the element
-    the user sees the text in the element    Funding sought
-    the user sees the text in the element
-    the user sees the text in the element    Other public sector funding
-    the user sees the text in the element
-    the user sees the text in the element    Contribution to project
-    the user sees the text in the element
-
-
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Total project costs
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(1)    12,200
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    % Grant
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(2)    0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Funding sought
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(3)    0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Other public sector funding
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(4)    0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    Contribution to project
+    the user sees the text in the element    css=.form-group tr:nth-of-type(2) td:nth-of-type(5)    12,200
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
