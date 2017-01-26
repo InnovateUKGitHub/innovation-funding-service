@@ -27,15 +27,22 @@
             </ul>
         </div>
 
-        <ul class="task-list">
+        <ul class="list-overview">
             <th:block th:each="section : ${model.sections}">
-                <li>
-                    <div class="task">
+                <li class="grid-row section">
+                    <div class="column-two-thirds">
                         <h2 class="heading-small">
                             <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{competitionId}/{sectionPath}(competitionId=${model.competition.id},sectionPath=${section.type.path})}"></a>
                         </h2>
                     </div>
-                    <div th:if="${model.isSectionComplete(section)}" class="task-status-complete">
+                    <div th:if="${model.isSectionComplete(section)}">
+                        <img class="section-status complete"
+                             src="/images/field/field-done-right.png"
+                             th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
+                             width="30"
+                             height="30"
+                             th:alt="'The &quot;'+${section.type.text}+'&quot; section is marked as done'"
+                             th:title="'The &quot;'+${section.type.text}+'&quot; section is marked as done'"/>
                         <span>Completed</span>
                     </div>
                 </li>

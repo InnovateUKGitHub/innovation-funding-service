@@ -60,13 +60,12 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
         when(publicContentService.publishByCompetitionId(competitionId)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/public-content/find-by-competition-id/{competitionId}", competitionId))
+        mockMvc.perform(post("/public-content/publish-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("competitionId").description("The competition id the public content to publish")
-                        ),
-                        responseFields()
+                        )
                 ));
     }
 
