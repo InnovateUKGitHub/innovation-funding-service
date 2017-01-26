@@ -833,7 +833,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
                 .withLastName("cd")
                 .build();
         ProcessRole leadAppProcessRole = newProcessRole()
-                .withOrganisation(o1)
+                .withOrganisationId(o1.getId())
                 .withUser(u)
                 .withRole(leadAppRole)
                 .build();
