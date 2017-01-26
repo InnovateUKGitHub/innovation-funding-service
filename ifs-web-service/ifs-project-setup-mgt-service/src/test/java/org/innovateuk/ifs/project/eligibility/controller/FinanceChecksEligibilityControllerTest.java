@@ -11,8 +11,8 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -125,7 +125,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Test
     public void testViewEligibilityLeadOrg() throws Exception {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
@@ -144,7 +144,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Test
     public void testViewEligibilityNonLeadOrg() throws Exception {
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(academicOrganisation);
@@ -188,14 +188,14 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         assertTrue(viewModel.getProjectName().equals(project.getName()));
 
         assertTrue(viewModel.isEligibilityApproved());
-        assertEquals(eligibility.getEligibilityStatus(), viewModel.getEligibilityStatus());
+        assertEquals(eligibility.getEligibilityRagStatus(), viewModel.getEligibilityRagStatus());
         assertEquals(eligibility.getEligibilityApprovalDate(), viewModel.getApprovalDate());
         assertEquals(eligibility.getEligibilityApprovalUserFirstName(), viewModel.getApproverFirstName());
         assertEquals(eligibility.getEligibilityApprovalUserLastName(), viewModel.getApproverLastName());
 
         FinanceChecksEligibilityForm form = (FinanceChecksEligibilityForm) model.get("eligibilityForm");
         assertTrue(form.isConfirmEligibilityChecked());
-        assertEquals(eligibility.getEligibilityStatus(), form.getEligibilityStatus());
+        assertEquals(eligibility.getEligibilityRagStatus(), form.getEligibilityRagStatus());
     }
 
     @Test
@@ -204,18 +204,18 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityStatus.UNSET)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.UNSET)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                         param("confirm-eligibility", "").
                         param("confirmEligibilityChecked", "false").
-                        param("eligibilityStatus", "RED")).
+                        param("eligibilityRagStatus", "RED")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityStatus.UNSET);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.UNSET);
 
     }
 
@@ -225,39 +225,39 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityStatus.RED)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.RED)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                         param("confirm-eligibility", "").
                         param("confirmEligibilityChecked", "true").
-                        param("eligibilityStatus", "RED")).
+                        param("eligibilityRagStatus", "RED")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityStatus.RED);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.RED);
 
     }
 
     @Test
     public void testConfirmEligibilityWhenSaveEligibilityReturnsFailure() throws Exception {
 
-        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.APPROVED, EligibilityStatus.RED)).
+        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.APPROVED, EligibilityRagStatus.RED)).
                 thenReturn(serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", project.getId(), industrialOrganisation.getId()).
                         param("confirm-eligibility", "").
                         param("confirmEligibilityChecked", "true").
-                        param("eligibilityStatus", "RED")).
+                        param("eligibilityRagStatus", "RED")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.APPROVED, EligibilityStatus.RED);
+        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.APPROVED, EligibilityRagStatus.RED);
 
     }
 
@@ -267,18 +267,18 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityStatus.GREEN)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.GREEN)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                         param("confirm-eligibility", "").
                         param("confirmEligibilityChecked", "true").
-                        param("eligibilityStatus", "GREEN")).
+                        param("eligibilityRagStatus", "GREEN")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityStatus.GREEN);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
 
     }
 
@@ -288,18 +288,18 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityStatus.UNSET)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.UNSET)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                         param("save-and-continue", "").
                         param("confirmEligibilityChecked", "false").
-                        param("eligibilityStatus", "RED")).
+                        param("eligibilityRagStatus", "RED")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityStatus.UNSET);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
     }
 
@@ -309,39 +309,39 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityStatus.RED)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.RED)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                         param("save-and-continue", "").
                         param("confirmEligibilityChecked", "true").
-                        param("eligibilityStatus", "RED")).
+                        param("eligibilityRagStatus", "RED")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityStatus.RED);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.RED);
 
     }
 
     @Test
     public void testSaveAndContinueWhenSaveEligibilityReturnsFailure() throws Exception {
 
-        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.REVIEW, EligibilityStatus.RED)).
+        when(projectFinanceService.saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.REVIEW, EligibilityRagStatus.RED)).
                 thenReturn(serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
 
-        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityStatus.GREEN);
+        EligibilityResource eligibility = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
         setUpViewEligibilityMocking(eligibility);
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", project.getId(), industrialOrganisation.getId()).
                         param("save-and-continue", "").
                         param("confirmEligibilityChecked", "true").
-                        param("eligibilityStatus", "RED")).
+                        param("eligibilityRagStatus", "RED")).
                 andExpect(status().isOk()).
                 andExpect(view().name("project/financecheck/eligibility"));
 
-        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.REVIEW, EligibilityStatus.RED);
+        verify(projectFinanceService).saveEligibility(project.getId(), industrialOrganisation.getId(), Eligibility.REVIEW, EligibilityRagStatus.RED);
 
     }
 
@@ -351,18 +351,18 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         Long projectId = 1L;
         Long organisationId = 2L;
 
-        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityStatus.GREEN)).
+        when(projectFinanceService.saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.GREEN)).
                 thenReturn(serviceSuccess());
 
         mockMvc.perform(
                 post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
                         param("save-and-continue", "").
                         param("confirmEligibilityChecked", "true").
-                        param("eligibilityStatus", "GREEN")).
+                        param("eligibilityRagStatus", "GREEN")).
                 andExpect(status().is3xxRedirection()).
                 andExpect(view().name("redirect:/project/" + projectId + "/finance-check"));
 
-        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityStatus.GREEN);
+        verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.GREEN);
 
     }
 
