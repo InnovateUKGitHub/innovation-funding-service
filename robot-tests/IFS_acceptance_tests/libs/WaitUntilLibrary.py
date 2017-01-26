@@ -12,13 +12,13 @@ currently_waiting_for_keyword_to_succeed = False
 # screenshots are only taken when failure results from a genuine test failure
 def setting_wait_until_flag(func):
 
-  def decorator(*args, **kwargs):
+  def decorator(*args):
 
     global currently_waiting_for_keyword_to_succeed
 
     currently_waiting_for_keyword_to_succeed = True
     try:
-      result = func(*args, **kwargs)
+      result = func(*args)
     except:
       do_capture_page_screenshot()
       raise
