@@ -16,7 +16,7 @@ import java.util.function.BiConsumer;
 import static java.util.Collections.emptyList;
 
 /**
- * Builder for {@link ProfileResource}.
+ * Builder for {@link AssessorProfileResource}.
  */
 public class AssessorProfileResourceBuilder extends BaseBuilder<AssessorProfileResource, AssessorProfileResourceBuilder> {
 

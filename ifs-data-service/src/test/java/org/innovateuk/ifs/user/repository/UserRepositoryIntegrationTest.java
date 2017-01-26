@@ -51,7 +51,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    @Rollback
     public void findByEmailAndStatus() {
         final User user = newUser()
                 .withUid("my-uid")
@@ -69,7 +68,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    @Rollback
     public void createUser() {
         loginSteveSmith();
 
@@ -103,7 +101,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    @Rollback
     public void deleteNewUser() {
         // Create a new user
         User newUser = repository.save(new User("New", "User", "new@example.com", "", "my-uid"));

@@ -35,7 +35,6 @@ public class AssessorProfileResourceDocs {
             fieldWithPath("user.ethnicity").description("Ethnic group of the user"),
             fieldWithPath("user.profileId").description("Profile id of the user"),
             fieldWithPath("user.inviteName").description("Invite name of the user"),
-            fieldWithPath("user.inviteName").description("Invite name of the user"),
             fieldWithPath("profile.address").description("Assess of the user"),
             fieldWithPath("profile.innovationAreas").description("Innovation areas for the user"),
             fieldWithPath("profile.businessType").description("Business type of assessor"),

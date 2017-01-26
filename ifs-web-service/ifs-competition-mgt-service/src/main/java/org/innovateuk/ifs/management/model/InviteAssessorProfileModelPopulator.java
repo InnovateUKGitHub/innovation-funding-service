@@ -14,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Component
 public class InviteAssessorProfileModelPopulator {
@@ -25,7 +26,7 @@ public class InviteAssessorProfileModelPopulator {
     @Autowired
     private AssessorRestService assessorRestService;
 
-    public InviteAssessorsProfileViewModel populateModel(Long assessorId, Long competitionId) {
+    public InviteAssessorsProfileViewModel populateModel(long assessorId, long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccessObjectOrThrowException();
 
@@ -49,7 +50,7 @@ public class InviteAssessorProfileModelPopulator {
 
         innovationAreas
                 .stream()
-                .collect(Collectors.groupingBy(InnovationAreaResource::getSector))
+                .collect(groupingBy(InnovationAreaResource::getSector))
                 .forEach(
                         (id, innovationAreaResources) ->
                         sectors.add(
