@@ -13,33 +13,33 @@ services:
           - iuk-auth-localdev
 
   application-service:
-    image: worth/application-service:1.0-SNAPSHOT
+    image: innovateuk/application-service:1.0-SNAPSHOT
     networks:
       - ifs
     
 
   assessment-service:
-    image: worth/assessment-service:1.0-SNAPSHOT
+    image: innovateuk/assessment-service:1.0-SNAPSHOT
     networks:
       - ifs
 
   competition-mgt-service:
-    image: worth/competition-management-service:1.0-SNAPSHOT
+    image: innovateuk/competition-management-service:1.0-SNAPSHOT
     networks:
       - ifs
 
   project-setup-mgt-service:
-    image: worth/project-setup-management-service:1.0-SNAPSHOT
+    image: innovateuk/project-setup-management-service:1.0-SNAPSHOT
     networks:
       - ifs
 
   project-setup-service:
-    image: worth/project-setup-service:1.0-SNAPSHOT
+    image: innovateuk/project-setup-service:1.0-SNAPSHOT
     networks:
       - ifs
 
   data-service:
-    image: worth/data-service:1.0-SNAPSHOT
+    image: innovateuk/data-service:1.0-SNAPSHOT
     networks:
       ifs:
         aliases:
