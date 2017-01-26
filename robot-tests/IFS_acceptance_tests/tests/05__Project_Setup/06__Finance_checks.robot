@@ -26,6 +26,9 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7095 Create NOT_APPLICABLE Viability state (and set for Academic Orgs upon Project creation)
 ...
 ...               INFUND-4830 As a project finance team member I want to be able to confirm that the appropriate viability finance checks have been carried out so I can approve the partner organisation as viable for funding
+...
+...               INFUND-4825 As a project finance team member I want to view details of each partner organisation so I can review their viability for funding
+
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -154,12 +157,21 @@ Viability checks are populated in the table
 
 
 Project finance user can see the viability check page for the lead partner
-    [Documentation]    INFUND-4831, INFUND-4830
+    [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
     when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
 
+Project finance user can see the lead partner's information
+    [Documentation]    INFUND-4825
+    [Tags]
+    # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    £201,674
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    30%
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £141,172
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £58,034
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £2,468
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
