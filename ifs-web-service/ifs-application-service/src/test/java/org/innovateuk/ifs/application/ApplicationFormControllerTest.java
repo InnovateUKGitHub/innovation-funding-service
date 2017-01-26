@@ -267,7 +267,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
     }
 
-
     @Test
     public void testQuestionSubmitAssign() throws Exception {
         ApplicationResource application = applications.get(0);
@@ -743,6 +742,24 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void testSaveFormElementApplicationResearchCategoryCallsFinanceWhenBusinessType() throws Exception {
+        String value = "1";
+        String fieldName = "application.researchCategoryId";
+
+        mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"true\"}"));
+
+        InOrder inOrder = Mockito.inOrder(financeHandler, applicationService);
+        inOrder.verify(financeHandler, calls(1)).getFinanceFormHandler("Business");
+        inOrder.verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+    }
+
+    @Test
      public void testSaveFormElementApplicationDuration() throws Exception {
         String value = "12";
         String fieldName = "application.durationInMonths";
@@ -780,7 +797,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         String jsonExpectedContent = "{\"success\":\"false\"}";
         assertEquals(jsonExpectedContent, content);
     }
-
 
     @Test
     public void testSaveFormElementApplicationInvalidDurationLength() throws Exception {
@@ -859,8 +875,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
-
-
     @Test
     public void testSaveFormElementApplicationValidStartDateDDMMYYYY() throws Exception {
         String value = "25-10-2025";
@@ -882,7 +896,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
 
     }
-
 
     @Test
     public void testSaveFormElementApplicationInvalidStartDateMMDDYYYY() throws Exception {
