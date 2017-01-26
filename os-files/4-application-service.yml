@@ -25,7 +25,7 @@ items:
           name: application-svc
           env:
           - name: SPRING_APPLICATION_JSON
-            value: '{"logout":{"url": "https://something.domain/Logout/"}}'
+            value: '{"logout":{"url": "https://ifs.local-dev/Logout/"}}'
           ports:
           - containerPort: 8080
           resources: {}

@@ -4,9 +4,9 @@
 
 s=0
 for i in \
-orangebus/ifs-ldap \
-orangebus/ifs-shib-sp \
-orangebus/ifs-shib-idp \
+innovateuk/ifs-ldap \
+innovateuk/ifs-shib-sp \
+innovateuk/ifs-shib-idp \
 worth/project-setup-service \
 worth/project-setup-management-service \
 worth/competition-management-service \

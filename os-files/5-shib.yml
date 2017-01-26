@@ -18,13 +18,13 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: orangebus/ifs-shib-sp:1.0-SNAPSHOT
+        - image: innovateuk/ifs-shib-sp:1.0-SNAPSHOT
           name: shib
           env:
           - name: SPHOST
-            value: something.domain
+            value: ifs.local-dev
           - name: IDPHOST
-            value: auth.something.domain
+            value: auth.local-dev
           - name: HTTPSPORT
             value: "9443"
           - name: HTTPPORT
@@ -57,7 +57,7 @@ items:
   metadata:
     name: shib
   spec:
-    host: something.domain
+    host: ifs.local-dev
     port:
       targetPort: 443-tcp
     tls:

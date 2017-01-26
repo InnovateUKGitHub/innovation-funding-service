@@ -18,13 +18,13 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: orangebus/ifs-shib-idp:1.0-SNAPSHOT
+        - image: innovateuk/ifs-shib-idp:1.0-SNAPSHOT
           name: idp
           env:
           - name: SPHOST
-            value: something.domain
+            value: ifs.local-dev
           - name: IDPHOST
-            value: auth.something.domain
+            value: auth.local-dev
           - name: HTTPSPORT
             value: "9443"
           - name: HTTPPORT
@@ -56,7 +56,7 @@ items:
   metadata:
     name: idp
   spec:
-    host: auth.something.domain
+    host: auth.local-dev
     port:
       targetPort: 443-tcp
     tls:
