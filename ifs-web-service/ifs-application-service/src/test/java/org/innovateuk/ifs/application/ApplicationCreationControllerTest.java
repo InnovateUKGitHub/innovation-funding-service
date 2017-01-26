@@ -87,4 +87,10 @@ public class ApplicationCreationControllerTest extends BaseUnitTest {
                 // TODO INFUND-936 temporary measure to redirect to login screen until email verification is in place
                 .andExpect(view().name("redirect:/"));
     }
+
+    @Test
+    public void testYourDetails() throws Exception {
+        mockMvc.perform(get("/application/create/your-details"))
+                .andExpect(view().name("create-application/your-details"));
+    }
 }

@@ -53,14 +53,14 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
 
         // Set up a lead applicant who has answered a question.
         leadApplicantForApplicationOnOrganisation1 = UserResourceBuilder.newUserResource().build();
-        processRoleForLeadOnApplicationOnOrganisation1 = newProcessRole().withApplication(application).withOrganisation(organisation1).build();
+        processRoleForLeadOnApplicationOnOrganisation1 = newProcessRole().withApplication(application).withOrganisationId(organisation1.getId()).build();
         formInputResponseUpdatedByLead = newFormInputResponseResource().withUpdatedBy(processRoleForLeadOnApplicationOnOrganisation1.getId()).withApplication(application.getId()).build();
         when(processRoleRepositoryMock.findOne(processRoleForLeadOnApplicationOnOrganisation1.getId())).thenReturn(processRoleForLeadOnApplicationOnOrganisation1);
         when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(leadApplicantForApplicationOnOrganisation1.getId(), getRole(LEADAPPLICANT).getId(), application.getId(), organisation1.getId())).thenReturn(newProcessRole().build());
 
         // Set up a collaborator who has answered a question
         collaboratorForApplicationOnOrganisation2 = UserResourceBuilder.newUserResource().build();
-        processRoleForCollaboratorOnApplicationOnOrganisation2 = newProcessRole().withApplication(application).withOrganisation(organisation2).build();
+        processRoleForCollaboratorOnApplicationOnOrganisation2 = newProcessRole().withApplication(application).withOrganisationId(organisation2.getId()).build();
         formInputResponseUpdatedByCollaborator = newFormInputResponseResource().withUpdatedBy(processRoleForCollaboratorOnApplicationOnOrganisation2.getId()).withApplication(application.getId()).build();
         when(processRoleRepositoryMock.findOne(processRoleForCollaboratorOnApplicationOnOrganisation2.getId())).thenReturn(processRoleForCollaboratorOnApplicationOnOrganisation2);
         when(processRoleRepositoryMock.findByUserIdAndRoleIdAndApplicationIdAndOrganisationId(collaboratorForApplicationOnOrganisation2.getId(), getRole(COLLABORATOR).getId(), application.getId(), organisation2.getId())).thenReturn(newProcessRole().build());
