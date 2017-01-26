@@ -6,21 +6,23 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.AffiliationMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
-import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -31,6 +33,12 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private AffiliationMapper affiliationMapper;
 
     @Autowired
     @Override
@@ -46,45 +54,34 @@ public class AssessorControllerIntegrationTest extends BaseControllerIntegration
 
         Profile profile = newProfile()
                 .with(id(null))
-                .withSkillsAreas("Testing Skills Area")
-                .withBusinessType(ACADEMIC)
                 .build();
         profileRepository.save(profile);
 
         List<Affiliation> affiliations = newAffiliation()
+                .with(id(null))
                 .withExists(true)
-                .withOrganisation("University of Nowhere")
                 .withAffiliationType(PROFESSIONAL)
-                .withPosition("Head of Debating")
                 .withUser(user)
                 .build(1);
-
         user.setProfileId(profile.getId());
         user.setAffiliations(affiliations);
         userRepository.save(user);
 
+        AssessorProfileResource expectedAssessorProfileResource = newAssessorProfileResource()
+                .withUser(userMapper.mapToResource(user))
+                .withProfile(
+                        newProfileResource()
+                                .withAffiliations(affiliationMapper.mapToResource(user.getAffiliations()))
+                                .withAddress(newAddressResource().with(id(null)).build())
+                                .build()
+                )
+                .build();
+
         flushAndClearSession();
 
-        RestResult<AssessorProfileResource> restResult = controller.getAssessorProfile(3L);
+        AssessorProfileResource actualAssessorProfileResource = controller.getAssessorProfile(3L).getSuccessObjectOrThrowException();
 
-        assertTrue(restResult.isSuccess());
-
-        AssessorProfileResource assessorProfileResource = restResult.getSuccessObjectOrThrowException();
-
-        assertEquals("Professor", assessorProfileResource.getUser().getFirstName());
-        assertEquals("Plum", assessorProfileResource.getUser().getLastName());
-
-        assertEquals("Testing Skills Area", assessorProfileResource.getProfile().getSkillsAreas());
-        assertEquals(ACADEMIC, assessorProfileResource.getProfile().getBusinessType());
-
-        List<AffiliationResource> affiliationResources = assessorProfileResource.getProfile().getAffiliations();
-        assertEquals(1, affiliationResources.size());
-        assertEquals(true, affiliationResources.get(0).getExists());
-        assertEquals("University of Nowhere", affiliationResources.get(0).getOrganisation());
-        assertEquals(PROFESSIONAL, affiliationResources.get(0).getAffiliationType());
-        assertEquals("Head of Debating", affiliationResources.get(0).getPosition());
-
-        assertEquals(emptyList(), assessorProfileResource.getProfile().getInnovationAreas());
+        assertEquals(expectedAssessorProfileResource, actualAssessorProfileResource);
     }
 
     @Test

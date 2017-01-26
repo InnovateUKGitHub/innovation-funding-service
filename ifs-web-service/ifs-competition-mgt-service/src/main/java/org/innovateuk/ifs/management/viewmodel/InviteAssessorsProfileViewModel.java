@@ -27,8 +27,7 @@ public class InviteAssessorsProfileViewModel {
             AddressResource addressResource,
             List<InnovationSectorViewModel> innovationSectors,
             String businessType,
-            String skills
-    ) {
+            String skills) {
         this.competition = competition;
         this.name = name;
         this.email = email;

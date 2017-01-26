@@ -4,6 +4,9 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 import java.util.List;
 
+/**
+ * Model attributes for View for the Assessor Profile view's Innovation Sectors.
+ */
 public class InnovationSectorViewModel {
 
     private String name;
