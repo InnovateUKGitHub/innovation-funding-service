@@ -28,8 +28,7 @@ public class ApplicationStatisticsTest {
                                         AssessmentStates.values())
                                         .map(x -> new ActivityState(APPLICATION_ASSESSMENT, x.getBackingState()))
                                         .toArray(ActivityState[]::new))
-                                .build(AssessmentStates.values().length)
-                                .toArray(new Assessment[AssessmentStates.values().length]))
+                                .build(AssessmentStates.values().length))
                 .build();
     }
 
