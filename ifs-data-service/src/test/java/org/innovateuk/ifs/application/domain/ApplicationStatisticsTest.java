@@ -24,10 +24,13 @@ public class ApplicationStatisticsTest {
         applicationStatistics = newApplicationStatistics()
                 .withAssessments(
                         newAssessment().withActivityState(
-                                Arrays.stream(AssessmentStates.values()).map(x -> new ActivityState(APPLICATION_ASSESSMENT, x.getBackingState())).toArray(ActivityState[]::new))
-                                .build(AssessmentStates.values().length).toArray(new Assessment[AssessmentStates.values().length]))
+                                Arrays.stream(
+                                        AssessmentStates.values())
+                                        .map(x -> new ActivityState(APPLICATION_ASSESSMENT, x.getBackingState()))
+                                        .toArray(ActivityState[]::new))
+                                .build(AssessmentStates.values().length)
+                                .toArray(new Assessment[AssessmentStates.values().length]))
                 .build();
-
     }
 
     @Test
