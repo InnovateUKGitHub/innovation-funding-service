@@ -52,7 +52,7 @@
                            th:id="'financePosition-organisationSize-'+${size}"
                            th:name="'financePosition-organisationSize'"
                            th:value="${size}"
-                           th:checked="${size == organisationFinanceSize}"
+                           th:checked="${size == model.finance.organisationFinanceSize}"
                            required="required" />
                     <span th:text="${size.name}" />
                 </label>

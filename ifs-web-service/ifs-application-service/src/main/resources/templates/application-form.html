@@ -74,7 +74,8 @@
 
                                 <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView)}"
                                           th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
-                                                   organisationFinanceTotal=(${model.finance.organisationFinanceTotal})">
+                                                   organisationgrantClaimPercentageId=(${model.finance.organisationgrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
+                                                   organisationFinanceSize=(${model.finance.organisationFinanceSize})">
                                     <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
                                 </th:block>
 

@@ -28,4 +28,14 @@ public class ApplicationFinanceOverviewViewModel extends BaseFinanceOverviewView
     public void setResearchParticipationPercentage(Double researchParticipationPercentage) {
         this.researchParticipationPercentage = researchParticipationPercentage;
     }
+
+    @Override
+    public Boolean getHasAcademicFileEntries() {
+        return null != academicFileEntries;
+    }
+
+    @Override
+    public Boolean hasTooHighResearchRatio(Double maxRatio) {
+        return (null != researchParticipationPercentage) && (researchParticipationPercentage > maxRatio);
+    }
 }

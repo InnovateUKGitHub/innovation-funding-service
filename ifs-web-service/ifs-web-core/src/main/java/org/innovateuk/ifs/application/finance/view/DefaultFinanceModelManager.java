@@ -106,19 +106,16 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationTotalContribution(applicationFinanceResource.getTotalContribution());
             financeViewModel.setOrganisationTotalOtherFunding(applicationFinanceResource.getTotalOtherFunding());
             financeViewModel.setFinanceView("finance");
-            addGrantClaim(financeViewModel, form, applicationFinanceResource);
+            addGrantClaim(financeViewModel, applicationFinanceResource);
         }
 
         return financeViewModel;
     }
 
-    private void addGrantClaim(FinanceViewModel financeViewModel, Form form, ApplicationFinanceResource applicationFinanceResource) {
+    private void addGrantClaim(FinanceViewModel financeViewModel, ApplicationFinanceResource applicationFinanceResource) {
         if(applicationFinanceResource.getGrantClaim()!=null) {
             financeViewModel.setOrganisationGrantClaimPercentage(ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));
             financeViewModel.setOrganisationgrantClaimPercentageId(applicationFinanceResource.getGrantClaim().getId());
-            String formInputKey = "finance-grantclaimpercentage-" + applicationFinanceResource.getGrantClaim();
-            String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
-            form.addFormInput(formInputKey, formInputValue);
         }
     }
 

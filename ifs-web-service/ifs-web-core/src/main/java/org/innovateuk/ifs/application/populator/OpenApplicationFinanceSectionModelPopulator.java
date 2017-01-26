@@ -69,8 +69,10 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
         form.setObjectErrors(bindingResult.getAllErrors());
 
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
-        FinanceViewModel financeViewModel = (FinanceViewModel) openFinanceSectionViewModel.getFinance();
-        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), financeViewModel.getOrganisationGrantClaimPercentage());
+        if(openFinanceSectionViewModel.getFinance() instanceof FinanceViewModel) {
+            FinanceViewModel financeViewModel = (FinanceViewModel) openFinanceSectionViewModel.getFinance();
+            populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), financeViewModel.getOrganisationGrantClaimPercentage());
+        }
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 

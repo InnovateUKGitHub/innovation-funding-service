@@ -105,4 +105,12 @@ public abstract class BaseFinanceOverviewViewModel {
     public void setFinanceSectionChildrenQuestionFormInputs(Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs) {
         this.financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionFormInputs;
     }
+
+    public Boolean getHasAcademicFileEntries() {
+        return Boolean.FALSE;
+    }
+
+    public Boolean hasTooHighResearchRatio(Double maxRatio) {
+        return Boolean.FALSE;
+    }
 }
