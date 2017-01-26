@@ -15,7 +15,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class PublicContentResourceDocs {
     public static final FieldDescriptor[] publicContentResourceFields = {
-            fieldWithPath("id").description("Id of the public content resourec"),
+            fieldWithPath("id").description("Id of the public content resource"),
             fieldWithPath("competitionId").description("id of the competition"),
             fieldWithPath("eligibilitySummary").description("The summary of the eligibilty"),
             fieldWithPath("fundingType").description("The type of competition funding"),

@@ -8,6 +8,8 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
+import java.time.LocalDateTime;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceBuilder;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceFields;
@@ -42,7 +44,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
     public void findByCompetitionid() throws Exception {
         final Long competitionId = 1L;
 
-        when(publicContentService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(publicContentResourceBuilder.build()));
+        when(publicContentService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(publicContentResourceBuilder.withPublishDate(LocalDateTime.now()).build()));
 
         mockMvc.perform(get("/public-content/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
