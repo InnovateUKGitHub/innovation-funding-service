@@ -85,8 +85,8 @@ public class QuestionApplicationViewModel {
         this.researchCategoryId = researchCategoryId;
     }
 
-    public boolean getUserOrganisationTypeIsBusiness() {
-        return OrganisationTypeEnum.isBusiness(getUserOrganisation().getOrganisationType());
+    public boolean getUserOrganisationTypeIsAcademic() {
+        return OrganisationTypeEnum.isAcademic(getUserOrganisation().getOrganisationType());
     }
 
     public boolean getHasApplicationFinances() {

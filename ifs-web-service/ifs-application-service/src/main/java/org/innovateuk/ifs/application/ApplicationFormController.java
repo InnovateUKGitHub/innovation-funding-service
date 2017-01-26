@@ -1002,7 +1002,7 @@ public class ApplicationFormController {
 
         if (fieldName.startsWith("application.")) {
 
-            if (fieldName.equals("application.researchCategoryId") && organisationType.equalsIgnoreCase("business")) {
+            if (fieldName.equals("application.researchCategoryId") && !organisationType.equalsIgnoreCase("academic")) {
                 financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
             }
 

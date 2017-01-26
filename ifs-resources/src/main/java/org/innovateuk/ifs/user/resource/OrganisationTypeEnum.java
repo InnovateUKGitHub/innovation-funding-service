@@ -55,13 +55,13 @@ public enum OrganisationTypeEnum {
         }
     }
 
-    public static boolean isBusiness(OrganisationTypeEnum organisationType){
-        return organisationType.equals(BUSINESS) || (organisationType.getParentOrganisationType() != null && organisationType.getParentOrganisationType().equals(BUSINESS));
+    public static boolean isAcademic(OrganisationTypeEnum organisationType){
+        return organisationType.equals(ACADEMIC) || (organisationType.getParentOrganisationType() != null && organisationType.getParentOrganisationType().equals(ACADEMIC));
     }
 
-    public static boolean isBusiness(Long organisationTypeId){
+    public static boolean isAcademic(Long organisationTypeId){
         if(organisationTypeId!=null) {
-            return isBusiness(getFromId(organisationTypeId));
+            return isAcademic(getFromId(organisationTypeId));
         } else {
             return false;
         }

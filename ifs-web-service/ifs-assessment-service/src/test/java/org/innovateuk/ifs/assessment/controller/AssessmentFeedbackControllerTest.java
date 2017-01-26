@@ -148,7 +148,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Market opportunity", model.getQuestionShortName());
         assertEquals("1. What is the business opportunity that this project addresses?", model.getQuestionName());
         assertEquals(Integer.valueOf(50), model.getMaximumScore());
-        assertEquals("Value 72", model.getApplicantResponse());
+        assertEquals("Value 78", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertTrue(model.isScoreFormInputExists());
         assertFalse(model.isScopeFormInputExists());
@@ -277,7 +277,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Market opportunity", model.getQuestionShortName());
         assertEquals("1. What is the business opportunity that this project addresses?", model.getQuestionName());
         assertEquals(Integer.valueOf(50), model.getMaximumScore());
-        assertEquals("Value 72", model.getApplicantResponse());
+        assertEquals("Value 78", model.getApplicantResponse());
         assertEquals(assessmentFormInputs, model.getAssessmentFormInputs());
         assertTrue(model.isScoreFormInputExists());
         assertTrue(model.isScopeFormInputExists());

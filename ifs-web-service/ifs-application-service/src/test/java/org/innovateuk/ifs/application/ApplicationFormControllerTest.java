@@ -160,10 +160,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
         assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
-        assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(1)));
+        assertEquals(application1Organisations.get(0), viewModel.getLeadOrganisation());
+        assertEquals(application1Organisations.size(), viewModel.getApplicationOrganisations().size());
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(0)));
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(1)));
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
         assertEquals(users.get(0), viewModel.getLeadApplicant());
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
@@ -185,10 +185,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
         assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
-        assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(1)));
+        assertEquals(application1Organisations.get(0), viewModel.getLeadOrganisation());
+        assertEquals(application1Organisations.size(), viewModel.getApplicationOrganisations().size());
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(0)));
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(1)));
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
         assertEquals(users.get(0), viewModel.getLeadApplicant());
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
@@ -742,7 +742,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
-    public void testSaveFormElementApplicationResearchCategoryCallsFinanceWhenBusinessType() throws Exception {
+    public void testSaveFormElementApplicationResearchCategoryCallsFinanceWhenNotAcademicType() throws Exception {
         String value = "1";
         String fieldName = "application.researchCategoryId";
 
@@ -756,6 +756,24 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         InOrder inOrder = Mockito.inOrder(financeHandler, applicationService);
         inOrder.verify(financeHandler, calls(1)).getFinanceFormHandler("Business");
+        inOrder.verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+    }
+
+    @Test
+    public void testSaveFormElementApplicationResearchCategoryDoesNotCallsFinanceWhenAcademicType() throws Exception {
+        String value = "5";
+        String fieldName = "application.researchCategoryId";
+
+        mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"true\"}"));
+
+        InOrder inOrder = Mockito.inOrder(financeHandler, applicationService);
+        inOrder.verify(financeHandler, never()).getFinanceFormHandler("Academic");
         inOrder.verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
 
