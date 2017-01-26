@@ -24,7 +24,7 @@ public class PublicContentController {
         return publicContentService.getCompetitionById(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "publish-by-competition{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "publish-by-competition-id/{id}", method = RequestMethod.POST)
     public RestResult<Void> publishByCompetition(@PathVariable("id") final Long competitionId) {
         return publicContentService.publishByCompetitionId(competitionId).toPostResponse();
     }

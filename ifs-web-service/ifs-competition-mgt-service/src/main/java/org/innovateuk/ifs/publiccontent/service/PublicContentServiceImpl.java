@@ -16,7 +16,7 @@ public class PublicContentServiceImpl implements PublicContentService {
 
     @Override
     public ServiceResult<PublicContentResource> getCompetitionById(Long id) {
-        return publicContentRestService.getCompetitionById(id).toServiceResult();
+        return publicContentRestService.getByCompetitionId(id).toServiceResult();
     }
 
     @Override

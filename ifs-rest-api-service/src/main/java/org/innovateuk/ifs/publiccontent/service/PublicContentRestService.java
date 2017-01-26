@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
  */
 public interface PublicContentRestService {
 
-    RestResult<PublicContentResource> getCompetitionById(final Long id);
+    RestResult<PublicContentResource> getByCompetitionId(final Long id);
 
     RestResult<Void> publishByCompetitionId(Long competitionId);
 }

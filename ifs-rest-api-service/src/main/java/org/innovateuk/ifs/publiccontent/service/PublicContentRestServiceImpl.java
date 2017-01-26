@@ -14,7 +14,7 @@ public class PublicContentRestServiceImpl extends BaseRestService implements Pub
     private static final String PUBLIC_CONTENT_REST_URL = "/public-content/";
 
     @Override
-    public RestResult<PublicContentResource> getCompetitionById(Long id) {
+    public RestResult<PublicContentResource> getByCompetitionId(Long id) {
         return getWithRestResult(PUBLIC_CONTENT_REST_URL + "find-by-competition-id/" + id, PublicContentResource.class);
     }
 

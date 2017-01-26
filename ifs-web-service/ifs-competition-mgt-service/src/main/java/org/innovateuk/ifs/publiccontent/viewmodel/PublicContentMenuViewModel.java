@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.viewmodel;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDateTime;
@@ -45,9 +46,18 @@ public class PublicContentMenuViewModel {
         return publishDate.format(PUBLISH_DATE_FORMAT);
     }
 
-    private void doNOthering() {}
-
     public boolean hasBeenPublished() {
         return publishDate != null;
+    }
+
+    public boolean disablePublishButton() {
+        return sections.stream()
+                .filter(section -> PublicContentStatus.IN_PROGRESS.equals(section.getStatus()))
+                .findAny()
+                .isPresent();
+    }
+
+    public boolean isSectionComplete(PublicContentSectionResource contentSectionResource) {
+        return PublicContentStatus.COMPLETE.equals(contentSectionResource.getStatus());
     }
 }
