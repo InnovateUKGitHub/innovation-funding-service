@@ -140,6 +140,22 @@ function startPybot() {
       else
         local includeHappyPath=''
     fi
+    if [[ "$useBespokeIncludeTags" ]]
+      then
+        for includeTag in $bespokeIncludeTags; do
+            local includeBespokeTags+=' --include '${includeTag}
+        done
+      else
+        local includeBespokeTags=''
+    fi
+    if [[ "$useBespokeExcludeTags" ]]
+      then
+          for excludeTag in $bespokeExcludeTags; do
+              local excludeBespokeTags+=' --exclude '${excludeTag}
+          done
+      else
+        local excludeBespokeTags=''
+    fi
     if [[ ${emails} -eq 1 ]]
       then
         local emailsString='--exclude Email'
@@ -152,6 +168,7 @@ function startPybot() {
       local rerunString=''
     fi
 
+
     pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
@@ -162,6 +179,8 @@ function startPybot() {
     -v BROWSER=chrome \
     -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
     $includeHappyPath \
+    $includeBespokeTags \
+    $excludeBespokeTags \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
@@ -266,6 +285,8 @@ fi
 
 unset opt
 unset testScrub
+unset useBespokeIncludeTag
+unset useBespokeExcludeTag
 
 quickTest=0
 emails=0
@@ -275,7 +296,7 @@ stopGrid=0
 noDeploy=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :e :r :c :n :w :d:" opt ; do
+while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -298,6 +319,14 @@ while getopts ":p :q :h :t :e :r :c :n :w :d:" opt ; do
     	d)
             testDirectory="$OPTARG"
             parallel=0
+        ;;
+        I)
+            useBespokeIncludeTags=1
+            bespokeIncludeTags+="$OPTARG "
+        ;;
+        E)
+            useBespokeExcludeTags=1
+            bespokeExcludeTags+="$OPTARG "
         ;;
         c)
             stopGrid=1
