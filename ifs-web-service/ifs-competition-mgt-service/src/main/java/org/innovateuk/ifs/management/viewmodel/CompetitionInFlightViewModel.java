@@ -10,7 +10,7 @@ import java.math.BigInteger;
 import java.util.List;
 
 /**
- * Holder of model attributes for the Competition Management Competition 'In Assessment' view.
+ * Holder of model attributes for the Competition Management 'in flight' Dashboard
  */
 public class CompetitionInFlightViewModel {
 

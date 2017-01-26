@@ -30,7 +30,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("competitionType").description("the competition type this competition belongs to"),
             fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to"),
             fieldWithPath("executive").description("the user id of the competition executive"),
-            fieldWithPath("executiveName").description("the name of hte competition executive"),
+            fieldWithPath("executiveName").description("the name of the competition executive"),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist"),
             fieldWithPath("leadTechnologistName").description("the name of the competition leadTechnologist"),
             fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
