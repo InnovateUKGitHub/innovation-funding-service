@@ -10,10 +10,11 @@
       image: true
       defaultUrl: 'http://'
       dialogOpts:
+        closeText : 'X'
         autoOpen: false
         width: 540
-        height: 200
-        title: "Enter Link"
+        height: 150
+        title: null
         buttonTitle: "Insert"
         buttonUpdateTitle: "Update"
         modal: true
@@ -107,7 +108,7 @@
 
           dialog.on 'dialogclose', ->
             widget.options.editable.restoreSelection widget.lastSelection
-            jQuery('label', buttonHolder).removeClass 'ui-state-active'
+            jQuery(buttonHolder).find('button').removeClass 'ui-state-active'
             do widget.options.editable.element.focus
             widget.options.editable.keepActivated false
           return false
@@ -119,9 +120,9 @@
           else
             nodeName = start.parent().prop('nodeName')
           if nodeName and nodeName.toUpperCase() is "A"
-            jQuery('label', button).addClass 'ui-state-active'
+            jQuery(button).find('button').addClass 'ui-state-active'
             return
-          jQuery('label', button).removeClass 'ui-state-active'
+          jQuery(button).find('button').removeClass 'ui-state-active'
 
       if (@options.link)
         buttonize "A"
