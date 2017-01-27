@@ -20,7 +20,19 @@ public class FinanceChecksQueriesViewModel {
     private int maxQueryCharacters;
     private int maxTitleCharacters;
 
-    public FinanceChecksQueriesViewModel(String organisationName, boolean leadPartnerOrganisation, String financeContactName, String financeContactEmail, String financeContactPhoneNumber, boolean showNewQuery, String querySection, Long projectId, String projectName, Map<Long, String> newQueryAttachments, int maxQueryWords, int maxQueryCharacters, int maxTitleCharacters) {
+    public FinanceChecksQueriesViewModel(String organisationName,
+                                         boolean leadPartnerOrganisation,
+                                         String financeContactName,
+                                         String financeContactEmail,
+                                         String financeContactPhoneNumber,
+                                         boolean showNewQuery,
+                                         String querySection,
+                                         Long projectId,
+                                         String projectName,
+                                         Map<Long, String> newQueryAttachments,
+                                         int maxQueryWords,
+                                         int maxQueryCharacters,
+                                         int maxTitleCharacters) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;

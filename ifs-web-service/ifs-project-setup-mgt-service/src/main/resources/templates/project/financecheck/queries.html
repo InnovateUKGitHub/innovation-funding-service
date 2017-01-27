@@ -37,58 +37,59 @@
     <th:block th:if="!${model.showNewQuery}">
         <div class="grid-row extra-margin-top">
             <div class="column-half">
-                <a id="post-new-query" th:href="@{'queries/new-query?query_section='+${model.querySection}}" class="button button-large">Post a new query</a>
+                <a id="post-new-query" th:href="@{'new-query?query_section='+${model.querySection}}" class="button button-large">Post a new query</a>
             </div>
         </div>
     </th:block>
     <th:block th:if="${model.showNewQuery}">
         <form class="extra-margin" th:action="@{'save-new-query?query_section='+${model.querySection}}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
-            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                <h1 class="heading-medium error-summary-heading">
-                    Your query could not be posted
-                </h1>
-                <ul class="error-summary-list">
-                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                </ul>
-            </div>
             <fieldset>
                 <legend class="heading-medium">Post new query</legend>
-                <div class="form-group">
-                    <label for="title" class="form-label-bold">Title</label>
+                <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
+                    <label for="title" class="form-label-bold">
+                        <span class="heading-small no-margin">Title</span>
+                        <span th:if="${#fields.hasErrors('title')}" th:remove="tag">
+                              <span class="error-message" th:each="err : ${#fields.errors('title')}" th:text="${err}" />
+                        </span>
+                    </label>
                     <input name="title"
                            id="title"
-                           class="width-full"
+                           th:class="${#fields.hasErrors('title') ? 'form-control field-error width-full' : 'form-control width-full'}"
                            required="required"
                            th:field="*{title}"
-                           th:classappend="${#fields.hasErrors('title') ? 'form-control field-error' : 'form-control'}"
-                           th:attr="maxlength=${model.maxTitleCharacters},data-maxlength-errormessage=#{validation.notesandqueries.title.length.max(${model.maxTitleCharacters})},
-                                    data-required-errormessage=#{validation.notesandqueries.title.required}">
+                           th:attr="maxlength=${model.maxTitleCharacters},data-maxlength-errormessage=#{validation.notesandqueries.thread.title.client.length.max(${model.maxTitleCharacters})},
+                                    data-required-errormessage=#{validation.notesandqueries.thread.title.required}">
                 </div>
                 <div class="form-group">
                     <label for="section" class="form-label-bold">Section</label>
                     <select name="section" id="section" class="form-control">
                         <th:block th:each="section_type : ${T(org.innovateuk.ifs.notesandqueries.thread.resource.SectionTypeEnum).values()}">
                             <th:block th:if="*{section}">
-                                <option value="${section_type.name()}"
-                                        th:selected="${#strings.toLowerCase(section_type.name()) == *{section}}"
+                                <option th:value="${section_type.name()}"
+                                        th:selected="${#strings.toLowerCase(section_type.name())} == *{section}"
                                         th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
                             </th:block>
                             <th:block th:unless="*{section}">
                                 <th:block th:if="${model.querySection}">
-                                    <option value="${section_type.name()}"
+                                    <option th:value="${section_type.name()}"
                                             th:selected="${#strings.toLowerCase(section_type.name()) == #strings.toLowerCase(model.querySection)}"
                                             th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
                                 </th:block>
                                 <th:block th:unless="${model.querySection}">
-                                    <option value="${section_type.name()}"
+                                    <option th:value="${section_type.name()}"
                                             th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
                                 </th:block>
                             </th:block>
                         </th:block>
                     </select>
                 </div>
-                <div class="form-group">
-                    <label for="query" class="form-label-bold">Query</label>
+                <div th:class="${#fields.hasErrors('query')}? 'form-group error':'form-group'">
+                    <label for="query" class="form-label-bold">
+                        <span class="heading-small no-margin">Query</span>
+                        <span th:if="${#fields.hasErrors('query')}" th:remove="tag">
+                              <span class="error-message" th:each="err : ${#fields.errors('query')}" th:text="${err}" />
+                        </span>
+                    </label>
                     <div class="textarea-wrapped word-count">
                         <textarea data-editor="md"
                           required = "required"
@@ -106,25 +107,20 @@
            <th:block th:if="${model.newQueryAttachments.size() > 0}">
                 <fieldset>
                     <legend class="heading-small">Supporting documentation</legend>
-                    <th:block th:each="${attachmentName : model.newQueryAttachments.values()}">
-                        <a th:href="@{'/queries/new-query/attachments/${}}" th:text="${attachmentName}">filename</a>
+                    <th:block th:each="attachmentId : ${model.newQueryAttachments.keySet()}">
+                        <a th:href="@{'new-query/attachment/'+${attachmentId}}" th:text="${model.newQueryAttachments.get(attachmentId)}">filename</a>
                     </th:block>
                 </fieldset>
             </th:block>
             <fieldset>
                 <div class="upload-section unstyled-view">
                     <legend class="heading-small no-margin">Upload supporting documentation</legend>
-                    <div th:classappend="${#fields.hasErrors('attachment') ? 'error' : ''}">
-                        <th:block th:if="${#fields.hasErrors('attachment')}">
-                            <span class="error-message" th:each="err : ${#fields.errors('attachment')}"
-                                          th:text="${err}"/>
-                        </th:block>
-                        <input type="file" id="file" class="inputfile" name="file">
-                        <label for="file" class="button-secondary extra-margin">+ Upload</label>
-                        <button name="uploadAttachment" class="button-secondary" type="submit"
-                                data-for-file-upload="file">Save
-                        </button>
-                    </div>
+                    <span th:if="${#fields.hasErrors('attachment')}" th:remove="tag">
+                        <span class="error-message" th:each="err : ${#fields.errors('attachment')}" th:text="${err}" />
+                    </span>
+                    <input type="file" id="attachment" class="inputfile" name="attachment">
+                    <label for="attachment" class="button-secondary extra-margin">+ Upload</label>
+                    <button name="uploadAttachment" class="button-secondary" type="submit" data-for-file-upload="attachment">Save</button>
                 </div>
             </fieldset>
             <hr>
@@ -134,7 +130,7 @@
                     <button class="button button-large no-margin">Post Query</button>
                 </div>
                 <div class="column-half alignright">
-                    <a href="queries">Cancel</a>
+                    <a href=".">Cancel</a>
                 </div>
             </div>
         </form>

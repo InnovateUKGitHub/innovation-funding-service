@@ -175,6 +175,8 @@ public enum CommonFailureKeys implements ErrorTemplate {
     ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED(BAD_REQUEST),
     ELIGIBILITY_RAG_STATUS_MUST_BE_SET(BAD_REQUEST),
 
+    FINANCE_CHECKS_POST_ATTACH_NOT_UPLOADED(BAD_REQUEST),
+
     /**
      * Offer letter
      */
