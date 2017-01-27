@@ -502,7 +502,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=Button:contains("Done")
-    Wait Until Element Contains    css=.no-margin    ${Total}
+    Wait Until Element Contains Without Screenshots    css=.no-margin    ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
