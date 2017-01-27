@@ -115,7 +115,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private void addGrantClaim(FinanceViewModel financeViewModel, ApplicationFinanceResource applicationFinanceResource) {
         if(applicationFinanceResource.getGrantClaim()!=null) {
             financeViewModel.setOrganisationGrantClaimPercentage(ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));
-            financeViewModel.setOrganisationgrantClaimPercentageId(applicationFinanceResource.getGrantClaim().getId());
+            financeViewModel.setOrganisationGrantClaimPercentageId(applicationFinanceResource.getGrantClaim().getId());
         }
     }
 

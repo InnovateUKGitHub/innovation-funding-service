@@ -112,7 +112,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     private void addGrantClaim(FinanceViewModel financeViewModel, Form form, ProjectFinanceResource projectFinanceResource) {
         if(projectFinanceResource.getGrantClaim()!=null) {
             financeViewModel.setOrganisationGrantClaimPercentage(projectFinanceResource.getGrantClaim().getGrantClaimPercentage());
-            financeViewModel.setOrganisationgrantClaimPercentageId(projectFinanceResource.getGrantClaim().getId());
+            financeViewModel.setOrganisationGrantClaimPercentageId(projectFinanceResource.getGrantClaim().getId());
             String formInputKey = "finance-grantclaimpercentage-" + projectFinanceResource.getGrantClaim();
             String formInputValue = projectFinanceResource.getGrantClaimPercentage() != null ? projectFinanceResource.getGrantClaimPercentage().toString() : "";
             form.addFormInput(formInputKey, formInputValue);

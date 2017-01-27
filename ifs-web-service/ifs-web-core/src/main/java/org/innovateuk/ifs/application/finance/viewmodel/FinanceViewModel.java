@@ -22,7 +22,7 @@ public class FinanceViewModel extends BaseFinanceViewModel {
     protected BigDecimal organisationTotalOtherFunding;
 
     protected Integer organisationGrantClaimPercentage;
-    protected Long organisationgrantClaimPercentageId;
+    protected Long organisationGrantClaimPercentageId;
 
     public Map<FinanceRowType, FinanceRowCostCategory> getOrganisationFinance() {
         return organisationFinance;
@@ -96,12 +96,12 @@ public class FinanceViewModel extends BaseFinanceViewModel {
         this.organisationGrantClaimPercentage = organisationGrantClaimPercentage;
     }
 
-    public Long getOrganisationgrantClaimPercentageId() {
-        return organisationgrantClaimPercentageId;
+    public Long getOrganisationGrantClaimPercentageId() {
+        return organisationGrantClaimPercentageId;
     }
 
-    public void setOrganisationgrantClaimPercentageId(Long organisationgrantClaimPercentageId) {
-        this.organisationgrantClaimPercentageId = organisationgrantClaimPercentageId;
+    public void setOrganisationGrantClaimPercentageId(Long organisationGrantClaimPercentageId) {
+        this.organisationGrantClaimPercentageId = organisationGrantClaimPercentageId;
     }
 
     @Override
