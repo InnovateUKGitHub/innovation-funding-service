@@ -8,6 +8,9 @@ import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+/**
+ * Populates a public content menu view model.
+ */
 @Component
 public class PublicContentMenuPopulator {
 

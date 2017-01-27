@@ -3,8 +3,8 @@ package org.innovateuk.ifs.publiccontent.modelpopulator;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.publiccontent.viewmodel.SearchViewModel;
 import org.junit.Test;
@@ -42,7 +42,7 @@ public class PublicContentSearchModelPopulatorTest {
     public void testPopulate() {
         boolean readOnly = true;
         PublicContentSectionResource section = newPublicContentSectionResource()
-                .withType(PublicContentSection.SEARCH).build();
+                .withType(PublicContentSectionType.SEARCH).build();
         PublicContentResource resource = newPublicContentResource()
                 .withProjectFundingRange(FUNDING_RANGE)
                 .withEligibilitySummary(ELIGIBILITY_SUMMARY)

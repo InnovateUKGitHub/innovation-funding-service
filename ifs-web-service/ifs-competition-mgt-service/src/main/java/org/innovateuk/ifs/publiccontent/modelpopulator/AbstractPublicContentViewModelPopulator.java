@@ -3,8 +3,8 @@ package org.innovateuk.ifs.publiccontent.modelpopulator;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.viewmodel.AbstractPublicContentViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -32,5 +32,5 @@ public abstract class AbstractPublicContentViewModelPopulator<M extends Abstract
 
     protected abstract M createInitial();
     protected abstract void populateSection(M model, PublicContentResource publicContentResource);
-    protected abstract PublicContentSection getType();
+    protected abstract PublicContentSectionType getType();
 }

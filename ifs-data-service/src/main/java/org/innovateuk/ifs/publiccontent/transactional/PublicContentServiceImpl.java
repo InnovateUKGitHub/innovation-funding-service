@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
@@ -19,15 +19,16 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PUBLIC_CONTENT_ALREADY_INITIALISED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * Service for operations around the usage and processing of Competitions
+ * Service for operations around the usage and processing of public content.
  */
 @Service
 public class PublicContentServiceImpl extends BaseTransactionalService implements PublicContentService {
@@ -43,18 +44,22 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     private PublicContentMapper publicContentMapper;
 
     @Override
-    public ServiceResult<PublicContentResource> getCompetitionById(Long id) {
+    public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
         return find(publicContentRepository.findByCompetitionId(id), notFoundError(PublicContent.class, id))
                 .andOnSuccessReturn(publicContent -> publicContentMapper.mapToResource(publicContent));
     }
 
     @Override
-    public ServiceResult<Void> initialiseForCompetitionId(Long competitionId) {
+    public ServiceResult<Void> initialiseByCompetitionId(Long competitionId) {
+        if (publicContentRepository.findByCompetitionId(competitionId) != null) {
+            return serviceFailure(PUBLIC_CONTENT_ALREADY_INITIALISED);
+        }
+
         PublicContent publicContent = new PublicContent();
         publicContent.setCompetitionId(competitionId);
         publicContentRepository.save(publicContent);
 
-        asList(PublicContentSection.values()).forEach(type -> {
+        stream(PublicContentSectionType.values()).forEach(type -> {
             ContentSection contentSection = new ContentSection();
             contentSection.setPublicContent(publicContent);
             contentSection.setType(type);
@@ -81,8 +86,16 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
         }
     }
 
+    private boolean allSectionsComplete(PublicContent publicContent) {
+        Optional<ContentSection> incompleteSection = publicContent.getContentSections().stream()
+                .filter(section -> PublicContentStatus.IN_PROGRESS.equals(section.getStatus()))
+                .findAny();
+
+        return !incompleteSection.isPresent();
+    }
+
     @Override
-    public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSection section) {
+    public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
         PublicContent publicContent = publicContentRepository.save(publicContentMapper.mapToDomain(resource));
 
         switch (section) {
@@ -123,22 +136,13 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     }
 
     private void saveContentEvent() {
-
     }
 
-    private void markSectionAsComplete(PublicContent publicContent, PublicContentSection sectionType) {
+    private void markSectionAsComplete(PublicContent publicContent, PublicContentSectionType sectionType) {
         publicContent.getContentSections().stream()
                 .filter(section -> sectionType.equals(section.getType()))
                 .findAny()
                 .ifPresent(section -> section.setStatus(PublicContentStatus.COMPLETE));
-    }
-
-    private boolean allSectionsComplete(PublicContent publicContent) {
-        Optional<ContentSection> incompleteSection = publicContent.getContentSections().stream()
-                .filter(section -> PublicContentStatus.IN_PROGRESS.equals(section.getStatus()))
-                .findAny();
-
-        return !incompleteSection.isPresent();
     }
 
 }

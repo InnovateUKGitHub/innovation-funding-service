@@ -4,9 +4,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.mapstruct.Mapper;
 
-/**
- * Created by luke.harper on 25/01/2017.
- */
 @Mapper(
     config = GlobalMapperConfig.class
 )

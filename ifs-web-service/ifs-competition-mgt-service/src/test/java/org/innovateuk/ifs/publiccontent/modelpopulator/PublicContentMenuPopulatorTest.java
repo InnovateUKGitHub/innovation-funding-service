@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.modelpopulator;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
@@ -42,7 +42,7 @@ public class PublicContentMenuPopulatorTest {
 
     @Test
     public void testPopulate() {
-        List<PublicContentSectionResource> sections = asList(PublicContentSection.values())
+        List<PublicContentSectionResource> sections = asList(PublicContentSectionType.values())
                         .stream()
                 .map(type -> newPublicContentSectionResource().withType(type).build())
                 .collect(Collectors.toList());

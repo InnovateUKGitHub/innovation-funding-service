@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.junit.Before;
@@ -10,8 +10,6 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-
-import java.time.LocalDateTime;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.PublicContentResourceDocs.publicContentResourceBuilder;
@@ -48,7 +46,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
     public void findByCompetitionid() throws Exception {
         final Long competitionId = 1L;
 
-        when(publicContentService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(publicContentResourceBuilder.withPublishDate(LocalDateTime.now()).build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(publicContentResourceBuilder.build()));
 
         mockMvc.perform(get("/public-content/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())
@@ -79,9 +77,9 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
     public void updateSection() throws Exception {
         PublicContentResource resource = publicContentResourceBuilder.build();
 
-        when(publicContentService.updateSection(resource, PublicContentSection.DATES)).thenReturn(serviceSuccess());
+        when(publicContentService.updateSection(resource, PublicContentSectionType.DATES)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/public-content/update-section/{section}/{id}", PublicContentSection.DATES.name(), resource.getId(), "json")
+        mockMvc.perform(post("/public-content/update-section/{section}/{id}", PublicContentSectionType.DATES.name(), resource.getId(), "json")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())

@@ -3,11 +3,11 @@ package org.innovateuk.ifs.publiccontent.service;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Implementation for public content rest calls.
  */
 @Service
 public class PublicContentRestServiceImpl extends BaseRestService implements PublicContentRestService {
@@ -25,7 +25,7 @@ public class PublicContentRestServiceImpl extends BaseRestService implements Pub
     }
 
     @Override
-    public RestResult<Void> updateSection(PublicContentResource resource, PublicContentSection section) {
+    public RestResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
         return postWithRestResult(PUBLIC_CONTENT_REST_URL + "update-section/" + section.name() + "/" + resource.getId(), resource, Void.class);
     }
 }

@@ -3,15 +3,18 @@ package org.innovateuk.ifs.publiccontent.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
+import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.PublicContentMapper;
+import org.innovateuk.ifs.publiccontent.repository.ContentSectionRepository;
 import org.innovateuk.ifs.publiccontent.repository.KeywordRepository;
 import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -38,6 +41,9 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
     private PublicContentRepository publicContentRepository;
 
     @Mock
+    private ContentSectionRepository contentSectionRepository;
+
+    @Mock
     private PublicContentMapper publicContentMapper;
 
     @Override
@@ -52,9 +58,33 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
         when(publicContentMapper.mapToResource(publicContent)).thenReturn(resource);
 
-        ServiceResult<PublicContentResource> result = service.getCompetitionById(COMPETITION_ID);
+        ServiceResult<PublicContentResource> result = service.findByCompetitionId(COMPETITION_ID);
 
         assertThat(result.getSuccessObjectOrThrowException(), equalTo(resource));
+        verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
+    }
+
+    @Test
+    public void testInitialise() {
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(null);
+
+        ServiceResult<Void> result = service.initialiseByCompetitionId(COMPETITION_ID);
+
+        assertTrue(result.isSuccess());
+        verify(publicContentRepository).save(Mockito.<PublicContent>any());
+        verify(contentSectionRepository, times(asList(PublicContentSectionType.values()).size())).save(Mockito.<ContentSection>any());
+    }
+
+    @Test
+    public void testInitialiseFailure() {
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(new PublicContent());
+
+        ServiceResult<Void> result = service.initialiseByCompetitionId(COMPETITION_ID);
+
+        assertFalse(result.isSuccess());
+        verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
+        verifyNoMoreInteractions(publicContentRepository);
+        verifyZeroInteractions(contentSectionRepository);
     }
 
     @Test
@@ -67,6 +97,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
 
         assertFalse(result.isSuccess());
+        verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
     }
 
 
@@ -80,6 +111,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
 
         assertTrue(result.isSuccess());
+        verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
     }
 
     @Test
@@ -92,7 +124,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         when(publicContent.getId()).thenReturn(1L);
         when(publicContent.getPublishDate()).thenReturn(LocalDateTime.now());
 
-        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSection.SEARCH);
+        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.SEARCH);
 
         verify(publicContentRepository).save(publicContent);
         verify(publicContent).setPublishDate(any());
@@ -110,7 +142,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         when(publicContent.getId()).thenReturn(1L);
         when(publicContent.getPublishDate()).thenReturn(null);
 
-        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSection.SEARCH);
+        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.SEARCH);
 
         verify(publicContentRepository).save(publicContent);
         verify(publicContent, never()).setPublishDate(any());
@@ -128,7 +160,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         when(publicContentMapper.mapToDomain(publicContentResource)).thenReturn(publicContent);
         when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
 
-        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSection.SEARCH);
+        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.SEARCH);
 
         verify(publicContentRepository).save(publicContent);
         keywords.forEach(keyword -> verify(keywordRepository).save(keywordMatcher(keyword)));

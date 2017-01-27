@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.modelpopulator;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.viewmodel.SearchViewModel;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +21,7 @@ public class PublicContentSearchModelPopulator extends AbstractPublicContentView
     }
 
     @Override
-    protected PublicContentSection getType() {
-        return PublicContentSection.SEARCH;
+    protected PublicContentSectionType getType() {
+        return PublicContentSectionType.SEARCH;
     }
 }

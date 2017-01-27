@@ -5,7 +5,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.SearchForm;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +24,7 @@ public class PublicContentSearchFormSaver extends AbstractPublicContentFormSaver
     }
 
     @Override
-    protected PublicContentSection getType() {
-        return PublicContentSection.SEARCH;
+    protected PublicContentSectionType getType() {
+        return PublicContentSectionType.SEARCH;
     }
 }
