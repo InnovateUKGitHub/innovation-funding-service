@@ -56,7 +56,7 @@ items:
           deploymentconfig: data-service
       spec:
         containers:
-        - image: worth/data-service:1.0-SNAPSHOT
+        - image: innovateuk/data-service:1.0-SNAPSHOT
           name: data-service
           ports:
           - containerPort: 8080

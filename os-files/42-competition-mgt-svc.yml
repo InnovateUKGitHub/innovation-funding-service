@@ -19,7 +19,7 @@ items:
           deploymentconfig: competition-mgt-svc
       spec:
         containers:
-        - image: worth/competition-management-service:1.0-SNAPSHOT
+        - image: innovateuk/competition-management-service:1.0-SNAPSHOT
           name: competition-mgt-svc
           ports:
           - containerPort: 8080

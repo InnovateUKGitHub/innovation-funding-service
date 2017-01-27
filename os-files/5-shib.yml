@@ -17,7 +17,7 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: worth/shibboleth:1.0-SNAPSHOT
+        - image: innovateuk/shibboleth:1.0-SNAPSHOT
           name: shib
           ports:
           - containerPort: 443

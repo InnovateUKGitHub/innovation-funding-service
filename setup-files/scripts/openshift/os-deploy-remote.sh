@@ -1,76 +1,78 @@
 #!/bin/bash
 set -e
 
-ENV=$1
-HOST=dev.ifs-test-clusters.com
+PROJECT=$1
+HOST=prod.ifs-test-clusters.com
+ROUTE_DOMAIN=apps.$HOST
+REGISTRY=721685138178.dkr.ecr.eu-west-2.amazonaws.com
 
-echo "Deploying the $ENV Openshift environment"
+echo "Deploying the $PROJECT Openshift PROJECTironment"
 
 function tailorAppInstance() {
     cp -r os-files os-files-tmp
-    sed -i.bak "s#worth/#721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/#g" os-files-tmp/*.yml
-    sed -i.bak "s#worth/#721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/#g" os-files-tmp/init/*.yml
-    sed -i.bak "s#worth/#721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/#g" os-files-tmp/robot-tests/*.yml
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$ENV.$HOST/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$ENV.$HOST/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$ENV.$HOST/g" os-files-tmp/*.yml
+    sed -i.bak "s#innovateuk/#${REGISTRY}/innovateuk/#g" os-files-tmp/*.yml
+    sed -i.bak "s#innovateuk/#${REGISTRY}/innovateuk/#g" os-files-tmp/init/*.yml
+    sed -i.bak "s#innovateuk/#${REGISTRY}/innovateuk/#g" os-files-tmp/robot-tests/*.yml
+    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+    sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+    sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
 
-    sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/*.yml
-    sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/init/*.yml
-    sed -i.bak "s/1.0-SNAPSHOT/1.0-$ENV/g" os-files-tmp/robot-tests/*.yml
+    sed -i.bak "s/1.0-SNAPSHOT/1.0-$PROJECT/g" os-files-tmp/*.yml
+    sed -i.bak "s/1.0-SNAPSHOT/1.0-$PROJECT/g" os-files-tmp/init/*.yml
+    sed -i.bak "s/1.0-SNAPSHOT/1.0-$PROJECT/g" os-files-tmp/robot-tests/*.yml
 }
 
 function buildShib() {
     cp -r setup-files/scripts/docker/shibboleth shibboleth
-    sed -i.bak "s/<<HOSTNAME>>/$ENV.$HOST/g" shibboleth/*
-    docker build -t 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/shibboleth:1.0-$ENV shibboleth/
+    sed -i.bak "s/<<HOSTNAME>>/$PROJECT.$HOST/g" shibboleth/*
+    docker build -t ${REGISTRY}/innovateuk/shibboleth:1.0-$PROJECT shibboleth/
 }
 
 function buildShibInit() {
     cp -r setup-files/scripts/openshift/shib-init shib-init
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$ENV.$HOST/g" shib-init/*.sh
-    docker build -t 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/shib-init:1.0-$ENV shib-init
+    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$HOST/g" shib-init/*.sh
+    docker build -t ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT shib-init
 }
 
 function buildRobotTests() {
-    docker build -t 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/robot-framework:1.0-$ENV robot-tests/
+    docker build -t ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT robot-tests/
 }
 
 function retagAppImages() {
-    docker tag worth/data-service:1.0-SNAPSHOT \
-        721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/data-service:1.0-$ENV
-    docker tag worth/project-setup-service:1.0-SNAPSHOT \
-        721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/project-setup-service:1.0-$ENV
-    docker tag worth/project-setup-management-service:1.0-SNAPSHOT \
-        721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/project-setup-management-service:1.0-$ENV
-    docker tag worth/competition-management-service:1.0-SNAPSHOT \
-        721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/competition-management-service:1.0-$ENV
-    docker tag worth/assessment-service:1.0-SNAPSHOT \
-        721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/assessment-service:1.0-$ENV
-    docker tag worth/application-service:1.0-SNAPSHOT \
-        721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/application-service:1.0-$ENV
+    docker tag innovateuk/data-service:1.0-SNAPSHOT \
+        ${REGISTRY}/innovateuk/data-service:1.0-$PROJECT
+    docker tag innovateuk/project-setup-service:1.0-SNAPSHOT \
+        ${REGISTRY}/innovateuk/project-setup-service:1.0-$PROJECT
+    docker tag innovateuk/project-setup-management-service:1.0-SNAPSHOT \
+        ${REGISTRY}/innovateuk/project-setup-management-service:1.0-$PROJECT
+    docker tag innovateuk/competition-management-service:1.0-SNAPSHOT \
+        ${REGISTRY}/innovateuk/competition-management-service:1.0-$PROJECT
+    docker tag innovateuk/assessment-service:1.0-SNAPSHOT \
+        ${REGISTRY}/innovateuk/assessment-service:1.0-$PROJECT
+    docker tag innovateuk/application-service:1.0-SNAPSHOT \
+        ${REGISTRY}/innovateuk/application-service:1.0-$PROJECT
 }
 
 function pushImages() {
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/data-service:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/project-setup-service:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/project-setup-management-service:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/competition-management-service:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/assessment-service:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/application-service:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/shibboleth:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/shib-init:1.0-$ENV
-    docker push 721685138178.dkr.ecr.eu-west-2.amazonaws.com/worth/robot-framework:1.0-$ENV
+    docker push ${REGISTRY}/innovateuk/data-service:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/project-setup-service:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/project-setup-management-service:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/competition-management-service:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/assessment-service:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/application-service:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/shibboleth:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT
+    docker push ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT
 }
 
 function deploy() {
-    oc new-project $ENV
+    oc new-project $PROJECT
     oc create -f os-files-tmp/1-aws-registry-secret.yml
     oc secrets add serviceaccount/default secrets/aws-secret-2 --for=pull
     rm -rf os-files-tmp/1-aws-registry-secret.yml
-    #oc adm policy add-scc-to-user anyuid -n $ENV -z default --config=setup-files/scripts/openshift/admin.kubeconfig
+    #oc adm policy add-scc-to-user anyuid -n $PROJECT -z default --config=setup-files/scripts/openshift/admin.kubeconfig
     ssh-add setup-files/scripts/openshift/ifs
-    ssh ec2-user@52.56.92.144 "oc adm policy add-scc-to-user anyuid -n $ENV -z default"
+    ssh ec2-user@52.56.92.144 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
 
     oc create -f os-files-tmp/
 }
@@ -79,7 +81,7 @@ function blockUntilServiceIsUp() {
     SERVICE_STATUS=404
     while [ ${SERVICE_STATUS} -ne "200" ]
     do
-        SERVICE_STATUS=$(curl  --max-time 1 -k -L -s -o /dev/null -w "%{http_code}" https://${ENV}.${HOST}/) || true
+        SERVICE_STATUS=$(curl  --max-time 1 -k -L -s -o /dev/null -w "%{http_code}" https://${PROJECT}.${HOST}/) || true
         oc get pods
         echo "Service status: HTTP $SERVICE_STATUS"
         sleep 5s

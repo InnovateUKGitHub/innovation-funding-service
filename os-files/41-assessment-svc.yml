@@ -19,7 +19,7 @@ items:
           deploymentconfig: assessment-svc
       spec:
         containers:
-        - image: worth/assessment-service:1.0-SNAPSHOT
+        - image: innovateuk/assessment-service:1.0-SNAPSHOT
           name: assessment-svc
           ports:
           - containerPort: 8080

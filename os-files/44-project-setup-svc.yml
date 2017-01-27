@@ -19,7 +19,7 @@ items:
           deploymentconfig: project-setup-svc
       spec:
         containers:
-        - image: worth/project-setup-service:1.0-SNAPSHOT
+        - image: innovateuk/project-setup-service:1.0-SNAPSHOT
           name: project-setup-svc
           ports:
           - containerPort: 8080
