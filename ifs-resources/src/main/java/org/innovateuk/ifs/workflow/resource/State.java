@@ -17,5 +17,6 @@ public enum State {
     VERIFIED,
     NOT_VERIFIED,
     ASSIGNED,
-    NOT_ASSIGNED
+    NOT_ASSIGNED,
+    NOT_APPLICABLE
 }
