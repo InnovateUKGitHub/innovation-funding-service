@@ -36,7 +36,8 @@ public class CategoryServiceImplTest extends BaseServiceUnitTest<CategoryService
         List<InnovationAreaResource> expected = newInnovationAreaResource()
                 .withId(1L, 3L)
                 .withName("Category 1", "Category 2")
-                .withParent(1L, 1L)
+                .withSector(1L, 1L)
+                .withSectorName("Sector 1", "Sector 2")
                 .build(2);
 
         when(categoryRestService.getInnovationAreasBySector(1L)).thenReturn(restSuccess(expected));
@@ -50,7 +51,8 @@ public class CategoryServiceImplTest extends BaseServiceUnitTest<CategoryService
         List<InnovationAreaResource> expected = newInnovationAreaResource()
                 .withId(2L, 3L)
                 .withName("Category 1", "Category 2")
-                .withParent(1L, 1L)
+                .withSector(1L, 1L)
+                .withSectorName("Sector 1", "Sector 2")
                 .build(2);
 
         when(categoryRestService.getInnovationAreas()).thenReturn(restSuccess(expected));

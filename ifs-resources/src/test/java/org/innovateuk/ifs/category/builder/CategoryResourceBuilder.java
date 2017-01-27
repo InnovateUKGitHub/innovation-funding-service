@@ -2,10 +2,7 @@ package org.innovateuk.ifs.category.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 

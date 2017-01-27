@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.form.transactional;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.resource.*;
@@ -37,9 +38,11 @@ public interface FormInputService {
     @PreAuthorize("hasPermission(#formInputResponseCommand, 'SAVE')")
     ServiceResult<FormInputResponse> saveQuestionResponse(@P("formInputResponseCommand")FormInputResponseCommand formInputResponseCommand);
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<FormInputResource> save(FormInputResource formInputResource);
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
     ServiceResult<Void> delete(Long id);
 }

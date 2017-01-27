@@ -28,219 +28,106 @@
 
         <p>To change the lead applicant for this application please contact Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
 
-        <style>
+        <div class="table-display-stacked">
 
-        @media (max-width:639px){
-          .grid-table-style .grid-row.table-head div[class^="column"]{
-            display: none;
-          }
-        }
+          <h2 class="heading-medium">Empire Ltd, Lead organisation</h2>
 
-        @media (min-width:640px){
+          <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+            <thead>
+              <tr>
+                <th class="width-30-percent">Applicant</th>
+                <th class="width-50-percent">Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Steve Smith</td>
+                <td>steve.smith@empire.com</td>
+                <td>Lead</td>
+              </tr>
+              <tr>
+                <td>Paul Davidson</td>
+                <td>paul.davidsonh@empire.com</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
 
-          .grid-table-style{
-            display: table;
-            width: 100%;
-            min-width: 960px;
-          }
+          <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'empire'}">
+            <p>
+              <a href="/prototypes/7661-edit-org?company=empire">Edit Empire Ltd</a>
+            </p>
+          </th:block>
 
-          .grid-table-style h2{
-            display: table-row;
-          }
+        </div>
 
-          .grid-table-style .grid-row{
-            border: 1px solid blue;
-            display: table-row;
-          }
+        <div class="table-display-stacked">
 
-          .grid-table-style .grid-row.table-head div[class^="column"]{
-            border-bottom: 1px solid black;
-            font-weight: bold;
-            display: table-cell;
-          }
+          <h2 class="heading-medium">Ludlow</h2>
 
-          div[class^="column"]{
-            display: table-cell;
-            border-bottom: 1px solid #e4e4e4;
-            vertical-align: middle;
-            padding: .63158em 1.05263em .47368em 0;
-          }
+          <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+            <thead>
+              <tr>
+                <th class="width-30-percent">Applicant</th>
+                <th class="width-50-percent">Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Jessica Doe</td>
+                <td>jessica.dow@ludlow.com</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td>Ryan Dell</td>
+                <td>ryan.dell@ludlow.com</td>
+                <td>Invite pending</td>
+              </tr>
+            </tbody>
+          </table>
 
-          .grid-row:last-child div[class^="column"]{
-            border-bottom: none;
-          }
+          <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'ludlow'}">
+            <p>
+              <a href="/prototypes/7661-edit-org?company=ludlow">Edit Ludlow</a>
+            </p>
+          </th:block>
 
-          div[class^="column"] p{
-            padding: 0;
-            margin: 0;
-          }
+        </div>
 
-          div[class^="column"] h3{
-            display: none;
-          }
+        <div class="table-display-stacked">
 
-          div[class^="column"] h3{
-            display: none;
-          }
+          <h2 class="heading-medium">EGGS</h2>
 
-          .grid-table-style .grid-row.table-head div[class^="column"] h3{
-            display: block;
-          }
+          <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+            <thead>
+              <tr>
+                <th class="width-30-percent">Applicant</th>
+                <th class="width-50-percent">Email</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Paul Tom</td>
+                <td>paul.tom@eggs.com</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
 
-          .tablesaw-stack th .tablesaw-cell-label{
-            background: red;
-          }
+          <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'eggs'}">
+            <p>
+              <a href="/prototypes/7661-edit-org?company=eggs">Edit EGGS</a>
+            </p>
+          </th:block>
 
-        }
-
-        </style>
-
-
-
-          <section class="grid-table-style">
-            <h2 class="heading-large">Empire Ltd - Lead organisation</h2>
-
-            <div class="grid-row table-head">
-              <div class="column-third">
-                <h3 class="heading-small">Applicant</h3>
-              </div>
-              <div class="column-third">
-                <h3 class="heading-small">Email</h3>
-              </div>
-              <div class="column-third">
-                <h3 class="heading-small">Status</h3>
-              </div>
-            </div>
-
-            <div class="grid-row section-divide">
-              <div class="column-third">
-                <h3 class="heading-small">Applicant 1</h3>
-                <p>Steve Smith</p>
-              </div>
-              <div class="column-third">
-                <h3 class="heading-small">Email</h3>
-                <p>steve.smith@empire.com</p>
-              </div>
-              <div class="column-third">
-                <h3 class="heading-small">Status</h3>
-                <p>Lead</p>
-              </div>
-            </div>
-
-            <div class="grid-row section-divide">
-              <div class="column-third">
-                <h3 class="heading-small">Applicant 2</h3>
-                <p>Paul Davidson</p>
-              </div>
-              <div class="column-third">
-                <h3 class="heading-small">Email</h3>
-                <p>paul.davidson@empire.com</p>
-              </div>
-              <div class="column-third">
-                <p>-</p>
-              </div>
-            </div>
-
-            <div class="grid-row section-divide">
-              <div class="column-third">
-                <a href="#">Edit Empire Ltd</a>
-              </div>
-            </div>
-          </section>
-
-          <div class="table-display-stacked">
-            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-              <thead>
-                <tr>
-                  <th>Applicant</th>
-                  <th>Email</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Steve Smith</td>
-                  <td>steve.smith@empire.com</td>
-                  <td>Lead</td>
-                </tr>
-                <tr>
-                  <td>Steve Smith</td>
-                  <td>steve.smith@empire.com</td>
-                  <td>Lead</td>
-                </tr>
-                <tr>
-                  <td>Steve Smith</td>
-                  <td>steve.smith@empire.com</td>
-                  <td>Lead</td>
-                </tr>
-              </tbody>
-            </table>
-          <div>
-
-
-
-        <!-- <section class="extra-margin-top">
-          <h2 class="heading-large">Ludlow</h2>
-
-          <div class="grid-row section-divide">
-            <div class="column-one-third">
-              <h3 class="heading-small no-margin">Applicant 1</h3>
-              <p>Jessica Doe</p>
-            </div>
-            <div class="column-one-third">
-              <h3 class="heading-small no-margin">Email</h3>
-              <p>j.doeh@ludlow.com</p>
-            </div>
-          </div>
-
-          <div class="grid-row section-divide">
-            <div class="column-one-third">
-              <h3 class="heading-small no-margin">Applicant 2</h3>
-              <p>Ryan Dell</p>
-            </div>
-            <div class="column-one-third">
-              <h3 class="heading-small no-margin">Email</h3>
-              <p>r.dell@ludlow.com</p>
-            </div>
-            <div class="column-one-third">
-              <h3 class="heading-small no-margin">Status</h3>
-              <p>Invite pending</p>
-            </div>
-          </div>
-
-          <div class="grid-row section-divide">
-            <div class="column-full">
-              <a href="#">Edit Ludlow</a>
-            </div>
-          </div>
-        </section>
-
-
-        <section>
-          <h2 class="heading-large">EGGS</h2>
-
-          <div class="grid-row section-divide">
-            <div class="column-one-third">
-              <h3 class="heading-small no-margin">Applicant 1</h3>
-              <p>Jessica Doe</p>
-            </div>
-            <div class="column-one-third">
-              <h3 class="heading-small no-margin">Email</h3>
-              <p>j.doeh@ludlow.com</p>
-            </div>
-          </div>
-
-          <div class="grid-row section-divide">
-            <div class="column-full">
-              <a href="#">Edit EGGS</a>
-            </div>
-          </div>
-        </section> -->
-
+        </div>
 
         <p class="extra-margin-top">Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances</p>
 
-        <p><a href="#">Add partner organisation</a></p>
+        <p><a href="/prototypes/7661-edit-org?company=newOrg">Add partner organisation</a></p>
 
         <p class="extra-margin-top"><a href="/prototypes/635-application-overview" class="button">Return to application</a></p>
 
@@ -283,93 +170,6 @@
             </div>
         </div>
 
-
-
-    <div class="table-display-stacked">
-      <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-            <thead>
-              <tr>
-                <th scope="col">Movie Title 1</th>
-                <th scope="col">Rank 2</th>
-                <th scope="col">Year 3</th>
-                <th scope="col"><abbr title="Rotten Tomato Rating">Rating</abbr></th>
-                <th scope="col">Gross</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Avatar_(2009_film)">Avatar</a></td>
-                <td>1</td>
-                <td>2009</td>
-                <td>83%</td>
-                <td>$2.7B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Titanic_(1997_film)">Titanic</a></td>
-                <td>2</td>
-                <td>1997</td>
-                <td>88%</td>
-                <td>$2.1B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/The_Avengers_(2012_film)">The Avengers</a></td>
-                <td>3</td>
-                <td>2012</td>
-                <td>92%</td>
-                <td>$1.5B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Harry_Potter_and_the_Deathly_Hallows_%E2%80%93_Part_2">Harry Potter and the Deathly Hallows—Part 2</a></td>
-                <td>4</td>
-                <td>2011</td>
-                <td>96%</td>
-                <td>$1.3B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Frozen_(2013_film)">Frozen</a></td>
-                <td>5</td>
-                <td>2013</td>
-                <td>89%</td>
-                <td>$1.2B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Iron_Man_3">Iron Man 3</a></td>
-                <td>6</td>
-                <td>2013</td>
-                <td>78%</td>
-                <td>$1.2B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Transformers:_Dark_of_the_Moon">Transformers: Dark of the Moon</a></td>
-                <td>7</td>
-                <td>2011</td>
-                <td>36%</td>
-                <td>$1.1B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/The_Lord_of_the_Rings:_The_Return_of_the_King">The Lord of the Rings: The Return of the King</a></td>
-                <td>8</td>
-                <td>2003</td>
-                <td>95%</td>
-                <td>$1.1B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Skyfall">Skyfall</a></td>
-                <td>9</td>
-                <td>2012</td>
-                <td>92%</td>
-                <td>$1.1B</td>
-              </tr>
-              <tr>
-                <td class="title"><a href="http://en.wikipedia.org/wiki/Transformers:_Age_of_Extinction">Transformers: Age of Extinction</a></td>
-                <td>10</td>
-                <td>2014</td>
-                <td>18%</td>
-                <td>$1.0B</td>
-              </tr>
-            </tbody>
-          </table>
-      </div>
         <!-- END OFHARDCODED PROTOTYPE HTML -->
 
         <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
