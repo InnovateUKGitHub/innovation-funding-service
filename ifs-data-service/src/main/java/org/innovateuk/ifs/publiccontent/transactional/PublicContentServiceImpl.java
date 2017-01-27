@@ -34,6 +34,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     @Autowired
     private ContentSectionRepository contentSectionRepository;
 
+
     @Autowired
     private PublicContentMapper publicContentMapper;
 

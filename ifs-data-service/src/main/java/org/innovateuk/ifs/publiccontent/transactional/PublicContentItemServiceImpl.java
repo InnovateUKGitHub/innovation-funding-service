@@ -6,7 +6,10 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+
+import static java.util.Arrays.asList;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -24,5 +27,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     public ServiceResult<PublicContentItemResource> byCompetitionId(Long id) {
         //TODO : Implement Method
         return null;
+    }
+
+    private List<String> separateSearchStringToList(String searchString) {
+        return asList(searchString.split(" ");
     }
 }
