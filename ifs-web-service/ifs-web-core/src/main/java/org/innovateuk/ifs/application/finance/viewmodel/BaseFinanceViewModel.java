@@ -14,4 +14,8 @@ public abstract class BaseFinanceViewModel {
     public void setFinanceView(String financeView) {
         this.financeView = financeView;
     }
+
+    public Boolean getHasOrganisationFinance() {
+        return Boolean.FALSE;
+    }
 }

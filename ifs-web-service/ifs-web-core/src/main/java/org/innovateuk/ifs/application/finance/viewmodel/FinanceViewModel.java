@@ -103,4 +103,9 @@ public class FinanceViewModel extends BaseFinanceViewModel {
     public void setOrganisationgrantClaimPercentageId(Long organisationgrantClaimPercentageId) {
         this.organisationgrantClaimPercentageId = organisationgrantClaimPercentageId;
     }
+
+    @Override
+    public Boolean getHasOrganisationFinance(){
+        return null != organisationFinance;
+    }
 }
