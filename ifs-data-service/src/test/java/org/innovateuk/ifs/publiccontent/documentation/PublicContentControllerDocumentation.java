@@ -42,7 +42,7 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
     public void findByCompetitionid() throws Exception {
         final Long competitionId = 1L;
 
-        when(publicContentService.getCompetitionById(competitionId)).thenReturn(serviceSuccess(publicContentResourceBuilder.build()));
+        when(publicContentService.findByCompetitionId(competitionId)).thenReturn(serviceSuccess(publicContentResourceBuilder.build()));
 
         mockMvc.perform(get("/public-content/find-by-competition-id/{competitionId}", competitionId))
                 .andExpect(status().isOk())

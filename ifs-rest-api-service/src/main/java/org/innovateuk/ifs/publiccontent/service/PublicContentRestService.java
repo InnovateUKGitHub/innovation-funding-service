@@ -4,7 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Rest service for public content.
  */
 public interface PublicContentRestService {
 

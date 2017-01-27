@@ -10,13 +10,13 @@ public interface PublicContentService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "GET_PUBLIC_CONTENT",
             description = "The Competition Admin, or project finance user can get the public content for a competition.")
-    ServiceResult<PublicContentResource> getCompetitionById(final Long id);
+    ServiceResult<PublicContentResource> findByCompetitionId(Long id);
 
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "INITIALISE_PUBLIC_CONTENT",
             description = "The Competition Admin, or project finance user can initalise the public content for a competition.")
-    ServiceResult<Void> initialiseForCompetitionId(Long id);
+    ServiceResult<Void> initialiseByCompetitionId(Long id);
 
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

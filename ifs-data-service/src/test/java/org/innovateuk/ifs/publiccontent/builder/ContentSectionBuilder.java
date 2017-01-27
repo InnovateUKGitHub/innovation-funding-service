@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
@@ -28,7 +28,7 @@ public class ContentSectionBuilder extends BaseBuilder<ContentSection, ContentSe
         return with(section -> setField("publicContent", publicContent, section));
     }
 
-    public ContentSectionBuilder withType(PublicContentSection type) {
+    public ContentSectionBuilder withType(PublicContentSectionType type) {
         return with(section -> setField("type", type, section));
     }
 

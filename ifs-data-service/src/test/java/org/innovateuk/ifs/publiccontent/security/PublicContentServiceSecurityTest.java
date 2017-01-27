@@ -28,12 +28,12 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
 
     @Test
     public void testGetByCompetitionId() {
-        runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.getCompetitionById(1L));
+        runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.findByCompetitionId(1L));
     }
 
     @Test
     public void testInitialise() {
-        runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.initialiseForCompetitionId(1L));
+        runAsAllowedRoles(COMP_ADMIN_ROLES, () -> classUnderTest.initialiseByCompetitionId(1L));
     }
 
     @Test
@@ -66,12 +66,12 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
     public static class TestPublicContentService implements PublicContentService {
 
         @Override
-        public ServiceResult<PublicContentResource> getCompetitionById(Long id) {
+        public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> initialiseForCompetitionId(Long id) {
+        public ServiceResult<Void> initialiseByCompetitionId(Long id) {
             return null;
         }
 

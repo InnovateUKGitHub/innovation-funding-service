@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.springframework.stereotype.Service;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Implementation for public content rest calls.
  */
 @Service
 public class PublicContentRestServiceImpl extends BaseRestService implements PublicContentRestService {

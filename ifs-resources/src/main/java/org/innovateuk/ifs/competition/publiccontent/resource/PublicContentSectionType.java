@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
 /**
  * Enum to represent the competition setup sections displayed for public content.
  */
-public enum PublicContentSection {
+public enum PublicContentSectionType {
     SEARCH("Competition information and search", "search"),
     SUMMARY("Summary", "summary"),
     ELIGIBILITY("Eligibility", "eligibility"),
@@ -16,7 +16,7 @@ public enum PublicContentSection {
     private String path;
 
 
-    PublicContentSection(String text, String path) {
+    PublicContentSectionType(String text, String path) {
         this.text = text;
         this.path = path;
     }

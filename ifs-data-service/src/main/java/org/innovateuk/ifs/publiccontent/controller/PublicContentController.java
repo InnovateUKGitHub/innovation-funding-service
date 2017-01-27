@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Controller for all public content actions.
  */
 @RestController
 @RequestMapping("/public-content")
@@ -21,7 +21,7 @@ public class PublicContentController {
 
     @RequestMapping(value = "find-by-competition-id/{id}", method = RequestMethod.GET)
     public RestResult<PublicContentResource> getCompetitionById(@PathVariable("id") final Long competitionId) {
-        return publicContentService.getCompetitionById(competitionId).toGetResponse();
+        return publicContentService.findByCompetitionId(competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "publish-by-competition-id/{id}", method = RequestMethod.POST)

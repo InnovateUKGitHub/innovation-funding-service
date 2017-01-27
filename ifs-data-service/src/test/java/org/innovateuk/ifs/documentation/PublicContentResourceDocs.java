@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -44,7 +44,7 @@ public class PublicContentResourceDocs {
             .withContentSections(
                     newPublicContentSectionResource()
                             .withStatus(PublicContentStatus.IN_PROGRESS)
-                            .withType(PublicContentSection.DATES)
+                            .withType(PublicContentSectionType.DATES)
                             .withPublicContent(1L).build(1)
             );
 }
