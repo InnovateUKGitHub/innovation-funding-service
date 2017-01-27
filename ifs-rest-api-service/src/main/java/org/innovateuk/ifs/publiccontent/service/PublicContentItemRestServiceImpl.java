@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
@@ -40,8 +41,8 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<PublicContentItemPageResource> getByItemsCompetitionId(Long id) {
-        return getWithRestResult(PUBLIC_CONTENT_ITEM_REST_URL + "all-by-competition-id/" + id, PublicContentItemPageResource.class);
+    public RestResult<PublicContentItemResource> getItemByCompetitionId(Long id) {
+        return getWithRestResult(PUBLIC_CONTENT_ITEM_REST_URL + "all-by-competition-id/" + id, PublicContentItemResource.class);
     }
 
     public String addParamToURL(String url, String paramName, String paramValue) {

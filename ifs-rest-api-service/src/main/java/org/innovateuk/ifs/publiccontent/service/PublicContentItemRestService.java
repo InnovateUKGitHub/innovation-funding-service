@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Optional;
@@ -16,5 +17,5 @@ public interface PublicContentItemRestService {
                                                                 Optional<Long> pageNumber,
                                                                 Optional<Long> pageSize) throws UnsupportedEncodingException;
 
-    RestResult<PublicContentItemPageResource> getByItemsCompetitionId(final Long id);
+    RestResult<PublicContentItemResource> getItemByCompetitionId(final Long competitionId);
 }

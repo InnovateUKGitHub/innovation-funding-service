@@ -4,6 +4,7 @@ package org.innovateuk.ifs.publiccontent.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.junit.Test;
 
 import java.util.Optional;
@@ -62,13 +63,9 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
 
     @Test
     public void test_getByItemsCompetitionId() {
-        PublicContentItemPageResource expectedResponse = new PublicContentItemPageResource();
-        expectedResponse.setSize(20);
-        expectedResponse.setNumber(32);
-        expectedResponse.setTotalElements(23293L);
-        expectedResponse.setTotalPages(123);
-        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "all-by-competition-id/" + COMPETITION_ID, PublicContentItemPageResource.class, expectedResponse);
-        RestResult<PublicContentItemPageResource> response = service.getByItemsCompetitionId(COMPETITION_ID);
+        PublicContentItemResource expectedResponse = new PublicContentItemResource();
+        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "all-by-competition-id/" + COMPETITION_ID, PublicContentItemResource.class, expectedResponse);
+        RestResult<PublicContentItemResource> response = service.getItemByCompetitionId(COMPETITION_ID);
         assertTrue(response.isSuccess());
     }
 
