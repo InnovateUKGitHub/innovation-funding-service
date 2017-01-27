@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Send Grant Offer Letter'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" th:remove="tag" />
 </head>
 <body th:with="context='project-management'" class="project-management grant-offer-letter">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
@@ -14,7 +14,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition Dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
 
     <div class="grid-row">
         <div class="column-two-thirds">
@@ -33,7 +33,7 @@
     </th:block>
     <th:block th:unless="${model.getSignedGrantOfferLetterApproved()}">
         <th:block th:if="${model.getSignedGrantOfferLetterFileAvailable()}">
-            <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and the project is ready to begin.</p>
+            <p>Please review the grant offer letter. You should confirm that it has been signed by the lead partner and that the project is ready to begin.</p>
         </th:block>
         <th:block th:unless="${model.getSignedGrantOfferLetterFileAvailable()}">
             <th:block th:if="${!model.isSentToProjectTeam()}">
@@ -152,7 +152,7 @@
 
     <th:block th:if="${!model.isSentToProjectTeam() and model.grantOfferLetterFile != null}">
         <button data-js-modal="modal-accept-send-gol" id="send-gol" class="button large">
-            Send to project team
+            Publish to project team
         </button>
     </th:block>
 

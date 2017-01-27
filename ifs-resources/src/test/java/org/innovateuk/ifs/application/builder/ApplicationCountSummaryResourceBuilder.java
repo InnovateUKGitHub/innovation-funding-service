@@ -41,16 +41,16 @@ public class ApplicationCountSummaryResourceBuilder extends BaseBuilder<Applicat
         return withArraySetFieldByReflection("leadOrganisation", leadOrganisations);
     }
 
-    public ApplicationCountSummaryResourceBuilder withAssessors(Long... assessorss) {
-        return withArraySetFieldByReflection("assessors", assessorss);
+    public ApplicationCountSummaryResourceBuilder withAssessors(Long... assessors) {
+        return withArraySetFieldByReflection("assessors", assessors);
     }
 
-    public ApplicationCountSummaryResourceBuilder withAccepted(Long... accepteds) {
-        return withArraySetFieldByReflection("accepted", accepteds);
+    public ApplicationCountSummaryResourceBuilder withAccepted(Long... accepted) {
+        return withArraySetFieldByReflection("accepted", accepted);
     }
 
-    public ApplicationCountSummaryResourceBuilder withSubmitted(Long... submitteds) {
-        return withArraySetFieldByReflection("submitted", submitteds);
+    public ApplicationCountSummaryResourceBuilder withSubmitted(Long... submitted) {
+        return withArraySetFieldByReflection("submitted", submitted);
     }
 
 }

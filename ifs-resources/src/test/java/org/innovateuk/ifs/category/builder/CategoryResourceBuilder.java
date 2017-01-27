@@ -2,10 +2,7 @@ package org.innovateuk.ifs.category.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -22,9 +19,5 @@ public abstract class CategoryResourceBuilder<T extends CategoryResource, B exte
 
     public B withName(String... names) {
         return withArraySetFieldByReflection("name", names);
-    }
-
-    public B withType(CategoryType... types) {
-        return withArraySetFieldByReflection("type", types);
     }
 }

@@ -8,15 +8,14 @@
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
                 <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
 
-                <details class="extra-margin-bottom">
+                <details class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                     <summary><span class="summary">Not requesting funding</span></summary>
                     <div class="panel-indent">
-                        <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span id="prototype-confirmation-text">Please confirm below.</span></p>
-                        <button class="button" id="prototype-funding">Not requesting funding</button>
+                        <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
+                        <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
+                        <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
                     </div>
                 </details>
-
-
                 <ul class="list-overview extra-margin">
                     <th:block th:each="subSection : ${model.subSections.get(model.currentSection.id)}">
                         <div th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
@@ -36,11 +35,11 @@
     <div th:fragment="agree_terms">
         <th:block th:if="${(model.application.currentCompetition.isOpen())} and ${null != model.currentSection}"
             th:with="currentSection=(${model.currentSection}), completedSections=(${model.completedSections})">
-            <th:block th:if="${currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).PROJECT_COST_FINANCES}">
-                <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container"  th:remove="tag" />
+            <th:block th:if="${model.showAgreeToStateAidOption}">
+                <div th:include="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container"  th:remove="tag" />
             </th:block>
-            <th:block th:if="${currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FUNDING_FINANCES}">
-                <div th:if="${currentSection}" th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
+            <th:block th:if="${model.showAgreeToTermsOption}">
+                <div th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container"  th:remove="tag" />
             </th:block>
         </th:block>
     </div>
@@ -65,35 +64,45 @@
     <div th:fragment="finance_sub_section_row">
 
         <li class="grid-row section">
-            <div class="column-one">
-                <th:block th:unless="${subSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FUNDING_FINANCES and model.fundingSectionLocked}">
-                    <h3 class="heading-small">
-                        <a  th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id},sectionId=${subSection.id})}"
-                            th:text="${subSection.name}"></a>
-                    </h3>
-                </th:block>
-                <th:block th:if="${subSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FUNDING_FINANCES and model.fundingSectionLocked}">
+            <th:block th:if="${model.showSectionAsNotRequired(subSection)}">
+                <div class="column-half">
                     <h3 class="heading-small" th:text="${subSection.name}"></h3>
-                    <p>You must give your project a research area in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding. You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
+                </div>
+                <div class="column-half alignright">
+                    <span class="form-hint">Not required</span>
+                </div>
+            </th:block>
+            <th:block th:unless="${model.showSectionAsNotRequired(subSection)}">
+                <div class="column-one">
+                    <th:block th:if="${model.showSectionAsLink(subSection)}">
+                        <h3 class="heading-small">
+                            <a  th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id},sectionId=${subSection.id})}"
+                                th:text="${subSection.name}"></a>
+                        </h3>
+                    </th:block>
+                    <th:block th:if="${model.showSectionAsLockedFunding(subSection)}">
+                        <h3 class="heading-small" th:text="${subSection.name}"></h3>
+                        <p>You must give your project a research category in <a th:href="@{/application/{id}/form/question/{questionId}(id=${model.application.currentApplication.id}, questionId=${model.applicationDetailsQuestionId})}">application details</a> before you can supply funding. You must also state your organisation size in the <a th:href="@{/application/{id}/form/section/{sectionId}(id=${model.application.currentApplication.id}, sectionId=${model.yourOrganisationSectionId})}">your organisation</a> section.</p>
+                    </th:block>
+                </div>
+                <th:block th:if="${model.showSectionStatus(subSection)}">
+                    <img class="section-status complete"
+                         src="/images/field/field-done-right.png"
+                         th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
+                         width="30"
+                         height="30"
+                         th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
+                         th:title="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
+                         th:if="${model.sectionsMarkedAsComplete.contains(subSection.id)}"/>
+                    <img class="section-status assigned"
+                         src="/images/field/field-assigned-right.png"
+                         th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
+                         width="30"
+                         height="30"
+                         th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
+                         th:title="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
+                         th:unless="${model.sectionsMarkedAsComplete.contains(subSection.id)}"/>
                 </th:block>
-            </div>
-            <th:block th:unless="${subSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FUNDING_FINANCES and model.fundingSectionLocked}">
-                <img class="section-status complete"
-                     src="/images/field/field-done-right.png"
-                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"
-                     width="30"
-                     height="30"
-                     th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
-                     th:title="'The &quot;'+${subSection.getName()}+'&quot; section is marked as done'"
-                     th:if="${model.sectionsMarkedAsComplete.contains(subSection.id)}"/>
-                <img class="section-status assigned"
-                     src="/images/field/field-assigned-right.png"
-                     th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"
-                     width="30"
-                     height="30"
-                     th:alt="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
-                     th:title="'The &quot;'+${subSection.getName()}+'&quot; section is assigned to you'"
-                     th:unless="${model.sectionsMarkedAsComplete.contains(subSection.id)}"/>
             </th:block>
         </li>
     </div>

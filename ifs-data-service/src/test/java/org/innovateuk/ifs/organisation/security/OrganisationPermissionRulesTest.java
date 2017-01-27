@@ -14,6 +14,8 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
@@ -25,8 +27,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -143,10 +143,11 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
 
         Organisation organisation = newOrganisation().withId(123L).build();
         Application application = newApplication().build();
-        ProcessRole processRole = newProcessRole().withApplication(application).withOrganisation(organisation).build();
-        UserResource user = newUserResource().withProcessRoles(singletonList(processRole.getId())).build();
+        ProcessRole processRole = newProcessRole().withApplication(application).withOrganisationId(organisation.getId()).build();
+        UserResource user = newUserResource().build();
 
-        when(processRoleRepositoryMock.findOne(processRole.getId())).thenReturn(processRole);
+        when(processRoleRepositoryMock.findByUserId(user.getId())).thenReturn(singletonList(processRole));
+        when(processRoleRepositoryMock.findByApplicationId(application.getId())).thenReturn(singletonList(processRole));
 
         OrganisationResource organisationResource =
                 newOrganisationResource().withId(organisation.getId()).withProcessRoles(singletonList(processRole.getId())).build();
@@ -162,7 +163,7 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
         Organisation anotherOrganisation = newOrganisation().withId(456L).build();
         User anotherUser = newUser().build();
         Application anotherApplication = newApplication().build();
-        ProcessRole anotherProcessRole = newProcessRole().withUser(anotherUser).withApplication(anotherApplication).withOrganisation(anotherOrganisation).build();
+        ProcessRole anotherProcessRole = newProcessRole().withUser(anotherUser).withApplication(anotherApplication).withOrganisationId(anotherOrganisation.getId()).build();
 
         OrganisationResource anotherOrganisationResource =
                 newOrganisationResource().withId(anotherOrganisation.getId()).withProcessRoles(singletonList(anotherProcessRole.getId())).build();

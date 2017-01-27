@@ -134,7 +134,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         Role leadApplicantRole = newRole().build();
         Role partnerRole = newRole().build();
         Organisation leadOrganisation = newOrganisation().build();
-        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisation(leadOrganisation).build();
+        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
@@ -142,7 +142,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
         when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(null);
 

@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
@@ -22,6 +24,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Application defines database relations and a model to use client side and server side.
@@ -45,7 +48,7 @@ public class Application implements ProcessActivity {
     @Max(100)
     private BigDecimal completion = BigDecimal.ZERO;
 
-    @OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "application")
@@ -71,6 +74,9 @@ public class Application implements ProcessActivity {
 
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE, CascadeType.PERSIST})
     private List<FormInputResponse> formInputResponses = new ArrayList<>();
+
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<ApplicationResearchCategoryLink> researchCategories = new HashSet<>();
 
     private Boolean stateAidAgreed;
 
@@ -169,7 +175,11 @@ public class Application implements ProcessActivity {
         if (this.processRoles == null) {
             this.processRoles = new ArrayList<>();
         }
-        this.processRoles.addAll(Arrays.asList(processRoles));
+        for (ProcessRole processRole : processRoles) {
+            if (!this.processRoles.contains(processRole)) {
+                this.processRoles.add(processRole);
+            }
+        }
     }
 
     public LocalDate getStartDate() {
@@ -213,8 +223,8 @@ public class Application implements ProcessActivity {
     }
 
     @JsonIgnore
-    public Organisation getLeadOrganisation() {
-        return getLeadProcessRole().map(role -> role.getOrganisation()).orElse(null);
+    public Long getLeadOrganisationId() {
+        return getLeadProcessRole().map(role -> role.getOrganisationId()).orElse(null);
     }
 
     @JsonIgnore
@@ -296,4 +306,12 @@ public class Application implements ProcessActivity {
         this.stateAidAgreed = stateAidAgreed;
     }
 
+    public Set<ResearchCategory> getResearchCategories() {
+        return researchCategories.stream().map(ApplicationResearchCategoryLink::getCategory).collect(Collectors.toSet());
+    }
+
+    public void addResearchCategory(ResearchCategory researchCategory) {
+        researchCategories.clear();
+        researchCategories.add(new ApplicationResearchCategoryLink(this, researchCategory));
+    }
 }

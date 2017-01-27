@@ -1,15 +1,13 @@
 package org.innovateuk.ifs.rest;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
+import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.commons.security.SecuritySetter;
 import org.innovateuk.ifs.commons.security.authentication.token.Authentication;
 import org.innovateuk.ifs.commons.service.HttpHeadersUtils;
 import org.junit.Assert;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.HttpClientErrorException;
@@ -27,7 +25,7 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
  * This test tests that the {RestErrorController} is able to take low-level errors produced by Spring MVC and Spring Security
  * prior to any Controller code actually being called, and convert them into RestErrorResponses.
  */
-public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends BaseWebIntegrationTest {
+public class RestErrorControllerMvcExceptionHandlingIntegrationTest extends BaseIntegrationTest {
 
 
     @Test

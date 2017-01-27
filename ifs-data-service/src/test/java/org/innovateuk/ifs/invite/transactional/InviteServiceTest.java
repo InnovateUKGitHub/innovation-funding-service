@@ -89,10 +89,10 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testValidatorEmpty() {
         Application application = newApplication().withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant", null);
+        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -106,10 +106,10 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testValidatorEmail() {
         Application application = newApplication().withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant", null);
+        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -126,10 +126,16 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     public void testInviteCollaborators() throws Exception {
         Competition competition = newCompetition().build();
         Application application = newApplication().withCompetition(competition).withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant", null);
+        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
-        Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+
+        Organisation leadOrganisation = newOrganisation().
+                withId(43L).
+                withName("Empire Ltd").
+                build();
+        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
+
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -146,10 +152,10 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
     @Test
     public void testInviteCollaboratorsInvalid() throws Exception {
         Application application = newApplication().withName("AppName").build();
-        Role role1 = new Role(1L, "leadapplicant", null);
+        Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -271,7 +277,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         User user = newUser().build();
         Organisation organisation = newOrganisation().build();
 
-        ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
+        ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         ApplicationInvite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();
@@ -309,10 +315,10 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         User user = newUser().build();
         Application application = newApplication().build();
         ApplicationInvite applicationInvite = newApplicationInvite().withId(24521L).withUser(user).withApplication(application).build();
-
+        List<ProcessRole> processRoles = newProcessRole().build(3);
 
         when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
-        when(processRoleRepositoryMock.findByUserAndApplication(any(User.class), any(Application.class))).thenReturn(newProcessRole().build(3));
+        when(processRoleRepositoryMock.findByUserAndApplicationId(any(User.class), any(Long.class))).thenReturn(processRoles);
         when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), any(Long.class))).thenReturn(emptyList());
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());

@@ -1,5 +1,5 @@
 allprojects {
-    group 'worth'
+    group 'innovateuk'
     version '1.0-SNAPSHOT'
 
     apply plugin: 'idea'
@@ -10,11 +10,15 @@ allprojects {
     targetCompatibility = 1.8
 }
 
+build.enabled = false
+jar.enabled=false
+
 subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
+    findMainClass.enabled = false
 
     jacocoTestReport {
         afterEvaluate {
@@ -62,13 +66,24 @@ subprojects {
     jar {
         manifest.attributes provider: 'gradle'
     }
+
+    test {
+        beforeTest { desc ->
+            println "Executing test ${desc.className}.${desc.name}"
+        }
+    }
 }
 
 buildscript {
 
+    ext['thymeleaf.version'] = '3.0.3.RELEASE'
+    ext['thymeleaf-layout-dialect.version'] = '2.1.1'
+
     ext {
         springBootVersion = '1.4.3.RELEASE'
+        thymeleafVersion = ext['thymeleaf.version']
     }
+
     repositories {
         mavenCentral()
         jcenter()

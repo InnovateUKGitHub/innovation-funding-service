@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.Future;
-
-import org.innovateuk.ifs.application.resource.SectionType;
-import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.commons.rest.ValidationMessages;
-import org.innovateuk.ifs.commons.service.BaseRestService;
-
-import org.innovateuk.ifs.commons.service.ParameterizedTypeReferences;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.stereotype.Service;
 
 /**
  * SectionRestServiceImpl is a utility for CRUD operations on {@link SectionResource}.
@@ -29,6 +28,11 @@ public class SectionRestServiceImpl extends BaseRestService implements SectionRe
     public RestResult<List<ValidationMessages>> markAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
         return postWithRestResult(sectionRestURL + "/markAsComplete/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, new ParameterizedTypeReference<List<ValidationMessages>>() {
         });
+    }
+
+    @Override
+    public RestResult<Void> markAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+        return postWithRestResult(sectionRestURL + "/markAsNotRequired/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById, Void.class);
     }
 
     @Override

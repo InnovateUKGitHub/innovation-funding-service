@@ -10,7 +10,6 @@ import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -56,6 +55,7 @@ import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectD
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -87,13 +87,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
-
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
-
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
-
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     @Autowired
@@ -116,6 +113,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private AddressMapper addressMapper;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private OrganisationAddressRepository organisationAddressRepository;
@@ -269,8 +269,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-        List<ProjectUser> projectUsers = getProjectUsersByProjectId(projectId);
-        return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
+        return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId), projectUserMapper::mapToResource));
     }
 
     @Override
@@ -593,7 +592,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("dashboardUrl", webBaseUrl);
         globalArguments.put("projectName", project.getName());
-        globalArguments.put("leadOrganisation", project.getApplication().getLeadOrganisation().getName());
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        globalArguments.put("leadOrganisation", leadOrganisation.getName());
         globalArguments.put("projectManagerName", getProjectManagerFullName(projectManager));
         globalArguments.put("projectManagerEmail", projectManager.getEmail());
         globalArguments.put("monitoringOfficerName", getMonitoringOfficerFullName(monitoringOfficer));
@@ -699,7 +700,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<ProjectTeamStatusResource> getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId) {
         Project project = projectRepository.findOne(projectId);
-        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
 
         Optional<ProjectUser> partnerUserForFilterUser = filterByUserId.flatMap(
                 userId -> simpleFindFirst(project.getProjectUsers(),
@@ -721,7 +723,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ProjectPartnerStatusResource getProjectPartnerStatus(Project project, Organisation partnerOrganisation) {
-        Organisation leadOrganisation = project.getApplication().getLeadOrganisation();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
         Optional<MonitoringOfficer> monitoringOfficer = getExistingMonitoringOfficerForProject(project.getId()).getOptionalSuccessObject();
         Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId()));
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(project.getId(), partnerOrganisation.getId());
@@ -811,7 +814,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     private Map<String, Object> createGlobalArgsForInviteContactEmail(Long projectId, InviteProjectResource inviteResource) {
         Project project = projectRepository.findOne(projectId);
-        String leadOrganisationName = project.getApplication().getLeadOrganisation().getName();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        String leadOrganisationName = leadOrganisation.getName();
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("projectName", project.getName());
         globalArguments.put("leadOrganisation", leadOrganisationName);
@@ -886,8 +891,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private List<ProjectUser> getLeadPartners(Project project) {
-        Application application = project.getApplication();
-        Organisation leadPartnerOrganisation = application.getLeadOrganisation();
+        ProcessRole leadRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadPartnerOrganisation = organisationRepository.findOne(leadRole.getOrganisationId());
         return simpleFilter(project.getProjectUsers(), pu -> organisationsEqual(leadPartnerOrganisation, pu)
                 && pu.getRole().isPartner());
     }
@@ -911,7 +916,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
             List<ProcessRole> allRoles = combineLists(leadApplicantRole, collaborativeRoles);
 
             List<ServiceResult<ProjectUser>> correspondingProjectUsers = simpleMap(allRoles,
-                    role -> createPartnerProjectUser(project, role.getUser(), role.getOrganisation()));
+                    role -> {
+                        Organisation organisation = organisationRepository.findOne(role.getOrganisationId());
+                        return createPartnerProjectUser(project, role.getUser(), organisation);
+                    });
 
             ServiceResult<List<ProjectUser>> projectUserCollection = aggregate(correspondingProjectUsers);
 
@@ -921,7 +929,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                         removeDuplicates(simpleMap(projectUsers, ProjectUser::getOrganisation));
 
                 List<PartnerOrganisation> partnerOrganisations = simpleMap(uniqueOrganisations, org ->
-                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisation().getId())));
+                        new PartnerOrganisation(project, org, org.getId().equals(leadApplicantRole.getOrganisationId())));
 
                 project.setProjectUsers(projectUsers);
                 project.setPartnerOrganisations(partnerOrganisations);
@@ -1017,7 +1025,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
         ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
-
             pm.setUser(leadPartnerUser.getUser());
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
@@ -1151,8 +1158,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
-
     }
 
-
+    @Override
+    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
+            notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
+    }
 }

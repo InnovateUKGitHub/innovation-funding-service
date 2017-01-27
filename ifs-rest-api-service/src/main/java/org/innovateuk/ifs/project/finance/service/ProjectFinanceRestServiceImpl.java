@@ -1,11 +1,15 @@
 package org.innovateuk.ifs.project.finance.service;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.SpendProfileCSVResource;
 import org.innovateuk.ifs.project.resource.SpendProfileResource;
@@ -86,15 +90,34 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     }
 
     @Override
+    public RestResult<ProjectFinanceResource> getProjectFinance(Long projectId, Long organisationId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/organisation/" + organisationId + "/financeDetails", ProjectFinanceResource.class);
+    }
+
+    @Override
     public RestResult<ViabilityResource> getViability(Long projectId, Long organisationId) {
         return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/viability", ViabilityResource.class);
     }
 
     @RequestMapping(value = "/{projectId}/partner-organisation/{organisationId}/viability/{viability}", method = POST)
-    public RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityStatus viabilityRagRating) {
+    public RestResult<Void> saveViability(Long projectId, Long organisationId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
-                "/viability/" + viability.name() + "/" + viabilityRagRating.name();
+                "/viability/" + viability.name() + "/" + viabilityRagStatus.name();
+
+        return postWithRestResult(postUrl, Void.class);
+    }
+
+    @Override
+    public RestResult<EligibilityResource> getEligibility(Long projectId, Long organisationId) {
+        return getWithRestResult(projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/eligibility", EligibilityResource.class);
+    }
+
+    @Override
+    public RestResult<Void> saveEligibility(Long projectId, Long organisationId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+
+        String postUrl = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId +
+                "/eligibility/" + eligibility.name() + "/" + eligibilityRagStatus.name();
 
         return postWithRestResult(postUrl, Void.class);
     }
@@ -109,5 +132,15 @@ public class ProjectFinanceRestServiceImpl extends BaseRestService implements Pr
     public RestResult<Void> saveCreditReportConfirmed(Long projectId, Long organisationId, boolean confirmed) {
         String url = projectFinanceRestURL + "/" + projectId + "/partner-organisation/" + organisationId + "/credit-report/" + confirmed;
         return postWithRestResult(url);
+    }
+
+    @Override
+    public RestResult<List<ProjectFinanceResource>> getFinanceTotals(Long applicationId) {
+        return getWithRestResult(projectFinanceRestURL + "/financeTotals/" + applicationId, projectFinanceResourceListType());
+    }
+
+    @Override
+    public RestResult<ProjectFinanceResource> addProjectFinanceForOrganisation(Long projectId, Long organisationId) {
+        throw new NotImplementedException("Adding of project finance organisation will usually not be necessary as they are added when project is created");
     }
 }

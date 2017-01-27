@@ -12,11 +12,22 @@
 
 .alignleft{
   text-align: left;
+
+  table td & {
+   text-align: left; 
+  }
+
 }
 
 .alignright{
   text-align: right;
+
+  table td & {
+   text-align: right;
+  }
+
 }
+
 /*--- Text colour ---*/
 
 .standard-text-colour{
@@ -37,10 +48,6 @@
   margin-right: 30px;
 }
 
-.extra-margin-bottom{
-  margin-bottom: 30px;
-}
-
 .extra-margin-left{
   margin-left: 30px;
 }
@@ -49,6 +56,13 @@
   .question.extra-margin{
     margin-top: 30px;
   }
+}
+
+/*--- Borders ---*/
+
+.section-divide{
+  border-top: 1px solid $border-colour;
+  padding-top: $gutter-half;
 }
 
 /*-- Hiding text - used for labels in tables where input uses aria-labelledby --*/
@@ -373,7 +387,7 @@ table{
 
       .form-hint{
        float: left;
-       margin: 19px 0 19px 0; 
+       margin: 19px 0 19px 0;
       }
     }
   }

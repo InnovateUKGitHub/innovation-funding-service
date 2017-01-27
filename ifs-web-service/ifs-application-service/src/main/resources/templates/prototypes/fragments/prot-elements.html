@@ -213,4 +213,284 @@
   </div>
 </th:block>
 
+
+<!-- =========================== Progress list =========================== -->
+
+<th:block th:fragment="prot-progress-list">
+  <!-- Applicant dashboard -->
+  <h2 class="heading-large">Your Dashboard</h2>
+  <div class="progress-list">
+    <h3 class="heading-medium">Projects in setup</h3>
+    <ul>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 1</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>In progress</strong></div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 2</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>In progress</strong></div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 3</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>In progress</strong></div>
+      </li>
+    </ul>
+  </div>
+  <div class="progress-list">
+    <h3 class="heading-medium no-margin-top">Applications in progress</h3>
+    <ul>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 1</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status">
+          <div class="pie-container">
+            <div class="pie medium">75%</div>
+            <div class="pie-overlay">
+              <span class="day">28</span>
+              <span>days left</span>
+            </div>
+          </div>
+          <span class="deadline">Deadline 28 January</span>
+          <strong>75% complete</strong>
+        </div>
+        <div class="action-required">
+          <strong>12 sections assigned to you</strong>
+        </div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 2</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status">
+          <div class="pie-container">
+            <div class="pie medium">50%</div>
+            <div class="pie-overlay">
+              <span class="day">41</span>
+              <span>days left</span>
+            </div>
+          </div>
+          <span class="deadline">Deadline 28 January</span>
+          <strong>50% complete</strong>
+        </div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
+          <span>Application number: 0000002</span>
+        </div>
+        <div class="status">
+          <img src="../images/icons/icon-awaiting-assessment.svg" width="70" height="70" alt="Awaiting assessment" />
+          <span class="awaiting">Awaiting assessment</span>
+          <strong>Application submitted</strong>
+        </div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 3</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status">
+          <div class="pie-container">
+            <div class="pie medium">25%</div>
+            <div class="pie-overlay">
+              <span class="day">147</span>
+              <span>days left</span>
+            </div>
+          </div>
+          <span class="deadline">Deadline 28 January</span>
+          <strong>15% complete</strong>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="progress-list">
+    <h3 class="heading-medium no-margin-top">Previous applications</h3>
+    <ul>
+      <li class="negative">
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 1</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>Not successful</strong></div>
+      </li>
+      <li class="positive">
+        <div class="task">
+          <h4 class="heading-small"><a href="#">Task 2</a></h4>
+          <span>Application number: 0000008</span>
+        </div>
+        <div class="status"><strong>Successful</strong></div>
+      </li>
+    </ul>
+  </div>
+
+  <hr />
+
+  <!-- Assessor dashboard  -->
+
+  <h2 class="heading-large">Technology inspired</h2>
+  <div class="progress-list">
+    <h3 class="heading-medium">Invitations to assess (1)</h3>
+    <ul>
+      <li>
+        <div class="task task-half-width">
+          <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+          <strong>Empire Gas Ltd</strong>
+        </div>
+        <div class="notification"><strong class="pending">Pending</strong></div>
+        <div class="status"><a href="#">Accept or reject</a></div>
+      </li>
+    </ul>
+  </div>
+
+  <form>
+    <div class="progress-list">
+      <h3 class="heading-medium">Applications for assessment (4)</h3>
+      <ul>
+        <li>
+          <div class="task task-half-width">
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>Ready for assessment</strong></div>
+        </li>
+        <li class="positive">
+          <div class="task task-half-width">
+            <div class="label-holder">
+              <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
+                <input id="assessment-submit-checkbox" type="checkbox" value="" checked="checked" />
+              </label>
+            </div>
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>Assessed</strong></div>
+          <div class="status">
+            <div class="score">
+              <strong class="percent">72%</strong>
+              <span>Overall score</span>
+              <strong>Recommended</strong>
+            </div>
+          </div>
+        </li>
+        <li class="negative">
+          <div class="task task-half-width">
+            <div class="label-holder">
+              <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
+                <input id="assessment-submit-checkbox2" type="checkbox" value="" />
+              </label>
+            </div>
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>Assessed</strong></div>
+          <div class="status">
+            <div class="score">
+              <strong class="percent">37%</strong>
+              <span>Overall score</span>
+              <strong>Not recommended</strong>
+            </div>
+          </div>
+        </li>
+        <li>
+          <div class="task task-half-width">
+            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <strong>Empire Gas Ltd</strong>
+          </div>
+          <div class="notification"><strong>In progress</strong></div>
+        </li>
+      </ul>
+      <p class="extra-margin-top">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
+      <div class="extra-margin-top">
+        <a href="#" class="button">Submit assessments</a>
+      </div>
+    </div>
+  </form>
+
+  <hr />
+
+  <!-- Comp setup dashboard -->
+
+  <h2 class="heading-large no-margin-bottom">Project setup status</h2>
+  <p class="subtitle no-margin">00000024: Sensing &amp; Control network using the lighting infrastructure</p>
+  <p>The following steps need to be completed before this project can begin. All partners have individual steps to complete.</p>
+  <strong><a href="/prototypes/1589-team-status">What's the status of each of my partners?</a></strong>
+  <div class="project-setup-progress-list">
+    <ul>
+      <li class="positive">
+        <div class="task">
+          <h4 class="heading-small">Successful application</h4>
+          The application <strong>Magic material</strong> has been successful within the <strong>New designs for a circular economy</strong> competition
+          <ul>
+            <li><a href="#">View application and feedback</a></li>
+            <li><a href="#">View terms and conditions of grant offer</a></li>
+          </ul>
+        </div>
+        <div class="status-complete"><span>Completed</span></div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small heading-action-required"><a href="#">Project details</a></h4>
+          Confirm the contact details, proposed start date and location of the project.
+        </div>
+        <div class="status-action-required"><span>To be completed</span></div>
+      </li>
+      <li class="read-only">
+        <div class="task">
+          <h4 class="heading-small">Monitoring Officer</h4>
+          We will assign the project a Monitoring Officer.
+        </div>
+        <div class="status"><span>Awaiting assignment by Innovate UK</span></div>
+      </li>
+      <li class="read-only">
+        <div class="task">
+          <h4 class="heading-small">Bank details</h4>
+          We need bank details for each consortium member so that we can pay the grant.
+        </div>
+      </li>
+      <li class="read-only">
+        <div class="task">
+          <h4 class="heading-small">Finance checks</h4>
+          We will review all project costs.
+        </div>
+      </li>
+      <li class="read-only">
+        <div class="task">
+          <h4 class="heading-small">Spend profile</h4>
+          Once we have approved your financial information, we will produce a spend profile.
+        </div>
+      </li>
+      <li>
+        <div class="task">
+          <h4 class="heading-small heading-action-required"><a href="#">Other documents</a></h4>
+          As lead partner in the consortium you will need to upload the following:
+          <ul class="list-bullet">
+            <li>a collaboration agreement</li>
+            <li>exploitation plan</li>
+          </ul>
+        </div>
+        <div class="status-action-required"><span>To be completed</span></div>
+      </li>
+      <li class="read-only">
+        <div class="task">
+          <h4 class="heading-small">Grant offer letter</h4>
+          Once all tasks are complete we will send a grant offer letter to the lead partner. When the lead partner has returned the letter to us, you can begin the project.
+        </div>
+      </li>
+    </ul>
+  </div>
+</th:block>
+
 </html>

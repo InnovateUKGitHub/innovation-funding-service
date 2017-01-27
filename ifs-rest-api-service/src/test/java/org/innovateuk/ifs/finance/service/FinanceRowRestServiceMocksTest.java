@@ -1,18 +1,21 @@
 package org.innovateuk.ifs.finance.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
-
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.LabourCost;
 import org.junit.Assert;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.costItemListType;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  *
@@ -71,5 +74,25 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
         String expectedUrl = costRestURL + "/update/" + costToUpdate.getId();
         setupPutWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages());
         service.update(costToUpdate).getSuccessObject();
+    }
+
+    @Test
+    public void testAddApplicationCostWithoutPersisting() {
+        LabourCost costToUpdate = new LabourCost();
+        String expectedUrl = costRestURL + "/add-without-persisting/" + 123L + "/" + 456L;
+        setupPostWithRestResultExpectations(expectedUrl, FinanceRowItem.class, null, costToUpdate, HttpStatus.OK);
+        RestResult<FinanceRowItem> financeRowItem = service.addWithoutPersisting(123L, 456L);
+        assertTrue(financeRowItem.isSuccess());
+        assertEquals(costToUpdate, financeRowItem.getSuccessObject());
+    }
+
+    @Test
+    public void testAddProjectCostWithoutPersisting() {
+        LabourCost costToUpdate = new LabourCost();
+        String expectedUrl = costRestURL + "/project/add-without-persisting/" + 123L + "/" + 456L;
+        setupPostWithRestResultExpectations(expectedUrl, FinanceRowItem.class, null, costToUpdate, HttpStatus.OK);
+        RestResult<FinanceRowItem> financeRowItem = service.addProjectCostWithoutPersisting(123L, 456L);
+        assertTrue(financeRowItem.isSuccess());
+        assertEquals(costToUpdate, financeRowItem.getSuccessObject());
     }
 }

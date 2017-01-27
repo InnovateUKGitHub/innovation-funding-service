@@ -372,15 +372,86 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
+    public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityStatus)
+                .andOnSuccessReturn(projectFinance -> {
+                    EligibilityResource eligibilityResource = new EligibilityResource(projectFinance.getEligibility(), projectFinance.getEligibilityStatus());
+                    eligibilityResource.setEligibilityApprovalDate(projectFinance.getEligibilityApprovalDate());
+                    setEligibilityApprovalUser(eligibilityResource, projectFinance.getEligibilityApprovalUser());
+
+                    return eligibilityResource;
+                });
+    }
+
+    private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {
+
+        if (eligibilityApprovalUser != null) {
+            eligibilityResource.setEligibilityApprovalUserFirstName(eligibilityApprovalUser.getFirstName());
+            eligibilityResource.setEligibilityApprovalUserLastName(eligibilityApprovalUser.getLastName());
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityRagStatus)
                 .andOnSuccess(() -> setViabilityApprovalUser(projectFinance, viability))
-                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus)));
+                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityRagStatus)));
+    }
+
+    @Override
+    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getProjectFinance(projectId, organisationId)
+                .andOnSuccess(projectFinance -> validateEligibility(projectFinance, eligibility, eligibilityRagStatus)
+                        .andOnSuccess(() -> setEligibilityApprovalUser(projectFinance, eligibility))
+                        .andOnSuccess(() -> saveEligibility(projectFinance, eligibility, eligibilityRagStatus)));
+    }
+
+    private ServiceResult<Void> validateEligibility(ProjectFinance projectFinanceInDB, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+
+        if (Eligibility.APPROVED == projectFinanceInDB.getEligibility()) {
+            return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
+        }
+
+        if (Eligibility.APPROVED == eligibility && EligibilityRagStatus.UNSET == eligibilityRagStatus) {
+            return serviceFailure(ELIGIBILITY_RAG_STATUS_MUST_BE_SET);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> setEligibilityApprovalUser(ProjectFinance projectFinance, Eligibility eligibility) {
+        if (Eligibility.APPROVED == eligibility) {
+            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> {
+                projectFinance.setEligibilityApprovalUser(currentUser);
+                projectFinance.setEligibilityApprovalDate(LocalDate.now());
+            });
+        } else {
+            return serviceSuccess();
+        }
+
+    }
+
+    private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+
+        projectFinance.setEligibility(eligibility);
+        projectFinance.setEligibilityStatus(eligibilityRagStatus);
+
+        projectFinanceRepository.save(projectFinance);
+
+        return serviceSuccess();
     }
 
     private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
@@ -416,13 +487,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
+    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         if (Viability.APPROVED == projectFinanceInDB.getViability()) {
             return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
-        if (Viability.APPROVED == viability && ViabilityStatus.UNSET == viabilityStatus) {
+        if (Viability.APPROVED == viability && ViabilityRagStatus.UNSET == viabilityRagStatus) {
             return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
         }
 
@@ -438,10 +509,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     }
 
-    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
+    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         projectFinance.setViability(viability);
-        projectFinance.setViabilityStatus(viabilityStatus);
+        projectFinance.setViabilityStatus(viabilityRagStatus);
 
         if (Viability.APPROVED == viability) {
             projectFinance.setViabilityApprovalDate(LocalDate.now());
@@ -624,15 +695,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
         });
     }
-
-    private Supplier<ServiceResult<Project>> project(Long id) {
-        return () -> getProject(id);
-    }
-
-    private ServiceResult<Project> getProject(Long id) {
-        return find(projectRepository.findOne(id), notFoundError(Project.class, id));
-    }
-
 
     private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
         return spendProfileRepository.findByProjectId(projectId);

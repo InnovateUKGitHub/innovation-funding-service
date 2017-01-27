@@ -1,12 +1,17 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.model.InviteAssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -27,9 +32,15 @@ import java.util.List;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.joining;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -42,14 +53,16 @@ import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceB
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
+import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
+import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -70,6 +83,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @InjectMocks
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private InviteAssessorProfileModelPopulator inviteAssessorProfileModelPopulator;
+
     private CompetitionResource competition;
 
     @Override
@@ -85,6 +102,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         competition = newCompetitionResource()
                 .withCompetitionStatus(IN_ASSESSMENT)
                 .withName("Technology inspired")
+                .withInnovationSectorName("Infrastructure systems")
+                .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
@@ -452,12 +471,68 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         inOrder.verifyNoMoreInteractions();
     }
 
+    @Test
+    public void profile() throws Exception {
+        Long assessorId = 1L;
+
+        AddressResource expectedAddress = newAddressResource()
+                .withAddressLine1("1 Testing Lane")
+                .withTown("Testville")
+                .withCounty("South Testshire")
+                .withPostcode("TES TEST")
+                .build();
+
+        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
+                .withSector(1L, 2L, 1L)
+                .withSectorName("sector 1", "sector 2", "sector 1")
+                .withName("innovation area 1", "innovation area 2", "innovation area 3")
+                .build(3);
+
+        AssessorProfileResource expectedProfile = newAssessorProfileResource()
+                .withUser(
+                        newUserResource()
+                                .withFirstName("Test")
+                                .withLastName("Tester")
+                                .withEmail("test@test.com")
+                                .withPhoneNumber("012345")
+                                .build()
+                )
+                .withProfile(
+                        newProfileResource()
+                                .withSkillsAreas("A Skill")
+                                .withBusinessType(ACADEMIC)
+                                .withInnovationAreas(expectedInnovationAreas)
+                                .withAddress(expectedAddress)
+                                .build()
+                )
+                .build();
+
+        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andReturn();
+
+        InviteAssessorsProfileViewModel model = (InviteAssessorsProfileViewModel) result.getModelAndView().getModel().get("model");
+
+        assertEquals("Test Tester", model.getName());
+        assertEquals("012345", model.getPhone());
+        assertEquals("A Skill", model.getSkills());
+        assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
+        assertEquals("test@test.com", model.getEmail());
+        assertEquals(2, model.getInnovationSectors().size());
+        assertEquals(expectedAddress, model.getAddress());
+
+        verify(assessorRestService, only()).getAssessorProfile(assessorId);
+    }
+
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {
         return newAvailableAssessorResource()
                 .withName("Dave Smith", "John Barnes")
-                .withInnovationArea(newInnovationAreaResource()
+                .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
-                        .buildArray(2, InnovationAreaResource.class))
+                        .buildArray(2, InnovationAreaResource.class)))
                 .withCompliant(TRUE, FALSE)
                 .withEmail("dave@email.com", "john@email.com")
                 .withBusinessType(BUSINESS, ACADEMIC)
@@ -468,9 +543,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     private List<AssessorCreatedInviteResource> setUpAssessorCreatedInviteResources() {
         return newAssessorCreatedInviteResource()
                 .withName("Dave Smith", "John Barnes")
-                .withInnovationArea(newInnovationAreaResource()
+                .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
-                        .buildArray(2, InnovationAreaResource.class))
+                        .buildArray(2, InnovationAreaResource.class)))
                 .withCompliant(TRUE, FALSE)
                 .withEmail("dave@email.com", "john@email.com")
                 .build(2);
@@ -479,9 +554,9 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     private List<AssessorInviteOverviewResource> setUpAssessorInviteOverviewResources() {
         return newAssessorInviteOverviewResource()
                 .withName("Dave Smith", "John Barnes")
-                .withInnovationArea(newInnovationAreaResource()
+                .withInnovationAreas(asList(newInnovationAreaResource()
                         .withName("Earth Observation", "Healthcare, Analytical science")
-                        .buildArray(2, InnovationAreaResource.class))
+                        .buildArray(2, InnovationAreaResource.class)))
                 .withCompliant(TRUE, FALSE)
                 .withBusinessType(BUSINESS, ACADEMIC)
                 .withStatus(ACCEPTED, REJECTED)
@@ -494,13 +569,13 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         assertEquals(expectedCompetition.getId(), model.getCompetitionId());
         assertEquals(expectedCompetition.getName(), model.getCompetitionName());
-        assertInnovationSectorAndArea(model);
+        assertInnovationSectorAndArea(expectedCompetition, model);
         assertStatistics(model);
     }
 
-    private void assertInnovationSectorAndArea(InviteAssessorsViewModel model) {
-        assertEquals("Health and life sciences", model.getInnovationSector());
-        assertEquals("Agriculture and food", model.getInnovationArea());
+    private void assertInnovationSectorAndArea(CompetitionResource expectedCompetition, InviteAssessorsViewModel model) {
+        assertEquals(expectedCompetition.getInnovationSectorName(), model.getInnovationSector());
+        assertEquals(StringUtils.join(expectedCompetition.getInnovationAreaNames(), ", "), model.getInnovationArea());
     }
 
     private void assertStatistics(InviteAssessorsViewModel model) {
@@ -519,12 +594,18 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedAvailableAssessors, (i, availableAssessorResource) -> {
             AvailableAssessorRowViewModel availableAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(availableAssessorResource.getName(), availableAssessorRowViewModel.getName());
-            assertEquals(availableAssessorResource.getInnovationArea().getName(), availableAssessorRowViewModel.getInnovationArea());
+            assertEquals(formatInnovationAreas(availableAssessorResource.getInnovationAreas()), availableAssessorRowViewModel.getInnovationAreas());
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
             assertEquals(availableAssessorResource.getEmail(), availableAssessorRowViewModel.getEmail());
             assertEquals(availableAssessorResource.getBusinessType(), availableAssessorRowViewModel.getBusinessType());
             assertEquals(availableAssessorResource.isAdded(), availableAssessorRowViewModel.isAdded());
         });
+    }
+
+    private String formatInnovationAreas(List<InnovationAreaResource> innovationAreas) {
+        return innovationAreas == null ? EMPTY : innovationAreas.stream()
+                .map(i -> i.getName())
+                .collect(joining(", "));
     }
 
     private void assertInvitedAssessors(List<AssessorCreatedInviteResource> expectedCreatedInvites, MvcResult result) {
@@ -536,7 +617,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedCreatedInvites, (i, createdInviteResource) -> {
             InvitedAssessorRowViewModel invitedAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(createdInviteResource.getName(), invitedAssessorRowViewModel.getName());
-            assertEquals(createdInviteResource.getInnovationArea().getName(), invitedAssessorRowViewModel.getInnovationArea());
+            assertEquals(formatInnovationAreas(createdInviteResource.getInnovationAreas()), invitedAssessorRowViewModel.getInnovationAreas());
             assertEquals(createdInviteResource.isCompliant(), invitedAssessorRowViewModel.isCompliant());
             assertEquals(createdInviteResource.getEmail(), invitedAssessorRowViewModel.getEmail());
         });
@@ -551,7 +632,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         forEachWithIndex(expectedInviteOverviews, (i, inviteOverviewResource) -> {
             OverviewAssessorRowViewModel overviewAssessorRowViewModel = model.getAssessors().get(i);
             assertEquals(inviteOverviewResource.getName(), overviewAssessorRowViewModel.getName());
-            assertEquals(inviteOverviewResource.getInnovationArea().getName(), overviewAssessorRowViewModel.getInnovationArea());
+            assertEquals(formatInnovationAreas(inviteOverviewResource.getInnovationAreas()), overviewAssessorRowViewModel.getInnovationAreas());
             assertEquals(inviteOverviewResource.isCompliant(), overviewAssessorRowViewModel.isCompliant());
             assertEquals(inviteOverviewResource.getBusinessType(), overviewAssessorRowViewModel.getBusinessType());
             assertEquals(inviteOverviewResource.getStatus(), overviewAssessorRowViewModel.getStatus());

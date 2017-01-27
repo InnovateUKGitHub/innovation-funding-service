@@ -87,7 +87,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return find(financeCheckRepository.findByProjectIdAndOrganisationId(key.getProjectId(), key.getOrganisationId()),
                 notFoundError(FinanceCheck.class, key)).
                 andOnSuccessReturn(this::mapToResource);
+
     }
+    private BigDecimal percentDivisor = new BigDecimal("100");
 
     @Override
     public ServiceResult<Void> save(FinanceCheckResource financeCheckResource) {
@@ -155,6 +157,30 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 getPartnerStatuses(partnerOrganisations), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
     }
 
+    public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
+        Project project = projectRepository.findOne(projectId);
+        Application application = project.getApplication();
+
+        return financeRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
+
+            financeRowService.financeDetails(application.getId(), organisationId).
+                    andOnSuccessReturn(applicationFinanceResource -> {
+
+                        BigDecimal grantPercentage = BigDecimal.valueOf(applicationFinanceResource.getGrantClaimPercentage());
+                        BigDecimal fundingSought = projectFinance.getTotal().multiply(grantPercentage).divide(percentDivisor);
+                        FinanceCheckEligibilityResource eligibilityResource = new FinanceCheckEligibilityResource(project.getId(),
+                                organisationId,
+                                application.getDurationInMonths(),
+                                projectFinance.getTotal(),
+                                grantPercentage,
+                                fundingSought,
+                                projectFinance.getTotalOtherFunding(),
+                                projectFinance.getTotal().subtract(fundingSought).subtract(projectFinance.getTotalOtherFunding()));
+                        return eligibilityResource;
+                    })
+        );
+    }
+
     private boolean getFinanceCheckApprovalStatus(Long projectId) {
         ServiceResult<ProjectTeamStatusResource> teamStatusResult = projectService.getProjectTeamStatus(projectId, Optional.empty());
         return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getFinanceChecksStatus())).isPresent();
@@ -167,7 +193,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            Pair<Viability, ViabilityStatus> viability = getViability(org);
+            Pair<Viability, ViabilityRagStatus> viability = getViability(org);
 
             FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
@@ -181,14 +207,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private Pair<Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
+    private Pair<Viability, ViabilityRagStatus> getViability(PartnerOrganisation org) {
 
         ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
                 org.getProject().getId(), org.getOrganisation().getId());
 
         ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
 
-        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityStatus());
+        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityRagStatus());
 
     }
 

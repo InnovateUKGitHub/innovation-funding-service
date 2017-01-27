@@ -1,14 +1,14 @@
 package org.innovateuk.ifs.application.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.Where;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 
@@ -19,6 +19,10 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 @Table(name = "Application")
 public class ApplicationStatistics {
 
+    private static final Set<AssessmentStates> ASSESSOR_STATES = EnumSet.complementOf(EnumSet.of(REJECTED, WITHDRAWN));
+
+    private static final Set<AssessmentStates> ACCEPTED_STATES = EnumSet.complementOf(EnumSet.of(PENDING, REJECTED, WITHDRAWN, CREATED));
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -27,10 +31,12 @@ public class ApplicationStatistics {
 
     private Long competition;
 
-    @OneToMany(mappedBy = "application")
+    @OneToMany(mappedBy = "applicationId")
     private List<ProcessRole> processRoles = new ArrayList<>();
 
     @OneToMany(mappedBy = "target", fetch = FetchType.LAZY)
+    @Where(clause = "process_type = 'Assessment'")
+    // TODO 7668 Issue with retrieval may be caused by this class noting being an Application
     private List<Assessment> assessments;
 
     public Long getId() {
@@ -63,8 +69,8 @@ public class ApplicationStatistics {
     }
 
     @JsonIgnore
-    public String getLeadOrganisation() {
-        return getLeadProcessRole().map(role -> role.getOrganisation().getName()).orElse(null);
+    public Long getLeadOrganisationId() {
+        return getLeadProcessRole().map(ProcessRole::getOrganisationId).orElse(null);
     }
 
     @JsonIgnore
@@ -86,11 +92,12 @@ public class ApplicationStatistics {
     }
 
     public long getAssessors() {
-        return assessments.stream().filter(a -> !a.isInState(REJECTED)).count();
+
+        return assessments.stream().filter(a -> ASSESSOR_STATES.contains(a.getActivityState())).count();
     }
 
     public long getAccepted() {
-        return assessments.stream().filter(a -> !(a.isInState(PENDING) || a.isInState(REJECTED))).count();
+        return assessments.stream().filter(a -> ACCEPTED_STATES.contains(a.getActivityState())).count();
     }
 
     public long getSubmitted() {

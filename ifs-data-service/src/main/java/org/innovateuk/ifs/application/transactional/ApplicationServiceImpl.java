@@ -12,6 +12,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
+import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -30,6 +31,7 @@ import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.apache.commons.lang3.tuple.Pair;
@@ -97,10 +99,26 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private SystemNotificationSource systemNotificationSource;
     @Autowired
     private ApplicationMapper applicationMapper;
+    @Autowired
+    private ResearchCategoryMapper researchCategoryMapper;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
         return find(user(userId), competition(competitionId)).andOnSuccess((user, competition) -> createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, user, competition));
+    }
+
+    private void generateProcessRolesForApplication(User user, Role role, Application application) {
+        List<ProcessRole> usersProcessRoles = processRoleRepository.findByUser(user);
+        List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
+        Long userOrganisationId = usersProcessRoles.size() != 0
+                ? usersProcessRoles.get(0).getOrganisationId()
+                : usersOrganisations.get(0).getId();
+        ProcessRole processRole = new ProcessRole(user, application.getId(), role, userOrganisationId);
+        processRoleRepository.save(processRole);
+        List<ProcessRole> processRoles = new ArrayList<>();
+        processRoles.add(processRole);
+        application.setProcessRoles(processRoles);
+        applicationRepository.save(application);
     }
 
     private ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, User user, Competition competition) {
@@ -112,30 +130,15 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
         List<ApplicationStatus> applicationStatusList = applicationStatusRepository.findByName(name);
         ApplicationStatus applicationStatus = applicationStatusList.get(0);
-
         application.setApplicationStatus(applicationStatus);
         application.setDurationInMonths(3L);
+        application.setCompetition(competition);
 
         return getRole(LEADAPPLICANT).andOnSuccess(role -> {
-
-            List<ProcessRole> usersProcessRoles = user.getProcessRoles();
-
-            Organisation userOrganisation = usersProcessRoles.size() != 0
-                    ? usersProcessRoles.get(0).getOrganisation()
-                    : user.getOrganisations().get(0);
-
-            ProcessRole processRole = new ProcessRole(user, application, role, userOrganisation);
-
-            List<ProcessRole> processRoles = new ArrayList<>();
-            processRoles.add(processRole);
-
-            application.setProcessRoles(processRoles);
-            application.setCompetition(competition);
-
-            applicationRepository.save(application);
-            processRoleRepository.save(processRole);
-
-            return serviceSuccess(applicationMapper.mapToResource(application));
+            Application savedApplication = applicationRepository.save(application);
+            generateProcessRolesForApplication(user, role, savedApplication);
+            savedApplication = applicationRepository.findOne(savedApplication.getId());
+            return serviceSuccess(applicationMapper.mapToResource(savedApplication));
         });
     }
 
@@ -317,7 +320,10 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<List<ApplicationResource>> findByUserId(final Long userId) {
         return getUser(userId).andOnSuccessReturn(user -> {
             List<ProcessRole> roles = processRoleRepository.findByUser(user);
-            List<Application> applications = simpleMap(roles, ProcessRole::getApplication);
+            List<Application> applications = simpleMap(roles, processRole -> {
+                Long appId = processRole.getApplicationId();
+                return appId != null ? applicationRepository.findOne(appId) : null;
+            });
             return applicationsToResources(applications);
         });
     }
@@ -337,6 +343,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             existingApplication.setResubmission(application.getResubmission());
             existingApplication.setPreviousApplicationNumber(application.getPreviousApplicationNumber());
             existingApplication.setPreviousApplicationTitle(application.getPreviousApplicationTitle());
+            application.getResearchCategories().forEach(researchCategoryResource ->
+                    existingApplication.addResearchCategory(researchCategoryMapper.mapToDomain(researchCategoryResource)));
+
             Application savedApplication = applicationRepository.save(existingApplication);
             return applicationMapper.mapToResource(savedApplication);
         });
@@ -413,9 +422,11 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<ApplicationResource> findByProcessRole(final Long id) {
-        return getProcessRole(id).andOnSuccessReturn(processRole ->
-                        applicationMapper.mapToResource(processRole.getApplication())
-        );
+        return getProcessRole(id).andOnSuccessReturn(processRole -> {
+            Long appId = processRole.getApplicationId();
+            Application application = applicationRepository.findOne(appId);
+            return applicationMapper.mapToResource(application);
+        });
     }
 
     // TODO DW - INFUND-1555 - try to remove the usage of ObjectNode
@@ -471,7 +482,9 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
                 .filter(p -> p.getRole().getName().equals(LEADAPPLICANT.getName()) 
 					|| p.getRole().getName().equals(UserRoleType.APPLICANT.getName()) 
 					|| p.getRole().getName().equals(UserRoleType.COLLABORATOR.getName()))
-                .map(ProcessRole::getOrganisation).collect(Collectors.toSet());
+                .map(processRole -> {
+                    return organisationRepository.findOne(processRole.getOrganisationId());
+                }).collect(Collectors.toSet());
 
         Long countMultipleStatusQuestionsCompleted = organisations.stream()
                 .mapToLong(org -> questions.stream()

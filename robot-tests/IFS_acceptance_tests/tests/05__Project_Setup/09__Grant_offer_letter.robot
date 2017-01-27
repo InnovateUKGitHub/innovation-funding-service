@@ -22,6 +22,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-6741 As the service delivery manager I want the service to generate a Grant Offer Letter once both the Spend Profiles and Other documents are approved so that the competitions team can review and publish to the project team
 ...
 ...               INFUND-7361 GOL is seen by internal user soon after the external user uploads it
+...
+...               INFUND-6048 As the contracts team I can have access to a generated Grant Offer Letter so that I can send it to the partners
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -67,7 +69,7 @@ Status updates correctly for internal user's table
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
 
 Project finance user selects the grant offer letter
-    [Documentation]  INFUND-6377
+    [Documentation]  INFUND-6377, INFUND-6048
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
     Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
@@ -138,8 +140,8 @@ Comp Admin user uploads new grant offer letter
     And the user should see the element    jQuery=button.button-secondary:contains("Remove")
     When the user uploads a file           annex  ${valid_pdf}
     And the user clicks the button/link    id=send-gol
-    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
-    Then the user should not see the element  jQuery=.button:contains("Send to project team")
+    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
+    Then the user should not see the element  jQuery=.button:contains("Publish to project team")
     And the user should not see the element   jQuery=button.button-secondary:contains("Remove")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting   # GOL
@@ -340,7 +342,6 @@ Comp Admin can accept the signed grant offer letter
     When the user clicks the button/link     jQuery=.modal-accept-signed-gol button:contains("Cancel")
     Then the user should not see an error in the page
 
-
 Internal user accepts signed grant offer letter
     [Documentation]    INFUND-5998, INFUND-6377
     [Tags]    HappyPath
@@ -379,7 +380,7 @@ Non lead can see the GOL approved
     [Documentation]  INFUND-6377
     [Tags]
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
-    Then the user should see the element  jQuery=p:nth-child(4) a:contains("testing.pdf")
+    Then the user should see the element  jQuery=.grant-offer-download:contains("testing.pdf")
     And the user should see the element   jQuery=.success-alert p:contains("Your signed grant offer letter has been received and accepted by Innovate UK")
 
 Non lead can download the signed GOL
@@ -470,18 +471,20 @@ project finance approves Viability for
 all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Cogilith_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Submit to lead partner")
+    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Review and submit total project")
-    the user clicks the button/link    jQuery=.button:contains("Submit project spend profile")
-    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Submit"]
+    the user clicks the button/link    jQuery=.button:contains("Review and send total project")
+    the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
+    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}

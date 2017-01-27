@@ -6,7 +6,7 @@ import org.innovateuk.ifs.BaseController;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.populator.OpenFinanceSectionModelPopulator;
+import org.innovateuk.ifs.application.populator.OpenApplicationFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
@@ -77,7 +77,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     private OrganisationDetailsModelPopulator organisationDetailsModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionSectionModelPopulator;
 
     @Autowired
     private AssessorFeedbackRestService assessorFeedbackRestService;
@@ -128,7 +128,9 @@ public class CompetitionManagementApplicationController extends BaseController {
             CompetitionResource competition = competitionService.getById(application.getCompetition());
             applicationModelPopulator.addApplicationAndSections(application, competition, user.getId(), Optional.empty(), Optional.empty(), model, form);
             organisationDetailsModelPopulator.populateModel(model, application.getId());
-            applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form);
+
+            // Having to pass getImpersonateOrganisationId here because look at the horrible code inside addOrganisationAndUserFinanceDetails with impersonation org id :(
+            applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, form.getImpersonateOrganisationId());
             addAppendices(applicationId, responses, model);
 
             model.addAttribute("form", form);
@@ -200,7 +202,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
     public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
                                                                 @PathVariable("competitionId") final Long competitionId,
-                                                                @PathVariable("organisationId") final String organisationId,
+                                                                @PathVariable("organisationId") final Long organisationId,
                                                                 @ModelAttribute("form") ApplicationForm form,
                                                                 Model model,
                                                                 BindingResult bindingResult
@@ -224,19 +226,19 @@ public class CompetitionManagementApplicationController extends BaseController {
             model.addAttribute("applicationReadyForSubmit", false);
 
             //TODO - INFUND-7498 - ViewModel is changed so template should be changed as well
-            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections);
+            OpenFinanceSectionViewModel openFinanceSectionViewModel = (OpenFinanceSectionViewModel) openFinanceSectionSectionModelPopulator.populateModel(form, model, application, financeSection, impersonatingUser, bindingResult, allSections, organisationId);
             model.addAttribute("model", openFinanceSectionViewModel);
 
             return "comp-mgt-application-finances";
         });
     }
 
-    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") String organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
+    private UserResource getImpersonateUserByOrganisationId(@PathVariable("organisationId") Long organisationId, @ModelAttribute("form") ApplicationForm form, Long applicationId) throws InterruptedException, ExecutionException {
         UserResource user;
         form.setImpersonateOrganisationId(Long.valueOf(organisationId));
         List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(applicationId);
         Optional<Long> userId = processRoles.stream()
-                .filter(p -> p.getOrganisation().equals(Long.valueOf(organisationId)))
+                .filter(p -> p.getOrganisationId().equals(Long.valueOf(organisationId)))
                 .map(p -> p.getUser())
                 .findAny();
 
@@ -276,9 +278,7 @@ public class CompetitionManagementApplicationController extends BaseController {
                                              @PathVariable("competitionId") Long competitionId,
                                              Model model, HttpServletRequest request) {
 
-        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
-            return applicationPrintPopulator.print(applicationId, model, request);
-        });
+        return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> applicationPrintPopulator.print(applicationId, model, request));
     }
 
     private void addAppendices(Long applicationId, List<FormInputResponseResource> responses, Model model) {

@@ -32,6 +32,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.util.List;
 import java.util.Map;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
@@ -46,6 +50,7 @@ import static org.innovateuk.ifs.user.builder.CompAdminEmailBuilder.newCompAdmin
 import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProjectFinanceEmailBuilder.newProjectFinanceEmail;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
@@ -54,12 +59,8 @@ import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.time.LocalDateTime.now;
-import static java.util.Collections.singletonList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.junit.Assert.*;
-import static org.mockito.Matchers.isA;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
@@ -103,6 +104,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withAddress(addressResource)
                 .build();
 
+        Long profileId = 1L;
+        Profile userProfile = newProfile()
+                .withId(profileId)
+                .withAddress(address)
+                .build();
+
         User userToCreate = newUser()
                 .withId((Long) null)
                 .withTitle("Mr")
@@ -114,9 +121,11 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
                 .withRoles(roles)
-
+                .withProfileId(userProfile.getId())
                 .build();
 
+        when(profileRepositoryMock.findOne(userToCreate.getProfileId())).thenReturn(userProfile);
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(userProfile);
         when(passwordPolicyValidatorMock.validatePassword("Passw0rd123", userToCreateResource.toUserResource())).thenReturn(serviceSuccess());
         when(userMapperMock.mapToDomain(userToCreateResource.toUserResource())).thenReturn(userToCreate);
         when(addressMapperMock.mapToDomain(userToCreateResource.getAddress())).thenReturn(
@@ -138,11 +147,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
             assertEquals(roles, user.getRoles());
-            assertTrue(user.getOrganisations().isEmpty());
 
-            assertNotNull(user.getProfile());
-            Profile profile = user.getProfile();
-            assertNull(profile.getId());
+            assertNotNull(user.getProfileId());
+            Profile profile = profileRepositoryMock.findOne(user.getProfileId());
+            assertEquals(profileId, profile.getId());
             assertNull(profile.getSkillsAreas());
             assertNull(profile.getBusinessType());
             assertNull(profile.getContract());
@@ -183,13 +191,17 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 withEthnicity(2L).
                 build();
 
-        Organisation selectedOrganisation = newOrganisation().build();
-        Role applicantRole = newRole().build();
+        Organisation selectedOrganisation = newOrganisation().withId(123L).build();
+        Role applicantRole = newRole().withName(APPLICANT.getName()).build();
 
         when(ethnicityMapperMock.mapIdToDomain(2L)).thenReturn(newEthnicity().withId(2L).build());
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(roleRepositoryMock.findOneByName(APPLICANT.getName())).thenReturn(applicantRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
+
+        Profile expectedProfile = newProfile().withId(7L).build();
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
 
         User expectedCreatedUser = createLambdaMatcher(user -> {
 
@@ -207,8 +219,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals(Long.valueOf(2), user.getEthnicity().getId());
             assertEquals(1, user.getRoles().size());
             assertEquals(applicantRole, user.getRoles().get(0));
-            assertEquals(1, user.getOrganisations().size());
-            assertEquals(selectedOrganisation, user.getOrganisations().get(0));
+            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
+            assertEquals(1, orgs.size());
+            assertEquals(selectedOrganisation, orgs.get(0));
+            assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;
         });
@@ -343,8 +357,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role compAdminRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(roleRepositoryMock.findOneByName(COMP_ADMIN.getName())).thenReturn(compAdminRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
+
+        Profile expectedProfile = newProfile().withId(7L).build();
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
 
         User expectedCreatedUser = createLambdaMatcher(user -> {
 
@@ -359,8 +377,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
             assertEquals(compAdminRole, user.getRoles().get(0));
-            assertEquals(1, user.getOrganisations().size());
-            assertEquals(selectedOrganisation, user.getOrganisations().get(0));
+            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
+            assertEquals(1, orgs.size());
+            assertEquals(selectedOrganisation, orgs.get(0));
+            assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;
         });
@@ -430,8 +450,12 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
         Role projectFinanceRole = newRole().build();
 
         when(organisationRepositoryMock.findOne(123L)).thenReturn(selectedOrganisation);
+        when(organisationRepositoryMock.findByUsersId(anyLong())).thenReturn(singletonList(selectedOrganisation));
         when(roleRepositoryMock.findOneByName(PROJECT_FINANCE.getName())).thenReturn(projectFinanceRole);
         when(idpServiceMock.createUserRecordWithUid("email@example.com", "thepassword")).thenReturn(serviceSuccess("new-uid"));
+
+        Profile expectedProfile = newProfile().withId(7L).build();
+        when(profileRepositoryMock.save(any(Profile.class))).thenReturn(expectedProfile);
 
         User expectedCreatedUser = createLambdaMatcher(user -> {
 
@@ -446,8 +470,10 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
             assertEquals("new-uid", user.getUid());
             assertEquals(1, user.getRoles().size());
             assertEquals(projectFinanceRole, user.getRoles().get(0));
-            assertEquals(1, user.getOrganisations().size());
-            assertEquals(selectedOrganisation, user.getOrganisations().get(0));
+            List<Organisation> orgs = organisationRepositoryMock.findByUsersId(user.getId());
+            assertEquals(1, orgs.size());
+            assertEquals(selectedOrganisation, orgs.get(0));
+            assertEquals(expectedProfile.getId(), user.getProfileId());
 
             return true;
         });

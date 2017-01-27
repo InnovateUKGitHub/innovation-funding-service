@@ -4,12 +4,11 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Resource Class for a generic {@link org.innovateuk.ifs.category.domain.Category}
+ * Resource Class for a generic {@code Category}
  */
 public abstract class CategoryResource {
     private Long id;
     private String name;
-    private CategoryType type;
 
     public CategoryResource() {
     }
@@ -17,7 +16,6 @@ public abstract class CategoryResource {
     protected CategoryResource(Long id, String name, CategoryType type) {
         this.id = id;
         this.name= name;
-        this.type = type;
     }
 
     public Long getId() {
@@ -53,7 +51,6 @@ public abstract class CategoryResource {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(name, that.name)
-                .append(type, that.type)
                 .isEquals();
     }
 
@@ -62,7 +59,6 @@ public abstract class CategoryResource {
         return new HashCodeBuilder(17, 37)
                 .append(id)
                 .append(name)
-                .append(type)
                 .toHashCode();
     }
 }

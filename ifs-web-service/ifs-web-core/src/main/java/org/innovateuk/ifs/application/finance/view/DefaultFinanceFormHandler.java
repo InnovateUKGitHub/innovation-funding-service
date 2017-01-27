@@ -1,22 +1,29 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.apache.commons.lang3.NotImplementedException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.item.*;
+import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
+import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.util.Either;
-import org.apache.commons.lang3.NotImplementedException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Component;
@@ -47,6 +54,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     private FinanceService financeService;
 
     @Autowired
+    private SectionService sectionService;
+
+    @Autowired
+    private QuestionService questionService;
+
+    @Autowired
+    private ProcessRoleService processRoleService;
+
+    @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
     
     @Autowired
@@ -60,7 +76,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             applicationFinanceResource = financeService.addApplicationFinance(userId, applicationId);
         }
 
-        storeFinancePosition(request, applicationFinanceResource.getId());
+        storeFinancePosition(request, applicationFinanceResource.getId(), competitionId, userId);
         ValidationMessages errors = getAndStoreCostitems(request, applicationFinanceResource.getId());
         addRemoveCostRows(request, applicationId, userId);
 
@@ -131,6 +147,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         return financeRowService.addWithoutPersisting(applicationFinance.getId(), questionId);
     }
 
+    @Override
+    public FinanceRowItem addProjectCostWithoutPersisting(Long projectId, Long organisationId, Long questionId) {
+        ProjectFinanceResource projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
+        return financeRowService.addProjectCostWithoutPersisting(projectFinanceResource.getId(), questionId);
+    }
+
     private void addRemoveCostRows(HttpServletRequest request, Long applicationId, Long userId) {
         Map<String, String[]> requestParams = request.getParameterMap();
         if (requestParams.containsKey("add_cost")) {
@@ -145,7 +167,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     }
 
     // TODO DW - INFUND-1555 - handle rest results
-    private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId) {
+    private void storeFinancePosition(HttpServletRequest request, @NotNull Long applicationFinanceId, Long competitionId, Long userId) {
         List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
         if (!financePositionKeys.isEmpty()) {
             ApplicationFinanceResource applicationFinance = applicationFinanceRestService.getById(applicationFinanceId).getSuccessObjectOrThrowException();
@@ -153,28 +175,51 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             financePositionKeys.stream().forEach(k -> {
                 String values = request.getParameterValues(k)[0];
                 LOG.debug(String.format("finance position k : %s value: %s ", k, values));
-                updateFinancePosition(applicationFinance, k, values);
+                updateFinancePosition(applicationFinance, k, values, competitionId, userId);
             });
             applicationFinanceRestService.update(applicationFinance.getId(), applicationFinance);
         }
     }
 
     @Override
-    public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value) {
+    public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
-        updateFinancePosition(applicationFinanceResource, fieldName, value);
+        updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
         applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
     }
 
 
-    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value) {
+    private void updateFinancePosition(ApplicationFinanceResource applicationFinance, String fieldName, String value, Long competitionId, Long userId) {
         String fieldNameReplaced = fieldName.replace("financePosition-", "");
         switch (fieldNameReplaced) {
             case "organisationSize":
-                applicationFinance.setOrganisationSize(OrganisationSize.valueOf(value));
+                OrganisationSize newValue = OrganisationSize.valueOf(value);
+                handleOrganisationSizeChange(applicationFinance, competitionId, userId, applicationFinance.getOrganisationSize(), newValue);
+                applicationFinance.setOrganisationSize(newValue);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
+        }
+    }
+
+    private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, OrganisationSize oldValue, OrganisationSize newValue) {
+        if(null != oldValue && !oldValue.equals(newValue)) {
+            Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
+                    .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
+                    .findFirst();
+
+            //set your funding section to marked as in complete
+            sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
+                    .forEach(fundingSection ->
+                        sectionService.markAsInComplete(fundingSection.getId(),
+                                applicationFinance.getApplication(),
+                                (processRole.isPresent() ? processRole.get().getId() : null))
+                    );
+
+            //reset your funding level
+            QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+            financeRowService.add(applicationFinance.getId(), financeQuestion.getId(), applicationFinance.getGrantClaim());
         }
     }
 

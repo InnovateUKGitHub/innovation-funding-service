@@ -82,15 +82,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="application : ${model.applications}">
-                            <td><a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${application.id})}" th:text="${#numbers.formatInteger(application.id,8)}"/></td>
-                            <td th:text="${application.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
-                            <td th:tet="${application.leadOrganisation}">Wessex University</td>
-                            <td class="aligncentre" th:text="${application.assessors}">4</td>
-                            <td class="aligncentre" th:text="${application.accepted}">2</td>
-                            <td class="aligncentre" th:text="${application.completed}">1</td>
+                        <tr th:each="app : ${model.applications}">
+                            <td><a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${app.id})}" th:text="${#numbers.formatInteger(app.id,8)}"/></td>
+                            <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
+                            <td th:text="${app.leadOrganisation}">Wessex University</td>
+                            <td class="aligncentre" th:text="${app.assessors}">4</td>
+                            <td class="aligncentre" th:text="${app.accepted}">2</td>
+                            <td class="aligncentre" th:text="${app.completed}">1</td>
                             <td class="alignright">
-                                <a class="button-secondary no-margin" th:href="@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${application.id})}">View progress</a>
+                                <a class="button-secondary no-margin" th:href="@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}">View progress</a>
                             </td>
                         </tr>
                     </tbody>

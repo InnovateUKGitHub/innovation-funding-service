@@ -9,8 +9,11 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileEntryRestService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
+import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRestService;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +39,9 @@ public class FinanceServiceImpl implements FinanceService {
     private ApplicationFinanceRestService applicationFinanceRestService;
 
     @Autowired
+    private ProjectFinanceRestService projectFinanceRestService;
+
+    @Autowired
     private FileEntryRestService fileEntryRestService;
 
     @Autowired
@@ -44,6 +50,9 @@ public class FinanceServiceImpl implements FinanceService {
     @Autowired
     private ApplicationService applicationService;
 
+    @Autowired
+    private ProjectService projectService;
+
     @Override
     public ApplicationFinanceResource addApplicationFinance(Long userId, Long applicationId) {
         ProcessRoleResource processRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
@@ -51,8 +60,8 @@ public class FinanceServiceImpl implements FinanceService {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
         CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
 
-        if(processRole.getOrganisation()!=null && competitionResource.isOpen()) {
-            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisation()).getSuccessObjectOrThrowException();
+        if(processRole.getOrganisationId()!=null && competitionResource.isOpen()) {
+            return applicationFinanceRestService.addApplicationFinanceForOrganisation(applicationId, processRole.getOrganisationId()).getSuccessObjectOrThrowException();
         }
         return null;
     }
@@ -60,7 +69,7 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public ApplicationFinanceResource getApplicationFinance(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
+        return applicationFinanceRestService.getApplicationFinance(applicationId, userApplicationRole.getOrganisationId()).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -71,7 +80,12 @@ public class FinanceServiceImpl implements FinanceService {
     @Override
     public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId) {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(userId, applicationId).getSuccessObjectOrThrowException();
-        return applicationFinanceRestService.getFinanceDetails(applicationId, userApplicationRole.getOrganisation()).getSuccessObjectOrThrowException();
+        return getApplicationFinanceDetails(userId, applicationId, userApplicationRole.getOrganisationId());
+    }
+
+    @Override
+    public ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId, Long organisationId) {
+        return applicationFinanceRestService.getFinanceDetails(applicationId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -80,6 +94,24 @@ public class FinanceServiceImpl implements FinanceService {
                 failure -> Collections.<ApplicationFinanceResource> emptyList(),
                 success -> success
         );
+    }
+
+    @Override
+    public List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId){
+        return projectFinanceRestService.getFinanceTotals(projectId).handleSuccessOrFailure(
+                failure -> Collections.<ProjectFinanceResource> emptyList(),
+                success -> success
+        );
+    }
+
+    @Override
+    public ProjectFinanceResource addProjectFinance(Long projectId, Long organisationId) {
+        return projectFinanceRestService.addProjectFinanceForOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId){
+        return projectFinanceRestService.getProjectFinance(projectId, organisationId).getSuccessObjectOrThrowException();
     }
 
     @Override

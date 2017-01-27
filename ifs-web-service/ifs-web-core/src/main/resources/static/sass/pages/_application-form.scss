@@ -1,4 +1,5 @@
-.app-form {
+.app-form,
+.eligibility-form {
 
 	.labour-costs-table td {
 		 	border-top:1px solid $border-colour;
@@ -23,11 +24,7 @@
 	.form-label-bold {
 		font-size:24px;
 	}
-	//for the # links
-	// .form-group {
-	//     margin-top: 30px;
-	//     margin-bottom:0;
-	// }
+
 	.last-update strong {
 		font-weight:300;
 	}
@@ -40,11 +37,6 @@
 			padding: 15px;
 		}
 	}
-	// .js-enabled &{
-	// 	input[name="submit-section"]{
-	// 		display: none;
-	// 	}
-	// }
 	.form-row .form-label {
 			width:50%;
 		}
@@ -52,9 +44,10 @@
 }
 
 .form-row {
+  @extend %contain-floats;
 	border-bottom:1px solid $border-colour;
 	padding:20px 0;
-	overflow: hidden;
+
 	&:first-child { border-top:1px solid $border-colour; }
 	+ .alignright {
 		margin-top:10px;
@@ -127,4 +120,9 @@ table img.table-tick {
 
 .your-finances {
   margin-bottom: 30px;
+}
+
+.eligibility-form h3 [data-mirror] {
+  width:120px;
+  text-align:right;
 }

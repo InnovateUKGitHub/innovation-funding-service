@@ -18,6 +18,7 @@ import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -30,15 +31,18 @@ import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.exception.UnableToReadUploadedFile;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.AjaxResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -105,6 +109,8 @@ public class ApplicationFormController {
     public static final String REMOVE_COST = "remove_cost";
     public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
+    public static final String NOT_REQUESTING_FUNDING = "not_requesting_funding";
+    public static final String REQUESTING_FUNDING = "requesting_funding";
     public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
     public static final String TERMS_AGREED_KEY = "termsAgreed";
@@ -132,7 +138,7 @@ public class ApplicationFormController {
     private OrganisationDetailsViewModelPopulator organisationDetailsViewModelPopulator;
 
     @Autowired
-    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Autowired
     private UserAuthenticationService userAuthenticationService;
@@ -172,6 +178,15 @@ public class ApplicationFormController {
 
     @Autowired
     private CookieFlashMessageFilter cookieFlashMessageFilter;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private OverheadFileSaver overheadFileSaver;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -231,21 +246,31 @@ public class ApplicationFormController {
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = simpleFilter(allSections, s -> sectionId.equals(s.getId())).get(0);
 
-        populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
+        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
+
+        populateSection(model, form, bindingResult, request, application, user, organisationId, section, allSections);
 
         return APPLICATION_FORM;
     }
 
-    private void populateSection(ApplicationForm form, Model model, ApplicationResource application, SectionResource section, UserResource user, BindingResult bindingResult, List<SectionResource> allSections, Long applicationId, HttpServletRequest request) {
+    private void populateSection(Model model,
+                                 ApplicationForm form,
+                                 BindingResult bindingResult,
+                                 HttpServletRequest request,
+                                 ApplicationResource application,
+                                 UserResource user,
+                                 Long organisationId,
+                                 SectionResource section,
+                                 List<SectionResource> allSections) {
         if(SectionType.GENERAL.equals(section.getType())
                 || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
-            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
-            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections);
+            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
-        applicationNavigationPopulator.addAppropriateBackURLToModel(applicationId, request, model, section);
+        applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);
     }
 
 
@@ -314,7 +339,7 @@ public class ApplicationFormController {
             // First check if any errors already exist in bindingResult
             if (isAllowedToUpdateQuestion(questionId, applicationId, user.getId()) || isMarkQuestionRequest(params)) {
                 /* Start save action */
-                errors.addAll(saveApplicationForm(application, competition, form, applicationId, null, question, request, response, bindingResult, true));
+                errors.addAll(saveApplicationForm(application, competition, form, null, question, request, response, bindingResult, true));
             }
 
             model.addAttribute("form", form);
@@ -358,7 +383,9 @@ public class ApplicationFormController {
                 request.getParameter(MARK_AS_COMPLETE) != null ||
                 request.getParameter(REMOVE_UPLOADED_FILE) != null ||
                 request.getParameter(UPLOAD_FILE) != null ||
-                request.getParameter(EDIT_QUESTION) != null)) {
+                request.getParameter(EDIT_QUESTION) != null ||
+                request.getParameter(REQUESTING_FUNDING) != null ||
+                request.getParameter(NOT_REQUESTING_FUNDING) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
@@ -382,11 +409,13 @@ public class ApplicationFormController {
         FinanceRowItem costItem = addCost(applicationId, questionId, request);
         FinanceRowType costType = costItem.getCostType();
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
 
         Set<Long> markedAsComplete = new TreeSet<>();
         model.addAttribute("markedAsComplete", markedAsComplete);
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, user.getId(), questionId, costType);
+
+        financeHandler.getFinanceModelManager(organisationType).addCost(model, costItem, applicationId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row", costType.getType());
@@ -409,12 +438,17 @@ public class ApplicationFormController {
     private ValidationMessages saveApplicationForm(ApplicationResource application,
                                                    CompetitionResource competition,
                                                    ApplicationForm form,
-                                                   Long applicationId, Long sectionId, QuestionResource question,
+                                                   Long sectionId, QuestionResource question,
                                                    HttpServletRequest request,
                                                    HttpServletResponse response, BindingResult bindingResult, Boolean validFinanceTerms) {
 
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
+        ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), application.getId());
+
+        SectionResource selectedSection = null;
+        if (sectionId != null) {
+            selectedSection = sectionService.getById(sectionId);
+        }
 
         // Check if action is mark as complete.  Check empty values if so, ignore otherwise. (INFUND-1222)
         Map<String, String[]> params = request.getParameterMap();
@@ -424,9 +458,8 @@ public class ApplicationFormController {
         boolean ignoreEmpty = (!params.containsKey(MARK_AS_COMPLETE)) && (!params.containsKey(MARK_SECTION_AS_COMPLETE));
 
         ValidationMessages errors = new ValidationMessages();
-        SectionResource selectedSection = null;
-        if (sectionId != null) {
-            selectedSection = sectionService.getById(sectionId);
+
+        if (null != selectedSection) {
             if (isMarkSectionAsCompleteRequest(params)) {
                 application.setStateAidAgreed(form.isStateAidAgreed());
             } else if (isMarkSectionAsIncompleteRequest(params) && selectedSection.getType() == SectionType.FINANCE) {
@@ -444,20 +477,32 @@ public class ApplicationFormController {
             }
         }
 
+        if(isNotRequestingFundingRequest(params)) {
+            setRequestingFunding(NOT_REQUESTING_FUNDING, user.getId(), application.getId(), competition.getId(), processRole.getId(), errors);
+        }
+
+        if(isRequestingFundingRequest(params)) {
+            setRequestingFunding(REQUESTING_FUNDING, user.getId(), application.getId(), competition.getId(), processRole.getId(), errors);
+        }
+
         setApplicationDetails(application, form.getApplication());
 
         if(applicationModelPopulator.userIsLeadApplicant(application, user.getId())) {
             applicationService.save(application);
         }
 
-        if(!isMarkSectionAsIncompleteRequest(params)) {
-            String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-            errors.addAll(financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), applicationId, competition.getId()));
+        errors.addAll(overheadFileSaver.handleOverheadFileRequest(request));
+
+        if(!isMarkSectionAsIncompleteRequest(params) ) {
+            String organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
+            ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
+            if(!overheadFileSaver.isOverheadFileRequest(request)) {
+                errors.addAll(saveErrors);
+            }
         }
 
         if(isMarkQuestionRequest(params)) {
             errors.addAll(handleApplicationDetailsMarkCompletedRequest(application, request, response, processRole, errors, bindingResult));
-
         } else if(isMarkSectionRequest(params)){
             errors.addAll(handleMarkSectionRequest(application, sectionId, request, processRole, errors, validFinanceTerms));
         }
@@ -465,9 +510,29 @@ public class ApplicationFormController {
         if (errors.hasErrors()) {
             errors.setErrors(sortValidationMessages(errors));
         }
+
         cookieFlashMessageFilter.setFlashMessage(response, "applicationSaved");
 
         return errors;
+    }
+
+    private void setRequestingFunding(String requestingFunding, Long userId, Long applicationId, Long competitionId, Long processRoleId, ValidationMessages errors) {
+        ApplicationFinanceResource finance = financeService.getApplicationFinanceDetails(userId, applicationId);
+        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+        finance.getGrantClaim().setGrantClaimPercentage(0);
+        errors.addAll(financeRowService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
+
+        if (!errors.hasErrors()) {
+            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+            SectionResource fundingSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES).get(0);
+            if (REQUESTING_FUNDING.equals(requestingFunding)) {
+                sectionService.markAsInComplete(organisationSection.getId(), applicationId, processRoleId);
+                sectionService.markAsInComplete(fundingSection.getId(), applicationId, processRoleId);
+            } else if (NOT_REQUESTING_FUNDING.equals(requestingFunding)) {
+                sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
+                sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
+            }
+        }
     }
 
     private List<Error> sortValidationMessages(ValidationMessages errors) {
@@ -480,7 +545,6 @@ public class ApplicationFormController {
     private void logSaveApplicationDetails(Map<String, String[]> params) {
         params.forEach((key, value) -> LOG.debug(String.format("saveApplicationForm key %s => value %s", key, value[0])));
     }
-
 
     private ValidationMessages handleApplicationDetailsMarkCompletedRequest(ApplicationResource application, HttpServletRequest request, HttpServletResponse response, ProcessRoleResource processRole, ValidationMessages errorsSoFar, BindingResult bindingResult) {
         ValidationMessages messages = new ValidationMessages();
@@ -588,6 +652,13 @@ public class ApplicationFormController {
         return params.containsKey(MARK_AS_INCOMPLETE);
     }
 
+    private boolean isNotRequestingFundingRequest(@NotNull Map<String, String[]> params) {
+        return params.containsKey(NOT_REQUESTING_FUNDING);
+    }
+    private boolean isRequestingFundingRequest(@NotNull Map<String, String[]> params) {
+        return params.containsKey(REQUESTING_FUNDING);
+    }
+
     private boolean isMarkSectionRequest(@NotNull Map<String, String[]> params){
         return params.containsKey(MARK_SECTION_AS_COMPLETE) || params.containsKey(MARK_SECTION_AS_INCOMPLETE);
     }
@@ -656,18 +727,14 @@ public class ApplicationFormController {
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
         SectionResource section = sectionService.getById(sectionId);
+        Long organisationId = userService.getUserOrganisationId(user.getId(), applicationId);
 
         model.addAttribute("form", form);
 
-        if(!validSection(request, form, bindingResult, section, model, application, user, competition)) {
-            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
-            return APPLICATION_FORM;
-        }
-
         Map<String, String[]> params = request.getParameterMap();
 
-        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(request, form, bindingResult, section);
-        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, applicationId, sectionId, null, request, response, bindingResult, validFinanceTerms);
+        Boolean validFinanceTerms = validFinanceTermsForMarkAsComplete(form, bindingResult, section, params, user.getId(), applicationId);
+        ValidationMessages saveApplicationErrors = saveApplicationForm(application, competition, form, sectionId, null, request, response, bindingResult, validFinanceTerms);
         logSaveApplicationErrors(bindingResult);
 
         if (params.containsKey(ASSIGN_QUESTION_PARAM)) {
@@ -675,65 +742,45 @@ public class ApplicationFormController {
             cookieFlashMessageFilter.setFlashMessage(response, "assignedQuestion");
         }
 
-        if(saveApplicationErrors.hasErrors() || !validFinanceTerms){
+        if(saveApplicationErrors.hasErrors() || !validFinanceTerms || overheadFileSaver.isOverheadFileRequest(request)){
             validationHandler.addAnyErrors(saveApplicationErrors);
-            populateSection(form, model, application, section, user, bindingResult, allSections, applicationId, request);
+            populateSection(model, form, bindingResult, request, application, user, organisationId, section, allSections);
             return APPLICATION_FORM;
         } else {
             return getRedirectUrl(request, applicationId, Optional.of(section.getType()));
         }
     }
 
-    private boolean validSection(HttpServletRequest request, ApplicationForm form, BindingResult bindingResult,
-                                 SectionResource section, Model model, ApplicationResource application, UserResource user,
-                                 CompetitionResource competition) {
-            if (section.getType() == SectionType.FUNDING_FINANCES) {
-                return validFinanceTermsForMarkAsComplete(request, form, bindingResult, section);
-            } else if (section.getType() == SectionType.PROJECT_COST_FINANCES) {
-                    return validStateAidForMarkAsComplete(request, form, bindingResult, section, application, competition, user, model);
-            } else if (section.getType() == SectionType.ORGANISATION_FINANCES) {
-                return validOrganisationFinancesForMarkAsComplete(request, bindingResult, user.getId(), application.getId());
-            }
-            return true;
-    }
-
-    private Boolean validFinanceTermsForMarkAsComplete(HttpServletRequest request, ApplicationForm form, BindingResult bindingResult, SectionResource section) {
+    private Boolean validFinanceTermsForMarkAsComplete(ApplicationForm form, BindingResult bindingResult, SectionResource section, Map<String, String[]> params, Long userId, Long applicationId) {
         Boolean valid = Boolean.TRUE;
 
-        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
-            if (SectionType.FUNDING_FINANCES.equals(section.getType())) {
-                if (!form.isTermsAgreed()) {
-                    bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
-                    valid = Boolean.FALSE;
-                }
+        if(!isMarkSectionAsCompleteRequest(params)) {
+            return valid;
+        }
+
+        if (SectionType.FUNDING_FINANCES.equals(section.getType())) {
+            if (!form.isTermsAgreed()) {
+                bindingResult.rejectValue(TERMS_AGREED_KEY, "APPLICATION_AGREE_TERMS_AND_CONDITIONS");
+                valid = Boolean.FALSE;
             }
         }
-        return valid;
-    }
 
+        if (SectionType.PROJECT_COST_FINANCES.equals(section.getType())) {
+            if (!form.isStateAidAgreed()) {
+                bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
+                valid = Boolean.FALSE;
+            }
+        }
 
-    private boolean validOrganisationFinancesForMarkAsComplete(HttpServletRequest request, BindingResult bindingResult, Long userId, Long applicationId) {
-        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
-            List<String> financePositionKeys = request.getParameterMap().keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
+        if(SectionType.ORGANISATION_FINANCES.equals(section.getType())) {
+            List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
             String organisationType = organisationService.getOrganisationType(userId, applicationId);
             if (financePositionKeys.isEmpty() && !"University (HEI)".equals(organisationType)) {
                 bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
                 return false;
             }
         }
-        return true;
-    }
 
-    private boolean validStateAidForMarkAsComplete(HttpServletRequest request, ApplicationForm form,
-                                                       BindingResult bindingResult, SectionResource section, ApplicationResource application,
-                                                       CompetitionResource competition, UserResource user, Model model) {
-        Boolean valid = Boolean.TRUE;
-        if (isMarkSectionAsCompleteRequest(request.getParameterMap())) {
-            if (!form.isStateAidAgreed()) {
-                bindingResult.rejectValue(STATE_AID_AGREED_KEY, "APPLICATION_AGREE_STATE_AID_CONDITIONS");
-                valid = Boolean.FALSE;
-            }
-        }
         return valid;
     }
 
@@ -958,7 +1005,7 @@ public class ApplicationFormController {
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
-            financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value);
+            financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
             return new StoreFieldResult();
         } else if (inputIdentifier.startsWith("cost-") || fieldName.startsWith("cost-")) {
             ValidationMessages validationMessages = financeHandler.getFinanceFormHandler(organisationType).storeCost(userId, applicationId, fieldName, value, competitionId);
@@ -1036,6 +1083,12 @@ public class ApplicationFormController {
             applicationService.save(application);
         } else if (fieldName.equals("application.previousApplicationTitle")) {
             application.setPreviousApplicationTitle(value);
+            applicationService.save(application);
+        } else if (fieldName.equals("application.researchCategoryId")) {
+            Long catId = Long.parseLong(value);
+            Set<ResearchCategoryResource> cats =
+                    categoryService.getResearchCategories().stream().filter(cat -> cat.getId().equals(catId)).collect(Collectors.toSet());
+            application.setResearchCategories(cats);
             applicationService.save(application);
         }
         return errors;

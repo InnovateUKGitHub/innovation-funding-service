@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.transactional;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -19,6 +20,7 @@ import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.mapper.EthnicityMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.CompAdminEmailRepository;
+import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.ProjectFinanceEmailRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserStatus;
@@ -33,13 +35,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
-import static java.util.Collections.singletonList;
 
 /**
  * A service around Registration and general user-creation operations
@@ -66,6 +68,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private TokenRepository tokenRepository;
+
+    @Autowired
+    private ProfileRepository profileRepository;
 
     @Autowired
     private CompAdminEmailRepository compAdminEmailRepository;
@@ -118,11 +123,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
         final UserResource userResource = userRegistrationResource.toUserResource();
 
-        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    user.setProfile(new Profile());
-                    user.getProfile().setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
-                    return createUserWithUid(user, userResource.getPassword());
+        return validateUser(userResource, userResource.getPassword()).
+                andOnSuccess(validUser -> {
+                        final User user = userMapper.mapToDomain(userResource);
+                        return createUserWithUid(user, userResource.getPassword(), userRegistrationResource.getAddress());
                 });
     }
 
@@ -137,9 +141,13 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
             roleName = APPLICANT.getName();
         }
         User newUser = assembleUserFromResource(userResource);
-        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> addOrganisationToUser(newUser, organisationId).andOnSuccess(user ->
-                addRoleToUser(user, roleName))).andOnSuccess(() ->
-                createUserWithUid(newUser, userResource.getPassword()));
+        return validateUser(userResource, userResource.getPassword()).
+                andOnSuccess(
+                        () -> addUserToOrganisation(newUser, organisationId).
+                                andOnSuccess(user -> addRoleToUser(user, roleName))).
+                andOnSuccess(
+                        () -> createUserWithUid(newUser, userResource.getPassword(), null)
+                );
     }
 
     private ServiceResult<UserResource> validateUser(UserResource userResource, String password) {
@@ -155,13 +163,17 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<UserResource> createUserWithUid(User user, String password) {
+    private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
 
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
         return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
+            Profile profile = new Profile();
+            if (addressResource != null) profile.setAddress(addressMapper.mapToDomain(addressResource));
+            Profile savedProfile = profileRepository.save(profile);
+            user.setProfileId(savedProfile.getId());
             User savedUser = userRepository.save(user);
             final UserResource userResource = userMapper.mapToResource(savedUser);
             return userResource;
@@ -184,13 +196,9 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     }
 
-    private ServiceResult<User> addOrganisationToUser(User user, Long organisationId) {
-
-        return find(organisation(organisationId)).andOnSuccessReturn(userOrganisation -> {
-
-            List<Organisation> userOrganisationList = new ArrayList<>();
-            userOrganisationList.add(userOrganisation);
-            user.setOrganisations(userOrganisationList);
+    private ServiceResult<User> addUserToOrganisation(User user, Long organisationId) {
+        return find(organisation(organisationId)).andOnSuccessReturn(org -> {
+            org.addUser(user);
             return user;
         });
     }

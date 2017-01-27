@@ -296,7 +296,7 @@ the user fills the milestones with invalid data
 Validation summary should be visible
     Then The user should see the text in the page    2. Briefing event: please enter a future date that is after the previous milestone
     And the user should see the text in the page    3. Submission date: please enter a future date that is after the previous milestone
-    And the user should see the text in the page    4. Allocate accessors: please enter a future date that is after the previous milestone
+    And the user should see the text in the page    4. Allocate assessors: please enter a future date that is after the previous milestone
     And the user should see the text in the page    5. Assessor briefing: please enter a future date that is after the previous milestone
     And the user should see the text in the page    6. Assessor accepts: please enter a future date that is after the previous milestone
     And the user should see the text in the page    7. Assessor deadline: please enter a future date that is after the previous milestone
@@ -369,7 +369,7 @@ the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id=funders0.funder
     Should Be Equal    ${input_value}    FunderName
     ${input_value} =    Get Value    id=0-funderBudget
-    Should Be Equal As Strings    ${input_value}    20000.00
+    Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id=pafNumber
     Should Be Equal As Strings    ${input_value}    2016
     ${input_value} =    Get Value    id=budgetCode

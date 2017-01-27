@@ -2,7 +2,7 @@ package org.innovateuk.ifs.transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
+import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -14,8 +14,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +35,7 @@ import static org.springframework.http.HttpStatus.OK;
  * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
  * and convert them into {@link RestErrorResponse} objects.
  */
-public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
+public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseIntegrationTest {
 
 
     @Test

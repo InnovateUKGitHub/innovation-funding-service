@@ -19,6 +19,7 @@ import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -84,6 +85,9 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
         ProjectActivityStates projectDetailsStatus = getProjectDetailsStatus(project);
         ProjectActivityStates financeChecksStatus = getFinanceChecksStatus(project);
 
+        ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+
         return new ProjectStatusResource(
                 project.getName(),
                 project.getId(),
@@ -91,7 +95,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 project.getApplication().getId(),
                 project.getApplication().getFormattedId(),
                 getProjectPartnerCount(project.getId()),
-                null != project.getApplication().getLeadOrganisation() ? project.getApplication().getLeadOrganisation().getName() : "",
+                null != leadOrganisation ? leadOrganisation.getName() : "",
                 projectDetailsStatus,
                 getBankDetailsStatus(project),
                 financeChecksStatus,
@@ -129,6 +133,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectActivityStates getBankDetailsStatus(Project project){
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
+        boolean started = false;
         for(Organisation organisation : project.getOrganisations()){
             if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
                 Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
@@ -137,12 +142,17 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
                     incomplete = true;
                 }
-                if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
-                    return ACTION_REQUIRED;
+                if(bankDetails.isPresent()) {
+                    started = true;
+                    if(organisationBankDetailsStatus.equals(PENDING)) {
+                        return ACTION_REQUIRED;
+                    }
                 }
             }
         }
-        if(incomplete) {
+        if(!started) {
+            return NOT_STARTED;
+        } else if(incomplete) {
             return PENDING;
         } else {
             return COMPLETE;

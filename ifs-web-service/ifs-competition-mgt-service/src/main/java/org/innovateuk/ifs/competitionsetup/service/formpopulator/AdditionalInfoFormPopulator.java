@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competitionsetup.form.FunderRowForm;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Arrays.asList;
 
 /**
  * Form populator for the additional info competition setup section.

@@ -7,8 +7,8 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.viability.form.FinanceChecksViabilityForm;
 import org.innovateuk.ifs.project.viability.viewmodel.FinanceChecksViabilityViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -93,7 +93,7 @@ public class FinanceChecksViabilityController {
                addAnyErrors(saveCreditReportResult).
                failNowOrSucceedWith(failureView, () -> {
 
-            ViabilityStatus statusToSend = getRagStatusDependantOnConfirmationCheckboxSelection(form);
+            ViabilityRagStatus statusToSend = getRagStatusDependantOnConfirmationCheckboxSelection(form);
 
             ServiceResult<Void> saveViabilityResult = financeService.saveViability(projectId, organisationId, viability, statusToSend);
 
@@ -103,13 +103,13 @@ public class FinanceChecksViabilityController {
         });
     }
 
-    private ViabilityStatus getRagStatusDependantOnConfirmationCheckboxSelection(FinanceChecksViabilityForm form) {
-        ViabilityStatus statusToSend;
+    private ViabilityRagStatus getRagStatusDependantOnConfirmationCheckboxSelection(FinanceChecksViabilityForm form) {
+        ViabilityRagStatus statusToSend;
 
         if (form.isConfirmViabilityChecked()) {
             statusToSend = form.getRagStatus();
         } else {
-            statusToSend = ViabilityStatus.UNSET;
+            statusToSend = ViabilityRagStatus.UNSET;
         }
         return statusToSend;
     }
@@ -145,8 +145,8 @@ public class FinanceChecksViabilityController {
         Integer headCount = null; // for this release, these will always be null
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
-        String approver = "Dave Smith";
-        LocalDate approvalDate = LocalDate.now();
+        String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();
+        LocalDate approvalDate = viability.getViabilityApprovalDate();
 
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
@@ -158,9 +158,9 @@ public class FinanceChecksViabilityController {
 
         ViabilityResource viability = financeService.getViability(projectId, organisationId);
         boolean creditReportConfirmed = financeService.isCreditReportConfirmed(projectId, organisationId);
-        boolean confirmViabilityChecked = viability.getViabilityStatus() != ViabilityStatus.UNSET;
+        boolean confirmViabilityChecked = viability.getViabilityRagStatus() != ViabilityRagStatus.UNSET;
 
-        return new FinanceChecksViabilityForm(creditReportConfirmed, viability.getViabilityStatus(), confirmViabilityChecked);
+        return new FinanceChecksViabilityForm(creditReportConfirmed, viability.getViabilityRagStatus(), confirmViabilityChecked);
     }
 
     private int toZeroScaleInt(BigDecimal value) {

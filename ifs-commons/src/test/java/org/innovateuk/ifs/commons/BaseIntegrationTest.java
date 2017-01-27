@@ -4,28 +4,25 @@ import org.innovateuk.ifs.commons.security.authentication.user.UserAuthenticatio
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.runner.RunWith;
-
+import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Arrays;
-import java.util.List;
-
 /**
- * This is the base class for all integration tests against a configured Spring application.  Subclasses of this base can be
- * of the form of either integration tests with a running server ({BaseWebIntegrationTest}) or without
- * (e.g. {BaseRepositoryIntegrationTest}).
+ * This is the base class for all integration tests against a configured Spring application.  This superclass also
+ * provides a running server against which tests can be run, or can simply be used as a non-web-based integration
+ * platform with a full stack available for autowiring.
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = IntegrationTestConfiguration.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("integration-test")
 public abstract class BaseIntegrationTest extends BaseTest {
 
-    public static final int USER_COUNT = 17;
-    public static final List<String> ALL_USERS_EMAIL = Arrays.asList("steve.smith@empire.com", "jessica.doe@ludlow.co.uk", "paul.plum@gmail.com", "competitions@innovateuk.gov.uk", "finance@innovateuk.gov.uk", "pete.tom@egg.com", "felix.wilson@gmail.com", "ewan+1@hiveit.co.uk", "ifs_web_user@innovateuk.org", "compadmin@innovateuk.test", "comp_exec1@innovateuk.test", "comp_exec2@innovateuk.test", "comp_technologist1@innovateuk.test", "comp_technologist2@innovateuk.test", "ifsadmin@innovateuk.test");
+    @LocalServerPort
+    protected int port;
 
     /**
      * Set a user on the Spring Security ThreadLocals

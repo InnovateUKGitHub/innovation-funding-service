@@ -204,7 +204,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         Competition competition = newCompetition().withName("Greener Jet Engines").build();
         Application application = newApplication().withCompetition(competition).build();
         organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build());
-        ProcessRole leadApplicantRole = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisation(organisation).withApplication(application).build();
+        ProcessRole leadApplicantRole = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(organisation.getId()).withApplication(application).build();
         Project project = newProject().withId(projectId).withApplication(application).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
@@ -212,6 +212,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         when(bankDetailsMapperMock.mapToResource(bankDetails)).thenReturn(bankDetailsResource);
         when(projectUsersHelperMock.getPartnerOrganisations(projectId)).thenReturn(singletonList(organisation));
         when(financeRowServiceMock.organisationSeeksFunding(project.getId(), project.getApplication().getId(), organisation.getId())).thenReturn(serviceSuccess(true));
+        when(organisationRepositoryMock.findOne(leadApplicantRole.getOrganisationId())).thenReturn(organisation);
 
         List<BankDetailsStatusResource> bankDetailsStatusResource = newBankDetailsStatusResource().withOrganisationId(organisation.getId()).withOrganisationName(organisation.getName()).withBankDetailsStatus(ProjectActivityStates.ACTION_REQUIRED).build(1);
 

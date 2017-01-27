@@ -2,8 +2,10 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
@@ -12,16 +14,17 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
+import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.Spy;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,14 +38,18 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
@@ -50,6 +57,7 @@ import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -71,7 +79,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Spy
     @InjectMocks
-    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Spy
     @InjectMocks
@@ -85,6 +93,12 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
+
+    @Mock
+    private OverheadFileSaver overheadFileSaver;
+
+    @Mock
+    private DefaultFinanceFormHandler defaultFinanceFormHandler;
 
     @Mock
     private Model model;
@@ -118,14 +132,17 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         this.setupQuestionStatus(applications.get(0));
 
         application = applications.get(0);
-        sectionId = Long.valueOf(1);
-        questionId = Long.valueOf(1);
-        formInputId = Long.valueOf(111);
-        costId = Long.valueOf(1);
+        sectionId = 1L;
+        questionId = 1L;
+        formInputId = 111L;
+        costId = 1L;
 
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
+        when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
     }
 
     @Test
@@ -184,6 +201,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Long currentSectionId = sectionResources.get(6).getId();
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId))
                 .andExpect(view().name("application-form"))
                 .andReturn();
@@ -329,6 +350,46 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void testNotRequestingFunding() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        QuestionResource financeQuestion = newQuestionResource().build();
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(restSuccess(financeQuestion));
+        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.NOT_REQUESTING_FUNDING, "1")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
+
+        ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
+        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
+        verify(sectionService, times(2)).markAsNotRequired(anyLong(), anyLong(), anyLong());
+    }
+
+    @Test
+    public void testRequestingFunding() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+        when(sectionService.getById(1L)).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        QuestionResource financeQuestion = newQuestionResource().build();
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(application.getCompetition(), FormInputType.FINANCE)).thenReturn(restSuccess(financeQuestion));
+        when(financeRowService.add(anyLong(), eq(financeQuestion.getId()), any(GrantClaim.class))).thenReturn(ValidationMessages.noErrors());
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.REQUESTING_FUNDING, "1")
+        ).andExpect(status().is3xxRedirection())
+                .andExpect(MockMvcResultMatchers.redirectedUrlPattern("/application/" + application.getId() +"/form/section/**"))
+                .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
+
+        ArgumentCaptor<GrantClaim> argument = ArgumentCaptor.forClass(GrantClaim.class);
+        verify(financeRowService).add(anyLong(), eq(financeQuestion.getId()), argument.capture());
+        assertThat(argument.getValue().getGrantClaimPercentage(), equalTo(0));
+        verify(sectionService, times(2)).markAsInComplete(anyLong(), anyLong(), anyLong());
+    }
+
+    @Test
     public void testSubmitFinanceSubSectionWithRedirectToYourFinances() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
@@ -346,6 +407,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFinanceMarkAsCompleteFailWithTerms() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -360,6 +425,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFinanceMarkAsCompleteFailWithStateAid() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -423,6 +492,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
                         .param("application.name", "")
+                        .param("application.researchCategoryId", "")
                         .param("application.resubmission", "")
                         .param("application.startDate", "")
                         .param("application.startDate.year", "")
@@ -433,6 +503,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertEquals("NotBlank", bindingResult.getFieldError("application.name").getCode());
+        assertEquals("NotNull", bindingResult.getFieldError("application.researchCategoryId").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.durationInMonths").getCode());
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
@@ -653,6 +724,22 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
         assertEquals(jsonExpectedContent, content);
+    }
+
+    @Test
+    public void testSaveFormElementApplicationResearchCategory() throws Exception {
+        String value = "1";
+        String fieldName = "application.researchCategoryId";
+
+        mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"true\"}"));
+
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
 
     @Test
@@ -1020,9 +1107,60 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 get("/application/{applicationId}/form/{sectionType}", application.getId(), SectionType.FINANCE))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(MockMvcResultMatchers.redirectedUrl("/application/"+application.getId()));
-
     }
 
+    @Test
+    public void testOverheadFile_overheadFileSaverIsCalledOnFormSubmit() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+        ).andExpect(status().is3xxRedirection());
+
+        verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
+    }
+
+    @Test
+    public void testOverheadFile_errorsAreNotShownOnOverheadFileRequest() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
 
 
+        ValidationMessages validationMessages = new ValidationMessages();
+        validationMessages.addError(new org.innovateuk.ifs.commons.error.Error("save_application_error", HttpStatus.FORBIDDEN));
+        when(overheadFileSaver.isOverheadFileRequest(any())).thenReturn(true);
+        when(financeHandler.getFinanceFormHandler(any()).update(any(), any(), any(), any())).thenReturn(validationMessages);
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
+        ).andExpect(status().is2xxSuccessful())
+        .andExpect(model().hasNoErrors());
+
+        verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
+    }
+
+    @Test
+    public void testOverheadFile_pageIsNotRedirectedOnOverheadFileUploadRequest() throws Exception {
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
+        when(overheadFileSaver.isOverheadFileRequest(any())).thenReturn(true);
+
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(sectionResourceBuilder.withType(SectionType.FINANCE).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(OverheadFileSaver.OVERHEAD_FILE_SUBMIT, "")
+        ).andExpect(status().is2xxSuccessful());
+
+        verify(overheadFileSaver, times(1)).handleOverheadFileRequest(isA(HttpServletRequest.class));
+    }
 }

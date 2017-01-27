@@ -26,6 +26,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
+
 /**
  * Managing all the view attributes for the finances
  */
@@ -57,9 +59,9 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     private CompetitionService competitionService;
     
     @Override
-    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
+    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
 
-        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId);
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
 
         if (applicationFinanceResource != null) {
             OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
@@ -78,7 +80,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 
     private void addGrantClaim(Model model, Form form, ApplicationFinanceResource applicationFinanceResource) {
         if(applicationFinanceResource.getGrantClaim()!=null) {
-            model.addAttribute("organisationGrantClaimPercentage", applicationFinanceResource.getGrantClaim().getGrantClaimPercentage());
+            model.addAttribute("organisationGrantClaimPercentage", ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));
             model.addAttribute("organisationgrantClaimPercentageId", applicationFinanceResource.getGrantClaim().getId());
             String formInputKey = "finance-grantclaimpercentage-" + applicationFinanceResource.getGrantClaim();
             String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
@@ -86,14 +88,14 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         }
     }
 
-    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, List<QuestionResource> costsQuestions, Long userId) {
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
+    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Long organisationId) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId, organisationId);
         if(applicationFinanceResource == null) {
             financeService.addApplicationFinance(userId, applicationId);
             // ugly fix since the addApplicationFinance method does not return the correct results.
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         }
-        
+
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
         
         ApplicationResource application = applicationService.getById(applicationId);
@@ -134,7 +136,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 	}
 
 	@Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, FinanceRowType costType) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
         if (FinanceRowType.LABOUR == costType) {
             ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
             LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(FinanceRowType.LABOUR);

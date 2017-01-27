@@ -28,6 +28,7 @@ IFS.core.loadOrder = {
       IFS.core.wordCount.init()
       IFS.core.disableSubmitUntilChecked.init()
       IFS.core.finance.init()
+      IFS.core.progressiveGroupSelect.init()
     },
     finalize: function () {
       IFS.core.modal.init()
@@ -35,6 +36,7 @@ IFS.core.loadOrder = {
       IFS.core.autoSubmitForm.init()
       IFS.core.pieChart.init()
       IFS.core.unsavedChanges.init()
+      IFS.core.mirrorElements.init()
       IFS.core.debug.init()
     }
   }

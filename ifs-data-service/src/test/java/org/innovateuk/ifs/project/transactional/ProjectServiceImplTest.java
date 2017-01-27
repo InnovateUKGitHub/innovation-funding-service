@@ -107,6 +107,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -158,7 +159,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 build();
 
         leadApplicantProcessRole = newProcessRole().
-                withOrganisation(organisation).
+                withOrganisationId(organisation.getId()).
                 withRole(leadApplicantRole).
                 withUser(user).
                 build();
@@ -192,7 +193,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 .build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        o = application.getLeadOrganisation();
+        o = organisation;
         o.setOrganisationType(businessOrganisationType);
 
         partnerRole = newRole().
@@ -211,7 +212,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         pu = newProjectUser().
                 withRole(PROJECT_FINANCE_CONTACT).
                 withUser(u).
-                withOrganisation(application.getLeadOrganisation()).
+                withOrganisation(o).
                 withInvite(newInvite().
                         build()).
                 build(1);
@@ -237,6 +238,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
     }
 
     @Test
@@ -245,8 +247,6 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Role partnerRole = newRole().withType(PARTNER).build();
 
         ProjectResource newProjectResource = newProjectResource().build();
-
-        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
 
         PartnerOrganisation savedProjectPartnerOrganisation = newPartnerOrganisation().
                 withOrganisation(organisation).
@@ -579,7 +579,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -615,7 +615,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -646,7 +646,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -677,7 +677,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         InviteProjectResource inviteResource = newInviteProjectResource()
                 .withName("Abc Xyz")
                 .withEmail("Abc.xyz@gmail.com")
-                .withLeadOrganisation("Lead Organisation 1")
+                .withLeadOrganisation(17L)
                 .withInviteOrganisationName("Invite Organisation 1")
                 .withHash("sample/url")
                 .build();
@@ -1287,11 +1287,16 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
     @Test
     public void testInviteProjectFinanceUser(){
         InviteProjectResource invite = newInviteProjectResource().build();
-        ProcessRole[] roles = newProcessRole().withOrganisation(o).withRole(LEADAPPLICANT).build(1).toArray(new ProcessRole[0]);
+        ProcessRole[] roles = newProcessRole()
+                .withOrganisationId(o.getId())
+                .withRole(LEADAPPLICANT)
+                .build(1)
+                .toArray(new ProcessRole[0]);
         Application a = newApplication().withProcessRoles(roles).build();
 
         Project project = newProject().withId(projectId).withApplication(a).build();
 
+        when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceSuccess());
         when(inviteProjectMapperMock.mapToDomain(invite)).thenReturn(newInvite().build());
@@ -1360,8 +1365,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
         OrganisationType academicOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.ACADEMIC).build();
         List<Organisation> organisations = new ArrayList<>();
-        organisations.add(application.getLeadOrganisation());
-        application.getLeadOrganisation().setOrganisationType(businessOrganisationType);
+        Organisation leadOrganisation = organisationRepositoryMock.findOne(application.getLeadOrganisationId());
+        leadOrganisation.setOrganisationType(businessOrganisationType);
+        organisations.add(leadOrganisation);
+        leadOrganisation.setOrganisationType(businessOrganisationType);
         organisations.add(newOrganisation().withOrganisationType(businessOrganisationType).build());
         organisations.add(newOrganisation().withOrganisationType(academicOrganisationType).build());
 
@@ -1738,7 +1745,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         User u = newUser().withEmailAddress("a@b.com").build();
 
         OrganisationType businessOrganisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build();
-        Organisation o = application.getLeadOrganisation();
+        Organisation o = organisationRepositoryMock.findOne(application.getLeadOrganisationId());
         o.setOrganisationType(businessOrganisationType);
 
         FileEntry golFile = newFileEntry().withFilesizeBytes(10).withMediaType("application/pdf").build();
@@ -2066,7 +2073,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
             collaborativeRoles.forEach(processRole -> {
 
                 List<ProjectUser> matchingProjectUser = simpleFilter(project.getProjectUsers(), projectUser ->
-                        projectUser.getOrganisation().equals(processRole.getOrganisation()) &&
+                        projectUser.getOrganisation().getId().equals(processRole.getOrganisationId()) &&
                                 projectUser.getUser().equals(processRole.getUser()));
 
                 assertEquals(1, matchingProjectUser.size());
@@ -2157,6 +2164,21 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.getSpendProfileSubmittedDate() == null);
     }
 
+    @Test
+    public void testGetProjectManager() {
+        final Long projectId = 123L;
+        final Project project = newProject().withId(projectId).build();
+        final ProjectUser projectManager = newProjectUser().withProject(project).withRole(PROJECT_MANAGER).build();
+        final ProjectUserResource projectManagerResource = newProjectUserResource().withProject(projectId).withRoleName(PROJECT_MANAGER.getName()).build();
+
+        when(projectUserMapperMock.mapToResource(projectManager)).thenReturn(projectManagerResource);
+        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(projectManager);
+
+        ServiceResult<ProjectUserResource> foundProjectManager = service.getProjectManager(projectId);
+        assertTrue(foundProjectManager.isSuccess());
+        assertTrue(foundProjectManager.getSuccessObject().getRoleName().equals(PROJECT_MANAGER.getName()));
+        assertTrue(foundProjectManager.getSuccessObject().getProject().equals(projectId));
+    }
 
     @Override
     protected ProjectService supplyServiceUnderTest() {
