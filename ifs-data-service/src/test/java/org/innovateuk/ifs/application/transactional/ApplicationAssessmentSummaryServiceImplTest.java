@@ -44,6 +44,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -91,7 +92,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withId(1L, 2L, 3L)
                         .withFirstName("John", "Dave", "Richard")
                         .withLastName("Barnes", "Smith", "Turner")
-                        .withProfile(profiles)
+                        .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
                         .buildArray(3, User.class))
                 .withStatus(ACCEPTED)
                 .withCompetition(competition)

@@ -96,10 +96,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     @Test
     public void getProfileSkills_noSkills() {
         User existingUser = newUser()
-                .withProfile(newProfile()
-                        .withAddress(newAddress().build())
-                        .withContract(newContract().build())
-                        .build())
+                .withProfileId(1L)
                 .build();
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
@@ -145,7 +142,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         User existingUser = newUser()
                 .withId(userId)
-                .withProfile(existingProfile)
+                .withProfileId(existingProfile.getId())
                 .build();
 
         when(profileRepositoryMock.findOne(existingProfile.getId())).thenReturn(existingProfile);
@@ -197,7 +194,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         User existingUser = newUser()
                 .withId(userId)
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
 
         when(userRepositoryMock.findOne(userId)).thenReturn(existingUser);
@@ -326,7 +323,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withContractSignedDate(contractSignedDate)
                 .build();
         User existingUser = newUser()
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
 
         when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
@@ -372,8 +369,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         // Profile has no contract or signed date
         User existingUser = newUser()
-                .withProfile(newProfile()
-                        .build())
+                .withProfileId(1L)
                 .build();
 
         when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
@@ -406,10 +402,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         // Profile has a contract and a signed date, but not the current one
         User existingUser = newUser()
-                .withProfile(newProfile()
-                        .withContract(newContract().build())
-                        .withContractSignedDate(LocalDateTime.now())
-                        .build())
+                .withProfileId(10L)
                 .build();
 
         when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
@@ -474,7 +467,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withContractSignedDate((LocalDateTime) null)
                 .build();
         User existingUser = newUser()
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
@@ -523,7 +516,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         Profile initialProfile = newProfile()
                 .build();
         User existingUser = newUser()
-                .withProfile(initialProfile)
+                .withProfileId(initialProfile.getId())
                 .build();
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
@@ -562,7 +555,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withContractSignedDate(LocalDateTime.now())
                 .build();
         User existingUser = newUser()
-                .withProfile(initialProfile)
+                .withProfileId(initialProfile.getId())
                 .build();
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
 
@@ -600,7 +593,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withContractSignedDate(LocalDateTime.now())
                 .build();
         User existingUser = newUser()
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
         when(contractRepositoryMock.findByCurrentTrue()).thenReturn(currentContract);
         when(profileRepositoryMock.findOne(existingUser.getProfileId())).thenReturn(profile);
@@ -678,7 +671,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         User user = newUser()
                 .withAffiliations( asList(newAffiliation().build()) )
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
 
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
@@ -707,7 +700,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withSkillsAreas("skills")
                 .build();
         User user = newUser()
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
 
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
@@ -761,7 +754,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withContractSignedDate(LocalDateTime.now())
                 .build();
         User user = newUser()
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
 
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
@@ -793,7 +786,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withSkillsAreas("Skills")
                 .build();
         User existingUser = newUser()
-                .withProfile(existingProfile)
+                .withProfileId(existingProfile.getId())
                 .withEthnicity(newEthnicity().build())
                 .build();
 
@@ -858,7 +851,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withAddress(newAddress().build())
                 .build();
         User existingUser = newUser()
-                .withProfile(originalProfile)
+                .withProfileId(originalProfile.getId())
                 .withEthnicity(newEthnicity().build())
                 .build();
 
