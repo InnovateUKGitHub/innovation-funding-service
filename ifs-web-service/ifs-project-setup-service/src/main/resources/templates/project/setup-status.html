@@ -73,7 +73,7 @@
         <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.bankDetailsSection.accessible}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
+            <a th:if="${model.bankDetailsSection.accessible }" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
             <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
           </h2>
           <p>We need bank details for each consortium member so that we can pay the grant.</p>
@@ -85,8 +85,10 @@
         <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
-            <th:block th:unless="${model.financeChecksSection.notRequired}">Finance checks</th:block>
-            <th:block th:if="${model.financeChecksSection.notRequired}">Finance checks (not required)</th:block>
+              <a th:if="${model.financeChecksSection.accessible}"
+                 th:href="@{/project/{id}/partner-organisation/{organisationId}/finance-checks(id=${model.projectId}, organisationId=${model.getOrganisationId()})}">Finance checks</a>
+              <th:block th:unless="${model.financeChecksSection.notRequired or model.financeCheckSection.accessible}">Finance checks</th:block>
+              <th:block th:if="${model.financeChecksSection.notRequired}">Finance checks (not required)</th:block>
           </h2>
           <p>We will review all project costs.</p>
         </div>

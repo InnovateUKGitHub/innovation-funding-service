@@ -11,7 +11,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}"  th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
 
 
     <div class="page-title">
@@ -20,7 +20,7 @@
         <h1 class="heading-xlarge">Finance checks</h1>
     </div>
 
-    <th:block th:if="${param.status != null and param.status[0] == 'approved'}">
+    <th:block th:if="${model.isApproved()}">
         <div class="success-alert extra-margin-bottom">
             The finance checks have been completed and your finances approved
         </div>
