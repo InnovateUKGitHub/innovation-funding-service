@@ -1,25 +1,24 @@
 apiVersion: v1
 kind: List
 items:
- 
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
-    name: shib
+    name: idp
   spec:
     replicas: 1
     selector:
-      deploymentconfig: shib
+      deploymentconfig: idp
     strategy:
       resources: {}
     template:
       metadata:
         labels:
-          deploymentconfig: shib
+          deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-sp:0.2.0
-          name: shib
+        - image: innovateuk/ifs-shib-idp:0.2.0
+          name: idp
           env:
           - name: SPHOST
             value: <<SHIB-ADDRESS>>
@@ -34,34 +33,33 @@ items:
           - containerPort: 9080
           resources: {}
           test: false
-    triggers:
-    - type: ConfigChange
-  status: {}
+  triggers:
+  - type: ConfigChange
  
 - apiVersion: v1
   kind: Service
   metadata:
-    name: shib
+    name: idp
   spec:
     ports:
     - name: 443-tcp
       port: 443
       targetPort: 9443
     selector:
-      deploymentconfig: shib
+      deploymentconfig: idp
   status:
     loadBalancer: {}
- 
+
 - apiVersion: v1
   kind: Route
   metadata:
-    name: shib
+    name: idp
   spec:
-    host: <<SHIB-ADDRESS>>
+    host: <<SHIB-IDP-ADDRESS>>
     port:
       targetPort: 443-tcp
     tls:
       termination: passthrough
     to:
       kind: Service
-      name: shib
+      name: idp
