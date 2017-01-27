@@ -34,6 +34,6 @@ Apply button disable when competion is in assessment
 
 *** Keywords ***
 the new window should have the competition brief
-    IFS Wait Until Keyword Succeeds    30    200ms    Select Window    url=https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief
+    Wait Until Keyword Succeeds Without Screenshots    30    200ms    Select Window    url=https://www.gov.uk/government/publications/funding-competition-connected-digital-additive-manufacturing/connected-digital-additive-manufacturing-competition-brief
     The user should see the text in the page    Dates and deadlines
     The user should see the text in the page    How to apply

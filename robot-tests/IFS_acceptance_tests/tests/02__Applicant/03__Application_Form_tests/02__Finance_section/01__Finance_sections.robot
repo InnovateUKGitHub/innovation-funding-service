@@ -77,13 +77,13 @@ the user adds three material rows
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    IFS Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
+    Wait Until Element Is Not Visible Without Screenshots    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
     the user moves focus to the element    jQuery=#material-costs-table button:contains("Remove")
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    IFS Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
+    Wait Until Element Is Not Visible Without Screenshots    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    IFS Run Keyword And Ignore Error    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    IFS Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
+    Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
+    Wait Until Element Is Not Visible Without Screenshots    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link    jQuery=button:contains("Materials")
 
 the working days per year should be 232 by default
@@ -93,4 +93,4 @@ the working days per year should be 232 by default
 
 the user navigates to another page
     the user clicks the button/link    link=Please refer to our guide to project costs for further information.
-    IFS Run Keyword And Ignore Error    Confirm Action
+    Run Keyword And Ignore Error Without Screenshots    Confirm Action

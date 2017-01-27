@@ -113,7 +113,7 @@ the applications should be sorted in reverse order by column
 
 The calculations should be correct
     [Arguments]    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}
-    ${pagination}=    IFS Run Keyword And Ignore Error    the user clicks the button/link    name=page
+    ${pagination}=    Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    name=page
     run keyword if    ${pagination} == 'PASS'    check calculations on both pages    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}
     run keyword if    ${pagination} == 'FAIL'    check calculations on one page    ${LIST_LOCATOR}    ${SUMMARY_LOCATOR}
 
@@ -153,7 +153,7 @@ submitted application calculations are correct
     the calculations should be correct    jQuery=td:contains("submitted")    css=.info-area p:nth-child(5) span
 
 the table header matches correctly
-    ${pagination}=    IFS Run Keyword And Ignore Error    the user clicks the button/link    name=page
+    ${pagination}=    Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    name=page
     Run Keyword If    ${pagination} == 'PASS'    check both pages of applications
     Run Keyword If    ${pagination} == 'FAIL'    check applications on one page
 

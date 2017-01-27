@@ -14,24 +14,24 @@ Create new application
 
 The user clicks the button/link
     [Arguments]    ${BUTTON}
-    IFS Wait Until element is visible    ${BUTTON}
+    Wait Until Element Is Visible Without Screenshots    ${BUTTON}
     Focus    ${BUTTON}
     wait for autosave
-    IFS Wait Until Keyword Succeeds    30    200ms    click element    ${BUTTON}
+    Wait Until Keyword Succeeds Without Screenshots    30    200ms    click element    ${BUTTON}
 
 
 The user should not see the text in the page
     [Arguments]    ${NOT_VISIBLE_TEXT}
-    IFS Wait Until Page Does Not Contain    ${NOT_VISIBLE_TEXT}
+    Wait Until Page Does Not Contain Without Screenshots    ${NOT_VISIBLE_TEXT}
 
 
 The user should see the element
     [Arguments]    ${ELEMENT}
-    IFS Wait Until Element Is Visible    ${ELEMENT}
+    Wait Until Element Is Visible Without Screenshots    ${ELEMENT}
 
 The user should not see the element
     [Arguments]    ${NOT_VISIBLE_ELEMENT}
-    IFS Wait Until element is not visible    ${NOT_VISIBLE_ELEMENT}
+    Wait Until Element Is Not Visible Without Screenshots    ${NOT_VISIBLE_ELEMENT}
 
 the user should get a new print window
     [Arguments]  ${title}
@@ -45,8 +45,8 @@ The user should see the browser notification
 
 The user should see the notification
     [Arguments]    ${MESSAGE}
-    IFS Wait Until Element Is Visible    css=div.event-alert
-    IFS Wait Until Page Contains    ${MESSAGE}
+    Wait Until Element Is Visible Without Screenshots    css=div.event-alert
+    Wait Until Page Contains Without Screenshots    ${MESSAGE}
 
 The applicant assigns the question to the collaborator
     [Arguments]    ${TEXT_AREA}    ${TEXT}    ${NAME}
@@ -57,7 +57,7 @@ The applicant assigns the question to the collaborator
 
 the user assigns the question to the collaborator
     [Arguments]    ${name}
-    IFS Wait Until Element Is Not Visible    css=div.event-alert
+    Wait Until Element Is Not Visible Without Screenshots    css=div.event-alert
     The user clicks the button/link    css=.assign-button
     The user clicks the button/link    jQuery=button:contains("${NAME}")
     Reload Page
@@ -132,7 +132,7 @@ invite a new academic
 the user should see that the element is disabled
     [Arguments]    ${element}
     the user should not see an error in the page
-    IFS Wait Until element is visible    ${element}
+    Wait Until Element Is Visible Without Screenshots    ${element}
     element should be disabled    ${element}
 
 The user fills the empty question fields
@@ -173,8 +173,8 @@ The user checks the assessment fields
 
 The user should see the text in the element
     [Arguments]    ${element}    ${text}
-    IFS Wait Until element is visible    ${element}
-    IFS Wait Until element contains    ${element}    ${text}
+    Wait Until Element Is Visible Without Screenshots    ${element}
+    Wait Until Element Contains Without Screenshots    ${element}    ${text}
     Page Should Not Contain    Error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
@@ -182,8 +182,8 @@ The user should see the text in the element
 
 The user should not see the text in the element
     [Arguments]    ${element}    ${text}
-    IFS Wait Until element is visible    ${element}
-    IFS Wait Until element does not contain    ${element}    ${text}
+    Wait Until Element Is Visible Without Screenshots    ${element}
+    Wait Until Element Does Not Contain Without Screenshots    ${element}    ${text}
     Page Should Not Contain    Error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request

@@ -173,13 +173,13 @@ the academic partner uploads a file
 
 
 the finance table should be correct
-    IFS Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
-    IFS Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(2)    £3,000
-    IFS Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(3)    £1,000
-    IFS Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(4)    £1,000
-    IFS Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £0
-    IFS Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
-    IFS Wait Until Element Contains    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £9,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(2)    £3,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(3)    £1,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(4)    £1,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(6)    £0
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(7)    £1,000
+    Wait Until Element Contains Without Screenshots    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(8)    £3,000
 
 Lead applicant marks the finances as complete
     Given guest user log-in    steve.smith@empire.com    Passw0rd

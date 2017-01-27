@@ -11,7 +11,7 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...
 ...               INFUND-2621 As a contributor I want to be able to review the current Project Setup status of all partners in my project so I can get an indication of the overall status of the consortium
 ...
-...               INFUND-4583 As a partner I want to be able to continue with Project Setup once I have supplied my Project Details so that I don't have to IFS Wait Until all partner details are submitted before providing further information
+...               INFUND-4583 As a partner I want to be able to continue with Project Setup once I have supplied my Project Details so that I don't have to wait until all partner details are submitted before providing further information
 ...
 ...               INFUND-4428 As a Partner, I should have access to the various Project Setup sections when they become available, so that I can access them when it is valid to
 ...
@@ -654,12 +654,12 @@ the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
 
 the applicant clicks the submit button and then clicks cancel in the submit modal
-    IFS Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 the applicant clicks the submit button in the modal
-    IFS Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
@@ -677,7 +677,7 @@ the user changes the start date back again
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 Mark as complete button should be enabled
-    Then IFS Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label

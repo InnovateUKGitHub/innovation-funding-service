@@ -14,7 +14,7 @@ Guest user log-in
     The guest user opens the browser
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
-    IFS Wait Until page contains    dashboard
+    Wait Until Page Contains Without Screenshots    dashboard
     Page should not contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
@@ -34,7 +34,7 @@ Invited guest user log in
     [Arguments]    ${email}    ${password}
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
-    IFS Wait Until page contains    dashboard
+    Wait Until Page Contains Without Screenshots    dashboard
     Page should not contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
@@ -42,13 +42,13 @@ Invited guest user log in
 
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}
-    IFS Wait Until element is visible    id=username
-    IFS Wait Until element is visible    id=password
+    Wait Until Element Is Visible Without Screenshots    id=username
+    Wait Until Element Is Visible Without Screenshots    id=password
     Input Text    id=username    ${USERNAME}
     Input Password    id=password    ${PSW}
 
 The guest user clicks the log-in button
-    IFS Wait Until element is visible    css=button[name="_eventId_proceed"]
+    Wait Until Element Is Visible Without Screenshots    css=button[name="_eventId_proceed"]
     Click Button    css=button[name="_eventId_proceed"]
 
 The guest user opens the browser
@@ -58,7 +58,6 @@ The guest user opens the browser
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'    Set Selenium Timeout    30
     Run keyword if    '${REMOTE_URL}' == 'http://ifs-local-dev:4444/wd/hub'    Set Selenium Timeout    10
-    Set Window Size     1024    768
 
 TestTeardown User closes the browser
     Run keyword if    '${REMOTE_URL}' != '' and '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'    Get Sauce Labs Test Report
@@ -71,19 +70,19 @@ The user closes the browser
 Logout as user
     the user clicks the button/link    link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
-    IFS Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
 
 The user can log out
     logout as user
 
 Get Sauce Labs Test Report
-    IFS Run Keyword And Ignore Error    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+    Run Keyword And Ignore Error Without Screenshots    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
 
 Get Sauce Labs Suite Report
-    IFS Run Keyword And Ignore Error    Report Sauce status    'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
+    Run Keyword And Ignore Error Without Screenshots    Report Sauce status    'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
 
 Close any open browsers
-    IFS Run Keyword And Ignore Error    Close all browsers
+    Run Keyword And Ignore Error Without Screenshots    Close all browsers
 
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
@@ -100,4 +99,4 @@ the user cannot login with their new details
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user logs out if they are logged in
-    IFS Run Keyword And Ignore Error    log out as user
+    Run Keyword And Ignore Error Without Screenshots    log out as user

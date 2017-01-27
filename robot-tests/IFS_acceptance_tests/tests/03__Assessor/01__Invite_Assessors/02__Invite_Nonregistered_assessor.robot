@@ -136,10 +136,10 @@ the assessor fills in all fields
 
 the user should not see the validation error in the create assessor form
     [Arguments]    ${ERROR_TEXT}
-    IFS Run Keyword And Ignore Error    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Continue")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    IFS Run Keyword And Ignore Error    IFS Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the assessor shouldn't be able to reject the rejected competition

@@ -122,7 +122,7 @@ Review and submit button
 
 *** Keywords ***
 the text should be visible
-    IFS Wait Until element contains    css=#form-input-11 .editor    I am a robot
+    Wait Until Element Contains Without Screenshots    css=#form-input-11 .editor    I am a robot
 
 The user clicks the section link and is redirected to the correct section
     [Arguments]    ${link}    ${url}
@@ -134,14 +134,14 @@ the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    IFS Wait Until Element Contains    css=#form-input-11 .count-down    400
+    Wait Until Element Contains Without Screenshots    css=#form-input-11 .count-down    400
     Focus    css=#form-input-11 .editor
     The user enters text to a text field    css=#form-input-11 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
     wait for autosave
 
 the word count should be correct for the Project summary
-    IFS Wait Until element contains    css=#form-input-11 .count-down    369
+    Wait Until Element Contains Without Screenshots    css=#form-input-11 .count-down    369
 
 the Applicant edits the Project description question (300 words)
     Clear Element Text    css=#form-input-11 .editor
@@ -173,17 +173,17 @@ the question should be marked as complete on the application overview page
     The user should see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 the text box should be editable
-    IFS Wait Until Element Is Enabled    css=#form-input-11 textarea
+    Wait Until Element Is Enabled Without Screenshots    css=#form-input-11 textarea
 
 the button state should change to 'Mark as complete'
     the user should see the element    jQuery=button:contains("Mark as complete")
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
-    IFS Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=#section-1 .section:nth-child(2)
     the user should not see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label
-    IFS Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
