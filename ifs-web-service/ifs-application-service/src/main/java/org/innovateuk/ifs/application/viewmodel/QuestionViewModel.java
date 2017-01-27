@@ -55,6 +55,10 @@ public class QuestionViewModel {
         return questionFormInputs;
     }
 
+    public void setQuestionFormInputs(Map<Long, List<FormInputResource>> questionFormInputs) {
+        this.questionFormInputs = questionFormInputs;
+    }
+
     public List<FormInputResource> getCurrentQuestionFormInputs() {
         if(null != currentQuestion) {
             return questionFormInputs.get(currentQuestion.getId());
@@ -63,7 +67,7 @@ public class QuestionViewModel {
     }
 
     public Boolean getHasCurrentQuestionFormInputs() {
-        return !questionFormInputs.isEmpty();
+        return null != questionFormInputs && !questionFormInputs.isEmpty();
     }
 
     public SortedSet<OrganisationResource> getAcademicOrganisations() {

@@ -59,7 +59,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     @Autowired
     private CompetitionService competitionService;
 
-    //TODO: make sure this function is not going to be used anymore
+    //TODO: INFUND-7849 - make sure this function is not going to be used anymore
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
 
