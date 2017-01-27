@@ -89,7 +89,7 @@ Status updates correctly for internal user's table
     #Internal user can view project details via the clickable 'hour glass' for Project details
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery=h1:contains("Project details")
-    And the user clicks the button/link    link=Competition dashboard
+    And the user clicks the button/link    link=Projects in setup
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
 
 Non-lead partner can see the project setup page
