@@ -15,7 +15,9 @@
 
     <main id="content">
         <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-        <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application team'}, ${'/prototypes/632-organisation-collaborator-overview'})" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application team'}, ${'/prototypes/632-organisation-collaborator-overview' + (param.company == null or param.company[0] == 'empire' ? '' : '?company='+ param.company[0])})" th:unless="${param.status != null and param.status[0] == 'firstLoad'}" th:remove="tag" />
+
+        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application team'}, ${'/prototypes/632-organisation-collaborator-overview?company=empire&#38;status=firstLoad'})" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
@@ -55,7 +57,7 @@
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
-            From this page you are able to invite an new organisation to your application. You need to add at least one applicant before you can invite the organisation..
+            From this page you are able to invite an new organisation to your application. You need to add at least one applicant before you can invite the organisation.
           </th:block>
 
         </p>
@@ -81,7 +83,7 @@
                     <td>Lead</td>
                     <td class="alignright"></td>
                   </tr>
-                  <tr>
+                  <tr th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
                     <td>Paul Davidson</td>
                     <td>paul.davidsonh@empire.com</td>
                     <td></td>
@@ -145,9 +147,13 @@
           </div>
         </th:block>
 
-        <p th:unless="${param.action != null and param.action[0] == 'addApplicant'}">
-          <a th:href="@{'?action=addApplicant&#38;company=' + ${param.company[0]}}">Add new applicant</a>
+        <p th:unless="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg' or param.status != null and param.status[0] == 'firstLoad'}">
+          <a th:href="@{'?action=addApplicant&#38;company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Add new applicant</a>
         </p>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
+          <a th:href="@{'?status=firstLoad&#38;company=empire&#38;action=addApplicant'}">Add new applicant</a>
+        </th:block>
 
         <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
           <fieldset>
@@ -179,7 +185,7 @@
                   <td>
                     <input type="text" id="applicant-email-1" name="applicant-emaile-1" aria-labelledby="new-applicant-email" required="required" class="form-control width-full">
                   </td>
-                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}">Remove</a></td>
+                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Remove</a></td>
                 </tr>
               </tbody>
             </table>
@@ -191,16 +197,20 @@
 
         </th:block>
 
-        <div class="alignright" th:unless="${param.company[0] == 'empire' or param.company[0] == 'newOrg'}">
-          <a href="/prototypes/635-application-overview" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
-          <hr />
-        </div>
+        <th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
 
-        <p class="extra-margin-top" th:unless="${param.company[0] == 'newOrg'}">Updating the organisation will notify applicants of changes to their position on the project.</p>
+          <div class="alignright" th:unless="${param.company[0] == 'empire' or param.company[0] == 'newOrg'}">
+            <a href="/prototypes/635-application-overview" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
+            <hr />
+          </div>
+
+          <p class="extra-margin-top" th:unless="${param.company[0] == 'newOrg'}">Updating the organisation will notify applicants of changes to their position on the project.</p>
+
+        </th:block>
 
         <p class="extra-margin-top">
 
-          <a href="/prototypes/635-application-overview" data-js-modal="modal-update-organisation" class="button" th:unless="${param.company[0] == 'newOrg'}">Update organisation</a>
+          <a th:href="${'/prototypes/635-application-overview' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}" data-js-modal="modal-update-organisation" class="button" th:unless="${param.company[0] == 'newOrg'}">Update organisation</a>
 
           <th:block th:if="${param.company[0] == 'newOrg'}">
             <a href="/prototypes/635-application-overview" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
@@ -219,6 +229,14 @@
 
             <form method="get" id="submit-remove-collaborator-form">
 
+                <th:block th:if="${param.user == null or param.user[0] == 'nonLead'}">
+                  <input type="hidden" name="company" th:value="${param.company[0]}" />
+                </th:block>
+
+                <th:block th:if="${param.status == null or param.status[0] == 'firstLoad'}">
+                  <input type="hidden" name="status" value="firstLoad" />
+                </th:block>
+
                 <button class="button large" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Update organisation</button>
                 <button type="button-link" class="js-close buttonlink large">Cancel</button>
 
@@ -234,8 +252,12 @@
 
             <form method="get" id="submit-remove-collaborator-form">
 
-                <button class="button large" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Add organisation and invite applicants</button>
-                <button type="button-link" class="js-close buttonlink large">Cancel</button>
+              <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
+                <input type="hidden" name="status" th:value="${param.status[0]}" />
+              </th:block>
+
+              <button class="button large" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Add organisation and invite applicants</button>
+              <button type="button-link" class="js-close buttonlink large">Cancel</button>
 
             </form>
 
@@ -249,12 +271,12 @@
             <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
             <hr />
 
-                <form method="get" id="submit-remove-collaborator-form">
+            <form method="get">
 
-                    <button class="button large" name="publish" value="publish" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Delete organisation</button>
-                    <button class="js-close buttonlink large" type="button">Cancel</button>
+                <button class="button large" name="publish" value="publish" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Delete organisation</button>
+                <button class="js-close buttonlink large" type="button">Cancel</button>
 
-                </form>
+            </form>
 
         </div>
 
