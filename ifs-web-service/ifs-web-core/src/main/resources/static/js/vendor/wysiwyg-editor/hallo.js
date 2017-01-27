@@ -540,10 +540,11 @@
         image: true,
         defaultUrl: 'http://',
         dialogOpts: {
+          closeText: 'X',
           autoOpen: false,
           width: 540,
-          height: 200,
-          title: "Enter Link",
+          height: 150,
+          title: null,
           buttonTitle: "Insert",
           buttonUpdateTitle: "Update",
           modal: true,
@@ -631,7 +632,7 @@
             dialog.dialog('open');
             dialog.on('dialogclose', function() {
               widget.options.editable.restoreSelection(widget.lastSelection);
-              jQuery('label', buttonHolder).removeClass('ui-state-active');
+              jQuery(buttonHolder).find('button').removeClass('ui-state-active');
               widget.options.editable.element.focus();
               return widget.options.editable.keepActivated(false);
             });
@@ -646,10 +647,10 @@
               nodeName = start.parent().prop('nodeName');
             }
             if (nodeName && nodeName.toUpperCase() === "A") {
-              jQuery('label', button).addClass('ui-state-active');
+              jQuery(button).find('button').addClass('ui-state-active');
               return;
             }
-            return jQuery('label', button).removeClass('ui-state-active');
+            return jQuery(button).find('button').removeClass('ui-state-active');
           });
         };
         if (this.options.link) {
