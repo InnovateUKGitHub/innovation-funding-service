@@ -14,8 +14,6 @@
 
 */
 
-
-
 textarea[readonly],
 textarea[disabled],
 input[readonly],
@@ -52,7 +50,7 @@ tr.form-group {
 }
 .field-error {
   @include box-shadow(none);
-  border: 2px solid $error-colour;
+  border: 4px solid $error-colour;
 }
 
 table td input[type="number"]{
