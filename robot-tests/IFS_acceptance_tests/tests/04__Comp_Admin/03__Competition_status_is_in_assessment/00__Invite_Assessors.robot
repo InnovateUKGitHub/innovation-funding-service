@@ -55,7 +55,6 @@ The user can select the profile link
     And the user should see the text in the page    Solar energy research
     And the user should see the text in the page    Precision Medicine
     And the user should see the text in the page    Business
-    And the user should see the text in the page    Renewable energy analysis
     [Teardown]    The user clicks the button/link    link=Invite assessors
 
 Innovation sector and area are correct
