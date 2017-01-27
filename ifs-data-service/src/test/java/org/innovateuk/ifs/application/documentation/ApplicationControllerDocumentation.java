@@ -97,7 +97,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void saveApplicationDetails() throws Exception{
         Long applicationId = 1L;
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
 
         ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
@@ -156,7 +156,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void applicationReadyForSubmit() throws Exception{
         Long applicationId = 1L;
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
         ObjectNode node = mapper.createObjectNode();
         node.put(READY_FOR_SUBMIT, true);
         node.put(PROGRESS, 10);
@@ -212,7 +212,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         ApplicationResource applicationResource = applicationResourceBuilder.build();
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
         ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
 
         when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId)).thenReturn(serviceSuccess(applicationResource));

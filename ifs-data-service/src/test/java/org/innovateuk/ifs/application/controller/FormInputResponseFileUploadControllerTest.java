@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
@@ -24,18 +23,18 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.commons.error.CommonErrors.*;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.isA;
@@ -110,7 +109,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        FormInputResponseFileEntryCreatedResponse createdResponse = new ObjectMapper().readValue(content, FormInputResponseFileEntryCreatedResponse.class);
+        FormInputResponseFileEntryCreatedResponse createdResponse = objectMapper.readValue(content, FormInputResponseFileEntryCreatedResponse.class);
         assertEquals(1111L, createdResponse.getFileEntryId());
 
         verify(fileValidatorMock).validateFileHeaders("application/pdf", "1000", "original.pdf");
@@ -159,7 +158,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
+        RestErrorResponse restErrorResponse = objectMapper.readValue(content, RestErrorResponse.class);
         assertEqualsUpNoIncludingStatusCode(restErrorResponse, generalError);
     }
 
@@ -594,7 +593,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 andReturn();
 
         String content = response.getResponse().getContentAsString();
-        FormInputResponseFileEntryResource successfulResponse = new ObjectMapper().readValue(content, FormInputResponseFileEntryResource.class);
+        FormInputResponseFileEntryResource successfulResponse = objectMapper.readValue(content, FormInputResponseFileEntryResource.class);
         assertEquals(fileEntryResource, successfulResponse);
     }
 
@@ -774,7 +773,7 @@ public class FormInputResponseFileUploadControllerTest extends BaseControllerMoc
                 ).
                 andReturn();
 
-        FormInputResponseFileEntryResource returnedFileEntryDetails = new ObjectMapper().readValue(response.getResponse().getContentAsString(), FormInputResponseFileEntryResource.class);
+        FormInputResponseFileEntryResource returnedFileEntryDetails = objectMapper.readValue(response.getResponse().getContentAsString(), FormInputResponseFileEntryResource.class);
         assertEquals(formInputFileEntryResource, returnedFileEntryDetails);
     }
 

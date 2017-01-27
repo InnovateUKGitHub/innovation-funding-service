@@ -1,19 +1,20 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.BuilderAmendFunctions;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -26,9 +27,7 @@ import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.lang.String.format;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -36,7 +35,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorController> {
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected AssessorController supplyControllerUnderTest() {

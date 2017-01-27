@@ -460,7 +460,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
 
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)

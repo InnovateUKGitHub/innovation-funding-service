@@ -258,7 +258,7 @@ public class QuestionControllerDocumentation extends BaseControllerMockMVCTest<Q
     @Test
     public void save() throws Exception {
         QuestionResource questionResource = questionBuilder.build();
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
 
         when(questionService.save(questionResource)).thenReturn(serviceSuccess(questionResource));
 

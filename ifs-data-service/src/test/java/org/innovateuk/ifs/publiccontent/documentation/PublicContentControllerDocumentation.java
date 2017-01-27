@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.publiccontent.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
 import org.innovateuk.ifs.publiccontent.controller.PublicContentController;
 import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.time.LocalDateTime;
@@ -19,6 +22,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -69,6 +73,26 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
                                 parameterWithName("competitionId").description("The competition id the public content to publish")
                         )
                 ));
+    }
+
+    @Test
+    public void updateSection() throws Exception {
+        PublicContentResource resource = publicContentResourceBuilder.build();
+
+        when(publicContentService.updateSection(resource, PublicContentSection.DATES)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/public-content/update-section/{section}/{id}", PublicContentSection.DATES.name(), resource.getId(), "json")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(resource)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("The id of the public content to update"),
+                                parameterWithName("section").description("The section of the public content to update")
+                        ),
+                        requestFields(publicContentResourceFields)
+                ));
+
     }
 
 }

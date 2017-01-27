@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessorController;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -27,7 +26,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AssessorControllerDocumentation extends BaseControllerMockMVCTest<AssessorController> {
 
     private RestDocumentationResultHandler document;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected AssessorController supplyControllerUnderTest() {

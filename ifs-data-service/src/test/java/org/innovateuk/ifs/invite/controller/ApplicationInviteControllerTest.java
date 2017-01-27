@@ -58,7 +58,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .withOrganisationName("new organisation")
                 .build();
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
         String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
@@ -85,7 +85,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .withInviteResources(inviteResources)
                 .build();
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
         String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
 
         when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceFailure(badRequestError("no invites")));

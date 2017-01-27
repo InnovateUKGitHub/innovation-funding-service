@@ -94,7 +94,7 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         FormInputResource testResource = formInputResourceBuilder.build();
         when(formInputServiceMock.save(any())).thenReturn(serviceSuccess(testResource));
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
 
         mockMvc.perform(put(baseURI + "/")
                     .contentType(APPLICATION_JSON)
