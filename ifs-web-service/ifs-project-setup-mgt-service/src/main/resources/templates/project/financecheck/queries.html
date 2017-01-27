@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Queries'" th:remove="tag" />
+</head>
+
+<body th:with="context='project-management'" class="query-form">
+<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
+
+    <div class="page-title">
+        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <h1 class="heading-xlarge">
+            <th:block th:text="${model.organisationName}" />
+            <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
+        </h1>
+    </div>
+
+    <h2 class="heading-medium">Finance Contact</h2>
+    <p>
+        <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
+        <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}">example@example.com</a> <br />
+        <th:block th:text="${model.financeContactPhoneNumber}">0</th:block>
+    </p>
+
+    <h2 class="heading-medium">Queries</h2>
+    <p>
+        If you have a query with the finances, use this section to raise your query with the finance contact.
+        You must confirm any finance changes with the contact before you approve.
+    </p>
+    <th:block th:if="!${model.showNewQuery}">
+        <div class="grid-row extra-margin-top">
+            <div class="column-half">
+                <a id="post-new-query" th:href="@{'queries/new-query?query_section='+${model.querySection}}" class="button button-large">Post a new query</a>
+            </div>
+        </div>
+    </th:block>
+    <th:block th:if="${model.showNewQuery}">
+        <form class="extra-margin" th:action="@{'save-new-query?query_section='+${model.querySection}}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+            <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                <h1 class="heading-medium error-summary-heading">
+                    Your query could not be posted
+                </h1>
+                <ul class="error-summary-list">
+                    <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                </ul>
+            </div>
+            <fieldset>
+                <legend class="heading-medium">Post new query</legend>
+                <div class="form-group">
+                    <label for="title" class="form-label-bold">Title</label>
+                    <input name="title"
+                           id="title"
+                           class="width-full"
+                           required="required"
+                           th:field="*{title}"
+                           th:classappend="${#fields.hasErrors('title') ? 'form-control field-error' : 'form-control'}"
+                           th:attr="maxlength=${model.maxTitleCharacters},data-maxlength-errormessage=#{validation.notesandqueries.title.length.max(${model.maxTitleCharacters})},
+                                    data-required-errormessage=#{validation.notesandqueries.title.required}">
+                </div>
+                <div class="form-group">
+                    <label for="section" class="form-label-bold">Section</label>
+                    <select name="section" id="section" class="form-control">
+                        <th:block th:each="section_type : ${T(org.innovateuk.ifs.notesandqueries.thread.resource.SectionTypeEnum).values()}">
+                            <th:block th:if="*{section}">
+                                <option value="${section_type.name()}"
+                                        th:selected="${#strings.toLowerCase(section_type.name()) == *{section}}"
+                                        th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
+                            </th:block>
+                            <th:block th:unless="*{section}">
+                                <th:block th:if="${model.querySection}">
+                                    <option value="${section_type.name()}"
+                                            th:selected="${#strings.toLowerCase(section_type.name()) == #strings.toLowerCase(model.querySection)}"
+                                            th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
+                                </th:block>
+                                <th:block th:unless="${model.querySection}">
+                                    <option value="${section_type.name()}"
+                                            th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
+                                </th:block>
+                            </th:block>
+                        </th:block>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="query" class="form-label-bold">Query</label>
+                    <div class="textarea-wrapped word-count">
+                        <textarea data-editor="md"
+                          required = "required"
+                          th:field="*{query}"
+                          id="query"
+                          name="query"
+                          th:attr="maxlength=${model.maxQueryCharacters}"
+                          th:classappend="${#fields.hasErrors('query') ? 'form-control field-error' : 'form-control'}"></textarea>
+                            <div class="textarea-footer" th:with="query=*{query}">
+                                <div th:include="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" th:remove="tag" />
+                            </div>
+                    </div>
+                </div>
+            </fieldset>
+           <th:block th:if="${model.newQueryAttachments.size() > 0}">
+                <fieldset>
+                    <legend class="heading-small">Supporting documentation</legend>
+                    <th:block th:each="${attachmentName : model.newQueryAttachments.values()}">
+                        <a th:href="@{'/queries/new-query/attachments/${}}" th:text="${attachmentName}">filename</a>
+                    </th:block>
+                </fieldset>
+            </th:block>
+            <fieldset>
+                <div class="upload-section unstyled-view">
+                    <legend class="heading-small no-margin">Upload supporting documentation</legend>
+                    <div th:classappend="${#fields.hasErrors('attachment') ? 'error' : ''}">
+                        <th:block th:if="${#fields.hasErrors('attachment')}">
+                            <span class="error-message" th:each="err : ${#fields.errors('attachment')}"
+                                          th:text="${err}"/>
+                        </th:block>
+                        <input type="file" id="file" class="inputfile" name="file">
+                        <label for="file" class="button-secondary extra-margin">+ Upload</label>
+                        <button name="uploadAttachment" class="button-secondary" type="submit"
+                                data-for-file-upload="file">Save
+                        </button>
+                    </div>
+                </div>
+            </fieldset>
+            <hr>
+            <input type="hidden" id="action" value="postQuery">
+            <div class="grid-row">
+                <div class="column-half">
+                    <button class="button button-large no-margin">Post Query</button>
+                </div>
+                <div class="column-half alignright">
+                    <a href="queries">Cancel</a>
+                </div>
+            </div>
+        </form>
+    </th:block>
+
+    <!-- show existing queries
+    <th:block th:each="">
+        <hr>
+        <h2 class="heading-medium non-margin-bottom" th:text="">Query Thread Title</h2>
+        <h3 class="heading-small no-margin" th:text="">Query Thread Section</h3>
+    </th:block>
+    -->
+
+    <th:block th:include="fragments/layout :: main-content-end" />
+</main>
+<th:block th:include="fragments/layout :: footer" />
+<th:block th:include="fragments/layout :: body-end" />
+</body>
+</html>
