@@ -391,7 +391,7 @@
                                                        th:errorclass="field-error"
                                                        th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
-                                                       maxlength="255"
+                                                       maxlength="5000"
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"
                                                        rows="3" />
@@ -444,7 +444,7 @@
                                                        th:errorclass="field-error"
                                                        th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                        th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
-                                                       maxlength="255"
+                                                       maxlength="5000"
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"/>
                                             </td>

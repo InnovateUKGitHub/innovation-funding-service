@@ -16,7 +16,7 @@ public class GuidanceRowResource {
     private String subject;
 
     @NotEmpty(message = "{validation.applicationquestionform.justification.required}", groups = GuidanceRowResource.GuidanceRowGroup.class)
-    @Size(max=255, message = "{validation.applicationquestionform.justification.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
+    @Size(max=5000, message = "{validation.applicationquestionform.justification.max}", groups = GuidanceRowResource.GuidanceRowGroup.class)
     private String justification;
 
     private Long formInput;

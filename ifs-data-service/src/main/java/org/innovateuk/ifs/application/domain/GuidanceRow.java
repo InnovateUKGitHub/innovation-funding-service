@@ -20,6 +20,8 @@ public class GuidanceRow {
     private FormInput formInput;
 
     private String subject;
+
+    @Column(length=5000)
     private String justification;
 
     @NotNull
