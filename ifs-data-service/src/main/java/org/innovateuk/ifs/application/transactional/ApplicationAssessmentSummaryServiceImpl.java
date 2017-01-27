@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.transactional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
@@ -77,6 +78,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                     application.getName(),
                     competition.getId(),
                     competition.getName(),
+                    getLeadOrganisationNames(application),
                     getPartnerOrganisationNames(application));
         });
     }
@@ -86,6 +88,14 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                 .filter(ProcessRole::isCollaborator)
                 .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
                 .collect(toList());
+    }
+
+    private String getLeadOrganisationNames(Application application) {
+        return application.getProcessRoles().stream()
+                .filter(ProcessRole::isLeadApplicant)
+                .findFirst()
+                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
+                .orElse(StringUtils.EMPTY);
     }
 
     private ApplicationAssessorResource getApplicationAssessor(CompetitionParticipant competitionParticipant, Long applicationId) {

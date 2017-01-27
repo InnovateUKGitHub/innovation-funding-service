@@ -14,6 +14,7 @@ public class ApplicationAssessmentProgressViewModel {
     private String applicationName;
     private Long competitionId;
     private String competitionName;
+    private String leadOrganisation;
     private List<String> partnerOrganisations;
     private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
     private List<ApplicationAvailableAssessorsRowViewModel> available;
@@ -24,6 +25,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   String applicationName,
                                                   Long competitionId,
                                                   String competitionName,
+                                                  String leadOrganisation,
                                                   List<String> partnerOrganisations,
                                                   List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
                                                   List<ApplicationAssessmentProgressRejectedRowViewModel> rejected,
@@ -33,6 +35,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.applicationName = applicationName;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.leadOrganisation = leadOrganisation;
         this.partnerOrganisations = partnerOrganisations;
         this.assigned = assigned;
         this.rejected = rejected;
@@ -54,6 +57,10 @@ public class ApplicationAssessmentProgressViewModel {
 
     public String getCompetitionName() {
         return competitionName;
+    }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
     }
 
     public List<String> getPartnerOrganisations() {
@@ -89,6 +96,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(applicationName, that.applicationName)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
+                .append(leadOrganisation, that.leadOrganisation)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(assigned, that.assigned)
                 .append(rejected, that.rejected)
@@ -104,6 +112,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(applicationName)
                 .append(competitionId)
                 .append(competitionName)
+                .append(leadOrganisation)
                 .append(partnerOrganisations)
                 .append(assigned)
                 .append(rejected)

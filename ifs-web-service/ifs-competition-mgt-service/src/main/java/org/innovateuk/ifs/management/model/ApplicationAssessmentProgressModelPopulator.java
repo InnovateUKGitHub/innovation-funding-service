@@ -51,6 +51,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessmentSummary.getName(),
                 applicationAssessmentSummary.getCompetitionId(),
                 applicationAssessmentSummary.getCompetitionName(),
+                applicationAssessmentSummary.getLeadOrganisation(),
                 applicationAssessmentSummary.getPartnerOrganisations(),
                 getAssignedAssessors(notAvailableAssessors),
                 getRejectedAssessors(notAvailableAssessors),

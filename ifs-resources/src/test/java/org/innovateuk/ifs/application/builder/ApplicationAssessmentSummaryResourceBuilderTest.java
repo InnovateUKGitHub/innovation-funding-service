@@ -17,6 +17,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         String expectedName = "application";
         Long expectedCompetitionId = 2L;
         String expectedCompetitionName = "competition";
+        String expectedLeadOrganisation = "leadOrganisation";
         List<String> expectedPartnerOrganisations = asList("partnerOrganisation1", "partnerOrganisation2");
 
         ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = newApplicationAssessmentSummaryResource()
@@ -24,6 +25,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
                 .withName(expectedName)
                 .withCompetitionId(expectedCompetitionId)
                 .withCompetitionName(expectedCompetitionName)
+                .withLeadOrganisation(expectedLeadOrganisation)
                 .withPartnerOrganisations(expectedPartnerOrganisations)
                 .build();
 
@@ -31,6 +33,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         assertEquals(expectedName, applicationAssessmentSummaryResource.getName());
         assertEquals(expectedCompetitionId, applicationAssessmentSummaryResource.getCompetitionId());
         assertEquals(expectedCompetitionName, applicationAssessmentSummaryResource.getCompetitionName());
+        assertEquals(expectedLeadOrganisation, applicationAssessmentSummaryResource.getLeadOrganisation());
         assertEquals(expectedPartnerOrganisations, applicationAssessmentSummaryResource.getPartnerOrganisations());
     }
 
@@ -40,6 +43,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         String[] expectedNames = {"name1", "name2"};
         Long[] expectedCompetitionIds = {3L, 4L};
         String[] expectedCompetitionNames = {"competition1", "competition2"};
+        String[] expectedLeadOrganisations = {"leadOrganisation1", "leadOrganisation"};
         List<String> expectedPartnerOrganisations1 = asList("partnerOrganisation1", "partnerOrganisation2");
         List<String> expectedPartnerOrganisations2 = asList("partnerOrganisation3", "partnerOrganisation4");
 
@@ -48,6 +52,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
                 .withName(expectedNames)
                 .withCompetitionId(expectedCompetitionIds)
                 .withCompetitionName(expectedCompetitionNames)
+                .withLeadOrganisation(expectedLeadOrganisations)
                 .withPartnerOrganisations(expectedPartnerOrganisations1, expectedPartnerOrganisations2)
                 .build(2);
 
@@ -56,6 +61,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         assertEquals(expectedNames[0], first.getName());
         assertEquals(expectedCompetitionIds[0], first.getCompetitionId());
         assertEquals(expectedCompetitionNames[0], first.getCompetitionName());
+        assertEquals(expectedLeadOrganisations[0], first.getLeadOrganisation());
         assertEquals(expectedPartnerOrganisations1, first.getPartnerOrganisations());
 
         ApplicationAssessmentSummaryResource second = applicationAssessmentSummaryResources.get(1);
@@ -63,6 +69,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         assertEquals(expectedNames[1], second.getName());
         assertEquals(expectedCompetitionIds[1], second.getCompetitionId());
         assertEquals(expectedCompetitionNames[1], second.getCompetitionName());
+        assertEquals(expectedLeadOrganisations[1], second.getLeadOrganisation());
         assertEquals(expectedPartnerOrganisations2, second.getPartnerOrganisations());
     }
 

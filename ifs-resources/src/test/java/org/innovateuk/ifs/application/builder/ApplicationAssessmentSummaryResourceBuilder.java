@@ -44,6 +44,10 @@ public class ApplicationAssessmentSummaryResourceBuilder extends BaseBuilder<App
         return withArraySetFieldByReflection("competitionName", value);
     }
 
+    public ApplicationAssessmentSummaryResourceBuilder withLeadOrganisation(String... value) {
+        return withArraySetFieldByReflection("leadOrganisation", value);
+    }
+
     public ApplicationAssessmentSummaryResourceBuilder withPartnerOrganisations(List<String>... value) {
         return withArraySetFieldByReflection("partnerOrganisations", value);
     }

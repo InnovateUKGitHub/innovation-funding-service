@@ -67,6 +67,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
                 setupExpectedRejectedRows(),
@@ -108,6 +109,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
                 setupExpectedRejectedRows(),
@@ -260,6 +262,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withName("Progressive Machines")
                 .withCompetitionId(competitionId)
                 .withCompetitionName("Connected digital additive manufacturing")
+                .withLeadOrganisation("Liquid Dynamics")
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO Systems"))
                 .build();
     }
