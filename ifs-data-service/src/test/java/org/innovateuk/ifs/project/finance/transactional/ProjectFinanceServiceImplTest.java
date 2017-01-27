@@ -701,7 +701,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setViability(Viability.APPROVED);
-        projectFinanceInDB.setViabilityStatus(ViabilityStatus.GREEN);
+        projectFinanceInDB.setViabilityStatus(ViabilityRagStatus.GREEN);
         projectFinanceInDB.setViabilityApprovalUser(user);
         projectFinanceInDB.setViabilityApprovalDate(LocalDate.now());
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
@@ -714,7 +714,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ViabilityResource returnedViabilityResource = result.getSuccessObject();
 
         assertEquals(Viability.APPROVED, returnedViabilityResource.getViability());
-        assertEquals(ViabilityStatus.GREEN, returnedViabilityResource.getViabilityStatus());
+        assertEquals(ViabilityRagStatus.GREEN, returnedViabilityResource.getViabilityRagStatus());
 
         assertEquals("Lee", returnedViabilityResource.getViabilityApprovalUserFirstName());
         assertEquals("Bowman", returnedViabilityResource.getViabilityApprovalUserLastName());
@@ -730,7 +730,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isFailure());
 
@@ -741,13 +741,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityStatusIsUnset() {
+    public void testSaveViabilityWhenViabilityRagStatusIsUnset() {
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.UNSET);
 
         assertTrue(result.isFailure());
 
@@ -758,7 +758,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityStatusIsUnsetButViabilityAlsoNotApproved() {
+    public void testSaveViabilityWhenViabilityRagStatusIsUnsetButViabilityAlsoNotApproved() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -766,15 +766,15 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityStatus.UNSET, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityRagStatus.UNSET, null, null);
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityStatusIsSetButViabilityNotApproved() {
+    public void testSaveViabilityWhenViabilityRagStatusIsSetButViabilityNotApproved() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -782,11 +782,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityStatus.AMBER, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, Viability.REVIEW, ViabilityRagStatus.AMBER, null, null);
     }
 
     @Test
@@ -798,11 +798,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, Viability.APPROVED, ViabilityStatus.AMBER, user, LocalDate.now());
+        assertSaveViabilityResults(projectFinanceInDB, Viability.APPROVED, ViabilityRagStatus.AMBER, user, LocalDate.now());
 
     }
 
@@ -819,11 +819,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     }
 
-    private void assertSaveViabilityResults(ProjectFinance projectFinanceInDB, Viability expectedViability, ViabilityStatus expectedViabilityStatus,
+    private void assertSaveViabilityResults(ProjectFinance projectFinanceInDB, Viability expectedViability, ViabilityRagStatus expectedViabilityRagStatus,
                                             User expectedApprovalUser, LocalDate expectedApprovalTime) {
 
         assertEquals(expectedViability, projectFinanceInDB.getViability());
-        assertEquals(expectedViabilityStatus, projectFinanceInDB.getViabilityStatus());
+        assertEquals(expectedViabilityRagStatus, projectFinanceInDB.getViabilityStatus());
         assertEquals(expectedApprovalUser, projectFinanceInDB.getViabilityApprovalUser());
         assertEquals(expectedApprovalTime, projectFinanceInDB.getViabilityApprovalDate());
 
@@ -843,7 +843,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setEligibility(Eligibility.APPROVED);
-        projectFinanceInDB.setEligibilityStatus(EligibilityStatus.GREEN);
+        projectFinanceInDB.setEligibilityStatus(EligibilityRagStatus.GREEN);
         projectFinanceInDB.setEligibilityApprovalDate(LocalDate.now());
         projectFinanceInDB.setEligibilityApprovalUser(user);
 
@@ -857,7 +857,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         EligibilityResource returnedEligibilityResource = result.getSuccessObject();
 
         assertEquals(Eligibility.APPROVED, returnedEligibilityResource.getEligibility());
-        assertEquals(EligibilityStatus.GREEN, returnedEligibilityResource.getEligibilityStatus());
+        assertEquals(EligibilityRagStatus.GREEN, returnedEligibilityResource.getEligibilityRagStatus());
 
         assertEquals("Lee", returnedEligibilityResource.getEligibilityApprovalUserFirstName());
         assertEquals("Bowman", returnedEligibilityResource.getEligibilityApprovalUserLastName());
@@ -873,7 +873,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.AMBER);
 
         assertTrue(result.isFailure());
 
@@ -889,7 +889,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.UNSET);
 
         assertTrue(result.isFailure());
 
@@ -905,11 +905,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.REVIEW, EligibilityStatus.UNSET, null, null);
+        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.REVIEW, EligibilityRagStatus.UNSET, null, null);
     }
 
     @Test
@@ -919,11 +919,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.REVIEW, EligibilityStatus.AMBER, null, null);
+        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.REVIEW, EligibilityRagStatus.AMBER, null, null);
 
     }
 
@@ -940,18 +940,18 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityStatus.GREEN);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
 
         assertTrue(result.isSuccess());
 
-        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.APPROVED, EligibilityStatus.GREEN, user, LocalDate.now());
+        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now());
     }
 
-    private void assertSaveEligibilityResults(ProjectFinance projectFinanceInDB, Eligibility expectedEligibility, EligibilityStatus expectedEligibilityStatus,
+    private void assertSaveEligibilityResults(ProjectFinance projectFinanceInDB, Eligibility expectedEligibility, EligibilityRagStatus expectedEligibilityRagStatus,
                                             User expectedApprovalUser, LocalDate expectedApprovalDate) {
 
         assertEquals(expectedEligibility, projectFinanceInDB.getEligibility());
-        assertEquals(expectedEligibilityStatus, projectFinanceInDB.getEligibilityStatus());
+        assertEquals(expectedEligibilityRagStatus, projectFinanceInDB.getEligibilityStatus());
         assertEquals(expectedApprovalUser, projectFinanceInDB.getEligibilityApprovalUser());
         assertEquals(expectedApprovalDate, projectFinanceInDB.getEligibilityApprovalDate());
 

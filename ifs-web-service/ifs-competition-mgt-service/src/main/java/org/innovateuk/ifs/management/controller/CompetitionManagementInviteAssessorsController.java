@@ -12,6 +12,7 @@ import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.model.InviteAssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -50,6 +51,9 @@ public class CompetitionManagementInviteAssessorsController {
 
     @Autowired
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
+
+    @Autowired
+    private InviteAssessorProfileModelPopulator inviteAssessorProfileModelPopulator;
 
     @RequestMapping(method = RequestMethod.GET)
     public String assessors(@PathVariable("competitionId") Long competitionId) {
@@ -143,6 +147,15 @@ public class CompetitionManagementInviteAssessorsController {
         CompetitionResource competition = competitionService.getById(competitionId);
         model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(competition));
         return "assessors/overview";
+    }
+
+    // TODO INFUND-7831 -- move profile to a more suitable controller
+    @RequestMapping(value = "/profile/{assessorId}", method = RequestMethod.GET)
+    public String profile(Model model,
+                          @PathVariable("competitionId") long competitionId,
+                          @PathVariable("assessorId") long assessorId) {
+        model.addAttribute("model", inviteAssessorProfileModelPopulator.populateModel(assessorId, competitionId));
+        return "assessors/profile";
     }
 
     private ServiceResult<CompetitionInviteResource> inviteUser(String email, Long competitionId) {

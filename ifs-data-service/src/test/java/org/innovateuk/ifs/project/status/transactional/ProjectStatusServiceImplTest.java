@@ -107,7 +107,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         /**
          * Create 3 applications, one for each org, with process roles
          */
-        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(leadApplicantRole, applicantRole, applicantRole).withOrganisation(organisations.get(0), organisations.get(1), organisations.get(2)).build(3);
+        List<ProcessRole> applicantProcessRoles = newProcessRole().withUser(users.get(0), users.get(1), users.get(2)).withRole(leadApplicantRole, applicantRole, applicantRole).withOrganisationId(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId()).build(3);
         List<Application> applications = newApplication().withCompetition(competition).withProcessRoles(applicantProcessRoles.get(0), applicantProcessRoles.get(1), applicantProcessRoles.get(2)).build(3);
 
         /**
@@ -270,7 +270,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
@@ -309,7 +309,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
 
         assertEquals(PENDING, returnedProjectStatusResource.getProjectDetailsStatus());
-        assertEquals(PENDING, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getBankDetailsStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
         assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
         assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getMonitoringOfficerStatus());
@@ -554,6 +554,45 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
     }
 
     @Test
+    public void getProjectStatusBankDetailsIncomplete() {
+        Long projectId = 2345L;
+        Long organisationId = 123L;
+        Long organisationId2 = 234L;
+
+        Project project = createProjectStatusResource(projectId, ApprovalType.EMPTY, ApprovalType.UNSET, Boolean.FALSE, Boolean.FALSE, Boolean.FALSE, null);
+        Organisation o = newOrganisation().withId(organisationId).build();
+        Organisation o2 = newOrganisation().withId(organisationId2).build();
+        List<PartnerOrganisation> po = asList(newPartnerOrganisation().withOrganisation(o).build(), newPartnerOrganisation().withOrganisation(o2).build());
+        project.setPartnerOrganisations(po);
+        Optional<ProjectUser> pu = Optional.of(newProjectUser().withRole(PROJECT_FINANCE_CONTACT).build());
+
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(newBankDetails().withApproval(true).build());
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId2)).thenReturn(null);
+        when(projectUsersHelperMock.getFinanceContact(projectId, organisationId)).thenReturn(pu);
+        when(projectUsersHelperMock.getFinanceContact(projectId, organisationId2)).thenReturn(pu);
+        when(projectDetailsWorkflowHandlerMock.isSubmitted(project)).thenReturn(true);
+        when(financeRowServiceMock.organisationSeeksFunding(any(Long.class), any(Long.class), any(Long.class))).thenReturn(serviceSuccess(Boolean.TRUE));
+
+        ServiceResult<ProjectStatusResource> result = service.getProjectStatusByProjectId(projectId);
+
+        ProjectStatusResource returnedProjectStatusResource = result.getSuccessObject();
+        assertTrue(result.isSuccess());
+        assertEquals(project.getName(), returnedProjectStatusResource.getProjectTitle());
+        assertEquals(project.getId(), returnedProjectStatusResource.getProjectNumber());
+        assertEquals(Integer.valueOf(1), returnedProjectStatusResource.getNumberOfPartners());
+
+        assertEquals(COMPLETE, returnedProjectStatusResource.getProjectDetailsStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getBankDetailsStatus());
+        assertEquals(ACTION_REQUIRED, returnedProjectStatusResource.getFinanceChecksStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getSpendProfileStatus());
+        assertEquals(COMPLETE, returnedProjectStatusResource.getMonitoringOfficerStatus());
+        assertEquals(PENDING, returnedProjectStatusResource.getOtherDocumentsStatus());
+        assertEquals(NOT_STARTED, returnedProjectStatusResource.getGrantOfferLetterStatus());
+        Map<UserRoleType, ProjectActivityStates> roles = asMap(COMP_ADMIN, NOT_STARTED);
+        assertTrue(roles.equals(returnedProjectStatusResource.getRoleSpecificGrantOfferLetterState()));
+    }
+
+    @Test
     public void getProjectStatusBankDetailsApproved() {
         Long projectId = 2345L;
         Long organisationId = 123L;
@@ -599,7 +638,7 @@ public class ProjectStatusServiceImplTest extends BaseServiceUnitTest<ProjectSta
         ProcessRole processRole = newProcessRole().
                 withRole(role).
                 withApplication(application).
-                withOrganisation(organisation).
+                withOrganisationId(organisation.getId()).
                 build();
         PartnerOrganisation partnerOrganisation = newPartnerOrganisation().withOrganisation(organisation).build();
         Project project = newProject().

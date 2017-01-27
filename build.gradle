@@ -1,5 +1,5 @@
 allprojects {
-    group 'worth'
+    group 'innovateuk'
     version '1.0-SNAPSHOT'
 
     apply plugin: 'idea'
@@ -65,6 +65,12 @@ subprojects {
 
     jar {
         manifest.attributes provider: 'gradle'
+    }
+
+    test {
+        beforeTest { desc ->
+            println "Executing test ${desc.className}.${desc.name}"
+        }
     }
 }
 

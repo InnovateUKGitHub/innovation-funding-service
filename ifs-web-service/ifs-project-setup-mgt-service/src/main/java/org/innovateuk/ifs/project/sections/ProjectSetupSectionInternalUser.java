@@ -48,7 +48,7 @@ public class ProjectSetupSectionInternalUser {
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
 
-        if (!userResource.hasRole(PROJECT_FINANCE)) {
+        if (!userResource.hasRole(PROJECT_FINANCE) || !projectSetupProgressChecker.isBankDetailsAccessible()) {
             return NOT_ACCESSIBLE;
         }
 
