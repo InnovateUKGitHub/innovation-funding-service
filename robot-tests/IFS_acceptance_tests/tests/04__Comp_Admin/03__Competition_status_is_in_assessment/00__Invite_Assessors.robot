@@ -19,8 +19,9 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               INFUND-6389 As a member of the competitions team I can see the innovation sector and innovation area(s) on the Invite assessors dashboard so ...
 ...
-...               INFUND-6449
-...               As a member of the competitions team, I can see the invited assessors list so...
+...               INFUND-6449 As a member of the competitions team, I can see the invited assessors list so...
+...
+...               INFUND-6669 As a member of the competitions team I can view an assessors profile so that I can decide if they are suitable to assess the competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -44,6 +45,18 @@ The User can Add and Remove Assessors
     And The user clicks the button/link    link=Invite
     Then The user should not see the text in the page    will.smith@gmail.com
     [Teardown]    The user clicks the button/link    link=Find
+
+The user can select the profile link
+    [Documentation]    INFUND-6999
+    [Tags]
+    Given the user clicks the button/link    link=Will Smith
+    Then the user should see the text in the page    will.smith@gmail.com
+    And the user should see the text in the page    028572565937
+    And the user should see the text in the page    Solar energy research
+    And the user should see the text in the page    Precision Medicine
+    And the user should see the text in the page    Business
+    And the user should see the text in the page    Renewable energy analysis
+    [Teardown]    The user clicks the button/link    link=Invite assessors
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
@@ -121,4 +134,4 @@ Assessor overview information
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Academic)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Yes)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Invite declined as not available)
-    #And the user should see the element    jQuery=tr:nth-child(4) td:contains....innovation area    #TODO Pending innovation area to be implemented
+    And the user should see the element    jQuery=tr:nth-child(4) td:contains(Manufacturing Readiness)
