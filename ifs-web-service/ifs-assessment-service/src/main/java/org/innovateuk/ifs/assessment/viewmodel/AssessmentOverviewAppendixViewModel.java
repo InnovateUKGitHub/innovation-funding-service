@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * TODO
+ * Holder of model attributes for appendices displayed within the Assessment Overview view.
  */
 public class AssessmentOverviewAppendixViewModel {
 

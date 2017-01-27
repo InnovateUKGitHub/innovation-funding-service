@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Holder of model attributes for response information displayed on the Assessment Overview shown as part of the assessment journey.
+ * Holder of model attributes for questions displayed within the Assessment Overview view.
  */
 public class AssessmentOverviewQuestionViewModel {
 

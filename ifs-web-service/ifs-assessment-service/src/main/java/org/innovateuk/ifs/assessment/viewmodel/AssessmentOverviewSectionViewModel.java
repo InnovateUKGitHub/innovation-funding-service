@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import java.util.List;
 
 /**
- * TODO
+ * Holder of model attributes for sections displayed within the Assessment Overview view.
  */
 public class AssessmentOverviewSectionViewModel {
 
