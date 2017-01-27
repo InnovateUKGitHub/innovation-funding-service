@@ -34,7 +34,7 @@
                         <div class="column-third">
                             <div class="score" th:if="${question.scoreResponse}" th:text="|Score ${question.scoreResponse} / ${question.maximumScore}|"></div>
                             <p th:unless="${question.responseRequired}" class="form-hint">No score required</p>
-                            <div class="score" th:if="${question.hasScope}"> In scope? <strong th:if="${question.scopeResponse}" th:text="${question.scopeResponse ? 'Yes' : 'No'}" /></div>
+                            <div class="score" th:if="${question.scopeResponse}"> In scope? <strong th:text="${question.scopeResponse ? 'Yes' : 'No'}" /></div>
                             <img class="section-status" th:if="${question.assessed}" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" width="30" height="30" th:alt="'The &quot;'+${question.questionName}+'&quot; section has been assessed'" />
                         </div>
                     </li>

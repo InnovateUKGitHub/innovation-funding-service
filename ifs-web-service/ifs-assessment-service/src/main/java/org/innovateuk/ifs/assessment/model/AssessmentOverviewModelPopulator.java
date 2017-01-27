@@ -115,7 +115,6 @@ public class AssessmentOverviewModelPopulator {
                     question.getAssessorMaximumScore(),
                     !questionFormInputs.isEmpty(),
                     isAssessed(questionFormInputs, responses),
-                    scopeInput.isPresent(),
                     scopeResponse,
                     scoreResponse
             );

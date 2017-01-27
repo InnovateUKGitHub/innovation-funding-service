@@ -221,7 +221,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                                         questionApplicationDetails.getAssessorMaximumScore(),
                                         false,
                                         false,
-                                        false,
                                         null,
                                         null),
                                 new AssessmentOverviewQuestionViewModel(
@@ -231,7 +230,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                                         questionScope.getAssessorMaximumScore(),
                                         true,
                                         false,
-                                        true,
                                         TRUE,
                                         null)
                         )
@@ -247,7 +245,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                                         questionBusinessOpportunity.getAssessorMaximumScore(),
                                         true,
                                         true,
-                                        false,
                                         null,
                                         "7"),
                                 new AssessmentOverviewQuestionViewModel(
@@ -256,7 +253,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                                         questionPotentialMarket.getQuestionNumber(),
                                         questionPotentialMarket.getAssessorMaximumScore(),
                                         true,
-                                        false,
                                         false,
                                         null,
                                         null)

@@ -14,7 +14,6 @@ public class AssessmentOverviewQuestionViewModel {
     private Integer maximumScore;
     private boolean responseRequired;
     private boolean assessed;
-    private boolean hasScope;
     private Boolean scopeResponse;
     private String scoreResponse;
 
@@ -24,7 +23,6 @@ public class AssessmentOverviewQuestionViewModel {
                                                Integer maximumScore,
                                                boolean responseRequired,
                                                boolean assessed,
-                                               boolean hasScope,
                                                Boolean scopeResponse,
                                                String scoreResponse) {
         this.questionId = questionId;
@@ -33,7 +31,6 @@ public class AssessmentOverviewQuestionViewModel {
         this.maximumScore = maximumScore;
         this.responseRequired = responseRequired;
         this.assessed = assessed;
-        this.hasScope = hasScope;
         this.scopeResponse = scopeResponse;
         this.scoreResponse = scoreResponse;
     }
@@ -86,14 +83,6 @@ public class AssessmentOverviewQuestionViewModel {
         this.assessed = assessed;
     }
 
-    public boolean isHasScope() {
-        return hasScope;
-    }
-
-    public void setHasScope(boolean hasScope) {
-        this.hasScope = hasScope;
-    }
-
     public Boolean getScopeResponse() {
         return scopeResponse;
     }
@@ -126,7 +115,6 @@ public class AssessmentOverviewQuestionViewModel {
                 .append(questionId, that.questionId)
                 .append(responseRequired, that.responseRequired)
                 .append(assessed, that.assessed)
-                .append(hasScope, that.hasScope)
                 .append(questionName, that.questionName)
                 .append(questionNumber, that.questionNumber)
                 .append(maximumScore, that.maximumScore)
@@ -144,7 +132,6 @@ public class AssessmentOverviewQuestionViewModel {
                 .append(maximumScore)
                 .append(responseRequired)
                 .append(assessed)
-                .append(hasScope)
                 .append(scopeResponse)
                 .append(scoreResponse)
                 .toHashCode();
