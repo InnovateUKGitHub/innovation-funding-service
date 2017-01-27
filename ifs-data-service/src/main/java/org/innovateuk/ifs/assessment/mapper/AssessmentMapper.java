@@ -5,6 +5,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
+import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.workflow.mapper.ProcessOutcomeMapper;
@@ -21,7 +22,8 @@ import org.mapstruct.Mappings;
                 ProcessOutcomeMapper.class,
                 ProcessRoleMapper.class,
                 ApplicationMapper.class,
-                UserMapper.class
+                UserMapper.class,
+                CompetitionMapper.class
         }
 )
 public abstract class AssessmentMapper extends BaseMapper<Assessment, AssessmentResource, Long> {
@@ -29,9 +31,10 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
     @Mappings({
             @Mapping(source = "processEvent", target = "event"),
             @Mapping(source = "version", target = "lastModified"),
-            @Mapping(source = "participant.id", target = "processRole"),
-            @Mapping(source = "target.id", target = "application"),
-            @Mapping(source = "target.competition.id", target = "competition"),
+            @Mapping(source = "participant", target = "processRole"),
+            @Mapping(source = "target", target = "application"),
+            @Mapping(source = "target.name", target = "applicationName"),
+            @Mapping(source = "target.competition", target = "competition"),
             @Mapping(source = "activityState", target = "assessmentState"),
     })
     @Override

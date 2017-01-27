@@ -49,7 +49,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 withFileName("appendix.pdf").
                 withUpdatedBy(1L).
                 withUpdatedByUserName("Steve Smith").
-                withFileEntry(fileEntry).
+                withFileEntry(fileEntry.getId()).
                 withFormInputs(Collections.singletonList(456L)).
                 build();
         List<FormInputResponseResource> formInputResponseResources = Collections.singletonList(formInputResponseResource);

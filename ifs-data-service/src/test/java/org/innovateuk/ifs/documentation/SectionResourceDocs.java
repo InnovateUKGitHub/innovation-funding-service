@@ -27,7 +27,7 @@ public class SectionResourceDocs {
     public static final SectionResourceBuilder sectionResourceBuilder = newSectionResource()
             .withId(1L)
             .withDescription("section description")
-            .withassessorGuidanceDescription("assessor guidance description")
+            .withAssessorGuidanceDescription("assessor guidance description")
             .withPriority(1)
             .withQuestionGroup(true)
             .withCompetition(1L)

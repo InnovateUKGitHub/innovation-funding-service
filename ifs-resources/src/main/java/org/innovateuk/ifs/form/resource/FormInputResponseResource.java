@@ -14,6 +14,7 @@ public class FormInputResponseResource {
     private Long updatedBy;
     private Long updatedByUser;
     private String updatedByUserName;
+    private Long question;
     private Long formInput;
     private Integer formInputMaxWordCount;
     private Long application;
@@ -97,6 +98,14 @@ public class FormInputResponseResource {
     @JsonIgnore
     public Integer getWordCountLeft() {
         return formInputMaxWordCount - this.getWordCount();
+    }
+
+    public Long getQuestion() {
+        return question;
+    }
+
+    public void setQuestion(Long question) {
+        this.question = question;
     }
 
     public Long getFormInput() {

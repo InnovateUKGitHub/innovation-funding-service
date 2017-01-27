@@ -24,6 +24,7 @@ public class AssessmentDocs {
             fieldWithPath("processOutcomes").description("outcomes of the assessment process"),
             fieldWithPath("processRole").description("process role of the assigned assessor"),
             fieldWithPath("application").description("the id of the application being assessed"),
+            fieldWithPath("applicationName").description("the name of the application being assessed"),
             fieldWithPath("competition").description("the competition id of the application being assessed"),
             fieldWithPath("assessmentState").description("the current workflow state of the assessment process"),
             fieldWithPath("internalParticipant").description("the user id of an internal user who is working on the process"),

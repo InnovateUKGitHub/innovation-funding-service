@@ -24,7 +24,10 @@ public class RejectAssessmentModelPopulator {
         AssessmentResource assessment = assessmentService.getById(assessmentId);
         ApplicationResource application = applicationService.getById(assessment.getApplication());
 
-        return new RejectAssessmentViewModel(assessment.getId(), application);
+        return new RejectAssessmentViewModel(assessment.getId(),
+                application.getId(),
+                application.getApplicationDisplayName()
+        );
     }
 
 }

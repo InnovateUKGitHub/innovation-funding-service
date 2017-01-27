@@ -34,6 +34,10 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
                 .with(idBasedValues("Value "));
     }
 
+    public FormInputResponseResourceBuilder withQuestion(Long... questions) {
+        return withArraySetFieldByReflection("question", questions);
+    }
+
     public FormInputResponseResourceBuilder withFormInputs(Long... owningFormInputs) {
         return withFormInputs(asList(owningFormInputs));
     }
@@ -42,8 +46,8 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return withList(owningFormInputs, (formInput, formInputResponseResource) -> formInputResponseResource.setFormInput(formInput));
     }
 
-    public FormInputResponseResourceBuilder withFileEntry(FileEntryResource fileEntry) {
-        return with(response -> response.setFileEntry(fileEntry.getId()));
+    public FormInputResponseResourceBuilder withFileEntry(Long... fileEntries) {
+        return withArraySetFieldByReflection("fileEntry", fileEntries);
     }
 
     public FormInputResponseResourceBuilder withApplication(Long applicationId) {

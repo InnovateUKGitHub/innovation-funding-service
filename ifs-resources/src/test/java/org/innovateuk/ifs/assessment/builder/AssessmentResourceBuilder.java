@@ -10,9 +10,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, AssessmentResourceBuilder> {
 
@@ -34,43 +34,47 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return new AssessmentResource();
     }
 
-    public AssessmentResourceBuilder withId(Long... ids) {
-        return withArray((id, assessment) -> setField("id", id, assessment), ids);
+    public AssessmentResourceBuilder withId(Long... values) {
+        return withArraySetFieldByReflection("id", values);
     }
 
     public AssessmentResourceBuilder withProcessEvent(ProcessEvent... processEvents) {
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentResourceBuilder withLastModifiedDate(Calendar... lastModifiedDates) {
-        return withArray((lastModifiedDate, object) -> setField("lastModified", lastModifiedDate, object), lastModifiedDates);
+    public AssessmentResourceBuilder withLastModifiedDate(Calendar... values) {
+        return withArraySetFieldByReflection("lastModified", values);
     }
 
-    public AssessmentResourceBuilder withStartDate(LocalDate... startDates) {
-        return withArray((startDate, object) -> setField("startDate", startDate, object), startDates);
+    public AssessmentResourceBuilder withStartDate(LocalDate... values) {
+        return withArraySetFieldByReflection("startDate", values);
     }
 
-    public AssessmentResourceBuilder withEndDate(LocalDate... endDates) {
-        return withArray((endDate, object) -> setField("endDate", endDate, object), endDates);
+    public AssessmentResourceBuilder withEndDate(LocalDate... values) {
+        return withArraySetFieldByReflection("endDate", values);
     }
 
-    public AssessmentResourceBuilder withProcessOutcome(List<Long>... processOutcomes) {
-        return withArray((processOutcome, object) -> setField("processOutcomes", processOutcome, object), processOutcomes);
+    public AssessmentResourceBuilder withProcessOutcome(List<Long>... values) {
+        return withArraySetFieldByReflection("processOutcomes", values);
     }
 
-    public AssessmentResourceBuilder withProcessRole(Long... processRoles) {
-        return withArray((processRole, object) -> setField("processRole", processRole, object), processRoles);
+    public AssessmentResourceBuilder withProcessRole(Long... values) {
+        return withArraySetFieldByReflection("processRole", values);
     }
 
-    public AssessmentResourceBuilder withApplication(Long... applications) {
-        return withArray((application, object) -> setField("application", application, object), applications);
+    public AssessmentResourceBuilder withApplication(Long... values) {
+        return withArraySetFieldByReflection("application", values);
     }
 
-    public AssessmentResourceBuilder withCompetition(Long... competitions) {
-        return withArray((competition, object) -> setField("competition", competition, object), competitions);
+    public AssessmentResourceBuilder withApplicationName(String... values) {
+        return withArraySetFieldByReflection("applicationName", values);
     }
 
-    public AssessmentResourceBuilder withActivityState(AssessmentStates... states) {
-        return withArray((state, object) -> object.setAssessmentState(state), states);
+    public AssessmentResourceBuilder withCompetition(Long... values) {
+        return withArraySetFieldByReflection("competition", values);
+    }
+
+    public AssessmentResourceBuilder withActivityState(AssessmentStates... values) {
+        return withArraySetFieldByReflection("assessmentState", values);
     }
 }

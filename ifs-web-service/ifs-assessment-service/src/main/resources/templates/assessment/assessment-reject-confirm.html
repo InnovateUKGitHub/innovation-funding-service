@@ -10,10 +10,10 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assigned application',linkClass='link-back',linkUrl=@{/{assessmentId}/assignment(assessmentId=${model.assessmentId})}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assigned application',linkClass='link-back',linkUrl=@{/{assessmentId}/assignment(assessmentId=${model.assessmentId})})" th:remove="tag" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (app=${model.application})" th:remove="tag" />
+                <div th:include="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" th:remove="tag" />
                 <h1 class="heading-xlarge">Confirm rejection</h1>
             </div>
 
