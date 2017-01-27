@@ -130,7 +130,6 @@ the user reads the email and clicks the link
     ${LINK}=    Get From List    ${ALL_LINKS}    1
     log    ${LINK}
     go to    ${LINK}
-    Capture Page Screenshot
     delete email    ${email_to_test}
     close mailbox
 
