@@ -32,7 +32,7 @@ public class PublicContentRestServiceMocksTest extends BaseRestServiceUnitTest<P
 
     @Test
     public void test_publishByCompetitionId() {
-        setupPostWithRestResultExpectations(PUBLIC_CONTENT_URL + "/publish-by-competition-id/" + COMPETITION_ID, HttpStatus.OK);
+        setupPostWithRestResultExpectations(PUBLIC_CONTENT_URL + "/all-by-competition-id/" + COMPETITION_ID, HttpStatus.OK);
         RestResult<Void> response = service.publishByCompetitionId(COMPETITION_ID);
         assertTrue(response.isSuccess());
     }

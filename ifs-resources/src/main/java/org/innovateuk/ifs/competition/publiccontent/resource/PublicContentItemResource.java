@@ -4,8 +4,50 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
 import java.time.LocalDateTime;
 
 public class PublicContentItemResource {
-    PublicContentResource publicContentResource;
-    String competitionTitle;
-    LocalDateTime competitionOpenDate;
-    LocalDateTime competitionCloseDate;
+    private PublicContentResource publicContentResource;
+    private String competitionTitle;
+    private LocalDateTime competitionOpenDate;
+    private LocalDateTime competitionCloseDate;
+
+    public PublicContentItemResource() {
+    }
+
+    public PublicContentItemResource(PublicContentResource publicContentResource, String competitionTitle, LocalDateTime competitionOpenDate, LocalDateTime competitionCloseDate) {
+        this.publicContentResource = publicContentResource;
+        this.competitionTitle = competitionTitle;
+        this.competitionOpenDate = competitionOpenDate;
+        this.competitionCloseDate = competitionCloseDate;
+    }
+
+    public PublicContentResource getPublicContentResource() {
+        return publicContentResource;
+    }
+
+    public void setPublicContentResource(PublicContentResource publicContentResource) {
+        this.publicContentResource = publicContentResource;
+    }
+
+    public String getCompetitionTitle() {
+        return competitionTitle;
+    }
+
+    public void setCompetitionTitle(String competitionTitle) {
+        this.competitionTitle = competitionTitle;
+    }
+
+    public LocalDateTime getCompetitionOpenDate() {
+        return competitionOpenDate;
+    }
+
+    public void setCompetitionOpenDate(LocalDateTime competitionOpenDate) {
+        this.competitionOpenDate = competitionOpenDate;
+    }
+
+    public LocalDateTime getCompetitionCloseDate() {
+        return competitionCloseDate;
+    }
+
+    public void setCompetitionCloseDate(LocalDateTime competitionCloseDate) {
+        this.competitionCloseDate = competitionCloseDate;
+    }
 }
