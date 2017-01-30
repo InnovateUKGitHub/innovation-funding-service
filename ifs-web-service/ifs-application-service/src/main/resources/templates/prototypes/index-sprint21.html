@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+
+</head>
+<body class="app-dashboard">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+
+<header role="banner" id="global-header" class="">
+  <div class="header-wrapper">
+    <div class="header-global">
+
+        <div th:include="fragments/elements :: header-logo"></div>
+    </div>
+  </div>
+</header>
+
+<main id="content">
+  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint21'"  th:remove="tag" />
+
+	<h1 class="heading-large">Sprint 21</h1>
+
+    <section>
+
+      <h2 class="heading-medium">Applicant view</h2>
+
+      <ul class="list list-bullet">
+        <li>
+          <h3 class="heading-small">INFUND-7320</h3>
+          <p>As a lead applicant I want to manage my collaborators on the application so it is upto date</p>
+            <ul class="list-bullet">
+              <li><a href="/prototypes/632-organisation-collaborator-overview">INFUND-7660</a> As a lead applicant I want to view my application team</li>
+              <li><a href="/prototypes/7661-edit-org?company=empire">INFUND-7661</a> As a lead applicant I want to edit my organisation</li>
+              <li><a href="/prototypes/7661-edit-org?company=ludlow">INFUND-7662</a> As a lead applicant I want to edit a partner organisation</li>
+              <li><a href="/prototypes/632-organisation-collaborator-overview?company=ludlow">INFUND-7663</a> As a non lead applicant I want to view the application team</li>
+              <li><a href="/prototypes/7661-edit-org?company=ludlow&#38;user=nonLead">INFUND-7664</a> As a non lead applicant I want to edit my application team</li>
+              <li><a href="/prototypes/632-organisation-collaborator-overview?status=firstLoad">INFUND-7665</a> As a lead applicant I want to add the additional applicants and their organisation of first load</li>
+              <li><a href="/prototypes/7661-edit-org?company=newOrg&#38;status=firstLoad">INFUND-7666</a> As an lead applicant I want to add a new organisation</li>
+            </ul>
+          </li>
+      </ul>
+
+    </section>
+
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+
+</body>
+</html>
