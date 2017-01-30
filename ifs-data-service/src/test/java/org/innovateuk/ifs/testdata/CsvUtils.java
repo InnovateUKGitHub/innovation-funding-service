@@ -372,6 +372,18 @@ class CsvUtils {
         String activityCode;
         Integer assessorCount;
         BigDecimal assessorPay;
+        LocalDateTime publishDate;
+        String shortDescription;
+        String fundingRange;
+        String eligibilitySummary;
+        String competitionDescription;
+        FundingType fundingType;
+        String projectSize;
+
+
+
+
+
 
         private CompetitionLine(List<String> line) {
 
