@@ -131,15 +131,11 @@
                          </th:block>
                     </div>
                 </th:block>
-              </th:block>
-            </div>
-
-            <th:block>
-                <div th:replace="finance/your-finances-sub-sections :: your_finances" />
             </th:block>
 
-            <div th:replace="finance/your-finances-sub-sections :: agree_terms" />
-            <div th:replace="finance/your-finances-sub-sections :: subsection_buttons" />
+            <th:block th:include="finance/your-finances-sub-sections :: your_finances" />
+            <th:block th:include="finance/your-finances-sub-sections :: agree_terms" />
+            <th:block th:include="finance/your-finances-sub-sections :: subsection_buttons" />
 
         </th:block>
 
@@ -149,7 +145,7 @@
         <th:block th:if="${model.showReturnButtons}">
             <th:block th:if="${model.application.allReadOnly}">
                 <a th:href="@{/application/{id}(id=${model.application.currentApplication.id})}" class="button-secondary" name="submit-section">Return to application overview</a>
-            </div>
+            </th:block>
             <th:block th:unless="${model.application.allReadOnly}">
                 <button th:unless="${model.isSection}" type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
             </th:block>
