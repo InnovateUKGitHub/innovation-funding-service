@@ -4,13 +4,13 @@
     <!-- ===========================Form: finance =========================== -->
     <div th:fragment="finance">
         <div th:class="form-group"
-             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationgrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationgrantClaimPercentageId +']}')}? 'error'">
+             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'error'">
 
             <label class="form-label form-label-bold" for="cost-financegrantclaim">
                 <div th:text="${question.name}" />
                 <span class="form-hint" th:text="${question.description}" />
-                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
-                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationgrantClaimPercentageId})" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
+                <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" th:remove="tag" />
             </label>
 
             <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
@@ -21,7 +21,7 @@
                    th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                    th:class="${organisationFinanceSize?.getMaxGrantClaimPercentage() != null and organisationFinanceSize?.getMaxGrantClaimPercentage() &lt; organisationGrantClaimPercentage} ? 'width-small form-control field-error' : 'width-small form-control'"
                    id="cost-financegrantclaim"
-                   th:name="${'finance-grantclaimpercentage-' + question.id + '-' + organisationgrantClaimPercentageId}"
+                   th:name="${'finance-grantclaimpercentage-' + question.id + '-' + organisationGrantClaimPercentageId}"
                    th:value="${organisationGrantClaimPercentage}"
                    placeholder="0"
                    th:attr="data-min-errormessage=#{validation.field.percentage.max.value.or.higher('%min%')},
@@ -32,7 +32,7 @@
     </div>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <div th:fragment="organisation_size" th:if="${organisationType?.name == 'Business'}" th:remove="tag">
+    <div th:fragment="organisation_size" th:if="${model.finance.organisationType?.name == 'Business'}" th:remove="tag">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>
@@ -52,7 +52,7 @@
                            th:id="'financePosition-organisationSize-'+${size}"
                            th:name="'financePosition-organisationSize'"
                            th:value="${size}"
-                           th:checked="${size == organisationFinanceSize}"
+                           th:checked="${size == model.finance.organisationFinanceSize}"
                            required="required" />
                     <span th:text="${size.name}" />
                 </label>
@@ -416,7 +416,7 @@
 
                 <div th:if="${overheadCosts?.getUseTotalOption()}" id="overhead-total">
                     <h3 class="heading-medium">Calculate overheads</h3>
-                    <p>If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
+                    <p>If you feel your overheads are higher than 20% you may calculate a value using the Innovate UK model in the spreadsheet available below. The model shows you which types of indirect costs associated with your project you may claim. For support with this option, please contact our Customer Support Service on 01793 44 2700. Any value claimed under this model will be subject to a review. This will assess the appropriateness of your claim if your grant application is successful.</p>
                     <div class="form-group download">
                         <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
                         <a href="/files/overheads.xlsx">Overhead calculation spreadsheet.xlsx (16kb)</a>

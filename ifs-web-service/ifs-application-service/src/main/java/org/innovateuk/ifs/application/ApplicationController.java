@@ -171,6 +171,8 @@ public class ApplicationController {
         ProcessRoleResource userApplicationRole = userRestService.findProcessRole(user.getId(), applicationId).getSuccessObjectOrThrowException();
 
         applicationModelPopulator.addOrganisationAndUserFinanceDetails(competition.getId(), applicationId, user, model, form, userApplicationRole.getOrganisationId());
+        applicationModelPopulator.addResearchCategoryId(application, model);
+
         model.addAttribute("applicationReadyForSubmit", applicationService.isApplicationReadyForSubmit(application.getId()));
 
         if (PROJECT_SETUP.equals(competition.getCompetitionStatus())) {
@@ -278,34 +280,6 @@ public class ApplicationController {
     @RequestMapping(value = "/terms-and-conditions")
     public String termsAndConditions(){
         return "application-terms-and-conditions";
-    }
-
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
-     */
-    @ProfileExecution
-    @RequestMapping(value = "/{applicationId}/section/{sectionId}", params= {"singleFragment=true"}, method = RequestMethod.POST)
-    public String assignQuestionAndReturnSectionFragmentIndividualSection(ApplicationForm form, Model model,
-                                                         @PathVariable("applicationId") final Long applicationId,
-                                                         @RequestParam("sectionId") final Optional<Long> sectionId,
-                                                         HttpServletRequest request, HttpServletResponse response){
-
-        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
-    }
-
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
-     */
-    @ProfileExecution
-    @RequestMapping(value = "/{applicationId}", params = {"singleFragment=true"}, method = RequestMethod.POST)
-    public String assignQuestionAndReturnSectionFragment(ApplicationForm form, Model model,
-                                                         @PathVariable("applicationId") final Long applicationId,
-                                                         @RequestParam("sectionId") final Optional<Long> sectionId,
-                                                         HttpServletRequest request, HttpServletResponse response){
-
-        return doAssignQuestionAndReturnSectionFragment(model, applicationId, sectionId, request, response, form);
     }
 
     @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)

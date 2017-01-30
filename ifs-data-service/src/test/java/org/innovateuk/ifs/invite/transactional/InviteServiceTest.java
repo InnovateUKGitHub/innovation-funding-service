@@ -92,7 +92,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -109,7 +109,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -135,7 +135,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
                 build();
         when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
 
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -155,7 +155,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Role role1 = new Role(1L, "leadapplicant");
         User leadApplicant = newUser().withEmailAddress("Email@email.com").withFirstName("Nico").build();
         Organisation leadOrganisation = newOrganisation().withName("Empire Ltd").build();
-        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisation(leadOrganisation).build();
+        ProcessRole processRole1 = newProcessRole().with(id(1L)).withApplication(application).withUser(leadApplicant).withRole(role1).withOrganisationId(leadOrganisation.getId()).build();
         application.setProcessRoles(asList(processRole1));
 
         ApplicationInvite invite = newInvite().withApplication(application).build();
@@ -277,7 +277,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         User user = newUser().build();
         Organisation organisation = newOrganisation().build();
 
-        ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
+        ProcessRole leadApplicantProcessRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
         Application application = newApplication().withCompetition(competition).withProcessRoles(leadApplicantProcessRole).build();
         InviteOrganisation inviteOrganisation = newInviteOrganisation().build();
         ApplicationInvite invite = newInvite().withInviteOrganisation(inviteOrganisation).withApplication(application).build();

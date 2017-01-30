@@ -37,6 +37,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
 
     private AvailableAssessorRowViewModel getRowViewModel(AvailableAssessorResource availableAssessorResource) {
         return new AvailableAssessorRowViewModel(
+                availableAssessorResource.getId(),
                 availableAssessorResource.getName(),
                 availableAssessorResource.getInnovationAreas(),
                 availableAssessorResource.isCompliant(),

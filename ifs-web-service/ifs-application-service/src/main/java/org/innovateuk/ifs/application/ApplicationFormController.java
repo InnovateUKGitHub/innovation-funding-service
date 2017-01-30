@@ -18,6 +18,7 @@ import org.innovateuk.ifs.application.viewmodel.OpenFinanceSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.OpenSectionViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionOrganisationDetailsViewModel;
 import org.innovateuk.ifs.application.viewmodel.QuestionViewModel;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
@@ -182,6 +183,9 @@ public class ApplicationFormController {
     private UserService userService;
 
     @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
     private OverheadFileSaver overheadFileSaver;
 
     @InitBinder
@@ -267,30 +271,6 @@ public class ApplicationFormController {
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
         applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);
-    }
-
-
-    private void addFormAttributes(ApplicationResource application,
-                                   CompetitionResource competition,
-                                   Optional<SectionResource> section,
-                                   UserResource user, Model model,
-                                   ApplicationForm form, Optional<QuestionResource> question,
-                                   Optional<List<FormInputResource>> formInputs,
-                                   List<ProcessRoleResource> userApplicationRoles){
-        applicationModelPopulator.addApplicationDetails(application, competition, user.getId(), section, question.map(q -> q.getId()), model, form, userApplicationRoles);
-        organisationDetailsViewModelPopulator.populateModel(application.getId(), userApplicationRoles);
-        Map<Long, List<FormInputResource>> questionFormInputs = new HashMap<>();
-
-        if(question.isPresent()) {
-            questionFormInputs.put(question.get().getId(), formInputs.orElse(null));
-        }
-        model.addAttribute("currentQuestion", question.orElse(null));
-        model.addAttribute("questionFormInputs", questionFormInputs);
-        model.addAttribute("currentUser", user);
-        model.addAttribute("form", form);
-        if(question.isPresent()) {
-            model.addAttribute("title", question.get().getShortName());
-        }
     }
 
     @ProfileExecution
@@ -416,8 +396,6 @@ public class ApplicationFormController {
         form.setBindingResult(bindingResult);
         return String.format("finance/finance :: %s_row", costType.getType());
     }
-
-
 
     @RequestMapping(value = "/remove_cost/{costId}")
     public @ResponseBody String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
@@ -1081,6 +1059,12 @@ public class ApplicationFormController {
             applicationService.save(application);
         } else if (fieldName.equals("application.previousApplicationTitle")) {
             application.setPreviousApplicationTitle(value);
+            applicationService.save(application);
+        } else if (fieldName.equals("application.researchCategoryId")) {
+            Long catId = Long.parseLong(value);
+            Set<ResearchCategoryResource> cats =
+                    categoryService.getResearchCategories().stream().filter(cat -> cat.getId().equals(catId)).collect(Collectors.toSet());
+            application.setResearchCategories(cats);
             applicationService.save(application);
         }
         return errors;

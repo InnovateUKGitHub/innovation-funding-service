@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -56,6 +59,7 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -143,6 +147,14 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
+
+        ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
+        when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        financeViewModel.setOrganisationGrantClaimPercentage(76);
+
+        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 
     @Test
@@ -492,6 +504,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
                         .param("application.name", "")
+                        .param("application.researchCategoryId", "")
                         .param("application.resubmission", "")
                         .param("application.startDate", "")
                         .param("application.startDate.year", "")
@@ -502,6 +515,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertEquals("NotBlank", bindingResult.getFieldError("application.name").getCode());
+        assertEquals("NotNull", bindingResult.getFieldError("application.researchCategoryId").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.durationInMonths").getCode());
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
@@ -722,6 +736,22 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
         String jsonExpectedContent = "{\"success\":\"true\"}";
         assertEquals(jsonExpectedContent, content);
+    }
+
+    @Test
+    public void testSaveFormElementApplicationResearchCategory() throws Exception {
+        String value = "1";
+        String fieldName = "application.researchCategoryId";
+
+        mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"true\"}"));
+
+        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
 
     @Test

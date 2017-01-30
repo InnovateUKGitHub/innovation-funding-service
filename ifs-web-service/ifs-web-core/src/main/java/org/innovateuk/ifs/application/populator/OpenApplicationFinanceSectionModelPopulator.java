@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -58,7 +59,7 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
 
         addQuestionsDetails(openFinanceSectionViewModel, application, form);
         addApplicationAndSections(openFinanceSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections, organisationResource);
-        addOrganisationAndUserFinanceDetails(application.getCompetition(), application.getId(), costsQuestions, user, model, form, organisationId);
+        addOrganisationAndUserFinanceDetails(openFinanceSectionViewModel, application.getCompetition(), application.getId(), costsQuestions, user, form, organisationId);
         addFundingSection(openFinanceSectionViewModel, application.getCompetition());
 
         sectionApplicationViewModel.setAllReadOnly(calculateAllReadOnly(competition, section.getId(), openFinanceSectionViewModel.getSectionsMarkedAsComplete())
@@ -68,21 +69,21 @@ public class OpenApplicationFinanceSectionModelPopulator extends BaseOpenFinance
         form.setObjectErrors(bindingResult.getAllErrors());
 
         openFinanceSectionViewModel.setSectionApplicationViewModel(sectionApplicationViewModel);
-        //TODO INFUND-7482 use finance view model when its complete.
-        Integer organisationGrantClaimPercentage = (Integer) model.asMap().get("organisationGrantClaimPercentage");
-        populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), organisationGrantClaimPercentage);
+        if(openFinanceSectionViewModel.getFinance() instanceof FinanceViewModel) {
+            FinanceViewModel financeViewModel = (FinanceViewModel) openFinanceSectionViewModel.getFinance();
+            populateSubSectionMenuOptions(openFinanceSectionViewModel, allSections, openFinanceSectionViewModel.getSectionApplicationViewModel().getUserOrganisation().getId(), financeViewModel.getOrganisationGrantClaimPercentage());
+        }
 
         model.addAttribute(MODEL_ATTRIBUTE_FORM, form);
 
         return openFinanceSectionViewModel;
     }
 
-    //TODO - INFUND-7482 - remove usages of Model model
-    private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
-                                                      Model model, ApplicationForm form, Long organisationId) {
+    private void addOrganisationAndUserFinanceDetails(OpenFinanceSectionViewModel financeSectionViewModel, Long competitionId, Long applicationId, List<QuestionResource> costsQuestions, UserResource user,
+                                                      ApplicationForm form, Long organisationId) {
 
-        applicationFinanceOverviewModelManager.addFinanceDetails(model, competitionId, applicationId);
+        financeSectionViewModel.setFinanceOverviewViewModel(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionId, applicationId));
         String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
-        financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
+        financeSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicationId, costsQuestions, user.getId(), form, organisationId));
     }
 }

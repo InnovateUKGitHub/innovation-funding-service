@@ -1,19 +1,15 @@
 *** Settings ***
-Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
-...
+Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission
 ...
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
-...
 ...
 ...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 ...
 ...               -INFUND-1137 As an applicant I want to be shown confirmation information when I submit my application submission so I can confirm this has been sent and I can be given guidance for the next stages
 ...
-...
 ...               INFUND-1887 As the Service Delivery Manager, I want to send an email notification to an applicant once they have successfully submitted a completed application so they have confidence their application has been received by Innovate UK
 ...
 ...               INFUND-3107 When clicking the "X", the form submits and doesn't cancel the action when using a modal popup
-...
 ...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       new account complete all but one
@@ -101,7 +97,7 @@ the user marks the first section as incomplete
     The user clicks the button/link    name=mark_as_incomplete
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
@@ -138,6 +134,6 @@ the applicant marks the first section as complete
     the applicant completes the application details
 
 the applicant clicks the submit and then clicks the "close button" in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=button:contains("X")
