@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.publiccontent.viewmodel.SearchViewModel;
+import org.innovateuk.ifs.publiccontent.viewmodel.SearchInformationViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -24,7 +24,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PublicContentSearchModelPopulatorTest {
+public class SearchInformationViewModelPopulatorTest {
 
     private static final Long COMPETITION_ID = 1L;
     private static final String FUNDING_RANGE = "FUNDING_RANGE";
@@ -33,7 +33,7 @@ public class PublicContentSearchModelPopulatorTest {
     private static final List<String> KEYWORDS = asList("keyword1", "keyword2");
 
     @InjectMocks
-    private PublicContentSearchModelPopulator target;
+    private SearchInformationViewModelPopulator target;
 
     @Mock
     private CompetitionService competitionService;
@@ -54,7 +54,7 @@ public class PublicContentSearchModelPopulatorTest {
         CompetitionResource competition = CompetitionResourceBuilder.newCompetitionResource().build();
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        SearchViewModel viewModel = target.populate(resource, readOnly);
+        SearchInformationViewModel viewModel = target.populate(resource, readOnly);
 
         assertThat(viewModel.isReadOnly(), equalTo(readOnly));
         assertThat(viewModel.getCompetition(), equalTo(competition));

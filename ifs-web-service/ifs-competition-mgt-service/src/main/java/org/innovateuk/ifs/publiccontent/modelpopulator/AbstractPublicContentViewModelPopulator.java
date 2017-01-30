@@ -10,6 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
+/**
+ * Abstract class to populate the generic fields needed in the view.
+ * @param <M> the view model class.
+ */
 public abstract class AbstractPublicContentViewModelPopulator<M extends AbstractPublicContentViewModel> implements PublicContentViewModelPopulator<M> {
 
     @Autowired

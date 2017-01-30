@@ -5,7 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 /**
  * Form for the Search page on public content setup.
  */
-public class SearchForm extends AbstractPublicContentForm {
+public class SearchInformationForm extends AbstractPublicContentForm {
 
     @NotEmpty
     private String shortDescription;

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.competition.publiccontent.resource;
 
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
@@ -18,7 +16,6 @@ public class PublicContentResource {
 
     private Long competitionId;
 
-    @JsonDeserialize(using= LocalDateTimeDeserializer.class)
     private LocalDateTime publishDate;
 
     private String shortDescription;

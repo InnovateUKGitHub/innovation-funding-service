@@ -6,23 +6,31 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.form.SearchForm;
+import org.innovateuk.ifs.publiccontent.form.SearchInformationForm;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Saver for the SearchInformationForm form.
+ */
 @Service
-public class PublicContentSearchFormSaver extends AbstractPublicContentFormSaver<SearchForm> implements PublicContentFormSaver<SearchForm> {
+public class SearchInformationFormSaver extends AbstractPublicContentFormSaver<SearchInformationForm> implements PublicContentFormSaver<SearchInformationForm> {
 
     @Override
-    protected void populateResource(SearchForm form, PublicContentResource publicContentResource) {
+    protected void populateResource(SearchInformationForm form, PublicContentResource publicContentResource) {
         publicContentResource.setShortDescription(form.getShortDescription());
         publicContentResource.setProjectFundingRange(form.getProjectFundingRange());
         publicContentResource.setEligibilitySummary(form.getEligibilitySummary());
-        publicContentResource.setKeywords(Lists.newArrayList(Splitter.on(",").split(form.getKeywords()))
-            .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList()));
+        publicContentResource.setKeywords(splitAndNormaliseKeywords(form.getKeywords()));
     }
 
+
+    private List<String> splitAndNormaliseKeywords(String keywords) {
+        return Lists.newArrayList(Splitter.on(",").split(keywords))
+                .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
+    }
     @Override
     protected PublicContentSectionType getType() {
         return PublicContentSectionType.SEARCH;

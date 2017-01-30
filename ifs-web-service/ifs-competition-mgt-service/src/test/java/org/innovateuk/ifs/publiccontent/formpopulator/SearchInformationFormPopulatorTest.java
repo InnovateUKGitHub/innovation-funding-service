@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.formpopulator;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.publiccontent.form.SearchForm;
+import org.innovateuk.ifs.publiccontent.form.SearchInformationForm;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuil
 import static org.junit.Assert.*;
 
 @RunWith(MockitoJUnitRunner.class)
-public class PublicContentSearchFormPopulatorTest {
+public class SearchInformationFormPopulatorTest {
 
     private static final Long COMPETITION_ID = 1L;
     private static final String FUNDING_RANGE = "FUNDING_RANGE";
@@ -25,7 +25,7 @@ public class PublicContentSearchFormPopulatorTest {
     private static final List<String> KEYWORDS = asList("keyword1", "keyword2");
 
     @InjectMocks
-    private PublicContentSearchFormPopulator target;
+    private SearchInformationFormPopulator target;
 
     @Test
     public void testPopulate() {
@@ -35,7 +35,7 @@ public class PublicContentSearchFormPopulatorTest {
                 .withKeywords(KEYWORDS)
                 .withShortDescription(SHORT_DESCRIPTION).build();
 
-        SearchForm form = target.populate(resource);
+        SearchInformationForm form = target.populate(resource);
 
         assertThat(form.getEligibilitySummary(), equalTo(ELIGIBILITY_SUMMARY));
         assertThat(form.getProjectFundingRange(), equalTo(FUNDING_RANGE));
