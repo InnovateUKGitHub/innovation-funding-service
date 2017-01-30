@@ -17,7 +17,7 @@ items:
           deploymentconfig: robot-framework
       spec:
         containers:
-        - image: worth/robot-framework:1.0-SNAPSHOT
+        - image: innovateuk/robot-framework:1.0-SNAPSHOT
           name: robot-framework
           ports: {}
           resources: {}

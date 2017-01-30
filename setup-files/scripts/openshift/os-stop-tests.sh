@@ -1,10 +1,9 @@
 #!/bin/bash
 set -e
 
-ENV=$1
-HOST=dev.ifs-test-clusters.com
+PROJECT=$1
 
-echo "Stopping tests on the $ENV Openshift environment"
+echo "Stopping tests on the $PROJECT Openshift environment"
 
 function stopTests() {
     oc delete dc selenium-grid
