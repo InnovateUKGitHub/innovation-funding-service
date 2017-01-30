@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.*;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -11,9 +10,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource, CompetitionResourceBuilder> {
 
@@ -36,7 +35,7 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     public CompetitionResourceBuilder withEndDate(LocalDateTime endDate) {
         return with(competition -> setField("endDate", endDate, competition));
     }
-    
+
     public CompetitionResourceBuilder withResearchCategories(Set<Long> categories) {
         return with(competition -> competition.setResearchCategories(categories));
     }
@@ -48,37 +47,37 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     public CompetitionResourceBuilder withMultiStream(boolean multiStream) {
         return with(competition -> competition.setMultiStream(multiStream));
     }
-    
+
     public CompetitionResourceBuilder withStreamName(String... streamNames) {
-        return withArray((streamName, object) -> setField("streamName", streamName, object), streamNames);
+        return withArraySetFieldByReflection("streamName", streamNames);
     }
 
     public CompetitionResourceBuilder withId(Long... ids) {
-        return withArray((id, object) -> setField("id", id, object), ids);
+        return withArraySetFieldByReflection("id", ids);
     }
 
     public CompetitionResourceBuilder withName(String... names) {
-        return withArray((name, object) -> setField("name", name, object), names);
+        return withArraySetFieldByReflection("name", names);
     }
 
     public CompetitionResourceBuilder withDescription(String... descriptions) {
-        return withArray((description, object) -> setField("description", description, object), descriptions);
+        return withArraySetFieldByReflection("description", descriptions);
     }
 
     public CompetitionResourceBuilder withAssessorAcceptsDate(LocalDateTime... assessorAcceptsDates) {
-        return withArray((assessorAcceptsDate, object) -> setField("assessorAcceptsDate", assessorAcceptsDate, object), assessorAcceptsDates);
+        return withArraySetFieldByReflection("assessorAcceptsDate", assessorAcceptsDates);
     }
 
     public CompetitionResourceBuilder withAssessorDeadlineDate(LocalDateTime... assessorDeadlineDates) {
-        return withArray((assessorDeadlineDate, object) -> setField("assessorDeadlineDate", assessorDeadlineDate, object), assessorDeadlineDates);
+        return withArraySetFieldByReflection("assessorDeadlineDate", assessorDeadlineDates);
     }
 
     public CompetitionResourceBuilder withFundersPanelDate(LocalDateTime... fundersPanelDates) {
-        return withArray((fundersPanelDate, object) -> setField("fundersPanelDate", fundersPanelDate, object), fundersPanelDates);
+        return withArraySetFieldByReflection("fundersPanelDate", fundersPanelDates);
     }
 
     public CompetitionResourceBuilder withFundersPanelEndDate(LocalDateTime... fundersPanelEndDates) {
-        return withArray((fundersPanelEndDate, object) -> setField("fundersPanelEndDate", fundersPanelEndDate, object), fundersPanelEndDates);
+        return withArraySetFieldByReflection("fundersPanelEndDate", fundersPanelEndDates);
     }
 
     public CompetitionResourceBuilder withAssessorFeedbackDate(LocalDateTime... assessorFeedbackDate) {
@@ -86,68 +85,79 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     public CompetitionResourceBuilder withMaxResearchRatio(Integer... maxResearchRatios) {
-        return withArray((maxResearchRatio, object) -> setField("maxResearchRatio", maxResearchRatio, object), maxResearchRatios);
+        return withArraySetFieldByReflection("maxResearchRatio", maxResearchRatios);
     }
 
     public CompetitionResourceBuilder withAcademicGrantClaimPercentage(Integer... grantClaimPercentages) {
-        return withArray((grantClaimPercentage, object) -> setField("academicGrantPercentage", grantClaimPercentage, object), grantClaimPercentages);
+        return withArraySetFieldByReflection("academicGrantPercentage", grantClaimPercentages);
     }
-    
+
     public CompetitionResourceBuilder withCompetitionStatus(CompetitionStatus... statuses) {
-    	return withArray((status, object) -> setField("competitionStatus", status, object), statuses);
+        return withArraySetFieldByReflection("competitionStatus", statuses);
     }
 
     public CompetitionResourceBuilder withLeadTechnologist(Long... userIds) {
-        return withArray((id, object) -> setField("leadTechnologist", id, object), userIds);
+        return withArraySetFieldByReflection("leadTechnologist", userIds);
     }
 
     public CompetitionResourceBuilder withLeadTechnologistName(String... names) {
-        return withArray((name, object) -> setField("leadTechnologistName", name, object), names);
+        return withArraySetFieldByReflection("leadTechnologistName", names);
     }
 
     public CompetitionResourceBuilder withExecutive(Long... userIds) {
-        return withArray((id, object) -> setField("executive", id, object), userIds);
+        return withArraySetFieldByReflection("executive", userIds);
+    }
+
+    public CompetitionResourceBuilder withExecutiveName(String... names) {
+        return withArraySetFieldByReflection("executiveName", names);
     }
 
     public CompetitionResourceBuilder withCompetitionType(Long... typeId) {
-        return withArray((id, object) -> setField("competitionType", id, object), typeId);
+        return withArraySetFieldByReflection("competitionType", typeId);
     }
 
     public CompetitionResourceBuilder withCompetitionTypeName(String... names) {
-        return withArray((name, object) -> setField("competitionTypeName", name, object), names);
+        return withArraySetFieldByReflection("competitionTypeName", names);
     }
 
     public CompetitionResourceBuilder withInnovationSector(Long... ids) {
-        return withArray((id, object) -> setField("innovationSector", id, object), ids);
+        return withArraySetFieldByReflection("innovationSector", ids);
     }
+
     public CompetitionResourceBuilder withInnovationSectorName(String... names) {
-        return withArray((name, object) -> setField("innovationSectorName", name, object), names);
+        return withArraySetFieldByReflection("innovationSectorName", names);
     }
+
     public CompetitionResourceBuilder withInnovationAreas(Set<Long>... ids) {
-        return withArray((id, object) -> setField("innovationAreas", id, object), ids);
+        return withArraySetFieldByReflection("innovationAreas", ids);
     }
+
     public CompetitionResourceBuilder withInnovationAreaNames(Set<String>... names) {
-        return withArray((name, object) -> setField("innovationAreaNames", name, object), names);
+        return withArraySetFieldByReflection("innovationAreaNames", names);
     }
 
     public CompetitionResourceBuilder withPafCode(String... codes) {
-        return withArray((code, object) -> setField("pafCode", code, object), codes);
+        return withArraySetFieldByReflection("pafCode", codes);
     }
+
     public CompetitionResourceBuilder withBudgetCode(String... codes) {
-        return withArray((code, object) -> setField("budgetCode", code, object), codes);
+        return withArraySetFieldByReflection("budgetCode", codes);
     }
+
     public CompetitionResourceBuilder withCompetitionCode(String... codes) {
-        return withArray((code, object) -> setField("code", code, object), codes);
+        return withArraySetFieldByReflection("code", codes);
     }
+
     public CompetitionResourceBuilder withCollaborationLevel(CollaborationLevel... collaborationLevels) {
-        return withArray((collaborationLevel, object) -> setField("collaborationLevel", collaborationLevel, object), collaborationLevels);
+        return withArraySetFieldByReflection("collaborationLevel", collaborationLevels);
     }
+
     public CompetitionResourceBuilder withLeadApplicantType(LeadApplicantType... leadApplicantTypes) {
-        return withArray((leadApplicantType, object) -> setField("leadApplicantType", leadApplicantType, object), leadApplicantTypes);
+        return withArraySetFieldByReflection("leadApplicantType", leadApplicantTypes);
     }
 
     public CompetitionResourceBuilder withActivityCode(String... activityCodes) {
-        return withArray((activityCode, object) -> setField("activityCode", activityCode, object), activityCodes);
+        return withArraySetFieldByReflection("activityCode", activityCodes);
     }
 
     public CompetitionResourceBuilder withFunders(List<CompetitionFunderResource> fundersList) {
@@ -167,11 +177,11 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
     }
 
     public CompetitionResourceBuilder withAssessorCount(Integer... assessorCount) {
-        return withArray((id, object) -> setField("assessorCount", id, object), assessorCount);
+        return withArraySetFieldByReflection("assessorCount", assessorCount);
     }
 
     public CompetitionResourceBuilder withAssessorPay(BigDecimal... assessorPay) {
-        return withArray((id, object) -> setField("assessorPay", id, object), assessorPay);
+        return withArraySetFieldByReflection("assessorPay", assessorPay);
     }
 
     public CompetitionResourceBuilder withSectionSetupStatus(Map<CompetitionSetupSection, Boolean> sectionSetupStatus) {

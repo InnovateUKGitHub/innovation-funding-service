@@ -13,7 +13,6 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...
 ...               INFUND-7232 As a member of the competitions team I can view previously assigned assessors so I can see who has previously been removed from assessing the application
 ...
-...
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    Assessor
@@ -28,7 +27,7 @@ View the list of the applications
     Then the application list is correct before changes
 
 View the available assessors
-    [Documentation]   INFUND-7233
+    [Documentation]    INFUND-7233
     [Tags]
     #TODO update these selectors once the tables on this page have unique class names
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
@@ -37,18 +36,17 @@ View the available assessors
 
 View the assigned list
     [Documentation]    INFUND-7230 INFUND-7038
-    [Tags]    Pending
-    #TODO INFUND-7848
-    Given the user clicks the button/link    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(6)
+    [Tags]
+    Given The user should see the element    jQuery=tr:contains(There are no assessors assigned to this application.)
+    When the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
     And the user clicks the button/link    jQuery=.link-back:contains("Allocate applications")
-    And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains("1")
+    Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains("1")
 
 Remove an assigned user who has not been notified back to available assessors
     [Documentation]    INFUND-7230
-    [Tags]    Pending
-    #TODO INFUND-7848
+    [Tags]
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove and notify")
@@ -56,8 +54,7 @@ Remove an assigned user who has not been notified back to available assessors
 
 Notify an assigned user
     [Documentation]    INFUND-7050
-    [Tags]    Pending
-    #TODO INFUND-7848
+    [Tags]
     Given the user clicks the button/link    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(6)
     And the user clicks the button/link    jQuery=.link-back:contains("Allocate applications")
     And the user clicks the button/link    jQuery=.link-back:contains("Manage assessments")
@@ -68,11 +65,10 @@ Notify an assigned user
 
 Remove and notify an assessor send the assessor to previously assigned table
     [Documentation]    INFUND-7232
-    [Tags]    Pending
-    #TODO INFUND-7848
+    [Tags]
     Given the user clicks the button/link    jQuery=.button:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
-    When the user clicks the button/link     jQuery=tr:nth-child(1) a:contains("Remove")
+    When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove and notify")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct
@@ -143,8 +139,8 @@ Custom suite setup
     ${initial_application_assigned} =    Get Value    jQuery=tr:nth-child(1) td:nth-child(5)
     ${initial_application_submitted} =    Get Value    jQuery=tr:nth-child(1) td:nth-child(6)
     the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
-    ${initial_assessors_application} =     Get Value  jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(4)
-    ${initial_assessors_assigned} =     Get Value    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(5)
+    ${initial_assessors_application} =    Get Value    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(4)
+    ${initial_assessors_assigned} =    Get Value    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(5)
     Set suite variable    ${initial_application_assesors}
     Set suite variable    ${initial_application_assigned}
     Set suite variable    ${initial_application_submitted}

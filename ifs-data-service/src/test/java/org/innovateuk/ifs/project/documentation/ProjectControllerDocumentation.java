@@ -275,7 +275,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isBadRequest())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -301,7 +301,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isBadRequest())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -329,7 +329,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isInternalServerError())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -356,7 +356,7 @@ public class ProjectControllerDocumentation extends BaseControllerMockMVCTest<Pr
 
         mockMvc.perform(put("/project/{projectId}/monitoring-officer", projectId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(monitoringOfficerResource)))
+                .content(objectMapper.writeValueAsString(monitoringOfficerResource)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(

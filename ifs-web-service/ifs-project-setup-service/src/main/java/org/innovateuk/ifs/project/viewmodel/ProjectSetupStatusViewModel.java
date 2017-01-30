@@ -1,13 +1,15 @@
 package org.innovateuk.ifs.project.viewmodel;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.Optional;
+
+import static org.innovateuk.ifs.project.sections.SectionStatus.TICK;
 
 /**
  * A view model that backs the Project Status page
@@ -21,6 +23,8 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private Long competitionId;
     private boolean monitoringOfficerAssigned;
     private boolean leadPartner;
+    private boolean hasCompanyHouse;
+    private boolean projectComplete;
     private String monitoringOfficerName;
     private Long organisationId;
     private SectionAccess companiesHouseSection;
@@ -40,7 +44,7 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
     private SectionStatus grantOfferLetterStatus;
 
     public ProjectSetupStatusViewModel(ProjectResource project, CompetitionResource competition,
-                                       Optional<MonitoringOfficerResource> monitoringOfficerResource, Long organisationId, boolean leadPartner,
+                                       Optional<MonitoringOfficerResource> monitoringOfficerResource, OrganisationResource organisation, boolean leadPartner,
                                        SectionAccess companiesHouseSection, SectionAccess projectDetailsSection,
                                        SectionAccess monitoringOfficerSection, SectionAccess bankDetailsSection,
                                        SectionAccess financeChecksSection, SectionAccess spendProfileSection,
@@ -55,9 +59,10 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.competitionName = competition.getName();
         this.competitionId = competition.getId();
         this.leadPartner = leadPartner;
+        this.hasCompanyHouse = organisation.getCompanyHouseNumber() != null && !organisation.getCompanyHouseNumber().isEmpty();
         this.monitoringOfficerAssigned = monitoringOfficerResource.isPresent();
         this.monitoringOfficerName = monitoringOfficerResource.map(mo -> mo.getFullName()).orElse("");
-        this.organisationId = organisationId;
+        this.organisationId = organisation.getId();
         this.companiesHouseSection = companiesHouseSection;
         this.projectDetailsSection = projectDetailsSection;
         this.monitoringOfficerSection = monitoringOfficerSection;
@@ -73,6 +78,11 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
         this.spendProfileStatus = spendProfileStatus;
         this.otherDocumentsStatus = otherDocumentsStatus;
         this.grantOfferLetterStatus = grantOfferLetterStatus;
+        this.projectComplete = projectDetailsStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && monitoringOfficerStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && financeChecksStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && spendProfileStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus())
+                && grantOfferLetterStatus.getSectionStatus().equalsIgnoreCase(TICK.getSectionStatus());
     }
 
     public Long getProjectId() {
@@ -171,5 +181,13 @@ public class ProjectSetupStatusViewModel implements BasicProjectDetailsViewModel
 
     public Long getCompetitionId() {
         return competitionId;
+    }
+
+    public boolean isHasCompanyHouse() {
+        return hasCompanyHouse;
+    }
+
+    public boolean isProjectComplete() {
+        return projectComplete;
     }
 }

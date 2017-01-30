@@ -545,8 +545,8 @@
           width: 540,
           height: 150,
           title: null,
-          buttonTitle: "Insert",
-          buttonUpdateTitle: "Update",
+          buttonTitle: "Insert link",
+          buttonUpdateTitle: "Update link",
           modal: true,
           resizable: false,
           draggable: false,
@@ -561,7 +561,7 @@
         dialogId = "" + this.options.uuid + "-dialog";
         butTitle = this.options.dialogOpts.buttonTitle;
         butUpdateTitle = this.options.dialogOpts.buttonUpdateTitle;
-        dialog = jQuery("<div id=\"" + dialogId + "\">        <form action=\"#\" method=\"post\" class=\"linkForm\">          <div class=\"form-group\">            <label class=\"form-label\" for=\"dialog-input-url\">Please insert a link</label>            <input class=\"form-control width-full\" id=\"dialog-input-url\" type=\"text\" name=\"url\" value=\"" + this.options.defaultUrl + "\" />          </div>          <div class=\"form-group\">            <input type=\"submit\" id=\"addlinkButton\" class=\"button\" value=\"" + butTitle + "\"/>          </div>        </form></div>");
+        dialog = jQuery("<div id=\"" + dialogId + "\">        <form action=\"#\" method=\"post\" class=\"linkForm\">          <div class=\"form-group\">            <label class=\"form-label\" for=\"dialog-input-url\">Insert a link including the full URL http://</label>            <input class=\"form-control width-full\" id=\"dialog-input-url\" type=\"text\" name=\"url\" value=\"" + this.options.defaultUrl + "\" />          </div>          <div class=\"form-group\">            <input type=\"submit\" id=\"addlinkButton\" class=\"button\" value=\"" + butTitle + "\"/>          </div>        </form></div>");
         urlInput = jQuery('input[name=url]', dialog);
         isEmptyLink = function(link) {
           if ((new RegExp(/^\s*$/)).test(link)) {
