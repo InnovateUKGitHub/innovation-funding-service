@@ -48,6 +48,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6801 Show text instead of Id - Spend Profile - Error Summary
 ...
 ...               INFUND-6138 Partners should be able to see the correct status of SP so to take action
+...
+...               INFUND-7409 PM is redirected to the wrong screen when saving their spend profile
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -69,6 +71,7 @@ Project Finance user generates the Spend Profile
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    jQuery=.generate-spend-profile-main-button
+    exit tests
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
@@ -137,8 +140,8 @@ Lead Partner can see Spend profile summary
     Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801
-    [Tags]    #HappyPath
+    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409
+    [Tags]
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
     When the user enters text to a text field          css=#row-24-0    2899
@@ -623,7 +626,7 @@ Lead partner can return edit rights to other project partners
 
 
 Lead partner can edit own spend profile and mark as complete
-    [Documentation]    INFUND-6977
+    [Documentation]    INFUND-6977, INFUNF-7409
     When the user clicks the button/link    link=${Katz_name}
     And the user should see the text in the page    Your spend profile is marked as complete
     And the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
