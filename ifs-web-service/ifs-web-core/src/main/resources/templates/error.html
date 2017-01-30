@@ -38,7 +38,7 @@
     </div>
 
     <p th:unless="${#strings.isEmpty(stacktrace)}" th:text="${'Stack trace for debugging: ' + stacktrace}" style="margin-top: 2em;">
-        Stack trace will be printed here, wrapped in comments to make it only visible in the source...
+        Stack trace will be printed here when using the "debug" active profile
     </p>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
