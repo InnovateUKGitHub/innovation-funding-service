@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.assessment.service;
 
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 
@@ -10,4 +12,5 @@ public interface AssessorRestService {
 
     RestResult<Void> createAssessorByInviteHash(String hash, UserRegistrationResource userRegistrationResource);
 
+    RestResult<AssessorProfileResource> getAssessorProfile(Long assessorId);
 }

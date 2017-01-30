@@ -298,14 +298,28 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(2L, 3L)
                 .build(2);
 
+        List<AssessmentResource> assessmentResources = newAssessmentResource()
+                .withActivityState(AssessmentStates.CREATED)
+                .withCompetition(competitionId)
+                .withId(2L, 3L)
+                .build(2);
+
         when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
                 .thenReturn(assessments);
+        when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(assessmentResources.get(0));
+        when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(assessmentResources.get(1));
+        when(assessmentRepositoryMock.findOne(2L)).thenReturn(assessments.get(0));
+        when(assessmentRepositoryMock.findOne(3L)).thenReturn(assessments.get(1));
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
 
         ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
 
         verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(0)));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(1)));
+        verify(assessmentRepositoryMock).findOne(2L);
+        verify(assessmentRepositoryMock).findOne(3L);
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
 
@@ -324,14 +338,28 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(2L, 3L)
                 .build(2);
 
+        List<AssessmentResource> assessmentResources = newAssessmentResource()
+                .withActivityState(AssessmentStates.CREATED)
+                .withCompetition(competitionId)
+                .withId(2L, 3L)
+                .build(2);
+
         when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
                 .thenReturn(assessments);
+        when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(assessmentResources.get(0));
+        when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(assessmentResources.get(1));
+        when(assessmentRepositoryMock.findOne(2L)).thenReturn(assessments.get(0));
+        when(assessmentRepositoryMock.findOne(3L)).thenReturn(assessments.get(1));
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(false);
 
         ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
 
         verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(0)));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(1)));
+        verify(assessmentRepositoryMock).findOne(2L);
+        verify(assessmentRepositoryMock).findOne(3L);
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
 
@@ -351,14 +379,28 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withId(2L, 3L)
                 .build(2);
 
+        List<AssessmentResource> assessmentResources = newAssessmentResource()
+                .withActivityState(AssessmentStates.CREATED)
+                .withCompetition(competitionId)
+                .withId(2L, 3L)
+                .build(2);
+
         when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
                 .thenReturn(assessments);
+        when(assessmentMapperMock.mapToResource(same(assessments.get(0)))).thenReturn(assessmentResources.get(0));
+        when(assessmentMapperMock.mapToResource(same(assessments.get(1)))).thenReturn(assessmentResources.get(1));
+        when(assessmentRepositoryMock.findOne(2L)).thenReturn(assessments.get(0));
+        when(assessmentRepositoryMock.findOne(3L)).thenReturn(assessments.get(1));
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(false);
         when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(false);
 
         ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
 
         verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(0)));
+        verify(assessmentMapperMock).mapToResource(same(assessments.get(1)));
+        verify(assessmentRepositoryMock).findOne(2L);
+        verify(assessmentRepositoryMock).findOne(3L);
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
         verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
 
