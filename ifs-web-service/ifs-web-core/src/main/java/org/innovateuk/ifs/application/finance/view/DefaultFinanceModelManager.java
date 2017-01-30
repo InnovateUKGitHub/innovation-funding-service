@@ -99,9 +99,6 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationType(organisationType);
             financeViewModel.setOrganisationFinanceId(applicationFinanceResource.getId());
             financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
-            financeViewModel.setOrganisationTotalFundingSought(applicationFinanceResource.getTotalFundingSought());
-            financeViewModel.setOrganisationTotalContribution(applicationFinanceResource.getTotalContribution());
-            financeViewModel.setOrganisationTotalOtherFunding(applicationFinanceResource.getTotalOtherFunding());
             financeViewModel.setFinanceView("finance");
             addGrantClaim(financeViewModel, applicationFinanceResource);
         }
