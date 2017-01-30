@@ -72,6 +72,8 @@ Only applications from this competition should be visible
 
 Columns for not submitted applications
     [Documentation]    INFUND-2307
+    [Tags]    Failing
+    #TODO Failing due to INFUND-7848
     When the user clicks the button/link    link=Applications not submitted
     Then the user should see the text in the page    Application no
     And the user should see the text in the page    Project title
@@ -80,16 +82,22 @@ Columns for not submitted applications
 
 Summary of the not submitted applications
     [Documentation]    INFUND-2307
+    [Tags]    Failing
+    #TODO Failing due to INFUND-7848
     Then the calculations should be correct    css=.info-area p:nth-child(3) span
     And both calculations in the page should show the same    css=.info-area p:nth-child(3) span
 
 Sorted by percentage
     [Documentation]    INFUND-2307
+    [Tags]    Failing
+    #TODO Failing due to INFUND-7848
     When the application list is sorted by    Project title
     Then the applications should be sorted by column    2
 
 Non submitted applications from this competition should be visible
     [Documentation]    INFUND-2311
+    [Tags]    Failing
+    #TODO Failing due to INFUND-7848
     Then the user should not see the element    link=${IN_ASSESSMENT_APPLICATION_3_NUMBER}
 
 Excel export

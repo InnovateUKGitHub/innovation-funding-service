@@ -6,6 +6,8 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 
 import java.util.List;
 
@@ -17,6 +19,9 @@ public abstract class InnovationAreaMapper extends BaseMapper<InnovationArea, In
     @Override
     public abstract InnovationArea mapToDomain(InnovationAreaResource resource);
 
+    @Mappings({
+            @Mapping(source = "sector.name", target = "sectorName"),
+    })
     @Override
     public abstract InnovationAreaResource mapToResource(InnovationArea innovationArea);
 

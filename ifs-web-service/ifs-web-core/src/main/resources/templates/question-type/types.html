@@ -33,9 +33,13 @@
     <div th:fragment="textarea"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''">
 
       <label class="form-label form-label-bold" th:for="'form-textarea-'+${formInput.getId()}" th:id="'form-label-'+${formInput.getId()}">
-        <span th:if="${readonly} and ${question.getName()}" th:text="${question.name}" />
-        <span th:unless="${readonly}" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
+        <th:block th:if="${readonly}">
+            <span th:if="${question.getName()}" th:text="${question.name}" />
+        </th:block>
+        <th:block th:unless="${readonly}"
+          <span th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
+          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
+        </th:block>
         <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
       </label>
       <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
