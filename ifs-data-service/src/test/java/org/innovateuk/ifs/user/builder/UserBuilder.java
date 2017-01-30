@@ -93,8 +93,8 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((uid, object) -> setField("uid", uid, object), uids);
     }
 
-    public UserBuilder withProfile(Profile... profiles) {
-        return withArray((profile, user) -> setField("profileId", profile.getId(), user), profiles);
+    public UserBuilder withProfileId(Long... profileIds) {
+        return withArraySetFieldByReflection("profileId", profileIds);
     }
 
     public UserBuilder withAffiliations(List<Affiliation>... affiliationsList) {

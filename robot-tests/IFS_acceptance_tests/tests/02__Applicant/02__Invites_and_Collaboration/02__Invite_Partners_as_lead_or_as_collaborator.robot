@@ -243,10 +243,10 @@ the user cannot invite another person to a different organisation
 
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
 
 the user is on the invites and collaborators page
-    ${status}=    run keyword and ignore error    the user should see the element    jQuery=.button:contains("Invite new contributors")
+    ${status}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery=.button:contains("Invite new contributors")
     run keyword if    ${status}!=('PASS', None)    log into smoke test application
 
 log into smoke test application

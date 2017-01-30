@@ -41,8 +41,8 @@ services:
       - "8085:8080"
       - "9005:8000"
 
-  data:
-    hostname: data
+  data-service:
+    hostname: data-service
     links:
       - admin
       - smtp
