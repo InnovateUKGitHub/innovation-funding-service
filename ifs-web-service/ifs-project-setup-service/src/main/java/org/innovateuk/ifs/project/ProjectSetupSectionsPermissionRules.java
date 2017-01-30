@@ -22,6 +22,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.project.sections.SectionAccess.ACCESSIBLE;
+import static org.innovateuk.ifs.project.sections.SectionAccess.NOT_ACCESSIBLE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 
 /**
@@ -59,7 +60,7 @@ public class ProjectSetupSectionsPermissionRules {
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION", description = "A partner can access the Bank Details " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessFinanceChecksSection);
+            return user.hasRole(UserRoleType.FINANCE_CONTACT) && doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessFinanceChecksSection);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +

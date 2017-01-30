@@ -22,8 +22,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  * This controller will handle requests related to finance checks
  */
 @Controller
-@RequestMapping("/" + FinanceChecksController.BASE_DIR + "/{projectId}/partner-organisation/{organisationId}/finance-checks")
-public class FinanceChecksController {
+@RequestMapping("/" + ProjectFinanceChecksController.BASE_DIR + "/{projectId}/partner-organisation/{organisationId}/finance-checks")
+public class ProjectFinanceChecksController {
 
     public static final String BASE_DIR = "project";
 

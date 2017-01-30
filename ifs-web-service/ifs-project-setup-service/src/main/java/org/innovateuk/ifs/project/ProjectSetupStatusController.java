@@ -103,6 +103,8 @@ public class ProjectSetupStatusController {
             projectDetailsProcessCompleted = statusAccessor.isFinanceContactSubmitted(organisation);
         }
 
+        boolean isFinanceContact = loggedInUser.hasRole(UserRoleType.FINANCE_CONTACT);
+
         ProjectActivityStates bankDetailsState = ownOrganisation.getBankDetailsStatus();
 
         SectionAccess companiesHouseAccess = statusAccessor.canAccessCompaniesHouseSection(organisation);
