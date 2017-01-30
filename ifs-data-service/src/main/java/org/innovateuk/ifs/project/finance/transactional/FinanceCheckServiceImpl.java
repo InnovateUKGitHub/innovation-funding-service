@@ -154,7 +154,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
         return serviceSuccess(new FinanceCheckSummaryResource(project.getId(), project.getName(), competition.getId(), competition.getName(), project.getTargetStartDate(),
                 project.getDurationInMonths().intValue(), totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, spendProfile.isPresent(),
-                getPartnerStatuses(partnerOrganisations), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+                getPartnerStatuses(partnerOrganisations, projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
     }
 
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {
@@ -186,7 +186,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return teamStatusResult.isSuccess() && !simpleFindFirst(teamStatusResult.getSuccessObject().getPartnerStatuses(), s -> !asList(COMPLETE, NOT_REQUIRED).contains(s.getFinanceChecksStatus())).isPresent();
     }
 
-    private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations) {
+    private List<FinanceCheckPartnerStatusResource> getPartnerStatuses(List<PartnerOrganisation> partnerOrganisations, Long projectId) {
 
         return mapWithIndex(partnerOrganisations, (i, org) -> {
 
@@ -203,7 +203,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 org.getOrganisation().getId(),
                 org.getOrganisation().getName(),
                 viability.getLeft(), viability.getRight(),
-                eligibilityStatus);
+                eligibilityStatus,
+                false); //TODO load query summary
         });
     }
 

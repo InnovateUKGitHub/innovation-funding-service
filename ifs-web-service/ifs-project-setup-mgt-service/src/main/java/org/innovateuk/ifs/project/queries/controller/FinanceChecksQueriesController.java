@@ -37,6 +37,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
@@ -68,17 +69,17 @@ public class FinanceChecksQueriesController {
     @Autowired
     private UserService userService;
 
-
     private static final String FORM_ATTR = "form";
-    public static final String NEW_POST_ATTACHMENTS = "postAttachments";
-    public static final String SAVED_QUERY_FORM = "savedQueryForm";
-    public static final String SAVED_POST_FORM = "savedPostForm";
-    public static final String SAVED_MODEL = "savedModel";
-    public static final String SAVED_MODEL_FLAG = "savedModelFlag";
-    public static final String NEW_QUERY_FLAG = "newQuery";
-    public static final String NEW_POST_FLAG = "newPost";
-    public static final String NEW_POST_QUERY_ID = "newPostQueryId";
-    public static final String FORM_ERRORS = "formErrors";
+    private static final String UNKNOWN_FIELD = "Unknown";
+    static final String NEW_POST_ATTACHMENTS = "postAttachments";
+    static final String SAVED_QUERY_FORM = "savedQueryForm";
+    static final String SAVED_POST_FORM = "savedPostForm";
+    static final String SAVED_MODEL = "savedModel";
+    static final String SAVED_MODEL_FLAG = "savedModelFlag";
+    static final String NEW_QUERY_FLAG = "newQuery";
+    static final String NEW_POST_FLAG = "newPost";
+    static final String NEW_POST_QUERY_ID = "newPostQueryId";
+    static final String FORM_ERRORS = "formErrors";
 
     @ModelAttribute(NEW_POST_ATTACHMENTS)
     private Map<Long, String> getEmptyAttachments() {
@@ -109,7 +110,7 @@ public class FinanceChecksQueriesController {
     @ModelAttribute(FORM_ERRORS)
     private BindingResult getFormErrors() { return createEmptyBindingResult(); }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(method = GET)
     public String showPage(@PathVariable Long projectId,
                            @PathVariable Long organisationId,
@@ -145,7 +146,7 @@ public class FinanceChecksQueriesController {
         return "project/financecheck/queries";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value="/new-query", method = GET)
     public String viewNewQuery(@PathVariable Long projectId,
                                @PathVariable Long organisationId,
@@ -163,7 +164,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value="/save-new-query", method = POST, params = "uploadAttachment")
     public String saveNewQueryAttachment(Model model,
                                          @PathVariable("projectId") final Long projectId,
@@ -194,7 +195,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
     public
     @ResponseBody
@@ -212,7 +213,7 @@ public class FinanceChecksQueriesController {
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value="/save-new-query", method = POST)
     public String saveQuery(@PathVariable("projectId") final Long projectId,
                             @PathVariable Long organisationId,
@@ -245,7 +246,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value="/cancel", method = GET)
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
@@ -261,7 +262,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value="/{queryId}/new-response", method = GET)
     public String viewNewResponse(@PathVariable Long projectId,
                                   @PathVariable Long organisationId,
@@ -280,7 +281,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value="/{queryId}/save-new-response", method = POST, params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
                                             @PathVariable("projectId") final Long projectId,
@@ -313,7 +314,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
     @RequestMapping(value="/{queryId}/save-new-response", method = POST)
     public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
@@ -385,12 +386,22 @@ public class FinanceChecksQueriesController {
         firstPost2.setPostBody("Question2");
         firstPost2.setAttachments(new LinkedList<>());
         thread2.setPosts (Arrays.asList(firstPost2));
-        List<ThreadResource> threads = Arrays.asList(thread, thread2);
+        List<ThreadResource> queries = Arrays.asList(thread, thread2);
 
         // TODO read data from service
-        List<FinanceChecksQueriesQueryViewModel> details = new LinkedList<>();
+
+        // order queries by most recent at top
+        List<ThreadResource> sortedQueries = queries.stream().
+                flatMap(t -> t.getPosts().stream()
+                        .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
+                .sorted((e1, e2) -> e1.getValue().getCreatedOn().compareTo(e2.getValue().getCreatedOn()))
+                .map(m -> m.getKey())
+                .distinct()
+                .collect(Collectors.toList());
+
+        List<FinanceChecksQueriesQueryViewModel> queryModel = new LinkedList<>();
         Long attachmentIndex = 0L;
-        for (ThreadResource t : threads) {
+        for (ThreadResource t : sortedQueries) {
             List<FinanceChecksQueriesPostViewModel> posts = new LinkedList<>();
             for (PostResource p : t.getPosts()) {
                 List<FinanceChecksQueriesAttachmentResourceViewModel> attachments = new LinkedList<>();
@@ -422,9 +433,9 @@ public class FinanceChecksQueriesController {
             detail.setAwaitingResponse(t.isAwaitingResponse());
             detail.setTitle(t.getTitle());
             detail.setId(t.getId());
-            details.add(detail);
+            queryModel.add(detail);
         }
-        return details;
+        return queryModel;
     }
 
     private FinanceChecksQueriesViewModel populateQueriesViewModel(Long projectId, Long organisationId, boolean showNewQuery, String querySection, Map<Long, String> attachmentLinks, boolean showNewPost, Long newPostQueryId) {
@@ -441,11 +452,11 @@ public class FinanceChecksQueriesController {
         return new FinanceChecksQueriesViewModel(
                 organisation.getName(),
                 leadPartnerOrganisation,
-                financeContact.isPresent() ? financeContact.get().getUserName() : "Unknown",
-                financeContact.isPresent() ? financeContact.get().getEmail() : "Unknown",
-                financeContact.isPresent() ? financeContact.get().getPhoneNumber() : "Unknown",
+                financeContact.isPresent() ? financeContact.get().getUserName() : UNKNOWN_FIELD,
+                financeContact.isPresent() ? financeContact.get().getEmail() : UNKNOWN_FIELD,
+                financeContact.isPresent() ? financeContact.get().getPhoneNumber() : UNKNOWN_FIELD,
                 showNewQuery,
-                querySection == null ? "Unknown" : querySection,
+                querySection == null ? UNKNOWN_FIELD : querySection,
                 project.getId(),
                 project.getName(),
                 attachmentLinks,
