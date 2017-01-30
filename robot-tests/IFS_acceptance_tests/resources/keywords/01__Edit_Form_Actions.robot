@@ -4,7 +4,7 @@ Resource          ../defaultResources.robot
 *** Keywords ***
 the user selects the checkbox
     [Arguments]    ${checkbox}
-    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
+    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[not(contains(@class,"selected"))]
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
     Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
@@ -18,7 +18,7 @@ the user selects the checkbox
 
 the user unselects the checkbox
     [Arguments]    ${checkbox}
-    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
     Execute Javascript    jQuery('form label a').contents().unwrap();    # we cannot click the checkbox itself as it is hidden, however if we click the label it will click the anchor in the label, therefore I remove the <a> before submit, but keep the text
     Run Keyword If    '${status}' == 'PASS'    Click Element    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label
     # Error checking
@@ -32,7 +32,7 @@ the user unselects the checkbox
 
 the user should see the checkbox
     [Arguments]    ${checkbox}
-    Wait Until Element Is Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -45,7 +45,7 @@ the user should see the checkbox
 
 the user should see that the checkbox is disabled
     [Arguments]    ${checkbox}
-    Wait Until Element Is Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @disabled='disabled']/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}" and @disabled='disabled']/ancestor::label[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -58,7 +58,7 @@ the user should see that the checkbox is disabled
 
 the user should not see the checkbox
     [Arguments]    ${checkbox}
-    Wait Until Element Is Not Visible    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Not Visible Without Screenshots    xpath=//*[@id="${checkbox}" or @name="${checkbox}"]/ancestor::label[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -92,12 +92,12 @@ the user moves focus to the element
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
-    wait until element is visible    ${element}
+    Wait Until Element Is Visible Without Screenshots    ${element}
     focus    ${element}
 
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
-    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
+    Wait Until Element Is Visible Without Screenshots    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
     #[contains(@class,"selected")]
     # Error checking
     Page Should Not Contain    Error
@@ -110,7 +110,7 @@ the user sees that the radio button is selected
 
 the user sees that the radio button is not selected
     [Arguments]    ${RADIO_BUTTON}
-    wait until element is visible    xpath=//*[@name="${RADIO_BUTTON}"]/ancestor::label[not(contains(@class,"selected"))]
+    Wait Until Element Is Visible Without Screenshots    xpath=//*[@name="${RADIO_BUTTON}"]/ancestor::label[not(contains(@class,"selected"))]
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -122,7 +122,7 @@ the user sees that the radio button is not selected
 
 the user selects the option from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
-    wait until element is visible    ${drop-down}
+    Wait Until Element Is Visible Without Screenshots    ${drop-down}
     Select From List    ${drop-down}    ${option}
     mouse out    ${drop-down}
     # Error checking
@@ -146,27 +146,28 @@ the user submits the form
 
 Question should be editable
     [Arguments]    ${Mark_question_as_incomplete}
-    ${status}    ${value}=    Run Keyword And Ignore Error    Element Should Be Visible    ${Mark_question_as_incomplete}
+    ${status}    ${value}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    ${Mark_question_as_incomplete}
     Run Keyword If    '${status}' == 'PASS'    Click Element    ${Mark_question_as_incomplete}
     wait for autosave
 
 The user enters text to a text field
     [Arguments]    ${TEXT_FIELD}    ${TEXT_INPUT}
-    Wait Until Element Is Visible    ${TEXT_FIELD}
+    Wait Until Element Is Visible Without Screenshots    ${TEXT_FIELD}
     Clear Element Text    ${TEXT_FIELD}
-    wait until keyword succeeds    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    input text    ${TEXT_FIELD}    ${TEXT_INPUT}
     Mouse Out    ${TEXT_FIELD}
-    Run Keyword And Ignore Error    focus    link=Sign out
+    Run Keyword And Ignore Error Without Screenshots    focus    link=Sign out
     Wait for autosave
+
 
 the user sees the text in the element
     [Arguments]    ${element}    ${text}
-    wait until element is visible    ${element}
-    Wait Until Keyword Succeeds    10    500ms    element should contain    ${element}    ${text}
+    Wait Until Element Is Visible Without Screenshots    ${element}
+    Wait Until Keyword Succeeds Without Screenshots    10    500ms    element should contain    ${element}    ${text}
 
 the user clears the text from the element
     [Arguments]    ${element}
-    wait until element is visible    ${element}
+    Wait Until Element Is Visible Without Screenshots    ${element}
     clear element text    ${element}
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong
@@ -178,12 +179,12 @@ the user clears the text from the element
 
 the user sees the text in the text field
     [Arguments]    ${textfield}    ${text}
-    wait until element is visible    ${textfield}
-    wait until keyword succeeds    10    200ms    textfield should contain    ${textfield}    ${text}
+    Wait Until Element Is Visible Without Screenshots    ${textfield}
+    Wait Until Keyword Succeeds Without Screenshots    10    200ms    textfield should contain    ${textfield}    ${text}
 
 the user selects the index from the drop-down menu
     [Arguments]    ${option}    ${drop-down}
-    wait until element is visible    ${drop-down}
+    Wait Until Element Is Visible Without Screenshots    ${drop-down}
     Select From List By Index    ${drop-down}    ${option}
     mouse out    ${drop-down}
     # Error checking
@@ -205,7 +206,7 @@ the user moves the mouse away from the element
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
-    wait until element is visible    ${element}
+    Wait Until Element Is Visible Without Screenshots    ${element}
     mouse out    ${element}
 
 the user should see the dropdown option selected
@@ -240,5 +241,5 @@ The user enters multiple strings into a text field
     [Arguments]    ${field}    ${string}    ${multiplicity}
     #Keyword uses custom IfsLibrary keyword "repeat string"
     ${concatenated_string} =    repeat string    ${string}    ${multiplicity}
-    Wait Until Element Is Visible    ${field}
-    wait until keyword succeeds    30s    200ms    Input Text    ${field}    ${concatenated_string}
+    Wait Until Element Is Visible Without Screenshots   ${field}
+    Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Input Text    ${field}    ${concatenated_string}

@@ -52,7 +52,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(consortiumResponses)));
+                .andExpect(content().string(objectMapper.writeValueAsString(consortiumResponses)));
     }
 
     @Test

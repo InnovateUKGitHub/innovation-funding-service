@@ -72,6 +72,11 @@
     <p class="subtitle" th:text="${#numbers.formatInteger(app.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
 </div>
 
+<!-- =========================== Element: Competition Title =========================== -->
+<div th:fragment="competition-title (competition) ">
+    <p class="subtitle" th:text="${#numbers.formatInteger(competition.id,8)} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
+</div>
+
 <!-- =========================== Element: Project Title =========================== -->
 <div th:fragment="project-title (projectId, projectName) ">
     <p class="subtitle" th:text="${#numbers.formatInteger(projectId,8)} + ': ' + ${projectName} "/>

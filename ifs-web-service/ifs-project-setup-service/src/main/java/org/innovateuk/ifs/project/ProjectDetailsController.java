@@ -104,6 +104,33 @@ public class ProjectDetailsController extends AddressLookupBaseController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
+    @RequestMapping(value = "/{projectId}/readonly", method = RequestMethod.GET)
+    public String viewProjectDetailsInReadOnly(@PathVariable("projectId") final Long projectId, Model model,
+                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+        CompetitionResource competitionResource = competitionService.getById(applicationResource.getCompetition());
+
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectResource.getId());
+        List<OrganisationResource> partnerOrganisations = getPartnerOrganisations(projectUsers);
+
+        ProjectTeamStatusResource teamStatus = projectService.getProjectTeamStatus(projectId, Optional.empty());
+
+
+        model.addAttribute("model", new ProjectDetailsViewModel(projectResource, loggedInUser,
+                getUsersPartnerOrganisations(loggedInUser, projectUsers),
+                partnerOrganisations, applicationResource, projectUsers, competitionResource,
+                projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
+                getProjectManager(projectResource.getId()).orElse(null), false));
+
+        model.addAttribute("readOnlyView", true);
+
+        return "project/detail";
+    }
+
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_PROJECT_DETAILS_SECTION')")
     @RequestMapping(value = "/{projectId}/confirm-project-details", method = RequestMethod.GET)
     public String projectDetailConfirmSubmit(@PathVariable("projectId") final Long projectId, Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {

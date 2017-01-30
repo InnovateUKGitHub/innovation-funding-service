@@ -262,7 +262,7 @@ Project Finance can see the progress of partners bank details
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_FINANCE}
     And the user should see the text in the page    ${PS_BD_APPLICATION_ACADEMIC_EMAIL}
     Then the user clicks the button/link            link=Bank details
-    [Teardown]  the user clicks the button/link     link=Competition Dashboard
+    [Teardown]  the user clicks the button/link     link=Projects in setup
 
 
 Project Finance can see Bank Details

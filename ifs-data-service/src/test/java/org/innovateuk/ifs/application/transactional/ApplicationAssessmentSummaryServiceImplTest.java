@@ -92,7 +92,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withId(1L, 2L, 3L)
                         .withFirstName("John", "Dave", "Richard")
                         .withLastName("Barnes", "Smith", "Turner")
-                        .withProfile(profiles)
+                        .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
                         .buildArray(3, User.class))
                 .withStatus(ACCEPTED)
                 .withCompetition(competition)

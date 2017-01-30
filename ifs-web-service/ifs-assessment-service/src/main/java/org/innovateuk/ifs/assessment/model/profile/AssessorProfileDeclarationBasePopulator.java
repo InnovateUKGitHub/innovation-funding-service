@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.groupingBy;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 
 /**
- * Base model populator that handles extraction of specific resources from a map of
+ * Base model modelpopulator that handles extraction of specific resources from a map of
  * {@link AffiliationResource} lists grouped by {@link AffiliationType}.
  */
 public abstract class AssessorProfileDeclarationBasePopulator {

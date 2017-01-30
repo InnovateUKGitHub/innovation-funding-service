@@ -26,7 +26,7 @@ Client-side validations
     When the user clicks the button/link    jQuery=a:contains("your skills")
     And The user should see the element    link=Edit your skills
     When the user clicks the button/link    jQuery=a:contains("Edit your skills")
-    And the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
+    And the user enters multiple strings into a text field    id=skillAreas    w${SPACE}    101
     And the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see an error    Please select an assessor type.
     And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
@@ -35,7 +35,7 @@ Server-side validations
     [Documentation]    INFUND-5182
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=label:contains("Business")
-    When the user enters multiple strings into a text field    id=skillAreas    word${SPACE}    101
+    When the user enters multiple strings into a text field    id=skillAreas    w${SPACE}    102
     And the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And browser validations have been disabled
