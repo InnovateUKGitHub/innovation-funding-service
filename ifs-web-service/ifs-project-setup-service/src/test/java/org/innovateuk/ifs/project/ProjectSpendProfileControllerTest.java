@@ -219,8 +219,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         verify(projectService).getById(projectId);
         verify(projectFinanceService, times(2)).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
-        verify(projectService, times(2)).getProjectUsersForProject(projectResource.getId());
-
+        verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
     }
 
     @Test
@@ -471,7 +470,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         verify(projectService).getById(projectId);
         verify(projectFinanceService).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
-        verify(projectService, times(2)).getProjectUsersForProject(projectResource.getId());
+        verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
 
     }
 

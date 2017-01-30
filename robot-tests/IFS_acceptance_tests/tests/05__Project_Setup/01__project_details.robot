@@ -89,7 +89,7 @@ Status updates correctly for internal user's table
     #Internal user can view project details via the clickable 'hour glass' for Project details
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery=h1:contains("Project details")
-    And the user clicks the button/link    link=Competition dashboard
+    And the user clicks the button/link    link=Projects in setup
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
 
 Non-lead partner can see the project setup page
@@ -654,12 +654,12 @@ the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
 
 the applicant clicks the submit button and then clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 the applicant clicks the submit button in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
@@ -677,7 +677,7 @@ the user changes the start date back again
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 Mark as complete button should be enabled
-    Then Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label

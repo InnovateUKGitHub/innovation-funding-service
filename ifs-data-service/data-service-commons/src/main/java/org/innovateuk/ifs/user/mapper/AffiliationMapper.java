@@ -5,6 +5,8 @@ import org.innovateuk.ifs.user.domain.Affiliation;
 import org.innovateuk.ifs.user.resource.AffiliationResource;
 import org.mapstruct.Mapper;
 
+import java.util.List;
+
 /**
  * Maps between domain and resource DTO for {@link Affiliation}.
  */
@@ -26,7 +28,7 @@ public abstract class AffiliationMapper {
 
     public abstract AffiliationResource mapToResource(Affiliation domain);
 
-    public abstract Iterable<AffiliationResource> mapToResource(Iterable<Affiliation> domain);
+    public abstract List<AffiliationResource> mapToResource(Iterable<Affiliation> domain);
 
     public abstract Affiliation mapToDomain(AffiliationResource resource);
 
