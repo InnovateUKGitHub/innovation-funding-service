@@ -76,30 +76,29 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
     private Application application;
     private OrganisationType organisationType;
     private long costId;
-    private String metaFieldTitle;
-    private String metaFieldType;
+    private FinanceRowMetaField financeRowMetaField;
 
     @Before
     public void setUp() {
         costId = 1;
-
-        metaFieldTitle = "country";
-        metaFieldType = "String";
+        String metaFieldTitle = "country";
+        String metaFieldType = "String";
 
         application = newApplication()
                 .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()
                 ).build();
         organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
         newFinanceRowItem = new SubContractingCost(costId, new BigDecimal(10), "Scotland", "nibbles", "purring");
-
         applicationFinance = newApplicationFinance()
                 .withApplication(application)
                 .withOrganisation(newOrganisation().withOrganisationType(organisationType).build())
                 .build();
+        financeRowMetaField = newFinanceRowMetaField()
+                .withTitle(metaFieldTitle)
+                .withType(metaFieldType).build();
 
         when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
         when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getName())).thenReturn(organisationFinanceDefaultHandlerMock);
-
     }
 
     @Test
@@ -224,17 +223,13 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testAlreadyExistingMetaValueShouldBeUpdated() {
-        List<FinanceRowMetaValue> currentFinanceRowMetaValue = Collections.singletonList(newFinanceRowMetaValue().withFinanceRowMetaField(
-                newFinanceRowMetaField()
-                        .withTitle(metaFieldTitle)
-                        .withType(metaFieldType).build())
+        List<FinanceRowMetaValue> currentFinanceRowMetaValue = Collections.singletonList(newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField)
                 .withValue("England")
                 .build());
 
-        List<FinanceRowMetaValue> newFinanceRowMetaValue = Collections.singletonList(newFinanceRowMetaValue().withFinanceRowMetaField(
-                newFinanceRowMetaField()
-                        .withTitle(metaFieldTitle)
-                        .withType(metaFieldType).build())
+        List<FinanceRowMetaValue> newFinanceRowMetaValue = Collections.singletonList(newFinanceRowMetaValue()
+                .withFinanceRowMetaField(financeRowMetaField)
                 .withValue("purring")
                 .build());
 
@@ -263,9 +258,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testNonExistingMetaValueShouldBeCreated() {
-        FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField()
-                .withTitle(metaFieldTitle)
-                .withType(metaFieldType).build();
         List<FinanceRowMetaValue> financeRowMetaValue = Collections.singletonList(
                 newFinanceRowMetaValue()
                         .withFinanceRowMetaField(financeRowMetaField)
@@ -294,10 +286,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testNoAttachedMetaValueDoesNotCreateOrUpdateMetaValue() {
-        FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField()
-                .withTitle(metaFieldTitle)
-                .withType(metaFieldType).build();
-
         ApplicationFinanceRow convertedApplicationFinanceRow = newApplicationFinanceRow()
                 .withTarget(applicationFinance).build();
 
