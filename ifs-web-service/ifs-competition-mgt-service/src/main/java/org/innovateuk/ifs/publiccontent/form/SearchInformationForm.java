@@ -7,13 +7,13 @@ import org.hibernate.validator.constraints.NotEmpty;
  */
 public class SearchInformationForm extends AbstractPublicContentForm {
 
-    @NotEmpty
+    @NotEmpty (message="{validation.publiccontent.searchinformationform.shortDescription.required}")
     private String shortDescription;
-    @NotEmpty
+    @NotEmpty (message="{validation.publiccontent.searchinformationform.projectFundingRange.required}")
     private String projectFundingRange;
-    @NotEmpty
+    @NotEmpty (message="{validation.publiccontent.searchinformationform.eligibilitySummary.required}")
     private String eligibilitySummary;
-    @NotEmpty
+    @NotEmpty (message="{validation.publiccontent.searchinformationform.keywords.required}")
     private String keywords;
 
     public String getShortDescription() {

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.publiccontent.saver;
 
 
 import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -28,7 +27,7 @@ public class SearchInformationFormSaver extends AbstractPublicContentFormSaver<S
 
 
     private List<String> splitAndNormaliseKeywords(String keywords) {
-        return Lists.newArrayList(Splitter.on(",").split(keywords))
+        return Splitter.on(",").trimResults().omitEmptyStrings().splitToList(keywords)
                 .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
     }
     @Override

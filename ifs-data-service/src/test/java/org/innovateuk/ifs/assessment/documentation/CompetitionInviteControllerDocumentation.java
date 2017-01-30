@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
 import org.innovateuk.ifs.email.resource.EmailContent;
@@ -14,7 +13,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
@@ -316,11 +314,9 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
-        ObjectMapper mapper = objectMapper;
-
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(content)))
+                .content(objectMapper.writeValueAsString(content)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
