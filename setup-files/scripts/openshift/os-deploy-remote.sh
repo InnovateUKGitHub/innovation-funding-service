@@ -23,20 +23,10 @@ function tailorAppInstance() {
     sed -i.bak "s/1.0-SNAPSHOT/1.0-$PROJECT/g" os-files-tmp/robot-tests/*.yml
 }
 
-function buildShib() {
-    cp -r setup-files/scripts/docker/shibboleth shibboleth
-    sed -i.bak "s/<<HOSTNAME>>/$PROJECT.$ROUTE_DOMAIN/g" shibboleth/*
-    docker build -t ${REGISTRY}/innovateuk/shibboleth:1.0-$PROJECT shibboleth/
-}
-
 function buildShibInit() {
     cp -r setup-files/scripts/openshift/shib-init shib-init
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" shib-init/*.sh
     docker build -t ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT shib-init
-}
-
-function buildRobotTests() {
-    docker build -t ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT robot-tests/
 }
 
 function retagAppImages() {
@@ -63,7 +53,6 @@ function pushImages() {
     docker push ${REGISTRY}/innovateuk/application-service:1.0-$PROJECT
     #docker push ${REGISTRY}/innovateuk/shibboleth:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT
-    docker push ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT
 }
 
 function deploy() {
@@ -104,9 +93,7 @@ function cleanUp() {
 
 cleanUp
 tailorAppInstance
-#buildShib
 buildShibInit
-buildRobotTests
 retagAppImages
 pushImages
 deploy

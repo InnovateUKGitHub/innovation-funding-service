@@ -42,6 +42,4 @@ cd $BASEDIR
 mysql ifs -uroot -ppassword -h$IFS_DATABASE_PORT_3306_TCP_ADDR -N -s -e "select email from user;" | xargs -I{} bash -c "addUserToShibboleth {}"
 
 echo "DONE"
-
-
 sleep 1000000000000
