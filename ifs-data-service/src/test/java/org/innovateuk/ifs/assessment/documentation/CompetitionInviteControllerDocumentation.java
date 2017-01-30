@@ -132,7 +132,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(post("/competitioninvite/rejectInvite/{hash}", hash)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(compRejection)))
+                .content(objectMapper.writeValueAsString(compRejection)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         requestFields(competitionRejectionFields),
@@ -316,7 +316,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
 
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)

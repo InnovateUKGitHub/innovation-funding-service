@@ -305,9 +305,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         process.setActivityState(pendingState);
         ProjectUserResource projectUser = newProjectUserResource().build();
         UserResource user = newUserResource().build();
-        ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityStatus.AMBER);
-        ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityStatus.UNSET);
-        ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityStatus.UNSET);
+        ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.AMBER);
+        ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityRagStatus.UNSET);
+        ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityRagStatus.UNSET);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
@@ -333,15 +333,15 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
         assertEquals(Viability.APPROVED, organisation1Results.getViability());
-        assertEquals(viability1.getViabilityStatus(), organisation1Results.getViabilityRagStatus());
+        assertEquals(viability1.getViabilityRagStatus(), organisation1Results.getViabilityRagStatus());
 
         FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
         assertEquals(Viability.NOT_APPLICABLE, organisation2Results.getViability());
-        assertEquals(ViabilityStatus.UNSET, organisation2Results.getViabilityRagStatus());
+        assertEquals(ViabilityRagStatus.UNSET, organisation2Results.getViabilityRagStatus());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
         assertEquals(Viability.REVIEW, organisation3Results.getViability());
-        assertEquals(viability3.getViabilityStatus(), organisation3Results.getViabilityRagStatus());
+        assertEquals(viability3.getViabilityRagStatus(), organisation3Results.getViabilityRagStatus());
     }
 
     @Test

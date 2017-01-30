@@ -66,7 +66,7 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
         final Long questionId = 1L;
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
         when(competitionSetupQuestionService.save(resource)).thenReturn(serviceSuccess(resource));
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = objectMapper;
 
         mockMvc.perform(put(baseUrl + "/{id}", questionId)
 

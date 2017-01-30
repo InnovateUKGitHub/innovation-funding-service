@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -429,14 +430,14 @@ class CsvUtils {
     static class CompetitionFunderLine {
         String competitionName;
         String funder;
-        BigDecimal funder_budget;
+        BigInteger funder_budget;
         boolean co_funder;
 
         private CompetitionFunderLine(List<String> line) {
             int i = 0;
             competitionName = nullable(line.get(i++));
             funder = nullable(line.get(i++));
-            funder_budget = nullableBigDecimal(line.get(i++));
+            funder_budget = nullableBigInteger(line.get(i++));
             co_funder = nullableBoolean(line.get(i++));
         }
     }
@@ -638,6 +639,16 @@ class CsvUtils {
         }
 
         return new BigDecimal(s);
+    }
+
+    private static BigInteger nullableBigInteger(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return new BigInteger(s);
     }
 
     private static boolean nullableBoolean(String s) {

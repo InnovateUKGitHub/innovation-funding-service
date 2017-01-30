@@ -204,7 +204,7 @@ public class BankDetailsServiceImplTest extends BaseServiceUnitTest<BankDetailsS
         Competition competition = newCompetition().withName("Greener Jet Engines").build();
         Application application = newApplication().withCompetition(competition).build();
         organisation.setOrganisationType(newOrganisationType().withOrganisationType(OrganisationTypeEnum.BUSINESS).build());
-        ProcessRole leadApplicantRole = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisation(organisation).withApplication(application).build();
+        ProcessRole leadApplicantRole = newProcessRole().withRole(UserRoleType.LEADAPPLICANT).withOrganisationId(organisation.getId()).withApplication(application).build();
         Project project = newProject().withId(projectId).withApplication(application).build();
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
