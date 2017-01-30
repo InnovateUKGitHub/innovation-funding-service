@@ -135,11 +135,6 @@ task osDeployRemote(type:Exec) {
     args = [openshiftEnv]
 }
 
-task osDeployLocal(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy-local.sh'
-    args = [project.version]
-}
-
 task osTestRemote(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
     args = [openshiftEnv]
