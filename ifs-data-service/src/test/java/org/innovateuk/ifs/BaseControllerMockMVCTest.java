@@ -2,6 +2,8 @@ package org.innovateuk.ifs;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
@@ -13,7 +15,6 @@ import org.innovateuk.ifs.file.transactional.FileHeaderAttributes;
 import org.innovateuk.ifs.rest.ErrorControllerAdvice;
 import org.innovateuk.ifs.rest.RestResultHandlingHttpMessageConverter;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Before;
 import org.junit.Rule;
 import org.mockito.InjectMocks;
@@ -43,18 +44,17 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.InputStreamTestUtil.assertInputStreamContents;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.emptyMap;
-import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.TEXT_PLAIN;
@@ -84,6 +84,12 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     protected MockMvc mockMvc;
 
     protected abstract ControllerType supplyControllerUnderTest();
+
+    protected static ObjectMapper objectMapper;
+    static {
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+    }
 
     @Rule
     public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation("build/generated-snippets");// having to "fake" the request body as JSON because Spring Restdocs does not support other content types other
@@ -122,7 +128,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
     }
 
     private static ResultMatcher contentObject(final Object json) throws JsonProcessingException {
-        return content().string(new ObjectMapper().writeValueAsString(json));
+        return content().string(objectMapper.writeValueAsString(json));
     }
 
     protected static ResultMatcher contentError(final Error error) throws JsonProcessingException {
@@ -131,7 +137,7 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
 
     protected void assertResponseErrorKeyEqual(String expectedKey, Error expectedError, MvcResult mvcResult) throws IOException {
         String content = mvcResult.getResponse().getContentAsString();
-        RestErrorResponse restErrorResponse = new ObjectMapper().readValue(content, RestErrorResponse.class);
+        RestErrorResponse restErrorResponse = objectMapper.readValue(content, RestErrorResponse.class);
         assertErrorKeyEqual(expectedKey, expectedError, restErrorResponse);
     }
 

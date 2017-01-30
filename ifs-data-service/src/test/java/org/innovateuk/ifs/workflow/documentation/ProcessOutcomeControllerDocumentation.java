@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.workflow.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.workflow.controller.ProcessOutcomeController;
 import org.innovateuk.ifs.workflow.resource.ProcessOutcomeResource;
@@ -24,7 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class ProcessOutcomeControllerDocumentation extends BaseControllerMockMVCTest<ProcessOutcomeController> {
 
     private RestDocumentationResultHandler document;
-    private ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     protected ProcessOutcomeController supplyControllerUnderTest() {

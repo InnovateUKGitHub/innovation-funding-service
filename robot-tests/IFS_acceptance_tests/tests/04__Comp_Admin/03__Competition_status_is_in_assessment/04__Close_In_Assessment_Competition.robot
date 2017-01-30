@@ -16,7 +16,8 @@ The Comp admin closes the competition In Assessment
     ...    INFUND-6602
     When The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user clicks the button/link    jQuery=.button:contains("Close assessment")
-    Then The user should be redirected to the correct page    ${Comp_admin_all_competitions_page}
+    Then The user should see the text in the page    Panel
+    And The user clicks the button/link    link=All competitions
     And The user should see the text in the element    css=section:nth-child(6)    ${IN_ASSESSMENT_COMPETITION_NAME}
 
 Assessors shouldn't see the closed competition

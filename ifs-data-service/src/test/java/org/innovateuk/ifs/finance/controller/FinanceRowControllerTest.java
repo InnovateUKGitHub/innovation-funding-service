@@ -93,7 +93,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         mockMvc.perform(get("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(costItem)))
+                .content(objectMapper.writeValueAsString(costItem)))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
@@ -108,7 +108,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         mockMvc.perform(post("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(costItem)))
+                .content(objectMapper.writeValueAsString(costItem)))
                 .andExpect(status().isOk());
 
         verify(financeRowServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));

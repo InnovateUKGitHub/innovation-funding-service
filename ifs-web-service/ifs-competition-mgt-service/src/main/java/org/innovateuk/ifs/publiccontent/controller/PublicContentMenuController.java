@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.publiccontent;
+package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.PublishForm;
-import org.innovateuk.ifs.publiccontent.populator.PublicContentMenuPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupCon
 @Controller
 @RequestMapping("/competition/setup/public-content")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class PublicContentSetupController {
+public class PublicContentMenuController {
 
     private static final String TEMPLATE_FOLDER = "competition/";
     private static final String FORM_ATTR_NAME = "form";
