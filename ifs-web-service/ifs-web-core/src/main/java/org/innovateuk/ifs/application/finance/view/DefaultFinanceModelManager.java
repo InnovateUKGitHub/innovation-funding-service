@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -57,7 +58,8 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     
     @Autowired
     private CompetitionService competitionService;
-    
+
+    //TODO: INFUND-7849 - make sure this function is not going to be used anymore
     @Override
     public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
 
@@ -82,6 +84,35 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             String formInputKey = "finance-grantclaimpercentage-" + applicationFinanceResource.getGrantClaim();
             String formInputValue = applicationFinanceResource.getGrantClaimPercentage() != null ? applicationFinanceResource.getGrantClaimPercentage().toString() : "";
             form.addFormInput(formInputKey, formInputValue);
+        }
+    }
+
+    @Override
+    public FinanceViewModel getFinanceViewModel(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
+
+        if (applicationFinanceResource != null) {
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            financeViewModel.setOrganisationFinance(applicationFinanceResource.getFinanceOrganisationDetails());
+            financeViewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
+            financeViewModel.setOrganisationType(organisationType);
+            financeViewModel.setOrganisationFinanceId(applicationFinanceResource.getId());
+            financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
+            financeViewModel.setOrganisationTotalFundingSought(applicationFinanceResource.getTotalFundingSought());
+            financeViewModel.setOrganisationTotalContribution(applicationFinanceResource.getTotalContribution());
+            financeViewModel.setOrganisationTotalOtherFunding(applicationFinanceResource.getTotalOtherFunding());
+            financeViewModel.setFinanceView("finance");
+            addGrantClaim(financeViewModel, applicationFinanceResource);
+        }
+
+        return financeViewModel;
+    }
+
+    private void addGrantClaim(FinanceViewModel financeViewModel, ApplicationFinanceResource applicationFinanceResource) {
+        if(applicationFinanceResource.getGrantClaim()!=null) {
+            financeViewModel.setOrganisationGrantClaimPercentage(ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));
+            financeViewModel.setOrganisationGrantClaimPercentageId(applicationFinanceResource.getGrantClaim().getId());
         }
     }
 

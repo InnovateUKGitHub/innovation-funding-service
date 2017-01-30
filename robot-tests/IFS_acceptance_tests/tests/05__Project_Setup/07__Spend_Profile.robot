@@ -740,12 +740,12 @@ the user makes all values zeros
 
 the text box should be editable
     [Arguments]    ${element}
-    Wait until element is visible    ${element}
+    Wait Until Element Is Visible Without Screenshots    ${element}
     Element Should Be Enabled    ${element}
 
 the field has value
     [Arguments]    ${field}    ${value}
-    wait until element is visible    ${field}
+    Wait Until Element Is Visible Without Screenshots    ${field}
     ${var} =    get value    ${field}
     should be equal as strings    ${var}    ${value}
 
