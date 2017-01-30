@@ -10,7 +10,6 @@ import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -89,13 +88,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
-
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
-
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
-
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     @Autowired
@@ -277,8 +273,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-        List<ProjectUser> projectUsers = getProjectUsersByProjectId(projectId);
-        return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
+        return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId), projectUserMapper::mapToResource));
     }
 
     @Override
@@ -1045,7 +1040,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
         ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
-
             pm.setUser(leadPartnerUser.getUser());
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
@@ -1179,8 +1173,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
-
     }
 
-
+    @Override
+    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
+            notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
+    }
 }

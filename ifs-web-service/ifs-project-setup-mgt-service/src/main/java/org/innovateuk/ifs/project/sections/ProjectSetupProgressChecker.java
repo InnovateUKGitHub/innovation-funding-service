@@ -34,6 +34,10 @@ class ProjectSetupProgressChecker {
         return ACTION_REQUIRED.equals(projectStatus.getBankDetailsStatus());
     }
 
+    public boolean isBankDetailsAccessible() {
+        return !NOT_STARTED.equals(projectStatus.getBankDetailsStatus());
+    }
+
     public boolean isBankDetailsQueried() {
         return PENDING.equals(projectStatus.getBankDetailsStatus());
     }

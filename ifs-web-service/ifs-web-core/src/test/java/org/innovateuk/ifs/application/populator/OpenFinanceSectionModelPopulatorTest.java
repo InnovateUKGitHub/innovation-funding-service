@@ -4,7 +4,10 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -91,7 +94,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private InviteRestService inviteRestService;
 
     @Mock
-    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     private FinanceHandler financeHandler;
@@ -235,5 +238,13 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         Map<Long, QuestionStatusResource> statuses = new HashMap<>();
         statuses.put(question.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build());
         when(questionService.getQuestionStatusesForApplicationAndOrganisation(eq(applicationResource.getId()), anyLong())).thenReturn(statuses);
+
+        ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
+        when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), applicationResource.getId())).thenReturn(financeOverviewViewModel);
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        financeViewModel.setOrganisationGrantClaimPercentage(76);
+
+        when(financeManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 }

@@ -178,10 +178,11 @@ Summary:Word count check(Your feedback)
     ...    INFUND-5179
     [Tags]    HappyPath
     [Setup]    browser validations have been disabled
-    When the user enters multiple strings into a text field    id=feedback    test    5001
+    capture large screenshot
+    When the user enters multiple strings into a text field    id=feedback    t    5001
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    This field cannot contain more than 5,000 characters.
-    When the user enters text to a text field    id=feedback    a a a a a a a a a a a a a a a a a a \ a a \ a a a \ a a a a a \ a a aa \ a a a a a \ a a a a a a a a \ a a a a a \ a a a \ a a a \ a a a \ a a a a \ a \ a a a a \ a a \ a a aa \ a a a a a a a a a a \ a a a a a \ aa a a a a a a a a a a a a a a
+    When the user enters multiple strings into a text field    id=feedback    w${SPACE}    102
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: -2
@@ -197,7 +198,7 @@ Summary:Word count check(Comments for InnovateUK)
     ...    INFUND-5178
     ...
     ...    INFUND-5179
-    When the user enters text to a text field    id=comment    a a a a a a a a a a a a a a a a a a \ a a \ a a a \ a a a a a \ a a aa \ a a a a a \ a a a a a a a a \ a a a a a \ a a a \ a a a \ a a a \ a a a a \ a \ a a a a \ a a \ a a aa \ a a a a a a a a a a \ a a a a a \ aa a a a a a a a a a a a a a a
+    When the user enters multiple strings into a text field    id=comment    a${SPACE}    102
     And the user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
     And the word count should be correct    Words remaining: -2
@@ -288,57 +289,57 @@ the user adds score and feedback for every question
     The user clicks the button/link    jQuery=label:contains(Yes)
     The user enters text to a text field    css=.editor    Testing scope feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Business opportunity feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Potential market feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project exploitation feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Economic benefit feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Technical approach feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Innovation feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Risks feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Project team feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Funding feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    css=.next
     The user selects the option from the drop-down menu    10    id=assessor-question-score
     The user enters text to a text field    css=.editor    Testing Adding value feedback text
     Focus    jQuery=a:contains("Sign out")
-    wait until page contains    Saving
+    Wait Until Page Contains Without Screenshots    Saving
     The user clicks the button/link    jquery=button:contains("Save and return to assessment overview")
 
 the table should show the correct scores
@@ -412,6 +413,6 @@ the progress of the applications should be correct
     Should Be Equal As Integers    ${TOTAL}    ${NUMBER_OF_APPLICATIONS}
 
 Count the applications
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Pending
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Pending
     Run Keyword If    '${status}' == 'FAIL'    set test variable    ${NUMBER_OF_APPLICATIONS}    4
     Run Keyword If    '${status}' == 'PASS'    set test variable    ${NUMBER_OF_APPLICATIONS}    3

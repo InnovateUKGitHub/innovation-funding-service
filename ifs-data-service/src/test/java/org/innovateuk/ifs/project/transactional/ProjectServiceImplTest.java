@@ -107,6 +107,7 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -2165,6 +2166,21 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         assertTrue(project.getSpendProfileSubmittedDate() == null);
     }
 
+    @Test
+    public void testGetProjectManager() {
+        final Long projectId = 123L;
+        final Project project = newProject().withId(projectId).build();
+        final ProjectUser projectManager = newProjectUser().withProject(project).withRole(PROJECT_MANAGER).build();
+        final ProjectUserResource projectManagerResource = newProjectUserResource().withProject(projectId).withRoleName(PROJECT_MANAGER.getName()).build();
+
+        when(projectUserMapperMock.mapToResource(projectManager)).thenReturn(projectManagerResource);
+        when(projectUserRepositoryMock.findByProjectIdAndRole(projectId, PROJECT_MANAGER)).thenReturn(projectManager);
+
+        ServiceResult<ProjectUserResource> foundProjectManager = service.getProjectManager(projectId);
+        assertTrue(foundProjectManager.isSuccess());
+        assertTrue(foundProjectManager.getSuccessObject().getRoleName().equals(PROJECT_MANAGER.getName()));
+        assertTrue(foundProjectManager.getSuccessObject().getProject().equals(projectId));
+    }
 
     @Override
     protected ProjectService supplyServiceUnderTest() {
