@@ -15,8 +15,8 @@
         width: 540
         height: 150
         title: null
-        buttonTitle: "Insert"
-        buttonUpdateTitle: "Update"
+        buttonTitle: "Insert link"
+        buttonUpdateTitle: "Update link"
         modal: true
         resizable: false
         draggable: false
@@ -32,7 +32,7 @@
       dialog = jQuery "<div id=\"#{dialogId}\">
         <form action=\"#\" method=\"post\" class=\"linkForm\">
           <div class=\"form-group\">
-            <label class=\"form-label\" for=\"dialog-input-url\">Please insert a link</label>
+            <label class=\"form-label\" for=\"dialog-input-url\">Insert a link including the full URL http://</label>
             <input class=\"form-control width-full\" id=\"dialog-input-url\" type=\"text\" name=\"url\" value=\"#{@options.defaultUrl}\" />
           </div>
           <div class=\"form-group\">
