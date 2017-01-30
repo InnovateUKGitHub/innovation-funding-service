@@ -12,11 +12,22 @@
 
 .alignleft{
   text-align: left;
+
+  table td & {
+   text-align: left; 
+  }
+
 }
 
 .alignright{
   text-align: right;
+
+  table td & {
+   text-align: right;
+  }
+
 }
+
 /*--- Text colour ---*/
 
 .standard-text-colour{
@@ -51,7 +62,7 @@
 
 .section-divide{
   border-top: 1px solid $border-colour;
-  padding-top: $gutter-half; 
+  padding-top: $gutter-half;
 }
 
 /*-- Hiding text - used for labels in tables where input uses aria-labelledby --*/

@@ -70,7 +70,7 @@ public class CompetitionInviteDocs {
             .withInnovationArea(newInnovationAreaResource()
                     .withId(10L)
                     .withName("Emerging Tech and Industries")
-                    .withParent(3L)
+                    .withSector(3L)
                     .build());
 
     public static final CompetitionRejectionResource competitionInviteResource =
