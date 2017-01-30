@@ -71,7 +71,7 @@ Project Finance user generates the Spend Profile
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    jQuery=.generate-spend-profile-main-button
-    exit tests
+
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
