@@ -7,8 +7,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
@@ -44,6 +49,13 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     @Enumerated(EnumType.STRING)
     private InviteStatus status;
+
+    @Column
+    private LocalDateTime sentOn;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="sentBy", referencedColumnName="id")
+    private User sentBy;
 
     public static String generateInviteHash() {
         return UUID.randomUUID().toString();
@@ -127,6 +139,22 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public LocalDateTime getSentOn() {
+        return sentOn;
+    }
+
+    public void setSentOn(LocalDateTime sentOn) {
+        this.sentOn = sentOn;
+    }
+
+    public User getSentBy() {
+        return sentBy;
+    }
+
+    public void setSentBy(User sentBy) {
+        this.sentBy = sentBy;
     }
 
     // TODO rename to getProcess() and delete the setter

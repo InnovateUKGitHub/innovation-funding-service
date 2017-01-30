@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -26,6 +27,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
@@ -76,7 +78,7 @@ import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
 
 public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<CompetitionInviteServiceImpl> {
-
+    private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
     private CompetitionParticipant competitionParticipant;
     private UserResource userResource;
     private User user;
@@ -108,6 +110,11 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         RejectionReason rejectionReason = newRejectionReason().withId(1L).withReason("not available").build();
         userResource = newUserResource().withId(7L).build();
         user = newUser().withId(7L).build();
+
+        UserResource senderResource = newUserResource().withId(-1L).withUID(UID).build();
+        User sender = newUser().withId(-1L).withUid(UID).build();
+        SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(senderResource));
+        when(userMapperMock.mapToDomain(senderResource)).thenReturn(sender);
 
         when(competitionInviteRepositoryMock.getByHash("inviteHash")).thenReturn(competitionInvite);
 
@@ -928,23 +935,26 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getInvitationOverview() throws Exception {
         long competitionId = 1L;
 
-        InnovationArea innovationArea = newInnovationArea().build();
-        InnovationAreaResource innovationAreaResource = newInnovationAreaResource()
-                .withId(2L)
-                .withName("Earth Observation")
-                .build();
-        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
+        List<InnovationArea> innovationAreas = newInnovationArea()
+                .withName("Earth Observation", "Internet of Things", "Data")
+                .build(3);
+        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
+                .withName("Earth Observation", "Internet of Things", "Data")
+                .build(3);
 
         Profile[] profiles = newProfile()
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
-                .withInnovationArea(innovationArea)
+                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
                 .buildArray(3, Profile.class);
         List<User> users = newUser()
                 .withProfile(profiles)
                 .build(3);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+        LocalDateTime[] sentOn = { LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
 
         List<CompetitionInvite> invites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
+                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .build(3);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
@@ -958,10 +968,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
-                .withInnovationAreas(innovationAreaList)
+                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
                 .withCompliant(false, false, false)
                 .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
-                .withDetails(null, "Invite declined as not available", null)
+                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
                 .build(3);
 
         when(profileRepositoryMock.findOne(profiles[0].getId())).thenReturn(profiles[0]);
@@ -971,8 +981,9 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
         when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
         when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
-        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
-
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
 
         List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
@@ -981,7 +992,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
         inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
         inOrder.verify(profileRepositoryMock, calls(2)).findOne(isA(Long.class));
-        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
+        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
 
         inOrder.verifyNoMoreInteractions();
     }
@@ -990,15 +1001,19 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getInvitationOverview_notExistingUsers() throws Exception {
         long competitionId = 1L;
 
-        InnovationArea innovationArea = newInnovationArea().build();
-        InnovationAreaResource innovationAreaResource = newInnovationAreaResource()
-                .withName("Earth Observation")
-                .build();
-        List<InnovationAreaResource> innovationAreaList = asList(innovationAreaResource);
+        List<InnovationArea> innovationAreas = newInnovationArea()
+                .withName("Earth Observation", "Internet of Things", "Data")
+                .build(3);
+        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
+                .withName("Earth Observation", "Internet of Things", "Data")
+                .build(3);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+        LocalDateTime[] sentOn = { LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
 
         CompetitionInvite[] invites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
-                .withInnovationArea(innovationArea)
+                .withSentOn(sentOn[0], sentOn[1], sentOn[2])
+                .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
                 .buildArray(3, CompetitionInvite.class);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
@@ -1010,17 +1025,19 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
-                .withInnovationAreas(innovationAreaList)
+                .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
                 .withCompliant(false, false, false)
                 .withStatus(ParticipantStatusResource.ACCEPTED, ParticipantStatusResource.REJECTED, ParticipantStatusResource.PENDING)
-                .withDetails(null, "Invite declined as not available", null)
+                .withDetails(null, "Invite declined as not available", "Invite sent: " + sentOn[2].format(formatter))
                 .build(3);
 
         when(competitionParticipantRepositoryMock.getByCompetitionIdAndRole(competitionId, ASSESSOR)).thenReturn(competitionParticipants);
         when(participantStatusMapperMock.mapToResource(ACCEPTED)).thenReturn(ParticipantStatusResource.ACCEPTED);
         when(participantStatusMapperMock.mapToResource(REJECTED)).thenReturn(ParticipantStatusResource.REJECTED);
         when(participantStatusMapperMock.mapToResource(PENDING)).thenReturn(ParticipantStatusResource.PENDING);
-        when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResource);
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(2))).thenReturn(innovationAreaResources.get(2));
 
         List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, actual);
@@ -1028,11 +1045,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, innovationAreaMapperMock);
         inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
         inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
-        inOrder.verify(innovationAreaMapperMock).mapToResource(innovationArea);
+        inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
 
         inOrder.verifyNoMoreInteractions();
     }
-
 
     @Test
     public void inviteUser_existing() {

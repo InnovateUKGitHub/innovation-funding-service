@@ -27,6 +27,7 @@ import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -34,9 +35,12 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.EnumSet;
@@ -61,6 +65,7 @@ import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -114,6 +119,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -283,6 +291,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
         if (participant.getStatus() == REJECTED) {
             details = format("Invite declined as %s", lowerCase(participant.getRejectionReason().getReason()));
+        } else if ( participant.getStatus() == PENDING) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
+            if (participant.getInvite().getSentOn() != null) {
+                details = format("Invite sent: %s", participant.getInvite().getSentOn().format(formatter));
+            }
         }
 
         return details;
@@ -336,6 +349,8 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private CompetitionInvite sendInvite(CompetitionInvite invite, EmailContent content) {
+        invite.setSentOn(LocalDateTime.now());
+        invite.setSentBy(getSender());
         competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
 
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
@@ -343,6 +358,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         notificationSender.sendEmailWithContent(notification, recipient, content);
 
         return invite;
+    }
+
+    private User getSender() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserResource user = (UserResource) authentication.getDetails();
+        return userMapper.mapToDomain(user);
     }
 
     @Override

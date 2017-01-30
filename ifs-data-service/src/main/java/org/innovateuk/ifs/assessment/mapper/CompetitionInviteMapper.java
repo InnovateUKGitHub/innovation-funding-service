@@ -33,7 +33,9 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvi
             @Mapping(target="name", ignore=true),
             @Mapping(target="hash", ignore=true),
             @Mapping(target="user", ignore=true),
-            @Mapping(target="target", ignore=true)
+            @Mapping(target="target", ignore=true),
+            @Mapping(target="sentBy", ignore=true),
+            @Mapping(target="sentOn", ignore=true),
     })
     @Override
     public abstract CompetitionInvite mapToDomain(CompetitionInviteResource resource);
