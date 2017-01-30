@@ -33,12 +33,12 @@
 
     <!-- ===========================Form: organisation_size =========================== -->
     <div th:fragment="organisation_size" th:if="${model.finance.organisationType?.name == 'Business'}" th:remove="tag">
-        <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
+        <div class="message-alert" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>
             <p>Changing this selection will reset your funding level.</p>
         </div>
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
             <fieldset>
                 <legend>
                     <span class="form-label form-label-bold" th:text="${question.name}"/>
@@ -54,7 +54,7 @@
                            th:value="${size}"
                            th:checked="${size == model.finance.organisationFinanceSize}"
                            required="required" />
-                    <span th:text="${size.name}" />
+                    <th:block th:text="${size.name}" />
                 </label>
             </fieldset>
         </div>
@@ -99,11 +99,10 @@
     </div>
 
     <!-- =========================== Form: Financial Year End =========================== -->
-    <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+    <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''">
         <fieldset th:with="value=(*{formInput[__${formInput.id}__]})">
             <legend>
                 <span class="form-label form-label-bold">End of last financial year</span>
-                <span class="form-hint">Enter the month and year that your last financial year finished.<br/>For example: 12 2016</span>
                 <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                 <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
             </legend>
@@ -121,6 +120,7 @@
                            th:id="${formInput.id}+'.MMYYYY.month'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
                            th:value="${month}"
+                           th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
                            required="required"
                            placeholder="MM"
                            max="12"
@@ -136,6 +136,7 @@
                            th:id="${formInput.id}+'.MMYYYY.year'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
                            th:value="${year}"
+                           th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
                            placeholder="YYYY"
                            required="required"
                            min="0"

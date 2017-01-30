@@ -64,7 +64,7 @@ IFS.core.formValidation = (function () {
         messageInvalid: {
           invalid: 'Please enter a valid date.',
           future: 'Please enter a future date.',
-          past: 'Please enter a past date'
+          past: 'Please enter a past date.'
         }
       },
       pattern: {
