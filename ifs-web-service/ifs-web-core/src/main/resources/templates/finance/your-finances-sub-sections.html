@@ -31,6 +31,48 @@
     </div>
 
 
+    <!-- =========================== Your organisation =========================== -->
+    <div th:fragment="your_organisation">
+        <th:block>
+            <fieldset>
+                <legend class="heading-medium no-margin-bottom">Financial overview</legend>
+                <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
+
+                <div class="grid-row">
+                    <div class="column-half">
+                        <table class="extra-margin-bottom">
+                            <thead>
+                            <tr>
+                                <th scope="col">Section</th>
+                                <th scope="col" class="numeric" id="last-year">Last financial year (£)</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td id="annual-turnover">Annual Turnover</td>
+                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-turnover"></td>
+                            </tr>
+                            <tr>
+                                <td id="annual-profit">Annual Profit</td>
+                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-profit"></td>
+                            </tr>
+                            <tr>
+                                <td id="annual-exports">Annual Exports</td>
+                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-exports"></td>
+                            </tr>
+                            <tr>
+                                <td id="research">Research and development spend</td>
+                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year research"></td>
+                            </tr>
+                            </tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </fieldset>
+        </th:block>
+    </div>
+
     <!-- ===========================Your finances agree terms view =========================== -->
     <div th:fragment="agree_terms">
         <th:block th:if="${(model.application.currentCompetition.isOpen())} and ${null != model.currentSection}"

@@ -92,8 +92,12 @@ public enum FormInputType implements Identifiable {
         }
     }
 
-    public boolean isDisplayableFinancialSummaryType() {
-        return FINANCIAL_SUMMARY_TYPES.contains(this);
+    public boolean isDisplayableFinanceOverviewRowType() {
+        return FINANCE_TYPES.contains(this);
+    }
+
+    public boolean isFinanceOverviewType() {
+        return FINANCIAL_OVERVIEW_ROW.equals(this);
     }
 
     public boolean isDisplayablePrintType() {

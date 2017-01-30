@@ -5,11 +5,14 @@ import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Generic ViewModel for common fields in SectionViewModels
@@ -251,5 +254,13 @@ public abstract class BaseSectionViewModel {
 
     public Boolean isShowReturnButtons() {
         return !isSubFinanceSection();
+    }
+
+    public Boolean isOrgFinancialOverview(Long questionId) {
+        return isSubFinanceSection() && questionFormInputs.get(questionId).stream().anyMatch(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType()));
+    }
+
+    private List<FormInputResource> getFormInputsFinancialOverviewType(Long questionId) {
+        return questionFormInputs.get(questionId).stream().filter(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType())).collect(toList());
     }
 }
