@@ -56,36 +56,24 @@
                     </div>
                 </th:block>
 
-                <div th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}" th:remove="tag">
-<<<<<<< HEAD
-                    <th:block th:if="${financeView != null}" th:with="formInputsForQuestion=(${model.questionFormInputs?.get(question?.id)})">
-                        <div class="question" th:each="formInput, status : ${formInputsForQuestion}" th:id="'form-input-'+${formInput.getId()}"
-=======
-                    <th:block th:if="${model.hasFinanceView}">
+                <div th:if="${model.hasFinanceView and model.isSection}" th:each="question : ${model.sectionQuestions.get(model.currentSection.id)}" th:remove="tag">
+                    <th:block th:if="${model.isOrgFinancialOverview(question.id)}">
+                        <div th:replace="finance/your-finances-sub-sections :: your_organisation" />
+                    </th:block>
+                    <th:block th:unless="${model.isOrgFinancialOverview(question.id)}">
                         <div class="question" th:each="formInput, status : ${model.questionFormInputs?.get(question?.id)}" th:id="'form-input-'+${formInput.getId()}"
->>>>>>> 0378f3626384c9b2aac6ba5a3c014b87ee69b374
-                             th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
-                             <th:block th:if="${model.isSection}">
-                                <th:block th:if="${model.isOrgFinancialOverview(question.id)}">
-                                    <div th:replace="finance/your-finances-sub-sections :: your_organisation" />
+                            th:with="formInputIndex=(${status.index}), response=(${model.responses.get(formInput.id)}),questionAssignee=(${model.assignable.questionAssignees.get(question.getId())})">
+
+                            <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
+                                            markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
+                                            subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
+                                            currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
+                                            researchCategories=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategories : null}),
+                                            rsCategoryId=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategoryId : null})">
+                                <th:block th:if="${formInput.type.displayableQuestionType}">
+                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                                 </th:block>
-                                <th:block th:unless="${model.isOrgFinancialOverview(question.id)}" th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
-                                                markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
-                                                subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
-                                                currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
-                                                researchCategories=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategories : null}),
-                                                rsCategoryId=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategoryId : null})">
-                                    <th:block th:if="${formInput.type.displayableQuestionType}">
-                                        <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
-                                    </th:block>
 
-                                    <th:block th:if="${formInput.type.isFinanceOverviewType()}">
-                                        <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}" />
-                                    </th:block>
-
-<<<<<<< HEAD
-                                    <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
-=======
                                 <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
                                           th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
                                                    organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
@@ -97,27 +85,17 @@
                                           th:with="academicFinance=(${model.finance.academicFinance}), title=(${model.finance.title})">
                                     <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
                                 </th:block>
->>>>>>> 0378f3626384c9b2aac6ba5a3c014b87ee69b374
 
-                                        <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
-                                                currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
-                                                completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
+                                <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
+                                    <th:block th:with="sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}), applicationOrganisations=(${model.applicationOrganisations}),
+                                            currentApplication=(${model.application.currentApplication}), financeSectionId=(${model.financeSectionId}), leadOrganisation=(${model.leadOrganisation}),
+                                            completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}), academicOrganisations=(${model.academicOrganisations}), eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
 
-                                            <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
-
-                                        </th:block>
+                                        <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
 
                                     </th:block>
+
                                 </th:block>
-<<<<<<< HEAD
-                            <th:block th:unless="${model.isSection}">
-                                <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
-                                                markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput})">
-                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}"></div>
-                                    <div th:replace="'finance/'+${financeView} :: ${formInput.type.nameLower}"></div>
-                                </th:block>
-=======
->>>>>>> 0378f3626384c9b2aac6ba5a3c014b87ee69b374
                             </th:block>
                         </div>
                     </th:block>

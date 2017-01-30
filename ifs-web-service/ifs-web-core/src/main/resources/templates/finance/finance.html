@@ -72,7 +72,7 @@
                th:id="${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
                th:value="*{formInput[__${formInput.id}__]}"
-               required="true"
+               required="required"
                min="0"
                max="2147483647"
                type="number"
@@ -94,7 +94,7 @@
                th:min="0"
                th:max="2147483647"
                th:value="*{formInput[__${formInput.id}__]}"
-               th:required="true"
+               th:required="required"
         />
     </div>
 
@@ -104,6 +104,8 @@
             <legend>
                 <span class="form-label form-label-bold">End of last financial year</span>
                 <span class="form-hint">Enter the month and year that your last financial year finished.<br/>For example: 12 2016</span>
+                <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+                <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
             </legend>
             <div class="date-group" data-past-date="">
                 <!--/* this is added for javascript date validation, if we have more mm yyyy fields we might want to do this in a cleaner way */-->
@@ -119,7 +121,7 @@
                            th:id="${formInput.id}+'.MMYYYY.month'"
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
                            th:value="${month}"
-                           required="true"
+                           required="required"
                            placeholder="MM"
                            max="12"
                            min="0"
@@ -135,41 +137,12 @@
                            th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
                            th:value="${year}"
                            placeholder="YYYY"
-                           required="true"
+                           required="required"
                            min="0"
                            type="number" />
                 </div>
             </div>
         </fieldset>
-    </div>
-
-    <!-- =========================== Form: Financial Row =========================== -->
-    <div th:fragment="financial_overview_row"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
-
-        <th:block th:if="${previousFormInput == null or previousFormInput.type.nameLower != 'financial_overview_row'}">
-            <!--/* This is the first element in the financial rows */-->
-
-        </th:block>
-
-            <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-                <span th:text="${formInput.description}"/>
-                <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
-                <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
-            </label>
-            <input class="form-control width-medium"
-                   th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                   th:id="${formInput.id}"
-                   th:name="'formInput['+${formInput.id}+']'"
-                   th:value="*{formInput[__${formInput.id}__]}"
-                   required="true"
-                   min="-2147483647"
-                   max="2147483647"
-                   type="number"
-            />
-        <th:block th:if="${nextFormInput == null or nextFormInput.type.nameLower != 'financial_overview_row'}">
-            <!-- This is the last element in the financial rows -->
-
-        </th:block>
     </div>
 
     <!-- =========================== Form: Financial Staff Count =========================== -->
@@ -187,7 +160,7 @@
                th:min="0"
                th:max="2147483647"
                th:value="*{formInput[__${formInput.id}__]}"
-               th:required="true"
+               th:required="required"
         />
     </div>
 

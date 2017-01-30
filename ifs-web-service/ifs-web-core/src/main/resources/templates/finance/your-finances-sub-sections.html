@@ -33,7 +33,20 @@
 
     <!-- =========================== Your organisation =========================== -->
     <div th:fragment="your_organisation">
-        <th:block>
+        <th:block th:with="markedAsComplete=(${model.application.markedAsComplete}),
+                           organisationFinanceSize=(${model.finance.organisationFinanceSize})">
+            <div class="question" th:each="formInput, status : ${model.getFormInputsOrganisationSize(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                    <div th:replace="'finance/'+${model.finance.financeView} :: organisation_size" />
+                </th:block>
+            </div>
+
+            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialEndYear(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                    <div th:replace="'finance/'+${model.finance.financeView} :: financial_year_end" />
+                </th:block>
+            </div>
+
             <fieldset>
                 <legend class="heading-medium no-margin-bottom">Financial overview</legend>
                 <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
@@ -48,28 +61,33 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td id="annual-turnover">Annual Turnover</td>
-                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-turnover"></td>
-                            </tr>
-                            <tr>
-                                <td id="annual-profit">Annual Profit</td>
-                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-profit"></td>
-                            </tr>
-                            <tr>
-                                <td id="annual-exports">Annual Exports</td>
-                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year annual-exports"></td>
-                            </tr>
-                            <tr>
-                                <td id="research">Research and development spend</td>
-                                <td class="numeric"><input type="text" class="form-control width-small" aria-labelledby="last-year research"></td>
+                            <tr th:each="formInput, status : ${model.getFormInputsFinancialOverview(question.id)}">
+                                <td id="annual-turnover"><span th:text="${formInput.description}"/>
+                                    <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+                                    <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" /></td>
+                                <td class="numeric">
+                                    <input class="form-control width-small"
+                                           th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and model.application.markedAsComplete?.contains(question.id))}"
+                                           th:id="${formInput.id}"
+                                           th:name="'formInput['+${formInput.id}+']'"
+                                           th:value="*{formInput[__${formInput.id}__]}"
+                                           required="true"
+                                           min="-2147483647"
+                                           max="2147483647"
+                                           type="number"/>
+                                </td>
                             </tr>
                             </tbody>
-
                         </table>
                     </div>
                 </div>
             </fieldset>
+
+            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialStaffCount(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                    <div th:replace="'finance/'+${model.finance.financeView} :: staff_count" />
+                </th:block>
+            </div>
         </th:block>
     </div>
 

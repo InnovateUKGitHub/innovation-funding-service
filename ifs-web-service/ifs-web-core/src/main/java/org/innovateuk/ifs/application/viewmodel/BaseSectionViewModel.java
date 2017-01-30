@@ -300,7 +300,23 @@ public abstract class BaseSectionViewModel {
         return isSubFinanceSection() && questionFormInputs.get(questionId).stream().anyMatch(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType()));
     }
 
-    private List<FormInputResource> getFormInputsFinancialOverviewType(Long questionId) {
-        return questionFormInputs.get(questionId).stream().filter(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType())).collect(toList());
+    public List<FormInputResource> getFormInputsOrganisationSize(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.ORGANISATION_SIZE);
+    }
+
+    public List<FormInputResource> getFormInputsFinancialOverview(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.FINANCIAL_OVERVIEW_ROW);
+    }
+
+    public List<FormInputResource> getFormInputsFinancialEndYear(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.FINANCIAL_YEAR_END);
+    }
+
+    public List<FormInputResource> getFormInputsFinancialStaffCount(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.FINANCIAL_STAFF_COUNT);
+    }
+
+    private List<FormInputResource> getFormInputsByType(Long questionId, FormInputType formInputType) {
+        return questionFormInputs.get(questionId).stream().filter(formInputResource -> formInputType.equals(formInputResource.getType())).collect(toList());
     }
 }
