@@ -29,11 +29,6 @@ public class FinanceRowRestServiceImpl extends BaseRestService implements Financ
     }
 
     @Override
-    public RestResult<FinanceRowItem> addProjectCostWithoutPersisting(Long projectFinanceId, Long questionId) {
-        return postWithRestResult(costRestURL + "/project/add-without-persisting/" + projectFinanceId + "/" + questionId, FinanceRowItem.class);
-    }
-
-    @Override
     public RestResult<List<FinanceRowItem>> getCosts(Long applicationFinanceId) {
         return getWithRestResult(costRestURL + "/get/" + applicationFinanceId, costItemListType());
     }

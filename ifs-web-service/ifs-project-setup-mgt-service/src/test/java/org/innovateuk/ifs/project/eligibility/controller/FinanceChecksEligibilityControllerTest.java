@@ -71,21 +71,13 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Mock
     private Model model;
 
-    private OrganisationResource industrialOrganisation = newOrganisationResource().
-            withName("Industrial Org").
-            withOrganisationSize(OrganisationSize.MEDIUM).
-            withCompanyHouseNumber("123456789").
-            withOrganisationTypeName("Business").
-            build();
+    private OrganisationResource industrialOrganisation;
 
-    private OrganisationResource academicOrganisation = newOrganisationResource().
-            withName("Academic Org").
-            withOrganisationSize(OrganisationSize.LARGE).
-            build();
+    private OrganisationResource academicOrganisation;
 
     private ApplicationResource application = newApplicationResource().withId(123L).build();
 
-    private ProjectResource project = newProjectResource().withName("Project1").withApplication(application).build();
+    private ProjectResource project = newProjectResource().withId(1L).withName("Project1").withApplication(application).build();
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
@@ -105,6 +97,20 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
 
         application = applications.get(0);
         project.setApplication(application.getId());
+
+        industrialOrganisation = newOrganisationResource().
+                withId(2L).
+                withName("Industrial Org").
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withCompanyHouseNumber("123456789").
+                withOrganisationTypeName("Business").
+                build();
+
+        academicOrganisation = newOrganisationResource().
+                withId(1L).
+                withName("Academic Org").
+                withOrganisationSize(OrganisationSize.LARGE).
+                build();
 
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
@@ -171,13 +177,6 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         eligibility.setEligibilityApprovalUserFirstName("Lee");
         eligibility.setEligibilityApprovalUserLastName("Bowman");
 
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
-
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-
-        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(projectFinanceService.getEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
     }
 
@@ -185,7 +184,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("model");
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
         assertEquals(expectedIsLeadPartnerOrganisation, viewModel.isLeadPartnerOrganisation());
         assertTrue(viewModel.getApplicationId().equals(application.getFormattedId()));

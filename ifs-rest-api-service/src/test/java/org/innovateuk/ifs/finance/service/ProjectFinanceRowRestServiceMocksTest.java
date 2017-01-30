@@ -17,21 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-/**
- *
- */
-public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<FinanceRowRestServiceImpl> {
-
-    private static final String costRestURL = "/cost";
-
-    @Override
-    protected FinanceRowRestServiceImpl registerRestServiceUnderTest() {
-        FinanceRowRestServiceImpl costService = new FinanceRowRestServiceImpl();
-        return costService;
-    }
+public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<ProjectFinanceRowRestServiceImpl> {
+    private String costRestURL = "/cost/project";
 
     @Test
-    public void test_getCosts_forApplicationFinanceId() {
+    public void test_getCosts_forProjectFinanceId() {
 
         List<FinanceRowItem> returnedResponse = new ArrayList<>();
 
@@ -54,7 +44,7 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
     }
 
     @Test
-    public void test_add_byApplicationFinanceIdAndQuestionId() {
+    public void test_add_byProjectFinanceIdAndQuestionId() {
         LabourCost costToUpdate = new LabourCost();
         String expectedUrl = costRestURL + "/add/123/456";
         setupPostWithRestResultExpectations(expectedUrl, ValidationMessages.class, costToUpdate, new ValidationMessages(), HttpStatus.OK);
@@ -77,12 +67,17 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
     }
 
     @Test
-    public void testAddApplicationCostWithoutPersisting() {
+    public void testAddProjectCostWithoutPersisting() {
         LabourCost costToUpdate = new LabourCost();
         String expectedUrl = costRestURL + "/add-without-persisting/" + 123L + "/" + 456L;
         setupPostWithRestResultExpectations(expectedUrl, FinanceRowItem.class, null, costToUpdate, HttpStatus.OK);
         RestResult<FinanceRowItem> financeRowItem = service.addWithoutPersisting(123L, 456L);
         assertTrue(financeRowItem.isSuccess());
         assertEquals(costToUpdate, financeRowItem.getSuccessObject());
+    }
+
+    @Override
+    protected ProjectFinanceRowRestServiceImpl registerRestServiceUnderTest() {
+        return new ProjectFinanceRowRestServiceImpl();
     }
 }
