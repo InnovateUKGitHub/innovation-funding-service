@@ -20,6 +20,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.stereotype.Component;
 
+import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.ORGANISATION_IS_ACADEMIC;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.PROJECT_CREATED;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.VIABILITY_APPROVED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_VIABILITY;
@@ -52,6 +53,10 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
 
     public boolean viabilityApproved(PartnerOrganisation partnerOrganisation, User internalUser) {
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, VIABILITY_APPROVED), partnerOrganisation);
+    }
+
+    public boolean organisationIsAcademic(PartnerOrganisation partnerOrganisation, User internalUser) {
+        return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ORGANISATION_IS_ACADEMIC), partnerOrganisation);
     }
 
     @Override

@@ -8,7 +8,7 @@ import org.innovateuk.ifs.workflow.resource.OutcomeType;
 public enum ViabilityOutcomes implements OutcomeType {
 
     PROJECT_CREATED("project-created"),
-    IS_ACADEMIC_ORGANISATION("is-academic-organisation"),
+    ORGANISATION_IS_ACADEMIC("organisation-is-academic"),
     VIABILITY_APPROVED("viability-approved");
 
     String event;

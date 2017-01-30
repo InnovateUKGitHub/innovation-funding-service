@@ -13,7 +13,7 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 import java.util.EnumSet;
 
 import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.PROJECT_CREATED;
-import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.IS_ACADEMIC_ORGANISATION;
+import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.ORGANISATION_IS_ACADEMIC;
 import static org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes.VIABILITY_APPROVED;
 
 import static org.innovateuk.ifs.project.finance.resource.ViabilityState.REVIEW;
@@ -51,7 +51,7 @@ public class ViabilityWorkflow extends StateMachineConfigurerAdapter<ViabilitySt
                     .and()
                 .withExternal()
                     .source(REVIEW)
-                    .event(IS_ACADEMIC_ORGANISATION)
+                    .event(ORGANISATION_IS_ACADEMIC)
                     .target(NOT_APPLICABLE)
                     .and()
                 .withExternal()
