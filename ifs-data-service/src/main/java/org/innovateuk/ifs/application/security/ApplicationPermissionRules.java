@@ -68,6 +68,13 @@ public class ApplicationPermissionRules extends BasePermissionRules {
         return isLeadApplicant || isCollaborator;
     }
 
+    @PermissionRule(value = "READ_FINANCE_DETAILS",
+            description = "The consortium can see the application finance details",
+            additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")
+    public boolean leadApplicantCanSeeTheApplicationFinanceDetails(final ApplicationResource applicationResource, final UserResource user) {
+        return isLeadApplicant(applicationResource.getId(), user);
+    }
+
     @PermissionRule(value = "READ_FINANCE_TOTALS",
             description = "The assessor can see the application finance totals in the applications they assess",
             additionalComments = "This rule secures ApplicationResource which can contain more information than this rule should allow. Consider a new cut down object based on ApplicationResource")

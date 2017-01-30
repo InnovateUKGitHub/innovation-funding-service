@@ -92,6 +92,11 @@ public class ApplicationFinanceController {
         return financeRowService.financeDetails(applicationId, organisationId).toGetResponse();
     }
 
+    @RequestMapping("/financeDetails/{applicationId}")
+    public RestResult<List<ApplicationFinanceResource>> financeDetails(@PathVariable("applicationId") final Long applicationId) {
+        return financeRowService.financeDetails(applicationId).toGetResponse();
+    }
+
     @RequestMapping("/financeTotals/{applicationId}")
     public RestResult<List<ApplicationFinanceResource>> financeTotals(@PathVariable("applicationId") final Long applicationId) {
         return financeRowService.financeTotals(applicationId).toGetResponse();

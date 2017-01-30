@@ -187,7 +187,10 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
         if (applicationFinanceResource != null || !fieldName.equals("application.researchCategoryId")) {
             updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
-            applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
+
+            if (!fieldName.equals("application.researchCategoryId")) {
+                applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
+            }
         }
     }
 
@@ -249,17 +252,10 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     private void resetFundingLevelForAllCollaborators(Long applicationId, Long financeQuestionId) {
 
-        financeService.getApplicationFinanceDetails(applicationId).stream().forEach(applicationFinance ->
-            resetFundingLevel(applicationFinance, financeQuestionId)
-        );
-
-        /*
-        Set<Long> userIds = processRoleService.getByApplicationId(applicationId).stream().filter(processRole -> processRole.getUser() != null).map(
-                processRole -> processRole.getUser()).collect(Collectors.toSet());
-
-        userIds.stream().forEach(userId ->
-                resetFundingLevel(financeService.getApplicationFinanceDetails(userId, applicationId), financeQuestionId));
-                */
+        financeService.getApplicationFinanceDetails(applicationId).stream().forEach(applicationFinance -> {
+            resetFundingLevel(applicationFinance, financeQuestionId);
+            applicationFinanceRestService.update(applicationFinance.getId(), applicationFinance);
+        });
     }
 
     private List<Either<FinanceRowItem, ValidationMessages>> getFinanceRowItems(Map<String, String[]> params, Long applicationFinanceId) {

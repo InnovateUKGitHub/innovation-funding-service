@@ -7,6 +7,7 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.math.BigDecimal;
@@ -16,6 +17,9 @@ public interface ApplicationFinanceHandler {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ApplicationFinanceResource getApplicationOrganisationFinances(final ApplicationFinanceResourceId applicationFinanceResourceId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_DETAILS')")
+    List<ApplicationFinanceResource> getApplicationFinances(final Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     List<ApplicationFinanceResource> getApplicationTotals(@P("applicationId")final Long applicationId);

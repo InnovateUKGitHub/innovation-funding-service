@@ -84,6 +84,9 @@ public interface FinanceRowService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId);
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_DETAILS')")
+    ServiceResult<List<ApplicationFinanceResource>> financeDetails(Long applicationId);
+
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
             description = "Internal users can access the finance checks details")

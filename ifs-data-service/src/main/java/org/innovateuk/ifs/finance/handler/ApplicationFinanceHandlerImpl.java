@@ -63,6 +63,21 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     }
 
     @Override
+    public List<ApplicationFinanceResource> getApplicationFinances(Long applicationId) {
+
+        List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(applicationId);
+        List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();;
+
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
+        for(ApplicationFinance applicationFinance : applicationFinances) {
+            ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+            setApplicationFinanceDetails(applicationFinanceResource);
+            applicationFinanceResources.add(applicationFinanceResource);
+        }
+        return applicationFinanceResources;
+    }
+
+    @Override
     public ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId) {
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(
                 projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId());

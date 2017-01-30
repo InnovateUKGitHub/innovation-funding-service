@@ -90,7 +90,10 @@ public class FinanceServiceImpl implements FinanceService {
 
     @Override
     public List<ApplicationFinanceResource> getApplicationFinanceDetails(Long applicationId) {
-        return applicationFinanceRestService.getApplicationFinances(applicationId).getSuccessObjectOrThrowException();
+        return applicationFinanceRestService.getFinanceDetails(applicationId).handleSuccessOrFailure(
+                failure -> Collections.<ApplicationFinanceResource> emptyList(),
+                success -> success
+        );
     }
 
     @Override

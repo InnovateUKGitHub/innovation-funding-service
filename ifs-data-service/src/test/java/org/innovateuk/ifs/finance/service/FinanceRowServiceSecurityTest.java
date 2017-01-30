@@ -467,6 +467,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         }
 
         @Override
+        public ServiceResult<List<ApplicationFinanceResource>> financeDetails(Long applicationId) {
+            return serviceSuccess(newApplicationFinanceResource().build(2));
+        }
+
+        @Override
         public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
             return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }

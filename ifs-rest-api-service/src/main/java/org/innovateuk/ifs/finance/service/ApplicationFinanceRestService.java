@@ -18,6 +18,7 @@ public interface ApplicationFinanceRestService {
     RestResult<ApplicationFinanceResource> getById(Long applicationFinanceId);
     RestResult<Double> getResearchParticipationPercentage(Long applicationId);
     RestResult<ApplicationFinanceResource> getFinanceDetails(Long applicationId, Long organisationId);
+    RestResult<List<ApplicationFinanceResource>> getFinanceDetails(Long applicationId);
     RestResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId);
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
     RestResult<Void> removeFinanceDocument(Long applicationFinanceId);
