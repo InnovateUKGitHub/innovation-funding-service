@@ -66,9 +66,9 @@
     <!--/* Changes body class from no-js to js when js is enabled */-->
     <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
 
-    <th:block th:replace="fragments/elements :: skiplink-container" />
-    <th:block th:replace="fragments/elements :: global-cookie-message" />
-    <th:block th:replace="fragments/elements :: global-alert-message" />
+    <th:block th:include="fragments/elements :: skiplink-container" />
+    <th:block th:include="fragments/elements :: global-cookie-message" />
+    <th:block th:include="fragments/elements :: global-alert-message" />
 
 </div>
 
@@ -100,7 +100,7 @@
 
 <div th:fragment="global-header">
     <header role="banner" id="global-header" class="with-proposition">
-      <th:block th:replace="fragments/elements :: notification" />
+      <th:block th:include="fragments/elements :: notification" />
       <div class="header-wrapper">
             <div class="header-global">
                 <th:block th:include="fragments/elements :: header-logo" />
@@ -182,7 +182,7 @@
 <div th:fragment="header-sub-generic">
     <div class="sub-header">
         <div class="deadline"><th:block th:text="${deadlineText}" />&nbsp;&nbsp;
-            <th:block th:replace="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
+            <th:block th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
         </div>
         <strong th:text="${title}" />
     </div>

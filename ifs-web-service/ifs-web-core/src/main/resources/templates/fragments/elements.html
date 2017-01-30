@@ -55,7 +55,7 @@
 <div th:fragment="competition-deadline">
     <div class="competition-deadline" th:if="${endDate != null}">
         <div class="day">
-            <th:block th:replace="fragments/elements :: ordinal-day (date=${endDate})" />
+            <th:block th:include="fragments/elements :: ordinal-day (date=${endDate})" />
         </div>
         <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
     </div>

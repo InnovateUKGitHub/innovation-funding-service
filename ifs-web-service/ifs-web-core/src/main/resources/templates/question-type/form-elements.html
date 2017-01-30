@@ -235,8 +235,8 @@
             <th:block th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
           </p>
 
-            <th:block th:replace="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" />
-            <th:block th:replace="question-type/form-elements :: assign-buttons" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" />
+            <th:block th:include="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" />
+            <th:block th:include="question-type/form-elements :: assign-buttons" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" />
 
             <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
                 <!--/* if  readonly we show the edit form button */-->
@@ -278,7 +278,7 @@
 <div th:fragment="assign-buttons">
     <div class="assign-container" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">
-              <th:block th:replace="question-type/form-elements :: assigned-to" />
+              <th:block th:include="question-type/form-elements :: assigned-to" />
         </div>
         <div class="assign-team">
             <!--/* Reassign question */-->
@@ -319,7 +319,7 @@
       <th:block th:if="${response?.getUpdateDate()}">
         <small>
           Last updated:
-          <th:block th:replace="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" />
+          <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" />
           by
           <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
           <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}" th:text="${response?.getUpdatedByUserName()}" />

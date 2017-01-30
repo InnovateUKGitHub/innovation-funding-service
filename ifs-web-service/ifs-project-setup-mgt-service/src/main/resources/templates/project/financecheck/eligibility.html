@@ -73,7 +73,7 @@
                         viewmode=readonly, generates readonly inputs,
                         viewmode=edit, generates the editable inputs + repeating row elements)
                         */-->
-                        <th:block th:replace="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')" th:with="formInputIndex=(${status.index})" />
+                        <th:block th:include="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')" th:with="formInputIndex=(${status.index})" />
                     </th:block>
                 </th:block>
             </div>
