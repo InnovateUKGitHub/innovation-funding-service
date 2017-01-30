@@ -42,8 +42,8 @@
 
             <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
-            <div class="table-overflow">
-                <table>
+            <div class="table-overflow" th:if="${#lists.size(model.assigned) > 0}">
+                <table class="assessors-assigned">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -91,17 +91,17 @@
                                    th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(model.assigned)}">
-                            <td colspan="10">There are no assessors assigned to this application.</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
 
+            <p th:if="${#lists.isEmpty(model.assigned)}">There are no assessors assigned to this application.</p>
+
+
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
             <div class="table-overflow" th:if="${#lists.size(model.rejected) > 0}">
-                <table>
+                <table class="assessors-rejected">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -127,10 +127,11 @@
 
             <p th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
 
+
             <h2 class="heading-medium" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
 
             <div class="table-overflow" th:if="${#lists.size(model.previouslyAssigned) > 0}">
-                <table>
+                <table class="assessors-previous">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
