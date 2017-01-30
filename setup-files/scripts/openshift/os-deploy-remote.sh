@@ -92,6 +92,7 @@ function blockUntilServiceIsUp() {
 }
 
 function shibInit() {
+    oc rsh $(oc get pods | grep ldap | awk '{ print $1 }') /usr/local/bin/ldap-delete-all-users.sh
     oc create -f os-files-tmp/init/6-shib-init.yml
 }
 
