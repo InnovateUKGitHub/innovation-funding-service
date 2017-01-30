@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
+import org.innovateuk.ifs.competition.resource.CompetitionKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
@@ -25,8 +26,9 @@ public class CompetitionInFlightViewModel {
     private BigInteger funding;
     private List<MilestonesRowViewModel> milestones;
     private long changesSinceLastNotify;
+    private CompetitionInFlightStatsViewModel keyStatistics;
 
-    public CompetitionInFlightViewModel(CompetitionResource competitionResource, List<MilestonesRowViewModel> milestones, long changesSinceLastNotify) {
+    public CompetitionInFlightViewModel(CompetitionResource competitionResource, List<MilestonesRowViewModel> milestones, long changesSinceLastNotify, CompetitionInFlightStatsViewModel keyStatistics) {
         this.competitionId = competitionResource.getId();
         this.competitionName = competitionResource.getName();
         this.competitionStatus = competitionResource.getCompetitionStatus();
@@ -36,6 +38,7 @@ public class CompetitionInFlightViewModel {
         this.executive = competitionResource.getExecutiveName();
         this.lead = competitionResource.getLeadTechnologistName();
         this.funding = competitionResource.getFunders().stream().map(CompetitionFunderResource::getFunderBudget).reduce(BigInteger.ZERO, BigInteger::add);
+        this.keyStatistics = keyStatistics;
         this.milestones = milestones;
         this.changesSinceLastNotify = changesSinceLastNotify;
     }
@@ -82,5 +85,9 @@ public class CompetitionInFlightViewModel {
 
     public long getChangesSinceLastNotify() {
         return changesSinceLastNotify;
+    }
+
+    public CompetitionInFlightStatsViewModel getKeyStatistics() {
+        return keyStatistics;
     }
 }

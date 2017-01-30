@@ -5,6 +5,7 @@ import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * This interface is used to generate Spring Data Repositories.
@@ -18,4 +19,7 @@ public interface CompetitionInviteRepository extends CrudRepository<CompetitionI
     List<CompetitionInvite> getByCompetitionIdAndStatus(long competitionId, InviteStatus status);
 
     CompetitionInvite getByHash(String hash);
+
+    Long countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
+
 }

@@ -78,6 +78,7 @@
                     <ul class="grid-row">
                         <li class="column-third">
                             <div class="highlight-panel">
+                                <span class="heading-large" th:text="${model.keyStatistics.statOne}">1</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="READY_TO_OPEN">Assessors invited</small>
                                     <small th:case="OPEN">Assessors invited</small>
@@ -91,6 +92,7 @@
 
                         <li class="column-third">
                             <div class="highlight-panel">
+                                <span class="heading-large" th:text="${model.keyStatistics.statTwo}">2</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="READY_TO_OPEN">Invitations accepted</small>
                                     <small th:case="OPEN">Invitations accepted</small>
@@ -104,6 +106,7 @@
 
                         <li class="column-third">
                             <div class="highlight-panel">
+                                <span class="heading-large" th:text="${model.keyStatistics.statThree}">3</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications per assessor</small>
                                     <small th:case="CLOSED">Assessors without applications</small>
@@ -118,6 +121,7 @@
                     <ul class="grid-row extra-margin">
                         <li class="column-third">
                             <div class="highlight-panel">
+                                <span class="heading-large" th:text="${model.keyStatistics.statFour}">4</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications started</small>
                                     <small th:case="CLOSED">Invitations invited</small>
@@ -130,6 +134,7 @@
 
                         <li class="column-third">
                             <div class="highlight-panel">
+                                <span class="heading-large" th:text="${model.keyStatistics.statFive}">5</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications (beyond 50%)</small>
                                     <small th:case="CLOSED">Invitations accepted</small>
@@ -142,6 +147,7 @@
 
                         <li class="column-third">
                             <div class="highlight-panel">
+                                <span class="heading-large" th:text="${model.keyStatistics.statSix}">6</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications submitted</small>
                                     <small th:case="CLOSED">Applications per assessor</small>
@@ -157,8 +163,7 @@
                             <button type="submit" class="button button-large"
                                     th:disabled="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
                                     th:formaction="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
-                                    th:formmethod="get">Applications
-                            </button>
+                                    th:formmethod="get">Applications</button>
                         </div>
                     </div>
 
