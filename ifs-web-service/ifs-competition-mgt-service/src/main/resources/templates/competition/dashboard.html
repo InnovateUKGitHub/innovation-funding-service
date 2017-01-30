@@ -38,7 +38,7 @@
     <div class="column-third">
         <h3 class="heading-small">
             <a th:href="@{'/competition/setup/'+${competition.id}}" th:if="${
-                (competition.competitionStatus.name() == 'COMPETITION_SETUP')}">
+                competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}">
                 <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
                 <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
             </a>

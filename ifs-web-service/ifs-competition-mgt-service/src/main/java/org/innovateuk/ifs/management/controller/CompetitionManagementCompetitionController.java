@@ -30,7 +30,7 @@ public class CompetitionManagementCompetitionController {
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public String competition(Model model, @PathVariable("competitionId") Long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        if (EnumSet.of(READY_TO_OPEN, OPEN, CLOSED, IN_ASSESSMENT, FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competition.getCompetitionStatus())) {
+        if (competition.getCompetitionStatus().isInFlight()) {
             model.addAttribute("model", competitionInFlightModelPopulator.populateModel(competition));
             return "competition/competition-in-flight";
         } else {
