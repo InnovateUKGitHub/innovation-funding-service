@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.domain.Application;
@@ -11,14 +10,14 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -46,11 +45,11 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         mockMvc.perform(get("/application/{id}", application1Id))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource1)));
+                .andExpect(content().string(objectMapper.writeValueAsString(testApplicationResource1)));
 
         mockMvc.perform(get("/application/2"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(testApplicationResource2)));
+                .andExpect(content().string(objectMapper.writeValueAsString(testApplicationResource2)));
     }
 
     @Test
@@ -100,14 +99,13 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
 
         ApplicationResource applicationResource = newApplicationResource().withName(applicationName).build();
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
+        ObjectNode applicationNameNode = objectMapper.createObjectNode().put("name", applicationName);
 
         when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
                 .contentType(APPLICATION_JSON)
-                .content(mapper.writeValueAsString(applicationNameNode)))
+                .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.name", notNullValue()));
     }

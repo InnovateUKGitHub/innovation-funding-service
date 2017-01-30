@@ -46,7 +46,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
 
         mockMvc.perform(post("/applicationfunding/1/submit")
 	        		.contentType(MediaType.APPLICATION_JSON)
-	    			.content(new ObjectMapper().writeValueAsString(decision)))
+	    			.content(objectMapper.writeValueAsString(decision)))
                 .andDo( this.document.snippets());
     }
     
@@ -59,7 +59,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
 
         mockMvc.perform(put("/applicationfunding/1")
         			.contentType(MediaType.APPLICATION_JSON)
-        			.content(new ObjectMapper().writeValueAsString(decision)))
+        			.content(objectMapper.writeValueAsString(decision)))
         		.andDo( this.document.snippets());
     }
     
