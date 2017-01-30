@@ -25,11 +25,33 @@ View the list of the applications
     When The user clicks the button/link    jQuery=.button:contains("Manage applications")
     Then the application list is correct before changes
 
+Application number navigates to Overview
+    [Documentation]    INFUND-7042
+    [Tags]
+    When the user clicks the button/link    link=00000021
+    Then The user should see the text in the page    00000021: Intelligent water system
+    And the user should see the text in the page    University of Bath
+    And the user should see the text in the page    Cardiff University
+    [Teardown]    The user goes back to the previous page
+
+View application progress page
+    [Documentation]    INFUND-7042, INFUND-7046
+    [Tags]
+    Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
+    Then The user should see the text in the page    00000015: Rainfall
+    [Teardown]
+
+Review the application
+    [Documentation]    INFUND-7046
+    [Tags]
+    When the user clicks the button/link    link=Review application
+    Then the user should see the text in the page    Application Overview
+    [Teardown]    The user goes back to the previous page
+
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
     #TODO update these selectors once the tables on this page have unique class names
-    Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
     And the available assessors information is correct
 
@@ -71,28 +93,6 @@ Remove and notify an assessor (Notified)
     And the user clicks the button/link    jQuery=button:contains("Remove and notify")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct
-
-Select the review applicaton button
-    [Documentation]    INFUND-7046
-    [Tags]
-    When the user clicks the button/link    link=Review application
-    Then the user should see the text in the page    Application Overview
-    [Teardown]    The user navigates to the page    ${Application_management_dashboard}
-
-The Application number should navigate to the Application Overview
-    [Documentation]    INFUND-7042
-    [Tags]
-    When the user clicks the button/link    link=00000015
-    Then The user should see the text in the page    00000015: Rainfall
-    [Teardown]    The user navigates to the page    ${Application_management_dashboard}
-
-The user can click view the partner information on the view progress screen
-    [Documentation]    INFUND-7042, INFUND-7046
-    [Tags]
-    When The user clicks the button/link    jQuery=tr:nth-child(7) a:contains(View progress)
-    Then The user should see the text in the page    00000021: Intelligent water system
-    And the user should see the text in the page    University of Bath
-    And the user should see the text in the page    Cardiff University
 
 *** Keywords ***
 the application list is correct before changes
