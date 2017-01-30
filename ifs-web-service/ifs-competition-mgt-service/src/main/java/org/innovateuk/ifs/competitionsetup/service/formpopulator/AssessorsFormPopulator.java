@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 
 /**
- * Form modelpopulator for the assessors competition setup section.
+ * Form populator for the assessors competition setup section.
  */
 @Service
 public class AssessorsFormPopulator implements CompetitionSetupFormPopulator {

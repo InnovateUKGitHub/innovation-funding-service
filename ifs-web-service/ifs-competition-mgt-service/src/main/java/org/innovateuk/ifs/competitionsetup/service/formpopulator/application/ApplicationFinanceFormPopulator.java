@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 /**
- * Form modelpopulator for the Finances sub-section under the Application form of competition setup section.
+ * Form populator for the Finances sub-section under the Application form of competition setup section.
  */
 @Service
 public class ApplicationFinanceFormPopulator implements CompetitionSetupSubsectionFormPopulator {

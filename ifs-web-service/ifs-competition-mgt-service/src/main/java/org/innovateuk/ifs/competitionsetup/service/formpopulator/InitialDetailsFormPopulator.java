@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * Form modelpopulator for the initial details competition setup section.
+ * Form populator for the initial details competition setup section.
  */
 @Service
 public class InitialDetailsFormPopulator implements CompetitionSetupFormPopulator {
