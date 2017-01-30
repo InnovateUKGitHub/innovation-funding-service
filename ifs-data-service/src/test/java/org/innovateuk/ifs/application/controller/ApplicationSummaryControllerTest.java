@@ -33,7 +33,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3?page=6"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
@@ -46,7 +46,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3?page=6&sort=id"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
@@ -59,7 +59,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
@@ -72,7 +72,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/submitted?page=6&sort=id"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
@@ -85,7 +85,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/not-submitted?page=6"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
@@ -98,7 +98,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/not-submitted?page=6&sort=id"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
@@ -111,7 +111,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/feedback-required?page=6"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
     }
@@ -124,7 +124,7 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
         
     	mockMvc.perform(get("/applicationSummary/findByCompetition/3/feedback-required?page=6&sort=id"))
                 .andExpect(status().isOk())
-                .andExpect(content().json(new ObjectMapper().writeValueAsString(resource)));
+                .andExpect(content().json(objectMapper.writeValueAsString(resource)));
     	
     	verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }

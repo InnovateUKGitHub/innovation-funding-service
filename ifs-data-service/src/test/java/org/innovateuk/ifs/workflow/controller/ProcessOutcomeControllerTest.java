@@ -36,7 +36,7 @@ public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<Proc
 
 
         mockMvc.perform(get("/processoutcome/{id}", processOutcomeId))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(processOutcome)))
+                .andExpect(content().string(objectMapper.writeValueAsString(processOutcome)))
                 .andExpect(status().isOk());
 
         verify(processOutcomeServiceMock, only()).findOne(processOutcomeId);
@@ -52,7 +52,7 @@ public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<Proc
 
         mockMvc.perform(MockMvcRequestBuilders.get("/processoutcome/process/{id}", assessmentId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
         verify(processOutcomeServiceMock, only()).findLatestByProcess(assessmentId);
     }
 
@@ -67,7 +67,7 @@ public class ProcessOutcomeControllerTest extends BaseControllerMockMVCTest<Proc
 
         mockMvc.perform(MockMvcRequestBuilders.get("/processoutcome/process/{id}/type/{type}", assessmentId, processType))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
         verify(processOutcomeServiceMock, only()).findLatestByProcessAndOutcomeType(assessmentId,processType);
     }
 
