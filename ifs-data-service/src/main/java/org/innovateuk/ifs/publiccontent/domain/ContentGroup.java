@@ -1,9 +1,12 @@
-package org.innovateuk.ifs.competition.domain;
+package org.innovateuk.ifs.publiccontent.domain;
 
 import org.innovateuk.ifs.file.domain.FileEntry;
 
 import javax.persistence.*;
 
+/**
+ * A customisable content group of fields.
+ */
 @Entity
 public class ContentGroup {
 
