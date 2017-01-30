@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.project.queries.controller;
 
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -82,7 +81,7 @@ public class FinanceChecksQueriesController {
     public static final String FORM_ERRORS = "formErrors";
 
     @ModelAttribute(NEW_POST_ATTACHMENTS)
-    public Map<Long, String> getEmptyAttachments() {
+    private Map<Long, String> getEmptyAttachments() {
         return new HashMap<>();
     }
 
@@ -112,19 +111,19 @@ public class FinanceChecksQueriesController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(method = GET)
-    public String viewQuery(@PathVariable Long projectId,
-                            @PathVariable Long organisationId,
-                            @RequestParam(value = "query_section", required = false) String querySection,
-                            Model model,
-                            @ModelAttribute(NEW_POST_ATTACHMENTS) Map<Long, String>attachments,
-                            @ModelAttribute(NEW_POST_FLAG) Boolean postFlag,
-                            @ModelAttribute(NEW_QUERY_FLAG) Boolean queryFlag,
-                            @ModelAttribute(SAVED_QUERY_FORM) FinanceChecksQueriesForm queryForm,
-                            @ModelAttribute(SAVED_POST_FORM) FinanceChecksQueriesPostForm postForm,
-                            @ModelAttribute(SAVED_MODEL) FinanceChecksQueriesViewModel viewModel,
-                            @ModelAttribute(SAVED_MODEL_FLAG) Boolean savedModel,
-                            @ModelAttribute(FORM_ERRORS) BindingResult errors,
-                            ValidationHandler validationHandler) {
+    public String showPage(@PathVariable Long projectId,
+                           @PathVariable Long organisationId,
+                           @RequestParam(value = "query_section", required = false) String querySection,
+                           Model model,
+                           @ModelAttribute(NEW_POST_ATTACHMENTS) Map<Long, String>attachments,
+                           @ModelAttribute(NEW_POST_FLAG) Boolean postFlag,
+                           @ModelAttribute(NEW_QUERY_FLAG) Boolean queryFlag,
+                           @ModelAttribute(SAVED_QUERY_FORM) FinanceChecksQueriesForm queryForm,
+                           @ModelAttribute(SAVED_POST_FORM) FinanceChecksQueriesPostForm postForm,
+                           @ModelAttribute(SAVED_MODEL) FinanceChecksQueriesViewModel viewModel,
+                           @ModelAttribute(SAVED_MODEL_FLAG) Boolean savedModel,
+                           @ModelAttribute(FORM_ERRORS) BindingResult errors,
+                           ValidationHandler validationHandler) {
 
         if (!queryFlag) {
             model.addAttribute(SAVED_QUERY_FORM, new FinanceChecksQueriesForm());
@@ -164,6 +163,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value="/save-new-query", method = POST, params = "uploadAttachment")
     public String saveNewQueryAttachment(Model model,
                                          @PathVariable("projectId") final Long projectId,
@@ -198,11 +198,11 @@ public class FinanceChecksQueriesController {
     @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
     public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadNewAttachment(@PathVariable Long projectId,
-                                                            @PathVariable Long organisationId,
-                                                            @PathVariable Long attachmentId,
-                                                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                                            @ModelAttribute(NEW_POST_ATTACHMENTS) Map<Long, String> attachments) {
+    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+                                                         @PathVariable Long organisationId,
+                                                         @PathVariable Long attachmentId,
+                                                         @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                                         @ModelAttribute(NEW_POST_ATTACHMENTS) Map<Long, String> attachments) {
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
 
@@ -214,7 +214,7 @@ public class FinanceChecksQueriesController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value="/save-new-query", method = POST)
-    public String postQuery(@PathVariable("projectId") final Long projectId,
+    public String saveQuery(@PathVariable("projectId") final Long projectId,
                             @PathVariable Long organisationId,
                             @RequestParam(value = "query_section", required = false) String querySection,
                             @ModelAttribute(NEW_POST_ATTACHMENTS) Map<Long, String> attachments,
@@ -247,11 +247,11 @@ public class FinanceChecksQueriesController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value="/cancel", method = GET)
-    public String cancelNewQuery(@PathVariable Long projectId,
-                                 @PathVariable Long organisationId,
-                                 @RequestParam(value = "query_section", required = false) String querySection,
-                                 Model model,
-                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+    public String cancelNewForm(@PathVariable Long projectId,
+                                @PathVariable Long organisationId,
+                                @RequestParam(value = "query_section", required = false) String querySection,
+                                Model model,
+                                @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         model.addAttribute(NEW_QUERY_FLAG, Boolean.FALSE);
         model.addAttribute(NEW_POST_FLAG, Boolean.FALSE);
         model.addAttribute(SAVED_MODEL_FLAG ,Boolean.FALSE);
@@ -279,6 +279,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value="/{queryId}/save-new-response", method = POST, params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
                                             @PathVariable("projectId") final Long projectId,
@@ -313,7 +314,7 @@ public class FinanceChecksQueriesController {
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @RequestMapping(value="/{queryId}/save-new-response", method = POST)
-    public String postResponse(Model model,
+    public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
                                @PathVariable Long organisationId,
                                @PathVariable Long queryId,

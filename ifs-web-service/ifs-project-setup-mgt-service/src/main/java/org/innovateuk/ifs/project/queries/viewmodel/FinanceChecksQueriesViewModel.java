@@ -59,7 +59,6 @@ public class FinanceChecksQueriesViewModel {
         this.showNewPost = showNewPost;
         this.newPostQueryId = newPostQueryId;
         this.organisationId = organisationId;
-
     }
 
     public String getOrganisationName() {
