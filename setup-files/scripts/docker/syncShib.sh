@@ -1,4 +1,8 @@
 #!/bin/bash
+
+[ -z "$IFSDB" ] && export ifsdb=ifs-database
+
+
 function executeMySQLCommand {
   mysql ifs -uroot -ppassword -hifs-database -N -s -e "$1"
 }

@@ -21,6 +21,9 @@ items:
         containers:
         - image: innovateuk/project-setup-management-service:1.0-SNAPSHOT
           name: project-setup-mgt-svc
+          env:
+          - name: SPRING_APPLICATION_JSON
+            value: '{"logout":{"url": "https://ifs.local-dev/Logout/"}}'
           ports:
           - containerPort: 8080
           resources: {}

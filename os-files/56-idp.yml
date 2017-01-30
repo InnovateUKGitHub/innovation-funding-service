@@ -35,7 +35,6 @@ items:
           test: false
   triggers:
   - type: ConfigChange
- 
 - apiVersion: v1
   kind: Service
   metadata:

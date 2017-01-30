@@ -1,6 +1,7 @@
 #!/bin/bash
 dbip=$(oc get svc | grep ifs-database | awk '{print $2}')
 export dbip
+echo ifs-database ip:$dbip
 
 function executeMySQLCommand {
     mysql ifs -uroot -ppassword -h${dbip} -N -s -e "$1" 2>/dev/null
