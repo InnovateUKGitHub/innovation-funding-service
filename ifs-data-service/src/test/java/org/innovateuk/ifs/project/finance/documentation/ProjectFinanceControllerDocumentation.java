@@ -130,7 +130,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(ApprovalType.APPROVED)))
+                .andExpect(content().string(objectMapper.writeValueAsString(ApprovalType.APPROVED)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
@@ -157,7 +157,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(table)))
+                .andExpect(content().string(objectMapper.writeValueAsString(table)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
@@ -186,7 +186,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileCSVResource)))
+                .andExpect(content().string(objectMapper.writeValueAsString(spendProfileCSVResource)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
@@ -269,7 +269,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)))
+                .andExpect(content().string(objectMapper.writeValueAsString(spendProfileResource)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
@@ -319,7 +319,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(table)))
+                .content(objectMapper.writeValueAsString(table)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
