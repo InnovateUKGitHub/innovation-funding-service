@@ -19,7 +19,7 @@ items:
           deploymentconfig: shib-init
       spec:
         containers:
-        - image: worth/shib-init:1.0-SNAPSHOT
+        - image: innovateuk/shib-init:1.0-SNAPSHOT
           name: shib-init
           ports: {}
           resources: {}

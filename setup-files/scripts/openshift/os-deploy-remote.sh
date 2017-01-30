@@ -25,13 +25,13 @@ function tailorAppInstance() {
 
 function buildShib() {
     cp -r setup-files/scripts/docker/shibboleth shibboleth
-    sed -i.bak "s/<<HOSTNAME>>/$PROJECT.$HOST/g" shibboleth/*
+    sed -i.bak "s/<<HOSTNAME>>/$PROJECT.$ROUTE_DOMAIN/g" shibboleth/*
     docker build -t ${REGISTRY}/innovateuk/shibboleth:1.0-$PROJECT shibboleth/
 }
 
 function buildShibInit() {
     cp -r setup-files/scripts/openshift/shib-init shib-init
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$HOST/g" shib-init/*.sh
+    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" shib-init/*.sh
     docker build -t ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT shib-init
 }
 
@@ -61,7 +61,7 @@ function pushImages() {
     docker push ${REGISTRY}/innovateuk/competition-management-service:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/assessment-service:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/application-service:1.0-$PROJECT
-    docker push ${REGISTRY}/innovateuk/shibboleth:1.0-$PROJECT
+    #docker push ${REGISTRY}/innovateuk/shibboleth:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT
 }
@@ -72,8 +72,9 @@ function deploy() {
     oc secrets add serviceaccount/default secrets/aws-secret-2 --for=pull
     rm -rf os-files-tmp/1-aws-registry-secret.yml
     #oc adm policy add-scc-to-user anyuid -n $PROJECT -z default --config=setup-files/scripts/openshift/admin.kubeconfig
+    chmod 600 setup-files/scripts/openshift/ifs
     ssh-add setup-files/scripts/openshift/ifs
-    ssh ec2-user@52.56.92.144 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
+    ssh ec2-user@52.56.119.142 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
 
     oc create -f os-files-tmp/
 }
@@ -82,7 +83,7 @@ function blockUntilServiceIsUp() {
     SERVICE_STATUS=404
     while [ ${SERVICE_STATUS} -ne "200" ]
     do
-        SERVICE_STATUS=$(curl  --max-time 1 -k -L -s -o /dev/null -w "%{http_code}" https://${PROJECT}.${HOST}/) || true
+        SERVICE_STATUS=$(curl  --max-time 1 -k -L -s -o /dev/null -w "%{http_code}" https://${PROJECT}.${ROUTE_DOMAIN}/) || true
         oc get pods
         echo "Service status: HTTP $SERVICE_STATUS"
         sleep 5s
@@ -102,7 +103,7 @@ function cleanUp() {
 
 cleanUp
 tailorAppInstance
-buildShib
+#buildShib
 buildShibInit
 buildRobotTests
 retagAppImages
