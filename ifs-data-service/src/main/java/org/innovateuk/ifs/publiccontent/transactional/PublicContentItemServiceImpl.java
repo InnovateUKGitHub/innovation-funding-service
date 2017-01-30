@@ -30,6 +30,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     }
 
     private List<String> separateSearchStringToList(String searchString) {
-        return asList(searchString.split(" ");
+        return asList(searchString.replaceAll("[^A-Za-z0-9]", " ").split("\\s"));
     }
 }

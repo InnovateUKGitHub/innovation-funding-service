@@ -64,7 +64,7 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
     @Test
     public void test_getByItemsCompetitionId() {
         PublicContentItemResource expectedResponse = new PublicContentItemResource();
-        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "all-by-competition-id/" + COMPETITION_ID, PublicContentItemResource.class, expectedResponse);
+        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + COMPETITION_ID, PublicContentItemResource.class, expectedResponse);
         RestResult<PublicContentItemResource> response = service.getItemByCompetitionId(COMPETITION_ID);
         assertTrue(response.isSuccess());
     }

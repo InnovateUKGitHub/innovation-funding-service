@@ -42,7 +42,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
 
     @Override
     public RestResult<PublicContentItemResource> getItemByCompetitionId(Long id) {
-        return getWithRestResult(PUBLIC_CONTENT_ITEM_REST_URL + "all-by-competition-id/" + id, PublicContentItemResource.class);
+        return getWithRestResult(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + id, PublicContentItemResource.class);
     }
 
     public String addParamToURL(String url, String paramName, String paramValue) {
