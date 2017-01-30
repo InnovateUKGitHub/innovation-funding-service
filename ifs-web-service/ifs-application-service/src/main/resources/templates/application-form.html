@@ -40,7 +40,7 @@
                  pendingAssignableUsers=(${model.assignable.pendingAssignableUsers}), leadOrganisation=(${model.leadOrganisation}), pendingOrganisationNames=(${model.pendingOrganisationNames}),
                  applicationOrganisations=(${model.applicationOrganisations}), leadApplicant=(${model.leadApplicant}),
                  researchCategories=(${model.application.researchCategories}), rsCategoryId=(${model.application.researchCategoryId}),
-                 isAcademicOrganisation=(${model.application.userOrganisationTypeIsAcademic}), hasApplicationFinances=(${model.application.hasApplicationFinances})">
+                 hasApplicationFinances=(${model.application.hasApplicationFinances})">
 
                 <th:block th:if="${formInput.type.displayableQuestionType}">
                     <div th:replace="question-type/types :: ${formInput.type.nameLower}" />

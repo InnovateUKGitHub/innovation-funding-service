@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,37 +21,25 @@ import static org.junit.Assert.assertEquals;
 @RunWith(MockitoJUnitRunner.class)
 public class QuestionApplicationViewModelTest {
 
-    private QuestionApplicationViewModel businessTypeViewModel;
-    private QuestionApplicationViewModel academicTypeViewModel;
+    private QuestionApplicationViewModel viewModel;
 
     @Before
     public void setup(){
         ApplicationResource currentApplication = newApplicationResource().withApplicationStatus(ApplicationStatusConstants.SUBMITTED.getId()).build();
         CompetitionResource competitionResource = newCompetitionResource().withCompetitionStatus(CompetitionStatus.CLOSED).build();
-        OrganisationResource academicUserOrganisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.ACADEMIC.getOrganisationTypeId()).build();
-        OrganisationResource businessUserOrganisation = newOrganisationResource().withOrganisationType(OrganisationTypeEnum.BUSINESS.getOrganisationTypeId()).build();
+        OrganisationResource userOrganisation = newOrganisationResource().build();
 
-        businessTypeViewModel = new QuestionApplicationViewModel(new HashSet<>(asList(0L)), Boolean.FALSE, currentApplication, competitionResource, businessUserOrganisation);
-        academicTypeViewModel = new QuestionApplicationViewModel(new HashSet<>(asList(0L)), Boolean.FALSE, currentApplication, competitionResource, academicUserOrganisation);
+        viewModel = new QuestionApplicationViewModel(new HashSet<>(asList(0L)), Boolean.FALSE, currentApplication, competitionResource, userOrganisation);
     }
 
     @Test
     public void testGetApplicationIsReadOnly() {
-        assertEquals(Boolean.TRUE, businessTypeViewModel.getApplicationIsReadOnly());
+        assertEquals(Boolean.TRUE, viewModel.getApplicationIsReadOnly());
     }
 
     @Test
     public void testGetApplicationIsClosed() {
-        assertEquals(Boolean.TRUE, businessTypeViewModel.getApplicationIsClosed());
+        assertEquals(Boolean.TRUE, viewModel.getApplicationIsClosed());
     }
 
-    @Test
-    public void testGetUserOrganisationTypeIsAcademic() {
-        assertEquals(Boolean.TRUE, academicTypeViewModel.getUserOrganisationTypeIsAcademic());
-    }
-
-    @Test
-    public void testGetUserOrganisationTypeIsNotAcademic() {
-        assertEquals(Boolean.FALSE, businessTypeViewModel.getUserOrganisationTypeIsAcademic());
-    }
 }

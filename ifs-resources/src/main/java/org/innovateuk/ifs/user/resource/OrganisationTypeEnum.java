@@ -55,18 +55,6 @@ public enum OrganisationTypeEnum {
         }
     }
 
-    public static boolean isAcademic(OrganisationTypeEnum organisationType){
-        return organisationType.equals(ACADEMIC) || (organisationType.getParentOrganisationType() != null && organisationType.getParentOrganisationType().equals(ACADEMIC));
-    }
-
-    public static boolean isAcademic(Long organisationTypeId){
-        if(organisationTypeId!=null) {
-            return isAcademic(getFromId(organisationTypeId));
-        } else {
-            return false;
-        }
-    }
-
     public boolean hasChildren(){
         Optional<OrganisationTypeEnum> child = lookup.values().stream().filter(o -> o.getParentOrganisationType() != null && o.getParentOrganisationType().equals(this)).findAny();
         return child.isPresent();

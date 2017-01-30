@@ -185,9 +185,6 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
     public void updateFinancePosition(Long userId, Long applicationId, String fieldName, String value, Long competitionId) {
         ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
 
-        // Do nothing if this update request is as a result of a research category change but no application finances
-        // have been entered yet.
-
         if (applicationFinanceResource != null || !fieldName.equals("application.researchCategoryId")) {
             updateFinancePosition(applicationFinanceResource, fieldName, value, competitionId, userId);
             applicationFinanceRestService.update(applicationFinanceResource.getId(), applicationFinanceResource);
@@ -212,15 +209,15 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, OrganisationSize oldValue, OrganisationSize newValue) {
         if(null != oldValue && !oldValue.equals(newValue)) {
-            resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+            resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId, false);
         }
     }
 
     private void handleResearchCategoryChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
-        resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
+        resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId, true);
     }
 
-    private void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
+    private void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, boolean resetCollaboratorsFundingLevel) {
 
         Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
                 .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
@@ -234,10 +231,35 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                                 (processRole.isPresent() ? processRole.get().getId() : null))
                 );
 
-        //reset your funding level
         QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-        applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-        financeRowService.add(applicationFinance.getId(), financeQuestion.getId(), applicationFinance.getGrantClaim());
+
+        if (resetCollaboratorsFundingLevel) {
+            resetFundingLevelForAllCollaborators(applicationFinance.getApplication(), financeQuestion.getId());
+        } else {
+            resetFundingLevel(applicationFinance, financeQuestion.getId());
+        }
+    }
+
+    private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
+        if (applicationFinance.getGrantClaim() != null) {
+            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
+            financeRowService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim());
+        }
+    }
+
+    private void resetFundingLevelForAllCollaborators(Long applicationId, Long financeQuestionId) {
+
+        financeService.getApplicationFinanceDetails(applicationId).stream().forEach(applicationFinance ->
+            resetFundingLevel(applicationFinance, financeQuestionId)
+        );
+
+        /*
+        Set<Long> userIds = processRoleService.getByApplicationId(applicationId).stream().filter(processRole -> processRole.getUser() != null).map(
+                processRole -> processRole.getUser()).collect(Collectors.toSet());
+
+        userIds.stream().forEach(userId ->
+                resetFundingLevel(financeService.getApplicationFinanceDetails(userId, applicationId), financeQuestionId));
+                */
     }
 
     private List<Either<FinanceRowItem, ValidationMessages>> getFinanceRowItems(Map<String, String[]> params, Long applicationFinanceId) {

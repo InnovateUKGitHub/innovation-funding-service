@@ -19,6 +19,7 @@ public interface FinanceService {
     ApplicationFinanceResource getApplicationFinanceByApplicationIdAndOrganisationId(Long applicationId, Long organisationId);
     ApplicationFinanceResource getApplicationFinanceDetails( Long userId, Long applicationId);
     ApplicationFinanceResource getApplicationFinanceDetails(Long userId, Long applicationId, Long organisationId);
+    List<ApplicationFinanceResource> getApplicationFinanceDetails(Long applicationId);
     List<ApplicationFinanceResource> getApplicationFinanceTotals(Long applicationId);
     ValidationMessages addCost(Long applicationFinanceId , Long questionId);
     RestResult<FileEntryResource> addFinanceDocument(Long applicationFinanceId, String contentType, long contentLength, String originalFilename, byte[] file);
