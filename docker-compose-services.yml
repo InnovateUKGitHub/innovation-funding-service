@@ -4,7 +4,6 @@ services:
     image: innovateuk/shibboleth:1.0-SNAPSHOT
     cap_add:
       - SYS_PTRACE
-    image: worth/shibboleth:1.0-SNAPSHOT
     ports:
       - "443:443"
       - "389:389"

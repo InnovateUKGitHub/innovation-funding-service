@@ -177,7 +177,7 @@ function startPybot() {
     -v UPLOAD_FOLDER:${uploadFileDir} \
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
-    -v REMOTE_URL:'http://hub:4444/wd/hub' \
+    -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
@@ -246,7 +246,7 @@ rootDir=`pwd`
 
 dataServiceCodeDir="${rootDir}/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
-webBase="<<SHIB-ADDRESS>>"
+webBase="ifs-local-dev"
 
 uploadFileDir="${scriptDir}/upload_files"
 baseFileStorage="/tmp/uploads"
@@ -355,7 +355,7 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
     esac
 done
 
-#startSeleniumGrid
+startSeleniumGrid
 
 if [[ ${rerunFailed} -eq 0 ]]
 then
@@ -365,7 +365,7 @@ fi
 if [[ ${quickTest} -eq 1 ]]
 then
     coloredEcho "=> Using quickTest: TRUE" blue
-    #addTestFiles
+    addTestFiles
     runTests
 elif [[ ${testScrub} ]]
 then
