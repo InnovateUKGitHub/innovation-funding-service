@@ -42,6 +42,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-7174 Not eligible partner should not have access to his Bank details page
 ...
 ...               INFUND-6882 Email validation done when valid is input selected for PM selection in project details
+...
+...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -93,7 +95,7 @@ Status updates correctly for internal user's table
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
 
 Non-lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805
+    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{collaborator1_credentials}
     When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
@@ -103,7 +105,9 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
-    And the user should see the element    link=View terms and conditions of grant offer
+    And the user clicks the button/link    link=View terms and conditions of grant offer
+    And the user should see the text in the page     Terms and Conditions of an Innovate UK Grant Award
+    And the user goes back to the previous page
     And the user should see the text in the page    Project details
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details

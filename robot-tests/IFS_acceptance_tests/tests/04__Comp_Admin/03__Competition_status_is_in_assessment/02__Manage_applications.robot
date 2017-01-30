@@ -76,7 +76,7 @@ Remove an assigned user (Not notified)
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Tags]
-    Given the user clicks the button/link    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(6)
+    Given the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
     And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
@@ -84,15 +84,30 @@ Notify an assigned user
     And the element should be disabled    jQuery=button:contains("Notify assessors")
     #TODO Check email once 7249 is done
 
+Assessor should see the assigned application
+    [Documentation]    INFUND-7050
+    [Setup]    Log in as a different user    email=paul.plum@gmail.com    password=Passw0rd
+    When The user clicks the button/link    link=Sustainable living models for the future
+    Then The user should see the element    Link=Rainfall
+
 Remove and notify an assessor (Notified)
     [Documentation]    INFUND-7232
     [Tags]
-    Given the user clicks the button/link    jQuery=.button:contains("Manage applications")
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=.button:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove and notify")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct
+    #TODO Check email once 7249 is done
+
+Assessor should not see the removed application
+    [Documentation]    INFUND-7232
+    [Setup]    Log in as a different user    email=paul.plum@gmail.com    password=Passw0rd
+    When The user clicks the button/link    link=Sustainable living models for the future
+    Then The user should not see the element    Link=Rainfall
 
 *** Keywords ***
 the application list is correct before changes
