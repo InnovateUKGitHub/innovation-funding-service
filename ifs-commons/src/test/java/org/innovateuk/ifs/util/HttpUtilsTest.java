@@ -38,4 +38,27 @@ public class HttpUtilsTest {
         assertEquals(Optional.empty(), HttpUtils.requestParameterPresent("testParameter", request));
     }
 
+
+    @Test
+    public void test_MMYYYYrequestParameterPresent() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "12");
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "2011");
+        assertEquals(Optional.of("12-2011"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
+    @Test
+    public void test_MMYYYYrequestParameterMonthMissing() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "2011");
+        assertEquals(Optional.of("-2011"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
+    @Test
+    public void test_MMYYYYrequestParameterYearMissing() {
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "12");
+        assertEquals(Optional.of("12-"), HttpUtils.requestParameterPresent("testParameter", request));
+    }
+
 }

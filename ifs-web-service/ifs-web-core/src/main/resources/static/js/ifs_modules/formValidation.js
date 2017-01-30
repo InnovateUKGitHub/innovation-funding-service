@@ -63,7 +63,8 @@ IFS.core.formValidation = (function () {
         fields: '.date-group input',
         messageInvalid: {
           invalid: 'Please enter a valid date.',
-          future: 'Please enter a future date.'
+          future: 'Please enter a future date.',
+          past: 'Please enter a past date'
         }
       },
       pattern: {
@@ -446,6 +447,9 @@ IFS.core.formValidation = (function () {
             if (dateGroup.is('[data-future-date]')) {
               valid = IFS.core.formValidation.checkFutureDate(dateGroup, date, showMessage)
             }
+            if (dateGroup.is('[data-past-date]')) {
+              valid = IFS.core.formValidation.checkPastDate(dateGroup, date, showMessage)
+            }
           }
         } else {
           if (enabled) {
@@ -487,6 +491,18 @@ IFS.core.formValidation = (function () {
         return true
       } else {
         if (showMessage) { IFS.core.formValidation.setInvalid(allFields, futureErrorMessage) }
+        return false
+      }
+    },
+    checkPastDate: function (dateGroup, date, showMessage) {
+      var pastErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-past')
+      var allFields = dateGroup.find('.day input, .month input, .year input')
+      var pastDate = new Date()
+      if (pastDate.setHours(0, 0, 0, 0) >= date.setHours(0, 0, 0, 0)) {
+        if (showMessage) { IFS.core.formValidation.setValid(allFields, pastErrorMessage) }
+        return true
+      } else {
+        if (showMessage) { IFS.core.formValidation.setInvalid(allFields, pastErrorMessage) }
         return false
       }
     },
