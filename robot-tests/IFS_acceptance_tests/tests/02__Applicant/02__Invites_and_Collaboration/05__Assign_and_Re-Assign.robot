@@ -193,13 +193,10 @@ Lead selects Research Area
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
+    # The following line has been commented  as 'alert message' is commented in application details section html due to upcoming functionality
     #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     Then the user should see the element       jQuery=legend:contains("Research category")
     And the user selects the radio button     application.researchCategoryId   financePosition-cat-35
-    #And the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    #    When the user navigates to his finances page
-    #    Then the user should not see the element  jQuery=.error-summary
-    # This is not yet working, due to upcomign functionality.
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
@@ -265,21 +262,6 @@ Lead applicant should be able to remove the registered partner
     And the user should not see the element    link= Assign test
 
 *** Keywords ***
-the applicant completes the application details
-    the user clicks the button/link    link=Application details
-    the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    the user selects the radio button     application.researchCategoryId   financePosition-cat-35
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
-    Clear Element Text    id=application_details-startdate_day
-    The user enters text to a text field    id=application_details-startdate_day    18
-    Clear Element Text    id=application_details-startdate_year
-    The user enters text to a text field    id=application_details-startdate_year    2018
-    Clear Element Text    id=application_details-startdate_month
-    The user enters text to a text field    id=application_details-startdate_month    11
-    The user enters text to a text field    id=application_details-duration    20
-    the user selects the radio button    application.resubmission    false
-    the user clicks the button/link    name=mark_as_complete
-
 the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor

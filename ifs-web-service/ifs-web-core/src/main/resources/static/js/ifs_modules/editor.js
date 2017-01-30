@@ -8,9 +8,16 @@ IFS.core.editor = (function () {
   return {
     settings: {
       editorTextarea: 'textarea[data-editor]',
-      htmlOptions: {
-        format: false,
-        allowedTags: ['p', 'em', 'strong', 'ol', 'ul', 'li', 'br', 'b', 'div']
+      editorOptions: {
+        plugins: {
+          'halloformat': {},
+          'hallolists': {},
+          'hallocleanhtml': {
+            format: false,
+            allowedTags: ['p', 'em', 'strong', 'ol', 'ul', 'li', 'br', 'b', 'div', 'a']
+          }
+        },
+        toolbar: 'halloToolbarFixed'
       }
     },
     init: function () {
@@ -50,31 +57,33 @@ IFS.core.editor = (function () {
             IFS.core.editor.textareaMarkdownToHtml(el, el.prev())
             break
           case 'html':
-            var html = jQuery.htmlClean(el.val(), s.htmlOptions)
+            var html = jQuery.htmlClean(el.val(), s.editorOptions.plugins.hallocleanhtml)
             el.prev().html(html)
             break
         }
       }
     },
     initEditors: function () {
-      jQuery('[role="textbox"][data-editor]').hallo({
+      // adding the link functionality when the editor is in html mode
+      var htmlEditorOptions = jQuery.extend(true, {}, s.editorOptions, {
         plugins: {
-          'halloformat': {},
-          'hallolists': {},
-          'hallocleanhtml': s.htmlOptions
-        },
-        toolbar: 'halloToolbarFixed'
+          'hallolink': {}
+        }
       })
+
+      jQuery('[role="textbox"][data-editor="html"]').hallo(htmlEditorOptions)
+      jQuery('[role="textbox"][data-editor="md"]').hallo(s.editorOptions)
 
       jQuery('[role="textbox"][data-editor="md"]').on('hallomodified', function (event, data) {
         var source = jQuery(this).next()
+        console.log('data.content', data.content)
         IFS.core.editor.editorHtmlToMarkdown(data.content, source)
         jQuery(source).trigger('keyup')
       })
 
       jQuery('[role="textbox"][data-editor="html"]').on('hallomodified', function (event, data) {
         var textarea = jQuery(this).next()
-        var html = jQuery.htmlClean(data.content, s.htmlOptions)
+        var html = jQuery.htmlClean(data.content, s.editorOptions.plugins.hallocleanhtml)
         if (html.replace(/<[^>]+>/ig, '').length === 0) {
           html = ''
         }
@@ -103,7 +112,7 @@ IFS.core.editor = (function () {
     },
     htmlToMarkdown: function (content) {
       var html = jQuery.trim(content.replace(/(\r\n|\n|\r)/gm, ''))
-      html = jQuery.htmlClean(html, s.htmlOptions)
+      html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
 
       return md(html)
     },
@@ -114,7 +123,7 @@ IFS.core.editor = (function () {
       } else {
         html = converter.makeHtml(content)
       }
-      html = jQuery.htmlClean(html, s.htmlOptions)
+      html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
       return html
     }
   }

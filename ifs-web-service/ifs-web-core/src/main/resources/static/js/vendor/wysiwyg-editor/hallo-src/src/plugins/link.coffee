@@ -10,12 +10,13 @@
       image: true
       defaultUrl: 'http://'
       dialogOpts:
+        closeText : 'X'
         autoOpen: false
         width: 540
-        height: 200
-        title: "Enter Link"
-        buttonTitle: "Insert"
-        buttonUpdateTitle: "Update"
+        height: 150
+        title: null
+        buttonTitle: "Insert link"
+        buttonUpdateTitle: "Update link"
         modal: true
         resizable: false
         draggable: false
@@ -30,9 +31,13 @@
       butUpdateTitle = @options.dialogOpts.buttonUpdateTitle
       dialog = jQuery "<div id=\"#{dialogId}\">
         <form action=\"#\" method=\"post\" class=\"linkForm\">
-          <input class=\"url\" type=\"text\" name=\"url\"
-            value=\"#{@options.defaultUrl}\" />
-          <input type=\"submit\" id=\"addlinkButton\" value=\"#{butTitle}\"/>
+          <div class=\"form-group\">
+            <label class=\"form-label\" for=\"dialog-input-url\">Insert a link including the full URL http://</label>
+            <input class=\"form-control width-full\" id=\"dialog-input-url\" type=\"text\" name=\"url\" value=\"#{@options.defaultUrl}\" />
+          </div>
+          <div class=\"form-group\">
+            <input type=\"submit\" id=\"addlinkButton\" class=\"button\" value=\"#{butTitle}\"/>
+          </div>
         </form></div>"
       urlInput = jQuery('input[name=url]', dialog)
 
@@ -103,7 +108,7 @@
 
           dialog.on 'dialogclose', ->
             widget.options.editable.restoreSelection widget.lastSelection
-            jQuery('label', buttonHolder).removeClass 'ui-state-active'
+            jQuery(buttonHolder).find('button').removeClass 'ui-state-active'
             do widget.options.editable.element.focus
             widget.options.editable.keepActivated false
           return false
@@ -115,9 +120,9 @@
           else
             nodeName = start.parent().prop('nodeName')
           if nodeName and nodeName.toUpperCase() is "A"
-            jQuery('label', button).addClass 'ui-state-active'
+            jQuery(button).find('button').addClass 'ui-state-active'
             return
-          jQuery('label', button).removeClass 'ui-state-active'
+          jQuery(button).find('button').removeClass 'ui-state-active'
 
       if (@options.link)
         buttonize "A"

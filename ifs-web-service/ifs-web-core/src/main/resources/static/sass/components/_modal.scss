@@ -38,7 +38,8 @@ Controlled with javascript, an alternative standard html page should be used for
 	@include transition-duration(300ms);
 
 
-	.close {
+	.close,
+  .ui-dialog-titlebar-close {
 		background:none;
 		border:1px solid #000;
 		position: absolute;
@@ -57,7 +58,8 @@ Controlled with javascript, an alternative standard html page should be used for
 		font-weight: bold;
 	}
 }
-.modal-overlay {
+.modal-overlay,
+.ui-widget-overlay {
 	&.js-close {
 		cursor:pointer;
 	}
