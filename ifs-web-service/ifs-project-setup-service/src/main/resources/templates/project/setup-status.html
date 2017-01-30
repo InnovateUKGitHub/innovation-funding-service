@@ -15,8 +15,26 @@
         <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" th:remove="tag" />
         <h1 class="heading-xlarge">Project setup status</h1>
     </div>
-    <p class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
-    <strong><a th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></strong>
+
+    <th:block th:if="${model.projectComplete}">
+        <div class="success-alert extra-margin-bottom">
+            The project is live, you can review progress at <a href="https://grants.innovateuk.org">_connect</a>
+        </div>
+
+        <p>The following steps have been completed by all partners. The project can now start.</p>
+    </th:block>
+
+    <p th:unless="${model.projectComplete}" class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
+
+    <!--TODO INFUND-3008 INFUND-4622 Not being implemented in the current release, tickets in backlog for creation of the companies house pages.-->
+    <!--<div class="warning-alert extra-margin-bottom" th:unless="${model.hasCompanyHouse}">-->
+        <!--<h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>-->
+        <!--<p>For your project to be funded by Innovate UK [Business Name] must be registered with Companies House. </p>-->
+        <!--<p><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>-->
+        <!--<p><a href="/prototypes/4242-register-no-companies-house">Business has no legal responsibility to register with Companies House</a></p>-->
+    <!--</div>-->
+
+    <strong><a th:unless="${model.projectComplete}" th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></strong>
 
     <ul class="ifs-progress-list extra-margin">
 
@@ -36,10 +54,12 @@
         <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.projectDetailsSection.accessible}" th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
-            <th:block th:unless="${model.projectDetailsSection.accessible}">Project details</th:block>
+            <a th:if="${model.projectDetailsSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/details(id=${model.projectId})}">Project details</a>
+              <a th:if="${model.projectComplete}" th:href="@{/project/{id}/readonly(id=${model.projectId})}">Project details</a>
+            <th:block th:unless="${model.projectDetailsSection.accessible or model.projectComplete}">Project details</th:block>
           </h2>
-          <p>Confirm the contact details, proposed start date and location of the project.</p>
+          <p th:if="${not model.projectComplete}">Confirm the contact details, proposed start date and location of the project.</p>
+          <p th:if="${model.projectComplete}">The contact details, start date and location of the project.</p>
         </div>
       </li>
       <!--/* ========================= Monitoring Officer ========================= */-->
@@ -48,7 +68,8 @@
         <div class="progress-info">
 
           <h2 class="heading-medium">
-            <a th:if="${model.monitoringOfficerSection.accessible}" th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
+            <a th:if="${model.monitoringOfficerSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/monitoring-officer(id=${model.projectId})}">Monitoring Officer</a>
+              <a th:if="${model.projectComplete}" th:href="@{/project/{id}/monitoring-officer/readonly(id=${model.projectId})}">Monitoring Officer</a>
             <th:block th:unless="${model.monitoringOfficerSection.accessible}">Monitoring Officer</th:block>
           </h2>
           <p th:if="${model.monitoringOfficerAssigned}">
@@ -73,10 +94,11 @@
         <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.bankDetailsSection.accessible}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
-            <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
+            <a th:if="${model.bankDetailsSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/bank-details(id=${model.projectId})}">Bank details</a>
+              <a th:if="${model.projectComplete}" th:href="@{/project/{id}/bank-details/readonly(id=${model.projectId})}">Bank details</a>
+              <th:block th:if="${model.bankDetailsSection.notRequired}">Bank details (not required)</th:block>
           </h2>
-          <p>We need bank details for each consortium member so that we can pay the grant.</p>
+           <p>We need bank details for each consortium member so that we can pay the grant.</p>
         </div>
       </li>
       <!--/* ========================= Finance Check ========================= */-->
@@ -114,9 +136,12 @@
         <div class="progress-status"></div>
         <div class="progress-info">
           <h2 class="heading-medium">
-            <a th:if="${model.otherDocumentsSection.accessible}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
+            <a th:if="${model.otherDocumentsSection.accessible and not model.projectComplete}" th:href="@{/project/{id}/partner/documents(id=${model.projectId})}">Other documents</a>
+              <a th:if="${model.projectComplete}" th:href="@{/project/{id}/partner/documents/readonly(id=${model.projectId})}">Other documents</a>
             <th:block th:if="${model.otherDocumentsSection.notAccessible}">Other documents</th:block>
           </h2>
+
+            <!-- TODO: INFUND - 6376 Prototype mentions Project manager should submit. Needs verification -->
           <p th:if="${model.leadPartner}">As lead partner in the consortium you will need to upload the following:</p>
           <p th:if="${model.nonLeadPartner}">The lead partner of the consortium will need to upload the following:</p>
           <ul class="list list-bullet">
