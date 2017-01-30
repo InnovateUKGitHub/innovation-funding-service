@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 
 public interface CompetitionKeyStatisticsService {
-    ServiceResult<CompetitionKeyStatisticsResource> getKeyStatisticsByCompetition(long competitionId);
+    ServiceResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatisticsByCompetition(long competitionId);
+    ServiceResult<CompetitionOpenKeyStatisticsResource> getOpenKeyStatisticsByCompetition(long competitionId);
+    ServiceResult<CompetitionClosedKeyStatisticsResource> getClosedKeyStatisticsByCompetition(long competitionId);
+    ServiceResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatisticsByCompetition(long competitionId);
 }

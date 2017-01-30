@@ -1,7 +1,12 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+
 /**
- * Holder of key statistics for the inflight dashboard
+ * Holder of key statistics for the in-flight dashboard
  */
 public class CompetitionInFlightStatsViewModel {
 
@@ -11,6 +16,41 @@ public class CompetitionInFlightStatsViewModel {
     private Long statFour;
     private Long statFive;
     private Long statSix;
+
+    public CompetitionInFlightStatsViewModel() {
+
+    }
+
+    public CompetitionInFlightStatsViewModel(CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource) {
+        this.statOne = keyStatisticsResource.getAssessorsInvited();
+        this.statTwo = keyStatisticsResource.getAssessorsAccepted();
+    }
+
+    public CompetitionInFlightStatsViewModel(CompetitionOpenKeyStatisticsResource keyStatisticsResource) {
+        this.statOne = keyStatisticsResource.getAssessorsInvited();
+        this.statTwo = keyStatisticsResource.getAssessorsAccepted();
+        this.statThree = keyStatisticsResource.getApplicationsPerAssessor();
+        this.statFour = keyStatisticsResource.getApplicationsStarted();
+        this.statFive = keyStatisticsResource.getApplicationsPastHalf();
+        this.statSix = keyStatisticsResource.getApplicationsSubmitted();
+    }
+
+    public CompetitionInFlightStatsViewModel(CompetitionClosedKeyStatisticsResource keyStatisticsResource) {
+        this.statOne = keyStatisticsResource.getApplicationsRequiringAssessors();
+        this.statTwo = keyStatisticsResource.getAssignmentCount();
+        this.statThree = keyStatisticsResource.getAssessorsWithoutApplications();
+        this.statFour = keyStatisticsResource.getAssessorsInvited();
+        this.statFive = keyStatisticsResource.getAssessorsAccepted();
+        this.statSix = keyStatisticsResource.getApplicationsPerAssessor();
+    }
+
+    public CompetitionInFlightStatsViewModel(CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource) {
+        this.statOne = keyStatisticsResource.getAssignmentCount();
+        this.statTwo = keyStatisticsResource.getAssignmentsWaiting();
+        this.statThree = keyStatisticsResource.getAssignmentsAccepted();
+        this.statFour = keyStatisticsResource.getAssessmentsStarted();
+        this.statFive = keyStatisticsResource.getAssessmentsSubmitted();
+    }
 
     public long getStatOne() {
         return statOne;

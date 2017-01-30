@@ -2,11 +2,9 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
-import org.innovateuk.ifs.competition.resource.CompetitionKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
-import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 
