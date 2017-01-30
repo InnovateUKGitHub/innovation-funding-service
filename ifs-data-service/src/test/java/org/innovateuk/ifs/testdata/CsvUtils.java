@@ -1,11 +1,16 @@
 package org.innovateuk.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
@@ -22,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -60,6 +66,14 @@ class CsvUtils {
 
     static List<CompetitionFunderLine> readCompetitionFunders() {
         return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
+    }
+
+    static List<PublicContentGroupLine> readPublicContentGroups() {
+        return simpleMap(readCsvLines("public-content-groups"), PublicContentGroupLine::new);
+    }
+
+    static List<PublicContentDateLine> readPublicContentDates() {
+        return simpleMap(readCsvLines("public-content-dates"), PublicContentDateLine::new);
     }
 
     static List<ApplicationLine> readApplications() {
@@ -373,17 +387,14 @@ class CsvUtils {
         String activityCode;
         Integer assessorCount;
         BigDecimal assessorPay;
-        LocalDateTime publishDate;
+        boolean published;
         String shortDescription;
         String fundingRange;
         String eligibilitySummary;
         String competitionDescription;
         FundingType fundingType;
         String projectSize;
-
-
-
-
+        List<String> keywords;
 
 
         private CompetitionLine(List<String> line) {
@@ -424,6 +435,14 @@ class CsvUtils {
             code = nullable(line.get(i++));
             assessorCount = nullableInteger(line.get(i++));
             assessorPay = nullableBigDecimal(line.get(i++));
+            published = nullableBoolean(line.get(i++));
+            shortDescription = nullable(line.get(i++));
+            fundingRange = nullable(line.get(i++));
+            eligibilitySummary = nullable(line.get(i++));
+            competitionDescription = nullable(line.get(i++));
+            fundingType = FundingType.valueOf(line.get(i++));
+            projectSize = nullable(line.get(i++));
+            keywords = nullableSplittableString(line.get(i++));
         }
     }
 
@@ -441,6 +460,35 @@ class CsvUtils {
             co_funder = nullableBoolean(line.get(i++));
         }
     }
+
+    static class PublicContentGroupLine {
+        String competitionName;
+        PublicContentSectionType section;
+        String heading;
+        String content;
+
+        private PublicContentGroupLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            section = PublicContentSectionType.valueOf(line.get(i++));
+            heading = nullable(line.get(i++));
+            content = nullable(line.get(i++));
+        }
+    }
+
+    static class PublicContentDateLine {
+        String competitionName;
+        LocalDateTime date;
+        String content;
+
+        private PublicContentDateLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            date = nullableDateTime(line.get(i++));
+            content = nullable(line.get(i++));
+        }
+    }
+
 
     static abstract class UserLine {
 
@@ -671,6 +719,17 @@ class CsvUtils {
         }
 
         return Boolean.parseBoolean(s);
+    }
+
+    private static List<String> nullableSplittableString(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return Collections.emptyList();
+        }
+
+        return Lists.newArrayList(Splitter.on("!").split(s))
+                .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
     }
 
 }

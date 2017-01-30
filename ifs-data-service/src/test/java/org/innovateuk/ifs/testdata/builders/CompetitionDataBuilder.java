@@ -4,6 +4,8 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
@@ -18,6 +20,7 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isBlank;
@@ -306,10 +309,30 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return with(data -> applicationDataBuilders.forEach(fn -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build()));
     }
 
+    public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, FundingType fundingType, String projectSize, List<String> keywords) {
+        return with(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
+
+            if (published) {
+                publicContent.setShortDescription(shortDescription);
+                publicContent.setProjectFundingRange(fundingRange);
+                publicContent.setEligibilitySummary(eligibilitySummary);
+                publicContent.setSummary(competitionDescription);
+                publicContent.setFundingType(fundingType);
+                publicContent.setProjectSize(projectSize);
+                publicContent.setKeywords(keywords);
+
+                stream(PublicContentSectionType.values()).forEach(type -> publicContentService.updateSection(publicContent, type).getSuccessObjectOrThrowException());
+
+                publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+            }
+
+        }));
+    }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
         competitionData.setCompetition(newCompetitionSaved);
+        publicContentService.initialiseByCompetitionId(competitionId);
     }
 
     private CompetitionDataBuilder asCompAdmin(Consumer<CompetitionData> action) {
