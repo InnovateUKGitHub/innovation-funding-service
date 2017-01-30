@@ -378,18 +378,6 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     }
 
     @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 1L;
-
-        when(assessmentServiceMock.notifyAssessor(assessmentId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/assessment/{id}/notify", assessmentId))
-                .andExpect(status().isOk());
-
-        verify(assessmentServiceMock, only()).notifyAssessor(assessmentId);
-    }
-
-    @Test
     public void withdrawAssessment() throws Exception {
         Long assessmentId = 1L;
 

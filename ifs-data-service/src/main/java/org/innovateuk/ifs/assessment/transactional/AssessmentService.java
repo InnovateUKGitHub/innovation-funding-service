@@ -53,10 +53,6 @@ public interface AssessmentService {
     ServiceResult<Void> acceptInvitation(long assessmentId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
-    @SecuredBySpring(value = "NOTIFY_ASSESSOR", description = "Comp Admins can notify an assessor of a newly assigned application")
-    ServiceResult<Void> notifyAssessor(long assessmentId);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
     @SecuredBySpring(
             value = "NOTIFY_ASSESSORS",
             description = "Comp admins and execs can notify all assessors of their assignments for a competition")

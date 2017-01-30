@@ -264,49 +264,6 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 1L;
-
-        Assessment assessment = newAssessment()
-                .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, CREATED.getBackingState()))
-                .build();
-
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandlerMock.notify(assessment)).thenReturn(true);
-
-        ServiceResult<Void> result = assessmentService.notifyAssessor(assessmentId);
-        assertTrue(result.isSuccess());
-
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandlerMock).notify(assessment);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void notifyAssessor_eventNotAccepted() throws Exception {
-        Long assessmentId = 1L;
-
-        Assessment assessment = newAssessment()
-                .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, CREATED.getBackingState()))
-                .build();
-
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandlerMock.notify(assessment)).thenReturn(false);
-
-        ServiceResult<Void> result = assessmentService.notifyAssessor(assessmentId);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(ASSESSMENT_NOTIFY_FAILED));
-
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandlerMock).notify(assessment);
-        inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
     public void notifyAssessorsByCompetition() throws Exception {
         Long competitionId = 1L;
 

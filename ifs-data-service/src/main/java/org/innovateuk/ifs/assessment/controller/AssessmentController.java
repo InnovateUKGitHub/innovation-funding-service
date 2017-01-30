@@ -60,11 +60,6 @@ public class AssessmentController {
         return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
     }
 
-    @RequestMapping(value = "/{id}/notify", method = PUT)
-    public RestResult<Void> notify(@PathVariable("id") long id) {
-        return assessmentService.notifyAssessor(id).toPutResponse();
-    }
-
     @RequestMapping(value = "/{id}/rejectInvitation", method = PUT)
     public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid ApplicationRejectionResource applicationRejection) {
         return assessmentService.rejectInvitation(id, applicationRejection).toPutResponse();

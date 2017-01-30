@@ -119,12 +119,6 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<Void> notifyAssessor(long assessmentId) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
-                .andOnSuccess(this::attemptNotifyAssessorTransition);
-    }
-
-    @Override
     public ServiceResult<Void> notifyAssessorsByCompetition(long competitionId) {
         return getCompetition(competitionId).andOnSuccess(competition -> {
             List<Assessment> assessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(

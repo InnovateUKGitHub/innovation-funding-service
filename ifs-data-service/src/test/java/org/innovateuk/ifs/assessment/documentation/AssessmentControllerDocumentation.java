@@ -173,20 +173,6 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
                 ));
     }
 
-    @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 1L;
-
-        when(assessmentServiceMock.notifyAssessor(assessmentId)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(put("/assessment/{id}/notify", assessmentId))
-                .andExpect(status().isOk())
-                .andDo(document("assessment/{method-name}",
-                        pathParameters(
-                                parameterWithName("id").description("Id of the assessment for which to notify")
-                        )
-                ));
-    }
 
     @Test
     public void submitAssessments() throws Exception {

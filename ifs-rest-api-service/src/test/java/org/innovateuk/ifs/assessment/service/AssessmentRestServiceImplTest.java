@@ -132,13 +132,4 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
         RestResult<Void> response = service.withdrawAssessment(assessmentId);
         assertTrue(response.isSuccess());
     }
-
-    @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 1L;
-
-        setupPutWithRestResultExpectations(format("%s/%s/notify", assessmentRestURL, assessmentId), null, OK);
-        RestResult<Void> response = service.notify(assessmentId);
-        assertTrue(response.isSuccess());
-    }
 }
