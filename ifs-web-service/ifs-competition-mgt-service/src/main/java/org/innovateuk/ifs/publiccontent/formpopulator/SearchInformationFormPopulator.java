@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.formpopulator;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.SearchInformationForm;
 import org.springframework.stereotype.Service;
 
@@ -22,5 +23,10 @@ public class SearchInformationFormPopulator extends AbstractPublicContentFormPop
         form.setProjectFundingRange(publicContentResource.getProjectFundingRange());
         form.setShortDescription(publicContentResource.getShortDescription());
         form.setKeywords(publicContentResource.getKeywords().stream().collect(Collectors.joining(",")));
+    }
+
+    @Override
+    protected PublicContentSectionType getType() {
+        return PublicContentSectionType.SEARCH;
     }
 }
