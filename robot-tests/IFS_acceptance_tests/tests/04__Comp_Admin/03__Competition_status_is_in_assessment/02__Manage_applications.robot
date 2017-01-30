@@ -119,6 +119,7 @@ the application list is correct before changes
     #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains(${initial_application_assesors})
     #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(5):contains(${initial_application_assigned})
     #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(5):contains(${initial+application_submitted})
+    #TODO checks disabled due toINFUND-7745
 
 the available assessors information is correct
     the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
@@ -126,6 +127,7 @@ the available assessors information is correct
     #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(3):contains('8')
     #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(4):contains('4')
     #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(5):contains('0')
+    #TODO checks disabled due toINFUND-7745
 
 the assigned list is correct before notification
     the user should see the element    jQuery=tr:eq(1) td:nth-child(1):contains("Paul Plum")
@@ -138,6 +140,7 @@ the assigned list is correct before notification
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(7):contains("-")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(8):contains("-")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(9):contains("-")
+    #TODO checks disabled due toINFUND-7745
 
 the previously assigned list is correct
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
@@ -146,6 +149,7 @@ the previously assigned list is correct
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Infrastructure')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(4):contains('8')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(5):contains('4')
+    #TODO checks disabled due toINFUND-7745
 
 Custom suite setup
     Guest user log-in    &{Comp_admin1_credentials}
