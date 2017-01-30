@@ -44,13 +44,13 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can delete costs from project finance")
     ServiceResult<Void> deleteCost(@P("costId") Long costId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Internal users can update the finance checks details")
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project finance users can update the finance checks details")
     ServiceResult<ProjectFinanceResource> updateCost(@P("projectFinanceId") Long projectFinanceId, ProjectFinanceResource applicationFinance);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
-            description = "Internal users can access the finance checks details")
+            description = "Project finance users can access the finance checks details")
     ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
 
     @PreAuthorize("hasAuthority('project_finance')")

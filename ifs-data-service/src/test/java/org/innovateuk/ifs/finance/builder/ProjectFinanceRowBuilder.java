@@ -7,9 +7,9 @@ import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.BuilderAmendFunctions.idBasedDescriptions;
 import static org.innovateuk.ifs.BuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 /**
  * Builder for ProjectFinanceRow entities.
@@ -28,6 +28,14 @@ public class ProjectFinanceRowBuilder extends BaseFinanceRowBuilder<ProjectFinan
         return new ProjectFinanceRowBuilder(emptyList()).
                 with(uniqueIds()).
                 with(idBasedDescriptions("Description "));
+    }
+
+    public ProjectFinanceRowBuilder withTarget(ProjectFinance... target) {
+        return withArraySetFieldByReflection("target", target);
+    }
+
+    public ProjectFinanceRowBuilder withId(Long... id){
+        return withArraySetFieldByReflection("id", id);
     }
 
     @Override

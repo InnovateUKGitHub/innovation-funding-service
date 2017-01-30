@@ -181,7 +181,15 @@ public class OrganisationFinanceHandlerTest {
         assertEquals("", materialCostTmp.getDescription());
         assertEquals("Screws", materialCostTmp.getItem());
         assertEquals(Integer.valueOf(5), materialCostTmp.getQuantity());
+    }
 
+    @Test
+    public void testCostItemToProjectCost() throws Exception {
+        FinanceRow materialCostTmp = handler.costItemToProjectCost(material);
+        assertEquals(new BigDecimal(100), materialCostTmp.getCost());
+        assertEquals("", materialCostTmp.getDescription());
+        assertEquals("Screws", materialCostTmp.getItem());
+        assertEquals(Integer.valueOf(5), materialCostTmp.getQuantity());
     }
 
     @Test
