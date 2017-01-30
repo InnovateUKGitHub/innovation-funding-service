@@ -9,4 +9,5 @@ public interface ProjectFinanceRowService {
     RestResult<ValidationMessages> update(FinanceRowItem costItem);
     void delete(Long costId);
     FinanceRowItem addWithoutPersisting(Long projectFinanceId, Long questionId);
+    FinanceRowItem findById(Long costId);
 }

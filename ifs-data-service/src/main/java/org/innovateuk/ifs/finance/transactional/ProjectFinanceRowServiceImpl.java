@@ -61,6 +61,15 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
+    public ServiceResult<FinanceRowItem> getCostItem(Long costItemId) {
+        ProjectFinanceRow cost = projectFinanceRowRepository.findOne(costItemId);
+        ProjectFinance projectFinance = cost.getTarget();
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
+
+        return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
+    }
+
+    @Override
     public ServiceResult<List<FinanceRowItem>> getCostItems(Long projectFinanceId, String costTypeName, Long questionId) {
         // TODO: 4834
         return null;

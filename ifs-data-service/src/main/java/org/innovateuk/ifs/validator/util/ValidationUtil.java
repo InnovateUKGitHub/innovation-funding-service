@@ -262,6 +262,22 @@ public class ValidationUtil {
         }
     }
 
+    public ValidationMessages validateProjectCostItem(FinanceRowItem costItem) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
+
+        if (bindingResult.hasErrors()) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("validated, with messages: ");
+                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
+                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
+            }
+            return new ValidationMessages(costItem.getId(), bindingResult);
+        } else {
+            LOG.debug("validated, no messages");
+            return ValidationMessages.noErrors(costItem.getId());
+        }
+    }
+
     private void invokeValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
         FinanceRowHandler financeRowHandler = validatorService.getCostHandler(costItem);
         financeRowHandler.validate(costItem, bindingResult);

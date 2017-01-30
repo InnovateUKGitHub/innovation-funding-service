@@ -18,6 +18,10 @@ public interface ProjectFinanceRowService {
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users can access cost items from project finance")
+    ServiceResult<FinanceRowItem> getCostItem(Long costItemId);
+
+    @PreAuthorize("hasAuthority('project_finance')")
+    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Project Finance users can access cost items from project finance")
     ServiceResult<List<FinanceRowItem>> getCostItems(Long projectFinanceId, String costTypeName, Long questionId);
 
     @PreAuthorize("hasAuthority('project_finance')")

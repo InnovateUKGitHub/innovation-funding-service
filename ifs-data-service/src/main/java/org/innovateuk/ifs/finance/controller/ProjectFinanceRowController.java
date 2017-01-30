@@ -36,7 +36,7 @@ public class ProjectFinanceRowController {
             return RestResult.restFailure(createResult.getFailure());
         }else{
             FinanceRowItem costItem = createResult.getSuccessObject();
-            ValidationMessages validationMessages = validationUtil.validateCostItem(costItem);
+            ValidationMessages validationMessages = validationUtil.validateProjectCostItem(costItem);
             return RestResult.restSuccess(validationMessages, HttpStatus.CREATED);
         }
     }
@@ -46,6 +46,11 @@ public class ProjectFinanceRowController {
             @PathVariable("projectFinanceId") final Long projectFinanceId,
             @PathVariable("questionId") final Long questionId) {
         return projectFinanceRowService.addCostWithoutPersisting(projectFinanceId, questionId).toPostCreateResponse();
+    }
+
+    @RequestMapping("/{id}")
+    public RestResult<FinanceRowItem> get(@PathVariable("id") final Long id) {
+        return projectFinanceRowService.getCostItem(id).toGetResponse();
     }
 
     /**
@@ -59,7 +64,7 @@ public class ProjectFinanceRowController {
             return RestResult.restFailure(updateResult.getFailure());
         }else{
             FinanceRowItem costItem = updateResult.getSuccessObject();
-            ValidationMessages validationMessages = validationUtil.validateCostItem(costItem);
+            ValidationMessages validationMessages = validationUtil.validateProjectCostItem(costItem);
             return RestResult.restSuccess(validationMessages);
         }
     }

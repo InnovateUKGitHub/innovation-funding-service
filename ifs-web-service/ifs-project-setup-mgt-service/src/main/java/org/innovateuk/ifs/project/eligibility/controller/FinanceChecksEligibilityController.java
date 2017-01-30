@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPo
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -110,20 +111,36 @@ public class FinanceChecksEligibilityController {
                                   BindingResult bindingResult,
                                   Model model,
                                   HttpServletRequest request) {
-        return doViewEligibility(projectId, organisationId, model, null, form, bindingResult, request);
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        return doViewEligibility(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
     }
 
-    private String doViewEligibility(Long projectId, Long organisationId, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult, HttpServletRequest request) {
+    private String doViewEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {
 
-        poulateProjectFinanceDetails(projectId, organisationId, form, bindingResult, model, request);
+        poulateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
 
-        EligibilityResource eligibility = financeService.getEligibility(projectId, organisationId);
+        EligibilityResource eligibility = financeService.getEligibility(project.getId(), organisation.getId());
 
         if (eligibilityForm == null) {
             eligibilityForm = getEligibilityForm(eligibility);
         }
 
-        model.addAttribute("model", getViewModel(projectId, organisationId, eligibility));
+        FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId());
+
+        boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
+
+        model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
+                application.getFormattedId(), isLeadPartnerOrganisation, project.getId(),
+                eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
+                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate()));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
         model.addAttribute("form", form);
@@ -136,24 +153,6 @@ public class FinanceChecksEligibilityController {
         boolean confirmEligibilityChecked = eligibility.getEligibilityRagStatus() != EligibilityRagStatus.UNSET;
 
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityRagStatus(), confirmEligibilityChecked);
-    }
-
-    private FinanceChecksEligibilityViewModel getViewModel(Long projectId, Long organisationId, EligibilityResource eligibility) {
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        boolean leadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
-
-        FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId);
-
-        boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
-
-        return new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
-                application.getFormattedId(), leadPartnerOrganisation, project.getId(),
-                eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate());
     }
 
     @RequestMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
@@ -206,8 +205,13 @@ public class FinanceChecksEligibilityController {
         ValidationMessages saveApplicationErrors = saveProjectFinanceSection(applicationResource.getCompetition(), projectId, organisationType, organisationResource.getId(), request);
 
         if(saveApplicationErrors.hasErrors()){
+            OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+            boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
+            UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+            List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
+            CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
             validationHandler.addAnyErrors(saveApplicationErrors);
-            return doViewEligibility(projectId, organisationId, model, null, form, bindingResult, request);
+            return doViewEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, model, null, form, bindingResult);
         } else {
             return getRedirectUrlToEligibility(projectId, organisationId);
         }
@@ -245,11 +249,19 @@ public class FinanceChecksEligibilityController {
                                      ValidationHandler validationHandler,
                                      Model model,
                                      HttpServletRequest request) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
+        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
 
         Supplier<String> successView = () ->
                 "redirect:/project/" + projectId + "/finance-check/organisation/" + organisationId + "/eligibility";
 
-        return doSaveEligibility(projectId, organisationId, Eligibility.APPROVED, eligibilityForm, form, validationHandler, successView, bindingResult, request, model);
+        return doSaveEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, Eligibility.APPROVED, eligibilityForm, form, validationHandler, successView, bindingResult, model);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -263,19 +275,27 @@ public class FinanceChecksEligibilityController {
                                   Model model,
                                   HttpServletRequest request) {
 
+        ProjectResource projectResource = projectService.getById(projectId);
+        ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisationResource.getId());
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(applicationResource.getCompetition());
+        CompetitionResource competition = competitionService.getById(applicationResource.getCompetition());
+
         Supplier<String> successView = () -> "redirect:/project/" + projectId + "/finance-check";
 
-        return doSaveEligibility(projectId, organisationId, Eligibility.REVIEW, eligibilityForm, form, validationHandler, successView, bindingResult, request, model);
+        return doSaveEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, Eligibility.APPROVED, eligibilityForm, form, validationHandler, successView, bindingResult, model);
     }
 
-    private String doSaveEligibility(Long projectId, Long organisationId, Eligibility eligibility, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form,
-                                     ValidationHandler validationHandler, Supplier<String> successView, BindingResult bindingResult, HttpServletRequest request, Model model) {
+    private String doSaveEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadOrganisation, OrganisationResource organisation, Eligibility eligibility, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, ValidationHandler validationHandler, Supplier<String> successView, BindingResult bindingResult, Model model) {
 
-        Supplier<String> failureView = () -> doViewEligibility(projectId, organisationId, model, eligibilityForm, form, bindingResult, request);
+        Supplier<String> failureView = () -> doViewEligibility(competition, application, project, allSections, user, isLeadOrganisation, organisation, model, eligibilityForm, form, bindingResult);
 
         EligibilityRagStatus statusToSend = getRagStatus(eligibilityForm);
 
-        ServiceResult<Void> saveEligibilityResult = financeService.saveEligibility(projectId, organisationId, eligibility, statusToSend);
+        ServiceResult<Void> saveEligibilityResult = financeService.saveEligibility(project.getId(), organisation.getId(), eligibility, statusToSend);
 
         return validationHandler
                 .addAnyErrors(saveEligibilityResult)
@@ -294,18 +314,15 @@ public class FinanceChecksEligibilityController {
         return statusToSend;
     }
 
-    private void poulateProjectFinanceDetails(Long projectId, Long organisationId, ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request){
-        ProjectResource project = projectService.getById(projectId);
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
+    private void poulateProjectFinanceDetails(CompetitionResource competition, ApplicationResource application, ProjectResource project, Long organisationId, List<SectionResource> allSections, UserResource user, ApplicationForm form, BindingResult bindingResult, Model model){
 
         SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
 
         addApplicationAndSectionsInternalWithOrgDetails(application, competition, user.getId(), Optional.ofNullable(section), Optional.empty(), model, form);
 
-        openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+        BaseSectionViewModel openFinanceSectionViewModel = openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+
+        model.addAttribute("model", openFinanceSectionViewModel);
 
         model.addAttribute("project", project);
     }

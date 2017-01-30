@@ -32,4 +32,9 @@ public class ProjectFinanceRowServiceImpl implements ProjectFinanceRowService {
     public FinanceRowItem addWithoutPersisting(Long applicationFinanceId, Long questionId) {
         return financeRowRestService.addWithoutPersisting(applicationFinanceId, questionId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public FinanceRowItem findById(Long costId) {
+        return financeRowRestService.findById(costId).getSuccessObjectOrThrowException();
+    }
 }

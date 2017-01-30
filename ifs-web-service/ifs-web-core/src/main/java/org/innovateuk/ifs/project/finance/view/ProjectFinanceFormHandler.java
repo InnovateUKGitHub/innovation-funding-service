@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.finance.view;
 
 import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.model.FinanceFormField;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.view.BaseFinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceFormHandler;
 import org.innovateuk.ifs.application.finance.view.UnsavedFieldsManager;
@@ -32,9 +31,6 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
-
-    @Autowired
-    private FinanceRowService financeRowService;
 
     @Autowired
     private ProjectFinanceRowRestService projectFinanceRowRestService;
@@ -123,7 +119,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
                             if(addResult.hasErrors()) {
                                 either = Either.right(addResult);
                             } else {
-                                FinanceRowItem added = financeRowService.findById(addResult.getObjectId());
+                                FinanceRowItem added = projectFinanceRowService.findById(addResult.getObjectId());
                                 either = Either.left(added);
                             }
 

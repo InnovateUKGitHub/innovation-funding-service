@@ -105,7 +105,7 @@
             </th:block>
             <input type="hidden"
                    th:id="${'section-percentage-'+subSection.id}"
-                   th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),model.eligibilityOverview.totalCost) + '%' : 0}" />
+                   th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
 
     </th:block>
 
@@ -289,7 +289,7 @@
         </th:block>
         <input type="hidden"
                th:id="${'section-percentage-'+subSection.id}"
-               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),model.eligibilityOverview.totalCost) + '%' : 0}" />
+               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
 
     </th:block>
     <!-- =========================== repeating rows - Materials  =========================== -->
@@ -434,7 +434,7 @@
         </th:block>
         <input type="hidden"
                th:id="${'section-percentage-'+subSection.id}"
-               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),model.eligibilityOverview.totalCost) + '%' : 0}" />
+               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
 
     </th:block>
 
@@ -636,7 +636,7 @@
         </th:block>
         <input type="hidden"
                th:id="${'section-percentage-'+subSection.id}"
-               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),model.eligibilityOverview.totalCost) + '%' : 0}" />
+               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
 
     </th:block>
 
@@ -784,7 +784,7 @@
         </th:block>
         <input type="hidden"
                th:id="${'section-percentage-'+subSection.id}"
-               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),model.eligibilityOverview.totalCost) + '%' : 0}" />
+               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
 
     </th:block>
     <!-- ===========================repeating rows : travel cost =========================== -->
@@ -929,7 +929,7 @@
         </th:block>
         <input type="hidden"
                th:id="${'section-percentage-'+subSection.id}"
-               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),model.eligibilityOverview.totalCost) + '%' : 0}" />
+               th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
 
     </th:block>
 

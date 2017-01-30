@@ -15,4 +15,5 @@ public interface ProjectFinanceRowRestService {
     RestResult<Void> delete(Long costId);
     RestResult<FinanceRowItem> addWithoutPersisting(Long projectFinanceId, Long questionId);
     RestResult<List<FinanceRowItem>> getCosts(Long projectFinanceId);
+    RestResult<FinanceRowItem> findById(Long id);
 }

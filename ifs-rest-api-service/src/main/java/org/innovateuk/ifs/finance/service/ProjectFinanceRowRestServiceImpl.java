@@ -42,4 +42,9 @@ public class ProjectFinanceRowRestServiceImpl extends BaseRestService implements
     public RestResult<List<FinanceRowItem>> getCosts(Long projectFinanceId) {
         return getWithRestResult(costRestURL + "/get/" + projectFinanceId, costItemListType());
     }
+
+    @Override
+    public RestResult<FinanceRowItem> findById(Long id) {
+        return getWithRestResult(costRestURL + "/" + id, FinanceRowItem.class);
+    }
 }
