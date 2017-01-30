@@ -94,42 +94,44 @@
                                 researchCategories=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategories : null}),
                                 rsCategoryId=(${model.application instanceof T(org.innovateuk.ifs.application.viewmodel.QuestionApplicationViewModel) ? model.application.researchCategoryId : null})">
 
-                            <th:block th:if="${formInput.type.displayableQuestionType}">
-                                <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
-                            </th:block>
-
-                            <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
-                                      th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
-                                               organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
-                                               organisationFinanceSize=(${model.finance.organisationFinanceSize})">
-                                <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
-                            </th:block>
-
-                            <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and !model.finance.hasOrganisationFinance}"
-                                      th:with="academicFinance=(${model.finance.academicFinance}), title=(${model.finance.title})">
-                                <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
-                            </th:block>
-
-                            <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
-
-                                <th:block th:with="
-                                    sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}),
-                                    applicationOrganisations=(${model.applicationOrganisations}),
-                                    currentApplication=(${model.application.currentApplication}),
-                                    financeSectionId=(${model.financeSectionId}),
-                                    leadOrganisation=(${model.leadOrganisation}),
-                                    completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}),
-                                    academicOrganisations=(${model.academicOrganisations}),
-                                    eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
-
-                                    <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
-
+                                <th:block th:if="${formInput.type.displayableQuestionType}">
+                                    <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                                 </th:block>
 
+                                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}"
+                                          th:with="organisationFinance=(${model.finance.organisationFinance}), organisationGrantClaimPercentage=(${model.finance.organisationGrantClaimPercentage}),
+                                                   organisationGrantClaimPercentageId=(${model.finance.organisationGrantClaimPercentageId}), organisationFinanceTotal=(${model.finance.organisationFinanceTotal}),
+                                                   organisationFinanceSize=(${model.finance.organisationFinanceSize})">
+                                    <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
+                                </th:block>
+
+                                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and !model.finance.hasOrganisationFinance}"
+                                          th:with="academicFinance=(${model.finance.academicFinance}), title=(${model.finance.title})">
+                                    <div th:replace="'finance/'+${model.finance.financeView} :: ${formInput.type.nameLower}" />
+                                </th:block>
+
+                                <th:block th:if="${model.isFinanceOverview && formInput.type.displayableFinancialSummaryType}">
+
+                                    <th:block th:with="
+                                        sectionsMarkedAsComplete=(${model.sectionsMarkedAsComplete}),
+                                        applicationOrganisations=(${model.applicationOrganisations}),
+                                        currentApplication=(${model.application.currentApplication}),
+                                        financeSectionId=(${model.financeSectionId}),
+                                        leadOrganisation=(${model.leadOrganisation}),
+                                        completedSectionsByOrganisation=(${model.completedSectionsByOrganisation}),
+                                        academicOrganisations=(${model.academicOrganisations}),
+                                        eachCollaboratorFinanceSectionId=(${model.eachCollaboratorFinanceSectionId})">
+
+                                        <div th:replace="finance/finance-summary :: ${formInput.type.nameLower}" />
+
+                                    </th:block>
+
+                                </th:block>
                             </th:block>
-                        </th:block>
+                         </th:block>
                     </div>
                 </th:block>
+              </th:block>
             </div>
 
             <th:block>
