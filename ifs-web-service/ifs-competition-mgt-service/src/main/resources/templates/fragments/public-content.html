@@ -1,6 +1,6 @@
 
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>This information is used for search and the opening section of the competition page.</p>
+    <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
         <dl>
             <dt>Short description</dt>
@@ -45,7 +45,7 @@
             <div class="form-group">
                 <label class="form-label-bold" for="keywords">
                     Keywords
-                    <span class="form-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
+                    <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
                 </label>
                 <input class="form-control width-full" id="keywords" type="text" th:field="${form.keywords}"
                        required="required"
