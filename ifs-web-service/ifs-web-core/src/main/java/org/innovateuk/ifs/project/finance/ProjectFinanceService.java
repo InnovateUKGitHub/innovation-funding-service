@@ -58,7 +58,7 @@ public interface ProjectFinanceService {
 
     List<ProjectFinanceResource> getProjectFinanceTotals(Long projectId);
 
-    ProjectFinanceResource addProjectFinance(Long userId, Long projectId);
+    ProjectFinanceResource addProjectFinance(Long projectId, Long organisationId);
 
     ProjectFinanceResource getProjectFinance(Long projectId, Long organisationId);
 

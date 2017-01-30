@@ -2,7 +2,6 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
@@ -26,6 +25,7 @@ import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -97,7 +97,7 @@ public class FinanceChecksEligibilityController {
     private FinanceHandler financeHandler;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private ProjectFinanceRowService financeRowService;
 
     @Autowired
     private QuestionService questionService;
@@ -189,10 +189,9 @@ public class FinanceChecksEligibilityController {
      * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
      */
     @ProfileExecution
-    @RequestMapping(value = "/section/{sectionId}", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST, params = "save-eligibility")
     public String projectFinanceFormSubmit(@PathVariable("projectId") final Long projectId,
                                            @PathVariable("organisationId") Long organisationId,
-                                           @PathVariable("sectionId") final Long sectionId,
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
@@ -201,10 +200,10 @@ public class FinanceChecksEligibilityController {
                                            HttpServletResponse response) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
-        String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
+        String organisationType = organisationResource.getOrganisationTypeName();
 
-        ValidationMessages saveApplicationErrors = saveProjectFinanceSection(applicationResource.getCompetition(), projectId, organisationType, user.getId(), request);
+        ValidationMessages saveApplicationErrors = saveProjectFinanceSection(applicationResource.getCompetition(), projectId, organisationType, organisationResource.getId(), request);
 
         if(saveApplicationErrors.hasErrors()){
             validationHandler.addAnyErrors(saveApplicationErrors);
@@ -217,11 +216,11 @@ public class FinanceChecksEligibilityController {
     private ValidationMessages saveProjectFinanceSection(Long competitionId,
                                                          Long projectId,
                                                          String organisationType,
-                                                         Long userId,
+                                                         Long organisationId,
                                                          HttpServletRequest request) {
         ValidationMessages errors = new ValidationMessages();
 
-        ValidationMessages saveErrors = financeHandler.getProjectFinanceFormHandler(organisationType).update(request, userId, projectId, competitionId);
+        ValidationMessages saveErrors = financeHandler.getProjectFinanceFormHandler(organisationType).update(request, organisationId, projectId, competitionId);
 
         errors.addAll(saveErrors);
 

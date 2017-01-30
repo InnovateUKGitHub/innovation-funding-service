@@ -24,6 +24,16 @@ public class ProjectFinanceRowRestServiceImpl extends BaseRestService implements
     }
 
     @Override
+    public RestResult<ValidationMessages> update(FinanceRowItem costItem) {
+        return putWithRestResult(costRestURL + "/update/" + costItem.getId(), costItem, ValidationMessages.class);
+    }
+
+    @Override
+    public RestResult<Void> delete(Long costId) {
+        return deleteWithRestResult(costRestURL + "/delete/" + costId);
+    }
+
+    @Override
     public RestResult<FinanceRowItem> addWithoutPersisting(Long projectFinanceId, Long questionId) {
         return postWithRestResult(costRestURL + "/add-without-persisting/" + projectFinanceId + "/" + questionId, FinanceRowItem.class);
     }

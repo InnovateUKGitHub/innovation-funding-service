@@ -17,5 +17,4 @@ public interface FinanceRowService {
     ValidationMessages add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem);
     FinanceRowItem addWithoutPersisting(Long applicationFinanceId, Long questionId);
     FinanceRowItem findById(Long costId);
-    FinanceRowItem addProjectCostWithoutPersisting(Long projectFinanceId, Long questionId);
 }

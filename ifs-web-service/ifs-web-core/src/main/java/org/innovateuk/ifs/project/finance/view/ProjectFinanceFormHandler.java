@@ -43,14 +43,15 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
     private UnsavedFieldsManager unsavedFieldsManager;
 
     @Override
-    public ValidationMessages update(HttpServletRequest request, Long userId, Long projectId, Long competitionId) {
-        ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(userId, projectId);
+    public ValidationMessages update(HttpServletRequest request, Long organisationId, Long projectId, Long competitionId) {
+        ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(projectId, organisationId);
+
         if (projectFinanceResource == null) {
-            projectFinanceResource = projectFinanceService.addProjectFinance(userId, projectId);
+            projectFinanceResource = projectFinanceService.addProjectFinance(projectId, organisationId);
         }
 
         ValidationMessages errors = getAndStoreCostitems(request, projectFinanceResource.getId());
-        addRemoveCostRows(request, projectId, userId);
+        addRemoveCostRows(request, projectId, organisationId);
 
         return errors;
     }
@@ -90,7 +91,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
         }
         if (requestParams.containsKey("remove_cost")) {
             String removeCostParam = request.getParameter("remove_cost");
-            financeRowService.delete(Long.valueOf(removeCostParam));
+            projectFinanceRowService.delete(Long.valueOf(removeCostParam));
         }
     }
 

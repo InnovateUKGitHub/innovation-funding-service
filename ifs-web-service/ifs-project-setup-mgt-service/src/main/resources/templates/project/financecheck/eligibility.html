@@ -80,7 +80,7 @@
                 </th:block>
                 <div class="alignright-button">
                     <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
-                    <button th:if="${viewmode=='edit'}" name="confirm-eligibility" class="button">Save</button>
+                    <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
                 </div>
             </th:block>
         </section>

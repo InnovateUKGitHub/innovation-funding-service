@@ -35,7 +35,8 @@ public class FinanceRowServiceImpl implements FinanceRowService {
 
     @Override
     public void delete(Long costId) {
-        financeRowRestService.delete(costId);}
+        financeRowRestService.delete(costId);
+    }
 
     @Override
     public ValidationMessages add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem) {
@@ -45,11 +46,6 @@ public class FinanceRowServiceImpl implements FinanceRowService {
     @Override
     public FinanceRowItem addWithoutPersisting(Long applicationFinanceId, Long questionId) {
         return financeRowRestService.addWithoutPersisting(applicationFinanceId, questionId).getSuccessObjectOrThrowException();
-    }
-
-    @Override
-    public FinanceRowItem addProjectCostWithoutPersisting(Long projectFinanceId, Long questionId) {
-        return financeRowRestService.addProjectCostWithoutPersisting(projectFinanceId, questionId).getSuccessObjectOrThrowException();
     }
 
 	@Override
