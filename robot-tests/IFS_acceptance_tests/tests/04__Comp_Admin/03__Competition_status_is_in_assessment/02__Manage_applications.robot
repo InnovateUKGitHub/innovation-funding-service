@@ -12,7 +12,6 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               INFUND-7237 Implement Assessor Total Applications and Assigned Counts for Application Progress within Assessor Management
 ...
 ...               INFUND-7232 As a member of the competitions team I can view previously assigned assessors so I can see who has previously been removed from assessing the application
-...
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    Assessor
@@ -44,7 +43,7 @@ View the assigned list
     And the user clicks the button/link    jQuery=.link-back:contains("Allocate applications")
     Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains("1")
 
-Remove an assigned user who has not been notified back to available assessors
+Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
@@ -56,14 +55,14 @@ Notify an assigned user
     [Documentation]    INFUND-7050
     [Tags]
     Given the user clicks the button/link    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(6)
-    And the user clicks the button/link    jQuery=.link-back:contains("Allocate applications")
-    And the user clicks the button/link    jQuery=.link-back:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the element should be disabled    jQuery=button:contains("Notify assessors")
     #TODO Check email once 7249 is done
 
-Remove and notify an assessor send the assessor to previously assigned table
+Remove and notify an assessor (Notified)
     [Documentation]    INFUND-7232
     [Tags]
     Given the user clicks the button/link    jQuery=.button:contains("Manage applications")
@@ -116,7 +115,8 @@ the available assessors information is correct
 the assigned list is correct before notification
     the user should see the element    jQuery=tr:eq(1) td:nth-child(1):contains("Paul Plum")
     the user should see the element    jQuery=tr:eq(1) td:nth-child(2):contains("ACADEMIC")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living, Infrastructure")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Infrastructure")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("5")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
@@ -127,7 +127,8 @@ the assigned list is correct before notification
 the previously assigned list is correct
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(2):contains('ACADEMIC')
-    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Urban living, Infrastructure')
+    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Urban living')
+    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Infrastructure')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(4):contains('8')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(5):contains('4')
 
