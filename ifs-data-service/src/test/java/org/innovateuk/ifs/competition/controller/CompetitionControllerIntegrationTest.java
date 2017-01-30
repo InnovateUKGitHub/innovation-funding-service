@@ -14,6 +14,10 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.resource.fixtures.CompetitionCoFundersResourceFixture;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.innovateuk.ifs.workflow.resource.State;
@@ -29,6 +33,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
+import static org.innovateuk.ifs.workflow.resource.State.CREATED;
+import static org.innovateuk.ifs.workflow.resource.State.PENDING;
 import static org.junit.Assert.*;
 
 /**
@@ -56,6 +66,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
     @Autowired
     private ActivityStateRepository activityStateRepository;
+
+    @Autowired
+    private UserMapper userMapper;
 
     private static final int EXISTING_CATEGORY_LINK_BEFORE_TEST = 2;
     private static final Long COMPETITION_ID = 1L;
@@ -379,7 +392,12 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     @Test
     public void notifyAssessors() throws Exception {
         CompetitionResource closedCompetition = createWithDates(twoDaysAgo, oneDayAgo, twoDaysAhead, threeDaysAhead, fourDaysAhead, fiveDaysAhead, sixDaysAhead, sevenDaysAhead);
-        List<Long> assessmentIds = createCreatedAssessmentsWithCompetition(closedCompetition.getId(), 2);
+        closedCompetition.setName("Closed competition name");
+
+        controller.saveCompetition(closedCompetition, closedCompetition.getId());
+
+        UserResource user = getPaulPlum();
+        List<Long> assessmentIds = createCreatedAssessmentsWithCompetition(closedCompetition.getId(), user, 2);
 
         RestResult<Void> notifyResult = controller.notifyAssessors(closedCompetition.getId());
         assertTrue("Notify assessors is a success", notifyResult.isSuccess());
@@ -388,9 +406,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertTrue("Assert get is success", getResult.isSuccess());
 
         CompetitionResource retrievedCompetition = getResult.getSuccessObject();
-        assertEquals(CompetitionStatus.IN_ASSESSMENT, retrievedCompetition.getCompetitionStatus());
+        assertEquals(IN_ASSESSMENT, retrievedCompetition.getCompetitionStatus());
 
-        List<Assessment> updatedAssessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(State.PENDING, closedCompetition.getId());
+        List<Assessment> updatedAssessments = assessmentRepository.findByActivityStateStateAndTargetCompetitionId(PENDING, closedCompetition.getId());
         assertEquals(assessmentIds.size(), updatedAssessments.size());
         assertThat(updatedAssessments.stream().map(Assessment::getId).collect(Collectors.toList()), is(assessmentIds));
     }
@@ -467,7 +485,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertThat(closedCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.CLOSED));
 
         CompetitionResource inAssessmentCompetition = createWithDates(fiveDaysAgo, fourDaysAgo, twoDaysAgo, oneDayAgo, fourDaysAhead, fiveDaysAhead, sixDaysAhead, sevenDaysAhead);
-        assertThat(inAssessmentCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.IN_ASSESSMENT));
+        assertThat(inAssessmentCompetition.getCompetitionStatus(), equalTo(IN_ASSESSMENT));
 
         CompetitionResource inPanelCompetition = createWithDates(fiveDaysAgo, fourDaysAgo, threeDaysAgo, twoDaysAgo, oneDayAgo, fiveDaysAhead, sixDaysAhead, sevenDaysAhead);
         assertThat(inPanelCompetition.getCompetitionStatus(), equalTo(CompetitionStatus.FUNDERS_PANEL));
@@ -549,21 +567,31 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(competitionTypeId, competitionsResult.getSuccessObject().getCompetitionType());
     }
 
-    private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, int numberOfAssessments) {
+    private List<Long> createCreatedAssessmentsWithCompetition(Long competitionId, UserResource assessor, int numberOfAssessments) {
         List<Application> applications = newApplication()
                 .withCompetition(competitionRepository.findById(competitionId))
                 .build(numberOfAssessments);
+
         applicationRepository.save(applications);
-        List<Assessment> assessments = new ArrayList<>();
-        for (Application application : applications) {
-            assessments.add(
-                    newAssessment()
-                            .withApplication(application)
-                            .withActivityState(activityStateRepository.findOneByActivityTypeAndState(ActivityType.APPLICATION_ASSESSMENT, State.CREATED))
-                            .build()
-            );
-        }
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, CREATED);
+
+        List<Assessment> assessments = simpleMap(
+                applications,
+                application -> newAssessment()
+                        .withApplication(application)
+                        .withActivityState(activityState)
+                        .withParticipant(
+                                newProcessRole()
+                                        .withUser(userMapper.mapToDomain(assessor))
+                                        .withApplication(application)
+                                        .build()
+                        )
+                        .build()
+        );
+
         assessmentRepository.save(assessments);
+
         return assessments.stream().map(Assessment::getId).collect(Collectors.toList());
     }
 
