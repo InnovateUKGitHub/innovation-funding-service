@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.queries.form;
 
 import org.hibernate.validator.constraints.NotBlank;
+import org.innovateuk.ifs.commons.validation.constraints.EnumValidator;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
+import org.innovateuk.ifs.notesandqueries.resource.thread.SectionTypeEnum;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
@@ -23,6 +25,7 @@ public class FinanceChecksQueriesForm {
     private String title;
 
     @Size(max = MAX_SECTION_CHARACTERS, message = "{validation.notesandqueries.thread.section.server.length.max}")
+    @EnumValidator( enumClazz=SectionTypeEnum.class, message="{validation.notesandqueries.thread.section.enum}")
     private String section;
 
     private MultipartFile attachment;

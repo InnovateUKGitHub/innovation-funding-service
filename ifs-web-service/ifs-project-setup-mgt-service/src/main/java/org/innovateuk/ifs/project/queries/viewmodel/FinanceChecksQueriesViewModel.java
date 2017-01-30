@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.queries.viewmodel;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,10 +16,14 @@ public class FinanceChecksQueriesViewModel {
     private String querySection;
     private Long projectId;
     private String projectName;
-    private Map<Long, String> newQueryAttachments;
+    private Map<Long, String> newAttachmentLinks;
     private int maxQueryWords;
     private int maxQueryCharacters;
     private int maxTitleCharacters;
+    List<FinanceChecksQueriesQueryViewModel> queries;
+    private boolean showNewPost;
+    private Long newPostQueryId;
+    private Long organisationId;
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -29,10 +34,14 @@ public class FinanceChecksQueriesViewModel {
                                          String querySection,
                                          Long projectId,
                                          String projectName,
-                                         Map<Long, String> newQueryAttachments,
+                                         Map<Long, String> newAttachmentLinks,
                                          int maxQueryWords,
                                          int maxQueryCharacters,
-                                         int maxTitleCharacters) {
+                                         int maxTitleCharacters,
+                                         List<FinanceChecksQueriesQueryViewModel> queries,
+                                         boolean showNewPost,
+                                         Long newPostQueryId,
+                                         Long organisationId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;
@@ -42,10 +51,15 @@ public class FinanceChecksQueriesViewModel {
         this.querySection = querySection;
         this.projectId = projectId;
         this.projectName = projectName;
-        this.newQueryAttachments = newQueryAttachments;
+        this.newAttachmentLinks = newAttachmentLinks;
         this.maxQueryWords = maxQueryWords;
         this.maxQueryCharacters = maxQueryCharacters;
         this.maxTitleCharacters = maxTitleCharacters;
+        this.queries = queries;
+        this.showNewPost = showNewPost;
+        this.newPostQueryId = newPostQueryId;
+        this.organisationId = organisationId;
+
     }
 
     public String getOrganisationName() {
@@ -119,12 +133,12 @@ public class FinanceChecksQueriesViewModel {
         this.projectName = projectName;
     }
 
-    public Map<Long, String>  getNewQueryAttachments() {
-        return newQueryAttachments;
+    public Map<Long, String>  getNewAttachmentLinks() {
+        return newAttachmentLinks;
     }
 
-    public void setNewQueryAttachments(Map<Long, String>  newQueryAttachments) {
-        this.newQueryAttachments = newQueryAttachments;
+    public void setNewAttachmentLinks(Map<Long, String>  newAttachmentLinks) {
+        this.newAttachmentLinks = newAttachmentLinks;
     }
 
     public int getMaxQueryWords() {
@@ -151,4 +165,33 @@ public class FinanceChecksQueriesViewModel {
         this.maxTitleCharacters = maxTitleCharacters;
     }
 
+    public List<FinanceChecksQueriesQueryViewModel> getQueries() {
+        return queries;
+    }
+
+    public void setQueries(List<FinanceChecksQueriesQueryViewModel> queries) {
+        this.queries = queries;
+    }
+
+    public boolean isShowNewPost() {
+        return showNewPost;
+    }
+
+    public void setShowNewPost(boolean showNewPost) {
+        this.showNewPost = showNewPost;
+    }
+    public Long getNewPostQueryId() {
+        return newPostQueryId;
+    }
+
+    public void setNewPostQueryId(Long newPostQueryId) {
+        this.newPostQueryId = newPostQueryId;
+    }
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
+    }
 }
