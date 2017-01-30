@@ -1,6 +1,5 @@
 *** Settings ***
 Resource    ../../resources/defaultResources.robot
-Resource    Applicant_Commons.robot
 
 *** Variables ***
 
@@ -36,8 +35,9 @@ Mark application details as complete
 Mark application details as incomplete
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Robot test application
-    the applicant incompletes the application details
-
+    the user clicks the button/link       link=Application details
+    the user clicks the button/link       jQuery=button:contains("Edit")
+    the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
 
 The applicant enters Org Size and Funding level
     [Arguments]    ${org_size}    ${funding_level}
@@ -51,12 +51,37 @@ The applicant enters Org Size and Funding level
     the user enters text to a text field   css=#cost-financegrantclaim  ${funding_level}
     the user moves focus to the element    jQuery=label[data-target="other-funding-table"]
 
+the Application details are completed
+    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=img.complete[alt*="Application details"]
+    Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
+
+the applicant completes the application details
+    the user clicks the button/link       link=Application details
+    the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
+    the user clicks the button/link       jQuery=label[for="resubmission-no"]
+    the user clicks the button/link       jQuery=label[for="resubmission-no"]
+    # those Radio buttons need to be clicked twice.
+    Clear Element Text                    id=application_details-startdate_day
+    The user enters text to a text field  id=application_details-startdate_day  18
+    Clear Element Text                    id=application_details-startdate_year
+    The user enters text to a text field  id=application_details-startdate_year  2018
+    Clear Element Text                    id=application_details-startdate_month
+    The user enters text to a text field  id=application_details-startdate_month  11
+    The user enters text to a text field  id=application_details-duration  20
+    the user clicks the button/link       jQuery=button:contains("Mark as complete")
+
 the user marks the finances as complete
     Applicant navigates to the finances of the Robot application
     the user fills in the project costs
-
+    the user fills in the organisation information
+    the user fills in the funding information  Robot test application
+    the user should see all finance subsections complete
+    the user clicks the button/link  link=Application Overview
+    the user should see the element  jQuery=img.complete[alt*="finances"]
 
 the user fills in the project costs
+    the user clicks the button/link  link=Your project costs
     the user fills in Labour
     the user fills in Overhead costs
     the user fills in Material

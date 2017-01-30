@@ -20,7 +20,6 @@ Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
 Resource          ../FinanceSection_Commons.robot
 
 *** Variables ***
