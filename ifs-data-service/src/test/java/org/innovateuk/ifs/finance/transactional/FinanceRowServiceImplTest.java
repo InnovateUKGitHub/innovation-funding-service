@@ -22,11 +22,11 @@ import org.innovateuk.ifs.finance.resource.cost.SubContractingCost;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -69,6 +69,37 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
     @Override
     protected FinanceRowServiceImpl supplyServiceUnderTest() {
         return new FinanceRowServiceImpl();
+    }
+
+    private FinanceRowItem newFinanceRowItem;
+    private ApplicationFinance applicationFinance;
+    private Application application;
+    private OrganisationType organisationType;
+    private long costId;
+    private String metaFieldTitle;
+    private String metaFieldType;
+
+    @Before
+    public void setUp() {
+        costId = 1;
+
+        metaFieldTitle = "country";
+        metaFieldType = "String";
+
+        application = newApplication()
+                .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()
+                ).build();
+        organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
+        newFinanceRowItem = new SubContractingCost(costId, new BigDecimal(10), "Scotland", "nibbles", "purring");
+
+        applicationFinance = newApplicationFinance()
+                .withApplication(application)
+                .withOrganisation(newOrganisation().withOrganisationType(organisationType).build())
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getName())).thenReturn(organisationFinanceDefaultHandlerMock);
+
     }
 
     @Test
@@ -193,23 +224,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testAlreadyExistingMetaValueShouldBeUpdated() {
-        LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
-        long costId = 1;
-
-        String metaFieldTitle = "country";
-        String metaFieldType = "String";
-
-        Application application = newApplication()
-                .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()
-                ).build();
-        OrganisationType organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
-        FinanceRowItem newFinanceRowItem = new SubContractingCost(costId, new BigDecimal(10), "Scotland", "nibbles", "purring");
-
-        ApplicationFinance applicationFinance = newApplicationFinance()
-                .withApplication(application)
-                .withOrganisation(newOrganisation().withOrganisationType(organisationType).build())
-                .build();
-
         List<FinanceRowMetaValue> currentFinanceRowMetaValue = Collections.singletonList(newFinanceRowMetaValue().withFinanceRowMetaField(
                 newFinanceRowMetaField()
                         .withTitle(metaFieldTitle)
@@ -233,8 +247,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
                 .withTarget(applicationFinance).build();
 
         when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getName())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(applicationFinanceRowRepositoryMock.save(any(ApplicationFinanceRow.class))).thenReturn(convertedApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(currentFinanceRowMetaValue.get(0));
@@ -247,36 +259,18 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         combinedFinanceRowMetaValue.setValue(newFinanceRowMetaValue.get(0).getValue());
 
         verify(financeRowMetaValueRepositoryMock, times(1)).save(combinedFinanceRowMetaValue);
-
-
     }
 
     @Test
     public void testNonExistingMetaValueShouldBeCreated() {
-        long costId = 1;
-
-        String metaFieldTitle = "country";
-        String metaFieldType = "String";
-
-        Application application = newApplication()
-                .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()
-                ).build();
-        OrganisationType organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
-        FinanceRowItem newFinanceRowItem = new SubContractingCost(costId, new BigDecimal(10), "Scotland", "nibbles", "purring");
-
-        ApplicationFinance applicationFinance = newApplicationFinance()
-                .withApplication(application)
-                .withOrganisation(newOrganisation().withOrganisationType(organisationType).build())
-                .build();
-
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField()
                 .withTitle(metaFieldTitle)
                 .withType(metaFieldType).build();
         List<FinanceRowMetaValue> financeRowMetaValue = Collections.singletonList(
                 newFinanceRowMetaValue()
-                    .withFinanceRowMetaField(financeRowMetaField)
-                    .withValue("England")
-                    .build()
+                        .withFinanceRowMetaField(financeRowMetaField)
+                        .withValue("England")
+                        .build()
         );
 
         ApplicationFinanceRow convertedApplicationFinanceRow = newApplicationFinanceRow()
@@ -287,8 +281,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
                 .withTarget(applicationFinance).build();
 
         when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getName())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(applicationFinanceRowRepositoryMock.save(any(ApplicationFinanceRow.class))).thenReturn(currentApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(null);
@@ -302,22 +294,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
 
     @Test
     public void testNoAttachedMetaValueDoesNotCreateOrUpdateMetaValue() {
-        long costId = 1;
-
-        String metaFieldTitle = "country";
-        String metaFieldType = "String";
-
-        Application application = newApplication()
-                .withCompetition(newCompetition().withCompetitionStatus(CompetitionStatus.OPEN).build()
-                ).build();
-        OrganisationType organisationType = newOrganisationType().withOrganisationType(OrganisationTypeEnum.RESEARCH).build();
-        FinanceRowItem newFinanceRowItem = new SubContractingCost(costId, new BigDecimal(10), "Scotland", "nibbles", "purring");
-
-        ApplicationFinance applicationFinance = newApplicationFinance()
-                .withApplication(application)
-                .withOrganisation(newOrganisation().withOrganisationType(organisationType).build())
-                .build();
-
         FinanceRowMetaField financeRowMetaField = newFinanceRowMetaField()
                 .withTitle(metaFieldTitle)
                 .withType(metaFieldType).build();
@@ -329,8 +305,6 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
                 .withTarget(applicationFinance).build();
 
         when(applicationFinanceRowRepositoryMock.findOne(costId)).thenReturn(currentApplicationFinanceRow);
-        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
-        when(organisationFinanceDelegateMock.getOrganisationFinanceHandler(organisationType.getName())).thenReturn(organisationFinanceDefaultHandlerMock);
         when(organisationFinanceDefaultHandlerMock.costItemToCost(any())).thenReturn(convertedApplicationFinanceRow);
         when(applicationFinanceRowRepositoryMock.save(any(ApplicationFinanceRow.class))).thenReturn(currentApplicationFinanceRow);
         when(financeRowMetaValueRepositoryMock.financeRowIdAndFinanceRowMetaFieldId(any(), any())).thenReturn(null);
