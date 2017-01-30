@@ -9,7 +9,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 /**
- * Represents an Innovation Area. {@link InnovationArea}s have a parent {@link InnovationSector}
+ * Represents an Innovation Area. {@link InnovationArea}s have a sector {@link InnovationSector}
  */
 @Entity
 @DiscriminatorValue("INNOVATION_AREA")
@@ -17,7 +17,7 @@ public class InnovationArea extends Category {
 
     @ManyToOne(optional = true)
     @JoinColumn(name="parent_id")
-    private InnovationSector parent;
+    private InnovationSector sector;
 
     // todo this is public just to support the mapper -- can be instantited with reflection
     public InnovationArea() {
@@ -30,12 +30,12 @@ public class InnovationArea extends Category {
             throw new NullPointerException("sector cannot be null");
         }
     }
-    public InnovationSector getParent() {
-        return parent;
+    public InnovationSector getSector() {
+        return sector;
     }
 
-    public void setParent(InnovationSector parent) {
-        this.parent = parent;
+    public void setSector(InnovationSector sector) {
+        this.sector = sector;
     }
 
     @Override
@@ -48,7 +48,7 @@ public class InnovationArea extends Category {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(parent, that.parent)
+                .append(sector, that.sector)
                 .isEquals();
     }
 
@@ -56,7 +56,7 @@ public class InnovationArea extends Category {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
-                .append(parent)
+                .append(sector)
                 .toHashCode();
     }
 }
