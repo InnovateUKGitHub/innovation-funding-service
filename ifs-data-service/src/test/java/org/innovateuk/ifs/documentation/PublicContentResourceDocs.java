@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -15,9 +15,9 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class PublicContentResourceDocs {
     public static final FieldDescriptor[] publicContentResourceFields = {
-            fieldWithPath("id").description("Id of the public content resourec"),
-            fieldWithPath("competitionId").description("id of the competition"),
-            fieldWithPath("eligibilitySummary").description("The summary of the eligibilty"),
+            fieldWithPath("id").description("Id of the public content resource"),
+            fieldWithPath("competitionId").description("Id of the competition"),
+            fieldWithPath("eligibilitySummary").description("The summary of the eligibility"),
             fieldWithPath("fundingType").description("The type of competition funding"),
             fieldWithPath("keywords[]").description("List of keywords that will match the search on"),
             fieldWithPath("projectFundingRange").description("The range of project funding"),
@@ -44,7 +44,7 @@ public class PublicContentResourceDocs {
             .withContentSections(
                     newPublicContentSectionResource()
                             .withStatus(PublicContentStatus.IN_PROGRESS)
-                            .withType(PublicContentSection.DATES)
+                            .withType(PublicContentSectionType.DATES)
                             .withPublicContent(1L).build(1)
             );
 }

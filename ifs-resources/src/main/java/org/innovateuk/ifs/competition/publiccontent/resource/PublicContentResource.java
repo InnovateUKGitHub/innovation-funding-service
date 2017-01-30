@@ -4,6 +4,9 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
 import java.time.LocalDateTime;
 import java.util.List;
 
+/**
+ * The resource for competition public content.
+ */
 public class PublicContentResource {
 
     private Long id;
@@ -28,7 +31,7 @@ public class PublicContentResource {
 
     private List<String> keywords;
 
-    //TODO events.
+    //TODO INFUND-6919 events.
 
 
     public Long getId() {

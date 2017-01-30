@@ -26,7 +26,14 @@
 
         <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project.</p>
 
-        <p>To change the lead applicant for this application please contact Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
+        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
+          <div class="message-alert">
+            <h2 class="heading-medium no-margin-bottom">You are the lead applicant</h2>
+            As the lead applicant you can add partner organisations and collaborators in the section below, you can also manage collaborators and assign questions from the application form.
+          </div>
+        </th:block>
+
+        <p th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant for this application please contact Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
 
         <div class="table-display-stacked">
 
@@ -46,7 +53,7 @@
                 <td>steve.smith@empire.com</td>
                 <td>Lead</td>
               </tr>
-              <tr>
+              <tr th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
                 <td>Paul Davidson</td>
                 <td>paul.davidsonh@empire.com</td>
                 <td></td>
@@ -56,13 +63,13 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'empire'}">
             <p>
-              <a href="/prototypes/7661-edit-org?company=empire">Edit Empire Ltd</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=empire' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}">Edit Empire Ltd</a>
             </p>
           </th:block>
 
         </div>
 
-        <div class="table-display-stacked">
+        <div class="table-display-stacked" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
 
           <h2 class="heading-medium">Ludlow</h2>
 
@@ -90,13 +97,13 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'ludlow'}">
             <p>
-              <a href="/prototypes/7661-edit-org?company=ludlow">Edit Ludlow</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=ludlow' + (param.company != null ? '&#38;user=nonLead' : '')}">Edit Ludlow</a>
             </p>
           </th:block>
 
         </div>
 
-        <div class="table-display-stacked">
+        <div class="table-display-stacked" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
 
           <h2 class="heading-medium">EGGS</h2>
 
@@ -119,17 +126,28 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'eggs'}">
             <p>
-              <a href="/prototypes/7661-edit-org?company=eggs">Edit EGGS</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=eggs' + (param.company != null ? '&#38;user=nonLead' : '')}">Edit EGGS</a>
             </p>
           </th:block>
 
         </div>
 
-        <p class="extra-margin-top">Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances</p>
+        <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'newOrg'}">
 
-        <p><a href="/prototypes/7661-edit-org?company=newOrg">Add partner organisation</a></p>
+          <p class="extra-margin-top">Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances</p>
 
-        <p class="extra-margin-top"><a href="/prototypes/635-application-overview" class="button">Return to application</a></p>
+          <p><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add partner organisation</a></p>
+
+        </th:block>
+
+        <p class="extra-margin-top">
+          <a href="/prototypes/635-application-overview" class="button" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">Return to application</a>
+
+          <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
+            <a href="#" class="button">Begin application</a>
+          </th:block>
+
+        </p>
 
 
         <div class="modal-submit-remove-collaborator" role="dialog" aria-hidden="true" style="margin-top: -153px;">

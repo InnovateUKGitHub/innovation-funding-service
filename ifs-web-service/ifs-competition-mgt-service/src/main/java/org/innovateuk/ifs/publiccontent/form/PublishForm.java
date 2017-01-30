@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.form;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Form to hold binding result errors for publishing public content.
  */
 public class PublishForm {
 }

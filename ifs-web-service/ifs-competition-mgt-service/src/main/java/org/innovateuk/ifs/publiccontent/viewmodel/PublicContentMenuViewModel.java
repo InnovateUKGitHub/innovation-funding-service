@@ -9,6 +9,9 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * View model for public content menu.
+ */
 public class PublicContentMenuViewModel {
     public static final DateTimeFormatter PUBLISH_DATE_FORMAT = DateTimeFormatter.ofPattern("hh:mma dd MMMM YYYY");
 

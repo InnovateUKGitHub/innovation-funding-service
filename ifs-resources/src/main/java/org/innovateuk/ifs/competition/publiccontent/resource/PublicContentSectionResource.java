@@ -1,13 +1,16 @@
 package org.innovateuk.ifs.competition.publiccontent.resource;
 
+/**
+ * The resouce for a public content section.
+ */
 public class PublicContentSectionResource {
     private Long id;
     private Long publicContent;
-    private PublicContentSection type;
+    private PublicContentSectionType type;
 
     private PublicContentStatus status;
 
-    // TOOD private List<ContentGroup> contentGroup;
+    // TOOD INFUND-7602 private List<ContentGroup> contentGroup;
 
 
     public Long getId() {
@@ -18,11 +21,11 @@ public class PublicContentSectionResource {
         this.id = id;
     }
 
-    public PublicContentSection getType() {
+    public PublicContentSectionType getType() {
         return type;
     }
 
-    public void setType(PublicContentSection type) {
+    public void setType(PublicContentSectionType type) {
         this.type = type;
     }
 

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Web service for public content.
  */
 @Service
 public class PublicContentServiceImpl implements PublicContentService {

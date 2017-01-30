@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.publiccontent.domain;
 
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSection;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
 
 import javax.persistence.*;
@@ -21,7 +21,7 @@ public class ContentSection {
     private PublicContent publicContent;
 
     @Enumerated(EnumType.STRING)
-    private PublicContentSection type;
+    private PublicContentSectionType type;
 
     @Enumerated(EnumType.STRING)
     private PublicContentStatus status;
@@ -37,11 +37,11 @@ public class ContentSection {
         this.publicContent = publicContent;
     }
 
-    public PublicContentSection getType() {
+    public PublicContentSectionType getType() {
         return type;
     }
 
-    public void setType(PublicContentSection type) {
+    public void setType(PublicContentSectionType type) {
         this.type = type;
     }
 

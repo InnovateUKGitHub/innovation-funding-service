@@ -33,7 +33,16 @@ public class ProjectDetailsViewModel {
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
 
-    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, List<Long> usersPartnerOrganisations, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner, boolean projectDetailsSubmitted, ProjectUserResource projectManager, boolean submissionAllowed) {
+    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
+                                   List<Long> usersPartnerOrganisations,
+                                   List<OrganisationResource> partnerOrganisations,
+                                   ApplicationResource app,
+                                   List<ProjectUserResource> projectUsers,
+                                   CompetitionResource competition,
+                                   boolean userIsLeadPartner,
+                                   boolean projectDetailsSubmitted,
+                                   ProjectUserResource projectManager,
+                                   boolean submissionAllowed) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;

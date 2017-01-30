@@ -11,7 +11,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
     <div th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Invite Assessors',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/find(competitionId=${model.competition.id})}"
+         th:with="linkTitle='Invite assessors',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/find(competitionId=${model.competition.id})}"
          th:remove="tag"/>
 
     <div class="page-title">

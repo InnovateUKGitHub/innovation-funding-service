@@ -160,7 +160,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         Competition competition = new Competition();
         competition.setSetupComplete(false);
         Competition savedCompetition = competitionRepository.save(competition);
-        return publicContentService.initialiseForCompetitionId(savedCompetition.getId())
+        return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
                 .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 
