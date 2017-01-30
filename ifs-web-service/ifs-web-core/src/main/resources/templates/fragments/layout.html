@@ -173,7 +173,7 @@
                th:text="${linkTitle}" />
         </nav>
         <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
-            <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" th:remove="tag" />
+            <th:block th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" />
         </div>
     </div>
 </div>

@@ -19,12 +19,12 @@
 
         <label class="form-label form-label-bold" th:for="${formInput.getId()}">
           <span th:if="${question.getName()}" th:text="question.getName()" />
-          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-          <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+          <th:block th:replace="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+          <th:block th:replace="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
         </label>
 
-        <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-textinput (id=${formInput.getId()}, response=${responses?.get(formInput.getId())?.getValue()})" th:remove="tag" />
+        <th:block th:replace="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:replace="question-type/form-elements :: form-textinput (id=${formInput.getId()}, response=${responses?.get(formInput.getId())?.getValue()})" />
     </div>
 
     <!-- =========================== Form: Textarea =========================== -->
@@ -36,14 +36,14 @@
         <th:block th:if="${readonly}">
             <span th:if="${question.getName()}" th:text="${question.name}" />
         </th:block>
-        <th:block th:unless="${readonly}"
+        <th:block th:unless="${readonly}">
           <span th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
-          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag"  />
+          <th:block th:replace="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
         </th:block>
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        <th:block th:replace="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
       </label>
-      <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
-      <div th:include="question-type/form-elements :: form-textarea-wrapped" th:remove="tag" />
+      <th:block th:replace="question-type/form-elements :: form-guidance (guidable=${formInput})" th:unless="${readonly}" />
+      <th:block th:replace="question-type/form-elements :: form-textarea-wrapped" />
     </div>
 
     <!-- ===========================Form: Date input =========================== -->
@@ -51,11 +51,11 @@
     <div th:fragment="date" class="form-group">
         <label class="form-label form-label-bold" th:for="${formInput.getId()}">
           <span th:if="${question.getName()}" th:text="${question.name}" />
-          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-          <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+          <th:block th:replace="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+          <th:block th:replace="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
         </label>
-        <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-dateinput (id=${formInput.getId()}, day='', month='', year='')" th:remove="tag" />
+        <th:block th:replace="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:replace="question-type/form-elements :: form-dateinput (id=${formInput.getId()}, day='', month='', year='')" />
     </div>
 
     <!-- ===========================Form: Fileupload =========================== -->
@@ -72,11 +72,11 @@
 		 		(questionAssignee?.assignee==null and !userIsLeadApplicant)}">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
 
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
+        <th:block th:replace="question-type/form-elements :: form-guidance (guidable=${formInput})" th:unless="${readonly}" />
         <input th:unless="${readonly}" th:if="${noFileUploaded}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
         <label th:unless="${readonly}" th:if="${noFileUploaded}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
         <button th:unless="${readonly}" th:if="${noFileUploaded}" name="upload_file" class="button-secondary" type="submit" th:attr='data-for-file-upload=${formInput.getId()}'>Save</button>
-        <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+        <th:block th:replace="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
         <div th:if="${!#strings.isEmpty(filename)}">
             <div>
                 <a th:if="${isCompManagementDownload}" th:href="@{${compManagementDownloadURL}}" class="uploaded-file" th:text="${filename}">The-uploaded-file-example.pdf</a>
@@ -96,28 +96,28 @@
     <div th:fragment="percentage" class="form-group">
         <label class="form-label" th:for="${formInput.getId()}">
           <span th:if="${question.getName()}" th:text="${question.name}" />
-          <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
-          <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
+          <th:block th:replace="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+          <th:block th:replace="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" />
         </label>
-        <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
-        <div th:include="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, field=${field})" th:remove="tag" />
+        <th:block th:replace="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+        <th:block th:replace="question-type/form-elements :: form-number-extra-small (id=${formInput.getId()}, field=${field})" />
         <span>%</span>
     </div>
 
     <!-- ===========================Form: application_details =========================== -->
 
-    <div th:fragment="application_details" th:remove="tag">
-        <div th:unless="${appIsClosed}" th:remove="tag">
-            	<div th:with="readonly=${readonly} or ${markedAsComplete?.contains(question.id)
+    <th:block th:fragment="application_details">
+        <th:block th:unless="${appIsClosed}">
+            	<th:block th:with="readonly=${readonly} or ${markedAsComplete?.contains(question.id)
             							 or (currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
-        		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
+        		 					    (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
         	        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
         	            <label class="form-label form-label-bold" th:for="application_details-title">
         	                  <span>Project title</span>
-        	                  <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
+        	                  <th:block th:replace="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:unless="${readonly}" />
         	            </label>
-                        <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" th:remove="tag" />
-                        <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
+                        <th:block th:replace="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')" />
+                        <th:block th:replace="question-type/form-elements :: form-guidance (guidable=${formInput})" />
                         <input class="form-control width-full"
                              th:readonly="${readonly}"
                              type="text"
@@ -140,8 +140,8 @@
                         <div class="form-group" th:classappend="${#fields.hasErrors('*{application.researchCategoryId}')} ? 'error'">
                             <legend>
                                 <span class="form-label-bold">Research category</span>
-                                <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Please confirm the research category for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" th:remove="tag" />
-                                <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategoryId')" th:remove="tag" />
+                                <th:block th:replace="question-type/form-elements :: form-hint (hint='Please confirm the research category for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" th:unless="${readonly}" />
+                                <th:block th:replace="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategoryId')" />
                             </legend>
 
                             <label th:class="${'block-label selection-button-radio '  + (cat.id == application.researchCategoryId ? ' selected focused' : '')}"  th:each="cat : ${researchCategories}" th:for="${'financePosition-cat-' + cat.id}">
@@ -154,7 +154,7 @@
                                        th:disabled="${readonly and (cat.id != rsCategoryId)}"
                                        required="required"
                                        th:attr="data-required-errormessage=#{validation.application.research.category.required}"/>
-                                <span th:text="${cat.name}" th:remove="tag" />
+                                <th:block th:text="${cat.name}" />
                             </label>
                         </div>
                     </fieldset>
@@ -163,8 +163,8 @@
                             <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                                 <legend>
                                     <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
-                                    <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" th:remove="tag" />
-                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" th:remove="tag" />
+                                    <th:block th:replace="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" th:if="${readonly}" />
+                                    <th:block th:replace="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')" />
                                 </legend>
 
                                 <label th:class="${'block-label selection-button-radio '  + (currentApplication.resubmission != null and currentApplication.resubmission ? ' selected focused' : '')}"
@@ -200,7 +200,7 @@
                             <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.previousApplicationNumber__}')} ? 'error'">
                                 <label class="form-label" th:for="application_details-previousapplicationnumber">
                                     <span>Previous application number</span>
-                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')" th:remove="tag" />
+                                    <th:block th:replace="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationNumber')" />
                                 </label>
                                 <input class="form-control width-full"
                                        th:readonly="${readonly}"
@@ -215,7 +215,7 @@
                             <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.previousApplicationTitle__}')} ? 'error'">
                                 <label class="form-label" th:for="application_details-previousapplicationtitle">
                                     <span>Previous application title</span>
-                                    <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" th:remove="tag" />
+                                    <th:block th:replace="question-type/form-elements :: form-validation-custom-messages (errorId='application.previousApplicationTitle')" />
                                 </label>
                                 <input class="form-control width-full"
                                        th:readonly="${readonly}"
@@ -233,11 +233,11 @@
                                      <legend>
                                          <span class="form-label form-label-bold">Estimated timescales</span>
                                          <span>Project start date</span>
-                                         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
-                                         <div th:include="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')" th:remove="tag" />
+                                         <th:block th:replace="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:unless="${readonly}" />
+                                         <th:block th:replace="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')" />
                                      </legend>
 
-                                  <div th:include="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" th:remove="tag" /><br/>
+                                  <th:block th:replace="question-type/form-elements :: form-dateinput (id='application_details-startdate', field='application.startDate',readonly=${readonly})" /><br/>
                               </div>
                               <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.durationInMonths__}')} ? 'error'" th:with="id='application_details-duration', field='application.durationInMonths',readonly=${readonly}">
                                   <th:block th:include="question-type/form-elements :: form-label (name='Duration in months',id=${id},bold=false)" />
@@ -256,7 +256,7 @@
                                         This could be fixed by doing a total refactor of javascript or set two different messages (Your project should be more than 1, less than 36), or like this with a regex */-->
                               </div>
                           </fieldset>
-                      </div>
+                      </th:block>
                         <h2 class="heading-medium no-margin">Lead organisation</h2>
                         <div th:text="${leadOrganisation.name}" />
                         <h2 class="heading-medium no-margin-bottom extra-margin">Partners</h2>
@@ -269,13 +269,13 @@
                                 <small>(pending)</small>
                             </li>
                         </ul>
-                        <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
-                                                 (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
+                        <th:block th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
+                                                 (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
                             <p>
-                                <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
-                                <div th:include="question-type/form-elements :: form-mark-as-complete-buttons" th:remove="tag"/>
+                                <th:block th:replace="question-type/form-elements :: form-edit-question-button" th:if="${readonly}" />
+                                <th:block th:replace="question-type/form-elements :: form-mark-as-complete-buttons" />
                             </p>
-                        </div>
+                        </th:block>
                         </div>
                         <div class="grid-row" th:if="${appIsClosed}">
                           <div class="column-half">
@@ -297,16 +297,16 @@
                           <div class="column-half">
                               <h3 class="heading-small">Project timescales</h3>
                               <p>Project start date:<br/>
-                                <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
+                                <th:block th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" />
                               </p>
-                              <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+                              <p>Duration:<br/><th:block th:text="${currentApplication.getDurationInMonths()}" /> months</p>
                           </div>
                         </div>
-                    </div>
+                    </th:block>
                     <!-- ===========================Form: empty / no question =========================== -->
-    <div th:fragment="empty" th:remove="tag">
-        <div ifs:utext="${question.getDescription()}" th:remove="tag" />
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
-    </div>
+    <th:block th:fragment="empty">
+        <th:block ifs:utext="${question.getDescription()}" />
+        <th:block th:replace="question-type/form-elements :: form-guidance (guidable=${formInput})" th:unless="${readonly}" />
+    </th:block>
 
 </html>

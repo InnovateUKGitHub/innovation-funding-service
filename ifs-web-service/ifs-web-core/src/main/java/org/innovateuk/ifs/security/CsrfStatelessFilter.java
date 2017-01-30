@@ -77,10 +77,12 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        final CsrfToken token = tokenService.generateToken();
 
         // Set the token to be used in subsequent requests
         if (!isResourceRequest(request)) {
+
+            final CsrfToken token = tokenService.generateToken();
+
             // Add the CsrfToken as an attribute of the request as expected by org.springframework.security.web.servlet.support.csrf.CsrfRequestDataValueProcessor#getExtraHiddenFields(javax.servlet.http.HttpServletRequest)
             request.setAttribute(CsrfToken.class.getName(), token);
 
@@ -110,13 +112,14 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
 
     private boolean isResourceRequest(final HttpServletRequest request) {
         final String uri = request.getRequestURI();
-        return uri.contains("/js/") ||
-                uri.contains("/css/") ||
-                uri.contains("/images/") ||
-                uri.contains("/favicon.ico") ||
-                uri.contains("/prototypes") ||
-                uri.contains("/error")  ||
-                uri.contains("/jolokia/");
+        return uri.equals("/health") ||
+                uri.startsWith("/js/") ||
+                uri.startsWith("/css/") ||
+                uri.startsWith("/images/") ||
+                uri.startsWith("/favicon.ico") ||
+                uri.startsWith("/prototypes") ||
+                uri.startsWith("/error")  ||
+                uri.startsWith("/jolokia/");
     }
 
     private void setTokenAsCookie(final HttpServletResponse response, final CsrfToken token) {

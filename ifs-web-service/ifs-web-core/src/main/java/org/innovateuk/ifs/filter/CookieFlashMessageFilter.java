@@ -6,7 +6,6 @@ import org.springframework.security.crypto.encrypt.Encryptors;
 import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.OrRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.GenericFilterBean;
@@ -21,8 +20,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Since the default Spring flash messages use sessions and we cannot use session because of the stateless design,
@@ -37,6 +36,17 @@ import java.util.List;
 public class CookieFlashMessageFilter extends GenericFilterBean {
     public static final String COOKIE_NAME = "flashMessage";
     private static final Integer COOKIE_LIFETIME = 60;
+
+    private static final OrRequestMatcher IGNORED_REQUESTS = new OrRequestMatcher(asList(
+        new AntPathRequestMatcher("/css/**"),
+        new AntPathRequestMatcher("/js/**"),
+        new AntPathRequestMatcher("/images/**"),
+        new AntPathRequestMatcher("/health"),
+        new AntPathRequestMatcher("/error"),
+        new AntPathRequestMatcher("/"),
+        new AntPathRequestMatcher("/assets/**"),
+        new AntPathRequestMatcher("/favicon.ico")
+    ));
 
     private TextEncryptor encryptor;
 
@@ -97,20 +107,6 @@ public class CookieFlashMessageFilter extends GenericFilterBean {
         chain.doFilter(request, response);
     }
     public boolean ignoreRequest(HttpServletRequest request) {
-        RequestMatcher ignored = getIgnoredRequestMatchers();
-        return ignored.matches(request);
-    }
-
-
-    public RequestMatcher getIgnoredRequestMatchers() {
-        List<RequestMatcher> antPathRequestMatchers = new ArrayList<RequestMatcher>();
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/error"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/css/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/js/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/assets/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/images/**"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/favicon.ico"));
-        return new OrRequestMatcher(antPathRequestMatchers);
+        return IGNORED_REQUESTS.matches(request);
     }
 }

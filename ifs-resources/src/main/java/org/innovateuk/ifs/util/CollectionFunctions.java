@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
@@ -211,7 +212,7 @@ public final class CollectionFunctions {
      */
     public static <T> Optional<T> getOnlyElementOrEmpty(List<T> list) {
         if (list == null || list.isEmpty()) {
-            return Optional.empty();
+            return empty();
         }
 
         if (list.size() > 1) {
@@ -547,7 +548,10 @@ public final class CollectionFunctions {
      * @return
      */
     public static <T> Optional<T> simpleFindFirst(List<T> list, Predicate<T> filterFn) {
-        return simpleFilter(list, filterFn).stream().findFirst();
+        if (list == null || list.isEmpty()) {
+            return empty();
+        }
+        return list.stream().filter(filterFn).findFirst();
     }
 
     /**
