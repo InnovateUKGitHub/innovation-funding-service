@@ -114,7 +114,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(assessmentFundingDecision)))
+                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -133,7 +133,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(applicationRejection)))
+                .content(objectMapper.writeValueAsString(applicationRejection)))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
@@ -195,7 +195,7 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
 
         mockMvc.perform(put("/assessment/submitAssessments")
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(assessmentSubmissions)))
+                .content(objectMapper.writeValueAsString(assessmentSubmissions)))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}", requestFields(assessmentSubmissionsFields)));
     }

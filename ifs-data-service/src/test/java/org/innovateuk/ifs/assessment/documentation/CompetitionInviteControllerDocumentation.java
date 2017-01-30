@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
 import org.innovateuk.ifs.email.resource.EmailContent;
@@ -14,7 +13,6 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
@@ -132,7 +130,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(post("/competitioninvite/rejectInvite/{hash}", hash)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(compRejection)))
+                .content(objectMapper.writeValueAsString(compRejection)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         requestFields(competitionRejectionFields),
@@ -316,11 +314,9 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
-        ObjectMapper mapper = new ObjectMapper();
-
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(content)))
+                .content(objectMapper.writeValueAsString(content)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
