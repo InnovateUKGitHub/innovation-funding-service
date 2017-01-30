@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.competition.repository;
+package org.innovateuk.ifs.publiccontent.repository;
 
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.domain.PublicContent;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.springframework.data.repository.PagingAndSortingRepository;
 
 /**
@@ -11,5 +10,5 @@ import org.springframework.data.repository.PagingAndSortingRepository;
  */
 public interface PublicContentRepository extends PagingAndSortingRepository<PublicContent, Long> {
 
-    Competition findByCompetitionId(Long id);
+    PublicContent findByCompetitionId(Long id);
 }
