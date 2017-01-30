@@ -252,6 +252,7 @@ public class FinanceChecksQueriesController {
                                 @RequestParam(value = "query_section", required = false) String querySection,
                                 Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        // TODO delete attachments
         model.addAttribute(NEW_QUERY_FLAG, Boolean.FALSE);
         model.addAttribute(NEW_POST_FLAG, Boolean.FALSE);
         model.addAttribute(SAVED_MODEL_FLAG ,Boolean.FALSE);
