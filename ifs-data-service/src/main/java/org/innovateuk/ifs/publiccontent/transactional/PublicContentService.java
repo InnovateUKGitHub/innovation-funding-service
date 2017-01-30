@@ -6,6 +6,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+/**
+ * Interface for public content actions.
+ */
 public interface PublicContentService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")

@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.form;
 import org.hibernate.validator.constraints.NotEmpty;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Form for the Search page on public content setup.
  */
 public class SearchForm extends AbstractPublicContentForm {
 

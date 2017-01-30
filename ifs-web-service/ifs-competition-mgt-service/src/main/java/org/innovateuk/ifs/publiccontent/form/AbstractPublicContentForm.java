@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.form;
 
 /**
- * Created by luke.harper on 25/01/2017.
+ * Abstract fields for public content form.
  */
 public abstract class AbstractPublicContentForm {
 }
