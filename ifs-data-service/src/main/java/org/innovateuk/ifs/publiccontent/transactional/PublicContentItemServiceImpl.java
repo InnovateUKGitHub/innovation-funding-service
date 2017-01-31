@@ -55,22 +55,28 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
-        List<Long> competitionIds = handleInnovationAreaId(innovationAreaId);
-        Set<Long> publicContentIds = handleSearchString(searchString);
+        Optional<List<Long>> competitionIds = getInnovationAreaId(innovationAreaId);
+        Optional<Set<Long>> publicContentIds = getSearchString(searchString);
 
-        Page<PublicContent> publicContentList;
+        Page<PublicContent> publicContentPage = getPublicContentPage(competitionIds, publicContentIds, pageNumber, pageSize);
 
-        if(innovationAreaId.isPresent() && searchString.isPresent()) {
-            publicContentList = publicContentRepository.findByCompetitionIdInAndIdIn(competitionIds, publicContentIds, getPageable(pageNumber, pageSize));
-        } else if(innovationAreaId.isPresent()) {
-            publicContentList = publicContentRepository.findByCompetitionIdIn(competitionIds, getPageable(pageNumber, pageSize));
-        } else if(searchString.isPresent()) {
-            publicContentList = publicContentRepository.findByIdIn(publicContentIds, getPageable(pageNumber, pageSize));
+        return ServiceResult.serviceSuccess(mapPageToPageItemResource(publicContentPage));
+    }
+
+    private Page<PublicContent> getPublicContentPage(Optional<List<Long>> competitionIds, Optional<Set<Long>> publicContentIds, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+        Page<PublicContent> publicContentPage;
+
+        if(competitionIds.isPresent() && publicContentIds.isPresent()) {
+            publicContentPage = publicContentRepository.findByCompetitionIdInAndIdIn(competitionIds.get(), publicContentIds.get(), getPageable(pageNumber, pageSize));
+        } else if(competitionIds.isPresent()) {
+            publicContentPage = publicContentRepository.findByCompetitionIdIn(competitionIds.get(), getPageable(pageNumber, pageSize));
+        } else if(publicContentIds.isPresent()) {
+            publicContentPage = publicContentRepository.findByIdIn(publicContentIds.get(), getPageable(pageNumber, pageSize));
         } else {
-            publicContentList = publicContentRepository.findAll(getPageable(pageNumber, pageSize));
+            publicContentPage = publicContentRepository.findAll(getPageable(pageNumber, pageSize));
         }
 
-        return ServiceResult.serviceSuccess(mapPageToPageItemResource(publicContentList));
+        return publicContentPage;
     }
 
     @Override
@@ -84,20 +90,20 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     }
 
 
-    private List<Long> handleInnovationAreaId(Optional<Long> innovationAreaId) {
+    private Optional<List<Long>> getInnovationAreaId(Optional<Long> innovationAreaId) {
         List<Long> competitionIds = new ArrayList<>();
 
         innovationAreaId.ifPresent(id -> {
-            InnovationArea innovationArea = innovationAreaRepository.findOne(innovationAreaId.get());
+            InnovationArea innovationArea = innovationAreaRepository.findOne(id);
             competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getSector().getId()).stream()
                     .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
                     .collect(Collectors.toList()));
         });
 
-        return competitionIds;
+        return !competitionIds.isEmpty() ? Optional.ofNullable(competitionIds) : Optional.empty();
     }
 
-    private Set<Long> handleSearchString(Optional<String> searchString) {
+    private Optional<Set<Long>> getSearchString(Optional<String> searchString) {
         Set<Long> publicContentIds = new HashSet<>();
 
         searchString.ifPresent(s -> {
@@ -117,7 +123,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             keywords.forEach(keyword -> publicContentIds.add(keyword.getPublicContent().getId()));
         });
 
-        return publicContentIds;
+        return !publicContentIds.isEmpty() ? Optional.ofNullable(publicContentIds) : Optional.empty();
     }
 
     private Pageable getPageable(Optional<Integer> pageNumber, Optional<Integer> pageSize) {
@@ -154,10 +160,10 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         });
 
         publicContentItemPageResource.setContent(publicContentItemResources);
-        publicContentItemPageResource.setTotalPages(publicContentItemPageResource.getTotalPages());
-        publicContentItemPageResource.setTotalElements(publicContentItemPageResource.getTotalElements());
-        publicContentItemPageResource.setNumber(publicContentItemPageResource.getNumber());
-        publicContentItemPageResource.setSize(publicContentItemPageResource.getSize());
+        publicContentItemPageResource.setTotalPages(publicContentList.getTotalPages());
+        publicContentItemPageResource.setTotalElements(publicContentList.getTotalElements());
+        publicContentItemPageResource.setNumber(publicContentList.getNumber());
+        publicContentItemPageResource.setSize(publicContentList.getSize());
 
         return publicContentItemPageResource;
     }
