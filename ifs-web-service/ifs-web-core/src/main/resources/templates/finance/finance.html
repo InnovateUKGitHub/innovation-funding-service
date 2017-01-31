@@ -773,25 +773,25 @@
         <div id="subcontracting">
             <th:block th:each="cost : ${costCategory.costs}">
                 <th:block th:include="finance/finance :: subcontracting_row" />
+            </th:block>
         </div>
-</div>
 
 
-<p class="alignright" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-    <th:block th:include="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting')" />
-</p>
-<div class="form-group alignright">
-    <label th:for="${'section-total-'+subSection.id}">Total subcontracting costs</label>
-    <input class="form-control form-control-1-4"
-           readonly="readonly"
-           type="text"
-           th:id="${'section-total-'+subSection.id}"
-           data-calculation-fields="[id*=subcontractingCost]"
-           data-calculation-operations="+"
-           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
-</div>
-</th:block>
+        <p class="alignright" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+            <th:block th:include="question-type/types :: add_row(text='Add another subcontractor', question=${question},rowcontainer='#subcontracting')" />
+        </p>
+        <div class="form-group alignright">
+            <label th:for="${'section-total-'+subSection.id}">Total subcontracting costs</label>
+            <input class="form-control form-control-1-4"
+                   readonly="readonly"
+                   type="text"
+                   th:id="${'section-total-'+subSection.id}"
+                   data-calculation-fields="[id*=subcontractingCost]"
+                   data-calculation-operations="+"
+                   th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                   th:value="'£ ' + ${#numbers.formatDecimal(costCategory.total, 0, 'COMMA', 0, 'POINT')}" />
+        </div>
+    </th:block>
 </div>
 
 <div th:fragment="subcontracting_row" th:remove="tag">

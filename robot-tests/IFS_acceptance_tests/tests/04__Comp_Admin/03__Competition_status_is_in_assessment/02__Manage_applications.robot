@@ -116,7 +116,8 @@ the available assessors information is correct
 the assigned list is correct before notification
     the user should see the element    jQuery=tr:eq(1) td:nth-child(1):contains("Paul Plum")
     the user should see the element    jQuery=tr:eq(1) td:nth-child(2):contains("ACADEMIC")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living, Infrastructure")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Infrastructure")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("5")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
@@ -127,7 +128,8 @@ the assigned list is correct before notification
 the previously assigned list is correct
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(2):contains('ACADEMIC')
-    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Urban living, Infrastructure')
+    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Urban living')
+    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Infrastructure')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(4):contains('8')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(5):contains('4')
 
