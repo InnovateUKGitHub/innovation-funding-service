@@ -169,6 +169,8 @@ the user removes prev costs if there are any
 
 the user fills in the organisation information
     the user clicks the button/link    link=Your organisation
+    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit your organisation")
+    Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit your organisation")
     the user selects the radio button  financePosition-organisationSize  financePosition-organisationSize-SMALL
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
