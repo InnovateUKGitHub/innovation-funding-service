@@ -70,7 +70,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     public void testCheckAccessToBankDetailsSectionHappyPath() {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
         when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(true);
-        assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
+        assertEquals(NOT_ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
     }
 
     @Test
@@ -93,7 +93,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     @Test
     public void testCheckAccessToBankDetailsSectionButBankDetailsNotApproved() {
         when(projectSetupProgressCheckerMock.isBankDetailsApproved()).thenReturn(false);
-        when(projectSetupProgressCheckerMock.isBankDetailsActionRequired()).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isBankDetailsAccessible()).thenReturn(true);
         assertEquals(ACCESSIBLE, internalUser.canAccessBankDetailsSection(getFinanceTeamMember()));
     }
 
@@ -103,7 +103,7 @@ public class ProjectSetupSectionsInternalUserTest extends BaseUnitTest {
     }
 
     @Test
-    public void testCheckAccessToFinanceChecksSectionAsNonFinanceTeamMambers() {
+    public void testCheckAccessToFinanceChecksSectionAsNonFinanceTeamMembers() {
         stream(UserRoleType.values()).forEach(role -> {
             if (role != PROJECT_FINANCE) {
                 List<RoleResource> roles = newRoleResource().withType(role).build(1);

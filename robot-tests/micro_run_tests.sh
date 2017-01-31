@@ -31,19 +31,19 @@ function section() {
 function clearDownFileRepository() {
     echo "***********Deleting any uploaded files***************"
     echo "storedFileFolder:   ${storedFileFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${storedFileFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${storedFileFolder}
 
     echo "***********Deleting any holding for scan files***************"
     echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${virusScanHoldingFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanHoldingFolder}
 
     echo "***********Deleting any quarantined files***************"
     echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${virusScanQuarantinedFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanQuarantinedFolder}
 
     echo "***********Deleting any scanned files***************"
     echo "virusScanScannedFolder: ${virusScanScannedFolder}"
-    docker exec innovationfundingservice_data_1  rm -rf ${virusScanScannedFolder}
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanScannedFolder}
 }
 
 function addTestFiles() { 
@@ -51,15 +51,15 @@ function addTestFiles() {
 
     clearDownFileRepository
     echo "***********Adding test files***************"
-    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data_1:/tmp/testing.pdf
+    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data-service_1:/tmp/testing.pdf
 
     echo "***********Making the quarantined directory ***************"
-    docker exec innovationfundingservice_data_1 mkdir -p ${virusScanQuarantinedFolder}
+    docker exec innovationfundingservice_data-service_1 mkdir -p ${virusScanQuarantinedFolder}
     echo "***********Adding pretend quarantined file ***************"
-    docker exec innovationfundingservice_data_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
+    docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
     echo "***********Adding standard file upload location ***********"
-    docker exec innovationfundingservice_data_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+    docker exec innovationfundingservice_data-service_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
 
     echo "***********Creating file entry for each db entry***********" 
     max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
@@ -67,7 +67,7 @@ function addTestFiles() {
     do 
       if [ "${i}" != "8" ]
       then
-        docker exec innovationfundingservice_data_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+        docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
       fi
     done
 }
@@ -140,6 +140,22 @@ function startPybot() {
       else
         local includeHappyPath=''
     fi
+    if [[ "$useBespokeIncludeTags" ]]
+      then
+        for includeTag in $bespokeIncludeTags; do
+            local includeBespokeTags+=' --include '${includeTag}
+        done
+      else
+        local includeBespokeTags=''
+    fi
+    if [[ "$useBespokeExcludeTags" ]]
+      then
+          for excludeTag in $bespokeExcludeTags; do
+              local excludeBespokeTags+=' --exclude '${excludeTag}
+          done
+      else
+        local excludeBespokeTags=''
+    fi
     if [[ ${emails} -eq 1 ]]
       then
         local emailsString='--exclude Email'
@@ -152,6 +168,7 @@ function startPybot() {
       local rerunString=''
     fi
 
+
     pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
@@ -162,6 +179,8 @@ function startPybot() {
     -v BROWSER=chrome \
     -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
     $includeHappyPath \
+    $includeBespokeTags \
+    $excludeBespokeTags \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
@@ -266,6 +285,8 @@ fi
 
 unset opt
 unset testScrub
+unset useBespokeIncludeTag
+unset useBespokeExcludeTag
 
 quickTest=0
 emails=0
@@ -275,7 +296,7 @@ stopGrid=0
 noDeploy=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :e :r :c :n :w :d:" opt ; do
+while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -298,6 +319,14 @@ while getopts ":p :q :h :t :e :r :c :n :w :d:" opt ; do
     	d)
             testDirectory="$OPTARG"
             parallel=0
+        ;;
+        I)
+            useBespokeIncludeTags=1
+            bespokeIncludeTags+="$OPTARG "
+        ;;
+        E)
+            useBespokeExcludeTags=1
+            bespokeExcludeTags+="$OPTARG "
         ;;
         c)
             stopGrid=1

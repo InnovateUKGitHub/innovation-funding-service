@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import org.innovateuk.ifs.assessment.mapper.AssessorProfileMapper;
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
+import org.innovateuk.ifs.assessment.resource.ProfileResource;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -8,9 +11,12 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.mapper.AffiliationMapper;
+import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +25,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 public class AssessorServiceImpl implements AssessorService {
@@ -41,10 +48,19 @@ public class AssessorServiceImpl implements AssessorService {
     private UserRepository userRepository;
 
     @Autowired
+    private AssessorProfileMapper assessorProfileMapper;
+
+    @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
     @Autowired
     private ProfileRepository profileRepository;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private AffiliationMapper affiliationMapper;
 
     @Override
     public ServiceResult<Void> registerAssessorByHash(String inviteHash, UserRegistrationResource userRegistrationResource) {
@@ -63,6 +79,33 @@ public class AssessorServiceImpl implements AssessorService {
                 });
             });
         });
+    }
+
+    @Override
+    public ServiceResult<AssessorProfileResource> getAssessorProfile(Long assessorId) {
+        return getAssessor(assessorId)
+                .andOnSuccess(user -> getProfile(user.getProfileId())
+                        .andOnSuccessReturn(
+                                profile -> {
+                                    // TODO INFUND-7750 - tidy up assessor profile DTOs
+                                    UserResource userResource = userMapper.mapToResource(user);
+                                    ProfileResource profileResource = assessorProfileMapper.mapToResource(profile);
+                                    profileResource.setAffiliations(affiliationMapper.mapToResource(user.getAffiliations()));
+                                    return new AssessorProfileResource(
+                                            userResource,
+                                            profileResource
+                                    );
+                                }
+                        )
+                );
+    }
+
+    private ServiceResult<Profile> getProfile(Long profileId) {
+        return find(profileRepository.findOne(profileId), notFoundError(Profile.class, profileId));
+    }
+
+    private ServiceResult<User> getAssessor(long assessorId) {
+        return find(userRepository.findByIdAndRolesName(assessorId, ASSESSOR.getName()), notFoundError(User.class, assessorId));
     }
 
     private ServiceResult<CompetitionInviteResource> retrieveInvite(String inviteHash) {

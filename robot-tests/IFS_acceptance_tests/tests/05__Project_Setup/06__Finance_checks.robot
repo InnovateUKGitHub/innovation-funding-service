@@ -26,6 +26,11 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7095 Create NOT_APPLICABLE Viability state (and set for Academic Orgs upon Project creation)
 ...
 ...               INFUND-4830 As a project finance team member I want to be able to confirm that the appropriate viability finance checks have been carried out so I can approve the partner organisation as viable for funding
+...
+...               INFUND-4825 As a project finance team member I want to view details of each partner organisation so I can review their viability for funding
+...
+...               INFUND-7613 Date and user stamp not showing
+
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -154,12 +159,21 @@ Viability checks are populated in the table
 
 
 Project finance user can see the viability check page for the lead partner
-    [Documentation]    INFUND-4831, INFUND-4830
+    [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
     when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
 
+Project finance user can see the lead partner's information
+    [Documentation]    INFUND-4825
+    [Tags]
+    # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    £201,674
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    30%
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £141,172
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £58,034
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £2,468
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
     [Documentation]    INFUND-4831, INFUND-4856, INFUND-4830
@@ -260,9 +274,11 @@ Clicking cancel on the viability modal for partner
 Confirming viability should show credit report info on a readonly page for partner
     [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance viability has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    confirmViabilityChecked
     And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
@@ -304,7 +320,7 @@ Status updates correctly for internal user's table
      When the user navigates to the page    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
      Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok      # Project details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action      # MO
-     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting       # Bank details
+     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status       # Bank details
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action     # Finance checks are actionable from the start-workaround for Private beta assessment
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status            # Spend Profile
      And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
@@ -333,7 +349,7 @@ Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in    lee.bowman@innovateuk.test    Passw0rd
     the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
-    ${update_comp}    ${value}=    run keyword and ignore error    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
+    ${update_comp}    ${value}=    Run Keyword And Ignore Error Without Screenshots    the user should not see the text in the page    ${FUNDERS_PANEL_COMPETITION_NAME}
     run keyword if    '${update_comp}' == 'PASS'    the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup

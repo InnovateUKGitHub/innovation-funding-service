@@ -33,7 +33,7 @@ public class ProjectFinanceChecksController {
     @Autowired
     OrganisationService organisationService;
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @RequestMapping(method = GET)
     public String viewFinanceChecks(Model model,
                                                @PathVariable("projectId") final Long projectId,

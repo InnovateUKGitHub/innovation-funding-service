@@ -48,6 +48,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6801 Show text instead of Id - Spend Profile - Error Summary
 ...
 ...               INFUND-6138 Partners should be able to see the correct status of SP so to take action
+...
+...               INFUND-7409 PM is redirected to the wrong screen when saving their spend profile
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -69,6 +71,7 @@ Project Finance user generates the Spend Profile
     And the user should see the element     jQuery=a.eligibility-1:contains("Approved")
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    jQuery=.generate-spend-profile-main-button
+
 
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
@@ -137,8 +140,8 @@ Lead Partner can see Spend profile summary
     Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801
-    [Tags]    #HappyPath
+    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409
+    [Tags]
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
     When the user enters text to a text field          css=#row-24-0    2899
@@ -148,7 +151,6 @@ Lead partner can edit his spend profile with invalid values
     Then the field has value                           css=#row-total-24    £ 10,669
     And the user should see the element                jQuery=.cell-error #row-total-24
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
-    When the user clicks the button/link               link=${Katz_Name}
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
@@ -239,7 +241,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should see the text in the page    Successful application
     Then the user should see the element            link = Monitoring Officer
     And the user should see the element             link = Bank details
-    And the user should not see the element         link = Finance checks
+    And the user should see the element         link = Finance checks
     And the user should see the element             link= Spend profile
     And the user should not see the element         link = Grant offer letter
 
@@ -624,12 +626,11 @@ Lead partner can return edit rights to other project partners
 
 
 Lead partner can edit own spend profile and mark as complete
-    [Documentation]    INFUND-6977
+    [Documentation]    INFUND-6977, INFUNF-7409
     When the user clicks the button/link    link=${Katz_name}
     And the user should see the text in the page    Your spend profile is marked as complete
     And the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
-    And the user clicks the button/link    link=${Katz_name}
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
 
 Industrial partner receives edit rights and can submit their spend profile
@@ -742,12 +743,12 @@ the user makes all values zeros
 
 the text box should be editable
     [Arguments]    ${element}
-    Wait until element is visible    ${element}
+    Wait Until Element Is Visible Without Screenshots    ${element}
     Element Should Be Enabled    ${element}
 
 the field has value
     [Arguments]    ${field}    ${value}
-    wait until element is visible    ${field}
+    Wait Until Element Is Visible Without Screenshots    ${field}
     ${var} =    get value    ${field}
     should be equal as strings    ${var}    ${value}
 

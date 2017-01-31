@@ -14,7 +14,7 @@ Guest user log-in
     The guest user opens the browser
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
-    wait until page contains    dashboard
+    Wait Until Page Contains Without Screenshots    dashboard
     Page should not contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
@@ -34,7 +34,7 @@ Invited guest user log in
     [Arguments]    ${email}    ${password}
     The guest user inserts user email & password    ${email}    ${password}
     The guest user clicks the log-in button
-    wait until page contains    dashboard
+    Wait Until Page Contains Without Screenshots    dashboard
     Page should not contain    Error
     Page Should Not Contain    something went wrong
     Page Should Not Contain    Page or resource not found
@@ -42,16 +42,17 @@ Invited guest user log in
 
 The guest user inserts user email & password
     [Arguments]    ${USERNAME}    ${PSW}
-    wait until element is visible    id=username
-    wait until element is visible    id=password
+    Wait Until Element Is Visible Without Screenshots    id=username
+    Wait Until Element Is Visible Without Screenshots    id=password
     Input Text    id=username    ${USERNAME}
     Input Password    id=password    ${PSW}
 
 The guest user clicks the log-in button
-    wait until element is visible    css=button[name="_eventId_proceed"]
+    Wait Until Element Is Visible Without Screenshots    css=button[name="_eventId_proceed"]
     Click Button    css=button[name="_eventId_proceed"]
 
 The guest user opens the browser
+    Register Keyword To Run On Failure    Capture Page Screenshot On Failure
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'    Start Virtual Display    1920    1080
     Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
@@ -69,19 +70,19 @@ The user closes the browser
 Logout as user
     the user clicks the button/link    link=Sign out
     The user should be redirected to the correct page    ${LOGGED_OUT_URL_FRAGMENT}
-    run keyword and ignore error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
 
 The user can log out
     logout as user
 
 Get Sauce Labs Test Report
-    Run keyword and ignore error    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
+    Run Keyword And Ignore Error Without Screenshots    Report Sauce status    'IFS | ${PREV_TEST_NAME}'    ${PREV_TEST_STATUS}    ${TEST_TAGS}    ${REMOTE_URL}
 
 Get Sauce Labs Suite Report
-    Run keyword and ignore error    Report Sauce status    'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
+    Run Keyword And Ignore Error Without Screenshots    Report Sauce status    'IFS | ${SUITE_NAME}'    ${SUITE_STATUS}    ${SUITE_MESSAGE}    ${REMOTE_URL}
 
 Close any open browsers
-    Run keyword and ignore error    Close all browsers
+    Run Keyword And Ignore Error Without Screenshots    Close all browsers
 
 the guest user enters the log in credentials
     [Arguments]    ${USER_NAME}    ${PASSWORD}
@@ -98,4 +99,4 @@ the user cannot login with their new details
     Page Should Contain    Your username/password combination doesn't seem to work
 
 the user logs out if they are logged in
-    run keyword and ignore error    log out as user
+    Run Keyword And Ignore Error Without Screenshots    log out as user

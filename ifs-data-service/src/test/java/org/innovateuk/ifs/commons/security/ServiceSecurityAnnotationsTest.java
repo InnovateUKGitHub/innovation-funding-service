@@ -20,12 +20,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.hibernate.internal.util.collections.ArrayHelper.toList;
 import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -73,7 +75,11 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
                     if (!hasOneOf(method, securityAnnotations)) {
                         fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " does not have security annotations");
                     }
+                    if (needsSecuredBySpring(annotationValues(method, securityAnnotations)) &&  !hasOneOf(method, asList(SecuredBySpring.class))){
+                        fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " needs to have a SecuredBySpring annotation");
+                    }
                     else {
+                        List<String> annotationValues = annotationValues(method, securityAnnotations);
                         totalMethodsChecked++;
                     }
                 }
@@ -82,6 +88,30 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
         // Make sure we are not failing silently
         assertTrue("We should be checking at least one method for security annotations", totalMethodsChecked > 0);
+    }
+
+    private boolean needsSecuredBySpring(List<String> values){
+        boolean needsSecuredBySpring = !simpleFilter(values, value ->
+                value.contains("Authority") ||
+                        value.contains("Role") ||
+                        value.contains("Authenticated") ||
+                        value.contains("Anonymous")).isEmpty();
+        return needsSecuredBySpring;
+    }
+
+    private List<String> annotationValues(Method method, List<Class<? extends Annotation>> annotations) throws Exception {
+        List<String> values = new ArrayList<>();
+        for (Class<? extends Annotation> clazz : annotations) {
+            // Note that if the annotation does not have a value method this will throw.
+            // This should mean that we will not get any silent failures in the event that the signatures change.
+            Method valueMethodOnAnnotation = clazz.getDeclaredMethod("value");
+            Annotation annotationOnServiceMethod = findAnnotation(method, clazz);
+            if (annotationOnServiceMethod != null) {
+                String value = (String) valueMethodOnAnnotation.invoke(annotationOnServiceMethod);
+                values.add(value);
+            }
+        }
+        return values;
     }
 
     /**

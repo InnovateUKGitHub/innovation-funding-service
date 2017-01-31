@@ -9,4 +9,4 @@ ADD assessment-1.0-SNAPSHOT.jar app.jar
 RUN sh -c 'touch /app.jar'
 ENTRYPOINT ["java", "-Xmx150m", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n", "-jar", "/app.jar"]
 HEALTHCHECK --interval=10s --timeout=5s \
-  CMD curl -f http://localhost:8080/health || exit 1
+  CMD curl -f http://localhost:8080/assessment/health || exit 1

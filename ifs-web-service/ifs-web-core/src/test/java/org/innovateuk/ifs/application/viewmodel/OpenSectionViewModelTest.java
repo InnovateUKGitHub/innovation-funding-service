@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -141,6 +142,21 @@ public class OpenSectionViewModelTest {
     @Test
     public void testGetIsSection() {
         assertEquals(Boolean.TRUE, viewModel.getIsSection());
+    }
+
+    @Test
+    public void testGetHasFinanceView() {
+        assertEquals(Boolean.FALSE, viewModel.getHasFinanceView());
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        viewModel.setFinanceViewModel(financeViewModel);
+
+        assertEquals(Boolean.FALSE, viewModel.getHasFinanceView());
+
+        financeViewModel.setFinanceView("finance");
+        viewModel.setFinanceViewModel(financeViewModel);
+
+        assertEquals(Boolean.TRUE, viewModel.getHasFinanceView());
     }
 
 }

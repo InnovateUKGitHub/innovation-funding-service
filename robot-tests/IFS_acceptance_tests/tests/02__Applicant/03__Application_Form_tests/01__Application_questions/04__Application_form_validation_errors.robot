@@ -57,7 +57,7 @@ Year field client side
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
-    ...    AND    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    ...    AND    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
     When the applicant inserts an invalid date
     Then the user should see an error    Please enter a future date.
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
@@ -114,8 +114,8 @@ Empty text area
 
 *** Keywords ***
 the applicant should not see the validation error any more
-    Run Keyword And Ignore Error    Mouse Out    css=input
-    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
+    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
     wait for autosave
     the user should not see the element    css=.error-message
 
@@ -148,8 +148,8 @@ Applicant goes to the application details page of the Robot application
 
 the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn
-    run keyword and ignore error    mouse out    css=input
-    Run Keyword And Ignore Error    mouse out    css=.editor
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=.editor
     Focus    css=.app-submit-btn
     wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months

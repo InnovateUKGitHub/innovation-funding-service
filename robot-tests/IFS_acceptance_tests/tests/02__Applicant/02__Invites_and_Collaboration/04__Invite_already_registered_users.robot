@@ -71,7 +71,6 @@ the user should see the change in the view team members page
     The user clicks the button/link    css=#content section:nth-of-type(1) li:nth-child(2) h3 a
     The user clicks the button/link    link=view team members and add collaborators
     The user should see the element    link= Dennis Bergkamp
-    Capture Page Screenshot
 
 Existing user creates a new application and invites a user from the same organisation
     When the user navigates to the page    ${COMPETITION_DETAILS_URL}
