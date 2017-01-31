@@ -82,7 +82,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}", organisationId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(userResource)))
+                .content(objectMapper.writeValueAsString(userResource)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for")
@@ -120,7 +120,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(post("/user/createLeadApplicantForOrganisation/{organisationId}/{competitionId}", organisationId, competitionId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(userResource)))
+                .content(objectMapper.writeValueAsString(userResource)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("organisationId").description("Identifier of the organisation who the user is the lead applicant for"),
@@ -189,7 +189,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(profileSkills)))
+                .content(objectMapper.writeValueAsString(profileSkills)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -226,7 +226,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(put("/user/id/{id}/updateUserAffiliations", userId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(affiliations)))
+                .content(objectMapper.writeValueAsString(affiliations)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -263,7 +263,7 @@ public class UserControllerDocumentation extends BaseControllerMockMVCTest<UserC
 
         mockMvc.perform(put("/user/id/{id}/updateUserProfile", userId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(profileDetails)))
+                .content(objectMapper.writeValueAsString(profileDetails)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(

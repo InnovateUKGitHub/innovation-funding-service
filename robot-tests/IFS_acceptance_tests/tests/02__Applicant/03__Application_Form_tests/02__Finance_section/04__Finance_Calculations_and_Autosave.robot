@@ -227,7 +227,7 @@ The applicant can leave the 'Your finances' page but the details are still saved
 
 The applicant selects 'Yes' and fills two rows
     the user clicks the button/link    jQuery=label:contains(Yes)
-    Run Keyword And Ignore Error    Click element    jQuery=#other-funding-table button:contains("Remove")
+    Run Keyword And Ignore Error Without Screenshots    Click element    jQuery=#other-funding-table button:contains("Remove")
     the user should see the element    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2)
     the user should see the element    id=other-funding-table
     the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${OTHER_FUNDING_DATE}
@@ -248,7 +248,7 @@ Totals should be correct
     the user should see the element    ${total_field}
     the user should see the element    ${total_collapsible}
     Textfield Value Should Be    ${TOTAL_FIELD}    ${FIELD_VALUE}
-    Wait Until Element Contains    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
+    Wait Until Element Contains Without Screenshots    ${TOTAL_COLLAPSIBLE}    ${COLLAPSIBLE_VALUE}
 
 Admin costs total should be correct
     [Arguments]    ${ADMIN_TOTAL}    ${ADMIN_VALUE}
@@ -259,11 +259,11 @@ Admin costs total should be correct
 the grant value should be correct in the finance summary page
     The user navigates to the next page
     the user should see the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)
-    Wait Until Element Contains    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
+    Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    25
 
 The user navigates to the next page
     The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
 
 The row should be removed
     [Arguments]    ${ROW}

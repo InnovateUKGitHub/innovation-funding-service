@@ -70,6 +70,20 @@ public class ProjectOtherDocumentsController {
         return "project/other-documents-confirm";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
+    @RequestMapping(value = "/readonly", method = GET)
+    public String viewDocumentsPageAsReadOnly(@PathVariable("projectId") Long projectId, Model model,
+                                           @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+
+        ProjectOtherDocumentsViewModel viewModel = getOtherDocumentsViewModel(projectId, loggedInUser);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("currentUser", loggedInUser);
+        model.addAttribute("readOnlyView", true);
+
+        return "project/other-documents";
+    }
+
+
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_OTHER_DOCUMENTS_SECTION')")
     @RequestMapping(value = "/submit", method = RequestMethod.POST)

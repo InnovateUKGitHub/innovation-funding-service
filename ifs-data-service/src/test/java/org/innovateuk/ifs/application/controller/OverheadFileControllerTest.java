@@ -67,7 +67,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
 
         mockMvc.perform(get(OVERHEAD_BASE_URL + "/overheadCalculationDocumentDetails?overheadId={overHeadIdSuccess}", overHeadIdSuccess))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(fileEntryResource)));
+                .andExpect(content().string(objectMapper.writeValueAsString(fileEntryResource)));
 
         mockMvc.perform(get(OVERHEAD_BASE_URL + "/overheadCalculationDocumentDetails?overheadId={overHeadIdFailure}", overHeadIdFailure))
                 .andExpect(status().is4xxClientError())
@@ -91,7 +91,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
 
         mockMvc.perform(get(OVERHEAD_BASE_URL + "/overheadCalculationDocument?overheadId={overHeadIdSuccess}", overHeadIdSuccess))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(successResult)));
+                .andExpect(content().string(objectMapper.writeValueAsString(successResult)));
 
         ValidationMessages validationMessages = new ValidationMessages();
         validationMessages.addError(new Error("GENERAL_NOT_FOUND", HttpStatus.BAD_REQUEST));
@@ -123,7 +123,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
         mockMvc.perform(post(OVERHEAD_BASE_URL + "/overheadCalculationDocument?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
                 .contentType("customType/type"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(fileEntryResource)));
+                .andExpect(content().string(objectMapper.writeValueAsString(fileEntryResource)));
 
         fileEntryResource = newFileEntryResource().withId(overHeadIdFailure).build();
 
@@ -153,7 +153,7 @@ public class OverheadFileControllerTest extends BaseControllerMockMVCTest<Overhe
         mockMvc.perform(put(OVERHEAD_BASE_URL + "/overheadCalculationDocument?overheadId={overHeadIdSuccess}", overHeadIdSuccess)
                 .contentType("customType/type"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(fileEntryResource)));
+                .andExpect(content().string(objectMapper.writeValueAsString(fileEntryResource)));
 
         fileEntryResource = newFileEntryResource().withId(overHeadIdFailure).build();
 
