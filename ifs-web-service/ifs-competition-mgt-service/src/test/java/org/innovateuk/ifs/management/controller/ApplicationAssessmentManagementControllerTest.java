@@ -56,6 +56,7 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
 
         assertEquals(competitionResource.getId(), model.getCompetitionId());
         assertEquals(competitionResource.getName(), model.getCompetitionName());
+        assertEquals(competitionResource.getCompetitionStatus(), model.getCompetitionStatus());
         assertEquals(2, model.getApplications().size());
         assertEquals(2L, model.getApplications().get(0).getAccepted());
         assertEquals(3L, model.getApplications().get(0).getAssessors());
