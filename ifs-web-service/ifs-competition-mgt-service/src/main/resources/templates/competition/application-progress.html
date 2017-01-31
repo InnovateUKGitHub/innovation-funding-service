@@ -29,8 +29,9 @@
                     <h3 class="heading-small">Partners</h3>
                     <ul>
                         <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
-                            th:text="${model.leadOrganisation} + ' (Lead)'"></li>
-                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
+                            th:text="${model.leadOrganisation} + ' (Lead)'">Aptrans Ltd (Lead)
+                        </li>
+                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Biotech Corp.</li>
                     </ul>
                 </div>
                 <div class="column-quarter">
