@@ -28,7 +28,8 @@ public abstract class AbstractContentGroupFormSaver<F extends AbstractContentGro
         if (optional.isPresent()) {
             if(!canHaveEmptyGroups() && form.getContentGroups().isEmpty()) {
                 //TODO replace with validation property.
-                return Collections.singletonList(Error.fieldError("contentGroups", "Cannot be empty", ""));
+                return Collections.singletonList(Error.fieldError("contentGroups", form.getContentGroups(),
+                        "validation.publiccontent.contentgroup.notempty"));
             }
             optional.get().setContentGroups(form.getContentGroups().stream().map(contentGroupForm -> {
                 ContentGroupResource contentGroupResource = new ContentGroupResource();
