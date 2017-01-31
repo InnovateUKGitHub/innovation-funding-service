@@ -17,9 +17,6 @@ public class FinanceViewModel extends BaseFinanceViewModel {
     protected OrganisationTypeResource organisationType;
     protected Long organisationFinanceId;
     protected BigDecimal organisationFinanceTotal;
-    protected BigDecimal organisationTotalFundingSought;
-    protected BigDecimal organisationTotalContribution;
-    protected BigDecimal organisationTotalOtherFunding;
 
     protected Integer organisationGrantClaimPercentage;
     protected Long organisationGrantClaimPercentageId;
@@ -62,30 +59,6 @@ public class FinanceViewModel extends BaseFinanceViewModel {
 
     public void setOrganisationFinanceTotal(BigDecimal organisationFinanceTotal) {
         this.organisationFinanceTotal = organisationFinanceTotal;
-    }
-
-    public BigDecimal getOrganisationTotalFundingSought() {
-        return organisationTotalFundingSought;
-    }
-
-    public void setOrganisationTotalFundingSought(BigDecimal organisationTotalFundingSought) {
-        this.organisationTotalFundingSought = organisationTotalFundingSought;
-    }
-
-    public BigDecimal getOrganisationTotalContribution() {
-        return organisationTotalContribution;
-    }
-
-    public void setOrganisationTotalContribution(BigDecimal organisationTotalContribution) {
-        this.organisationTotalContribution = organisationTotalContribution;
-    }
-
-    public BigDecimal getOrganisationTotalOtherFunding() {
-        return organisationTotalOtherFunding;
-    }
-
-    public void setOrganisationTotalOtherFunding(BigDecimal organisationTotalOtherFunding) {
-        this.organisationTotalOtherFunding = organisationTotalOtherFunding;
     }
 
     public Integer getOrganisationGrantClaimPercentage() {
