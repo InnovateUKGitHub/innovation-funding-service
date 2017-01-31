@@ -465,7 +465,7 @@ Invited finance contact registration flow
     And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
-    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify account
+    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
