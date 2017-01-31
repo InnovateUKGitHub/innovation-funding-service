@@ -8,15 +8,15 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 
 public interface ApplicationSummaryRestService {
 
-    RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+    RestResult<ApplicationSummaryPageResource> getAllApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
 
-    RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+    RestResult<ApplicationSummaryPageResource> getSubmittedApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
 
-    RestResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+    RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
 
-    RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+    RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
     
-    RestResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId);
+    RestResult<CompetitionSummaryResource> getCompetitionSummary(Long competitionId);
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);
 }

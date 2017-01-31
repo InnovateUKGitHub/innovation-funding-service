@@ -21,25 +21,25 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	private String applicationRestUrl = "/application";
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+	public RestResult<ApplicationSummaryPageResource> getAllApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId;
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+	public RestResult<ApplicationSummaryPageResource> getSubmittedApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/submitted";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+	public RestResult<ApplicationSummaryPageResource> getNonSubmittedApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/not-submitted";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
 	}
 	
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplicationSummariesByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+	public RestResult<ApplicationSummaryPageResource> getFeedbackRequiredApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/feedback-required";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
 	}
@@ -74,7 +74,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 	
 	@Override
-	public RestResult<CompetitionSummaryResource> getCompetitionSummaryByCompetitionId(Long competitionId) {
+	public RestResult<CompetitionSummaryResource> getCompetitionSummary(Long competitionId) {
 		return getWithRestResult(applicationSummaryRestUrl + "/getCompetitionSummary/" + competitionId, CompetitionSummaryResource.class);
 	}
 
