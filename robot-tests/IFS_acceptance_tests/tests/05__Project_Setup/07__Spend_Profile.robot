@@ -313,7 +313,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     #The complete name of the button is anyways not selected. Please use the short version of it.
 
 Academic partner can view spend profile page
-    [Documentation]    INFUND-3970
+    [Documentation]    INFUND-3970, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
