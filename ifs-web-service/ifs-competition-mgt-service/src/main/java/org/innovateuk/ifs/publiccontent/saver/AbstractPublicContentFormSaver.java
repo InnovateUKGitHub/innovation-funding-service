@@ -23,6 +23,12 @@ public abstract class AbstractPublicContentFormSaver<F extends AbstractPublicCon
         return publicContentService.updateSection(publicContentResource, getType());
     }
 
+    @Override
+    public ServiceResult<Void> markAsComplete(F form, PublicContentResource publicContentResource) {
+        populateResource(form, publicContentResource);
+        return publicContentService.markSectionAsComplete(publicContentResource, getType());
+    }
+
     protected abstract void populateResource(F form, PublicContentResource publicContentResource);
     protected abstract PublicContentSectionType getType();
 

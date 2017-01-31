@@ -46,6 +46,11 @@ public class PublicContentServiceImpl implements PublicContentService {
     }
 
     @Override
+    public ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
+        return publicContentRestService.markSectionAsComplete(resource, section).toServiceResult();
+    }
+
+    @Override
     public ServiceResult<Void> removeFile(PublicContentResource resource, PublicContentSectionType type, List<ContentGroupForm> contentGroups, Integer removeFile) {
         Optional<PublicContentSectionResource> optionalSection = resource.getContentSections().stream().filter(filterSection -> type.equals(filterSection.getType())).findAny();
         if (optionalSection.isPresent()) {

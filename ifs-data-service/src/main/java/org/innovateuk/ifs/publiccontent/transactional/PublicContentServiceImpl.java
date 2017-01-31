@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,15 +40,26 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     private ContentSectionRepository contentSectionRepository;
     @Autowired
     private KeywordRepository keywordRepository;
-
     @Autowired
     private PublicContentMapper publicContentMapper;
+    @Autowired
+    private ContentGroupService contentGroupService;
 
     @Override
     public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
         return find(publicContentRepository.findByCompetitionId(id), notFoundError(PublicContent.class, id))
-                .andOnSuccessReturn(publicContent -> publicContentMapper.mapToResource(publicContent));
+                .andOnSuccessReturn(publicContent -> sortGroups(publicContentMapper.mapToResource(publicContent)));
     }
+
+    private PublicContentResource sortGroups(PublicContentResource publicContentResource) {
+        publicContentResource.getContentSections()
+                .forEach(contentSectionResource -> Collections.sort(contentSectionResource.getContentGroups(),
+                        (o1, o2) -> o1.getPriority().compareTo(o2.getPriority())));
+
+        //TODO Sort events INFUND-6919
+        return publicContentResource;
+    }
+
 
     @Override
     public ServiceResult<Void> initialiseByCompetitionId(Long competitionId) {
@@ -96,6 +108,18 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
+        PublicContent publicContent = saveSection(resource, section);
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
+        PublicContent publicContent = saveSection(resource, section);
+        markSectionAsComplete(publicContent, section);
+        return serviceSuccess();
+    }
+
+    private PublicContent saveSection(PublicContentResource resource, PublicContentSectionType section) {
         PublicContent publicContent = publicContentRepository.save(publicContentMapper.mapToDomain(resource));
 
         switch (section) {
@@ -106,18 +130,16 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
                 saveContentEvent();
                 break;
             default:
-                saveContentGroup();
+                contentGroupService.saveContentGroups(resource, publicContent, section);
                 break;
         }
 
-        markSectionAsComplete(publicContent, section);
-
-        //If the public content has already been published then publish again.
+        //If the public content has already been published then update the publish date.
         if (allSectionsComplete(publicContent) && publicContent.getPublishDate() != null) {
             publish(publicContent);
         }
 
-        return serviceSuccess();
+        return publicContent;
     }
 
 
@@ -129,10 +151,6 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
             entity.setPublicContent(publicContent);
             keywordRepository.save(entity);
         });
-    }
-
-    private void saveContentGroup() {
-
     }
 
     private void saveContentEvent() {

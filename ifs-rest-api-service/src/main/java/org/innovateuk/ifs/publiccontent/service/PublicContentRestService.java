@@ -15,4 +15,5 @@ public interface PublicContentRestService {
 
     RestResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section);
 
+    RestResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section);
 }

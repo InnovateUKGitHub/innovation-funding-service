@@ -33,7 +33,7 @@ public class PublicContentServiceImplTest {
         PublicContentResource resource = new PublicContentResource();
         when(publicContentRestService.getByCompetitionId(COMPETITION_ID)).thenReturn(restSuccess(resource));
 
-        PublicContentResource result = target.getCompetitionById(COMPETITION_ID).getSuccessObjectOrThrowException();
+        PublicContentResource result = target.getCompetitionById(COMPETITION_ID);
 
         assertThat(result, equalTo(resource));
     }

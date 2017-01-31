@@ -51,9 +51,9 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     }
 
     @RequestMapping(value = "/{competitionId}/edit", method = RequestMethod.POST)
-    public String save(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+    public String markAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                        @Valid @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
-        return save(competitionId, model, form, validationHandler);
+        return markAsComplete(competitionId, model, form, validationHandler);
     }
 
     protected String readOnly(Long competitionId, Model model, Optional<F> form) {
@@ -76,12 +76,12 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return TEMPLATE_FOLDER + "public-content-form";
     }
 
-    protected String save(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
+    protected String markAsComplete(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
         Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
 
-        return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().save(form, publicContent));
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
 
     }
 

@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.publiccontent.form;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -11,6 +13,8 @@ public class EligibilityForm extends AbstractPublicContentForm {
 
     private Integer uploadFile;
     private Integer removeFile;
+    @NotEmpty
+    @Valid
     private List<ContentGroupForm> contentGroups;
     private MultipartFile attachment;
 

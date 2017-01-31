@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.publiccontent.form;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 /**
  * Form for the Eligibility page on public content setup.
  */
@@ -7,9 +9,11 @@ public class ContentGroupForm {
 
     private Long id;
 
+    @NotEmpty
     private String heading;
 
-    private String Content;
+    @NotEmpty
+    private String content;
 
     public Long getId() {
         return id;
@@ -28,10 +32,10 @@ public class ContentGroupForm {
     }
 
     public String getContent() {
-        return Content;
+        return content;
     }
 
     public void setContent(String content) {
-        Content = content;
+        this.content = content;
     }
 }

@@ -9,13 +9,10 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 
 public interface PublicContentService {
-
     PublicContentResource getCompetitionById(final Long competitionId);
-
     ServiceResult<Void> publishByCompetitionId(Long publicContentId);
-
     ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section);
-
+    ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section);
     ServiceResult<Void> removeFile(PublicContentResource resource, PublicContentSectionType type, List<ContentGroupForm> contentGroups, Integer removeFile);
     ServiceResult<Void> uploadFile(PublicContentResource resource, PublicContentSectionType type, List<ContentGroupForm> contentGroups, Integer uploadFile, MultipartFile attachment);
 }
