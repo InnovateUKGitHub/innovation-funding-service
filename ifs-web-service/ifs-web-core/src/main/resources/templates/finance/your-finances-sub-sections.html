@@ -110,7 +110,8 @@
     <div th:fragment="your_finance_summary">
 
         <div class="form-group" style="overflow:auto;">
-            <table>
+            <table th:with="organisationId=${model.application.userOrganisation.id},
+                            hasOrganisationFinance=${model.financeOverview.hasFinancesForOrganisation(organisationId)}">
                 <thead>
                 <tr>
                     <th scope="col" class="numeric width-small">Total project costs</th>
@@ -122,16 +123,17 @@
                 </thead>
                 <tbody>
                 <tr>
-                <div th:if="${organisationFinance}" th:remove="tag">
-                    <td class="numeric">
-                        <strong th:text="'£'+${#numbers.formatDecimal(organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}" />
-                    </td>
-                    <td class="numeric" th:text="${organisationGrantClaimPercentage}+'%'"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationTotalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                <div th:if="${hasOrganisationFinance}"
+                     th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}" th:remove="tag">
+                    <td class="numeric"> 
+                        <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /> 
+                    </td> 
+                    <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/> 
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/> 
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/> 
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/> 
                 </div>
-                <div th:unless="${organisationFinance}" th:remove="tag">
+                <div th:unless="${hasOrganisationFinance}" th:remove="tag">
                     <td class="numeric">
                         <strong>&pound;0</strong>
                     </td>

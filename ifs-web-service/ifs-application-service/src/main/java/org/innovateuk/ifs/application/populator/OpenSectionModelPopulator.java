@@ -93,7 +93,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
 
         if(null != competition) {
             addApplicationAndSections(openSectionViewModel, sectionApplicationViewModel, application, competition, user.getId(), section, form, allSections);
-            addOrganisationAndUserFinanceDetails(competition.getId(), application.getId(), user, model, form, allSections, organisationId);
+            addOrganisationAndUserFinanceDetails(openSectionViewModel, competition.getId(), application.getId(), user, model, form, allSections, organisationId);
         }
 
         form.setBindingResult(bindingResult);
@@ -259,7 +259,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
     }
 
     //TODO - INFUND-7482 - remove usages of Model model
-    private void addOrganisationAndUserFinanceDetails(Long competitionId, Long applicationId, UserResource user,
+    private void addOrganisationAndUserFinanceDetails(OpenSectionViewModel openSectionViewModel, Long competitionId, Long applicationId, UserResource user,
                                                       Model model, ApplicationForm form, List<SectionResource> allSections,
                                                       Long organisationId) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
@@ -275,7 +275,7 @@ public class OpenSectionModelPopulator extends BaseSectionModelPopulator {
             if(!form.isAdminMode()){
                 String organisationType = organisationService.getOrganisationType(user.getId(), applicationId);
                 if(competitionResource.isOpen()) {
-                    financeHandler.getFinanceModelManager(organisationType).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
+                    openSectionViewModel.setFinanceViewModel(financeHandler.getFinanceModelManager(organisationType).getFinanceViewModel(applicationId, costsQuestions, user.getId(), form, organisationId));
                 }
             }
         }

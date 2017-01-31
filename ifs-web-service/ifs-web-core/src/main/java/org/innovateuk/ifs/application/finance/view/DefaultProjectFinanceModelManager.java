@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
@@ -53,7 +55,8 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     
     @Autowired
     private CompetitionService competitionService;
-    
+
+    //TODO: INFUND-7849 - make sure this function is not going to be used anymore
     @Override
     public void addOrganisationFinanceDetails(Model model, Long projectId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
 
@@ -66,9 +69,6 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", projectFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", projectFinanceResource.getTotal());
-            model.addAttribute("organisationTotalFundingSought", projectFinanceResource.getTotalFundingSought());
-            model.addAttribute("organisationTotalContribution", projectFinanceResource.getTotalContribution());
-            model.addAttribute("organisationTotalOtherFunding", projectFinanceResource.getTotalOtherFunding());
             model.addAttribute("financeView", "finance");
             addGrantClaim(model, form, projectFinanceResource);
         }
@@ -78,6 +78,35 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
         if(projectFinanceResource.getGrantClaim()!=null) {
             model.addAttribute("organisationGrantClaimPercentage", projectFinanceResource.getGrantClaim().getGrantClaimPercentage());
             model.addAttribute("organisationgrantClaimPercentageId", projectFinanceResource.getGrantClaim().getId());
+            String formInputKey = "finance-grantclaimpercentage-" + projectFinanceResource.getGrantClaim();
+            String formInputValue = projectFinanceResource.getGrantClaimPercentage() != null ? projectFinanceResource.getGrantClaimPercentage().toString() : "";
+            form.addFormInput(formInputKey, formInputValue);
+        }
+    }
+
+    @Override
+    public FinanceViewModel getFinanceViewModel(Long projectId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
+        FinanceViewModel financeViewModel = new ProjectFinanceViewModel();
+        ProjectFinanceResource projectFinanceResource = getOrganisationFinances(projectId, costsQuestions, userId, organisationId);
+
+        if (projectFinanceResource != null) {
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(projectFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            financeViewModel.setOrganisationFinance(projectFinanceResource.getFinanceOrganisationDetails());
+            financeViewModel.setOrganisationFinanceSize(projectFinanceResource.getOrganisationSize());
+            financeViewModel.setOrganisationType(organisationType);
+            financeViewModel.setOrganisationFinanceId(projectFinanceResource.getId());
+            financeViewModel.setOrganisationFinanceTotal(projectFinanceResource.getTotal());
+            financeViewModel.setFinanceView("finance");
+            addGrantClaim(financeViewModel, form, projectFinanceResource);
+        }
+
+        return financeViewModel;
+    }
+
+    private void addGrantClaim(FinanceViewModel financeViewModel, Form form, ProjectFinanceResource projectFinanceResource) {
+        if(projectFinanceResource.getGrantClaim()!=null) {
+            financeViewModel.setOrganisationGrantClaimPercentage(projectFinanceResource.getGrantClaim().getGrantClaimPercentage());
+            financeViewModel.setOrganisationGrantClaimPercentageId(projectFinanceResource.getGrantClaim().getId());
             String formInputKey = "finance-grantclaimpercentage-" + projectFinanceResource.getGrantClaim();
             String formInputValue = projectFinanceResource.getGrantClaimPercentage() != null ? projectFinanceResource.getGrantClaimPercentage().toString() : "";
             form.addFormInput(formInputKey, formInputValue);

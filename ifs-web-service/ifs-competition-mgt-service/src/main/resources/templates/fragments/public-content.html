@@ -1,8 +1,8 @@
 
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>This information is used for search and the opening section of the competition page.</p>
+    <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
-        <dl class="readonly-data">
+        <dl>
             <dt>Short description</dt>
             <dd th:text="${form.shortDescription}"></dd>
             <dt>Project funding range</dt>
@@ -20,28 +20,36 @@
                     Short description
                     <span class="form-hint">Appears at the top of the competition page.</span>
                 </label>
-                <input class="form-control width-full" id="short-description" type="text" th:field="${form.shortDescription}"/>
+                <input class="form-control width-full" id="short-description" type="text" th:field="${form.shortDescription}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
             </div>
             <div class="form-group">
                 <label class="form-label-bold" for="funding-range">
                     Project funding range
                     <span class="form-hint">Appears against the competition search result.</span>
                 </label>
-                <input class="form-control" id="funding-range" type="text" th:field="${form.projectFundingRange}" />
+                <input class="form-control" id="funding-range" type="text" th:field="${form.projectFundingRange}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
             </div>
             <div class="form-group">
                 <label class="form-label-bold" for="eligibility-summary">
                     Eligibility summary
                     <span class="form-hint">Appears against the competition search result.</span>
                 </label>
-                <input class="form-control" id="eligibility-summary" type="text" th:field="${form.eligibilitySummary}"/>
+                <input class="form-control" id="eligibility-summary" type="text" th:field="${form.eligibilitySummary}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}" />
             </div>
             <div class="form-group">
                 <label class="form-label-bold" for="keywords">
                     Keywords
-                    <span class="form-hint">Keywords help competitions appear in search but are not visible to applicants. Separate keywords with commas.</span>
+                    <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
                 </label>
-                <input class="form-control width-full prot-section-0-empty" id="keywords" type="text" th:field="${form.keywords}" />
+                <input class="form-control width-full" id="keywords" type="text" th:field="${form.keywords}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}"/>
             </div>
         </fieldset>
         <div class="alignright">

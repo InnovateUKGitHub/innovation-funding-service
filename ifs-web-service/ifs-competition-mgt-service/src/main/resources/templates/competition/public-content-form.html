@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Public Content'" th:remove="tag" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -19,7 +19,7 @@
             <h1 class="heading-xlarge" th:text="${model.section.type.text}"></h1>
         </div>
 
-        <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">There was a problem submitting the public content.</h2>
 
             <ul class="error-summary-list">
@@ -37,7 +37,7 @@
                 <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
             </div>
             <div class="column-half alignright">
-                <a class="button-secondary no-margin" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest) + '/edit'}}">Edit</a>
+                <a class="button-secondary no-margin" href="edit">Edit</a>
             </div>
             </th:block>
             <th:block th:unless="${model.readOnly}">

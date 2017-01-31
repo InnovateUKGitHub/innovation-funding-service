@@ -37,6 +37,8 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 @RequestMapping("/project")
 public class ProjectSetupStatusController {
 
+    public static final String PROJECT_SETUP_COMPLETE_PAGE = "project/setup-complete-status";
+    public static final String PROJECT_SETUP_PAGE = "project/setup-status";
     @Autowired
     private ProjectService projectService;
 
@@ -57,10 +59,10 @@ public class ProjectSetupStatusController {
             ":" + request.getServerPort() +
             "/applicant/dashboard";
 
-
-        model.addAttribute("model", getProjectSetupStatusViewModel(projectId, loggedInUser));
+        ProjectSetupStatusViewModel projectSetupStatusViewModel = getProjectSetupStatusViewModel(projectId, loggedInUser);
+        model.addAttribute("model", projectSetupStatusViewModel);
         model.addAttribute("url", dashboardUrl);
-        return "project/setup-status";
+        return PROJECT_SETUP_PAGE;
     }
 
     private ProjectSetupStatusViewModel getProjectSetupStatusViewModel(Long projectId, UserResource loggedInUser) {
@@ -122,7 +124,7 @@ public class ProjectSetupStatusController {
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferLetterState, leadPartner);
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation.getId(), leadPartner,
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation, leadPartner,
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
                 projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
     }

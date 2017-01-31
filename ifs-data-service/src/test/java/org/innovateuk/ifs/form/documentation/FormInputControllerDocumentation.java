@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.form.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.form.controller.FormInputController;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -94,11 +93,9 @@ public class FormInputControllerDocumentation extends BaseControllerMockMVCTest<
         FormInputResource testResource = formInputResourceBuilder.build();
         when(formInputServiceMock.save(any())).thenReturn(serviceSuccess(testResource));
 
-        ObjectMapper mapper = objectMapper;
-
         mockMvc.perform(put(baseURI + "/")
                     .contentType(APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(testResource)))
+                    .content(objectMapper.writeValueAsString(testResource)))
                 .andDo(this.document.snippets(
                         responseFields(formInputResourceFields)
                 ));
