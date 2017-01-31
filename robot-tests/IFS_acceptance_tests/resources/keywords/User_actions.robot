@@ -2,16 +2,6 @@
 Resource          ../defaultResources.robot
 
 *** Keywords ***
-
-Create new application
-    Wait for autosave
-    go to    ${CREATE_APPLICATION_PAGE}
-    Input Text    id=application_name    Form test application
-    Click Element    css=#content > form > input
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
-
-
 The user clicks the button/link
     [Arguments]    ${BUTTON}
     Wait Until Element Is Visible Without Screenshots    ${BUTTON}
