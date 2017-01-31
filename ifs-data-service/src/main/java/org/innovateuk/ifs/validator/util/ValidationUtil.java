@@ -248,23 +248,15 @@ public class ValidationUtil {
     public ValidationMessages validateCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         invokeValidator(costItem, bindingResult);
-
-        if (bindingResult.hasErrors()) {
-            if (LOG.isDebugEnabled()) {
-                LOG.debug("validated, with messages: ");
-                bindingResult.getFieldErrors().stream().forEach(e -> LOG.debug("Field Error: " + e.getRejectedValue() + e.getDefaultMessage()));
-                bindingResult.getAllErrors().stream().forEach(e -> LOG.debug("Error: " + e.getObjectName() + e.getDefaultMessage()));
-            }
-            return new ValidationMessages(costItem.getId(), bindingResult);
-        } else {
-            LOG.debug("validated, no messages");
-            return ValidationMessages.noErrors(costItem.getId());
-        }
+        return buildValidationMessages(costItem, bindingResult);
     }
 
     public ValidationMessages validateProjectCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
+        return buildValidationMessages(costItem, bindingResult);
+    }
 
+    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("validated, with messages: ");

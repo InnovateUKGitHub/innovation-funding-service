@@ -10,6 +10,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
 
+/**
+ * Transactional service to support operations on ProjectFinanceRow.  This is only permitted for use by internal finance users.
+ */
 public interface ProjectFinanceRowService {
 
     @PreAuthorize("hasAuthority('project_finance')")

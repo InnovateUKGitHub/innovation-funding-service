@@ -30,6 +30,9 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
+/**
+ * Transactional service to support operations on ProjectFinanceRow.  This is only permitted for use by internal finance users.
+ */
 @Service
 public class ProjectFinanceRowServiceImpl extends BaseTransactionalService implements ProjectFinanceRowService {
     private static final Log LOG = LogFactory.getLog(ProjectFinanceRowServiceImpl.class);
