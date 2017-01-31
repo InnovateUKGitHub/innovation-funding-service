@@ -14,15 +14,15 @@
         </div>
 
         <h2 class="heading-medium">Finances Summary</h2>
-        <div th:include="finance/finance-summary :: application_finances_summary" th:remove="tag" />
+        <th:block th:include="finance/finance-summary :: application_finances_summary" />
         <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
         <h2 class="heading-medium">Project cost breakdown</h2>
-        <div th:include="finance/finance-summary :: financial_summary_table" th:remove="tag"/>
+        <th:block th:include="finance/finance-summary :: financial_summary_table" />
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
         <h2 class="heading-medium">Academic partner breakdown</h2>
         <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs please see the documents below.</p>
-        <div th:include="finance/finance-summary :: academic_partner_breakdown" th:remove="tag"/>
+        <th:block th:include="finance/finance-summary :: academic_partner_breakdown" />
     </div>
 
 
@@ -78,21 +78,22 @@
                             <td class="numeric bold" th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <span th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                             </td>
-                            <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                            <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                 <td class="numeric bold"><span>&pound;0</span></td>
-                            </div>
-                            <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},
-                            formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}" th:remove="tag">
-                                <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                            </th:block>
+                            <th:block th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},
+                            formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
+                                <th:block th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}"
+                                          th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                     <td class="numeric"
                                         th:with="formInputType=${formInput.type},category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                                         th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                                     </td>
-                                </div>
-                                <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                                </th:block>
+                                <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
                                     <td class="numeric">&pound;0</td>
-                                </div>
-                            </div>
+                                </th:block>
+                            </th:block>
                         </th:block>
                     </tr>
                     <tr th:each="pendingOrganisationName : ${pendingOrganisationNames}">
@@ -100,24 +101,22 @@
                             <div th:text="${pendingOrganisationName}"></div>
                             <div><small>(pending)</small></div>
                         </th>
-                        <div th:remove="tag">
-                            <td class="numeric bold"><span>&pound;0</span></td>
-                        </div>
-                        <div th:each="financeSubSection : ${financeSectionChildren}" th:remove="tag">
+                        <td class="numeric bold"><span>&pound;0</span></td>
+                        <th:block th:each="financeSubSection : ${financeSectionChildren}">
                             <td class="numeric">&pound;0</td>
-                        </div>
+                        </th:block>
                     </tr>
                     <tr>
                         <th scope="row">Total</th>
                         <td class="numeric bold">
                             <span th:if="${financeTotal != null}" th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
                         </td>
-                        <div th:remove="tag" th:each="financeSubSection : ${financeSectionChildren}"
+                        <th:block th:each="financeSubSection : ${financeSectionChildren}"
                              th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs.get(question.id).get(0)}">
                             <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                                 th:if="${financeTotal != null}"
                                 th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
-                        </div>
+                        </th:block>
                     </tr>
                     </tbody>
                 </table>
@@ -128,7 +127,7 @@
 
     <!-- ===========================Form: funding breakdown =========================== -->
     <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
-        <div th:include="finance/finance-summary :: application_finances_incomplete_warning" th:remove="tag" />
+        <th:block th:include="finance/finance-summary :: application_finances_incomplete_warning" />
 
         <div class="form-group finance-summary" style="overflow:auto;">
             <table>
@@ -159,15 +158,16 @@
                                 Detailed Organisation Finances
                             </a>
 
-                            <div th:remove="tag" th:if="${currentApplication.isOpen()}">
+                            <th:block th:if="${currentApplication.isOpen()}">
                               <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/tick-icon.png')}"
                                    th:if="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has marked the Finances as complete"/>
                               <img class="table-tick" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/warning-icon.png')}"
                                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" alt="has not yet marked the Finances as complete" />
-                            </div>
+                            </th:block>
                         </div>
                     </th>
-                    <div th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                    <th:block th:with="organisationFinance=${organisationFinances.get(applicationOrganisation.id)}"
+                              th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                         <td class="numeric">
                             <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                         </td>
@@ -175,8 +175,8 @@
                         <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
                         <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
                         <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
-                    </div>
-                    <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                    </th:block>
+                    <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
                         <td class="numeric">
                             <strong>&pound;0</strong>
                         </td>
@@ -184,7 +184,7 @@
                         <td class="numeric">&pound;0</td>
                         <td class="numeric">&pound;0</td>
                         <td class="numeric">&pound;0</td>
-                    </div>
+                    </th:block>
                 </tr>
                 <tr th:each="pendingOrganisationName : ${pendingOrganisationNames}">
                     <th scope="row">
@@ -196,15 +196,13 @@
 
                         </div>
                     </th>
-                    <div th:remove="tag">
-                        <td class="numeric">
-                            <strong>&pound;0</strong>
-                        </td>
-                        <td class="numeric">0%</td>
-                        <td class="numeric">&pound;0</td>
-                        <td class="numeric">&pound;0</td>
-                        <td class="numeric">&pound;0</td>
-                    </div>
+                    <td class="numeric">
+                        <strong>&pound;0</strong>
+                    </td>
+                    <td class="numeric">0%</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
+                    <td class="numeric">&pound;0</td>
                 </tr>
                 <tr>
                     <th scope="row">Total</th>
@@ -227,15 +225,15 @@
         and !sectionsMarkedAsComplete.contains(financeSectionId)}" class="warning-alert">
             <h2 class="heading-small no-margin">The following organisations have not marked their finances as complete:</h2>
             <ul class="list list-bullet">
-                <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
+                <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
                     <li th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}" th:text="${applicationOrganisation.name}" />
-                </div>
+                </th:block>
             </ul>
-            <div th:remove="tag" th:each="applicationOrganisation : ${applicationOrganisations}">
+            <th:block th:each="applicationOrganisation : ${applicationOrganisations}">
                 <a th:if="${applicationOrganisation.id == userOrganisation.id}"
                    th:unless="${completedSectionsByOrganisation.get(applicationOrganisation.id).contains(eachCollaboratorFinanceSectionId)}"
                    th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Return to the finances section to complete your finances</a>
-            </div>
+            </th:block>
 
             <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>
         </div>
