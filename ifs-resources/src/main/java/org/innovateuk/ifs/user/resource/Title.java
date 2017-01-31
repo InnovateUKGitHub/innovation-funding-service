@@ -8,11 +8,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  * The title of a User.
  */
 public enum Title {
-    MR(1, "Mr"),
-    MISS(2, "Miss"),
-    MRS(3, "Mrs"),
-    MS(4, "Ms"),
-    DR(5, "Dr");
+    Mr(1, "Mr"),
+    Miss(2, "Miss"),
+    Mrs(3, "Mrs"),
+    Ms(4, "Ms"),
+    Dr(5, "Dr");
 
     private final String displayName;
     private final long id;
