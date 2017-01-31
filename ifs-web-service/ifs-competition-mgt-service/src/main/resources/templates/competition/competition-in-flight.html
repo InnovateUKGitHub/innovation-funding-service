@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle=${model.competitionName} + ' in assessment'"
+    <div th:include="fragments/layout :: head" th:with="pageTitle=|${model.competitionName} (${model.competitionStatus.displayName})|"
          th:remove="tag"/>
 </head>
 
@@ -73,11 +73,11 @@
                         </div>
                     </th:block>
 
-                    <h2 class="heading-medium">Key statistics</h2>
+                    <h2 class="heading-large">Key statistics</h2>
 
                     <ul class="grid-row">
                         <li class="column-third">
-                            <div class="highlight-panel">
+                            <div class="highlight-panel highlight-panel-padded">
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="READY_TO_OPEN">Assessors invited</small>
                                     <small th:case="OPEN">Assessors invited</small>
@@ -90,7 +90,7 @@
                         </li>
 
                         <li class="column-third">
-                            <div class="highlight-panel">
+                            <div class="highlight-panel highlight-panel-padded">
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="READY_TO_OPEN">Invitations accepted</small>
                                     <small th:case="OPEN">Invitations accepted</small>
@@ -103,7 +103,7 @@
                         </li>
 
                         <li class="column-third">
-                            <div class="highlight-panel">
+                            <div class="highlight-panel highlight-panel-padded">
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications per assessor</small>
                                     <small th:case="CLOSED">Assessors without applications</small>
@@ -117,7 +117,7 @@
 
                     <ul class="grid-row extra-margin">
                         <li class="column-third">
-                            <div class="highlight-panel">
+                            <div class="highlight-panel highlight-panel-padded">
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications started</small>
                                     <small th:case="CLOSED">Invitations invited</small>
@@ -129,7 +129,7 @@
                         </li>
 
                         <li class="column-third">
-                            <div class="highlight-panel">
+                            <div class="highlight-panel highlight-panel-padded">
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications (beyond 50%)</small>
                                     <small th:case="CLOSED">Invitations accepted</small>
@@ -141,7 +141,7 @@
                         </li>
 
                         <li class="column-third">
-                            <div class="highlight-panel">
+                            <div class="highlight-panel highlight-panel-padded">
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications submitted</small>
                                     <small th:case="CLOSED">Applications per assessor</small>
@@ -151,31 +151,27 @@
                             </div>
                         </li>
                     </ul>
-                    <h2 class="heading-medium">Actions</h2>
+                    <h2 class="heading-large">Actions</h2>
                     <div class="grid-row dashboard-actions">
                         <div class="column-third">
-                            <button type="submit" class="button button-large"
-                                    th:disabled="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
-                                    th:formaction="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
-                                    th:formmethod="get">Applications
-                            </button>
+                            <a class="button button-block"
+                               th:disabled="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
+                               th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications</a>
                         </div>
                     </div>
 
                     <div class="grid-row dashboard-actions">
                         <div class="column-third">
-                            <a class="button"
+                            <a class="button button-block"
                                th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite assessors</a>
                         </div>
                         <div class="column-third">
-                            <button type="submit" class="button button-large"
-                                    th:disabled="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN')}"
-                                    th:formaction="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}"
-                                    th:formmethod="get">Manage applications
-                            </button>
+                            <a class="button button-block"
+                               th:disabled="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN')}"
+                               th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Manage applications</a>
                         </div>
                         <div class="column-third">
-                            <a class="button"
+                            <a class="button button-block"
                                th:classappend="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' ? 'disabled' : '')}"
                                href="#">View panel sheet</a>
                         </div>
@@ -183,7 +179,7 @@
 
                     <div class="grid-row dashboard-actions">
                         <div class="column-third">
-                            <a class="button"
+                            <a class="button button-block"
                                th:classappend="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT' ? 'disabled' : '')}"
                                href="#">Funding decision</a>
                         </div>
@@ -198,8 +194,8 @@
                     </div>
                 </div>
                 <div class="column-third">
-                    <h2 class="heading-medium extra-margin-top">Competition milestones</h2>
-                    <ul class="comp-timeline-status">
+                    <h2 class="heading-medium no-margin-top">Competition milestones</h2>
+                    <ul class="timeline-status">
                         <th:block th:each="milestone : ${model.milestones}">
                             <li th:if="${milestone.milestoneType.presetDate}"
                                 th:class="${(milestone.passed ? 'done' : 'not-done')}">
