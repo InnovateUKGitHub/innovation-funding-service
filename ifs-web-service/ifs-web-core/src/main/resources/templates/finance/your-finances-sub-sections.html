@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
 
     <!-- ===========================Your finances section view =========================== -->
-    <div th:fragment="your_finances">
+    <th:block th:fragment="your_finances">
         <th:block th:if="${model.currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FINANCE}">
             <div class="your-finances">
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
@@ -18,7 +18,7 @@
                 </details>
                 <ul class="list-overview extra-margin">
                     <th:block th:each="subSection : ${model.subSections.get(model.currentSection.id)}">
-                        <th:block th:include="finance/your-finances-sub-sections :: finance_sub_section_row" />
+                        <th:block th:insert="finance/your-finances-sub-sections :: finance_sub_section_row" />
                     </th:block>
                 </ul>
             </div>
@@ -28,25 +28,25 @@
             <div th:include="finance/your-finances-sub-sections :: your_finance_summary"/>
 
         </th:block>
-    </div>
+    </th:block>
 
 
     <!-- ===========================Your finances agree terms view =========================== -->
-    <div th:fragment="agree_terms">
+    <th:block th:fragment="agree_terms">
         <th:block th:if="${(model.application.currentCompetition.isOpen())} and ${null != model.currentSection}"
             th:with="currentSection=(${model.currentSection}), completedSections=(${model.completedSections})">
             <th:block th:if="${model.showAgreeToStateAidOption}">
-                <th:block th:include="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" />
+                <th:block th:insert="fragments/elements :: application-agree-to-state-aid" th:with="fieldName='form.stateAidAgreed'" class="agree-to-terms-container" />
             </th:block>
             <th:block th:if="${model.showAgreeToTermsOption}">
-                <th:block th:include="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" />
+                <th:block th:insert="fragments/elements :: application-agree-to-terms" th:with="fieldName='form.termsAgreed'" class="agree-to-terms-container" />
             </th:block>
         </th:block>
-    </div>
+    </th:block>
 
 
     <!-- ===========================Subsection buttons =========================== -->
-    <div th:fragment="subsection_buttons">
+    <th:block th:fragment="subsection_buttons">
         <th:block th:if="${model.subFinanceSection}">
             <div>
                 <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
@@ -59,9 +59,9 @@
                 </a>
             </div>
         </th:block>
-    </div>
+    </th:block>
 
-    <div th:fragment="finance_sub_section_row">
+    <th:block th:fragment="finance_sub_section_row">
 
         <li class="grid-row section">
             <th:block th:if="${model.showSectionAsNotRequired(subSection)}">
@@ -105,9 +105,9 @@
                 </th:block>
             </th:block>
         </li>
-    </div>
+    </th:block>
 
-    <div th:fragment="your_finance_summary">
+    <th:block th:fragment="your_finance_summary">
 
         <div class="form-group" style="overflow:auto;">
             <table>
@@ -144,6 +144,6 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </th:block>
 
 </html>

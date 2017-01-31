@@ -18,18 +18,18 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project setup'}, ${'Project details'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
+
 	<hr />
 
 	<h2 class="heading-medium">Aptrans Ltd finances</h2>
 	<p>Post a query with the organisation's finance contact.</p>
-	
-	<th:block th:include="prototypes/fragments/project-setup :: prototype-post-query('query','admin')" /> 
-	
+
+	<th:block th:insert="prototypes/fragments/project-setup :: prototype-post-query('query','admin')" />
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -46,7 +46,7 @@
 
 		function $_GET(param) {
 	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
+	        window.location.href.replace( location.hash, '' ).replace(
 	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 	            function( m, key, value ) { // callback
 	                vars[key] = value !== undefined ? value : '';
@@ -54,7 +54,7 @@
 	        );
 
 	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
+	            return vars[param] ? vars[param] : null;
 	        }
 	        return vars;
 	    }

@@ -9,7 +9,7 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
-	<th:block th:include="fragments/layout :: header-sub"	 th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"/>
+	<th:block th:insert="fragments/layout :: header-sub"	 th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"/>
 	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
   <div class="grid-row">
     <div class="column-two-thirds">
@@ -40,7 +40,7 @@
             <div th:text="${partner.organisationName}" />
           </td>
           <td>
-            <th:block th:include="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
+            <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
           </td>
       </tr>
     </tbody>

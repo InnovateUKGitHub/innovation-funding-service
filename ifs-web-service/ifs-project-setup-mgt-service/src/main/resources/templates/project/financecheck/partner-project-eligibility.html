@@ -173,7 +173,7 @@
               <button class="button button-secondary extra-margin">Return to finance checks</button>
             </th:block>
 
-            <th:block th:include="fragments/modals :: approve-eligibility-modal" />
+            <th:block th:insert="fragments/modals :: approve-eligibility-modal" />
         </th:block>
     </form>
     <th:block th:unless="${model.showApproveButton}">

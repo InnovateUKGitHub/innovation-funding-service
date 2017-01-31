@@ -20,7 +20,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<th:block th:include="prototypes/fragments/comp-setup :: ${'prototype-section-'+ (param.section == null ? 'public-index' : param.section[0])}" th:remove="tag"/>
+	<th:block th:insert="prototypes/fragments/comp-setup :: ${'prototype-section-'+ (param.section == null ? 'public-index' : param.section[0])}" th:remove="tag"/>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

@@ -3,7 +3,7 @@
 <!--/* id of the competition for in the page title */-->
 <!--/* TODO: Why ask for competition object when all you need is id here?  Can you please ask for just two value parameters instead?  It simplifies view model: */-->
 <th:block th:fragment="competition-id(competition)">
-    <th:block th:include="fragments/competition-management :: competition-id-simple(${competition.competitionId})" />
+    <th:block th:insert="fragments/competition-management :: competition-id-simple(${competition.competitionId})" />
 </th:block>
 
 <!--/* TODO: Following on from previous to do, we can do it like this: */-->
@@ -38,17 +38,17 @@
     <th:block th:switch="${competitionStatus}">
 
         <th:block th:case="'OPEN'">
-          <th:block th:include="fragments/competition-management :: competition-mgt-menu-open(id=${competitionId})" />
+          <th:block th:insert="fragments/competition-management :: competition-mgt-menu-open(id=${competitionId})" />
         </th:block>
 
         <th:block th:case="'IN_ASSESSMENT'">
-          <th:block th:include="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
+          <th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
         </th:block>
         <th:block th:case="'FUNDERS_PANEL'">
-        	<th:block th:include="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
+        	<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessment(id=${competitionId})" />
         </th:block>
         <th:block th:case="'ASSESSOR_FEEDBACK'">
-        	<th:block th:include="fragments/competition-management :: competition-mgt-menu-assessor-feedback(id=${competitionId})" />
+        	<th:block th:insert="fragments/competition-management :: competition-mgt-menu-assessor-feedback(id=${competitionId})" />
         </th:block>
         <!--/* future
         <div th:remove="tag" th:case="'PROJECT_SETUP'"></div>
@@ -117,7 +117,7 @@
           <a th:href="@{/management/competition/{competitionId}/applications/download(competitionId=${competitionSummary.competitionId})}" class="button-secondary no-margin-right">Export application data (.xls)</a>
           <label for="notify-applicants" role="button" class="button no-margin-right" id="publish-funding-decision" data-js-modal="modal-publish-funding-decision">Notify applicants</label>
 
-          <th:block th:include="fragments/modals :: modal-overlay" />
+          <th:block th:insert="fragments/modals :: modal-overlay" />
       </div>
 
       <div th:case="'ASSESSOR_FEEDBACK'" class="info-area boxed">
@@ -133,7 +133,7 @@
           <form method="post" th:action="@{/competition/{competitionId}/assessorfeedback(competitionId=${competitionSummary.getCompetitionId()})}">
             <button th:disabled="${!canPublishAssessorFeedback}" class="button no-margin-right" th:if="${activeTab == 'submitted'}" data-js-modal="modal-submit-assessor-feedback">Publish assessor feedback</button>
           </form>
-          <th:block th:include="fragments/modals :: modal-overlay" />
+          <th:block th:insert="fragments/modals :: modal-overlay" />
 
       </div>
 

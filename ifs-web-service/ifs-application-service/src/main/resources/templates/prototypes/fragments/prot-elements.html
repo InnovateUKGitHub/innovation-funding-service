@@ -6,13 +6,13 @@
 <div th:fragment="prot-snippet(element)">
 
   <div class="result">
-    <th:block th:include="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
+    <th:block th:insert="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
   </div>
 
   <pre>
     <code class="language-markup">
       <xmp>
-        <th:block th:include="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
+        <th:block th:insert="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
       </xmp>
     </code>
   </pre>

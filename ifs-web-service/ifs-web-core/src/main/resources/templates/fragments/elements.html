@@ -55,7 +55,7 @@
 <div th:fragment="competition-deadline">
     <div class="competition-deadline" th:if="${endDate != null}">
         <div class="day">
-            <th:block th:include="fragments/elements :: ordinal-day (date=${endDate})" />
+            <th:block th:insert="fragments/elements :: ordinal-day (date=${endDate})" />
         </div>
         <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
     </div>
@@ -161,7 +161,7 @@
 </div>
 
 <!-- =========================== Element: Formatted Date =========================== -->
-<div  th:fragment="pretty-date (date)" >
+<div th:fragment="pretty-date (date)" >
     <th:block th:with="today=(${#temporals.createToday()})">
         <th:block th:if="${date.toLocalDate().equals(today)}" th:text="Today" />
         <th:block th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="Yesterday" />

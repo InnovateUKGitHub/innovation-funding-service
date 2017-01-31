@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
 <!-- ===========================Place: <HEAD>=========================== -->
-<div th:fragment="head">
+<th:block th:fragment="head">
     <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
     <title th:text="${pageTitle}+' - Innovation Funding Service'"></title>
@@ -58,23 +58,23 @@
     /*]]>*/
     </script>
 
-</div>
+</th:block>
 
 <!-- ===========================Place: <body> start =========================== -->
 
-<div th:fragment="body-start">
+<th:block th:fragment="body-start">
     <!--/* Changes body class from no-js to js when js is enabled */-->
     <script>(function(H){H.className=H.className.replace(/\bno-js\b/,'js-enabled')})(document.documentElement)</script>
 
-    <th:block th:include="fragments/elements :: skiplink-container" />
-    <th:block th:include="fragments/elements :: global-cookie-message" />
-    <th:block th:include="fragments/elements :: global-alert-message" />
+    <th:block th:insert="fragments/elements :: skiplink-container" />
+    <th:block th:insert="fragments/elements :: global-cookie-message" />
+    <th:block th:insert="fragments/elements :: global-alert-message" />
 
-</div>
+</th:block>
 
 <!-- ===========================Place: <body> end =========================== -->
 
-<div th:fragment="body-end">
+<th:block th:fragment="body-end">
 
     <script src="/js/dest/vendor.min.js" th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/vendor.min.js')}" type="text/javascript"></script>
     <script src="/js/dest/ifs.min.js" th:src="${@mvcResourceUrlProvider.getForLookupPath('/js/dest/ifs.min.js')}" type="text/javascript"></script>
@@ -94,16 +94,16 @@
             <script th:src="'/project-setup'+${@mvcResourceUrlProvider.getForLookupPath('/js/dest/project-setup.min.js')}" type="text/javascript"></script>
         </th:block>
     </th:block>
-</div>
+</th:block>
 
 <!-- ===========================Place: main <header>  =========================== -->
 
-<div th:fragment="global-header">
+<th:block th:fragment="global-header">
     <header role="banner" id="global-header" class="with-proposition">
-      <th:block th:include="fragments/elements :: notification" />
+      <th:block th:insert="fragments/elements :: notification" />
       <div class="header-wrapper">
             <div class="header-global">
-                <th:block th:include="fragments/elements :: header-logo" />
+                <th:block th:insert="fragments/elements :: header-logo" />
             </div>
             <div class="header-proposition">
               <div class="content">
@@ -123,23 +123,23 @@
         <span>This is a new service – your <a href="mailto:IFSfeedback@innovateuk.gov.uk">feedback</a> will help us to improve it.</span>
       </p>
     </div>
-</div>
+</th:block>
 <!-- ===========================Place: <main> content-start =========================== -->
 
-<div th:fragment="main-content-start">
+<th:block th:fragment="main-content-start">
 
-</div>
+</th:block>
 
 <!-- ===========================Place: <main> content-end =========================== -->
 
-<div th:fragment="main-content-end">
+<th:block th:fragment="main-content-end">
     <p class="user-feedback"><span>Need help with this service?</span> <a href="/info/contact">Contact us</a></p>
-</div>
+</th:block>
 
 
 <!-- ===========================Place: main <footer>  =========================== -->
 
-<div th:fragment="footer">
+<th:block th:fragment="footer">
 
   <footer class="group js-footer" id="footer" role="contentinfo">
 
@@ -160,11 +160,11 @@
         </div>
       </div>
     </footer>
-</div>
+</th:block>
 
 
 <!-- =========================== Element : subheader =========================== -->
-<div th:fragment="header-sub">
+<th:block th:fragment="header-sub">
     <div class="sub-header">
         <nav>
             <a th:if="${linkTitle != null and linkUrl != null}"
@@ -173,20 +173,20 @@
                th:text="${linkTitle}" />
         </nav>
         <div class="deadline" th:if="${currentCompetition != null}">Days left to submit&nbsp;&nbsp;
-            <th:block th:include="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" />
+            <th:block th:insert="fragments/elements :: pie-small" th:with="daysPercentage=${currentCompetition.getStartDateToEndDatePercentage()},daysLeft=${currentCompetition.getDaysLeft()}" />
         </div>
     </div>
-</div>
+</th:block>
 
 
-<div th:fragment="header-sub-generic">
+<th:block th:fragment="header-sub-generic">
     <div class="sub-header">
         <div class="deadline"><th:block th:text="${deadlineText}" />&nbsp;&nbsp;
-            <th:block th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
+            <th:block th:insert="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
         </div>
         <strong th:text="${title}" />
     </div>
-</div>
+</th:block>
 
 
 </html>

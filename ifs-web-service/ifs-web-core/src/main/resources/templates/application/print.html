@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:include="fragments/layout :: head" th:with="pageTitle='Print Application'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Print Application'" />
 
 
 </head>
 <body th:with="context='applicant'" class="print-doc">
-<th:block th:include="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: body-start" />
 
 <div class="print-bar">
     <button class="button" onclick="window.print()">Print your application</button>
@@ -37,11 +37,11 @@
           <section class="landscape">
               <div>
                     <h2 class="heading-medium">Funding breakdown</h2>
-                    <th:block th:include="application/print-elements :: financial_summary_table" />
+                    <th:block th:insert="application/print-elements :: financial_summary_table" />
             </div>
         </section>
     </div>
-  <th:block th:include="fragments/layout :: body-end" />
+  <th:block th:insert="fragments/layout :: body-end" />
   <th:block th:unless="${param.noprint}">
     <script type="text/javascript">
         jQuery(document).ready(function(){

@@ -72,7 +72,7 @@
                  </div>
 
                  <th:block th:if="${assessorFeedback.fileUploaded and assessorFeedback.readonly}">
-                     <th:block th:include="question-type/form-elements :: readonly-file-download
+                     <th:block th:insert="question-type/form-elements :: readonly-file-download
                                  (filename=${assessorFeedback.filename},
                                   filesizeKbytes=${assessorFeedback.filesizeKbytes},
                                   fileDescription=${'View the application feedback:'},
@@ -105,13 +105,13 @@
               <div th:replace="finance/finance-summary :: research_participation_alert" th:if="${currentApplication.isOpen()}"></div>
 
               <h2 class="heading-medium">Funding breakdown</h2>
-              <th:block th:include="finance/finance-summary :: financial_summary_table" />
+              <th:block th:insert="finance/finance-summary :: financial_summary_table" />
 
               <div th:if="${academicOrganisations != null and academicOrganisations.size() > 0}">
                   <h2 class="heading-medium">Academic partner breakdown</h2>
                   <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs, please see the
                       below documents.</p>
-                  <th:block th:include="finance/finance-summary :: academic_partner_breakdown" />
+                  <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
               </div>
           </div>
       </div>

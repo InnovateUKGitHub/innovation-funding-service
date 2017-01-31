@@ -13,7 +13,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	
+
 	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.status != null and param.status[0] == 'approved' ? '/prototypes/1588-project-status?stage=level5' : '/prototypes/1588-project-status?stage=level3')})" th:remove="tag" />
 
 
@@ -27,13 +27,13 @@
 	</th:block>
 
 	<p>Innovate UK are currently reviewing your finances and may contact you with any queries. This stage can take some time. You can review your finance details using the link below.</p>
-	
+
 	<ul>
 		<li>
-			<a href="/prototypes/3985-partner-finances" class="heading-medium">View finances</a> 
+			<a href="/prototypes/3985-partner-finances" class="heading-medium">View finances</a>
 		</li>
 		<li>
-			<a href="/prototypes/1585-finances-overview" class="heading-medium">Project finance overview</a> 
+			<a href="/prototypes/1585-finances-overview" class="heading-medium">Project finance overview</a>
 		</li>
 	</ul>
 
@@ -55,9 +55,9 @@
         <button class="button button-secondary" th:unless="${param.status != null and param.status[0] == 'approved'}">Respond</button>
     </form>
 
-    <th:block th:include="prototypes/fragments/project-setup :: prototype-post-query('query','partner')" th:if="${param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}"/> 
-	
-	
+    <th:block th:insert="prototypes/fragments/project-setup :: prototype-post-query('query','partner')" th:if="${param.action != null and param.action[0] == 'newResponse' or param.action != null and param.action[0] == 'postResponse'}"/>
+
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -69,7 +69,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

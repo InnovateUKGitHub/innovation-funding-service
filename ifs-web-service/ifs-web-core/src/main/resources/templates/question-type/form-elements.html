@@ -129,30 +129,30 @@
             <input type="hidden" th:name="${field}" th:id="${id}" th:value="${field}" />
 
 	        <div class="day">
-	            <th:block th:include="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)" />
+	            <th:block th:insert="question-type/form-elements :: form-label (name='Day',id=${id}+'_day',bold=false)" />
 	            <th:block th:if="${dateFieldPresent}">
-	            	<th:block th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
+	            	<th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
 	             </th:block>
 	             <th:block th:unless="${dateFieldPresent}">
-	            	<th:block th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
+	            	<th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_day', field=${field}+'.dayOfMonth',placeholder='DD',readonly=${(readonly != null and readonly) or (dayReadonly != null and dayReadonly)},required=true,min=1,max=31)" />
 	             </th:block>
 	        </div>
 	        <div class="month">
-	            <th:block th:include="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)" />
+	            <th:block th:insert="question-type/form-elements :: form-label (name='Month',id=${id}+'_month',bold=false)" />
 	            <th:block th:if="${dateFieldPresent}">
-	          		<th:block th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM',required=true,min=1,max=12)" />
+	          		<th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM',required=true,min=1,max=12)" />
 	            </th:block>
 	            <th:block th:unless="${dateFieldPresent}">
-	           		<th:block th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM',required=true,min=1,max=12)" />
+	           		<th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_month', field=${field}+'.monthValue',placeholder='MM',required=true,min=1,max=12)" />
 	            </th:block>
 	        </div>
 	        <div class="year">
-	            <th:block th:include="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
+	            <th:block th:insert="question-type/form-elements :: form-label (name='Year',id=${id}+'_year',bold=false)" />
 	            <th:block th:if="${dateFieldPresent}">
-	        		<th:block th:include="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
+	        		<th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}+'_year', field=${field}+'.year',placeholder='YYYY',required=true)" />
 	            </th:block>
 	            <th:block th:unless="${dateFieldPresent}">
-	           		<th:block th:include="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
+	           		<th:block th:insert="question-type/form-elements :: form-number-extra-small-empty (id=${id}+'_year',field=${field}+'.year', placeholder='YYYY',required=true)" />
 	            </th:block>
             </div>
         </th:block>
@@ -161,8 +161,8 @@
 
 
 <div th:fragment="form-percentage (id, title, field)">
-    <th:block th:include="question-type/form-elements :: form-label (name=${title},id=${id},bold=false)" />
-    <th:block th:include="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field}, min=0, max=100)" />
+    <th:block th:insert="question-type/form-elements :: form-label (name=${title},id=${id},bold=false)" />
+    <th:block th:insert="question-type/form-elements :: form-number-extra-small (id=${id}, field=${field}, min=0, max=100)" />
 </div>
 <!-- ========================= textarea  =========================== -->
 
@@ -231,12 +231,12 @@
 
         <div class="textarea-footer">
           <p>
-            <th:block th:include="question-type/form-elements :: last-update-info" />
-            <th:block th:include="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
+            <th:block th:insert="question-type/form-elements :: last-update-info" />
+            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${formInput.getWordCount()}, currentWordsLeft=${response?.getWordCountLeft()})" />
           </p>
 
-            <th:block th:include="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" />
-            <th:block th:include="question-type/form-elements :: assign-buttons" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" />
+            <th:block th:insert="question-type/form-elements :: ready-for-review" th:if="${!userIsLeadApplicant}" />
+            <th:block th:insert="question-type/form-elements :: assign-buttons" th:unless="${readonly} or ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or ${!userIsLeadApplicant}" />
 
             <th:block th:if="${competitionIsOpen} == null or ${competitionIsOpen}">
                 <!--/* if  readonly we show the edit form button */-->
@@ -278,7 +278,7 @@
 <div th:fragment="assign-buttons">
     <div class="assign-container" th:if="${question.isAssignEnabled()}">
         <div class="assign-button">
-              <th:block th:include="question-type/form-elements :: assigned-to" />
+              <th:block th:insert="question-type/form-elements :: assigned-to" />
         </div>
         <div class="assign-team">
             <!--/* Reassign question */-->
@@ -318,10 +318,7 @@
 <div th:fragment="last-update-info">
       <th:block th:if="${response?.getUpdateDate()}">
         <small>
-          Last updated:
-          <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" />
-          by
-          <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
+          Last updated: <th:block th:include="fragments/elements :: pretty-date (date=${response?.getUpdateDate()})" /> by <th:block th:if="${response?.getUpdatedByUser() == currentUser.getId()}">you</th:block>
           <th:block th:unless="${response?.getUpdatedByUser() == currentUser.getId()}" th:text="${response?.getUpdatedByUserName()}" />
         </small>
       </th:block>

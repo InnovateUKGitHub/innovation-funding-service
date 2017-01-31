@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
     <!-- ===========================Form: financial summary (question type) =========================== -->
-    <div th:fragment="financial_summary" th:if="${financeTotalPerType}">
+    <th:block th:fragment="financial_summary" th:if="${financeTotalPerType}">
         <div th:class="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio} ? 'eligibility warning' : 'eligibility'" >
             <dl class="list-eligibility">
                 <dt>Maximum research participation</dt>
@@ -14,19 +14,19 @@
         </div>
 
         <h2 class="heading-medium">Finances Summary</h2>
-        <th:block th:include="finance/finance-summary :: application_finances_summary" />
+        <th:block th:insert="finance/finance-summary :: application_finances_summary" />
         <!--/* <div class="icon icon-information"></div><span>Please provide your financial breakdown in the <a th:href="@{/application/{id}/form/section/7/(id=${currentApplication.getId()})}" >Your finances</a> section.</span> */-->
         <h2 class="heading-medium">Project cost breakdown</h2>
-        <th:block th:include="finance/finance-summary :: financial_summary_table" />
+        <th:block th:insert="finance/finance-summary :: financial_summary_table" />
         <p>This is the level of cost detail that the assessors will see during the assessment process.</p>
 
         <h2 class="heading-medium">Academic partner breakdown</h2>
         <p>Academic partners submit their project costs through the Je-S system. For a full breakdown of their project costs please see the documents below.</p>
-        <th:block th:include="finance/finance-summary :: academic_partner_breakdown" />
-    </div>
+        <th:block th:insert="finance/finance-summary :: academic_partner_breakdown" />
+    </th:block>
 
 
-    <div th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
+    <th:block th:fragment="academic_partner_breakdown" th:if="${financeTotalPerType}">
         <div th:each="organisation : ${academicOrganisations}" th:unless="${academicFileEntries == null}">
             <h3 th:text="${organisation.name}" class="heading-medium">University</h3>
             <div th:if="${academicFileEntries.containsKey(organisation.id)}" th:with="applicationFinanceResource = ${academicFileEntries.get(organisation.id).left}, fileEntry = ${academicFileEntries.get(organisation.id).right}">
@@ -42,11 +42,11 @@
                 </div>
             </div>
         </div>
-    </div>
+    </th:block>
 
 
     <!-- ===========================Form: financial summary/breakdown table =========================== -->
-    <div th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
+    <th:block th:fragment="financial_summary_table" th:if="${financeTotalPerType}">
         <div class="form-group project-cost-breakdown">
             <div style="overflow: auto;">
                 <th:block th:unless="${applicationOrganisations != null}">
@@ -123,11 +123,11 @@
 
             </div>
         </div>
-    </div>
+    </th:block>
 
     <!-- ===========================Form: funding breakdown =========================== -->
-    <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
-        <th:block th:include="finance/finance-summary :: application_finances_incomplete_warning" />
+    <th:block th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
+        <th:block th:insert="finance/finance-summary :: application_finances_incomplete_warning" />
 
         <div class="form-group finance-summary" style="overflow:auto;">
             <table>
@@ -217,10 +217,10 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </th:block>
     <!-- ===========================Form: finances incomplete =========================== -->
 
-    <div th:fragment="application_finances_incomplete_warning">
+    <th:block th:fragment="application_finances_incomplete_warning">
         <div th:if="${hasFinanceSection and currentApplication.isOpen()
         and !sectionsMarkedAsComplete.contains(financeSectionId)}" class="warning-alert">
             <h2 class="heading-small no-margin">The following organisations have not marked their finances as complete:</h2>
@@ -237,10 +237,10 @@
 
             <p>This application cannot be submitted unless finances have been marked as complete by all partners.</p>
         </div>
-    </div>
+    </th:block>
 
     <!-- ===========================Form: Research Participations alert messages =========================== -->
-    <div th:fragment="research_participation_alert">
+    <th:block th:fragment="research_participation_alert">
         <div th:unless="${researchParticipationPercentage &gt; currentCompetition.maxResearchRatio}" class="success-alert">
             <h2 class="heading-small no-margin">The participation levels of this project are within the required range.</h2>
             <p>This application can be submitted with these project costs.</p>
@@ -249,5 +249,5 @@
             <h2 class="heading-small no-margin">The participation levels of this project are not within the required range</h2>
             <p>You will not be able to submit this application until the research participation is <span th:text="${currentCompetition.maxResearchRatio}"></span>% or less.</p>
         </div>
-    </div>
+    </th:block>
 </html>

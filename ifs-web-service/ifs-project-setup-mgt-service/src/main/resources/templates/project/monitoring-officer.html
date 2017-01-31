@@ -128,10 +128,7 @@
 		<th:block th:if="${model.targetProjectStartDate}">
 			<h3 class="heading-medium no-margin">Target project start date</h3>
 			<p class="form-hint">Planned start date for the project.</p>
-			<p th:if="${model.targetProjectStartDate}">
-				<th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
-	 			<th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
-			</p>
+			<p th:if="${model.targetProjectStartDate}"><th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" /> <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" /></p>
 		</th:block>
 
 		<th:block th:if="${model.projectManagerName}">

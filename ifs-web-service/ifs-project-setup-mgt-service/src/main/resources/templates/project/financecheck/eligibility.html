@@ -73,7 +73,7 @@
                         viewmode=readonly, generates readonly inputs,
                         viewmode=edit, generates the editable inputs + repeating row elements)
                         */-->
-                        <th:block th:include="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')" th:with="formInputIndex=(${status.index})" />
+                        <th:block th:insert="project/financecheck/fragments/finance :: ${formInput.type.nameLower} (viewmode='readonly')" th:with="formInputIndex=(${status.index})" />
                     </th:block>
                 </th:block>
             </div>
@@ -122,9 +122,9 @@
         <a th:if="${model.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
     </form>
 
-    <th:block th:include="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-<th:block th:include="fragments/layout :: footer" />
-<th:block th:include="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
