@@ -9,43 +9,31 @@ Default Tags
 Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot
 
+#This test suite is using the Application:  Robot test application
+
 *** Test Cases ***
 Green check shows after marking a question as complete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
     [Setup]
-    Given the user makes sure that the finances section is not marked as complete
-    When the user navigates to the overview page of the Robot test application
-    And none of the sections are marked as complete
-    And the user clicks the button/link    link=4. Economic benefit
+    Given the user navigates to the overview page of the Robot test application
+    And the user should see the element     jQuery=img.assigned[alt*="Economic"]
+    When the user clicks the button/link    link=4. Economic benefit
     And the applicant adds some content and marks this section as complete
     And The user navigates to the overview page of the Robot test application
-    Then the applicant can see that the economics benefit section is marked as complete
+    Then the user should not see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
 
 Blue flag shows after marking a question as incomplete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
     Given The user navigates to the overview page of the Robot test application
-    And the applicant can see that the economics benefit section is marked as complete
+    And the user should not see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
     And the user clicks the button/link    link=4. Economic benefit
     And the applicant edits the "economic benefit" question
     And The user navigates to the overview page of the Robot test application
-    Then none of the sections are marked as complete
 
 Green check shows when finances are marked as complete
     [Documentation]    INFUND-1733
     [Tags]
     Given the Application details are completed
     Then the user marks the finances as complete
-
-*** Keywords ***
-none of the sections are marked as complete
-    the user should not see the element    css=.complete
-
-the applicant can see that the economics benefit section is marked as complete
-    the user should see the element    jQuery=#section-2 .section:nth-child(4) img[src*="/images/field/field-done-right"]
-
-the user makes sure that the finances section is not marked as complete
-    the user navigates to the overview page of the Robot test application
-    the user clicks the button/link    link=Your finances
-    Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    jQuery=button:contains("Edit")
