@@ -29,10 +29,9 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail
 @Service
 public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService implements CompetitionSetupFinanceService {
 
+
     @Autowired
     private FormInputRepository formInputRepository;
-
-    private static final String TURNOVER_FINANCE_NOT_CONSISTENT_MESSAGE = "include.growth.table.count.turnover.finance.input.active.not.consistent";
 
     @Override
     public ServiceResult<Void> save(CompetitionSetupFinanceResource compSetupFinanceRes) {
@@ -100,7 +99,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         if (isConsistent) {
             return serviceSuccess(byCountAndTurnover);
         } else {
-            return serviceFailure(new Error(TURNOVER_FINANCE_NOT_CONSISTENT_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR));
+            return serviceFailure(new Error("include.growth.table.count.turnover.finance.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 
@@ -110,7 +109,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
         if (isConsistent) {
             return serviceSuccess(!count.getActive());
         } else {
-            return serviceFailure(new Error(TURNOVER_FINANCE_NOT_CONSISTENT_MESSAGE, HttpStatus.INTERNAL_SERVER_ERROR));
+            return serviceFailure(new Error("include.growth.table.count.turnover.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
         }
     }
 
