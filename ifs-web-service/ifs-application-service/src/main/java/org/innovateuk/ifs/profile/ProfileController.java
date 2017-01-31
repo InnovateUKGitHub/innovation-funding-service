@@ -56,7 +56,7 @@ public class ProfileController {
 
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String viewUserProfile(Model model, HttpServletRequest request) {
-        final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);
+        final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request, true);
         final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
