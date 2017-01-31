@@ -2,6 +2,8 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
@@ -42,8 +44,6 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -120,6 +120,11 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(financeHandler.getProjectFinanceModelManager("Business")).thenReturn(defaultProjectFinanceModelManager);
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        financeViewModel.setOrganisationGrantClaimPercentage(74);
+
+        when(defaultProjectFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 
     @Test

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationController;
@@ -97,7 +96,6 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     @Test
     public void saveApplicationDetails() throws Exception{
         Long applicationId = 1L;
-        ObjectMapper mapper = new ObjectMapper();
 
         ApplicationResource testApplicationResource1 = applicationResourceBuilder.build();
 
@@ -105,7 +103,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         mockMvc.perform(post("/application/saveApplicationDetails/{id}", applicationId)
                     .contentType(APPLICATION_JSON)
-                    .content(mapper.writeValueAsString(testApplicationResource1))
+                    .content(objectMapper.writeValueAsString(testApplicationResource1))
                 )
                 .andDo(this.document.snippets(
                     pathParameters(
@@ -156,8 +154,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
     public void applicationReadyForSubmit() throws Exception{
         Long applicationId = 1L;
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode node = mapper.createObjectNode();
+        ObjectNode node = objectMapper.createObjectNode();
         node.put(READY_FOR_SUBMIT, true);
         node.put(PROGRESS, 10);
         node.put(RESEARCH_PARTICIPATION, 20.5);
@@ -212,14 +209,13 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
 
         ApplicationResource applicationResource = applicationResourceBuilder.build();
 
-        ObjectMapper mapper = new ObjectMapper();
-        ObjectNode applicationNameNode = mapper.createObjectNode().put("name", applicationName);
+        ObjectNode applicationNameNode = objectMapper.createObjectNode().put("name", applicationName);
 
         when(applicationServiceMock.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId)).thenReturn(serviceSuccess(applicationResource));
 
         mockMvc.perform(post("/application/createApplicationByName/{competitionId}/{userId}", competitionId, userId, "json")
                 .contentType(APPLICATION_JSON)
-                .content(mapper.writeValueAsString(applicationNameNode)))
+                .content(objectMapper.writeValueAsString(applicationNameNode)))
                 .andDo(document.snippets(
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition the new application is being created for."),

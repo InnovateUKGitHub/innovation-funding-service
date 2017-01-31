@@ -162,6 +162,10 @@ include::competitionSetupQuestion.adoc[]
 == Competition Setup Finance
 include::competitionSetupFinance.adoc[]
 
+[[publicContent]]
+== Public Content
+include::publicContent.adoc[]
+
 [[assessment]]
 == Assessment
 include::assessment.adoc[]
