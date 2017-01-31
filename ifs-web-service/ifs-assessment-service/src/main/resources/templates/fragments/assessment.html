@@ -24,10 +24,18 @@
 
 
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
-<div th:fragment="assessment-header-sub">
+<div th:fragment="assessment-header-sub (linkTitle, linkUrl, linkClass)">
     <div class="sub-header">
         <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass != null ? linkClass : ''}" th:href="${linkUrl}" th:text="${linkTitle}" />
+            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
+        </nav>
+    </div>
+</div>
+
+<div th:fragment="assessment-header-deadline-sub (linkTitle, linkUrl, linkClass, daysPercentage, daysLeft)">
+    <div class="sub-header">
+        <nav>
+            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
         </nav>
         <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
             <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />

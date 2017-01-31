@@ -14,7 +14,7 @@
 
     <div th:include="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" th:remove="tag" />
       	<div class="page-title">
-            <div th:include="fragments/elements :: application-title (app=${model.application.currentApplication})" th:remove="tag" />
+            <div th:include="fragments/elements :: application-title (applicationId=${model.application.currentApplication.id},applicationName=${model.application.currentApplication.applicationDisplayName})" th:remove="tag" />
             <h1 class="heading-xlarge"  th:text="${model.title}" />
         </div>
         <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" data-autosave="application" enctype="multipart/form-data"

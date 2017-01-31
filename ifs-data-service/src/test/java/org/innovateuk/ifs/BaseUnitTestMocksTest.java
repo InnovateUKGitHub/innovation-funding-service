@@ -66,6 +66,7 @@ import org.innovateuk.ifs.project.finance.repository.*;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -481,6 +482,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected FinanceCheckWorkflowHandler financeCheckWorkflowHandlerMock;
+
+    @Mock
+    protected ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
 
     @Mock
     protected GOLWorkflowHandler golWorkflowHandlerMock;
