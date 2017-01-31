@@ -26,6 +26,7 @@ function cleanUp() {
 
 function buildAndPushTestImages() {
     rm -rf robot-tests/target && mkdir robot-tests/target
+    sleep 5
     docker build -t ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT robot-tests-tmp/
     docker push ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT
 }

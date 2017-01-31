@@ -34,7 +34,7 @@ items:
   metadata:
     name: chrome
   spec:
-    replicas: 4
+    replicas: 5
     selector:
       deploymentconfig: chrome
     template:
