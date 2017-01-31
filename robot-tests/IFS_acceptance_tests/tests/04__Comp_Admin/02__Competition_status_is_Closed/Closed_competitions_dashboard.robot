@@ -13,9 +13,9 @@ Resource          ../../../resources/defaultResources.robot
 The user should be able to navigate to the Closed dashboard
     [Documentation]    INFUND-6599
     When The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
-    Then the user should see the element    jQuery=.button:contains("Applications")
+    Then the user should see the element    jQuery=button:contains("Applications")
     and the user should see the element    jQuery=.button:contains("Notify assessors")
-    and the user should see the element    link=Invite assessors
+    and the user should see the element    jQuery=.button:contains("Invite assessors")
 
 The user can Invite Assessors
     [Documentation]    INFUND-6604
@@ -36,6 +36,6 @@ The user can Notify Assessors
     [Documentation]    INFUND-6458
     [Tags]
     When The user clicks the button/link    jQuery=.button:contains("Notify assessors")
-    Then The user should see the text in the page    In assessment
+    Then the user should see the text in the page    In assessment
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=12;
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=12;
