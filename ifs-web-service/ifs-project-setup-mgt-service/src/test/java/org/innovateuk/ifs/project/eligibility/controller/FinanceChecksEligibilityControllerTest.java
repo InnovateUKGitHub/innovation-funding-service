@@ -10,12 +10,16 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
+import org.innovateuk.ifs.project.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -70,6 +74,12 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
 
     @Mock
     private Model model;
+
+    @Mock
+    private ProjectFinanceRowService financeRowService;
+
+    @Mock
+    private ProjectFinanceFormHandler projectFinanceFormHandler;
 
     private OrganisationResource industrialOrganisation;
 
@@ -126,6 +136,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(financeHandler.getProjectFinanceModelManager("Business")).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler("Business")).thenReturn(projectFinanceFormHandler);
 
         FinanceViewModel financeViewModel = new FinanceViewModel();
         financeViewModel.setOrganisationGrantClaimPercentage(74);
@@ -368,6 +379,41 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
 
         verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.GREEN);
 
+    }
+
+    @Test
+    public void testAjaxAddCost() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        Long questionId = 3L;
+
+        FinanceRowItem costItem = new Materials();
+        when(projectFinanceFormHandler.addCostWithoutPersisting(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
+        mockMvc.perform(
+                get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/add_cost/{questionId}", projectId, organisationId, questionId)).
+                andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAjaxRemoveCost() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        Long costId = 3L;
+
+        mockMvc.perform(
+                get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/remove_cost/{costId}", projectId, organisationId, costId)).
+                andExpect(status().isOk());;
+    }
+
+    @Test
+    public void testProjectFinanceFormSubmit() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
+                        param("save-eligibility", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + 2 +"/eligibility"));
     }
 
     @Override
