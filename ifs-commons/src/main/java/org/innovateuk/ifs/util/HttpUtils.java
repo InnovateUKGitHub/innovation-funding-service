@@ -1,21 +1,12 @@
 package org.innovateuk.ifs.util;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import javax.servlet.http.HttpServletRequest;
-import java.util.*;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.function.Function;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.MapFunctions.simplePartition;
 
 /**
  * A set of utilities for performing commonly used functions related to HTTP.
@@ -53,28 +44,19 @@ public final class HttpUtils {
         return Optional.empty();
     }
 
-    static Map<String, String> processForMMYYYY(Map<String, String> parameterMap) {
+    /**
+     *First off filters out the parameters which we are interested in but they are still of the form e.g. (  key -> formInput[12].MMYYYY.year,
+     *                                                                                                       value -> 7
+     *                                                                                                       key -> formInput[12].MMYYYY.month,
+     *                                                                                                       value -> 2011)
+     *Then it makes a map of maps keyed of the form input e.g.
+     *And eventually it returns a Map with in the key the name of the input (formInput[12]) and combined value in the value (7-2011)
+     * @param parameterMap
+     * @return
+     */
+    public static Map<String, String> processForMMYYYY(Map<String, String> parameterMap) {
         Map<String, String> parametersThatNeedProcessing = simpleFilter(parameterMap, key -> key.endsWith(MM_YYYY_MONTH_APPEND) || key.endsWith(MM_YYYY_YEAR_APPEND));
-        // We should now only have the parameters which we are interested in but they are still of the form e.g.
-        // key ->
-        //   formInput[12].MMYYYY.year,
-        // value ->
-        //   7
-        // key ->
-        //   formInput[12].MMYYYY.month,
-        // value -> 2011
         Map<String, Map<String, String>> parametersThatNeedProcessingGroupedByFormInput = simpleGroupBy(parametersThatNeedProcessing, key -> key.replace(MM_YYYY_MONTH_APPEND, "").replace(MM_YYYY_YEAR_APPEND, ""));
-        // We now have a map of maps keyed of the form input e.g.
-        // key ->
-        //    formInput[12]
-        // value ->
-        //    map -> key ->
-        //             formInput[12].MMYYYY.year
-        //           value ->
-        //              2011
-        //           key ->
-        //             formInput[12].MMYYYY.month
-        //           value -> 7
         Map<String, String> processed = simpleMapEntry(parametersThatNeedProcessingGroupedByFormInput, Entry::getKey,
                 entry -> {
                     Map<String, String> components = entry.getValue();
@@ -84,11 +66,7 @@ public final class HttpUtils {
                     String value = (month != null ? month : "") + "-" + (year != null ? year : "");
                     return value;
                 });
-        // At this point we should have e.g.
-        // key ->
-        //   formInput[12]
-        // value ->
-        //   7-2011
+
         return processed;
     }
 

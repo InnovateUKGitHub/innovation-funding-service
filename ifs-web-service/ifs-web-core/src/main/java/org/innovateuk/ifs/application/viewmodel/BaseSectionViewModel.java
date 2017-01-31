@@ -10,6 +10,7 @@ import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -297,7 +298,8 @@ public abstract class BaseSectionViewModel {
     }
 
     public Boolean isOrgFinancialOverview(Long questionId) {
-        return isSubFinanceSection() && questionFormInputs.get(questionId).stream().anyMatch(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType()));
+        return isSubFinanceSection()
+                && (questionFormInputs.containsKey(questionId) && questionFormInputs.get(questionId).stream().anyMatch(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType())));
     }
 
     public List<FormInputResource> getFormInputsOrganisationSize(Long questionId) {
@@ -317,6 +319,9 @@ public abstract class BaseSectionViewModel {
     }
 
     private List<FormInputResource> getFormInputsByType(Long questionId, FormInputType formInputType) {
-        return questionFormInputs.get(questionId).stream().filter(formInputResource -> formInputType.equals(formInputResource.getType())).collect(toList());
+        if(questionFormInputs.containsKey(questionId)) {
+            return questionFormInputs.get(questionId).stream().filter(formInputResource -> formInputType.equals(formInputResource.getType())).collect(toList());
+        } 
+        return Collections.emptyList();
     }
 }
