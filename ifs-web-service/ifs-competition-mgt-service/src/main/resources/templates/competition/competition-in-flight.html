@@ -154,8 +154,10 @@
                     <h2 class="heading-large">Actions</h2>
                     <div class="grid-row dashboard-actions">
                         <div class="column-third">
+                            <a class="button button-block disabled" aria-disabled="true"
+                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN'}">Applications</a>
                             <a class="button button-block"
-                               th:disabled="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
+                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
                                th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications</a>
                         </div>
                     </div>
@@ -166,21 +168,27 @@
                                th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite assessors</a>
                         </div>
                         <div class="column-third">
+                            <a class="button button-block disabled" aria-disabled="true"
+                               th:if="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN')}">Manage applications</a>
                             <a class="button button-block"
-                               th:disabled="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN')}"
+                               th:unless="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN')}"
                                th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Manage applications</a>
                         </div>
                         <div class="column-third">
+                            <a class="button button-block disabled" aria-disabled="true"
+                               th:if="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' ? 'disabled' : '')}">View panel sheet</a>
                             <a class="button button-block"
-                               th:classappend="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' ? 'disabled' : '')}"
+                               th:unless="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' ? 'disabled' : '')}"
                                href="#">View panel sheet</a>
                         </div>
                     </div>
 
                     <div class="grid-row dashboard-actions">
                         <div class="column-third">
+                            <a class="button button-block disabled" aria-disabled="true"
+                               th:if="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT' ? 'disabled' : '')}">Funding decision</a>
                             <a class="button button-block"
-                               th:classappend="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT' ? 'disabled' : '')}"
+                               th:unless="${(model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT' ? 'disabled' : '')}"
                                href="#">Funding decision</a>
                         </div>
                         <!--
