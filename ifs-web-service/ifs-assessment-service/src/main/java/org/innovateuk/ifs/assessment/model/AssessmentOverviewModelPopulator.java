@@ -84,20 +84,17 @@ public class AssessmentOverviewModelPopulator {
                                                                  Map<Long, List<FormInputResource>> formInputs,
                                                                  Map<Long, AssessorFormInputResponseResource> responses) {
         Map<Long, QuestionResource> questionsMap = simpleToMap(questions, QuestionResource::getId, identity());
-        return sections.stream()
-                .map(sectionResource -> {
+        return simpleMap(sections, sectionResource -> {
+            List<QuestionResource> sectionQuestions = sectionResource.getQuestions().stream()
+                    .map(questionsMap::get)
+                    .collect(toList());
 
-                    List<QuestionResource> sectionQuestions = sectionResource.getQuestions().stream()
-                            .map(questionsMap::get)
-                            .collect(toList());
-
-                    return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
-                            sectionResource.getName(),
-                            sectionResource.getAssessorGuidanceDescription(),
-                            getQuestions(sectionQuestions, formInputs, responses)
-                    );
-                })
-                .collect(toList());
+            return new AssessmentOverviewSectionViewModel(sectionResource.getId(),
+                    sectionResource.getName(),
+                    sectionResource.getAssessorGuidanceDescription(),
+                    getQuestions(sectionQuestions, formInputs, responses)
+            );
+        });
     }
 
     private List<AssessmentOverviewQuestionViewModel> getQuestions(List<QuestionResource> questions,
