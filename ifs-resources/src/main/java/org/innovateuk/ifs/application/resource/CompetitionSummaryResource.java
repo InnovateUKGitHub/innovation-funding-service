@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.application.resource;
 
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,131 +11,152 @@ import java.time.format.DateTimeFormatter;
  * Represents a high-level overview of an application.
  */
 public class CompetitionSummaryResource {
-    private Long competitionId;
-	private String competitionName;
-	private CompetitionStatus competitionStatus;
-	private LocalDateTime applicationDeadline;
-	private Long totalNumberOfApplications;
-	private Long applicationsStarted;
-	private Long applicationsInProgress;
-	private Long applicationsSubmitted;
-	private Long applicationsNotSubmitted;
-	private Long applicationsFunded;
 
-	public Long getCompetitionId() {
-		return competitionId;
-	}
+    private long competitionId;
+    private String competitionName;
+    private CompetitionStatus competitionStatus;
+    private LocalDateTime applicationDeadline;
+    private int totalNumberOfApplications;
+    private int applicationsStarted;
+    private int applicationsInProgress;
+    private int applicationsSubmitted;
+    private int applicationsNotSubmitted;
+    private int applicationsFunded;
+    private int ineligibleApplications;
+    private int assessorsInvited;
 
-	public void setCompetitionId(Long competitionId) {
-		this.competitionId = competitionId;
-	}
+    public long getCompetitionId() {
+        return competitionId;
+    }
 
-	public String getCompetitionName() {
-		return competitionName;
-	}
+    public void setCompetitionId(long competitionId) {
+        this.competitionId = competitionId;
+    }
 
-	public void setCompetitionName(String competitionName) {
-		this.competitionName = competitionName;
-	}
+    public String getCompetitionName() {
+        return competitionName;
+    }
 
-	public LocalDateTime getApplicationDeadline() {
-		return applicationDeadline;
-	}
+    public void setCompetitionName(String competitionName) {
+        this.competitionName = competitionName;
+    }
 
-	public void setApplicationDeadline(LocalDateTime applicationDeadline) {
-		this.applicationDeadline = applicationDeadline;
-	}
+    public LocalDateTime getApplicationDeadline() {
+        return applicationDeadline;
+    }
 
-	public String getFormattedApplicationDeadline(){
-		if(applicationDeadline == null){
-			return "";
-		}
-		return applicationDeadline.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));
-	}
+    public void setApplicationDeadline(LocalDateTime applicationDeadline) {
+        this.applicationDeadline = applicationDeadline;
+    }
 
-	public Long getTotalNumberOfApplications() {
-		return totalNumberOfApplications;
-	}
+    public String getFormattedApplicationDeadline() {
+        if (applicationDeadline == null) {
+            return "";
+        }
+        return applicationDeadline.format(DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm"));
+    }
 
-	public void setTotalNumberOfApplications(Long totalNumberOfApplications) {
-		this.totalNumberOfApplications = totalNumberOfApplications;
-	}
+    public int getTotalNumberOfApplications() {
+        return totalNumberOfApplications;
+    }
 
-	public Long getApplicationsStarted() {
-		return applicationsStarted;
-	}
+    public void setTotalNumberOfApplications(int totalNumberOfApplications) {
+        this.totalNumberOfApplications = totalNumberOfApplications;
+    }
 
-	public void setApplicationsStarted(Long applicationsStarted) {
-		this.applicationsStarted = applicationsStarted;
-	}
+    public int getApplicationsStarted() {
+        return applicationsStarted;
+    }
 
-	public Long getApplicationsInProgress() {
-		return applicationsInProgress;
-	}
+    public void setApplicationsStarted(int applicationsStarted) {
+        this.applicationsStarted = applicationsStarted;
+    }
 
-	public void setApplicationsInProgress(Long applicationsInProgress) {
-		this.applicationsInProgress = applicationsInProgress;
-	}
+    public int getApplicationsInProgress() {
+        return applicationsInProgress;
+    }
 
-	public Long getApplicationsSubmitted() {
-		return applicationsSubmitted;
-	}
+    public void setApplicationsInProgress(int applicationsInProgress) {
+        this.applicationsInProgress = applicationsInProgress;
+    }
 
-	public void setApplicationsSubmitted(Long applicationsSubmitted) {
-		this.applicationsSubmitted = applicationsSubmitted;
-	}
+    public int getApplicationsSubmitted() {
+        return applicationsSubmitted;
+    }
 
-	public Long getApplicationsNotSubmitted() {
-		return applicationsNotSubmitted;
-	}
+    public void setApplicationsSubmitted(int applicationsSubmitted) {
+        this.applicationsSubmitted = applicationsSubmitted;
+    }
 
-	public void setApplicationsNotSubmitted(Long applicationsNotSubmitted) {
-		this.applicationsNotSubmitted = applicationsNotSubmitted;
-	}
+    public int getApplicationsNotSubmitted() {
+        return applicationsNotSubmitted;
+    }
 
-	public CompetitionStatus getCompetitionStatus() {
-		return competitionStatus;
-	}
+    public void setApplicationsNotSubmitted(int applicationsNotSubmitted) {
+        this.applicationsNotSubmitted = applicationsNotSubmitted;
+    }
 
-	public void setCompetitionStatus(CompetitionStatus competitionStatus) {
-		this.competitionStatus = competitionStatus;
-	}
-	
-	public Long getApplicationsFunded() {
-		return applicationsFunded;
-	}
-	
-	public void setApplicationsFunded(Long applicationsFunded) {
-		this.applicationsFunded = applicationsFunded;
-	}
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
+    }
 
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) return true;
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
+        this.competitionStatus = competitionStatus;
+    }
 
-		if (o == null || getClass() != o.getClass()) return false;
+    public int getApplicationsFunded() {
+        return applicationsFunded;
+    }
 
-		CompetitionSummaryResource that = (CompetitionSummaryResource) o;
+    public void setApplicationsFunded(int applicationsFunded) {
+        this.applicationsFunded = applicationsFunded;
+    }
 
-		return new EqualsBuilder()
-				.append(competitionId, that.competitionId)
-				.append(competitionName, that.competitionName)
-				.append(competitionStatus, that.competitionStatus)
-				.append(applicationDeadline, that.applicationDeadline)
-				.append(totalNumberOfApplications, that.totalNumberOfApplications)
-				.append(applicationsStarted, that.applicationsStarted)
-				.append(applicationsInProgress, that.applicationsInProgress)
-				.append(applicationsSubmitted, that.applicationsSubmitted)
-				.append(applicationsNotSubmitted, that.applicationsNotSubmitted)
-				.append(applicationsFunded, that.applicationsFunded)
-				.isEquals();
-	}
+    public int getIneligibleApplications() {
+        return ineligibleApplications;
+    }
 
-	@Override
-	public int hashCode() {
-		return new HashCodeBuilder(17, 37)
-				.append(competitionId)
-				.append(competitionName)
-				.toHashCode();
-	}
+    public void setIneligibleApplications(int ineligibleApplications) {
+        this.ineligibleApplications = ineligibleApplications;
+    }
+
+    public int getAssessorsInvited() {
+        return assessorsInvited;
+    }
+
+    public void setAssessorsInvited(int assessorsInvited) {
+        this.assessorsInvited = assessorsInvited;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionSummaryResource that = (CompetitionSummaryResource) o;
+
+        return new EqualsBuilder()
+                .append(competitionId, that.competitionId)
+                .append(competitionName, that.competitionName)
+                .append(competitionStatus, that.competitionStatus)
+                .append(applicationDeadline, that.applicationDeadline)
+                .append(totalNumberOfApplications, that.totalNumberOfApplications)
+                .append(applicationsStarted, that.applicationsStarted)
+                .append(applicationsInProgress, that.applicationsInProgress)
+                .append(applicationsSubmitted, that.applicationsSubmitted)
+                .append(applicationsNotSubmitted, that.applicationsNotSubmitted)
+                .append(applicationsFunded, that.applicationsFunded)
+                .append(ineligibleApplications, that.ineligibleApplications)
+                .append(assessorsInvited, that.assessorsInvited)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(competitionId)
+                .append(competitionName)
+                .toHashCode();
+    }
 }
