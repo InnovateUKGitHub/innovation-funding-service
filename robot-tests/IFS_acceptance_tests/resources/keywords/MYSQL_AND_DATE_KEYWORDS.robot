@@ -65,6 +65,26 @@ get today
     ${today} =    Get Current Date    result_format=%d %B %Y    exclude_millis=true
     [Return]    ${today}
 
+get tomorrow
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%d %m %Y  exclude_millis=true
+    [Return]  ${tomorrow}
+
+get tomorrow day
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%d  exclude_millis=true
+    [Return]  ${tomorrow}
+
+get tomorrow month
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%m  exclude_millis=true
+    [Return]  ${tomorrow}
+
+get tomorrow year
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%Y  exclude_millis=true
+    [Return]  ${tomorrow}
+
 get next year
     ${year} =  get time    year    NOW + 365d
     [Return]  ${year}

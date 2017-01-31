@@ -28,3 +28,20 @@ the user sees the correct assessed question information
     the user should see the text in the page    Scored
     the user should see the text in the page    Out of
     the user should not see the text in the page    The business opportunity is plausible
+
+the user fills in the Initial details
+    the user clicks the button/link                      link=Initial details
+    the user enters text to a text field                 css=#title  From new Competition to New Application
+    the user selects the option from the drop-down menu  Programme  id=competitionTypeId
+    the user selects the option from the drop-down menu  Emerging and enablingtechnologies  id=innovationSectorCategoryId
+    the user selects the option from the drop-down menu  Robotics and AS  css=select[id^=innovationAreaCategory]
+    ${day} =  get tomorrow day
+    the user enters text to a text field                 css=#openingDateDay  ${day}
+    ${month} =  get tomorrow month
+    the user enters text to a text field                 css=#openingDateMonth  ${month}
+    ${year} =  get tomorrow year
+    the user enters text to a text field                 css=#openingDateMonth  ${year}
+    the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
+    the user selects the option from the drop-down menu  Toby Reader  id=executiveUserId
+    the user clicks the button/link                      jQuery=.button:contains("Done")
+    the user clicks the button/link                      link=Competition setup
