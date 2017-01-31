@@ -26,7 +26,7 @@ public enum Title {
         return displayName;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
