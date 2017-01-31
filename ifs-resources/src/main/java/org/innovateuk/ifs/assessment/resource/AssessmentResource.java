@@ -18,6 +18,7 @@ public class AssessmentResource {
     private Long processRole;
     private Long internalParticipant;
     private Long application;
+    private String applicationName;
     private Long competition;
 
     public Long getId() {
@@ -92,6 +93,14 @@ public class AssessmentResource {
         this.application = application;
     }
 
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
+    }
+
     public Long getCompetition() {
         return competition;
     }
@@ -129,7 +138,9 @@ public class AssessmentResource {
                 .append(endDate, that.endDate)
                 .append(processOutcomes, that.processOutcomes)
                 .append(processRole, that.processRole)
+                .append(internalParticipant, that.internalParticipant)
                 .append(application, that.application)
+                .append(applicationName, that.applicationName)
                 .append(competition, that.competition)
                 .isEquals();
     }
@@ -145,7 +156,9 @@ public class AssessmentResource {
                 .append(endDate)
                 .append(processOutcomes)
                 .append(processRole)
+                .append(internalParticipant)
                 .append(application)
+                .append(applicationName)
                 .append(competition)
                 .toHashCode();
     }

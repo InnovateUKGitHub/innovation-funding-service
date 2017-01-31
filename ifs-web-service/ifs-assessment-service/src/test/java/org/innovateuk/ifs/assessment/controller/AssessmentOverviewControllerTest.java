@@ -2,11 +2,10 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
-import org.innovateuk.ifs.application.resource.AppendixResource;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
+import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.assessment.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
@@ -15,38 +14,38 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
-import org.innovateuk.ifs.assessment.viewmodel.AssessmentOverviewRowViewModel;
-import org.innovateuk.ifs.assessment.viewmodel.RejectAssessmentViewModel;
+import org.innovateuk.ifs.assessment.viewmodel.*;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileEntryRestService;
-import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.form.service.FormInputRestService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.google.common.collect.Sets.newHashSet;
+import static java.lang.Boolean.TRUE;
 import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
+import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -55,12 +54,12 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder.newOrganisationFinanceOverviewBuilder;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
-import static org.innovateuk.ifs.form.resource.FormInputType.ASSESSOR_SCORE;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.anyLong;
@@ -74,19 +73,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<AssessmentOverviewController> {
 
     @Mock
-    private CookieFlashMessageFilter cookieFlashMessageFilter;
-
-    @Mock
     private AssessmentService assessmentService;
 
     @Mock
     private AssessorFormInputResponseService assessorFormInputResponseService;
-
-    @Mock
-    private FormInputRestService formInputRestService;
-
-    @Mock
-    private FileEntryRestService fileEntryRestService;
 
     @Spy
     @InjectMocks
@@ -111,66 +101,201 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
-        this.setupApplicationResponses();
-        this.loginDefaultUser();
-        this.setupFinances();
-        this.setupInvites();
-        //noinspection unchecked
-        when(organisationService.getOrganisationForUser(isA(Long.class), isA(List.class))).thenReturn(Optional.ofNullable(organisations.get(0)));
     }
 
     @Test
-    public void AssessmentDetails() throws Exception {
-        AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
+    public void getOverview() throws Exception {
+        long applicationId = 1L;
+
         CompetitionResource competition = newCompetitionResource()
-                .withId(1L)
-                .withAssessorAcceptsDate(LocalDateTime.now().minusDays(2))
-                .withAssessorDeadlineDate(LocalDateTime.now().plusDays(4))
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().plusDays(4))
                 .build();
 
-        List<AssessorFormInputResponseResource> assessorResponses = newAssessorFormInputResponseResource()
-                .withAssessment(1L, 1L, 1L, 1L)
-                .withQuestion(1L, 1L, 2L, 2L)
-                .withFormInput(1L, 2L, 3L, 4L)
-                .withValue("Response to Q1 Form Input 1", "Response to Q1 Form Input 2", "Response to Q2 Form Input 1", "Response to Q2 Form Input 2")
-                .build(4);
+        AssessmentResource assessment = newAssessmentResource()
+                .withApplication(applicationId)
+                .withCompetition(competition.getId())
+                .withApplicationName("Using natural gas to heat homes")
+                .build();
 
-        List<FormInputResource> formInputs = FormInputResourceBuilder.newFormInputResource()
-                .withId(1L, 2L, 3L, 4L)
-                .withType(ASSESSOR_SCORE)
-                .build(4);
-        List<QuestionResource> questions = QuestionResourceBuilder.newQuestionResource()
-                .withId(32L, 33L, 1L, 20L, 21L, 22L, 23L, 10L, 30L, 31L)
-                .withShortName("Question short name")
-                .build(10);
+        QuestionResource questionApplicationDetails = newQuestionResource()
+                .withShortName("Application Details")
+                .build();
 
-        ApplicationResource app = applications.get(0);
-        Set<Long> sections = newHashSet(1L, 2L);
-        Map<Long, Set<Long>> mappedSections = new HashMap<>();
-        mappedSections.put(organisations.get(0).getId(), sections);
-        when(competitionService.getById(app.getCompetition())).thenReturn(competition);
-        when(sectionService.getCompletedSectionsByOrganisation(anyLong())).thenReturn(mappedSections);
+        QuestionResource questionScope = newQuestionResource()
+                .withShortName("Scope")
+                .build();
+
+        QuestionResource questionBusinessOpportunity = newQuestionResource()
+                .withShortName("Business opportunity")
+                .withAssessorMaximumScore(10)
+                .build();
+
+        QuestionResource questionPotentialMarket = newQuestionResource()
+                .withShortName("Potential market")
+                .withAssessorMaximumScore(15)
+                .build();
+
+        List<QuestionResource> questions = asList(questionApplicationDetails, questionScope, questionBusinessOpportunity, questionPotentialMarket);
+
+        List<SectionResource> sections = newSectionResource()
+                .withName("Details", "Application questions")
+                .withQuestions(
+                        asList(questionApplicationDetails.getId(), questionScope.getId()),
+                        asList(questionBusinessOpportunity.getId(), questionPotentialMarket.getId()))
+                .withAssessorGuidanceDescription("These do not need scoring", "Each question should be given a score")
+                .build(2);
+
+        FormInputResource potentialMarketFileEntryFormInput = newFormInputResource()
+                .build();
+
+        List<FormInputResource> assessorFormInputsScope = newFormInputResource()
+                .withType(TEXTAREA, ASSESSOR_APPLICATION_IN_SCOPE)
+                .withQuestion(questionScope.getId())
+                .build(2);
+
+        List<FormInputResource> assessorFormInputsBusinessOpportunity = newFormInputResource()
+                .withType(TEXTAREA, ASSESSOR_SCORE)
+                .withQuestion(questionBusinessOpportunity.getId())
+                .build(2);
+
+        List<FormInputResource> assessorFormInputsPotentialMarket = newFormInputResource()
+                .withType(TEXTAREA, ASSESSOR_SCORE)
+                .withQuestion(questionPotentialMarket.getId())
+                .build(2);
+
+        List<FormInputResource> assessorFormInputs = combineLists(assessorFormInputsScope,
+                assessorFormInputsBusinessOpportunity, assessorFormInputsPotentialMarket);
+
+        List<FormInputResponseResource> applicantResponses = newFormInputResponseResource()
+                .withFormInputs(potentialMarketFileEntryFormInput.getId())
+                .withFileEntry(1L)
+                .withQuestion(questionPotentialMarket.getId())
+                .withFileName("Project-plan.pdf")
+                .withFilesizeBytes(112640L)
+                .build(1);
+
+        AssessorFormInputResponseResource assessorResponsesScope = newAssessorFormInputResponseResource()
+                .withAssessment(assessment.getId())
+                .withQuestion(questionScope.getId())
+                .withFormInput(assessorFormInputsScope.get(1).getId())
+                .withValue("true")
+                .build();
+
+        List<AssessorFormInputResponseResource> assessorResponsesBusinessOpportunity = newAssessorFormInputResponseResource()
+                .withAssessment(assessment.getId())
+                .withQuestion(questionBusinessOpportunity.getId())
+                .withFormInput(assessorFormInputsBusinessOpportunity.get(0).getId(),
+                        assessorFormInputsBusinessOpportunity.get(1).getId())
+                .withValue("Text response", "7")
+                .build(2);
+
+        AssessorFormInputResponseResource assessorResponsesPotentialMarket = newAssessorFormInputResponseResource()
+                .withAssessment(assessment.getId())
+                .withQuestion(questionPotentialMarket.getId())
+                .withFormInput(assessorFormInputsPotentialMarket.get(0).getId())
+                .withValue("Text response")
+                .build();
+
+        List<AssessorFormInputResponseResource> assessorResponses = combineLists(combineLists(assessorResponsesScope,
+                assessorResponsesBusinessOpportunity), assessorResponsesPotentialMarket);
+
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
+        when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(sectionService.getAllByCompetitionId(competition.getId())).thenReturn(sections);
+        when(sectionService.filterParentSections(sections)).thenReturn(sections);
+        when(questionService.findByCompetition(competition.getId())).thenReturn(questions);
+        when(formInputService.findAssessmentInputsByCompetition(competition.getId())).thenReturn(assessorFormInputs);
         when(assessorFormInputResponseService.getAllAssessorFormInputResponses(assessment.getId())).thenReturn(assessorResponses);
-        when(formInputService.findAssessmentInputsByQuestion(anyLong())).thenReturn(formInputs);
-        when(questionService.getById(32L)).thenReturn(questions.get(0));
-        Map<Long, AssessmentOverviewRowViewModel> assessorResponsesMap = new HashMap<>();
-        questions.forEach(question -> assessorResponsesMap.put(question.getId(), new AssessmentOverviewRowViewModel(question, formInputs, assessorResponses)));
+        when(formInputResponseService.getByApplication(applicationId)).thenReturn(applicantResponses);
 
-        FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResource formInput = newFormInputResource().withId(1L).withQuestion(32L).build();
-        setupFormInputAndFileEntry(fileEntry, formInput, app);
-        List<AppendixResource> appendices = setUpAppendices(fileEntry, formInput, app, questions.get(0));
+        List<AssessmentOverviewSectionViewModel> expectedSections = asList(
+                new AssessmentOverviewSectionViewModel(sections.get(0).getId(),
+                        "Details",
+                        "These do not need scoring",
+                        asList(
+                                new AssessmentOverviewQuestionViewModel(
+                                        questionApplicationDetails.getId(),
+                                        questionApplicationDetails.getShortName(),
+                                        questionApplicationDetails.getQuestionNumber(),
+                                        questionApplicationDetails.getAssessorMaximumScore(),
+                                        false,
+                                        false,
+                                        null,
+                                        null),
+                                new AssessmentOverviewQuestionViewModel(
+                                        questionScope.getId(),
+                                        questionScope.getShortName(),
+                                        questionScope.getQuestionNumber(),
+                                        questionScope.getAssessorMaximumScore(),
+                                        true,
+                                        false,
+                                        TRUE,
+                                        null)
+                        )
+                ),
+                new AssessmentOverviewSectionViewModel(sections.get(1).getId(),
+                        "Application questions",
+                        "Each question should be given a score",
+                        asList(
+                                new AssessmentOverviewQuestionViewModel(
+                                        questionBusinessOpportunity.getId(),
+                                        questionBusinessOpportunity.getShortName(),
+                                        questionBusinessOpportunity.getQuestionNumber(),
+                                        questionBusinessOpportunity.getAssessorMaximumScore(),
+                                        true,
+                                        true,
+                                        null,
+                                        "7"),
+                                new AssessmentOverviewQuestionViewModel(
+                                        questionPotentialMarket.getId(),
+                                        questionPotentialMarket.getShortName(),
+                                        questionPotentialMarket.getQuestionNumber(),
+                                        questionPotentialMarket.getAssessorMaximumScore(),
+                                        true,
+                                        false,
+                                        null,
+                                        null)
+                        )
+                )
+        );
+
+        List<AssessmentOverviewAppendixViewModel> expectedAppendices = singletonList(
+                new AssessmentOverviewAppendixViewModel(
+                        potentialMarketFileEntryFormInput.getId(),
+                        "Potential market",
+                        "Project-plan.pdf",
+                        "110 KB")
+        );
+
+        AssessmentOverviewViewModel expectedViewModel = new AssessmentOverviewViewModel(
+                assessment.getId(),
+                applicationId,
+                "Using natural gas to heat homes",
+                competition.getId(),
+                50L,
+                3L,
+                expectedSections,
+                expectedAppendices
+        );
 
         mockMvc.perform(get("/" + assessment.getId()))
                 .andExpect(status().isOk())
-                .andExpect(view().name("assessment/application-overview"))
-                .andExpect(model().attribute("currentApplication", app))
-                .andExpect(model().attribute("questionFeedback", assessorResponsesMap))
-                .andExpect(model().attribute("appendices", appendices))
-                .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("daysLeft", 3L))
-                .andExpect(model().attribute("daysLeftPercentage", 50L));
+                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("assessment/application-overview"));
+
+        InOrder inOrder = inOrder(assessmentService, competitionService, sectionService, questionService, formInputService,
+                assessorFormInputResponseService, formInputResponseService);
+        inOrder.verify(assessmentService).getById(assessment.getId());
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(sectionService).getAllByCompetitionId(competition.getId());
+        inOrder.verify(sectionService).filterParentSections(sections);
+        inOrder.verify(questionService).findByCompetition(competition.getId());
+        inOrder.verify(formInputService).findAssessmentInputsByCompetition(competition.getId());
+        inOrder.verify(assessorFormInputResponseService).getAllAssessorFormInputResponses(assessment.getId());
+        inOrder.verify(formInputResponseService).getByApplication(applicationId);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -178,16 +303,13 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource().withId(1L).withApplication(1L).build();
         CompetitionResource competition = newCompetitionResource()
                 .withId(1L)
-                .withAssessorAcceptsDate(LocalDateTime.now().minusDays(2))
-                .withAssessorDeadlineDate(LocalDateTime.now().plusDays(4))
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().plusDays(4))
                 .build();
         ApplicationResource app = applications.get(0);
         when(competitionService.getById(app.getCompetition())).thenReturn(competition);
         when(assessmentService.getById(assessment.getId())).thenReturn(assessment);
 
-        FileEntryResource fileEntry = newFileEntryResource().build();
-        FormInputResource formInput = newFormInputResource().withId(1L).build();
-        setupFormInputAndFileEntry(fileEntry, formInput, app);
         SortedSet<OrganisationResource> orgSet = setupOrganisations();
         List<ApplicationFinanceResource> appFinanceList = setupFinances(app, orgSet);
         OrganisationFinanceOverview organisationFinanceOverview = newOrganisationFinanceOverviewBuilder()
@@ -246,7 +368,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplication(applicationId)
                 .build();
 
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource()
+                .withName("application name")
+                .build();
 
         when(assessmentService.getById(assessmentId)).thenReturn(assessment);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -257,22 +381,22 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
+        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
+                application.getId(),
+                "application name"
+        );
+
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectReason"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
-
-        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals(assessmentId, model.getAssessmentId());
-        assertEquals(application, model.getApplication());
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
 
@@ -285,7 +409,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertTrue(bindingResult.hasFieldErrors("rejectReason"));
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        InOrder inOrder = inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
         inOrder.verify(applicationService, calls(1)).getById(applicationId);
         inOrder.verifyNoMoreInteractions();
@@ -303,7 +427,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplication(applicationId)
                 .build();
 
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource()
+                .withName("application name")
+                .build();
 
         when(assessmentService.getById(assessmentId)).thenReturn(assessment);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -314,22 +440,22 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
+        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
+                application.getId(),
+                "application name"
+        );
+
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
-
-        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals(assessmentId, model.getAssessmentId());
-        assertEquals(application, model.getApplication());
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
 
@@ -343,7 +469,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        InOrder inOrder = inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
         inOrder.verify(applicationService, calls(1)).getById(applicationId);
         inOrder.verifyNoMoreInteractions();
@@ -361,7 +487,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplication(applicationId)
                 .build();
 
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource()
+                .withName("application name")
+                .build();
 
         when(assessmentService.getById(assessmentId)).thenReturn(assessment);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -372,22 +500,22 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
+        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
+                application.getId(),
+                "application name"
+        );
+
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form", "rejectComment"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
-
-        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals(assessmentId, model.getAssessmentId());
-        assertEquals(application, model.getApplication());
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
 
@@ -401,7 +529,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        InOrder inOrder = inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
         inOrder.verify(applicationService, calls(1)).getById(applicationId);
         inOrder.verifyNoMoreInteractions();
@@ -419,7 +547,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplication(applicationId)
                 .build();
 
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource()
+                .withName("application name")
+                .build();
 
         when(assessmentService.getById(assessmentId)).thenReturn(assessment);
         when(applicationService.getById(applicationId)).thenReturn(application);
@@ -431,22 +561,22 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
+        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
+                application.getId(),
+                "application name"
+        );
+
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("rejectReason", reason)
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attributeExists("model"))
+                .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(model().hasErrors())
                 .andExpect(model().attributeHasFieldErrors("form"))
                 .andExpect(view().name("assessment/reject-invitation-confirm"))
                 .andReturn();
-
-        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals(assessmentId, model.getAssessmentId());
-        assertEquals(application, model.getApplication());
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
 
@@ -455,7 +585,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getFieldErrorCount());
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        InOrder inOrder = inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
         inOrder.verify(assessmentService, calls(1)).rejectInvitation(assessmentId, reason, comment);
         inOrder.verify(applicationService, calls(1)).getById(applicationId);
@@ -472,26 +602,27 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplication(applicationId)
                 .build();
 
-        ApplicationResource application = newApplicationResource().build();
+        ApplicationResource application = newApplicationResource()
+                .withName("application name")
+                .build();
 
         when(assessmentService.getById(assessmentId)).thenReturn(assessment);
         when(applicationService.getById(applicationId)).thenReturn(application);
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
 
-        MvcResult result = mockMvc.perform(get("/{assessmentId}/reject/confirm", assessmentId))
+        RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
+                application.getId(),
+                "application name"
+        );
+
+        mockMvc.perform(get("/{assessmentId}/reject/confirm", assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(model().attributeExists("model"))
-                .andExpect(view().name("assessment/reject-invitation-confirm"))
-                .andReturn();
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name("assessment/reject-invitation-confirm"));
 
-        RejectAssessmentViewModel model = (RejectAssessmentViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals(assessmentId, model.getAssessmentId());
-        assertEquals(application, model.getApplication());
-
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
+        InOrder inOrder = inOrder(assessmentService, applicationService);
         inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
         inOrder.verify(applicationService, calls(1)).getById(applicationId);
         inOrder.verifyNoMoreInteractions();
@@ -521,19 +652,5 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         orgSet.add(org2);
 
         return orgSet;
-    }
-
-    private void setupFormInputAndFileEntry(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app) {
-        FormInputResponseResource formInputResponse = newFormInputResponseResource().withFormInputs(1L).withFileEntry(fileEntry).build();
-        List<FormInputResponseResource> responses = new ArrayList<>();
-        responses.add(formInputResponse);
-
-        when(formInputResponseService.getByApplication(app.getId())).thenReturn(responses);
-        when(formInputRestService.getById(formInputResponse.getFormInput())).thenReturn(restSuccess(formInput));
-        when(fileEntryRestService.findOne(formInputResponse.getFileEntry())).thenReturn(restSuccess(fileEntry));
-    }
-
-    private List<AppendixResource> setUpAppendices(FileEntryResource fileEntry, FormInputResource formInput, ApplicationResource app, QuestionResource appendixQuestion) {
-        return singletonList(new AppendixResource(app.getId(), formInput.getId(), appendixQuestion.getShortName(), fileEntry));
     }
 }

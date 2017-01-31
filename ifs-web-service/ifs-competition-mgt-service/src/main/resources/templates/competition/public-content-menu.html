@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Public Content'" th:remove="tag" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
@@ -32,7 +32,7 @@
                 <li class="grid-row section">
                     <div class="column-two-thirds">
                         <h2 class="heading-small">
-                            <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{competitionId}/{sectionPath}(competitionId=${model.competition.id},sectionPath=${section.type.path})}"></a>
+                            <a th:text="${section.type.text}" th:href="@{/competition/setup/public-content/{sectionPath}/{competitionId}{edit}(competitionId=${model.competition.id},sectionPath=${section.type.path},edit=${model.isSectionComplete(section) ? '' : '/edit'})}"></a>
                         </h2>
                     </div>
                     <div th:if="${model.isSectionComplete(section)}">
