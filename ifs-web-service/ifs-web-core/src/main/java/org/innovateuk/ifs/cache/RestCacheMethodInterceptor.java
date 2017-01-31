@@ -29,10 +29,6 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
     private UidSupplier uidSupplier;
 
     protected static void put(final Object value, final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws ExecutionException {
-        if (uid == null) {
-            return;
-        }
-
         final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
         methodMap.putIfAbsent(method, new HashMap<>());
         final Map<List<Object>, Object> argsMap = methodMap.get(method);
@@ -40,10 +36,6 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
     }
 
     protected static Optional<Object> get(final String uid, final Method method, final List<Object> parameters, final Cache<String, Map<Method, Map<List<Object>, Object>>> cache) throws ExecutionException {
-        if (uid == null) {
-            return Optional.empty();
-        }
-
         final Map<Method, Map<List<Object>, Object>> methodMap = cache.get(uid, HashMap::new);
         final Map<List<Object>, Object> argsMap = methodMap.get(method);
         if (argsMap != null) {
@@ -67,11 +59,8 @@ public class RestCacheMethodInterceptor implements MethodInterceptor {
 
     public void invalidate() {
         final String uid = uidSupplier.get();
-
-        if (uid != null) {
-            cache.invalidate(uidSupplier.get());
-            LOG.debug("Invalidating: " + uid);
-        }
+        cache.invalidate(uidSupplier.get());
+        LOG.debug("Invalidating: " + uid);
     }
 
     @Override

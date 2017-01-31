@@ -59,7 +59,7 @@ Notify an assigned user
     And the user clicks the button/link    jQuery=.link-back:contains("Allocate applications")
     And the user clicks the button/link    jQuery=.link-back:contains("Manage assessments")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
-    And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+#    And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the element should be disabled    jQuery=button:contains("Notify assessors")
     #TODO Check email once 7249 is done
 

@@ -3,6 +3,8 @@ package org.innovateuk.ifs.cache;
 
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_REQUEST;
 import static org.springframework.web.context.request.RequestContextHolder.getRequestAttributes;
 
@@ -13,6 +15,9 @@ public class RequestUidSupplier implements UidSupplier {
 
     @Override
     public String get() {
+        if (getRequestAttributes().getAttribute(REQUEST_UID_KEY, SCOPE_REQUEST) == null) {
+            getRequestAttributes().setAttribute(REQUEST_UID_KEY, UUID.randomUUID().toString(), SCOPE_REQUEST);
+        }
         return (String)getRequestAttributes().getAttribute(REQUEST_UID_KEY, SCOPE_REQUEST);
 
     }
