@@ -33,8 +33,7 @@ IFS.core.repeatableFinanceRows = (function () {
           url = host + '/application/' + jQuery('#application_id').val() + '/form/' + elName + '/' + elValue
         }
         if (jQuery('#projectId').length === 1) {
-          // todo replace 22 with a dynamic value
-          url = host + '/project-setup-management/project/' + jQuery('#projectId').val() + '/finance-check/organisation/22/eligibility/' + elName + '/' + elValue
+          url = host + '/project-setup-management/project/' + jQuery('#projectId').val() + '/finance-check/organisation/' + jQuery('#organisationId').val() + '/eligibility/' + elName + '/' + elValue
         }
       }
 

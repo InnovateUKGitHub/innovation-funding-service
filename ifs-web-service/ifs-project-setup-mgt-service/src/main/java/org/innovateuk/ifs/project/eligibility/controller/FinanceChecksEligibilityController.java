@@ -17,7 +17,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.profiling.ProfileExecution;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
@@ -49,8 +48,6 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller serves the Eligibility page where internal users can confirm the eligibility of a partner organisation's
@@ -104,7 +101,7 @@ public class FinanceChecksEligibilityController {
     private QuestionService questionService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewEligibility(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
@@ -138,7 +135,7 @@ public class FinanceChecksEligibilityController {
         boolean eligibilityApproved = eligibility.getEligibility() == Eligibility.APPROVED;
 
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
-                application.getFormattedId(), isLeadPartnerOrganisation, project.getId(),
+                application.getFormattedId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
                 eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
                 eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate()));
 
@@ -155,7 +152,8 @@ public class FinanceChecksEligibilityController {
         return new FinanceChecksEligibilityForm(eligibility.getEligibilityRagStatus(), confirmEligibilityChecked);
     }
 
-    @RequestMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping(value = "/" + ADD_COST + "/{"+QUESTION_ID+"}")
     public String addCostRow(@ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
                              BindingResult bindingResult,
                              Model model,
@@ -174,7 +172,8 @@ public class FinanceChecksEligibilityController {
         return String.format("finance/finance :: %s_row", costType.getType());
     }
 
-    @RequestMapping(value = "/remove_cost/{costId}")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @DeleteMapping(value = "/remove_cost/{costId}")
     public @ResponseBody
     String removeCostRow(@PathVariable("costId") final Long costId) throws JsonProcessingException {
         financeRowService.delete(costId);
@@ -183,12 +182,8 @@ public class FinanceChecksEligibilityController {
         return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(ajaxResult);
     }
 
-    /**
-     * This method is for the post request when the users clicks the input[type=submit] button.
-     * This is also used when the user clicks the 'mark-as-complete' button or reassigns a question to another user.
-     */
-    @ProfileExecution
-    @RequestMapping(method = RequestMethod.POST, params = "save-eligibility")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @PostMapping(params = "save-eligibility")
     public String projectFinanceFormSubmit(@PathVariable("projectId") final Long projectId,
                                            @PathVariable("organisationId") Long organisationId,
                                            @Valid @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
@@ -240,7 +235,7 @@ public class FinanceChecksEligibilityController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @RequestMapping(method = POST, params = "confirm-eligibility")
+    @PostMapping(params = "confirm-eligibility")
     public String confirmEligibility(@PathVariable("projectId") Long projectId,
                                      @PathVariable("organisationId") Long organisationId,
                                      @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,
@@ -265,7 +260,7 @@ public class FinanceChecksEligibilityController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
-    @RequestMapping(method = POST, params = "save-and-continue")
+    @PostMapping(params = "save-and-continue")
     public String saveAndContinue(@PathVariable("projectId") Long projectId,
                                   @PathVariable("organisationId") Long organisationId,
                                   @ModelAttribute(FORM_ATTR_NAME) ApplicationForm form,

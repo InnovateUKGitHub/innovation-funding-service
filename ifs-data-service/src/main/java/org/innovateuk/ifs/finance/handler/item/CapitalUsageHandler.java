@@ -34,7 +34,7 @@ public class CapitalUsageHandler extends FinanceRowHandler {
     public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
         ProjectFinanceRow cost = null;
         if (costItem instanceof CapitalUsage) {
-            return mapCapitalUsageToProjectCost(costItem);
+            return mapCapitalUsageToProjectCost((CapitalUsage)costItem);
         }
         return cost;
     }
@@ -82,8 +82,7 @@ public class CapitalUsageHandler extends FinanceRowHandler {
         return capitalUsageCost;
     }
 
-    private ProjectFinanceRow mapCapitalUsageToProjectCost(FinanceRowItem costItem) {
-        CapitalUsage capitalUsage = (CapitalUsage) costItem;
+    private ProjectFinanceRow mapCapitalUsageToProjectCost(CapitalUsage capitalUsage) {
         ProjectFinanceRow capitalUsageCost = new ProjectFinanceRow(capitalUsage.getId(), COST_KEY, "", capitalUsage.getDescription(), capitalUsage.getDeprecation(),
                 capitalUsage.getNpv(), null, null);
         capitalUsageCost.addCostValues(

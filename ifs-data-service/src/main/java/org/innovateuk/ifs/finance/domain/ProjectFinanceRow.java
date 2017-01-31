@@ -34,8 +34,8 @@ public class ProjectFinanceRow extends FinanceRow<ProjectFinance> {
         this.target = projectFinance;
     }
 
-    public ProjectFinanceRow(Long id, String name, String item, String description, Integer quantity, BigDecimal cost,
-                                 ProjectFinance projectFinance, Question question) {
+    public ProjectFinanceRow(Long id, String name, String item, String description, Integer quantity,
+                             BigDecimal cost, ProjectFinance projectFinance, Question question) {
         super(id, name, item, description, quantity, cost, question);
         this.target = projectFinance;
     }

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class ProjectFinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<ProjectFinanceRowRestServiceImpl> {
-    private String costRestURL = "/cost/project";
+    private static final String costRestURL = "/cost/project";
 
     @Test
     public void test_getCosts_forProjectFinanceId() {

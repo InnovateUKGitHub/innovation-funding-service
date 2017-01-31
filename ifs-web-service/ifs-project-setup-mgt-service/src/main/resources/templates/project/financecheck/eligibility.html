@@ -105,6 +105,7 @@
     </form>
     <input type="hidden" id="cacheTest" value="" />
     <input type="hidden" id="projectId" th:value="${summaryModel.projectId}" />
+    <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}" />
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}">
 
         <th:block th:unless="${summaryModel.isReadOnly()}">
