@@ -12,7 +12,6 @@ Documentation     INFUND-7042 As a member of the competitions team I can see lis
 ...               INFUND-7237 Implement Assessor Total Applications and Assigned Counts for Application Progress within Assessor Management
 ...
 ...               INFUND-7232 As a member of the competitions team I can view previously assigned assessors so I can see who has previously been removed from assessing the application
-...
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin    Assessor
@@ -26,11 +25,33 @@ View the list of the applications
     When The user clicks the button/link    jQuery=.button:contains("Manage applications")
     Then the application list is correct before changes
 
+Application number navigates to Overview
+    [Documentation]    INFUND-7042
+    [Tags]
+    When the user clicks the button/link    link=00000021
+    Then The user should see the text in the page    00000021: Intelligent water system
+    And the user should see the text in the page    University of Bath
+    And the user should see the text in the page    Cardiff University
+    [Teardown]    The user goes back to the previous page
+
+View application progress page
+    [Documentation]    INFUND-7042, INFUND-7046
+    [Tags]
+    Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
+    Then The user should see the text in the page    00000015: Rainfall
+    [Teardown]
+
+Review the application
+    [Documentation]    INFUND-7046
+    [Tags]
+    When the user clicks the button/link    link=Review application
+    Then the user should see the text in the page    Application Overview
+    [Teardown]    The user goes back to the previous page
+
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
     #TODO update these selectors once the tables on this page have unique class names
-    Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
     And the available assessors information is correct
 
@@ -44,56 +65,48 @@ View the assigned list
     And the user clicks the button/link    jQuery=.link-back:contains("Allocate applications")
     Then the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains("1")
 
-Remove an assigned user who has not been notified back to available assessors
+Remove an assigned user (Not notified)
     [Documentation]    INFUND-7230
     [Tags]
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove and notify")
+    And the user clicks the button/link    jQuery=button:contains("Remove assessor")
     And the available assessors information is correct
 
 Notify an assigned user
     [Documentation]    INFUND-7050
     [Tags]
-    Given the user clicks the button/link    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(6)
-    And the user clicks the button/link    jQuery=.link-back:contains("Allocate applications")
-    And the user clicks the button/link    jQuery=.link-back:contains("Manage assessments")
+    Given the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
+    And the user clicks the button/link    jQuery=a:contains("Allocate applications")
+    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
-    And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the element should be disabled    jQuery=button:contains("Notify assessors")
     #TODO Check email once 7249 is done
 
-Remove and notify an assessor send the assessor to previously assigned table
+Assessor should see the assigned application
+    [Documentation]    INFUND-7050
+    [Setup]    Log in as a different user    email=paul.plum@gmail.com    password=Passw0rd
+    When The user clicks the button/link    link=Sustainable living models for the future
+    Then The user should see the element    Link=Rainfall
+
+Remove and notify an assessor (Notified)
     [Documentation]    INFUND-7232
     [Tags]
-    Given the user clicks the button/link    jQuery=.button:contains("Manage applications")
+    [Setup]    Log in as a different user    &{Comp_admin1_credentials}
+    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=.button:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove and notify")
+    And the user clicks the button/link    jQuery=button:contains("Remove assessor")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct
+    #TODO Check email once 7249 is done
 
-Select the review applicaton button
-    [Documentation]    INFUND-7046
-    [Tags]
-    When the user clicks the button/link    link=Review application
-    Then the user should see the text in the page    Application Overview
-    [Teardown]    The user navigates to the page    ${Application_management_dashboard}
-
-The Application number should navigate to the Application Overview
-    [Documentation]    INFUND-7042
-    [Tags]
-    When the user clicks the button/link    link=00000015
-    Then The user should see the text in the page    00000015: Rainfall
-    [Teardown]    The user navigates to the page    ${Application_management_dashboard}
-
-The user can click view the partner information on the view progress screen
-    [Documentation]    INFUND-7042, INFUND-7046
-    [Tags]
-    When The user clicks the button/link    jQuery=tr:nth-child(7) a:contains(View progress)
-    Then The user should see the text in the page    00000021: Intelligent water system
-    And the user should see the text in the page    University of Bath
-    And the user should see the text in the page    Cardiff University
+Assessor should not see the removed application
+    [Documentation]    INFUND-7232
+    [Setup]    Log in as a different user    email=paul.plum@gmail.com    password=Passw0rd
+    When The user clicks the button/link    link=Sustainable living models for the future
+    Then The user should not see the element    Link=Rainfall
 
 *** Keywords ***
 the application list is correct before changes
@@ -105,6 +118,7 @@ the application list is correct before changes
     #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(4):contains(${initial_application_assesors})
     #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(5):contains(${initial_application_assigned})
     #the user should see the element    jQuery=tr:nth-child(1) td:nth-child(5):contains(${initial+application_submitted})
+    #TODO checks disabled due toINFUND-7745
 
 the available assessors information is correct
     the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
@@ -112,24 +126,29 @@ the available assessors information is correct
     #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(3):contains('8')
     #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(4):contains('4')
     #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(5):contains('0')
+    #TODO checks disabled due toINFUND-7745
 
 the assigned list is correct before notification
     the user should see the element    jQuery=tr:eq(1) td:nth-child(1):contains("Paul Plum")
     the user should see the element    jQuery=tr:eq(1) td:nth-child(2):contains("ACADEMIC")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living, Infrastructure")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living")
+    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Infrastructure")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("5")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(7):contains("-")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(8):contains("-")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(9):contains("-")
+    #TODO checks disabled due toINFUND-7745
 
 the previously assigned list is correct
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
     the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(2):contains('ACADEMIC')
-    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Urban living, Infrastructure')
+    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Urban living')
+    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Infrastructure')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(4):contains('8')
     #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(5):contains('4')
+    #TODO checks disabled due toINFUND-7745
 
 Custom suite setup
     Guest user log-in    &{Comp_admin1_credentials}
