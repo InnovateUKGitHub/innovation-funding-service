@@ -261,15 +261,33 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
         assertEqualParticipants(asList(savedParticipants.get(0), savedParticipants.get(1)), retrievedParticipants);
     }
 
+    @Test
+    public void countByCompetitionIdAndRole() throws Exception {
+        saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2")
+                        .withEmail("test1@test.com", "test2@test.com")
+                        .withHash(generateInviteHash(), generateInviteHash())
+                        .withCompetition(newCompetition().withId(1L).build())
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(2)
+        );
+
+        flushAndClearSession();
+
+        int participantCount = repository.countByCompetitionIdAndRole(1L, ASSESSOR);
+
+        assertEquals(2, participantCount);
+    }
+
     private CompetitionParticipant saveNewCompetitionParticipant(CompetitionInvite invite) {
-        CompetitionParticipant saved = repository.save(new CompetitionParticipant(invite));
-        return saved;
+        return repository.save(new CompetitionParticipant(invite));
     }
 
     private List<CompetitionParticipant> saveNewCompetitionParticipants(List<CompetitionInvite> invites) {
-        List<CompetitionParticipant> saved = invites.stream().map(competitionInvite ->
+        return invites.stream().map(competitionInvite ->
                 repository.save(new CompetitionParticipant(competitionInvite))).collect(toList());
-        return saved;
     }
 
     private void assertEqualParticipants(List<CompetitionParticipant> expected, List<CompetitionParticipant> actual) {

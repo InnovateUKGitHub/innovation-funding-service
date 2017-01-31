@@ -110,11 +110,11 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
         assertTrue(result.isSuccess());
         CompetitionSummaryResource resource = result.getSuccessObject();
-        assertEquals(6, resource.getTotalNumberOfApplications().intValue());
-        assertEquals(1, resource.getApplicationsStarted().intValue());
-        assertEquals(0, resource.getApplicationsInProgress().intValue());
-        assertEquals(1, resource.getApplicationsNotSubmitted().intValue());
-        assertEquals(5, resource.getApplicationsSubmitted().intValue());
+        assertEquals(6, resource.getTotalNumberOfApplications());
+        assertEquals(1, resource.getApplicationsStarted());
+        assertEquals(0, resource.getApplicationsInProgress());
+        assertEquals(1, resource.getApplicationsNotSubmitted());
+        assertEquals(5, resource.getApplicationsSubmitted());
     }
 
     @Test
@@ -123,11 +123,11 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
         assertTrue(result.isSuccess());
         CompetitionSummaryResource resource = result.getSuccessObject();
-        assertEquals(6, resource.getTotalNumberOfApplications().intValue());
-        assertEquals(1, resource.getApplicationsStarted().intValue());
-        assertEquals(0, resource.getApplicationsInProgress().intValue());
-        assertEquals(1, resource.getApplicationsNotSubmitted().intValue());
-        assertEquals(5, resource.getApplicationsSubmitted().intValue());
+        assertEquals(6, resource.getTotalNumberOfApplications());
+        assertEquals(1, resource.getApplicationsStarted());
+        assertEquals(0, resource.getApplicationsInProgress());
+        assertEquals(1, resource.getApplicationsNotSubmitted());
+        assertEquals(5, resource.getApplicationsSubmitted());
 
         ApplicationResource application = applicationService.findAll().getSuccessObject().get(0);
         applicationService.updateApplicationStatus(application.getId(), ApplicationStatusConstants.SUBMITTED.getId());
@@ -135,11 +135,11 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         result = controller.getCompetitionSummary(COMPETITION_ID);
         assertTrue(result.isSuccess());
         resource = result.getSuccessObject();
-        assertEquals(6, resource.getTotalNumberOfApplications().intValue());
-        assertEquals(0, resource.getApplicationsStarted().intValue());
-        assertEquals(0, resource.getApplicationsInProgress().intValue());
-        assertEquals(0, resource.getApplicationsNotSubmitted().intValue());
-        assertEquals(6, resource.getApplicationsSubmitted().intValue());
+        assertEquals(6, resource.getTotalNumberOfApplications());
+        assertEquals(0, resource.getApplicationsStarted());
+        assertEquals(0, resource.getApplicationsInProgress());
+        assertEquals(0, resource.getApplicationsNotSubmitted());
+        assertEquals(6, resource.getApplicationsSubmitted());
     }
 
 
