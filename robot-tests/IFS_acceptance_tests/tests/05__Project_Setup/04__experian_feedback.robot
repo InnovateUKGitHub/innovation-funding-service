@@ -10,6 +10,8 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-7161 If browser back button is used bank account details can be changed again by IUK inspite of being approved once
 ...
 ...               INFUND-7109 Bank Details Status - Internal user
+...
+...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
@@ -103,8 +105,9 @@ Bank account number and sort code validations server side
      Then the user should see the text in the page    Please enter a valid account number
      And the user should see the text in the page    Please enter a valid sort code
 
+
 Project Finance cancels bank details changes
-    [Documentation]    INFUND-4054
+    [Documentation]    INFUND-4054,  INFUND-5899
     [Tags]    HappyPath
     When the user clicks the button/link          link=Cancel bank account changes
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
@@ -115,6 +118,9 @@ Project Finance cancels bank details changes
     When the user clicks the button/link    jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
     Then the text box should be editable    id=company-name
+    When the user clicks the button/link    link=Review bank details
+    Then the user should see the text in the page    These details are now undergoing an internal review.
+    [Teardown]    the user goes back to the previous page
 
 Project Finance updates bank account details
     [Documentation]    INFUND-4054
