@@ -6,6 +6,7 @@ import org.innovateuk.ifs.user.domain.User;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.function.Consumer;
 
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 
@@ -61,7 +62,29 @@ public class CompetitionInvite extends Invite<Competition, CompetitionInvite> im
         this.competition = competition;
     }
 
+    @Deprecated // TODO workaround for mapstruct see: https://devops.innovateuk.org/issue-tracking/browse/INFUND-4585
+    public InnovationArea getInnovationAreaOrNull() {
+        return innovationArea;
+    }
+
+    public boolean isNewAssessorInvite() {
+        return getUser() == null;
+    }
+
+    public CompetitionInvite ifNewAssessorInvite(Consumer<CompetitionInvite> consumer) {
+        if (isNewAssessorInvite()) {
+            consumer.accept(this);
+        }
+        return this;
+    }
+
     public InnovationArea getInnovationArea() {
+        if (!isNewAssessorInvite()) {
+            throw new IllegalStateException(("Cannot get InnovationArea for an existing assessor CompetitionInvite"));
+        }
+        if (innovationArea == null) {
+            throw new NullPointerException("Unexpected null innovationArea for new Assessor CompetitionInvite");
+        }
         return innovationArea;
     }
 }

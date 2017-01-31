@@ -38,7 +38,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -133,7 +132,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR,
                     asMap("name", invite.getName(),
                             "competitionName", invite.getTarget().getName(),
-                            "innovationArea", invite.getInnovationArea(),
+                            "innovationArea", invite.getInnovationAreaOrNull(),
                             "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
                             "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
                             "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())));
@@ -235,7 +234,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite) {
         return getByEmailAndCompetition(stagedInvite.getEmail(), stagedInvite.getCompetitionId()).handleSuccessOrFailure(
                 failure -> getCompetition(stagedInvite.getCompetitionId())
-                        .andOnSuccess(competition -> getInnovationArea(stagedInvite.getInnovationCategoryId())
+                        .andOnSuccess(competition -> getInnovationArea(stagedInvite.getInnovationAreaId())
                                 .andOnSuccess(innovationArea ->
                                         inviteUserToCompetition(
                                                 stagedInvite.getName(),
@@ -258,13 +257,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return getCompetition(competitionId).andOnSuccessReturn(competition ->
                 mapWithIndex(newUserStagedInvites, (index, invite) ->
                         getByEmailAndCompetition(invite.getEmail(), competitionId).handleSuccessOrFailure(
-                                failure -> getInnovationArea(invite.getInnovationCategoryId())
+                                failure -> getInnovationArea(invite.getInnovationAreaId())
                                         .andOnSuccess(innovationArea ->
                                                 inviteUserToCompetition(invite.getName(), invite.getEmail(), competition, innovationArea)
                                         )
                                         .andOnFailure(() -> serviceFailure(Error.fieldError(
                                                 "invites[" + index + "].innovationArea",
-                                                invite.getInnovationCategoryId(),
+                                                invite.getInnovationAreaId(),
                                                 "validation.competitionInvite.create.innovationArea.required"
                                                 ))
                                         ),
@@ -388,7 +387,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             if (participant.getStatus() == ACCEPTED || participant.getStatus() == REJECTED) {
                 return ServiceResult.serviceFailure(new Error(COMPETITION_INVITE_CLOSED, invite.getTarget().getName()));
             }
-
             return serviceSuccess(invite);
         });
     }
@@ -413,8 +411,20 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-            return serviceSuccess(participant.acceptAndAssignUser(user));
+          return
+                  getProfileForUser(user)
+                          .andOnSuccessReturn(
+                                  profile -> participant
+                                          .getInvite()
+                                          .ifNewAssessorInvite( invite -> profile.addInnovationArea(invite.getInnovationArea()) )
+                          )
+                          .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+
         }
+    }
+
+    private ServiceResult<Profile> getProfileForUser(User user) {
+        return find(profileRepository.findOne(user.getProfileId()), notFoundError(Profile.class, user.getProfileId()));
     }
 
     private ServiceResult<CompetitionParticipant> reject(CompetitionParticipant participant, RejectionReason rejectionReason, Optional<String> rejectionComment) {
@@ -446,9 +456,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private List<InnovationAreaResource> getInnovationAreasForInvite(CompetitionInvite competitionInvite) {
-        boolean inviteForNewUser = competitionInvite.getUser() == null;
-
-        if (inviteForNewUser) {
+        if (competitionInvite.isNewAssessorInvite()) {
             return asList(innovationAreaMapper.mapToResource(competitionInvite.getInnovationArea()));
         } else {
             return profileRepository.findOne(competitionInvite.getUser().getProfileId()).getInnovationAreas().stream()
