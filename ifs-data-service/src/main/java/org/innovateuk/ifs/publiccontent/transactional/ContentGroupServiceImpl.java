@@ -86,11 +86,11 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
         Set<ContentGroupResource> toAdd = optionalResource.get().getContentGroups().stream()
                 .filter(group -> null == group.getId()).collect(Collectors.toSet());
 
-        Set<ContentGroupResource> toUpdate = Sets.difference(toAdd, new HashSet<>(optionalResource.get().getContentGroups()));
+        Set<ContentGroupResource> toUpdate = Sets.difference(new HashSet<>(optionalResource.get().getContentGroups()), toAdd);
 
         Set<Long> resourceIds = optionalResource.get().getContentGroups().stream().filter(contentGroupResource -> contentGroupResource != null).map(ContentGroupResource::getId).collect(Collectors.toSet());
         Set<Long> entityIds = optionalSection.get().getContentGroups().stream().map(ContentGroup::getId).collect(Collectors.toSet());
-        Set<Long> toDeleteIds = Sets.difference(resourceIds, entityIds);
+        Set<Long> toDeleteIds = Sets.difference(entityIds, resourceIds);
 
         addNewGroups(toAdd, optionalSection.get());
         updateGroups(toUpdate, optionalSection.get());
