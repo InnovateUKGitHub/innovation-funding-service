@@ -83,7 +83,7 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
-    [Teardown]  the user clicks the button/link     link=Competition dashboard
+    [Teardown]  the user clicks the button/link     link=Projects in setup
 
 
 MO server-side validation
@@ -235,10 +235,10 @@ standard verification for email address follows
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=.button:contains("Assign Monitoring Officer")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the user edits the MO details

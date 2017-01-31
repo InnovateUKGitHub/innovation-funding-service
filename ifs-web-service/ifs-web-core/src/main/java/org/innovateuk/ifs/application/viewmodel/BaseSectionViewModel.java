@@ -1,15 +1,21 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceViewModel;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * Generic ViewModel for common fields in SectionViewModels
@@ -36,6 +42,8 @@ public abstract class BaseSectionViewModel {
     protected Map<Long, List<FormInputResource>> subSectionQuestionFormInputs;
     protected Set<Long> sectionsMarkedAsComplete;
 
+    protected BaseFinanceViewModel financeViewModel;
+    protected BaseFinanceOverviewViewModel financeOverviewViewModel;
     protected SectionAssignableViewModel sectionAssignableViewModel;
     protected NavigationViewModel navigationViewModel;
     protected SectionApplicationViewModel sectionApplicationViewModel;
@@ -251,5 +259,69 @@ public abstract class BaseSectionViewModel {
 
     public Boolean isShowReturnButtons() {
         return !isSubFinanceSection();
+    }
+
+    public BaseFinanceViewModel getFinanceViewModel() {
+        return financeViewModel;
+    }
+
+    public void setFinanceViewModel(BaseFinanceViewModel financeViewModel) {
+        this.financeViewModel = financeViewModel;
+    }
+
+    public BaseFinanceViewModel getFinance() {
+        return getFinanceViewModel();
+    }
+
+    public BaseFinanceOverviewViewModel getFinanceOverviewViewModel() {
+        return financeOverviewViewModel;
+    }
+
+    public void setFinanceOverviewViewModel(BaseFinanceOverviewViewModel financeOverviewViewModel) {
+        this.financeOverviewViewModel = financeOverviewViewModel;
+    }
+
+    public BaseFinanceOverviewViewModel getFinanceOverview() {
+        return getFinanceOverviewViewModel();
+    }
+
+    public Boolean getHasFinanceView() {
+        if (null == financeViewModel) {
+            return Boolean.FALSE;
+        }
+
+        if(null == getFinanceViewModel().getFinanceView()) {
+            return Boolean.FALSE;
+        }
+
+        return Boolean.TRUE;
+    }
+
+    public Boolean isOrgFinancialOverview(Long questionId) {
+        return isSubFinanceSection()
+                && (questionFormInputs.containsKey(questionId) && questionFormInputs.get(questionId).stream().anyMatch(formInputResource -> FormInputType.FINANCIAL_OVERVIEW_ROW.equals(formInputResource.getType())));
+    }
+
+    public List<FormInputResource> getFormInputsOrganisationSize(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.ORGANISATION_SIZE);
+    }
+
+    public List<FormInputResource> getFormInputsFinancialOverview(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.FINANCIAL_OVERVIEW_ROW);
+    }
+
+    public List<FormInputResource> getFormInputsFinancialEndYear(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.FINANCIAL_YEAR_END);
+    }
+
+    public List<FormInputResource> getFormInputsFinancialStaffCount(Long questionId) {
+        return getFormInputsByType(questionId, FormInputType.FINANCIAL_STAFF_COUNT);
+    }
+
+    private List<FormInputResource> getFormInputsByType(Long questionId, FormInputType formInputType) {
+        if(questionFormInputs.containsKey(questionId)) {
+            return questionFormInputs.get(questionId).stream().filter(formInputResource -> formInputType.equals(formInputResource.getType())).collect(toList());
+        } 
+        return Collections.emptyList();
     }
 }

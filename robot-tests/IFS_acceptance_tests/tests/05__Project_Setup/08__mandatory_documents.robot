@@ -487,7 +487,7 @@ Project Finance is able to Approve and Reject
 Project Finance user can click the link and go back to the Competition Dashboard page
     [Documentation]    INFUND-5516, INFUND-7345
     [Tags]
-    When the user clicks the button/link           link=Competition dashboard
+    When the user clicks the button/link           link=Projects in setup
     Then the user should not see an error in the page
     And the user should see the text in the page   Projects in setup
     [Teardown]    the user goes back to the previous page
@@ -511,7 +511,7 @@ CompAdmin approves other documents
     When the user clicks the button/link    jQuery=button:contains("Accept documents")
     And the user clicks the button/link    jQuery=.modal-accept-docs .button:contains("Accept Documents")
     Then the user should see the text in the page    The documents provided have been approved.
-    [Teardown]  the user clicks the button/link      link=Competition dashboard
+    [Teardown]  the user clicks the button/link      link=Projects in setup
 
 
 Partners can see the documents approved

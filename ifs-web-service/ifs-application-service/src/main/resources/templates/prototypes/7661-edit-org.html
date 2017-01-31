@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="app-dashboard">
+
+    <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+    <div th:include="fragments/layout :: body-start" th:remove="tag" />
+    <div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+    <main id="content">
+        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application team'}, ${'/prototypes/632-organisation-collaborator-overview' + (param.company == null or param.company[0] == 'empire' ? '' : '?company='+ param.company[0])})" th:unless="${param.status != null and param.status[0] == 'firstLoad'}" th:remove="tag" />
+
+        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application team'}, ${'/prototypes/632-organisation-collaborator-overview?company=empire&#38;status=firstLoad'})" />
+
+        <!-- HARDCODED PROTOTYPE HTML -->
+
+        <h1 class="heading-xlarge">
+          <span class="heading-secondary">0102468: Technology inspired</span>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'empire'}">
+            Edit Empire Ltd
+          </th:block>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'ludlow'}">
+            Edit Ludlow
+          </th:block>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'eggs'}">
+            Edit EGGS
+          </th:block>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
+            Add partner organisation
+          </th:block>
+
+        </h1>
+
+        <p>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'empire'}">
+            From this page you are able to invite and remove contributors from the lead organisation. This organisation and the lead applicant cannot be removed from the application.
+          </th:block>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'ludlow'}">
+            From this page you are able to invite and remove contributors from Ludlow.
+          </th:block>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'eggs'}">
+            From this page you are able to invite and remove contributors from EGGS.
+          </th:block>
+
+          <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
+            From this page you are able to invite an new organisation to your application. You need to add at least one applicant before you can invite the organisation.
+          </th:block>
+
+        </p>
+
+        <th:block th:if="${param.company != null and param.company[0] == 'empire'}">
+          <div class="table-display-stacked">
+
+            <h2 class="heading-medium">Empire Ltd, Lead organisation</h2>
+
+            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+              <thead>
+                <tr>
+                  <th class="width-30-percent">Applicant</th>
+                  <th class="width-40-percent">Email</th>
+                  <th class="width-15-percent">Status</th>
+                  <th class="width-15-percent alignright">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Steve Smith</td>
+                    <td>steve.smith@empire.com</td>
+                    <td>Lead</td>
+                    <td class="alignright"></td>
+                  </tr>
+                  <tr th:unless="${param.status != null and param.status[0] == 'firstLoad'}">
+                    <td>Paul Davidson</td>
+                    <td>paul.davidsonh@empire.com</td>
+                    <td></td>
+                    <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}">Remove</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+        </th:block>
+
+        <th:block th:if="${param.company != null and param.company[0] == 'ludlow'}">
+          <div class="table-display-stacked">
+
+            <h2 class="heading-medium">Ludlow</h2>
+
+            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+              <thead>
+                <tr>
+                  <th class="width-30-percent">Applicant</th>
+                  <th class="width-50-percent">Email</th>
+                  <th class="width-20-percent">Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Jessica Doe</td>
+                  <td>jessica.dow@ludlow.com</td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>Ryan Dell</td>
+                  <td>ryan.dell@ludlow.com</td>
+                  <td>Invite pending</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </th:block>
+
+        <th:block th:if="${param.company != null and param.company[0] == 'eggs'}">
+          <div class="table-display-stacked">
+
+            <h2 class="heading-medium">EGGS</h2>
+
+            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+              <thead>
+                <tr>
+                  <th class="width-30-percent">Applicant</th>
+                  <th class="width-50-percent">Email</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Paul Tom</td>
+                  <td>paul.tom@eggs.com</td>
+                  <td></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </th:block>
+
+        <p th:unless="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg' or param.status != null and param.status[0] == 'firstLoad'}">
+          <a th:href="@{'?action=addApplicant&#38;company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Add new applicant</a>
+        </p>
+
+        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
+          <a th:href="@{'?status=firstLoad&#38;company=empire&#38;action=addApplicant'}">Add new applicant</a>
+        </th:block>
+
+        <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
+          <fieldset>
+            <legend class="heading-medium">Partner organisation</legend>
+            <div class="form-group">
+              <label class="form-label-bold" for="new-org-name">Organisation name</label>
+              <input class="form-control width-full" id="new-org-name" type="text" />
+            </div>
+          </fieldset>
+        </th:block>
+
+        <th:block th:if="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg'}">
+
+          <fieldset class="table-display-stacked extra-margin-top">
+            <legend class="heading-medium">New applicant</legend>
+            <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
+              <thead>
+                <tr>
+                  <th class="width-30-percent" id="new-applicant-name">Applicant name</th>
+                  <th class="width-55-percent" id="new-applicant-email">Email</th>
+                  <th class="width-15-percent alignright"></th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input type="text" id="applicant-name-1" name="applicant-name-1" aria-labelledby="new-applicant-name" required="required" class="form-control width-full">
+                  </td>
+                  <td>
+                    <input type="text" id="applicant-email-1" name="applicant-emaile-1" aria-labelledby="new-applicant-email" required="required" class="form-control width-full">
+                  </td>
+                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Remove</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </fieldset>
+
+          <p>
+            <a href="#">Add new applicant</a>
+          </p>
+
+        </th:block>
+
+        <th:block th:unless="${param.user != null and param.user[0] == 'nonLead'}">
+
+          <div class="alignright" th:unless="${param.company[0] == 'empire' or param.company[0] == 'newOrg'}">
+            <a href="/prototypes/635-application-overview" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
+            <hr />
+          </div>
+
+          <p class="extra-margin-top" th:unless="${param.company[0] == 'newOrg'}">Updating the organisation will notify applicants of changes to their position on the project.</p>
+
+        </th:block>
+
+        <p class="extra-margin-top">
+
+          <a th:href="${'/prototypes/635-application-overview' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}" data-js-modal="modal-update-organisation" class="button" th:unless="${param.company[0] == 'newOrg'}">Update organisation</a>
+
+          <th:block th:if="${param.company[0] == 'newOrg'}">
+            <a href="/prototypes/635-application-overview" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
+          </th:block>
+
+          <a href="#" class="button-link-style">Cancel</a>
+        </p>
+
+
+        <div class="modal-update-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
+            <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+            <h2 class="heading-medium no-margin">Update organisation</h2>
+            <p>Invites will be sent to all new applicants.</p>
+            <p>Any removed applicants will not be informed by the Innovate funding system, if you remove people you should discuss this with with them.</p>
+            <hr />
+
+            <form method="get" id="submit-remove-collaborator-form">
+
+                <th:block th:if="${param.user == null or param.user[0] == 'nonLead'}">
+                  <input type="hidden" name="company" th:value="${param.company[0]}" />
+                </th:block>
+
+                <th:block th:if="${param.status == null or param.status[0] == 'firstLoad'}">
+                  <input type="hidden" name="status" value="firstLoad" />
+                </th:block>
+
+                <button class="button large" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Update organisation</button>
+                <button type="button-link" class="js-close buttonlink large">Cancel</button>
+
+            </form>
+
+        </div>
+
+        <div class="modal-new-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
+            <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+            <h2 class="heading-medium no-margin">Add organisation and invite applicants</h2>
+            <p>All applicants that have been added to this organisation will be added at this point.</p>
+            <hr />
+
+            <form method="get" id="submit-remove-collaborator-form">
+
+              <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
+                <input type="hidden" name="status" th:value="${param.status[0]}" />
+              </th:block>
+
+              <button class="button large" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Add organisation and invite applicants</button>
+              <button type="button-link" class="js-close buttonlink large">Cancel</button>
+
+            </form>
+
+        </div>
+
+
+        <div class="modal-delete-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
+            <button class="js-close close" type="button" aria-label="Close Popup">X</button>
+            <h2 class="heading-medium no-margin">Delete organisation</h2>
+            <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
+            <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
+            <hr />
+
+            <form method="get">
+
+                <button class="button large" name="publish" value="publish" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Delete organisation</button>
+                <button class="js-close buttonlink large" type="button">Cancel</button>
+
+            </form>
+
+        </div>
+
+        <!-- END OFHARDCODED PROTOTYPE HTML -->
+
+        <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    </main>
+
+    <div th:include="fragments/layout :: footer" th:remove="tag" />
+    <div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+    <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
+    <script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>
+</body>
+
+</html>

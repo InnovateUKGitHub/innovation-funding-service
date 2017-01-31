@@ -42,6 +42,8 @@ Documentation     INFUND-2612 As a partner I want to have a overview of where I 
 ...               INFUND-7174 Not eligible partner should not have access to his Bank details page
 ...
 ...               INFUND-6882 Email validation done when valid is input selected for PM selection in project details
+...
+...               INFUND-7432 Terms and Conditions of grant offer takes you to the IFS ts and cs, not the grant ones
 Suite Setup       Custom suite setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -89,11 +91,11 @@ Status updates correctly for internal user's table
     #Internal user can view project details via the clickable 'hour glass' for Project details
     When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.waiting a
     Then the user should see the element    jQuery=h1:contains("Project details")
-    And the user clicks the button/link    link=Competition dashboard
+    And the user clicks the button/link    link=Projects in setup
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting
 
 Non-lead partner can see the project setup page
-    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805
+    [Documentation]    INFUND-2612, INFUND-2621, INFUND-4428, INFUND-5827, INFUND-5805, INFUND-7432
     [Tags]    HappyPath
     [Setup]  log in as a different user     &{collaborator1_credentials}
     When The user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_HEADER}
@@ -103,7 +105,9 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Successful application
     And the user should see the text in the page    The application ${PROJECT_SETUP_APPLICATION_1_TITLE} has been successful within the ${PROJECT_SETUP_COMPETITION_NAME} competition
     And the user should see the element    link=View application and feedback
-    And the user should see the element    link=View terms and conditions of grant offer
+    And the user clicks the button/link    link=View terms and conditions of grant offer
+    And the user should see the text in the page     Terms and Conditions of an Innovate UK Grant Award
+    And the user goes back to the previous page
     And the user should see the text in the page    Project details
     And the user should see the text in the page    Monitoring Officer
     And the user should see the text in the page    Bank details
@@ -461,7 +465,7 @@ Invited finance contact registration flow
     And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
-    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify account
+    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
@@ -611,7 +615,7 @@ Non-lead partner cannot change any project details
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
 
-Internal user can see the Project details as sumbmitted
+Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
@@ -654,12 +658,12 @@ the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
 
 the applicant clicks the submit button and then clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 the applicant clicks the submit button in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
@@ -677,7 +681,7 @@ the user changes the start date back again
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 Mark as complete button should be enabled
-    Then Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label

@@ -121,7 +121,7 @@ public class RegistrationServiceImplTest extends BaseServiceUnitTest<Registratio
                 .withPhoneNumber("01234 567890")
                 .withEmailAddress("email@example.com")
                 .withRoles(roles)
-                .withProfile(userProfile)
+                .withProfileId(userProfile.getId())
                 .build();
 
         when(profileRepositoryMock.findOne(userToCreate.getProfileId())).thenReturn(userProfile);

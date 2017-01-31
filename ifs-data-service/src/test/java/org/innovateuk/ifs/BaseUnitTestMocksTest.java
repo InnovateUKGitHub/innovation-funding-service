@@ -14,10 +14,7 @@ import org.innovateuk.ifs.application.mapper.QuestionMapper;
 import org.innovateuk.ifs.application.mapper.SectionMapper;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
-import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
-import org.innovateuk.ifs.assessment.mapper.AssessorFormInputResponseMapper;
-import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
-import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
+import org.innovateuk.ifs.assessment.mapper.*;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.repository.AssessorFormInputResponseRepository;
 import org.innovateuk.ifs.assessment.transactional.*;
@@ -68,6 +65,7 @@ import org.innovateuk.ifs.project.finance.repository.*;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -473,10 +471,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessorService assessorServiceMock;
 
     @Mock
+    protected AssessorProfileMapper assessorProfileMapperMock;
+
+    @Mock
     protected ProjectUsersHelper projectUsersHelperMock;
 
     @Mock
     protected FinanceCheckWorkflowHandler financeCheckWorkflowHandlerMock;
+
+    @Mock
+    protected ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
 
     @Mock
     protected GOLWorkflowHandler golWorkflowHandlerMock;

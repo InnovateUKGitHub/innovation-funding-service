@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedValues;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -34,6 +35,10 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
                 .with(idBasedValues("Value "));
     }
 
+    public FormInputResponseResourceBuilder withQuestion(Long... questions) {
+        return withArraySetFieldByReflection("question", questions);
+    }
+
     public FormInputResponseResourceBuilder withFormInputs(Long... owningFormInputs) {
         return withFormInputs(asList(owningFormInputs));
     }
@@ -42,8 +47,8 @@ public class FormInputResponseResourceBuilder extends BaseBuilder<FormInputRespo
         return withList(owningFormInputs, (formInput, formInputResponseResource) -> formInputResponseResource.setFormInput(formInput));
     }
 
-    public FormInputResponseResourceBuilder withFileEntry(FileEntryResource fileEntry) {
-        return with(response -> response.setFileEntry(fileEntry.getId()));
+    public FormInputResponseResourceBuilder withFileEntry(Long... fileEntries) {
+        return withArray((fileEntry, formInputResponseResource) -> formInputResponseResource.setFileEntry(fileEntry), fileEntries);
     }
 
     public FormInputResponseResourceBuilder withApplication(Long applicationId) {

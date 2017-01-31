@@ -20,12 +20,12 @@ public class InnovationAreaBuilderTest {
         InnovationArea innovationArea = newInnovationArea()
                 .withId(expectedId)
                 .withName(expectedName)
-                .withParent(expectedParent)
+                .withSector(expectedParent)
                 .build();
 
         assertEquals(expectedId, innovationArea.getId());
         assertEquals(expectedName, innovationArea.getName());
-        assertEquals(expectedParent, innovationArea.getParent());
+        assertEquals(expectedParent, innovationArea.getSector());
     }
 
     @Test
@@ -37,17 +37,17 @@ public class InnovationAreaBuilderTest {
         List<InnovationArea> innovationAreas = newInnovationArea()
                 .withId(expectedIds)
                 .withName(expectedNames)
-                .withParent(expectedParents)
+                .withSector(expectedParents)
                 .build(2);
 
         InnovationArea first = innovationAreas.get(0);
         assertEquals(expectedIds[0], first.getId());
         assertEquals(expectedNames[0], first.getName());
-        assertEquals(expectedParents[0], first.getParent());
+        assertEquals(expectedParents[0], first.getSector());
 
         InnovationArea second = innovationAreas.get(1);
         assertEquals(expectedIds[1], second.getId());
         assertEquals(expectedNames[1], second.getName());
-        assertEquals(expectedParents[1], second.getParent());
+        assertEquals(expectedParents[1], second.getSector());
     }
 }

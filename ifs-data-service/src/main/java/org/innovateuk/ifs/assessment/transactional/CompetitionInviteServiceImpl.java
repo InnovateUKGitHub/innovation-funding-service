@@ -199,6 +199,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return serviceSuccess(assessors.stream()
                 .map(assessor -> {
                     AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
+                    availableAssessor.setId(assessor.getId());
                     availableAssessor.setEmail(assessor.getEmail());
                     availableAssessor.setName(assessor.getName());
                     availableAssessor.setBusinessType(getBusinessType(assessor));
