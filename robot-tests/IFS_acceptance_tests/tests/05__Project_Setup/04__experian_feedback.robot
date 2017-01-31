@@ -96,7 +96,7 @@ Bank account number and sort code validations client side
     And the user should not see an error in the page
 
 Bank account number and sort code validations server side
-    [Documentation]    INFUND-4054, INFUND-5899
+    [Documentation]    INFUND-4054
     [Tags]
      When the user enters text to a text field    id=bank-acc-number    abcdefgh
      And the user enters text to a text field    id=bank-sort-code    abcdef
@@ -107,7 +107,7 @@ Bank account number and sort code validations server side
 
 
 Project Finance cancels bank details changes
-    [Documentation]    INFUND-4054
+    [Documentation]    INFUND-4054,  INFUND-5899
     [Tags]    HappyPath
     When the user clicks the button/link          link=Cancel bank account changes
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
