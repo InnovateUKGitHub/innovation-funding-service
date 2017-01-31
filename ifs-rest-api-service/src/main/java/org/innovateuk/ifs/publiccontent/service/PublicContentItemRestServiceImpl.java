@@ -23,7 +23,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
     private static final String PUBLIC_CONTENT_ITEM_REST_URL = "/public-content/items/";
 
     @Override
-    public RestResult<PublicContentItemPageResource> getByFilterValues(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Long> pageNumber, Optional<Long> pageSize) {
+    public RestResult<PublicContentItemPageResource> getByFilterValues(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
         String searchStringEncoded = null;
         try {
             searchStringEncoded = UriUtils.encode(searchString.orElse(null), "UTF8");
