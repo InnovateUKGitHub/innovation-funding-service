@@ -21,6 +21,7 @@ items:
         containers:
         - image: innovateuk/shib-init:1.0-SNAPSHOT
           name: shib-init
+          imagePullPolicy: Always
           ports: {}
           resources: {}
     test: false

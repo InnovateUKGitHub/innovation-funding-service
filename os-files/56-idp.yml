@@ -19,6 +19,7 @@ items:
         containers:
         - image: innovateuk/ifs-shib-idp:0.2.0
           name: idp
+          imagePullPolicy: Always
           env:
           - name: SPHOST
             value: <<SHIB-ADDRESS>>

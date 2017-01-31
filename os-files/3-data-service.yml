@@ -26,6 +26,7 @@ items:
             value: password
           image: mysql:5.5.49
           name: mysql
+          imagePullPolicy: Always
           ports:
           - containerPort: 3306
           volumeMounts:
@@ -58,6 +59,7 @@ items:
         containers:
         - image: innovateuk/data-service:1.0-SNAPSHOT
           name: data-service
+          imagePullPolicy: Always
           lifecycle:
             postStart:
               exec:

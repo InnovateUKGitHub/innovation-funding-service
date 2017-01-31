@@ -21,6 +21,7 @@ items:
         containers:
         - image: camptocamp/courier-imap
           name: imap
+          imagePullPolicy: Always
           ports:
           - containerPort: 143
           resources: {}

@@ -24,6 +24,7 @@ items:
             value: "8636"
           image: innovateuk/ifs-ldap:0.2.0
           name: ldap
+          imagePullPolicy: Always
           ports:
           - containerPort: 8389
           - containerPort: 8636

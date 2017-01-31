@@ -21,6 +21,7 @@ items:
         containers:
         - image: innovateuk/assessment-service:1.0-SNAPSHOT
           name: assessment-svc
+          imagePullPolicy: Always
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'

@@ -21,6 +21,7 @@ items:
         containers:
         - image: enmobile/docker-spring-boot-admin
           name: admin
+          imagePullPolicy: Always
           ports:
           - containerPort: 8123
           resources: {}
