@@ -8,6 +8,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.ApplicationFinance;
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
+import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -56,6 +57,9 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
     protected FinanceRowServiceImpl supplyServiceUnderTest() {
         return new FinanceRowServiceImpl();
     }
+
+    @Mock
+    private ApplicationFinanceHandler applicationFinanceHandlerMock;
 
     @Test
     public void testFindApplicationFinanceByApplicationIdAndOrganisation() {
@@ -175,5 +179,17 @@ public class FinanceRowServiceImplTest extends BaseServiceUnitTest<FinanceRowSer
         assertTrue(result.isSuccess());
 
         assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testFindApplicationFinanceDetailsByApplicationId() {
+
+        List<ApplicationFinanceResource> existingFinances = newApplicationFinanceResource().withApplication(1L).build(3);
+        when(applicationFinanceHandlerMock.getApplicationFinances(1L)).thenReturn(existingFinances);
+
+        ServiceResult<List<ApplicationFinanceResource>> result = service.financeDetails(1L);
+        assertTrue(result.isSuccess());
+
+        assertEquals(existingFinances, result.getSuccessObject());
     }
 }

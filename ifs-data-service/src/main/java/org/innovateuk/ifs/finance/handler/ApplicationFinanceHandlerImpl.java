@@ -136,13 +136,13 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
         List<ProjectFinanceResource> financeResources = new ArrayList<>();
 
-        for(ProjectFinance finance : finances) {
+        finances.stream().forEach(finance -> {
             ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getName());
             EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(), finance.getProject().getApplication().getCompetition()));
             financeResource.setFinanceOrganisationDetails(costs);
             financeResources.add(financeResource);
-        }
+        });
         return financeResources;
     }
 

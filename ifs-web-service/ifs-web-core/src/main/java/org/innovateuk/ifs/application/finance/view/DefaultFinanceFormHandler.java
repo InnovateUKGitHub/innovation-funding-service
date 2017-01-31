@@ -203,7 +203,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
                 applicationFinance.setOrganisationSize(newValue);
                 break;
             case "application.researchCategoryId":
-                handleResearchCategoryChange(applicationFinance, competitionId, userId);
+                handleResearchCategoryChange(applicationFinance, competitionId);
                 break;
             default:
                 LOG.error(String.format("value not saved: %s / %s", fieldNameReplaced, value));
@@ -212,21 +212,21 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, OrganisationSize oldValue, OrganisationSize newValue) {
         if(null != oldValue && !oldValue.equals(newValue)) {
-            resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId, false);
+            resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
         }
     }
 
-    private void handleResearchCategoryChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
-        resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId, true);
+    private void handleResearchCategoryChange(ApplicationFinanceResource applicationFinance, Long competitionId) {
+        resetFundingLevelAndMarkAsIncompleteForAllCollaborators(competitionId, applicationFinance.getApplication());
     }
 
-    private void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, boolean resetCollaboratorsFundingLevel) {
+    private void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
 
         Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
                 .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
                 .findFirst();
 
-        //set your funding section to marked as in complete
+        //set your funding section to marked as incomplete
         sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
                 .forEach(fundingSection ->
                         sectionService.markAsInComplete(fundingSection.getId(),
@@ -236,11 +236,28 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
         QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
 
-        if (resetCollaboratorsFundingLevel) {
-            resetFundingLevelForAllCollaborators(applicationFinance.getApplication(), financeQuestion.getId());
-        } else {
+        resetFundingLevel(applicationFinance, financeQuestion.getId());
+    }
+
+    private void resetFundingLevelAndMarkAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
+
+        QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
+
+        Set<Long> userIds = processRoleService.getByApplicationId(applicationId).stream().filter(processRole -> processRole.getUser() != null).map(
+                processRole -> processRole.getUser()).collect(Collectors.toSet());
+
+        userIds.stream().forEach(userId ->
+                //set user's funding section to marked as incomplete
+                sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
+                        .forEach(fundingSection ->
+                                sectionService.markAsInComplete(fundingSection.getId(),
+                                        applicationId, userId))
+        );
+
+        financeService.getApplicationFinanceDetails(applicationId).stream().forEach(applicationFinance -> {
             resetFundingLevel(applicationFinance, financeQuestion.getId());
-        }
+            applicationFinanceRestService.update(applicationFinance.getId(), applicationFinance);
+        });
     }
 
     private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
@@ -248,14 +265,6 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
             applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
             financeRowService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim());
         }
-    }
-
-    private void resetFundingLevelForAllCollaborators(Long applicationId, Long financeQuestionId) {
-
-        financeService.getApplicationFinanceDetails(applicationId).stream().forEach(applicationFinance -> {
-            resetFundingLevel(applicationFinance, financeQuestionId);
-            applicationFinanceRestService.update(applicationFinance.getId(), applicationFinance);
-        });
     }
 
     private List<Either<FinanceRowItem, ValidationMessages>> getFinanceRowItems(Map<String, String[]> params, Long applicationFinanceId) {
