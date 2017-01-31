@@ -88,7 +88,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
                 .withName("A Innovation Area")
                 .withId(2L)
-                .withParent(1L)
+                .withSector(1L)
                 .build(1);
         when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
