@@ -24,9 +24,7 @@ public class ProjectFinanceRowController {
     private ValidationUtil validationUtil;
 
     /**
-     * INFUND-4834 Note that this is done as GET to support some javascript features from front end.
-     * It follows same rules as applicaiton finances do and reuses same javascripts.
-     *
+     * Used for adding new cost items to project costs table
      * @param projectFinanceId
      * @param questionId
      * @param newCostItem
@@ -48,9 +46,9 @@ public class ProjectFinanceRowController {
     }
 
     /**
-     * This is a way of adding empty rows to interface without actually persisting the empty row in database.
-     * This is the way finances work so we are following same approach in PS.  It maybe possible to construct
-     * required resource object without talking to data layer but that needs further investigation.
+     * Used to add new empty rows on load of project finances page.  This is done to be consistent with how application
+     * finances work.  It may be possible to build resource object without going to data layer.  That will require
+     * further investigation and out of scope form INFUND-4834.
      * @param projectFinanceId
      * @param questionId
      * @return
@@ -68,7 +66,7 @@ public class ProjectFinanceRowController {
     }
 
     /**
-     * Save the updated FinanceRowItem and if there are validation messages, return those (but still save)
+     * Save the updated FinanceRowItem in project finances and if there are validation messages, return those (but still save)
      * @return ValidationMessages resource object to store validation messages about invalid user input.
      */
     @PutMapping("/update/{id}")
