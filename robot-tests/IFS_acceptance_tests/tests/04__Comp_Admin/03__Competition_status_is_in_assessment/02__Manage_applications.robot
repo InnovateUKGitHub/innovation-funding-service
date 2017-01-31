@@ -70,7 +70,7 @@ Remove an assigned user (Not notified)
     [Tags]
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove and notify")
+    And the user clicks the button/link    jQuery=button:contains("Remove assessor")
     And the available assessors information is correct
 
 Notify an assigned user
@@ -97,7 +97,7 @@ Remove and notify an assessor (Notified)
     And the user clicks the button/link    jQuery=.button:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
-    And the user clicks the button/link    jQuery=button:contains("Remove and notify")
+    And the user clicks the button/link    jQuery=button:contains("Remove assessor")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct
     #TODO Check email once 7249 is done
