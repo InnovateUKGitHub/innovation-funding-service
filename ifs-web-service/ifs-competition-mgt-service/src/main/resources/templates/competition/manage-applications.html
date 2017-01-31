@@ -16,7 +16,7 @@
             <h1 class="heading-xlarge">
                 <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block
                     th:text="${model.competitionName}"/><th:block
-                    th:text="${inAssessment} ? ', in assessment' : ''"/></span>
+                    th:text="${inAssessment} ? ', in assessment' : ', competition closed'"/></span>
                 <span th:text="${inAssessment} ? 'Manage applications' : 'Allocate Applications'"></span>
             </h1>
 
