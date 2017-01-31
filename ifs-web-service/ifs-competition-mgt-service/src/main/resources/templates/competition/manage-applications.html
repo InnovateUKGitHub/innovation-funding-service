@@ -13,8 +13,11 @@
         <main id="content">
             <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Manage assessments',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
 
-            <h1 class="heading-xlarge" th:text="${inAssessment} ? 'Manage applications' : 'Allocate Applications'">
-                <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block th:text="${model.competitionName}"/>, in assessment</span>
+            <h1 class="heading-xlarge">
+                <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block
+                    th:text="${model.competitionName}"/><th:block
+                    th:text="${inAssessment} ? ', in assessment' : ''"/></span>
+                <span th:text="${inAssessment} ? 'Manage applications' : 'Allocate Applications'"></span>
             </h1>
 
             <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
