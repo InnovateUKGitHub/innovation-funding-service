@@ -209,7 +209,9 @@ Funding Information not editable after notifications date
 Eligibility is not editable when the competition is open
     [Documentation]    INFUND-6792
     [Tags]
-    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/1
+    # Changing competition to ${NOT_EDITABLE_COMPETITION} as the orginal competition (live) does not have some of the questions
+    # required in order to view some of the pages - in this case the finance section with - is growth table include.
+    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input
