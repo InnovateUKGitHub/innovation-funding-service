@@ -1,8 +1,7 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.publiccontent.PublicContentSetupController;
-import org.innovateuk.ifs.publiccontent.populator.PublicContentMenuPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentMenuPopulator;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
 import org.junit.Test;
@@ -20,10 +19,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
- * Class for testing public functions of {@link PublicContentSetupController}
+ * Class for testing public functions of {@link PublicContentMenuController}
  */
 @RunWith(MockitoJUnitRunner.class)
-public class PublicContentSetupControllerTest extends BaseControllerMockMVCTest<PublicContentSetupController> {
+public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<PublicContentMenuController> {
 
     private static final Long COMPETITION_ID = Long.valueOf(12);
     private static final String URL_PREFIX = "/competition/setup/public-content";
@@ -36,8 +35,8 @@ public class PublicContentSetupControllerTest extends BaseControllerMockMVCTest<
 
 
     @Override
-    protected PublicContentSetupController supplyControllerUnderTest() {
-        return new PublicContentSetupController();
+    protected PublicContentMenuController supplyControllerUnderTest() {
+        return new PublicContentMenuController();
     }
 
     @Test

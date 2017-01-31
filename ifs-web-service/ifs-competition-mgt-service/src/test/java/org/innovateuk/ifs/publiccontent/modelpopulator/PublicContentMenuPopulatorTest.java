@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.publiccontent.populator;
+package org.innovateuk.ifs.publiccontent.modelpopulator;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
