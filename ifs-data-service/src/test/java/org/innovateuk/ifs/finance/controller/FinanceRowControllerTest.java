@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -20,11 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceRowController> {
-
-    @Override
-    protected FinanceRowController supplyControllerUnderTest() {
-        return new FinanceRowController();
-    }
 
     @Mock
     private ValidationUtil validationUtil;
@@ -123,5 +117,10 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
                 .andExpect(status().isNoContent());
 
         verify(financeRowServiceMock, times(1)).deleteCost(123L);
+    }
+
+    @Override
+    protected FinanceRowController supplyControllerUnderTest() {
+        return new FinanceRowController();
     }
 }

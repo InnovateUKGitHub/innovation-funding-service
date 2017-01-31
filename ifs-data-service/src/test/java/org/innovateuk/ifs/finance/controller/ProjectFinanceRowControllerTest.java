@@ -17,6 +17,7 @@ import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<ProjectFinanceRowController> {
@@ -34,7 +35,7 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
 
         when(projectFinanceRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
-        mockMvc.perform(get("/cost/project/add/{projectFinanceId}/{questionId}", "123", "456"))
+        mockMvc.perform(post("/cost/project/add/{projectFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
         verify(projectFinanceRowServiceMock, times(1)).addCost(123L, 456L, null);
@@ -45,7 +46,7 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
 
         when(projectFinanceRowServiceMock.addCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
 
-        mockMvc.perform(get("/cost/project/add-without-persisting/{projectFinanceId}/{questionId}", "123", "456"))
+        mockMvc.perform(post("/cost/project/add-without-persisting/{projectFinanceId}/{questionId}", "123", "456"))
                 .andExpect(status().isCreated());
 
         verify(projectFinanceRowServiceMock, times(1)).addCostWithoutPersisting(123L, 456L);
@@ -91,7 +92,7 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
         GrantClaim costItem = new GrantClaim();
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
 
-        mockMvc.perform(get("/cost/project/update/{id}", "123")
+        mockMvc.perform(put("/cost/project/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(costItem)))
                 .andExpect(status().isNotFound())
@@ -106,7 +107,7 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
         GrantClaim costItem = new GrantClaim();
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
 
-        mockMvc.perform(post("/cost/project/update/{id}", "123")
+        mockMvc.perform(put("/cost/project/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(costItem)))
                 .andExpect(status().isOk());
@@ -119,9 +120,20 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
 
         when(projectFinanceRowServiceMock.deleteCost(123L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(get("/cost/project/delete/123"))
+        mockMvc.perform(delete("/cost/project/delete/123"))
                 .andExpect(status().isNoContent());
 
         verify(projectFinanceRowServiceMock, times(1)).deleteCost(123L);
+    }
+
+    @Test
+    public void testGet() throws Exception{
+
+        when(projectFinanceRowServiceMock.getCostItem(123L)).thenReturn(serviceSuccess(new GrantClaim()));
+
+        mockMvc.perform(get("/cost/project/123"))
+                .andExpect(status().isOk());
+
+        verify(projectFinanceRowServiceMock, times(1)).getCostItem(123L);
     }
 }
