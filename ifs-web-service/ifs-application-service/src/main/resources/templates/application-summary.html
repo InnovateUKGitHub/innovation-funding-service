@@ -23,7 +23,7 @@
     <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (app=${currentApplication})" />
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
         <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Summary</h1>
         <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Overview</h1>
     </div>
@@ -35,7 +35,7 @@
     </p>
 
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview">
-      <div th:include="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, assessorFeedbackDownloadLink=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.id})})" th:remove="tag"/>
+      <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, assessorFeedbackDownloadLink=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.id})})" />
     </form>
 
     <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">

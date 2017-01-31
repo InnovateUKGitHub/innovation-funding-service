@@ -31,6 +31,68 @@
     </th:block>
 
 
+    <!-- =========================== Your organisation =========================== -->
+    <th:block th:fragment="your_organisation">
+        <th:block th:with="markedAsComplete=(${model.application.markedAsComplete}),
+                           organisationFinanceSize=(${model.finance.organisationFinanceSize})">
+            <div class="question" th:each="formInput, status : ${model.getFormInputsOrganisationSize(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                    <div th:replace="'finance/'+${model.finance.financeView} :: organisation_size" />
+                </th:block>
+            </div>
+
+            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialEndYear(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                    <div th:replace="'finance/'+${model.finance.financeView} :: financial_year_end" />
+                </th:block>
+            </div>
+
+            <fieldset>
+                <legend class="heading-medium no-margin-bottom">Financial overview</legend>
+                <span class="form-hint">Details relating to your organisation over the last financial year.</span><br>
+                <div class="grid-row">
+                    <div class="column-half">
+                        <table class="extra-margin-bottom">
+                            <thead>
+                                <tr>
+                                    <th scope="col">Section</th>
+                                    <th scope="col" class="numeric" id="last-year">Last financial year (£)</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr th:each="formInput, status : ${model.getFormInputsFinancialOverview(question.id)}" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''" class="form-group">
+                                    <td>
+                                        <label th:for="${'input-'+formInput.id}">
+                                            <span th:text="${formInput.description}"></span>
+                                            <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+                                        </label>
+                                    </td>
+                                    <td class="numeric">
+                                        <input class="form-control width-small"
+                                               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and model.application.markedAsComplete?.contains(question.id))}"
+                                               th:id="${'input-'+formInput.id}"
+                                               th:name="'formInput['+${formInput.id}+']'"
+                                               th:value="*{formInput[__${formInput.id}__]}"
+                                               th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
+                                               required="required"
+                                               min="-2147483647"
+                                               max="2147483647"
+                                               type="number"/>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="question" th:each="formInput, status : ${model.getFormInputsFinancialStaffCount(question.id)}" th:id="'form-input-'+${formInput.getId()}">
+                <th:block th:if="${formInput.type.isDisplayableFinanceType(model.finance.financeView) and model.finance.hasOrganisationFinance}">
+                    <div th:replace="'finance/'+${model.finance.financeView} :: staff_count" />
+                </th:block>
+            </div>
+        </th:block>
+    </th:block>
+
     <!-- ===========================Your finances agree terms view =========================== -->
     <th:block th:fragment="agree_terms">
         <th:block th:if="${(model.application.currentCompetition.isOpen())} and ${null != model.currentSection}"
@@ -122,14 +184,15 @@
                 </thead>
                 <tbody>
                 <tr>
-                <th:block th:if="${model.finance.hasOrganisationFinance}">
+                <th:block th:if="${hasOrganisationFinance}"
+                     th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
                     <td class="numeric">
-                        <strong th:text="'£'+${#numbers.formatDecimal(model.finance.organisationFinanceTotal, 0, 'COMMA', 0, 'POINT')}" />
+                        <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                     </td>
-                    <td class="numeric" th:text="${model.finance.organisationGrantClaimPercentage}+'%'"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(model.finance.organisationTotalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(model.finance.organisationTotalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(model.finance.organisationTotalContribution, 0, 'COMMA', 0, 'POINT')}"/>
+                    <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
+                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
                 </th:block>
                 <th:block th:unless="${model.finance.hasOrganisationFinance}">
                     <td class="numeric">
