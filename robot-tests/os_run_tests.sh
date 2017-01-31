@@ -28,107 +28,6 @@ function section() {
     echo
 }
 
-function clearDownFileRepository() {
-    echo "***********Deleting any uploaded files***************"
-    echo "storedFileFolder:   ${storedFileFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${storedFileFolder}
-
-    echo "***********Deleting any holding for scan files***************"
-    echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanHoldingFolder}
-
-    echo "***********Deleting any quarantined files***************"
-    echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanQuarantinedFolder}
-
-    echo "***********Deleting any scanned files***************"
-    echo "virusScanScannedFolder: ${virusScanScannedFolder}"
-    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanScannedFolder}
-}
-
-function addTestFiles() { 
-    section "=> RESETTING FILE STORAGE STATE"
-
-    clearDownFileRepository
-    echo "***********Adding test files***************"
-    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data-service_1:/tmp/testing.pdf
-
-    echo "***********Making the quarantined directory ***************"
-    docker exec innovationfundingservice_data-service_1 mkdir -p ${virusScanQuarantinedFolder}
-    echo "***********Adding pretend quarantined file ***************"
-    docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
-
-    echo "***********Adding standard file upload location ***********"
-    docker exec innovationfundingservice_data-service_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
-
-    echo "***********Creating file entry for each db entry***********" 
-    max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
-    for i in `seq 1 ${max_file_entry_id}`;
-    do 
-      if [ "${i}" != "8" ]
-      then
-        docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
-      fi
-    done
-}
-
-function resetDB() {
-    section "=> RESETTING DATABASE STATE and syncing shibboleth users"
-    cd ${rootDir}
-    ./gradlew flywayClean flywayMigrate syncShib
-}
-
-function buildAndDeploy() {
-    section "=> BUILDING AND DEPLOYING APPLICATION"
-    cd ${rootDir}
-    if [[ ${noDeploy} -eq 0 ]]
-    then
-        echo "=> Starting build and deploy script..."
-        ./gradlew -Pcloud=development cleanDeployServices -x test
-    else
-        coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
-    fi
-
-    ./gradlew -Pcloud=development composeUp
-}
-
-function startSeleniumGrid() {
-    section "=> STARTING SELENIUM GRID"
-
-    cd ${scriptDir}
-
-    if [[ ${parallel} -eq 1 ]]
-    then
-      declare -i suiteCount=$(find ${testDirectory}/* -maxdepth 0 -type d | wc -l)
-    else
-      declare -i suiteCount=1
-    fi
-    if [[ ${suiteCount} -eq 0 ]]
-    then
-      suiteCount=1
-    fi
-
-    echo "=> Suite count: ${suiteCount}"
-
-    docker-compose -f docker-compose-services.yml up -d --force-recreate --build
-    sleep 2
-    docker-compose -f docker-compose-services.yml scale chrome=${suiteCount}
-
-    unset suiteCount
-    if [[ ${quickTest} -eq 1 ]]
-    then
-      echo "=> Waiting 5 seconds for the grid to be properly started"
-      sleep 5
-    fi
-  }
-
-function stopSeleniumGrid() {
-    section "=> STOPPING SELENIUM GRID"
-
-    cd ${scriptDir}
-    docker-compose -f docker-compose-services.yml down -v --remove-orphans
-}
-
 function startPybot() {
     section "=> STARTING PYBOT FOR ${1}"
 
@@ -177,7 +76,7 @@ function startPybot() {
     -v UPLOAD_FOLDER:${uploadFileDir} \
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
-    -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
+    -v REMOTE_URL:'http://hub:4444/wd/hub' \
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
@@ -246,7 +145,7 @@ rootDir=`pwd`
 
 dataServiceCodeDir="${rootDir}/ifs-data-service"
 webServiceCodeDir="${rootDir}/ifs-web-service"
-webBase="ifs-local-dev"
+webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/upload_files"
 baseFileStorage="/tmp/uploads"
@@ -315,8 +214,8 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
         ;;
         r)
 		    rerunFailed=1
-    	;;
-    	d)
+	;;
+	d)
             testDirectory="$OPTARG"
             parallel=0
         ;;
@@ -343,7 +242,7 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
         ;;
         :)
             case $OPTARG in
-           	    d)
+		    d)
                  coloredEcho "=> Option -$OPTARG requires the location of the robottest files relative to ${scriptDir}." red >&2
                 ;;
                 *)
@@ -355,7 +254,7 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
     esac
 done
 
-startSeleniumGrid
+#startSeleniumGrid
 
 if [[ ${rerunFailed} -eq 0 ]]
 then
@@ -365,7 +264,6 @@ fi
 if [[ ${quickTest} -eq 1 ]]
 then
     coloredEcho "=> Using quickTest: TRUE" blue
-    addTestFiles
     runTests
 elif [[ ${testScrub} ]]
 then
@@ -394,5 +292,9 @@ then
 else
     wd=$(pwd)
     logs="target/${targetDir}/log.html"
-    open "file://${wd}/${logs}"
+    #open "file://${wd}/${logs}"
 fi
+
+
+echo "DONE"
+sleep 1000000000000

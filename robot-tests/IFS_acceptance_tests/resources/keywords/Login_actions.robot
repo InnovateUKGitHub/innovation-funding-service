@@ -56,7 +56,7 @@ The guest user opens the browser
     Run keyword if    '${VIRTUAL_DISPLAY}' == 'true'    Start Virtual Display    1920    1080
     Run keyword if    '${SERVER_AUTH}' != ''    Open browser    ${PROTOCOL}${SERVER_AUTH}@${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
     Run keyword if    '${SERVER_AUTH}' == ''    Open browser    ${PROTOCOL}${SERVER_BASE}    ${BROWSER}    remote_url=${REMOTE_URL}    desired_capabilities=${DESIRED_CAPABILITIES}
-    Run keyword if    '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'    Set Selenium Timeout    30
+    Run keyword if    '${REMOTE_URL}' != 'http://ifs-local-dev:4444/wd/hub'    Set Selenium Timeout    10
     Run keyword if    '${REMOTE_URL}' == 'http://ifs-local-dev:4444/wd/hub'    Set Selenium Timeout    10
 
 TestTeardown User closes the browser

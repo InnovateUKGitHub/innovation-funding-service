@@ -16,7 +16,8 @@ function tailorToAppInstance() {
     sed -i.bak "s/1.0-SNAPSHOT/1.0-$PROJECT/g" os-files-tmp/robot-tests/*.yml
 
     cp -r robot-tests robot-tests-tmp
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/micro_run_tests.sh
+    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/openshift/*.sh
+    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/os_run_tests.sh
 }
 
 function cleanUp() {
@@ -38,7 +39,13 @@ function deployTests() {
     sleep 2
 }
 
+function fileFixtures() {
+    chmod +x robot-tests/openshift/addtestFiles.sh
+    ./robot-tests/openshift/addtestFiles.sh
+}
+
 cleanUp
+fileFixtures
 tailorToAppInstance
 buildAndPushTestImages
 deployTests
