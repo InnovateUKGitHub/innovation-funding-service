@@ -23,6 +23,7 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot
 
 *** Variables ***
+# This suite uses application: Assign test
 
 *** Test Cases ***
 Lead applicant can assign a question
@@ -210,9 +211,8 @@ Lead marks finances as complete
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    jQuery=h3:contains("Your funding")
-    When the user clicks the button/link   link=Your project costs
-    Then the user fills in the project costs
-    When the user navigates to his finances page  Assign test
+    When the user fills in the project costs
+    And the user navigates to his finances page  Assign test
     Then the user fills in the organisation information
     And the user fills in the funding information  Assign test
     When the user navigates to his finances page  Assign test
@@ -275,18 +275,17 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the collaborator is able to edit the finances
-    the user clicks the button/link   link=Your project costs
     the user fills in the project costs
     the user navigates to his finances page  Assign test
     the user fills in the organisation information
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application
-    Given the user clicks the button/link    link= ${OPEN_COMPETITION_NAME}
-    And the user clicks the button/link    link= Application details
-    And the user enters text to a text field    id=application_details-title    Assign test
-    And The user clicks the button/link    jQuery=button:contains("Save and return")
+    Given the user clicks the button/link     link= ${OPEN_COMPETITION_NAME}
+    And the user clicks the button/link       link= Application details
+    And the user enters text to a text field  id=application_details-title  Assign test
+    And The user clicks the button/link       jQuery=button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
+    When the applicant assigns the question to the collaborator  css=#form-input-12 .editor  test1233  Jessica Doe
