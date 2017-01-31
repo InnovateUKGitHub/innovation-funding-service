@@ -9,12 +9,15 @@ Default Tags
 Resource          ../../../resources/defaultResources.robot
 Resource          ../FinanceSection_Commons.robot
 
+#This test suite is using the Application:  Robot test application
+
 *** Test Cases ***
 Green check shows after marking a question as complete
     [Documentation]    INFUND-539
     [Tags]    HappyPath
     [Setup]
     Given the user makes sure that the finances section is not marked as complete
+    And the Application details are not completed
     When the user navigates to the overview page of the Robot test application
     And none of the sections are marked as complete
     And the user clicks the button/link    link=4. Economic benefit
@@ -49,3 +52,7 @@ the user makes sure that the finances section is not marked as complete
     the user navigates to the overview page of the Robot test application
     the user clicks the button/link    link=Your finances
     Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    jQuery=button:contains("Edit")
+
+the Application details are not completed
+    ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=img.complete[alt*="Application details"]
+    Run Keyword If  '${status}' == 'PASS'  Mark application details as incomplete
