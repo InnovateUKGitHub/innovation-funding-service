@@ -20,6 +20,10 @@ items:
       spec:
         containers:
         - image: innovateuk/assessment-service:1.0-SNAPSHOT
+          readinessProbe:
+            httpGet:
+              path: /assessment/health
+              port: 8080
           name: assessment-svc
           imagePullPolicy: Always
           env:

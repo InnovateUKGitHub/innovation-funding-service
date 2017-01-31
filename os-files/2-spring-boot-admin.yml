@@ -20,6 +20,10 @@ items:
       spec:
         containers:
         - image: enmobile/docker-spring-boot-admin
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8123
           name: admin
           imagePullPolicy: Always
           ports:

@@ -20,6 +20,10 @@ items:
       spec:
         containers:
         - image: innovateuk/project-setup-service:1.0-SNAPSHOT
+          readinessProbe:
+            httpGet:
+              path: /project-setup/health
+              port: 8080
           name: project-setup-svc
           imagePullPolicy: Always
           env:

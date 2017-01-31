@@ -22,6 +22,10 @@ items:
       spec:
         containers:
         - image: innovateuk/application-service:1.0-SNAPSHOT
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
           name: application-svc
           imagePullPolicy: Always
           env:

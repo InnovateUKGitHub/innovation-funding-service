@@ -69,12 +69,12 @@ function deploy() {
 }
 
 function blockUntilServiceIsUp() {
-    SERVICE_STATUS=404
-    while [ ${SERVICE_STATUS} -ne "200" ]
+    UNREADY_PODS=1
+    while [ ${UNREADY_PODS} -ne "0" ]
     do
-        SERVICE_STATUS=$(curl  --max-time 3 -k -L -s -o /dev/null -w "%{http_code}" https://${PROJECT}.${ROUTE_DOMAIN}/) || true
-        oc get pods
-        echo "Service status: HTTP $SERVICE_STATUS"
+        UNREADY_PODS=$(oc get pods -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
+        oc get pods -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}'
+        echo "pods not Ready: $UNREADY_PODS"
         sleep 5s
     done
     oc get routes

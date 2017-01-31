@@ -20,6 +20,10 @@ items:
       spec:
         containers:
         - image: innovateuk/competition-management-service:1.0-SNAPSHOT
+          readinessProbe:
+            httpGet:
+              path: /management/health
+              port: 8080
           name: competition-mgt-svc
           imagePullPolicy: Always
           env:

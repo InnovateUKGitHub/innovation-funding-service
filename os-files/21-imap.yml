@@ -47,6 +47,10 @@ items:
           - name: smtp-maildir-storage
             mountPath: /home/smtp/Maildir
         - image: camptocamp/sqwebmail
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 80
           name: webmail
           ports:
           - containerPort: 80
