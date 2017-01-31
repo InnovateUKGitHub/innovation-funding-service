@@ -53,13 +53,15 @@
 <div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>Text entered into this section will appear within the eligibility tab.</p>
     <th:block th:if="${model.readOnly}">
+        <th:block th:each="contentGroup: ${form.contentGroups}">
+            <h2 class="heading-small no-margin-bottom" th:text="${contentGroup.heading}"></h2>
+            <p th:text="${contentGroup.content}"></p>
+        </th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <div class="content-group" th:each="contentGroup,iter: ${form.contentGroups}">
             <th:block th:include="fragments/public-content :: content-group(contentGroup=${contentGroup},index=${iter.index})"></th:block>
         </div>
-
-
     </th:block>
 
 </div>
@@ -68,6 +70,7 @@
     <fieldset>
         <legend class="heading-medium no-margin">Content</legend>
         <fieldset>
+            <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
             <hr />
             <div class="form-group">
                 <label class="form-label-bold" for="heading-one">

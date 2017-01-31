@@ -69,7 +69,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     private String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
         model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
         if(form.isPresent()) {
-            model.addAttribute("form", form);
+            model.addAttribute("form", form.get());
         } else {
             model.addAttribute("form", formPopulator().populate(publicContent));
         }

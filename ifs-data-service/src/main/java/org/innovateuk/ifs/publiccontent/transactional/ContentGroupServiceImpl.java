@@ -88,7 +88,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
 
         Set<ContentGroupResource> toUpdate = Sets.difference(toAdd, new HashSet<>(optionalResource.get().getContentGroups()));
 
-        Set<Long> resourceIds = optionalResource.get().getContentGroups().stream().map(ContentGroupResource::getId).collect(Collectors.toSet());
+        Set<Long> resourceIds = optionalResource.get().getContentGroups().stream().filter(contentGroupResource -> contentGroupResource != null).map(ContentGroupResource::getId).collect(Collectors.toSet());
         Set<Long> entityIds = optionalSection.get().getContentGroups().stream().map(ContentGroup::getId).collect(Collectors.toSet());
         Set<Long> toDeleteIds = Sets.difference(resourceIds, entityIds);
 
@@ -110,6 +110,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
             if (optional.isPresent()) {
                 optional.get().setContent(contentGroupResource.getContent());
                 optional.get().setHeading(contentGroupResource.getHeading());
+                optional.get().setPriority(contentGroupResource.getPriority());
             }
         });
     }
@@ -119,6 +120,7 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
             ContentGroup contentGroup = new ContentGroup();
             contentGroup.setHeading(contentGroupResource.getHeading());
             contentGroup.setContent(contentGroupResource.getContent());
+            contentGroup.setPriority(contentGroupResource.getPriority());
             contentGroup.setContentSection(contentSection);
             contentGroupRepository.save(contentGroup);
         });
