@@ -101,6 +101,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return withArray((date, competition) -> competition.closeAssessment(date), dates);
     }
 
+    public CompetitionBuilder withAssessorCount(Integer... asssessorCounts) {
+        return withArraySetFieldByReflection("assessorCount", asssessorCounts);
+    }
+
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {
         LocalDateTime now = LocalDateTime.now();
         if(READY_TO_OPEN.equals(status)) {

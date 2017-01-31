@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 public class CompetitionClosedKeyStatisticsResource {
     private long assessorsInvited;
     private long assessorsAccepted;
@@ -54,5 +57,35 @@ public class CompetitionClosedKeyStatisticsResource {
 
     public void setAssignmentCount(long assignmentCount) {
         this.assignmentCount = assignmentCount;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CompetitionClosedKeyStatisticsResource that = (CompetitionClosedKeyStatisticsResource) o;
+
+        return new EqualsBuilder()
+                .append(assessorsInvited, that.assessorsInvited)
+                .append(assessorsAccepted, that.assessorsAccepted)
+                .append(applicationsPerAssessor, that.applicationsPerAssessor)
+                .append(applicationsRequiringAssessors, that.applicationsRequiringAssessors)
+                .append(assessorsWithoutApplications, that.assessorsWithoutApplications)
+                .append(assignmentCount, that.assignmentCount)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(assessorsInvited)
+                .append(assessorsAccepted)
+                .append(applicationsPerAssessor)
+                .append(applicationsRequiringAssessors)
+                .append(assessorsWithoutApplications)
+                .append(assignmentCount)
+                .toHashCode();
     }
 }

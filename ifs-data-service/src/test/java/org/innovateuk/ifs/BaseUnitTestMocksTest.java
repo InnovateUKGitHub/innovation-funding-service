@@ -33,6 +33,7 @@ import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -174,6 +175,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionService competitionServiceMock;
+
+    @Mock
+    protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;

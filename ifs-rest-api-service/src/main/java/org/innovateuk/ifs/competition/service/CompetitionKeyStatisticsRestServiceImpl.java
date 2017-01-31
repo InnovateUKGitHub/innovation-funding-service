@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import static java.lang.String.format;
 
 /**
- * Interface for retrieving {@link CompetitionKeyStatisticsResource}
+ * Interface for retrieving Competition Key Statistics Resources}
  */
 @Service
 public class CompetitionKeyStatisticsRestServiceImpl extends BaseRestService implements CompetitionKeyStatisticsRestService {
