@@ -44,11 +44,50 @@
                 <input class="form-control width-full prot-section-0-empty" id="keywords" type="text" th:field="${form.keywords}" />
             </div>
         </fieldset>
+        <div class="alignright">
+            <a href="#">+ add new section</a>
+        </div>
     </th:block>
 </div>
 
 <div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    
+    <p>Text entered into this section will appear within the eligibility tab.</p>
+    <th:block th:if="${model.readOnly}">
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <div class="content-group" th:each="contentGroup,iter: ${form.contentGroups}">
+            <th:block th:include="fragments/public-content :: content-group(contentGroup=${contentGroup},index=${iter.index})"></th:block>
+        </div>
 
+
+    </th:block>
+
+</div>
+
+<div th:fragment="content-group(contentGroup, index)" xmlns:th="http://www.w3.org/1999/html">
+    <fieldset>
+        <legend class="heading-medium no-margin">Content</legend>
+        <fieldset>
+            <hr />
+            <div class="form-group">
+                <label class="form-label-bold" for="heading-one">
+                    Heading
+                </label>
+                <input class="form-control" id="heading-one" type="text" th:field="*{contentGroups[__${index}__].heading}" />
+            </div>
+            <div class="form-group">
+                <label class="form-label-bold" for="content-one">
+                    Content
+                </label>
+                <textarea name="skills-areas" id="content-one" cols="30" rows="10" class="width-full" th:field="*{contentGroups[__${index}__].content}"></textarea>
+            </div>
+            <button name="uploadFile" th:value="${index}">Add attachment</button>
+            <button name="removeFile" th:value="${index}">remove</button>
+        </fieldset>
+        <ul class="comp-setup-section-navigation">
+            <li><a href="#">Remove section</a></li>
+        </ul>
+        <hr />
+    </fieldset>
 </div>
 

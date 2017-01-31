@@ -12,19 +12,24 @@ import org.mapstruct.Mappings;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-            ContentSectionMapper.class,
             FileEntryMapper.class
     }
 )
 public abstract class ContentGroupMapper extends BaseMapper<ContentGroup, ContentGroupResource, Long> {
 
     @Override
+    @Mappings({
+            @Mapping(source = "contentSection.id", target = "contentSectionId"),
+            @Mapping(source = "contentSection.type", target = "sectionType")
+    })
     public abstract ContentGroupResource mapToResource(ContentGroup domain);
 
+    @Override
     @Mappings({
-            @Mapping(target = "contentSectionId", ignore = true)
+            @Mapping(target = "contentSection", ignore = true)
     })
-    public abstract ContentGroup mapToDomain(ContentGroupResource domain);
+    public abstract ContentGroup mapToDomain(ContentGroupResource resource);
+
 
     public Long mapPublicContentToId(ContentGroup object) {
         if (object == null) {

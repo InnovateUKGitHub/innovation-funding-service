@@ -14,4 +14,5 @@ public interface PublicContentRestService {
     RestResult<Void> publishByCompetitionId(Long competitionId);
 
     RestResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section);
+
 }

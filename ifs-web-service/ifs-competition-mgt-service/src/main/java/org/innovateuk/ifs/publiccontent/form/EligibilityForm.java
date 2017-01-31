@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.publiccontent.form;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 
 /**
@@ -7,13 +9,40 @@ import java.util.List;
  */
 public class EligibilityForm extends AbstractPublicContentForm {
 
-    List<ContentGroupForm> groups;
+    private Integer uploadFile;
+    private Integer removeFile;
+    private List<ContentGroupForm> contentGroups;
+    private MultipartFile attachment;
 
-    public List<ContentGroupForm> getGroups() {
-        return groups;
+    public List<ContentGroupForm> getContentGroups() {
+        return contentGroups;
     }
 
-    public void setGroups(List<ContentGroupForm> groups) {
-        this.groups = groups;
+    public void setContentGroups(List<ContentGroupForm> contentGroups) {
+        this.contentGroups = contentGroups;
+    }
+
+    public Integer getUploadFile() {
+        return uploadFile;
+    }
+
+    public void setUploadFile(Integer uploadFile) {
+        this.uploadFile = uploadFile;
+    }
+
+    public Integer getRemoveFile() {
+        return removeFile;
+    }
+
+    public void setRemoveFile(Integer removeFile) {
+        this.removeFile = removeFile;
+    }
+
+    public MultipartFile getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(MultipartFile attachment) {
+        this.attachment = attachment;
     }
 }

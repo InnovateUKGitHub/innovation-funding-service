@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class EligibilityFormPopulator extends AbstractPublicContentFormPopulator<EligibilityForm> implements PublicContentFormPopulator<EligibilityForm> {
+public class PublicContentEligibilityFormPopulator extends AbstractPublicContentFormPopulator<EligibilityForm> implements PublicContentFormPopulator<EligibilityForm> {
 
     @Override
     protected EligibilityForm createInitial() {
@@ -17,7 +17,7 @@ public class EligibilityFormPopulator extends AbstractPublicContentFormPopulator
 
     @Override
     protected void populateSection(EligibilityForm form, PublicContentResource publicContentResource) {
-        form.setGroups(getContentGroupForms(publicContentResource));
+        form.setContentGroups(getContentGroupForms(publicContentResource));
     }
 
     @Override

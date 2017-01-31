@@ -61,6 +61,7 @@ public enum CommonFailureKeys implements ErrorTemplate {
      */
     PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH(BAD_REQUEST),
     PUBLIC_CONTENT_ALREADY_INITIALISED(BAD_REQUEST),
+    PUBLIC_CONTENT_NOT_INITIALISED(BAD_REQUEST),
 
     /**
      * Notifications

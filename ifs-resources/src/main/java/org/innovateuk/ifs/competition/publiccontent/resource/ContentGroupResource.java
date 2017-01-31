@@ -19,7 +19,7 @@ public class ContentGroupResource {
 
     private Integer priority;
 
-    private FileEntryResource fileEntryResource;
+    private FileEntryResource fileEntry;
 
     public Long getId() {
         return id;
@@ -61,19 +61,19 @@ public class ContentGroupResource {
         this.priority = priority;
     }
 
-    public FileEntryResource getFileEntryResource() {
-        return fileEntryResource;
-    }
-
-    public void setFileEntryResource(FileEntryResource fileEntryResource) {
-        this.fileEntryResource = fileEntryResource;
-    }
-
     public PublicContentSectionType getSectionType() {
         return sectionType;
     }
 
     public void setSectionType(PublicContentSectionType sectionType) {
         this.sectionType = sectionType;
+    }
+
+    public FileEntryResource getFileEntry() {
+        return fileEntry;
+    }
+
+    public void setFileEntry(FileEntryResource fileEntry) {
+        this.fileEntry = fileEntry;
     }
 }
