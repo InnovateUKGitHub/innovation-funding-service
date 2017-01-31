@@ -55,4 +55,5 @@ the user makes sure that the finances section is not marked as complete
 
 the Application details are not completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=img.complete[alt*="Application details"]
-    Run Keyword If  '${status}' == 'PASS'  Mark application details as incomplete
+    Run Keyword If    '${status}' == 'PASS'    Mark application details as incomplete
+    Run Keyword If    '${status}' == 'FAIL'    the user should see the element  jQuery=img.assigned[alt*="Application details"]
