@@ -83,6 +83,10 @@ public enum FormInputType implements Identifiable {
         return ACADEMIC_FINANCE_TYPES.contains(this);
     }
 
+    public boolean isDisplayableFinancialSummaryType() {
+        return FINANCIAL_SUMMARY_TYPES.contains(this);
+    }
+
     public boolean isDisplayableFinanceType(String financeView) {
 
         switch (financeView) {
