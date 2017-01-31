@@ -45,4 +45,4 @@ cleanUp
 
 echo ""
 echo "Tests are running now. You can follow the progress with the wollowing command:"
-echo "oc logs -f $(oc get pods | grep robot-framework | awk '{ print $1 }')"
+echo "oc logs -f $(oc get pods | grep robot-framework-1 | awk '{ print $1 }')"
