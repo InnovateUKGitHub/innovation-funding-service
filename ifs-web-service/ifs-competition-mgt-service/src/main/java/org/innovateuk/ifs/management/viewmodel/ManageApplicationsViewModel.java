@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.management.viewmodel;
 
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+
 import java.util.List;
 
 /**
@@ -9,11 +11,13 @@ public class ManageApplicationsViewModel {
     private Long competitionId;
     private String competitionName;
     private List<ManageApplicationsRowViewModel> applications;
+    private CompetitionStatus competitionStatus;
 
-    public ManageApplicationsViewModel(Long competitionId, String competitionName, List<ManageApplicationsRowViewModel> applications) {
+    public ManageApplicationsViewModel(Long competitionId, String competitionName, List<ManageApplicationsRowViewModel> applications, CompetitionStatus competitionStatus) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applications = applications;
+        this.competitionStatus = competitionStatus;
     }
 
     public Long getCompetitionId() {
@@ -26,5 +30,9 @@ public class ManageApplicationsViewModel {
 
     public List<ManageApplicationsRowViewModel> getApplications() {
         return applications;
+    }
+
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
     }
 }

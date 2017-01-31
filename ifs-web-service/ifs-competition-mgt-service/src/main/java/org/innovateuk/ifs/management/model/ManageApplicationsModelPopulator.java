@@ -19,7 +19,8 @@ public class ManageApplicationsModelPopulator {
     public ManageApplicationsViewModel populateModel(CompetitionResource competition, List<ApplicationCountSummaryResource> applicationCounts) {
         ManageApplicationsViewModel model = new ManageApplicationsViewModel(
                 competition.getId(), competition.getName(),
-                simpleMap(applicationCounts, this::getRowViewModel));
+                simpleMap(applicationCounts, this::getRowViewModel),
+                competition.getCompetitionStatus());
         return model;
     }
 
