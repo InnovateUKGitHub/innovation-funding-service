@@ -163,5 +163,5 @@ Clear the login fields
     wait for autosave
 
 the user clicks the forgot psw link
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    click element    link=Forgot your password?
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=Forgot your password?
     Run Keyword If    '${status}' == 'FAIL'    click element    link=forgot your password?

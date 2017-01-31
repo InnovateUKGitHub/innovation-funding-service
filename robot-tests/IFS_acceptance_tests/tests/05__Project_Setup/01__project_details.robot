@@ -654,12 +654,12 @@ the submit button should be disabled
     Element Should Be Disabled    jQuery=.button:contains("Mark as complete")
 
 the applicant clicks the submit button and then clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
 the applicant clicks the submit button in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user clicks the button/link    jQuery=button:contains("Submit")
 
@@ -677,7 +677,7 @@ the user changes the start date back again
     the user clicks the button/link    jQuery=.button:contains("Save")
 
 Mark as complete button should be enabled
-    Then Wait Until Element Is Enabled    jQuery=.button:contains("Mark as complete")
+    Then Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Mark as complete")
 
 the user should not see duplicated select options
     ${NO_OPTIONs}=    Get Matching Xpath Count    //div/div/label

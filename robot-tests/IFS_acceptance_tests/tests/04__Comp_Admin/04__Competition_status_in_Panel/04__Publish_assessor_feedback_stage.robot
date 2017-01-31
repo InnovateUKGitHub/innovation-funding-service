@@ -3,7 +3,7 @@ Documentation     INFUND-2672 As a competition administrator I want to be able t
 ...
 ...               INFUND-2608 As a lead applicant I want to receive an email to inform me when the application feedback is accessible so that I can review the assessment
 Suite Setup       Run Keywords    Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
-...               AND    Run Keyword And Ignore Error    Delete the emails from both test mailboxes
+...               AND    Run Keyword And Ignore Error Without Screenshots    Delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
 Force Tags        Upload    CompAdmin
 Resource          ../../../resources/defaultResources.robot
