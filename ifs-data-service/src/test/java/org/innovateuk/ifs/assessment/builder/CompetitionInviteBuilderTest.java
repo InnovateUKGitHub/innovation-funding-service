@@ -53,9 +53,10 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedCompetition, invite.getTarget());
         assertEquals(expectedHash, invite.getHash());
         assertEquals(expectedName, invite.getName());
-        assertEquals(expectedInnovationArea, invite.getInnovationArea());
+        assertEquals(expectedInnovationArea, invite.getInnovationAreaOrNull());
         assertEquals(expectedSentBy, invite.getSentBy());
         assertEquals(expectedSentOn, invite.getSentOn());
+
     }
 
     @Test
@@ -92,7 +93,7 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedCompetitions[0], first.getTarget());
         assertEquals(expectedHashes[0], first.getHash());
         assertEquals(expectedNames[0], first.getName());
-        assertEquals(expectedInnovationAreas[0], first.getInnovationArea());
+        assertEquals(expectedInnovationAreas[0], first.getInnovationAreaOrNull());
         assertEquals(expectedSentBy[0], first.getSentBy());
         assertEquals(expectedSentOn[0], first.getSentOn());
 
@@ -104,7 +105,7 @@ public class CompetitionInviteBuilderTest {
         assertEquals(expectedCompetitions[1], second.getTarget());
         assertEquals(expectedHashes[1], second.getHash());
         assertEquals(expectedNames[1], second.getName());
-        assertEquals(expectedInnovationAreas[1], second.getInnovationArea());
+        assertEquals(expectedInnovationAreas[1], second.getInnovationAreaOrNull());
         assertEquals(expectedSentBy[1], second.getSentBy());
         assertEquals(expectedSentOn[1], second.getSentOn());
     }
