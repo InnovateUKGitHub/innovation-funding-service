@@ -12,8 +12,7 @@ import java.util.List;
 
 public interface CategoryService {
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance', 'assessor')")
+    @NotSecured(value = "Innovation Areas can be viewed on the public front-door competition search by public visitors.")
     ServiceResult<List<InnovationAreaResource>> getInnovationAreas();
 
     @SecuredBySpring(value = "TODO", description = "TODO")
