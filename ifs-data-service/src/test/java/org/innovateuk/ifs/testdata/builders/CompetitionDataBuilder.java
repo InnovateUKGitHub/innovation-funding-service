@@ -9,6 +9,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -170,8 +172,15 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                     getSuccessObjectOrThrowException();
 
-            projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException();
+            doAs(anyProjectFinanceUser(),
+                    () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException());
+
         });
+    }
+
+    private UserResource anyProjectFinanceUser() {
+        List<User> projectFinanceUsers = userRepository.findByRoles_Name(UserRoleType.PROJECT_FINANCE.getName());
+        return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {

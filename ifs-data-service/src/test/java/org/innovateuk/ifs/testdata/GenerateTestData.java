@@ -68,6 +68,8 @@ import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newEx
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
+import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -261,6 +263,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
         projectDataBuilder = newProjectData(serviceLocator);
+        publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
+        publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
     }
 
     @Test

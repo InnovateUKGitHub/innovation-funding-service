@@ -29,7 +29,7 @@ public class PublicContentDateDataBuilder extends BaseDataBuilder<Void, PublicCo
         });
     }
 
-    public static PublicContentDateDataBuilder newCompetitionFunderData(ServiceLocator serviceLocator) {
+    public static PublicContentDateDataBuilder newPublicContentDateDataBuilder(ServiceLocator serviceLocator) {
         return new PublicContentDateDataBuilder(Collections.emptyList(), serviceLocator);
     }
 

@@ -32,7 +32,7 @@ public class PublicContentGroupDataBuilder extends BaseDataBuilder<Void, PublicC
         });
     }
 
-    public static PublicContentGroupDataBuilder newCompetitionFunderData(ServiceLocator serviceLocator) {
+    public static PublicContentGroupDataBuilder newPublicContentGroupDataBuilder(ServiceLocator serviceLocator) {
         return new PublicContentGroupDataBuilder(Collections.emptyList(), serviceLocator);
     }
 
