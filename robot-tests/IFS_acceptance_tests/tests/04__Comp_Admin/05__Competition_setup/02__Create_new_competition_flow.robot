@@ -89,7 +89,7 @@ Initial details - User enters valid values and marks as done
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link            jQuery=.button:contains("Done")
-    Then the user should see the text in the page   Toby Reader
+    Then the user should see the text in the page   John Doe
     And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
@@ -583,7 +583,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
+    And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}
