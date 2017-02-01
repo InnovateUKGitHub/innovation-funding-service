@@ -20,10 +20,10 @@ Suite Teardown    TestTeardown User closes the browser
 Test Teardown
 Force Tags        Applicant
 Resource          ../../../resources/defaultResources.robot
-Resource          ../Applicant_Commons.robot
 Resource          ../FinanceSection_Commons.robot
 
 *** Variables ***
+# This suite uses application: Assign test
 
 *** Test Cases ***
 Lead applicant can assign a question
@@ -194,13 +194,10 @@ Lead selects Research Area
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
+    # The following line has been commented  as 'alert message' is commented in application details section html due to upcoming functionality
     #Then the user should see the element      jQuery=h2:contains("Research category determines funding")
     Then the user should see the element       jQuery=legend:contains("Research category")
     And the user selects the radio button     application.researchCategoryId   financePosition-cat-35
-    #And the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    #    When the user navigates to his finances page
-    #    Then the user should not see the element  jQuery=.error-summary
-    # This is not yet working, due to upcomign functionality.
 
 Lead marks finances as complete
     [Documentation]    INFUND-3016
@@ -214,9 +211,8 @@ Lead marks finances as complete
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    jQuery=h3:contains("Your funding")
-    When the user clicks the button/link   link=Your project costs
-    Then the user fills in the project costs
-    When the user navigates to his finances page  Assign test
+    When the user fills in the project costs
+    And the user navigates to his finances page  Assign test
     Then the user fills in the organisation information
     And the user fills in the funding information  Assign test
     When the user navigates to his finances page  Assign test
@@ -266,21 +262,6 @@ Lead applicant should be able to remove the registered partner
     And the user should not see the element    link= Assign test
 
 *** Keywords ***
-the applicant completes the application details
-    the user clicks the button/link    link=Application details
-    the user clicks the button/link      jQuery=label[for^="financePosition"]:contains("Experimental development")
-    the user selects the radio button     application.researchCategoryId   financePosition-cat-35
-    the user clicks the button/link    jQuery=label[for="resubmission-no"]
-    Clear Element Text    id=application_details-startdate_day
-    The user enters text to a text field    id=application_details-startdate_day    18
-    Clear Element Text    id=application_details-startdate_year
-    The user enters text to a text field    id=application_details-startdate_year    2018
-    Clear Element Text    id=application_details-startdate_month
-    The user enters text to a text field    id=application_details-startdate_month    11
-    The user enters text to a text field    id=application_details-duration    20
-    the user selects the radio button    application.resubmission    false
-    the user clicks the button/link    name=mark_as_complete
-
 the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
@@ -294,18 +275,17 @@ the question should contain the correct status/name
     Element Should Contain    ${ELEMENT}    ${STATUS}
 
 the collaborator is able to edit the finances
-    the user clicks the button/link   link=Your project costs
     the user fills in the project costs
     the user navigates to his finances page  Assign test
     the user fills in the organisation information
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application
-    Given the user clicks the button/link    link= ${OPEN_COMPETITION_NAME}
-    And the user clicks the button/link    link= Application details
-    And the user enters text to a text field    id=application_details-title    Assign test
-    And The user clicks the button/link    jQuery=button:contains("Save and return")
+    Given the user clicks the button/link     link= ${OPEN_COMPETITION_NAME}
+    And the user clicks the button/link       link= Application details
+    And the user enters text to a text field  id=application_details-title  Assign test
+    And The user clicks the button/link       jQuery=button:contains("Save and return")
 
 Steve smith assigns a question to the collaborator
     the user navigates to the page    ${PUBLIC_DESCRIPTION_URL}
-    When the applicant assigns the question to the collaborator    css=#form-input-12 .editor    test1233    Jessica Doe
+    When the applicant assigns the question to the collaborator  css=#form-input-12 .editor  test1233  Jessica Doe
