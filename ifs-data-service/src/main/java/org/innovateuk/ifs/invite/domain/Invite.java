@@ -145,6 +145,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         return sentOn;
     }
 
+    // TODO remove #setSentOn and #setSentBy, and add user and date parameters to #send : https://devops.innovateuk.org/issue-tracking/browse/INFUND-7959
     public void setSentOn(LocalDateTime sentOn) {
         this.sentOn = sentOn;
     }
@@ -153,6 +154,7 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
         return sentBy;
     }
 
+    // TODO remove #setSentOn and #setSentBy, and add user and date parameters to #send : https://devops.innovateuk.org/issue-tracking/browse/INFUND-7959
     public void setSentBy(User sentBy) {
         this.sentBy = sentBy;
     }
