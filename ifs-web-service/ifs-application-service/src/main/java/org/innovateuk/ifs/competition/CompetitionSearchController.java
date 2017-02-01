@@ -28,7 +28,7 @@ public class CompetitionSearchController {
     @GetMapping
     public String publicContentSearch(Model model, @RequestParam(KEYWORDS_KEY) Optional<String> keywords,
                                       @RequestParam(INNOVATION_AREA_ID_KEY) Optional<Long> innovationAreaId,
-                                      @RequestParam(PAGE_NUMBER_KEY) Optional<Long> pageNumber) {
+                                      @RequestParam(PAGE_NUMBER_KEY) Optional<Integer> pageNumber) {
 
         model.addAttribute("model", itemSearchPopulator.createItemSearchViewModel(innovationAreaId, keywords,  pageNumber));
 

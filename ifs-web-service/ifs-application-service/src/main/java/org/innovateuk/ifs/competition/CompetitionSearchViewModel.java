@@ -9,7 +9,7 @@ import java.util.List;
  * Competition public content search view model.
  */
 public class CompetitionSearchViewModel {
-    public final static Long PAGE_SIZE = 10L;
+    public final static Integer PAGE_SIZE = 10;
 
     private List<InnovationAreaResource> innovationAreas;
     private List<PublicContentItemResource> publicContentItems;
@@ -18,7 +18,7 @@ public class CompetitionSearchViewModel {
     private Long selectedInnovationAreaId;
     private String searchKeywords;
 
-    private Long pageNumber;
+    private Integer pageNumber;
     private String nextPageLink;
     private String previousPageLink;
 
@@ -47,11 +47,11 @@ public class CompetitionSearchViewModel {
         this.selectedInnovationAreaId = selectedInnovationAreaId;
     }
 
-    public Long getPageNumber() {
+    public Integer getPageNumber() {
         return pageNumber;
     }
 
-    public void setPageNumber(Long pageNumber) {
+    public void setPageNumber(Integer pageNumber) {
         this.pageNumber = pageNumber;
     }
 
@@ -72,7 +72,7 @@ public class CompetitionSearchViewModel {
     }
 
     public boolean hasNextPage() {
-        Long lastResultOnPage = (this.pageNumber + 1) * PAGE_SIZE;
+        int lastResultOnPage = (this.pageNumber + 1) * PAGE_SIZE;
         return lastResultOnPage < this.totalResults;
     }
 
@@ -88,23 +88,23 @@ public class CompetitionSearchViewModel {
         this.totalResults = totalResults;
     }
 
-    private Long getCurrentPageStart() {
+    private int getCurrentPageStart() {
         return this.pageNumber * PAGE_SIZE + 1;
     }
 
-    public Long getNextPageStart() {
+    public int getNextPageStart() {
         return getCurrentPageStart() + PAGE_SIZE;
     }
 
-    public Long getNextPageEnd() {
+    public int getNextPageEnd() {
         return getNextPageStart() + PAGE_SIZE - 1;
     }
 
-    public Long getPreviousPageStart() {
+    public int getPreviousPageStart() {
         return getCurrentPageStart() - PAGE_SIZE;
     }
 
-    public Long getPreviousPageEnd() {
+    public int getPreviousPageEnd() {
         return getCurrentPageStart() - 1;
     }
 

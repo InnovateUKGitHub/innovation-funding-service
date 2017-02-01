@@ -27,15 +27,15 @@ public class CompetitionSearchPopulator {
     @Autowired
     private CategoryRestService categoryRestService;
 
-    public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Long> pageNumber) {
+    public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber) {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
 
         categoryRestService.getInnovationAreas().andOnSuccess(innovationAreas -> { viewModel.setInnovationAreas(innovationAreas); return restSuccess();});
-        PublicContentItemPageResource pageResource = publicContentItemRestService.getByFilterValues(
+        Optional<PublicContentItemPageResource> pageResource = publicContentItemRestService.getByFilterValues(
                 innovationAreaId,
                 keywords,
                 pageNumber,
-                Optional.of(CompetitionSearchViewModel.PAGE_SIZE)).getSuccessObject();
+                CompetitionSearchViewModel.PAGE_SIZE).getOptionalSuccessObject();
 
         innovationAreaId.ifPresent(id -> viewModel.setSelectedInnovationAreaId(id));
         keywords.ifPresent(words -> viewModel.setSearchKeywords(words));
@@ -44,20 +44,28 @@ public class CompetitionSearchPopulator {
             viewModel.setPageNumber(pageNumber.get());
         }
         else {
-            viewModel.setPageNumber(0L);
+            viewModel.setPageNumber(0);
         }
 
-        viewModel.setNextPageLink(createPageLink(innovationAreaId, keywords, pageNumber, 1L));
-        viewModel.setPreviousPageLink(createPageLink(innovationAreaId, keywords, pageNumber, -1L));
-        viewModel.setTotalResults(pageResource.getTotalElements());
+        if(pageResource.isPresent()) {
+            viewModel.setPublicContentItems(pageResource.get().getContent());
+            viewModel.setTotalResults(pageResource.get().getTotalElements());
+        }
+        else {
+            viewModel.setTotalResults(0L);
+        }
+
+
+        viewModel.setNextPageLink(createPageLink(innovationAreaId, keywords, pageNumber, 1));
+        viewModel.setPreviousPageLink(createPageLink(innovationAreaId, keywords, pageNumber, -1));
 
         return viewModel;
     }
 
-    private String createPageLink(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Long> pageNumber, Long delta) {
+    private String createPageLink(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber, Integer delta) {
         List<NameValuePair> searchparams = new ArrayList<>();
 
-        Long page = delta;
+        Integer page = delta;
         if(pageNumber.isPresent()) {
             page = pageNumber.get() + delta;
         }

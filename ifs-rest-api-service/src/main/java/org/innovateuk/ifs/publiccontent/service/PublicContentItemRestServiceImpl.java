@@ -23,7 +23,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
     private static final String PUBLIC_CONTENT_ITEM_REST_URL = "/public-content/items/";
 
     @Override
-    public RestResult<PublicContentItemPageResource> getByFilterValues(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+    public RestResult<PublicContentItemPageResource> getByFilterValues(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
         String searchStringEncoded = null;
         try {
             searchStringEncoded = UriUtils.encode(searchString.orElse(null), "UTF8");
@@ -35,7 +35,7 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
         url = addParamToURL(url, "innovationAreaId", String.valueOf(innovationAreaId.orElse(null)));
         url = addParamToURL(url, "searchString", searchStringEncoded);
         url = addParamToURL(url, "pageNumber", String.valueOf(pageNumber.orElse(null)));
-        url = addParamToURL(url, "pageSize", String.valueOf(pageSize.orElse(null)));
+        url = addParamToURL(url, "pageSize", String.valueOf(pageSize));
 
         return getWithRestResult( url, PublicContentItemPageResource.class);
     }
