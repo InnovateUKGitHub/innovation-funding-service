@@ -108,7 +108,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
-        PublicContent publicContent = saveSection(resource, section);
+        saveSection(resource, section);
         return serviceSuccess();
     }
 

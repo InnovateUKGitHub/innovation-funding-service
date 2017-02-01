@@ -29,6 +29,5 @@ public interface ContentGroupService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "SAVE_CONTENT_GROUPS",
             description = "The Competition Admin, or project finance user can remove a content group file.")
-
     ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType section);
 }

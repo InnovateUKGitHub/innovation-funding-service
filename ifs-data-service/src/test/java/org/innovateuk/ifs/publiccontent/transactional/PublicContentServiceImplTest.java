@@ -2,9 +2,7 @@ package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
+import org.innovateuk.ifs.competition.publiccontent.resource.*;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
@@ -19,13 +17,19 @@ import org.mockito.Mockito;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.COMPLETE;
+import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.IN_PROGRESS;
+import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.newContentSection;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -46,15 +50,31 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
     @Mock
     private PublicContentMapper publicContentMapper;
 
+    @Mock
+    private ContentGroupService contentGroupService;
+
     @Override
     protected PublicContentServiceImpl supplyServiceUnderTest() {
         return new PublicContentServiceImpl();
     }
 
+
+    private static final List<ContentGroupResource> CONTENT_GROUPS = asList(
+            newContentGroupResource().withPriority(2).build(),
+            newContentGroupResource().withPriority(1).build());
+
+    private static final List<PublicContentSectionResource> COMPLETE_SECTIONS =
+            stream(PublicContentSectionType.values()).map(type -> newPublicContentSectionResource()
+                    .withType(type)
+                    .withStatus(PublicContentStatus.COMPLETE)
+                    .withContentGroups(CONTENT_GROUPS)
+                    .build()).collect(Collectors.toList());
+
+
     @Test
     public void testGetById() {
         PublicContent publicContent = newPublicContent().build();
-        PublicContentResource resource = newPublicContentResource().build();
+        PublicContentResource resource = newPublicContentResource().withContentSections(COMPLETE_SECTIONS).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
         when(publicContentMapper.mapToResource(publicContent)).thenReturn(resource);
 
@@ -62,7 +82,9 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
 
         assertThat(result.getSuccessObjectOrThrowException(), equalTo(resource));
         verify(publicContentRepository).findByCompetitionId(COMPETITION_ID);
+        assertTrue(isSortedByPriority(result.getSuccessObjectOrThrowException()));
     }
+
 
     @Test
     public void testInitialise() {
@@ -90,7 +112,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
     @Test
     public void testPublishWithIncompleteSections() {
         PublicContent publicContent = newPublicContent().withContentSections(
-                newContentSection().withStatus(PublicContentStatus.IN_PROGRESS).build(2)
+                newContentSection().withStatus(IN_PROGRESS).build(2)
         ).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
 
@@ -138,7 +160,8 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         PublicContentResource publicContentResource = newPublicContentResource().withKeywords(Collections.emptyList()).build();
         when(publicContentMapper.mapToDomain(publicContentResource)).thenReturn(publicContent);
         when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
-        when(publicContent.getContentSections()).thenReturn(newContentSection().withStatus(PublicContentStatus.COMPLETE).build(1));
+        ContentSection section = newContentSection().withType(PublicContentSectionType.SEARCH).withStatus(IN_PROGRESS).build();
+        when(publicContent.getContentSections()).thenReturn(asList(section));
         when(publicContent.getId()).thenReturn(1L);
         when(publicContent.getPublishDate()).thenReturn(null);
 
@@ -146,10 +169,30 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
 
         verify(publicContentRepository).save(publicContent);
         verify(publicContent, never()).setPublishDate(any());
+        //Assert that it doesn't change the status to complete.
+        assertThat(section.getStatus(), equalTo(IN_PROGRESS));
 
         assertTrue(result.isSuccess());
     }
 
+    @Test
+    public void testMarkAsComplete() {
+        PublicContent publicContent = mock(PublicContent.class);
+        PublicContentResource publicContentResource = newPublicContentResource().withKeywords(Collections.emptyList()).build();
+        when(publicContentMapper.mapToDomain(publicContentResource)).thenReturn(publicContent);
+        when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
+        ContentSection section = newContentSection().withType(PublicContentSectionType.SEARCH).withStatus(IN_PROGRESS).build();
+        when(publicContent.getContentSections()).thenReturn(asList(section));
+        when(publicContent.getId()).thenReturn(1L);
+        when(publicContent.getPublishDate()).thenReturn(null);
+
+        ServiceResult<Void> result = service.markSectionAsComplete(publicContentResource, PublicContentSectionType.SEARCH);
+
+        //Assert that it changes status to complete
+        assertThat(section.getStatus(), equalTo(COMPLETE));
+
+        assertTrue(result.isSuccess());
+    }
 
     @Test
     public void testUpdateSearchSection() {
@@ -166,6 +209,28 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         keywords.forEach(keyword -> verify(keywordRepository).save(keywordMatcher(keyword)));
 
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testUpdateEligibilitySection() {
+        PublicContent publicContent = newPublicContent().withContentSections(Collections.emptyList()).build();
+        PublicContentResource publicContentResource = newPublicContentResource()
+                .withContentSections(COMPLETE_SECTIONS).build();
+        when(publicContentMapper.mapToDomain(publicContentResource)).thenReturn(publicContent);
+        when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
+
+        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.ELIGIBILITY);
+
+        verify(publicContentRepository).save(publicContent);
+        verify(contentGroupService).saveContentGroups(publicContentResource, publicContent, PublicContentSectionType.ELIGIBILITY);
+
+        assertTrue(result.isSuccess());
+    }
+
+    private boolean isSortedByPriority(PublicContentResource publicContentResource) {
+        return publicContentResource.getContentSections().stream().map(contentSectionResource ->
+                contentSectionResource.getContentGroups().get(0).getPriority() < contentSectionResource.getContentGroups().get(1).getPriority())
+        .anyMatch(Boolean::booleanValue);
     }
 
     private static Keyword keywordMatcher(String keyword) {
