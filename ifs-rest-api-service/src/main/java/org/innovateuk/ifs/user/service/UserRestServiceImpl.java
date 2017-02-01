@@ -162,7 +162,9 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setLastName(lastName);
         user.setPassword(password);
         user.setEmail(email);
-        user.setTitle(title);
+        if(!StringUtils.isEmpty(title)) {
+            user.setTitle(Title.valueOf(title));
+        }
         user.setPhoneNumber(phoneNumber);
         if(!StringUtils.isEmpty(gender)) {
             user.setGender(Gender.valueOf(gender));
@@ -196,7 +198,9 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setTitle(title);
+        if(!StringUtils.isEmpty(title)) {
+            user.setTitle(Title.valueOf(title));
+        }
         user.setPhoneNumber(phoneNumber);
         if(!StringUtils.isEmpty(gender)) {
             user.setGender(Gender.valueOf(gender));
