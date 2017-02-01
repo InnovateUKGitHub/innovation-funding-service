@@ -13,7 +13,10 @@ public class ManageApplicationsViewModel {
     private List<ManageApplicationsRowViewModel> applications;
     private CompetitionStatus competitionStatus;
 
-    public ManageApplicationsViewModel(Long competitionId, String competitionName, List<ManageApplicationsRowViewModel> applications, CompetitionStatus competitionStatus) {
+    public ManageApplicationsViewModel(Long competitionId,
+                                       String competitionName,
+                                       List<ManageApplicationsRowViewModel> applications,
+                                       CompetitionStatus competitionStatus) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applications = applications;
