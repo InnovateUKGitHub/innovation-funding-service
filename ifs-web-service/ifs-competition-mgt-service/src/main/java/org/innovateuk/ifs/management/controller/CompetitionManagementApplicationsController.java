@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
+import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +23,9 @@ public class CompetitionManagementApplicationsController {
     @Autowired
     private AllApplicationsPageModelPopulator allApplicationsPageModelPopulator;
 
+    @Autowired
+    private SubmittedApplicationsModelPopulator submittedApplicationsModelPopulator;
+
     @RequestMapping(method = RequestMethod.GET)
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId) {
 		model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId));
@@ -32,5 +36,11 @@ public class CompetitionManagementApplicationsController {
 	public String allApplications(Model model, @PathVariable("competitionId") long competitionId) {
         model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId));
         return "competition/all-applications";
+    }
+
+    @RequestMapping(path = "/submitted", method = RequestMethod.GET)
+    public String submittedApplications(Model model, @PathVariable("competitionId") long competitionId) {
+        model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId));
+        return "competition/submitted-applications";
     }
 }

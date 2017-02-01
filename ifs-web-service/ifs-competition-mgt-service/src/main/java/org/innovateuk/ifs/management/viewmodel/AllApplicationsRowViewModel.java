@@ -6,11 +6,8 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 /**
  * View model for a single row of the Competition All Applications paginated table.
  */
-public class AllApplicationsRowViewModel {
+public class AllApplicationsRowViewModel extends BaseApplicationsRowViewModel {
 
-    private long applicationNumber;
-    private String projectTitle;
-    private String lead;
     private String innovationArea;
     private String status;
     private int percentageComplete;
@@ -21,24 +18,10 @@ public class AllApplicationsRowViewModel {
                                        String innovationArea,
                                        String status,
                                        int percentageComplete) {
-        this.applicationNumber = applicationNumber;
-        this.projectTitle = projectTitle;
-        this.lead = lead;
+        super(applicationNumber, projectTitle, lead);
         this.innovationArea = innovationArea;
         this.status = status;
         this.percentageComplete = percentageComplete;
-    }
-
-    public long getApplicationNumber() {
-        return applicationNumber;
-    }
-
-    public String getProjectTitle() {
-        return projectTitle;
-    }
-
-    public String getLead() {
-        return lead;
     }
 
     public String getInnovationArea() {
@@ -62,10 +45,8 @@ public class AllApplicationsRowViewModel {
         AllApplicationsRowViewModel that = (AllApplicationsRowViewModel) o;
 
         return new EqualsBuilder()
-                .append(applicationNumber, that.applicationNumber)
+                .appendSuper(super.equals(o))
                 .append(percentageComplete, that.percentageComplete)
-                .append(projectTitle, that.projectTitle)
-                .append(lead, that.lead)
                 .append(innovationArea, that.innovationArea)
                 .append(status, that.status)
                 .isEquals();
@@ -74,9 +55,7 @@ public class AllApplicationsRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(applicationNumber)
-                .append(projectTitle)
-                .append(lead)
+                .appendSuper(super.hashCode())
                 .append(innovationArea)
                 .append(status)
                 .append(percentageComplete)

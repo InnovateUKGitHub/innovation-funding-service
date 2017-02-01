@@ -24,6 +24,7 @@ public class CompetitionSummaryResource {
     private int applicationsFunded;
     private int ineligibleApplications;
     private int assessorsInvited;
+    private LocalDateTime assessorDeadline;
 
     public long getCompetitionId() {
         return competitionId;
@@ -128,6 +129,14 @@ public class CompetitionSummaryResource {
         this.assessorsInvited = assessorsInvited;
     }
 
+    public LocalDateTime getAssessorDeadline() {
+        return assessorDeadline;
+    }
+
+    public void setAssessorDeadline(LocalDateTime assessorDeadline) {
+        this.assessorDeadline = assessorDeadline;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -149,6 +158,7 @@ public class CompetitionSummaryResource {
                 .append(applicationsFunded, that.applicationsFunded)
                 .append(ineligibleApplications, that.ineligibleApplications)
                 .append(assessorsInvited, that.assessorsInvited)
+                .append(assessorDeadline, that.assessorDeadline)
                 .isEquals();
     }
 

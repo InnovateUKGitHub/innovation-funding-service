@@ -74,7 +74,7 @@
             </li>
 
             <li class="column-quarter dashboard-actions">
-                <a class="button" href="#">Submitted applications</a>
+                <a class="button" th:href="@{/competition/{cid}/applications/submitted(cid=${model.competitionId})}">Submitted applications</a>
             </li>
 
             <!--/* TODO: Implement non submitted applications - INFUND-7372

@@ -20,7 +20,7 @@
 
     <h1 class="heading-xlarge">
         <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block th:text="${model.competitionName}"/></span>
-        All applications
+        Submitted applications
     </h1>
 
     <div class="no-constrain-width justify-left">
@@ -30,31 +30,15 @@
 
             <li class="column-quarter">
                 <div class="highlight-panel">
-                    <span class="heading-large" th:text="${model.totalNumberOfApplications}">22</span>
+                    <span class="heading-large" th:text="${#temporals.format(model.assessmentDeadline, 'dd MMMM Y')}">17 November 2016</span>
                     <br />
-                    <small>Total number of applications</small>
+                    <small>Assessment deadline</small>
                 </div>
             </li>
 
             <li class="column-quarter">
                 <div class="highlight-panel">
-                    <span class="heading-large" th:text="${model.applicationsStarted}">12</span>
-                    <br />
-                    <small>Applications started</small>
-                </div>
-            </li>
-
-            <li class="column-quarter">
-                <div class="highlight-panel">
-                    <span class="heading-large" th:text="${model.applicationsInProgress}">6</span>
-                    <br />
-                    <small>Applications (Beyond 50%)</small>
-                </div>
-            </li>
-
-            <li class="column-quarter">
-                <div class="highlight-panel">
-                    <span class="heading-large" th:text="${model.applicationsSubmitted}">4</span>
+                    <span class="heading-large" th:text="${model.applicationsSubmitted}">18</span>
                     <br />
                     <small>Applications submitted</small>
                 </div>
@@ -62,7 +46,7 @@
         </ul>
     </div>
 
-    <!--/* TODO: Implement sort dropdown for the table - INFUND-7953 */-->
+    <!--/* TODO: Implement sort dropdown for the table - INFUND-7952 */-->
 
     <div class="table-overflow">
         <table id="application-list">
@@ -72,8 +56,10 @@
                 <th scope="col">Project title</th>
                 <th scope="col">Lead</th>
                 <th scope="col">Innovation Area</th>
-                <th scope="col">Status</th>
-                <th scope="col" class="alignright" style="width: 10%">Percentage complete</th>
+                <th scope="col">Number of partners</th>
+                <th scope="col">Grant requested (£)</th>
+                <th scope="col">Total project cost (£)</th>
+                <th scope="col" class="alignright" style="width: 10%">Duration (months)</th>
             </tr>
             </thead>
             <tbody>
@@ -85,8 +71,10 @@
                 <td th:text="${row.projectTitle}">Machine learning in robots</td>
                 <td th:text="${row.lead}">PWC</td>
                 <td th:text="${row.innovationArea}">HVM</td>
-                <td th:text="${row.status}">Submitted</td>
-                <td class="alignright" th:text="${row.percentageComplete}">100</td>
+                <td th:text="${row.numberOfPartners}">5</td>
+                <td th:text="${#numbers.formatInteger(row.grantRequested, 3, 'COMMA')}">£203,000</td>
+                <td th:text="${#numbers.formatInteger(row.totalProjectCost, 3, 'COMMA')}">£324,000</td>
+                <td class="alignright" th:text="${row.durationInMonths}">12</td>
             </tr>
             </tbody>
         </table>

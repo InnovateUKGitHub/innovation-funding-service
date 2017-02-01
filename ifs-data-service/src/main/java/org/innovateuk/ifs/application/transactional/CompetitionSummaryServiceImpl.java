@@ -55,6 +55,7 @@ public class CompetitionSummaryServiceImpl extends BaseTransactionalService impl
         competitionSummaryResource.setAssessorsInvited(
                 competitionParticipantRepository.countByCompetitionIdAndRole(competitionId, CompetitionParticipantRole.ASSESSOR)
         );
+        competitionSummaryResource.setAssessorDeadline(competition.getAssessorDeadlineDate());
 
         return serviceSuccess(competitionSummaryResource);
     }

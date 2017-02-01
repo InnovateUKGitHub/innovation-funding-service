@@ -13,7 +13,7 @@ import java.util.List;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
- * Builds the model for the Competition Management All Applications view model.
+ * Builds the Competition Management All Applications view model.
  */
 @Component
 public class AllApplicationsPageModelPopulator {
