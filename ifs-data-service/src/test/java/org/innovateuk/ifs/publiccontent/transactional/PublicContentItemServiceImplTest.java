@@ -82,8 +82,9 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(keywordRepository.findByKeywordLike(anyString())).thenReturn(Collections.emptyList());
 
         when(competitionRepository.findById(anyLong())).thenReturn(newCompetition().with(competition -> {
+            competition.setSetupComplete(true);
             competition.setMilestones(newMilestone()
-                    .withDate(LocalDateTime.MIN, LocalDateTime.MAX)
+                    .withDate(LocalDateTime.now().minusDays(1), LocalDateTime.MAX)
                     .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
                     .build(2));
             competition.setName("Competition one");
@@ -230,9 +231,9 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     private void makePublicContentIdsFound() {
         PublicContent publicContent = newPublicContent().with(publicContent1 -> publicContent1.setId(PUBLIC_CONTENT_ID)).withCompetitionId(COMPETITION_ID).build();
 
-        when(keywordRepository.findByKeywordLike("Big")).thenReturn(newKeyword().withKeyword("Big Data").withPublicContent(publicContent).build(2));
-        when(keywordRepository.findByKeywordLike("data")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
-        when(keywordRepository.findByKeywordLike("a")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
+        when(keywordRepository.findByKeywordLike("%Big%")).thenReturn(newKeyword().withKeyword("Big Data").withPublicContent(publicContent).build(2));
+        when(keywordRepository.findByKeywordLike("%data%")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
+        when(keywordRepository.findByKeywordLike("%a%")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
     }
 
     private Page<PublicContent> getPublicContentPage() {
