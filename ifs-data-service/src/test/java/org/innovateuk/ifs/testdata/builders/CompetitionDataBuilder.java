@@ -310,7 +310,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, FundingType fundingType, String projectSize, List<String> keywords) {
-        return with(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
+        return asCompAdmin(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
 
             if (published) {
                 publicContent.setShortDescription(shortDescription);
@@ -332,7 +332,6 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
         competitionData.setCompetition(newCompetitionSaved);
-        publicContentService.initialiseByCompetitionId(competitionId);
     }
 
     private CompetitionDataBuilder asCompAdmin(Consumer<CompetitionData> action) {

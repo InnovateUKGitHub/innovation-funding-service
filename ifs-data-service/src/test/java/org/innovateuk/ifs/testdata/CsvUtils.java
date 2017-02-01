@@ -2,7 +2,6 @@ package org.innovateuk.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
 import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
@@ -27,6 +26,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
@@ -440,7 +440,7 @@ class CsvUtils {
             fundingRange = nullable(line.get(i++));
             eligibilitySummary = nullable(line.get(i++));
             competitionDescription = nullable(line.get(i++));
-            fundingType = FundingType.valueOf(line.get(i++));
+            fundingType = nullableEnum(line.get(i++), FundingType::valueOf);
             projectSize = nullable(line.get(i++));
             keywords = nullableSplittableString(line.get(i++));
         }
@@ -470,7 +470,7 @@ class CsvUtils {
         private PublicContentGroupLine(List<String> line) {
             int i = 0;
             competitionName = nullable(line.get(i++));
-            section = PublicContentSectionType.valueOf(line.get(i++));
+            section = nullableEnum(line.get(i++), PublicContentSectionType::valueOf);
             heading = nullable(line.get(i++));
             content = nullable(line.get(i++));
         }
@@ -649,6 +649,10 @@ class CsvUtils {
         return isBlank(s) || "N".equals(s) ? null : s;
     }
 
+    private static <T> T nullableEnum(String s, Function<String, T> valueOf) {
+        return nullable(s) == null ? null : valueOf.apply(s);
+    }
+
     private static LocalDate nullableDate(String s) {
         String value = nullable(s);
 
@@ -728,7 +732,7 @@ class CsvUtils {
             return Collections.emptyList();
         }
 
-        return Lists.newArrayList(Splitter.on("!").split(s))
+        return Splitter.on("!").trimResults().omitEmptyStrings().splitToList(s)
                 .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
     }
 

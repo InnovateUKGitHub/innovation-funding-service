@@ -197,6 +197,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.userProfileService = serviceLocator.getBean(UserProfileService.class);
         this.baseUserService = serviceLocator.getBean(BaseUserService.class);
         this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
+        this.publicContentService = serviceLocator.getBean(PublicContentService.class);
+        this.publicContentRepository = serviceLocator.getBean(PublicContentRepository.class);
+        this.contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
+        this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
 
     }
 
