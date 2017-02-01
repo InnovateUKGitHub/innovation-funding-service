@@ -5,6 +5,7 @@ import org.innovateuk.ifs.threads.generic.post.domain.Post;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +21,7 @@ public final class Thread implements Threadable {
     private Long classPk;
     private String className;
 
+    @Size(max=255)
     private String title;
 
     @OneToMany
