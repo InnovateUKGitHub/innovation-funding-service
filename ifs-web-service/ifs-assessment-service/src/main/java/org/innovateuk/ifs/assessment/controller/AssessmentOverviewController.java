@@ -6,9 +6,9 @@ import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
-import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,22 +18,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.util.function.Supplier;
 
+import static java.lang.String.format;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
-import static java.lang.String.format;
 
 @Controller
 @RequestMapping(value = "/{assessmentId}")
 public class AssessmentOverviewController {
 
     private static final String FORM_ATTR_NAME = "form";
-
-    @Autowired
-    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
     private AssessmentOverviewModelPopulator assessmentOverviewModelPopulator;
@@ -48,12 +44,12 @@ public class AssessmentOverviewController {
     private AssessmentService assessmentService;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getOverview(Model model, AssessmentOverviewForm form, @PathVariable("assessmentId") Long assessmentId,
-                              HttpServletRequest request) {
+    public String getOverview(Model model,
+                              @ModelAttribute(FORM_ATTR_NAME) AssessmentOverviewForm form,
+                              @PathVariable("assessmentId") Long assessmentId,
+                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
-        Long userId = userAuthenticationService.getAuthenticatedUser(request).getId();
-        assessmentOverviewModelPopulator.populateModel(assessmentId, userId, form, model);
-
+        model.addAttribute("model", assessmentOverviewModelPopulator.populateModel(assessmentId));
         return "assessment/application-overview";
     }
 

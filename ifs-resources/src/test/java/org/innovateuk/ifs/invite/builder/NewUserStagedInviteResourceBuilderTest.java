@@ -21,13 +21,13 @@ public class NewUserStagedInviteResourceBuilderTest {
                 .withName(expectedName)
                 .withEmail(expectedEmail)
                 .withCompetitionId(expectedCompetitionId)
-                .withInnovationCategoryId(expectedInnovationCategoryId)
+                .withInnovationAreaId(expectedInnovationCategoryId)
                 .build();
 
         assertEquals(expectedName, stagedInviteResource.getName());
         assertEquals(expectedEmail, stagedInviteResource.getEmail());
         assertEquals(expectedCompetitionId, stagedInviteResource.getCompetitionId());
-        assertEquals(expectedInnovationCategoryId, stagedInviteResource.getInnovationCategoryId());
+        assertEquals(expectedInnovationCategoryId, stagedInviteResource.getInnovationAreaId());
     }
 
     @Test
@@ -41,19 +41,19 @@ public class NewUserStagedInviteResourceBuilderTest {
                 .withName(expectedNames)
                 .withEmail(expectedEmails)
                 .withCompetitionId(expectedCompetitionIds)
-                .withInnovationCategoryId(expectedInnovationCategoryIds)
+                .withInnovationAreaId(expectedInnovationCategoryIds)
                 .build(2);
 
         NewUserStagedInviteResource first = rejectionReasons.get(0);
         assertEquals(expectedNames[0], first.getName());
         assertEquals(expectedEmails[0], first.getEmail());
         assertEquals((long) expectedCompetitionIds[0], first.getCompetitionId());
-        assertEquals((long) expectedInnovationCategoryIds[0], first.getInnovationCategoryId());
+        assertEquals((long) expectedInnovationCategoryIds[0], first.getInnovationAreaId());
 
         NewUserStagedInviteResource second = rejectionReasons.get(1);
         assertEquals(expectedNames[1], second.getName());
         assertEquals(expectedEmails[1], second.getEmail());
         assertEquals((long) expectedCompetitionIds[1], second.getCompetitionId());
-        assertEquals((long) expectedInnovationCategoryIds[1], second.getInnovationCategoryId());
+        assertEquals((long) expectedInnovationCategoryIds[1], second.getInnovationAreaId());
     }
 }

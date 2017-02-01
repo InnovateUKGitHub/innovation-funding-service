@@ -72,9 +72,6 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
-            model.addAttribute("organisationTotalFundingSought", applicationFinanceResource.getTotalFundingSought());
-            model.addAttribute("organisationTotalContribution", applicationFinanceResource.getTotalContribution());
-            model.addAttribute("organisationTotalOtherFunding", applicationFinanceResource.getTotalOtherFunding());
             model.addAttribute("financeView", "finance");
             addGrantClaim(model, form, applicationFinanceResource);
         }
@@ -102,9 +99,6 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationType(organisationType);
             financeViewModel.setOrganisationFinanceId(applicationFinanceResource.getId());
             financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
-            financeViewModel.setOrganisationTotalFundingSought(applicationFinanceResource.getTotalFundingSought());
-            financeViewModel.setOrganisationTotalContribution(applicationFinanceResource.getTotalContribution());
-            financeViewModel.setOrganisationTotalOtherFunding(applicationFinanceResource.getTotalOtherFunding());
             financeViewModel.setFinanceView("finance");
             addGrantClaim(financeViewModel, applicationFinanceResource);
         }
