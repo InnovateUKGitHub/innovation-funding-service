@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.finance.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -20,11 +19,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceRowController> {
-
-    @Override
-    protected FinanceRowController supplyControllerUnderTest() {
-        return new FinanceRowController();
-    }
 
     @Mock
     private ValidationUtil validationUtil;
@@ -93,7 +87,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         mockMvc.perform(get("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(costItem)))
+                .content(objectMapper.writeValueAsString(costItem)))
                 .andExpect(status().isNotFound())
                 .andReturn();
 
@@ -108,7 +102,7 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
 
         mockMvc.perform(post("/cost/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(costItem)))
+                .content(objectMapper.writeValueAsString(costItem)))
                 .andExpect(status().isOk());
 
         verify(financeRowServiceMock, times(1)).updateCost(eq(123L), isA(FinanceRowItem.class));
@@ -125,14 +119,8 @@ public class FinanceRowControllerTest extends BaseControllerMockMVCTest<FinanceR
         verify(financeRowServiceMock, times(1)).deleteCost(123L);
     }
 
-    @Test
-    public void addProjectCostWithoutPersisting() throws Exception{
-
-        when(financeRowServiceMock.addProjectCostWithoutPersisting(123L, 456L)).thenReturn(serviceSuccess(new GrantClaim()));
-
-        mockMvc.perform(get("/cost/project/add-without-persisting/{projectFinanceId}/{questionId}", "123", "456"))
-                .andExpect(status().isCreated());
-
-        verify(financeRowServiceMock, times(1)).addProjectCostWithoutPersisting(123L, 456L);
+    @Override
+    protected FinanceRowController supplyControllerUnderTest() {
+        return new FinanceRowController();
     }
 }

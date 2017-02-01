@@ -221,6 +221,8 @@ public class BaseUnitTest {
     @Mock
     public AssessmentRestService assessmentRestService;
     @Mock
+    public MilestoneService milestoneServiceMock;
+    @Mock
     public AssessorRestService assessorRestService;
 
     @Spy

@@ -1,0 +1,23 @@
+=== Retrieve by competition id
+==== Request
+include::{snippets}/public-content/find-by-competition-id/http-request.adoc[]
+include::{snippets}/public-content/find-by-competition-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/public-content/find-by-competition-id/http-response.adoc[]
+include::{snippets}/public-content/find-by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/public-content/find-by-competition-id/curl-request.adoc[]
+
+=== Publish public content
+==== Request
+include::{snippets}/public-content/publish-by-competition-id/http-request.adoc[]
+include::{snippets}/public-content/publish-by-competition-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/public-content/publish-by-competition-id/http-response.adoc[]
+include::{snippets}/public-content/publish-by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/public-content/publish-by-competition-id/curl-request.adoc[]

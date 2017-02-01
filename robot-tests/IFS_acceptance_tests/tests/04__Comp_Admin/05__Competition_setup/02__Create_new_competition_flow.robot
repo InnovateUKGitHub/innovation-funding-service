@@ -267,7 +267,8 @@ Milestones: Page should contain the correct fields
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Milestones
-    Then The user should see the text in the page    1. Open date
+    Then the user should see the text in the page  Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
+    When The user should see the text in the page   1. Open date
     And the user should see the text in the page    2. Briefing event
     And the user should see the text in the page    3. Submission date
     And the user should see the text in the page    4. Allocate assessors
@@ -502,7 +503,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=Button:contains("Done")
-    Wait Until Element Contains    css=.no-margin    ${Total}
+    Wait Until Element Contains Without Screenshots    css=.no-margin    ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10

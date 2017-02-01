@@ -362,9 +362,7 @@ Project manager's status should be updated
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element    jQuery=li.complete:nth-child(8)
-    When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the text in the page    Project team status
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And the user should see the element      link=_connect
 
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
@@ -372,9 +370,7 @@ Non lead's status should be updated
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element    jQuery=li.complete:nth-child(8)
-    When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the text in the page    Project team status
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And the user should see the element      link=_connect
 
 Non lead can see the GOL approved
     [Documentation]  INFUND-6377

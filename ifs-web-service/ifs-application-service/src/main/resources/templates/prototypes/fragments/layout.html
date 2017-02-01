@@ -21,7 +21,8 @@
         <li th:class="${(sprint == 'sprint17' ? 'selected' : '')}"><a href="/prototypes/index-sprint17">17</a></li>
         <li th:class="${(sprint == 'sprint18' ? 'selected' : '')}"><a href="/prototypes/index-sprint18">18</a></li>
         <li th:class="${(sprint == 'sprint19' ? 'selected' : '')}"><a href="/prototypes/index-sprint19">19</a></li>
-        <li th:class="${(sprint == 'sprint20' ? 'selected' : '')}"><a href="/prototypes/index-sprint20"><strong>20</strong></a></li>
+        <li th:class="${(sprint == 'sprint20' ? 'selected' : '')}"><a href="/prototypes/index-sprint20">20</a></li>
+        <li th:class="${(sprint == 'sprint21' ? 'selected' : '')}"><a href="/prototypes/index-sprint21"><strong>21</strong></a></li>
     </ul>
 
     <div class="alignright">
@@ -263,6 +264,53 @@
             Assigned to John Smith
         </div>
     </div>
+</div>
+
+<!-- ========UPDATED TASK LIST - ======= -->
+
+<div th:fragment="prototype-task-question-labels">
+	<div class="assign-container" th:classappend="${(status == 'assignedToYou' or status == 'reassignedToYou' ? 'action-required' : 'secondary-notification')}" th:unless="${status == 'complete'}">
+
+    <th:block th:if="${status == 'assigned'}">
+      <div class="assign-button">
+          Assigned to: <strong th:text="${name}">You</strong>
+      </div>
+    </th:block>
+
+    <th:block th:if="${status == 'assignedToYou'}">
+      <div class="assign-button">
+          Assigned to: <strong>You</strong>
+      </div>
+    </th:block>
+
+    <th:block th:if="${status == 'reassignedToYou'}">
+      <div class="assign-button">
+          Reassigned to: <strong>You</strong>
+      </div>
+    </th:block>
+
+    <div class="assign-team">
+      <h3>Reassign question</h3>
+      <ul class="list list-bullet">
+          <li>
+              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Pete Tom">Pete Tom</button>
+          </li>
+          <li>
+              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Jessica Doe">Jessica Doe</button>
+          </li>
+          <li>
+              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Steve Smith">Steve Smith</button>
+          </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <th:block th:if="${status == 'complete'}">
+    <div class="task-status-complete">
+      <span>Completed</span>
+    </div>
+  </th:block>
 </div>
 
 

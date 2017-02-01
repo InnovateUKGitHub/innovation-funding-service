@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.competition.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.controller.CompetitionSetupQuestionController;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
@@ -11,7 +10,6 @@ import org.mockito.Mock;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionSetupQuestionResourceDocs.competitionSetupQuestionResourceFields;
@@ -66,12 +64,11 @@ public class CompetitionSetupQuestionControllerDocumentation extends BaseControl
         final Long questionId = 1L;
         CompetitionSetupQuestionResource resource = competitionSetupQuestionResourceBuilder.build();
         when(competitionSetupQuestionService.save(resource)).thenReturn(serviceSuccess(resource));
-        ObjectMapper mapper = new ObjectMapper();
 
         mockMvc.perform(put(baseUrl + "/{id}", questionId)
 
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(resource)))
+                .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
