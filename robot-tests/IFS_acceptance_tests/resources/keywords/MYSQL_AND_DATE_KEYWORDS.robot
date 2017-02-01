@@ -62,7 +62,7 @@ get yesterday
     [Return]    ${yesterday}
 
 get today
-    ${today} =    Get Current Date    result_format=%d %B %Y    exclude_millis=true
+    ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
     [Return]    ${today}
 
 get next year
