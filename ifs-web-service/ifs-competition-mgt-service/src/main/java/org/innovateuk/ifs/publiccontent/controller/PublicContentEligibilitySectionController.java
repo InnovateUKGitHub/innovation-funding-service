@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.EligibilityForm;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentEligibilityFormPopulator;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
@@ -45,4 +46,8 @@ public class PublicContentEligibilitySectionController extends AbstractContentGr
         return eligibilityFormSaver;
     }
 
+    @Override
+    protected PublicContentSectionType getType() {
+        return PublicContentSectionType.ELIGIBILITY;
+    }
 }

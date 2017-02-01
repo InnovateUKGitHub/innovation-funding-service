@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
-import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -10,13 +9,13 @@ import java.util.List;
  * Abstract fields for public content form.
  */
 public abstract class AbstractContentGroupForm extends AbstractPublicContentForm {
-
-    private Integer uploadFile;
-    private Integer removeFile;
     @NotEmpty
     @Valid
     private List<ContentGroupForm> contentGroups;
-    private MultipartFile attachment;
+
+    private Long removeFile;
+
+    private Integer uploadFile;
 
     public List<ContentGroupForm> getContentGroups() {
         return contentGroups;
@@ -26,27 +25,19 @@ public abstract class AbstractContentGroupForm extends AbstractPublicContentForm
         this.contentGroups = contentGroups;
     }
 
+    public Long getRemoveFile() {
+        return removeFile;
+    }
+
+    public void setRemoveFile(Long removeFile) {
+        this.removeFile = removeFile;
+    }
+
     public Integer getUploadFile() {
         return uploadFile;
     }
 
     public void setUploadFile(Integer uploadFile) {
         this.uploadFile = uploadFile;
-    }
-
-    public Integer getRemoveFile() {
-        return removeFile;
-    }
-
-    public void setRemoveFile(Integer removeFile) {
-        this.removeFile = removeFile;
-    }
-
-    public MultipartFile getAttachment() {
-        return attachment;
-    }
-
-    public void setAttachment(MultipartFile attachment) {
-        this.attachment = attachment;
     }
 }

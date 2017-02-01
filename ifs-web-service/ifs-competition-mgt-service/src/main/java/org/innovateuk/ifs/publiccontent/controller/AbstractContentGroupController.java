@@ -19,14 +19,16 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
     public String saveAndUpload(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                 @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
         return saveAndFileAction(competitionId, model, form, validationHandler,
-                (publicContentResource) -> publicContentService.uploadFile(publicContentResource, PublicContentSectionType.ELIGIBILITY, form.getContentGroups(), form.getUploadFile(), form.getAttachment()));
+                (publicContentResource) -> publicContentService.uploadFile(publicContentResource, getType(), form.getContentGroups()));
     }
 
     @RequestMapping(value = "/{competitionId}/edit", params = "removeFile" ,method = RequestMethod.POST)
     public String saveAndRemove(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                 @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
         return saveAndFileAction(competitionId, model, form, validationHandler,
-                (publicContentResource) -> publicContentService.removeFile(publicContentResource, PublicContentSectionType.ELIGIBILITY, form.getContentGroups(), form.getRemoveFile()));
+                (publicContentResource) -> publicContentService.removeFile(form));
     }
+
+    protected abstract PublicContentSectionType getType();
 
 }
