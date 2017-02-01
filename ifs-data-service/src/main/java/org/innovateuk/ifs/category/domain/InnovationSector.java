@@ -12,7 +12,7 @@ import java.util.List;
 @DiscriminatorValue("INNOVATION_SECTOR")
 public class InnovationSector extends ParentCategory<InnovationArea> {
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sector", cascade = CascadeType.ALL)
     @OrderBy("name ASC")
     private List<InnovationArea> children;
 
@@ -31,6 +31,6 @@ public class InnovationSector extends ParentCategory<InnovationArea> {
 
     public void setChildren(List<InnovationArea> children) {
         this.children = children;
-        children.forEach(innovationArea -> innovationArea.setParent(this));
+        children.forEach(innovationArea -> innovationArea.setSector(this));
     }
 }

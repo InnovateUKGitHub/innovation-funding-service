@@ -61,8 +61,25 @@ public class BankDetailsController extends AddressLookupBaseController {
             BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
             populateExitingBankDetailsInForm(bankDetailsResource, form);
         }
-        return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
+        return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, false);
     }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
+    @RequestMapping(value="readonly", method = RequestMethod.GET)
+    public String bankDetailsAsReadOnly(Model model,
+                              @PathVariable("projectId") final Long projectId,
+                              @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                              @ModelAttribute(FORM_ATTR_NAME) BankDetailsForm form) {
+        ProjectResource projectResource = projectService.getById(projectId);
+        OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
+        RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
+        if(bankDetailsResourceRestResult.isSuccess()) {
+            BankDetailsResource bankDetailsResource = bankDetailsResourceRestResult.getSuccessObject();
+            populateExitingBankDetailsInForm(bankDetailsResource, form);
+        }
+        return doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, true);
+    }
+
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
     @RequestMapping(method = RequestMethod.POST)
@@ -110,7 +127,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
 
-        final Supplier<String> failureView = () -> doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser);
+        final Supplier<String> failureView = () -> doViewBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser, false);
 
         return validationHandler.failNowOrSucceedWithFilter(e -> !e.getField().contains("addressForm"), failureView,
                 () -> doViewConfirmBankDetails(model, form, projectResource, bankDetailsResourceRestResult, loggedInUser));
@@ -132,7 +149,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
+        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
@@ -145,7 +162,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
+        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_BANK_DETAILS_SECTION')")
@@ -159,7 +176,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         ProjectResource project = projectService.getById(projectId);
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(projectId, loggedInUser.getId());
         RestResult<BankDetailsResource> bankDetailsResourceRestResult = bankDetailsRestService.getBankDetailsByProjectAndOrganisation(projectId, organisationResource.getId());
-        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser);
+        return doViewBankDetails(model, form, project, bankDetailsResourceRestResult, loggedInUser, false);
     }
 
     private boolean isNewAddressNotValid(BankDetailsForm form) {
@@ -171,19 +188,28 @@ public class BankDetailsController extends AddressLookupBaseController {
         ) && OrganisationAddressType.ADD_NEW.name().equals(form.getAddressType().name()));
     }
 
-    private String doViewBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource, RestResult<BankDetailsResource> bankDetailsResourceRestResult, UserResource loggedInUser) {
-        populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult);
+    private String doViewBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource,
+                                     RestResult<BankDetailsResource> bankDetailsResourceRestResult,
+                                     UserResource loggedInUser,
+                                     boolean isReadOnly) {
+        populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult, isReadOnly);
         processAddressLookupFields(form);
         return "project/bank-details";
     }
 
-    private String doViewConfirmBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource, RestResult<BankDetailsResource> bankDetailsResourceRestResult, UserResource loggedInUser) {
-        populateBankDetailsModel(model, form, loggedInUser, projectResource, bankDetailsResourceRestResult);
+    private String doViewConfirmBankDetails(Model model, BankDetailsForm form, ProjectResource projectResource,
+                                            RestResult<BankDetailsResource> bankDetailsResourceRestResult,
+                                            UserResource loggedInUser) {
+        populateBankDetailsModel(model, form, loggedInUser, projectResource,
+                bankDetailsResourceRestResult, false);
         processAddressLookupFields(form);
         return "project/bank-details-confirm";
     }
 
-    private void populateBankDetailsModel(Model model, BankDetailsForm form, UserResource loggedInUser, ProjectResource project, RestResult<BankDetailsResource> bankDetailsResourceRestResult){
+    private void populateBankDetailsModel(Model model, BankDetailsForm form, UserResource loggedInUser,
+                                          ProjectResource project,
+                                          RestResult<BankDetailsResource> bankDetailsResourceRestResult,
+                                          boolean readOnlyView){
         OrganisationResource organisationResource = projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId());
         BankDetailsViewModel bankDetailsViewModel = loadDataIntoModelResource(project, organisationResource);
 
@@ -196,6 +222,7 @@ public class BankDetailsController extends AddressLookupBaseController {
         model.addAttribute("currentUser", loggedInUser);
         model.addAttribute("organisation", organisationResource);
         model.addAttribute(FORM_ATTR_NAME, form);
+        model.addAttribute("readOnlyView", readOnlyView);
         model.addAttribute("model", bankDetailsViewModel);
     }
 

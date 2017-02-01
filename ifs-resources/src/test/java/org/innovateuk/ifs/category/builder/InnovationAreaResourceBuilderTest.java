@@ -14,43 +14,50 @@ public class InnovationAreaResourceBuilderTest {
     @Test
     public void buildOne() throws Exception {
         long expectedId = 1L;
-        long expectedSectorId = 2L;
         String expectedName = "Test Category";
+        long expectedSectorId = 2L;
+        String expectedSectorName = "Test Sector";
 
         InnovationAreaResource innovationAreaResource = newInnovationAreaResource()
                 .withId(expectedId)
                 .withName(expectedName)
-                .withParent(expectedSectorId)
+                .withSector(expectedSectorId)
+                .withSectorName(expectedSectorName)
                 .build();
 
         assertEquals(expectedId, innovationAreaResource.getId().longValue());
         assertEquals(expectedName, innovationAreaResource.getName());
-        assertEquals(expectedSectorId, innovationAreaResource.getParent().longValue());
+        assertEquals(expectedSectorId, innovationAreaResource.getSector().longValue());
+        assertEquals(expectedSectorName, innovationAreaResource.getSectorName());
         assertEquals(INNOVATION_AREA, innovationAreaResource.getType());
     }
 
     @Test
     public void buildMany() throws Exception {
         Long[] expectedIds = {1L, 2L};
-        Long[] expectedSectorIds = {2L, 0L};
         String[] expectedNames = {"Innovation Area 1", "Innovation Area 2"};
+        Long[] expectedSectorIds = {2L, 0L};
+        String[] expectedSectorNames = {"Test Sector 1", "Test Sector 2"};
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
                 .withId(expectedIds)
                 .withName(expectedNames)
-                .withParent(expectedSectorIds)
+                .withSector(expectedSectorIds)
+                .withSectorName(expectedSectorNames)
                 .build(2);
 
         InnovationAreaResource first = innovationAreaResources.get(0);
         assertEquals(expectedIds[0], first.getId());
-        assertEquals(expectedSectorIds[0], first.getParent());
+        assertEquals(expectedSectorIds[0], first.getSector());
         assertEquals(expectedNames[0], first.getName());
+        assertEquals(expectedSectorNames[0], first.getSectorName());
         assertEquals(INNOVATION_AREA, first.getType());
 
         InnovationAreaResource second = innovationAreaResources.get(1);
         assertEquals(expectedIds[1], second.getId());
-        assertEquals(expectedSectorIds[1], second.getParent());
+        assertEquals(expectedSectorIds[1], second.getSector());
         assertEquals(expectedNames[1], second.getName());
+        assertEquals(expectedSectorNames[1], second.getSectorName());
         assertEquals(INNOVATION_AREA, second.getType());
     }
 }

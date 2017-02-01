@@ -72,6 +72,7 @@ import static org.innovateuk.ifs.user.resource.AffiliationType.EMPLOYER;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
@@ -775,12 +776,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
+        long assessorId = 3L;
 
         List<InnovationAreaResource> innovationAreas = newInnovationAreaResource()
                 .withName("Emerging Tech and Industries")
                 .build(1);
 
         List<AvailableAssessorResource> expected = newAvailableAssessorResource()
+                .withId(assessorId)
                 .withName("Jeremy Alufson")
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com")
@@ -800,6 +803,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withContractSignedDate(now())
                 .build();
         User assessor = newUser()
+                .withId(assessorId)
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
                 .withEmailAddress("worth.email.test+assessor1@gmail.com")
@@ -809,7 +813,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                         .withPosition("Software Developer")
                         .withExists(true)
                         .build(1))
-                .withProfile(profile)
+                .withProfileId(profile.getId())
                 .build();
         when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(singletonList(assessor));
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
@@ -841,12 +845,12 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
         User compliantUser = newUser()
                 .withAffiliations(newAffiliation()
-                        .withAffiliationType(EMPLOYER)
-                        .withOrganisation("Hive IT")
-                        .withPosition("Software Developer")
-                        .withExists(true)
-                        .build(1))
-                .withProfile(profile1)
+                    .withAffiliationType(EMPLOYER)
+                    .withOrganisation("Hive IT")
+                    .withPosition("Software Developer")
+                    .withExists(true)
+                    .build(1))
+                .withProfileId(profile1.getId())
                 .build();
 
         Profile profile2 = newProfile()
@@ -860,7 +864,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                         .withPosition("Software Developer")
                         .withExists(true)
                         .build(1))
-                .withProfile(profile2)
+                .withProfileId(profile2.getId())
                 .build();
 
         Profile profile3 = newProfile()
@@ -869,7 +873,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
         User nonCompliantUserNoAffiliations = newUser()
                 .withAffiliations()
-                .withProfile(profile3)
+                .withProfileId(profile3.getId())
                 .build();
 
         Profile profile4 = newProfile()
@@ -883,7 +887,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                         .withPosition("Software Developer")
                         .withExists(true)
                         .build(1))
-                .withProfile(profile4)
+                .withProfileId(profile4.getId())
                 .build();
 
         List<CompetitionInvite> existingUserInvites = newCompetitionInvite()
@@ -942,7 +946,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInnovationArea(innovationArea)
                 .buildArray(3, Profile.class);
         List<User> users = newUser()
-                .withProfile(profiles)
+                .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
                 .build(3);
 
         List<CompetitionInvite> invites = newCompetitionInvite()

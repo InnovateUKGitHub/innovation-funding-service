@@ -18,13 +18,15 @@ import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
@@ -179,6 +181,14 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                                 )
                         )
                 );
+    }
+
+    @Override
+    public ServiceResult<Void> notifyAssessorsByCompetition(Long competitionId) {
+        return processAnyFailuresOrSucceed(findByStateAndCompetition(AssessmentStates.CREATED, competitionId).getSuccessObject()
+                .stream()
+                .map(assessmentResource -> notify(assessmentResource.getId()))
+                .collect(toList()));
     }
 
     private ServiceResult<User> getAssessor(Long assessorId) {

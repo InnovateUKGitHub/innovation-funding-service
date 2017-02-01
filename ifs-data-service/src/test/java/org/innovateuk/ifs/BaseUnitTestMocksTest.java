@@ -24,8 +24,8 @@ import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.category.repository.*;
-import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.category.transactional.CategoryService;
+import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
@@ -42,8 +42,10 @@ import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
+import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.transactional.FormInputService;
@@ -65,6 +67,7 @@ import org.innovateuk.ifs.project.finance.repository.*;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
 import org.innovateuk.ifs.project.mapper.ProjectMapper;
@@ -126,6 +129,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationFinanceMapper applicationFinanceMapperMock;
+
+    @Mock
+    protected ProjectFinanceMapper projectFinanceMapperMock;
 
     @Mock
     protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
@@ -461,6 +467,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected FinanceRowService financeRowServiceMock;
 
     @Mock
+    protected ProjectFinanceRowService projectFinanceRowServiceMock;
+
+    @Mock
     protected ProjectDetailsWorkflowHandler projectDetailsWorkflowHandlerMock;
 
     @Mock
@@ -476,10 +485,16 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessorService assessorServiceMock;
 
     @Mock
+    protected AssessorProfileMapper assessorProfileMapperMock;
+
+    @Mock
     protected ProjectUsersHelper projectUsersHelperMock;
 
     @Mock
     protected FinanceCheckWorkflowHandler financeCheckWorkflowHandlerMock;
+
+    @Mock
+    protected ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
 
     @Mock
     protected GOLWorkflowHandler golWorkflowHandlerMock;

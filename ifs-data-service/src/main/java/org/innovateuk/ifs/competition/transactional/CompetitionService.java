@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -36,15 +37,19 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<Void> closeAssessment(Long competitionId);
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAuthority('comp_admin')")
     ServiceResult<Void> notifyAssessors(Long competitionId);
 }

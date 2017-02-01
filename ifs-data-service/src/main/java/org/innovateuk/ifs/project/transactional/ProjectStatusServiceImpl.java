@@ -133,6 +133,7 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
     private ProjectActivityStates getBankDetailsStatus(Project project){
         // Show flag when there is any organisation awaiting approval.
         boolean incomplete = false;
+        boolean started = false;
         for(Organisation organisation : project.getOrganisations()){
             if(isOrganisationSeekingFunding(project.getId(), project.getApplication().getId(), organisation.getId())) {
                 Optional<BankDetails> bankDetails = Optional.ofNullable(bankDetailsRepository.findByProjectIdAndOrganisationId(project.getId(), organisation.getId()));
@@ -141,12 +142,17 @@ public class ProjectStatusServiceImpl extends AbstractProjectServiceImpl impleme
                 if (!bankDetails.isPresent() || organisationBankDetailsStatus.equals(ACTION_REQUIRED)) {
                     incomplete = true;
                 }
-                if(bankDetails.isPresent() && organisationBankDetailsStatus.equals(PENDING)){
-                    return ACTION_REQUIRED;
+                if(bankDetails.isPresent()) {
+                    started = true;
+                    if(organisationBankDetailsStatus.equals(PENDING)) {
+                        return ACTION_REQUIRED;
+                    }
                 }
             }
         }
-        if(incomplete) {
+        if(!started) {
+            return NOT_STARTED;
+        } else if(incomplete) {
             return PENDING;
         } else {
             return COMPLETE;

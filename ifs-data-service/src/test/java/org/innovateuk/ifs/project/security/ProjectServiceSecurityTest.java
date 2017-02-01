@@ -481,6 +481,23 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         });
     }
 
+    @Test
+    public void testGetProjectManager(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(
+                () -> classUnderTest.getProjectById(123L),
+                () -> {
+                    verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1)).compAdminsCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1)).projectFinanceUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(projectPermissionRules);
+                }
+        );
+    }
+
+
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
         return TestProjectService.class;
@@ -677,6 +694,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         @Override
         public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
             return null;
+        }
+
+        @Override
+        public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+            return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
         }
 
     }

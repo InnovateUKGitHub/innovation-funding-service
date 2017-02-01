@@ -10,7 +10,6 @@ import org.innovateuk.ifs.address.repository.AddressRepository;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
@@ -42,6 +41,7 @@ import org.innovateuk.ifs.project.finance.domain.SpendProfile;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.transactional.CostCategoryTypeStrategy;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
 import org.innovateuk.ifs.project.mapper.MonitoringOfficerMapper;
@@ -88,13 +88,10 @@ import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Service
 public class ProjectServiceImpl extends AbstractProjectServiceImpl implements ProjectService {
-
     private static final Log LOG = LogFactory.getLog(ProjectServiceImpl.class);
 
     public static final String WEB_CONTEXT = "/project-setup";
-
     private static final String GOL_STATE_ERROR = "Set Grant Offer Letter workflow status to sent failed for project %s";
-
     private static final String PROJECT_STATE_ERROR = "Set project status to live failed for project %s";
 
     @Autowired
@@ -153,6 +150,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private FinanceCheckWorkflowHandler financeCheckWorkflowHandler;
+
+    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
 
     @Autowired
     private GOLWorkflowHandler golWorkflowHandler;
@@ -273,8 +273,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Override
     public ServiceResult<List<ProjectUserResource>> getProjectUsers(Long projectId) {
-        List<ProjectUser> projectUsers = getProjectUsersByProjectId(projectId);
-        return serviceSuccess(simpleMap(projectUsers, projectUserMapper::mapToResource));
+        return serviceSuccess(simpleMap(getProjectUsersByProjectId(projectId), projectUserMapper::mapToResource));
     }
 
     @Override
@@ -954,16 +953,27 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
         ServiceResult<Void> projectDetailsProcess = createProjectDetailsProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> financeCheckProcesses = createFinanceCheckProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
+        ServiceResult<Void> viabilityProcesses = createViabilityProcesses(newProject.getPartnerOrganisations(), originalLeadApplicantProjectUser);
         ServiceResult<Void> golProcess = createGOLProcess(newProject, originalLeadApplicantProjectUser);
         ServiceResult<Void> projectProcess = createProjectProcess(newProject, originalLeadApplicantProjectUser);
 
-        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, golProcess, projectProcess);
+        return processAnyFailuresOrSucceed(projectDetailsProcess, financeCheckProcesses, viabilityProcesses, golProcess, projectProcess);
     }
 
     private ServiceResult<Void> createFinanceCheckProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
 
         List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
                 financeCheckWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
+                        serviceSuccess() :
+                        serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
+
+        return aggregate(results).andOnSuccessReturnVoid();
+    }
+
+    private ServiceResult<Void> createViabilityProcesses(List<PartnerOrganisation> partnerOrganisations, ProjectUser originalLeadApplicantProjectUser) {
+
+        List<ServiceResult<Void>> results = simpleMap(partnerOrganisations, partnerOrganisation ->
+                viabilityWorkflowHandler.projectCreated(partnerOrganisation, originalLeadApplicantProjectUser) ?
                         serviceSuccess() :
                         serviceFailure(PROJECT_SETUP_UNABLE_TO_CREATE_PROJECT_PROCESSES));
 
@@ -1030,7 +1040,6 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         Optional<ProjectUser> existingProjectManager = getExistingProjectManager(project);
 
         ServiceResult<Void> setProjectManagerResult = existingProjectManager.map(pm -> {
-
             pm.setUser(leadPartnerUser.getUser());
             pm.setOrganisation(leadPartnerUser.getOrganisation());
             return serviceSuccess();
@@ -1164,8 +1173,11 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
         return getProject(projectId).andOnSuccessReturn(project -> golWorkflowHandler.getState(project));
-
     }
 
-
+    @Override
+    public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+        return find(projectUserRepository.findByProjectIdAndRole(projectId, ProjectParticipantRole.PROJECT_MANAGER),
+            notFoundError(ProjectUserResource.class, projectId)).andOnSuccessReturn(projectUserMapper::mapToResource);
+    }
 }

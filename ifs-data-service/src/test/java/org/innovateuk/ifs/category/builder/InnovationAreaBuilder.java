@@ -29,7 +29,7 @@ public class InnovationAreaBuilder extends CategoryBuilder<InnovationArea, Innov
         return new InnovationArea();
     }
 
-    public InnovationAreaBuilder withParent(InnovationSector... innovationSectors) {
-        return withArraySetFieldByReflection("parent", innovationSectors);
+    public InnovationAreaBuilder withSector(InnovationSector... innovationSectors) {
+        return withArraySetFieldByReflection("sector", innovationSectors);
     }
 }

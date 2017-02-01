@@ -43,6 +43,7 @@ public class CompetitionResource {
     private Long competitionType;
     private String competitionTypeName;
     private Long executive;
+    private String executiveName;
     private Long leadTechnologist;
     private String leadTechnologistName;
     private Long innovationSector;
@@ -286,6 +287,14 @@ public class CompetitionResource {
 
     public void setExecutive(Long executive) {
         this.executive = executive;
+    }
+
+    public String getExecutiveName() {
+        return executiveName;
+    }
+
+    public void setExecutiveName(String executiveName) {
+        this.executiveName = executiveName;
     }
 
     public Long getLeadTechnologist() {
