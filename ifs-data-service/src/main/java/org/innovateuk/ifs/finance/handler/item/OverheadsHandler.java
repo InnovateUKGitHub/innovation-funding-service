@@ -64,6 +64,22 @@ public class OverheadsHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        if (costItem instanceof Overhead) {
+            Overhead overhead = (Overhead) costItem;
+            Integer rate = overhead.getRate();
+            String rateType = null;
+
+            if (overhead.getRateType() != null) {
+                rateType = overhead.getRateType().toString();
+            }
+            cost = new ProjectFinanceRow(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return buildRowItem(cost, cost.getFinanceRowMetadata());
     }

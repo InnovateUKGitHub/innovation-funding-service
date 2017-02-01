@@ -127,8 +127,8 @@
     <ul class="task-list">
         <li><div class="task"><h4 class="heading-small"><a href="#">Task 1</a></h4></div></li>
         <li><div class="task"><h4 class="heading-small"><a href="#">Task 2</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>
-        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required">Assigned to <strong>you</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
-        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to <strong>Jessica Doe</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required"><strong>Assigned to you</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to Jessica Doe</span><div class="task-status-complete"><span>Completed</span></div></li>
         <li><div class="task"><h4 class="heading-small">Task 5</h4></div></li>
         <li><div class="task"><h4 class="heading-small">Task 6</h4></div><span class="notification">Jessica Doe</span></li>
         <li class="read-only"><div class="task"><h4 class="heading-small">Task 7</h4></div><span class="notification">-</span></li>
@@ -250,23 +250,26 @@
     <ul>
       <li>
         <div class="task">
-          <h4 class="heading-small"><a href="#">Task 1</a></h4>
-          <span>Application number: 0000008</span>
+          <h4 class="heading-medium"><a href="#">A new innovative solution to tidal energy</a></h4>
+          <ul class="application-details">
+            <li>Application number: 0000008</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
+          <div class="action-required">
+            <strong>12 sections assigned to you</strong>
+          </div>
         </div>
         <div class="status">
-          <div class="pie-container">
-            <div class="pie medium">75%</div>
-            <div class="pie-overlay">
-              <span class="day">28</span>
-              <span>days left</span>
-            </div>
+          <div class="status-msg msg-deadline">
+            <strong class="bold-medium">4:32</strong><br />
+              hours:minutes left<br />
+              Deadline today
           </div>
-          <span class="deadline">Deadline 28 January</span>
-          <strong>75% complete</strong>
+          <div class="status-msg msg-progress">
+            15% complete
+          </div>
         </div>
-        <div class="action-required">
-          <strong>12 sections assigned to you</strong>
-        </div>
+
       </li>
       <li>
         <div class="task">

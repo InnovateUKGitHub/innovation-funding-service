@@ -414,7 +414,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         List<NewUserStagedInviteResource> newUserStagedInvites = newNewUserStagedInviteResource()
                 .withEmail("test1@test.com", "test2@test.com")
                 .withName("Test Name 1", "Test Name 2")
-                .withInnovationCategoryId(1L)
+                .withInnovationAreaId(1L)
                 .build(2);
 
         NewUserStagedInviteListResource newUserStagedInviteList = newNewUserStagedInviteListResource()
