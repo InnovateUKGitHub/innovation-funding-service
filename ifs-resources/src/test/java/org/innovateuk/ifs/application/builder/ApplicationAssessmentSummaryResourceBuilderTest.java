@@ -13,7 +13,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
 
     @Test
     public void buildOne() {
-        Long expectedId = 1L;
+        long expectedId = 1L;
         String expectedName = "application";
         Long expectedCompetitionId = 2L;
         String expectedCompetitionName = "competition";
@@ -57,7 +57,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
                 .build(2);
 
         ApplicationAssessmentSummaryResource first = applicationAssessmentSummaryResources.get(0);
-        assertEquals(expectedIds[0], first.getId());
+        assertEquals(expectedIds[0].longValue(), first.getId());
         assertEquals(expectedNames[0], first.getName());
         assertEquals(expectedCompetitionIds[0], first.getCompetitionId());
         assertEquals(expectedCompetitionNames[0], first.getCompetitionName());
@@ -65,7 +65,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         assertEquals(expectedPartnerOrganisations1, first.getPartnerOrganisations());
 
         ApplicationAssessmentSummaryResource second = applicationAssessmentSummaryResources.get(1);
-        assertEquals(expectedIds[1], second.getId());
+        assertEquals(expectedIds[1].longValue(), second.getId());
         assertEquals(expectedNames[1], second.getName());
         assertEquals(expectedCompetitionIds[1], second.getCompetitionId());
         assertEquals(expectedCompetitionNames[1], second.getCompetitionName());
