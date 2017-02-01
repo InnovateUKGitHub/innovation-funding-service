@@ -12,7 +12,7 @@ ${unsuccessful_application_overview}    ${server}/management/competition/${FUNDE
 *** Test Cases ***
 Invalid Large pdf
     [Documentation]    INFUND-2602
-    [Tags]  Upload
+    [Tags]    Upload
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
     When the user uploads the file    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
@@ -72,4 +72,3 @@ Upload a file to an unsuccessful application
 the user uploads the file
     [Arguments]    ${upload_filename}
     Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
-

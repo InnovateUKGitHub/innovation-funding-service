@@ -34,6 +34,16 @@ public class JESCostHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        if (costItem instanceof AcademicCost) {
+            AcademicCost academicCostItem = (AcademicCost) costItem;
+            cost = new ProjectFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(), null, null, academicCostItem.getTotal(), null, null);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return buildRowItem(cost);
     }

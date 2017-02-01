@@ -39,6 +39,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -386,7 +387,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withPassword("password123")
                 .withFirstName("firstName")
                 .withLastName("lastName")
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
                 .withId(1L)
@@ -401,7 +402,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle(),
+                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
@@ -416,7 +417,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
                 .param("retypedPassword", userResource.getPassword())
-                .param("title", userResource.getTitle())
+                .param("title", userResource.getTitle().toString())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
@@ -438,7 +439,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withPassword("password")
                 .withFirstName("firstName")
                 .withLastName("lastName")
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withPhoneNumber("0123456789")
                 .withEmail("invited@email.com")
                 .withId(1L)
@@ -452,7 +453,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle(),
+                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
@@ -467,7 +468,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .cookie(inviteHashCookie, organisationCookie)
                 .param("password", userResource.getPassword())
                 .param("retypedPassword", userResource.getPassword())
-                .param("title", userResource.getTitle())
+                .param("title", userResource.getTitle().toString())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
@@ -531,7 +532,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .withPassword("password")
                 .withFirstName("firstName")
                 .withLastName("lastName")
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withPhoneNumber("0123456789")
                 .withEmail("test@test.test")
                 .withId(1L)
@@ -544,7 +545,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle(),
+                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
@@ -557,7 +558,7 @@ public class RegistrationControllerTest extends BaseControllerMockMVCTest<Regist
                 .param("email", userResource.getEmail())
                 .param("password", userResource.getPassword())
                 .param("retypedPassword", userResource.getPassword())
-                .param("title", userResource.getTitle())
+                .param("title", userResource.getTitle().toString())
                 .param("firstName", userResource.getFirstName())
                 .param("lastName", userResource.getLastName())
                 .param("phoneNumber", userResource.getPhoneNumber())
