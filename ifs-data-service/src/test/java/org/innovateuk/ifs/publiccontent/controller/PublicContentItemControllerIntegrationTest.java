@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Rollback;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -130,7 +131,10 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     }
 
     private void makeSetupOfKeywords() {
-        PublicContent publicContentOne = newPublicContent().withCompetitionId(1L).build();
+        PublicContent publicContentOne = newPublicContent()
+                .withCompetitionId(1L)
+                .withPublishDate(LocalDateTime.now())
+                .build();
 
         PublicContent publicContentResult = publicContentRepository.save(publicContentOne);
 
