@@ -49,7 +49,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 withFileName("appendix.pdf").
                 withUpdatedBy(1L).
                 withUpdatedByUserName("Steve Smith").
-                withFileEntry(fileEntry).
+                withFileEntry(fileEntry.getId()).
                 withFormInputs(Collections.singletonList(456L)).
                 build();
         List<FormInputResponseResource> formInputResponseResources = Collections.singletonList(formInputResponseResource);
@@ -62,7 +62,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                                 header("IFS_AUTH_TOKEN", "123abc")
                 ).
                 andExpect(status().isOk()).
-                andExpect(content().string(new ObjectMapper().writeValueAsString(formInputResponseResources))).
+                andExpect(content().string(objectMapper.writeValueAsString(formInputResponseResources))).
                 andDo(document("forminputresponse/find-responses-by-form-input-id-and-application-id",
                         pathParameters(
                                 parameterWithName("formInputId").description("Form Input Id"),

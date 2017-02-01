@@ -26,6 +26,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpStatus;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.REGISTERED;
@@ -618,5 +619,56 @@ public class ProjectServiceImplTest {
 
         verify(projectRestService).getGrantOfferLetterWorkflowState(projectId);
 
+    }
+
+    @Test
+    public void testGetProjectManager() {
+        Long projectId = 123L;
+        final Long projectManagerId = 987L;
+        when(projectRestService.getProjectManager(projectId))
+                .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
+        assertTrue(service.getProjectManager(projectId).isPresent());
+    }
+
+    @Test
+    public void testGetProjectManagerWhenNotFound() {
+        Long projectId = 123L;
+        final Long projectManagerId = 987L;
+        when(projectRestService.getProjectManager(projectId))
+                .thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
+        assertFalse(service.getProjectManager(projectId).isPresent());
+    }
+
+    @Test
+    public void testIsProjectManager() {
+        final Long projectId = 123L;
+        final Long projectManagerId = 987L;
+
+        when(projectRestService.getProjectManager(projectId))
+                .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
+        assertTrue(service.isProjectManager(projectManagerId, projectId));
+    }
+
+    @Test
+    public void testIsProjectManagerWhenNotFound() {
+        final Long projectId = 123L;
+        final Long projectManagerId = 987L;
+
+        when(projectRestService.getProjectManager(projectId)).thenReturn(restSuccess(null, HttpStatus.NOT_FOUND));
+
+        final Optional<ProjectUserResource> projectManager = service.getProjectManager(projectId);
+        assertFalse(service.isProjectManager(projectManagerId, projectId));
+    }
+
+    @Test
+    public void testIsProjectManagerWhenNotIt() {
+        final Long projectId = 123L;
+        final Long projectManagerId = 987L;
+        final Long loggedInUserId = 742L;
+
+        when(projectRestService.getProjectManager(projectId))
+                .thenReturn(restSuccess(newProjectUserResource().withUser(projectManagerId).build()));
+
+        assertFalse(service.isProjectManager(loggedInUserId, projectId));
     }
 }

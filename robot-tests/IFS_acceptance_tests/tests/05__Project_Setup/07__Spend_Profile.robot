@@ -48,6 +48,10 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6801 Show text instead of Id - Spend Profile - Error Summary
 ...
 ...               INFUND-6138 Partners should be able to see the correct status of SP so to take action
+...
+...               INFUND-7409 PM is redirected to the wrong screen when saving their spend profile
+...
+...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -70,6 +74,7 @@ Project Finance user generates the Spend Profile
     And the user should see the element     jQuery=a.eligibility-2:contains("Approved")
     Then the user should see the element    jQuery=.generate-spend-profile-main-button
 
+
 Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]
@@ -87,7 +92,7 @@ Project Finance generates the Spend Profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
 Lead partner can view spend profile page
-    [Documentation]    INFUND-3970, INFUND-6138
+    [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
@@ -101,6 +106,9 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Katz_Name} - Spend profile
+    And the user clicks the button/link    link=Spend profile overview
+    And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
+    [Teardown]    the user goes back to the previous page
 
 Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -137,8 +145,8 @@ Lead Partner can see Spend profile summary
     Then the user sees the text in the element      jQuery=.grid-container table tr:nth-child(1) td:nth-child(2)    £ 16,632
 
 Lead partner can edit his spend profile with invalid values
-    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801
-    [Tags]    #HappyPath
+    [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409
+    [Tags]
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
     When the user enters text to a text field          css=#row-24-0    2899
@@ -148,7 +156,6 @@ Lead partner can edit his spend profile with invalid values
     Then the field has value                           css=#row-total-24    £ 10,669
     And the user should see the element                jQuery=.cell-error #row-total-24
     And the user clicks the button/link                jQuery=.button:contains("Save and return to spend profile overview")
-    When the user clicks the button/link               link=${Katz_Name}
     Then the user should see the text in the page      You cannot submit your spend profile. Your total costs are higher than the eligible project costs.
     And the user should see the element                jQuery=.error-summary-list li:contains("Labour")
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
@@ -245,7 +252,7 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 
 Non-lead partner can view spend profile page
-    [Documentation]    INFUND-3970, INFUND-6138
+    [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
@@ -258,6 +265,9 @@ Non-lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
+    And the user clicks the button/link    link=Project setup status
+    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -303,7 +313,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     #The complete name of the button is anyways not selected. Please use the short version of it.
 
 Academic partner can view spend profile page
-    [Documentation]    INFUND-3970
+    [Documentation]    INFUND-3970, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
@@ -311,6 +321,9 @@ Academic partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Zooveo_Name} - Spend profile
+    And the user clicks the button/link    link=Project setup status
+    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    [Teardown]    the user goes back to the previous page
 
 Academic partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -624,12 +637,11 @@ Lead partner can return edit rights to other project partners
 
 
 Lead partner can edit own spend profile and mark as complete
-    [Documentation]    INFUND-6977
+    [Documentation]    INFUND-6977, INFUNF-7409
     When the user clicks the button/link    link=${Katz_name}
     And the user should see the text in the page    Your spend profile is marked as complete
     And the user clicks the button/link    jQuery=.button:contains("Edit spend profile")
     And the user clicks the button/link    jQuery=.button:contains("Save and return to spend profile overview")
-    And the user clicks the button/link    link=${Katz_name}
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
 
 Industrial partner receives edit rights and can submit their spend profile
@@ -742,12 +754,12 @@ the user makes all values zeros
 
 the text box should be editable
     [Arguments]    ${element}
-    Wait until element is visible    ${element}
+    Wait Until Element Is Visible Without Screenshots    ${element}
     Element Should Be Enabled    ${element}
 
 the field has value
     [Arguments]    ${field}    ${value}
-    wait until element is visible    ${field}
+    Wait Until Element Is Visible Without Screenshots    ${field}
     ${var} =    get value    ${field}
     should be equal as strings    ${var}    ${value}
 

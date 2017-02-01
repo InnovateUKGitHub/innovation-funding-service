@@ -47,7 +47,7 @@ the Applicant clicks on the Italic button in the "business opportunity" field
 
 all text entered should be Bold and stay the same after page refresh
     The user enters text to a text field    css=#form-input-1 .editor    Entering text to verify BOLD.
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor b
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    css=#form-input-1 .editor b
     Run Keyword If    '${status}' == 'FAIL'    Element Should Be Visible    css=#form-input-1 .editor strong
     Focus    css=.app-submit-btn
     wait for autosave
@@ -70,7 +70,7 @@ the Applicant clicks on the Bullet format button in the "business opportunity" f
 
 all text entered should be Italic and stay the same after page refresh
     The user enters text to a text field    css=#form-input-1 .editor    Entering text to verify ITALIC.
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Element Should Be Visible    css=#form-input-1 .editor i
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    css=#form-input-1 .editor i
     Run Keyword If    '${status}' == 'FAIL'    the user should see the element    css=#form-input-1 .editor em
     Focus    css=.app-submit-btn
     wait for autosave
@@ -82,7 +82,7 @@ all text entered should be in Numbering bullets and stay the same after page ref
     Focus    css=.app-submit-btn
     wait for autosave
     the user reloads the page
-    Run Keyword And Ignore Error    Confirm Action
+    Run Keyword And Ignore Error Without Screenshots    Confirm Action
     the user should see the element    css=#form-input-1 .editor ol
 
 all text entered should be in Bullet format and stay the same after page refresh

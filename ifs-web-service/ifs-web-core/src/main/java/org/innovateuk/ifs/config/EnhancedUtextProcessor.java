@@ -30,7 +30,8 @@ class EnhancedUtextProcessor extends AbstractAttributeTagProcessor {
             .addAttributes("h2", "class", "id")
             .addAttributes("h3", "class", "id")
             .addAttributes("th", "style")
-            .addAttributes("div", "class", "id", "aria-hidden");
+            .addAttributes("div", "class", "id", "aria-hidden")
+            .addAttributes("a", "href");
 
 
     public EnhancedUtextProcessor(final TemplateMode templateMode, final String dialectPrefix) {

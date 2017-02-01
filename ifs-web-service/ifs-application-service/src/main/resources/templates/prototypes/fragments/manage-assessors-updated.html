@@ -513,18 +513,11 @@
                                 <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
                                     <thead>
                                         <tr>
-                                            <th id="invite-label-assessor-name" scope="col">Name</th>
-                                            <th id="invite-label-assessor-email" scope="col">Email</th>
+                                            <th id="invite-label-assessor-name" scope="col" class="width-40-percent">Name</th>
+                                            <th id="invite-label-assessor-email" scope="col" class="width-40-percent">Email</th>
                                             <th scope="col"><span class="visuallyhidden">Remove</span></th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr data-tablesaw-no-labels>
-                                            <td colspan="3" class="alignright">
-                                                <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
-                                            </td>
-                                        </tr>
-                                    </tfoot>
                                     <tbody>
                                         <tr>
                                             <td>
@@ -544,21 +537,23 @@
                                             <td>
                                                 <input type="text" id="assessor-email-two" name="assessor-email-two" aria-labelledby="invite-label-assessor-email" class="form-control width-full" />
                                             </td>
-                                            <td class="alignright">
+                                            <td class="numeric">
                                                 <a href="#" id="prototype-remove-two">Remove</a>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
-
+                                <p class="extra-margin-top alignright">
+                                    <a href="#" id="prototype-assessor-add-row">Add another assessor of this type</a>
+                                </p>
                             </div>
 
-
-                            <div class="alignright extra-margin-top">
+                            <div>
                                 <input type="hidden" name="status" value="invite-new" />
                                 <input type="hidden" name="tab" value="invite" />
                                 <a class="button no-margin " id="prototype-add-assessors">Add assessors to list</a>
                             </div>
+
                         </form>
                     </div>
                 </details>
@@ -742,25 +737,25 @@
 
                   <div class="column-third">
                     <div class="form-group">
-                        <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
+                      <label for="filterInnovationArea" th:text="${(site == 'rc' ? 'Research area' : 'Innovation area')}">RESEARCH AREA</label>
 
-                        <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                      <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
 
-                          <th:block th:if="${param.filterInnovationArea != null}">
-                              <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
-                          </th:block>
+                        <th:block th:if="${param.filterInnovationArea != null}">
+                            <option th:text="${param.filterInnovationArea[0]}" selected="selected">TEST</option>
+                        </th:block>
 
-                          <th:block th:if="${param.filterInnovationArea == null}">
-                              <option selected="selected">---</option>
-                          </th:block>
+                        <th:block th:if="${param.filterInnovationArea == null}">
+                            <option selected="selected">---</option>
+                        </th:block>
 
-                          <th:block th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
-                        </select>
+                        <th:block th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
+                      </select>
                     </div>
                   </div>
 
-                <div class="column-third">
-                    <div class="form-group">
+                  <div class="column-third">
+                      <div class="form-group">
                         <label class="form-label" for="filterStatus">Status</label>
                         <select name="filterStatus" id="filterStatus" class="form-control width-full">
                              <option value="All">All</option>
@@ -768,15 +763,10 @@
                              <option value="Invite sent">Invite sent</option>
                              <option value="Invite declined">Invite declined</option>
                          </select>
-                    </div>
-                </div>
+                      </div>
+                  </div>
 
             </div>
-
-
-
-
-
 
             <div class="grid-row">
 

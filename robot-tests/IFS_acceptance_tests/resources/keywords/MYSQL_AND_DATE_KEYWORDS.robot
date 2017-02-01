@@ -61,6 +61,10 @@ get yesterday
     ${yesterday} =    Subtract Time From Date    ${today}    1 day
     [Return]    ${yesterday}
 
+get today
+    ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
+    [Return]    ${today}
+
 get next year
     ${year} =  get time    year    NOW + 365d
     [Return]  ${year}
