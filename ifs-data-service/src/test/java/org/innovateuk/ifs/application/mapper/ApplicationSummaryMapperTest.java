@@ -37,7 +37,7 @@ import static org.mockito.Mockito.when;
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationSummaryMapperTest {
 
-	private static final Long APPLICATION_ID = Long.valueOf(123L);
+	private static final long APPLICATION_ID = 123L;
 
 	@InjectMocks
 	private ApplicationSummaryMapperImpl mapper;
@@ -101,13 +101,13 @@ public class ApplicationSummaryMapperTest {
 		assertEquals(APPLICATION_ID, result.getId());
 		assertEquals("appname", result.getName());
 		assertEquals("In Progress", result.getStatus());
-		assertEquals(Integer.valueOf(66), result.getCompletedPercentage());
+		assertEquals(66, result.getCompletedPercentage());
 		assertEquals("leadorg", result.getLead());
 		assertEquals("User 4", result.getLeadApplicant());
-		assertEquals(Integer.valueOf(2), result.getNumberOfPartners());
+		assertEquals(2, result.getNumberOfPartners());
 		assertEquals(new BigDecimal("1.23"), result.getGrantRequested());
 		assertEquals(new BigDecimal("9.87"), result.getTotalProjectCost());
-		assertEquals(Long.valueOf(7L), result.getDuration());
+		assertEquals(7L, result.getDuration());
 		assertTrue(result.isFunded());
 		assertEquals(FundingDecision.FUNDED, result.getFundingDecision());
 		

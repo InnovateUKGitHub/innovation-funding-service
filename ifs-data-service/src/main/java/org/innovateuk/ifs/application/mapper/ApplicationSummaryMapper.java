@@ -75,6 +75,10 @@ public abstract class ApplicationSummaryMapper {
 		BigDecimal totalProjectCost = getTotalProjectCost(source);
 		result.setTotalProjectCost(totalProjectCost);
 
+		// TODO: Map innovation area once it has been defined for an application
+
+		result.setInnovationArea("");
+
 		return result;
 	}
 
