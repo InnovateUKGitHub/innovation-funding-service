@@ -24,6 +24,16 @@ public class OtherCostHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        if (costItem instanceof OtherCost) {
+            OtherCost otherCost = (OtherCost) costItem;
+            cost = new ProjectFinanceRow(otherCost.getId(), COST_KEY , "", otherCost.getDescription(), 0, otherCost.getCost(), null, null);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return buildRowItem(cost);
     }

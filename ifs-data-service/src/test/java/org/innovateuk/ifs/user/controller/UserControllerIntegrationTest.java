@@ -265,7 +265,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         userResource.setLastName("How");
         userResource.setPassword("Password123");
         userResource.setEmail("email@Nope.com");
-        userResource.setTitle("King");
+        userResource.setTitle(Title.Miss);
         userResource.setPhoneNumber("0123335787888");
 
         RestResult<UserResource> restResult = controller.createUser(1L, 1L, userResource);
