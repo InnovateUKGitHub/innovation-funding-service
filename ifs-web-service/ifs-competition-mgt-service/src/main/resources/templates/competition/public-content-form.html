@@ -10,7 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post" enctype="multipart/form-data">
         <!-- Link back -->
         <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
 
@@ -27,10 +27,10 @@
             </ul>
         </div>
 
-        <!--- sections ---->
+        <!-- sections -->
         <div th:include="fragments/public-content :: ${'section-' + model.section.type.path} (model=${model},form=${form})" th:remove="tag" />
 
-        <!--- buttons ---->
+        <!-- buttons -->
         <div class="grid-row extra-margin">
             <th:block th:if="${model.readOnly}">
             <div class="column-half">
