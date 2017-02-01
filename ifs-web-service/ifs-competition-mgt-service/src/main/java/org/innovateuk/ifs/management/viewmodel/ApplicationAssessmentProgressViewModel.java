@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ApplicationAssessmentProgressViewModel {
 
-    private Long applicationId;
+    private long applicationId;
     private String applicationName;
     private Long competitionId;
     private String competitionName;
@@ -21,7 +21,7 @@ public class ApplicationAssessmentProgressViewModel {
     private List<ApplicationAssessmentProgressRejectedRowViewModel> rejected;
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> previouslyAssigned;
 
-    public ApplicationAssessmentProgressViewModel(Long applicationId,
+    public ApplicationAssessmentProgressViewModel(long applicationId,
                                                   String applicationName,
                                                   Long competitionId,
                                                   String competitionName,
@@ -43,7 +43,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.available = available;
     }
 
-    public Long getApplicationId() {
+    public long getApplicationId() {
         return applicationId;
     }
 

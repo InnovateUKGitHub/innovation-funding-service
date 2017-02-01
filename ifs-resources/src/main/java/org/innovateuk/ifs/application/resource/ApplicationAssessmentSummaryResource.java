@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class ApplicationAssessmentSummaryResource {
 
-    private Long id;
+    private long id;
     private String name;
     private Long competitionId;
     private String competitionName;
@@ -20,7 +20,7 @@ public class ApplicationAssessmentSummaryResource {
     public ApplicationAssessmentSummaryResource() {
     }
 
-    public ApplicationAssessmentSummaryResource(Long id, String name, Long competitionId, String competitionName, String leadOrganisation, List<String> partnerOrganisations) {
+    public ApplicationAssessmentSummaryResource(long id, String name, Long competitionId, String competitionName, String leadOrganisation, List<String> partnerOrganisations) {
         this.id = id;
         this.name = name;
         this.competitionId = competitionId;
@@ -29,11 +29,11 @@ public class ApplicationAssessmentSummaryResource {
         this.partnerOrganisations = partnerOrganisations;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
