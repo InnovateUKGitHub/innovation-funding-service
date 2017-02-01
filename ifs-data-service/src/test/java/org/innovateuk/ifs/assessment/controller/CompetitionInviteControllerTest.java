@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
@@ -415,7 +414,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
         List<NewUserStagedInviteResource> newUserStagedInvites = newNewUserStagedInviteResource()
                 .withEmail("test1@test.com", "test2@test.com")
                 .withName("Test Name 1", "Test Name 2")
-                .withInnovationCategoryId(1L)
+                .withInnovationAreaId(1L)
                 .build(2);
 
         NewUserStagedInviteListResource newUserStagedInviteList = newNewUserStagedInviteListResource()
@@ -460,11 +459,9 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
 
         when(competitionInviteServiceMock.sendInvite(inviteId, content)).thenReturn(serviceSuccess(resource));
 
-        ObjectMapper mapper = new ObjectMapper();
-
         mockMvc.perform(post("/competitioninvite/sendInvite/{inviteId}", inviteId)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(mapper.writeValueAsString(content)))
+                .content(objectMapper.writeValueAsString(content)))
                 .andExpect(status().isOk());
 
         verify(competitionInviteServiceMock, only()).sendInvite(eq(inviteId), any());
