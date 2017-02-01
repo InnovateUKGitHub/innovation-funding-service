@@ -28,7 +28,12 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4830 As a project finance team member I want to be able to confirm that the appropriate viability finance checks have been carried out so I can approve the partner organisation as viable for funding
 ...
 ...               INFUND-4825 As a project finance team member I want to view details of each partner organisation so I can review their viability for funding
-
+...
+...               INFUND-7613 Date and user stamp not showing
+...
+...               INFUND-4820 As a project finance team member I want a page containing summary information for each project so that I can manage the Finance Checks section for each project in Project Setup
+...
+...               INFUND-7718 Content: Breadcrumb content for main project page to projects in setup is incorrect
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -40,7 +45,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 
 *** Test Cases ***
 Project Finance user can see the finance check summary page
-    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016
+    [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
     [Tags]  HappyPath
     [Setup]    Log in as a different user         lee.bowman@innovateuk.test    Passw0rd
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
@@ -49,6 +54,8 @@ Project Finance user can see the finance check summary page
     And the user should see the text in the page  Overview
     And the user should see the text in the page    ${funders_panel_application_1_title}
     And the table row has expected values
+    And the user should see the element    link=Projects in setup
+
 
 Status of the Eligibility column (workaround for private beta competition)
     [Documentation]    INFUND-5190
@@ -272,9 +279,11 @@ Clicking cancel on the viability modal for partner
 Confirming viability should show credit report info on a readonly page for partner
     [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Confirm viability")
     And the user clicks the button/link    name=confirm-viability    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance viability has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    confirmViabilityChecked
     And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.

@@ -21,6 +21,8 @@ public abstract class FinanceRowHandler {
 
     public abstract ApplicationFinanceRow toCost(FinanceRowItem costItem);
 
+    public abstract ProjectFinanceRow toProjectCost(FinanceRowItem costItem);
+
     public abstract FinanceRowItem toCostItem(ApplicationFinanceRow cost);
 
     public abstract FinanceRowItem toCostItem(ProjectFinanceRow cost);

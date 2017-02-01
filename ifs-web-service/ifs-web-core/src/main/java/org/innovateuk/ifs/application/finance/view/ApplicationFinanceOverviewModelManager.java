@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.BaseFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
@@ -64,11 +66,11 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
     }
 
     private void addFinanceSections(Long competitionId, Model model) {
-    	SectionResource section = sectionService.getFinanceSection(competitionId);
+        SectionResource section = sectionService.getFinanceSection(competitionId);
 
-    	if(section == null) {
-    		return;
-    	}
+        if(section == null) {
+            return;
+        }
 
         sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
 
@@ -102,6 +104,65 @@ public class ApplicationFinanceOverviewModelManager implements FinanceOverviewMo
 
         model.addAttribute("financeSectionChildrenQuestionsMap", financeSectionChildrenQuestionsMap);
         model.addAttribute("financeSectionChildrenQuestionFormInputs", financeSectionChildrenQuestionFormInputs);
+    }
+
+    public BaseFinanceOverviewViewModel getFinanceDetailsViewModel(Long competitionId, Long applicationId) {
+        ApplicationFinanceOverviewViewModel viewModel = new ApplicationFinanceOverviewViewModel();
+
+        addFinanceSections(competitionId, viewModel);
+        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl(financeService, fileEntryRestService, applicationId);
+        viewModel.setFinanceTotal(organisationFinanceOverview.getTotal());
+        viewModel.setFinanceTotalPerType(organisationFinanceOverview.getTotalPerType());
+        Map<Long, BaseFinanceResource> organisationFinances = organisationFinanceOverview.getFinancesByOrganisation();
+        viewModel.setOrganisationFinances(organisationFinances);
+        viewModel.setAcademicFileEntries(organisationFinanceOverview.getAcademicOrganisationFileEntries());
+        viewModel.setTotalFundingSought(organisationFinanceOverview.getTotalFundingSought());
+        viewModel.setTotalContribution(organisationFinanceOverview.getTotalContribution());
+        viewModel.setTotalOtherFunding(organisationFinanceOverview.getTotalOtherFunding());
+        viewModel.setResearchParticipationPercentage(applicationFinanceRestService.getResearchParticipationPercentage(applicationId).getSuccessObjectOrThrowException());
+
+        return viewModel;
+    }
+
+    private void addFinanceSections(Long competitionId, BaseFinanceOverviewViewModel viewModel) {
+    	SectionResource section = sectionService.getFinanceSection(competitionId);
+
+    	if(section == null) {
+    		return;
+    	}
+
+        sectionService.removeSectionsQuestionsWithType(section, FormInputType.EMPTY);
+
+        viewModel.setFinanceSection(section);
+        List<SectionResource> financeSubSectionChildren = getFinanceSubSectionChildren(competitionId, section);
+        viewModel.setFinanceSectionChildren(financeSubSectionChildren);
+
+        List<QuestionResource> allQuestions = questionService.findByCompetition(competitionId);
+
+        Map<Long, List<QuestionResource>> financeSectionChildrenQuestionsMap = financeSubSectionChildren.stream()
+                .collect(toMap(
+                        SectionResource::getId,
+                        s -> filterQuestions(s.getQuestions(), allQuestions)
+                ));
+
+        List<FormInputResource> formInputs = formInputService.findApplicationInputsByCompetition(competitionId);
+
+        Map<Long, List<FormInputResource>> financeSectionChildrenQuestionFormInputs = financeSectionChildrenQuestionsMap
+                .values().stream().flatMap(a -> a.stream())
+                .collect(toMap(q -> q.getId(), k -> filterFormInputsByQuestion(k.getId(), formInputs)));
+
+
+        //Remove all questions without non-empty form inputs.
+        Set<Long> questionsWithoutNonEmptyFormInput = financeSectionChildrenQuestionFormInputs.keySet().stream()
+                .filter(key -> financeSectionChildrenQuestionFormInputs.get(key).isEmpty()).collect(Collectors.toSet());
+        questionsWithoutNonEmptyFormInput.forEach(questionId -> {
+            financeSectionChildrenQuestionFormInputs.remove(questionId);
+            financeSectionChildrenQuestionsMap.keySet().forEach(key -> financeSectionChildrenQuestionsMap.get(key)
+                    .removeIf(questionResource -> questionResource.getId().equals(questionId)));
+        });
+
+        viewModel.setFinanceSectionChildrenQuestionsMap(financeSectionChildrenQuestionsMap);
+        viewModel.setFinanceSectionChildrenQuestionFormInputs(financeSectionChildrenQuestionFormInputs);
     }
 
     private List<SectionResource> getFinanceSubSectionChildren(Long competitionId, SectionResource section) {

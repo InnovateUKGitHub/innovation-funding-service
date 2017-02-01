@@ -1,20 +1,17 @@
 package org.innovateuk.ifs.address.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.junit.Test;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.hasSize;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AddressControllerTest extends BaseControllerMockMVCTest<AddressController> {
 
@@ -55,6 +52,6 @@ public class AddressControllerTest extends BaseControllerMockMVCTest<AddressCont
         when(addressService.getById(addressResource.getId())).thenReturn(serviceSuccess(addressResource));
         mockMvc.perform(get("/address/{id}", addressResource.getId()))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(addressResource)));;
+                .andExpect(content().string(objectMapper.writeValueAsString(addressResource)));;
     }
 }
