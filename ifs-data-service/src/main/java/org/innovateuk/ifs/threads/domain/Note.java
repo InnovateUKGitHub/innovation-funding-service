@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.threads.domain;
 
+import org.innovateuk.ifs.user.domain.User;
+
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.List;
 
 @Entity
-public final class Note implements Threadable {
-    private Query query;
-
-    @Override
-    public final List<Post> posts() {
-        return query.posts();
-    }
-}
+@DiscriminatorValue("NOTE")
+public class Note extends Thread {}

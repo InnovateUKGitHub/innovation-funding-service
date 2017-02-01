@@ -12,12 +12,12 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private User writer;
+    private User author;
     private String body;
     private List<PostAttachment> attachments;
 
-    public User writer() {
-        return writer;
+    public User author() {
+        return author;
     }
 
     public List<PostAttachment> attachments() {
