@@ -170,7 +170,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
             Competition competition = competitionRepository.findById(publicContent.getCompetitionId());
 
-            if(CompetitionStatus.OPEN.equals(competition.getCompetitionStatus()) && null != competition.getEndDate()) {
+            if(CompetitionStatus.OPEN.equals(competition.getCompetitionStatus()) && null != publicContent.getPublishDate()) {
                 publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
                 publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
                 publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());

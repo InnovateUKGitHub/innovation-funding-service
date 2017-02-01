@@ -243,6 +243,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(expected.getContent()).thenReturn(newPublicContent().with((integer, publicContent) -> {
             publicContent.setId(integer + 1L);
             publicContent.setCompetitionId(COMPETITION_ID);
+            publicContent.setPublishDate(LocalDateTime.now());
         }).build(40));
         when(expected.getNumber()).thenReturn(1);
         when(expected.getSize()).thenReturn(40);
