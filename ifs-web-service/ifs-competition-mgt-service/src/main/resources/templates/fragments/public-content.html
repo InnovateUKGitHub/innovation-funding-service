@@ -63,7 +63,7 @@
     <th:block th:if="${model.readOnly}">
         <th:block th:each="contentGroup: ${form.contentGroups}">
             <h2 class="heading-small no-margin-bottom" th:text="${contentGroup.heading}"></h2>
-            <p th:text="${contentGroup.content}"></p>
+            <p ifs:utext="${contentGroup.content}"></p>
         </th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
@@ -71,7 +71,6 @@
             <th:block th:include="fragments/public-content :: content-group(contentGroup=${contentGroup},index=${iter.index})"></th:block>
         </div>
     </th:block>
-
 </div>
 
 <div th:fragment="content-group(contentGroup, index)" xmlns:th="http://www.w3.org/1999/html">
