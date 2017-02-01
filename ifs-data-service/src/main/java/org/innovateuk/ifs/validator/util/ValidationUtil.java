@@ -248,7 +248,15 @@ public class ValidationUtil {
     public ValidationMessages validateCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
         invokeValidator(costItem, bindingResult);
+        return buildValidationMessages(costItem, bindingResult);
+    }
 
+    public ValidationMessages validateProjectCostItem(FinanceRowItem costItem) {
+        BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
+        return buildValidationMessages(costItem, bindingResult);
+    }
+
+    private ValidationMessages buildValidationMessages(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             if (LOG.isDebugEnabled()) {
                 LOG.debug("validated, with messages: ");

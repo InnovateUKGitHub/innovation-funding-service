@@ -17,6 +17,7 @@ public class FinanceChecksEligibilityViewModel {
     private String projectName;
     private String applicationId;
     private Long projectId;
+    private Long organisationId;
 
     private boolean eligibilityApproved;
     private EligibilityRagStatus eligibilityRagStatus;
@@ -25,7 +26,7 @@ public class FinanceChecksEligibilityViewModel {
     private LocalDate approvalDate;
 
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName,
-                                             String applicationId, boolean leadPartnerOrganisation, Long projectId,
+                                             String applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
                                              boolean eligibilityApproved, EligibilityRagStatus eligibilityRagStatus, String approverFirstName,
                                              String approverLastName, LocalDate approvalDate) {
         this.eligibilityOverview = eligibilityOverview;
@@ -34,6 +35,7 @@ public class FinanceChecksEligibilityViewModel {
         this.applicationId = applicationId;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.projectId = projectId;
+        this.organisationId = organisationId;
 
         this.eligibilityApproved = eligibilityApproved;
         this.eligibilityRagStatus = eligibilityRagStatus;
@@ -153,5 +155,13 @@ public class FinanceChecksEligibilityViewModel {
 
     public void setApprovalDate(LocalDate approvalDate) {
         this.approvalDate = approvalDate;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 }

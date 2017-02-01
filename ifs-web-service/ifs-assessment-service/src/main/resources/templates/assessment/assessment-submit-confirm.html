@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="currentApplication=${currentApplication},linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})}"  th:remove="tag"></div>
+            <div th:include="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})})" th:remove="tag"></div>
 
             <div class="page-title">
                 <h1 class="heading-xlarge">Submit assessments</h1>
