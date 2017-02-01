@@ -15,3 +15,5 @@ In Panel Dashboard
     And the user should not see the element    link=View and update competition setup
     And the user should see the element    jQuery=.button:contains("View panel sheet")
     And the user should see the element    jQuery=.button:contains("Funding decision")
+    And the user should see the element    jQuery=.button:contains("Invite assessors")
+    And the user should see the element    jQuery=.button:contains("Manage applications")
