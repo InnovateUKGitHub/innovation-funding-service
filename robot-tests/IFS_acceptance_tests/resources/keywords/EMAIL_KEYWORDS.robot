@@ -52,15 +52,6 @@ the user reads his email from the second mailbox remotely
     log    ${subject}
     check pattern in email    ${email_to_test}    ${pattern}
 
-
-the user reads his email from the default remote mailbox
-    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}
-    Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=testtest1
-    ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
-    log    ${subject}
-    check pattern in email    ${email_to_test}    ${pattern}
-
-
 check pattern in email
     [Arguments]    ${email_to_test}    ${pattern}
     ${HTML}=    get email body    ${email_to_test}
@@ -157,7 +148,7 @@ Delete the emails from the default test mailbox
 
 
 delete the emails from the default remote test mailbox
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
     Delete All Emails
     close mailbox
 
@@ -174,9 +165,9 @@ Delete the emails from both default test mailboxes
 
 
 delete the emails from both default remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
     Delete All Emails
     close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_two}@gmail.com    password={test_mailbox_two_password}
     Delete All Emails
     close mailbox

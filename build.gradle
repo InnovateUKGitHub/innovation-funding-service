@@ -138,3 +138,15 @@ task happyRobotTests(type:Exec) {
 task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
 }
+
+import org.apache.tools.ant.filters.*
+
+task robotTestsFilter (type: Copy) {
+    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    include 'EMAIL_VARIABLES_TEMPLATE.robot'
+    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
+    filter(ReplaceTokens, tokens: [valid_email: project.properties['ifs.robot.valid.email'], valid_email_two: project.properties['ifs.robot.valid.email_two'], sender : project.properties['ifs.robot.sender'] ,test_mailbox_one : project.properties['ifs.robot.mailbox_one'],  test_mailbox_two : project.properties['ifs.robot.mailbox_two'], test_mailbox_password : project.properties['ifs.robot.mailbox.password']])
+
+
+}
