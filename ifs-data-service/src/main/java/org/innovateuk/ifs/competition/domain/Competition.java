@@ -141,7 +141,7 @@ public class Competition implements ProcessActivity {
 
     public CompetitionStatus getCompetitionStatus() {
         if (setupComplete) {
-            if ( !isMilestoneReached(OPEN_DATE)) {
+            if (!isMilestoneReached(OPEN_DATE)) {
                 return READY_TO_OPEN;
             } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
