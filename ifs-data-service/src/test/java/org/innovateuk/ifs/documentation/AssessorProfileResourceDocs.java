@@ -14,6 +14,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.PROFESSIONAL;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class AssessorProfileResourceDocs {
@@ -45,7 +46,7 @@ public class AssessorProfileResourceDocs {
     public static final AssessorProfileResourceBuilder assessorProfileResourceBuilder = newAssessorProfileResource()
             .withUser(
                     newUserResource()
-                            .withTitle("Mr")
+                            .withTitle(Mr)
                             .withUid("abcdefg")
                             .withFirstName("First")
                             .withLastName("Last")

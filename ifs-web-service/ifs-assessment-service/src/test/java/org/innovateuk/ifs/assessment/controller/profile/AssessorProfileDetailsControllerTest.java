@@ -26,6 +26,8 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -110,7 +112,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", profileDetails.getTitle())
+                .param("title", profileDetails.getTitle().name())
                 .param("firstName", profileDetails.getFirstName())
                 .param("lastName", profileDetails.getLastName())
                 .param("phoneNumber", profileDetails.getPhoneNumber())
@@ -139,7 +141,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void submitDetails_changeDetails() throws Exception {
-        String title = "Mrs";
+        Title title = Mrs;
         String firstName = "Felicia";
         String lastName = "Wilkinson";
         String phoneNumber = "87654321";
@@ -175,7 +177,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
@@ -215,7 +217,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", profileDetails.getTitle())
+                .param("title", profileDetails.getTitle().name())
                 .param("firstName", "")
                 .param("lastName", "")
                 .param("phoneNumber", profileDetails.getPhoneNumber())
@@ -308,7 +310,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .build();
 
         return newUserProfileResource()
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withFirstName("Felix")
                 .withLastName("Wilson")
                 .withPhoneNumber("12345678")
