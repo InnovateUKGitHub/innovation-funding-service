@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.form;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * Form for the Eligibility page on public content setup.
@@ -14,6 +15,8 @@ public class ContentGroupForm {
 
     @NotEmpty
     private String content;
+
+    private MultipartFile attachment;
 
     public Long getId() {
         return id;
@@ -38,4 +41,13 @@ public class ContentGroupForm {
     public void setContent(String content) {
         this.content = content;
     }
+
+    public MultipartFile getAttachment() {
+        return attachment;
+    }
+
+    public void setAttachment(MultipartFile attachment) {
+        this.attachment = attachment;
+    }
+
 }

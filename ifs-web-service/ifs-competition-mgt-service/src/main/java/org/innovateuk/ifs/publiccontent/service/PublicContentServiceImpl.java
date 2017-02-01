@@ -4,7 +4,9 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
 import org.innovateuk.ifs.publiccontent.form.ContentGroupForm;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -51,28 +53,33 @@ public class PublicContentServiceImpl implements PublicContentService {
     }
 
     @Override
-    public ServiceResult<Void> removeFile(PublicContentResource resource, PublicContentSectionType type, List<ContentGroupForm> contentGroups, Integer removeFile) {
-        Optional<PublicContentSectionResource> optionalSection = resource.getContentSections().stream().filter(filterSection -> type.equals(filterSection.getType())).findAny();
-        if (optionalSection.isPresent()) {
-            Long groupToRemoveFrom = optionalSection.get().getContentGroups().get(removeFile).getId();
-            return contentGroupRestService.removeFile(groupToRemoveFrom).toServiceResult();
-        } else {
-            return serviceFailure(PUBLIC_CONTENT_NOT_INITIALISED);
-        }
+    public ServiceResult<Void> removeFile(AbstractContentGroupForm form) {
+        return contentGroupRestService.removeFile(form.getRemoveFile()).toServiceResult();
     }
 
     @Override
-    public ServiceResult<Void> uploadFile(PublicContentResource resource, PublicContentSectionType type, List<ContentGroupForm> contentGroups, Integer uploadFile, MultipartFile attachment) {
-        Optional<PublicContentSectionResource> optionalSection = resource.getContentSections().stream().filter(filterSection -> type.equals(filterSection.getType())).findAny();
-        if (optionalSection.isPresent()) {
-            Long groupToRemoveFrom = optionalSection.get().getContentGroups().get(uploadFile).getId();
+    public ServiceResult<Void> uploadFile(PublicContentResource resource, PublicContentSectionType type, List<ContentGroupForm> contentGroups) {
+        Optional<PublicContentSectionResource> optionalSection = CollectionFunctions.simpleFindFirst(resource.getContentSections(),
+                contentSectionResource -> type.equals(contentSectionResource.getType()));
+        Optional<ContentGroupForm> withAttachment = CollectionFunctions.simpleFindFirst(contentGroups,
+                contentGroupForm -> contentGroupForm.getAttachment() != null);
+
+        if (optionalSection.isPresent() && withAttachment.isPresent()) {
+            Long groupToUpload = getIdFromResourceIndex(optionalSection.get(), contentGroups, withAttachment.get());
+            MultipartFile attachment = withAttachment.get().getAttachment();
             try {
-                return contentGroupRestService.uploadFile(groupToRemoveFrom, attachment.getContentType(), attachment.getSize(), attachment.getOriginalFilename(), attachment.getBytes()).toServiceResult();
+                return contentGroupRestService.uploadFile(groupToUpload, attachment.getContentType(), attachment.getSize(), attachment.getOriginalFilename(), attachment.getBytes()).toServiceResult();
             } catch (IOException e) {
                 return serviceFailure(FILES_UNABLE_TO_CREATE_FILE);
             }
         } else {
             return serviceFailure(PUBLIC_CONTENT_NOT_INITIALISED);
         }
+    }
+
+
+
+    private Long getIdFromResourceIndex(PublicContentSectionResource sectionResource, List<ContentGroupForm> contentGroups, ContentGroupForm contentGroupForm) {
+        return sectionResource.getContentGroups().get(contentGroups.indexOf(contentGroupForm)).getId();
     }
 }
