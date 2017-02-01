@@ -7,7 +7,7 @@ import java.util.List;
 
 public class ThreadResource {
     private List<PostResource> posts;
-    private SectionTypeEnum sectionType;
+    private FinanceChecksSectionType sectionType;
     private String title;
     private boolean awaitingResponse;
     private LocalDateTime createdOn;
@@ -23,11 +23,11 @@ public class ThreadResource {
         this.posts = posts;
     }
 
-    public SectionTypeEnum getSectionType() {
+    public FinanceChecksSectionType getSectionType() {
         return sectionType;
     }
 
-    public void setSectionType(SectionTypeEnum sectionType) {
+    public void setSectionType(FinanceChecksSectionType sectionType) {
         this.sectionType = sectionType;
     }
 

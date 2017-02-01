@@ -4,7 +4,7 @@ import org.innovateuk.ifs.notesandqueries.resource.thread.ThreadResource;
 
 import java.util.List;
 
-public class FinanceChecksQueriesQueryViewModel extends ThreadResource{
+public class FinanceChecksQueriesQueryViewModel extends ThreadResource {
     public List<FinanceChecksQueriesPostViewModel> getViewModelPosts() {
         return viewModelPosts;
     }

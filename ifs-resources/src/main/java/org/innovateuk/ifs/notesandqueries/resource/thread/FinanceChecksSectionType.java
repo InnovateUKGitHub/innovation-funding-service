@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.notesandqueries.resource.thread;
 
-public enum SectionTypeEnum {
+public enum FinanceChecksSectionType {
     ELIGIBILITY,
-    VIABILITY;
+    VIABILITY
 }

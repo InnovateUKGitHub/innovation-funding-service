@@ -34,27 +34,6 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
     }
 
     @Test
-    public void testCancelNewForm() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.cancelNewForm(1L, 2L, "", null, null));
-
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonFinanceTeamRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.cancelNewForm(1L, 2L, "", null, null);
-                Assert.fail("Should not have been able to cancel form without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
     public void testDownloadAttachment() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
         assertSecured(() -> classUnderTest.downloadAttachment(1L, 2L, 3L, null, null));
@@ -75,94 +54,12 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
         });
     }
 
-    @Test
-    public void testSaveQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null));
 
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonFinanceTeamRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null);
-                Assert.fail("Should not have been able to save query without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
-    public void testSaveResponse() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.saveResponse(null, 1L, 2L, 3L, "", null, null, null, null));
-
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonFinanceTeamRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.saveResponse(null, 1L, 2L, 3L, "", null, null, null, null);
-                Assert.fail("Should not have been able to save response without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
-    public void testSaveQueryAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.saveNewQueryAttachment(null, 1L, 2L, "", null, null, null, null));
-
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonFinanceTeamRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.saveNewQueryAttachment(null, 1L, 2L, "", null, null, null, null);
-                Assert.fail("Should not have been able to save a query attachment without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
-    public void testSaveResponseAttachment() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.saveNewResponseAttachment(null, 1L, 2L, 3L, "", null, null, null, null));
-
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonFinanceTeamRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.saveNewResponseAttachment(null, 1L, 2L, 3L, "", null, null, null, null);
-                Assert.fail("Should not have been able to save a response attachment without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
 
     @Test
     public void testShowPage() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.showPage(1L, 2L, "", null, null, Boolean.FALSE, Boolean.FALSE, null, null, null, Boolean.FALSE, null, null));
+        assertSecured(() -> classUnderTest.showPage(1L, 2L, "", null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -172,50 +69,8 @@ public class FinanceChecksQueriesControllerSecurityTest extends BaseProjectSetup
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.showPage(1L, 2L, "", null, null, Boolean.FALSE, Boolean.FALSE, null, null, null, Boolean.FALSE, null, null);
+                classUnderTest.showPage(1L, 2L, "", null);
                 Assert.fail("Should not have been able to view the page without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
-    public void testViewNewQuery() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.viewNewQuery(1L, 2L, "", null, null, null));
-
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonFinanceTeamRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.viewNewQuery(1L, 2L, "", null, null, null);
-                Assert.fail("Should not have been able to show the create query form without the project finance role");
-            } catch (AccessDeniedException e) {
-                // expected behaviour
-            }
-        });
-    }
-
-    @Test
-    public void testViewNewResponse() {
-        setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.viewNewResponse(1L, 2L, 3L, "", null, null, null));
-
-        List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
-                .collect(toList());
-
-        nonFinanceTeamRoles.forEach(role -> {
-
-            setLoggedInUser(
-                    newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
-            try {
-                classUnderTest.viewNewResponse(1L, 2L, 3L, "", null, null, null);
-                Assert.fail("Should not have been able to show the add response form without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
             }

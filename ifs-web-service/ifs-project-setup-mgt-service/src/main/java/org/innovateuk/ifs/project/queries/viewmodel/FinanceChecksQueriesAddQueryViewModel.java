@@ -1,11 +1,9 @@
 package org.innovateuk.ifs.project.queries.viewmodel;
 
 import java.util.List;
+import java.util.Map;
 
-/**
- * View model backing the internal Finance Team members view of the Finance Check Queries page
- */
-public class FinanceChecksQueriesViewModel {
+public class FinanceChecksQueriesAddQueryViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private String financeContactName;
@@ -14,11 +12,15 @@ public class FinanceChecksQueriesViewModel {
     private String querySection;
     private Long projectId;
     private String projectName;
-    List<FinanceChecksQueriesQueryViewModel> queries;
+    private Map<Long, String> newAttachmentLinks;
+    private int maxQueryWords;
+    private int maxQueryCharacters;
+    private int maxTitleCharacters;
     private Long organisationId;
     private String baseUrl;
 
-    public FinanceChecksQueriesViewModel(String organisationName,
+
+    public FinanceChecksQueriesAddQueryViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
                                          String financeContactName,
                                          String financeContactEmail,
@@ -26,7 +28,10 @@ public class FinanceChecksQueriesViewModel {
                                          String querySection,
                                          Long projectId,
                                          String projectName,
-                                         List<FinanceChecksQueriesQueryViewModel> queries,
+                                         Map<Long, String> newAttachmentLinks,
+                                         int maxQueryWords,
+                                         int maxQueryCharacters,
+                                         int maxTitleCharacters,
                                          Long organisationId,
                                          String baseUrl) {
         this.organisationName = organisationName;
@@ -37,7 +42,10 @@ public class FinanceChecksQueriesViewModel {
         this.querySection = querySection;
         this.projectId = projectId;
         this.projectName = projectName;
-        this.queries = queries;
+        this.newAttachmentLinks = newAttachmentLinks;
+        this.maxQueryWords = maxQueryWords;
+        this.maxQueryCharacters = maxQueryCharacters;
+        this.maxTitleCharacters = maxTitleCharacters;
         this.organisationId = organisationId;
         this.baseUrl = baseUrl;
 
@@ -106,21 +114,43 @@ public class FinanceChecksQueriesViewModel {
         this.projectName = projectName;
     }
 
-    public List<FinanceChecksQueriesQueryViewModel> getQueries() {
-        return queries;
+    public Map<Long, String>  getNewAttachmentLinks() {
+        return newAttachmentLinks;
     }
 
-    public void setQueries(List<FinanceChecksQueriesQueryViewModel> queries) {
-        this.queries = queries;
+    public void setNewAttachmentLinks(Map<Long, String>  newAttachmentLinks) {
+        this.newAttachmentLinks = newAttachmentLinks;
     }
 
-    public Long getOrganisationId() {
-        return organisationId;
+    public int getMaxQueryWords() {
+        return maxQueryWords;
+    }
+
+    public void setMaxQueryWords(int maxQueryWords) {
+        this.maxQueryWords = maxQueryWords;
+    }
+
+    public int getMaxQueryCharacters() {
+        return maxQueryCharacters;
+    }
+
+    public void setMaxQueryCharacters(int maxQueryCharacters) {
+        this.maxQueryCharacters = maxQueryCharacters;
+    }
+
+    public int getMaxTitleCharacters() {
+        return maxTitleCharacters;
+    }
+
+    public void setMaxTitleCharacters(int maxTitleCharacters) {
+        this.maxTitleCharacters = maxTitleCharacters;
     }
 
     public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
     }
+
+    public Long getOrganisationId() { return this.organisationId; }
 
     public String getBaseUrl() {
         return baseUrl;
