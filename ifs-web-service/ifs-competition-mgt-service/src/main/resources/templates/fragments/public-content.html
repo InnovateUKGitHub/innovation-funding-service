@@ -80,24 +80,28 @@
         <fieldset>
             <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
             <hr />
-                <div class="form-group">
-                    <label class="form-label-bold" th:for="${'heading-'+index}">
-                        Heading
-                    </label>
-                    <input class="form-control" th:id="${'heading-'+index}" type="text" th:field="*{contentGroups[__${index}__].heading}" />
+            <div class="form-group">
+                <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
+                <input class="form-control" th:id="${'heading-'+index}" type="text" th:field="*{contentGroups[__${index}__].heading}" />
+            </div>
+            <div class="form-group">
+                <div class="textarea-wrapped">
+                <label class="form-label-bold" th:for="${'content-'+index}">Content</label>
+                    <textarea th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"></textarea>
                 </div>
-                <div class="form-group">
-                    <div class="textarea-wrapped">
-                    <label class="form-label-bold" th:for="${'content-'+index}">Content</label>
-                        <textarea th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group upload-section">
-                    <input type="file" th:id="${'file-upload-'+index}" class="inputfile" />
+            </div>
+            <div class="form-group upload-section">
+                <th:block th:if="*{contentGroups[__${index}__].attachment} == null">
+                    <input type="file" th:id="${'file-upload-'+index}" class="inputfile" th:field="*{contentGroups[__${index}__].attachment}"/>
                     <label th:for="${'file-upload-'+index}" class="button-secondary extra-margin">+ Upload</label>
                     <button class="button-secondary" type="submit" name="uploadFile" th:attr="data-for-file-upload=${'file-upload-'+index}" th:value="${index}">Save</button>
-                </div>
+                    <p class="uploaded-file">No file currently uploaded</p>
+                </th:block>
+                <th:block th:unless="*{contentGroups[__${index}__].attachment} == null">
+                    <p class="uploaded-file" th:text="*{contentGroups[__${index}__].attachment}">Filename.pdf</p>
+                    <button class="button-secondary" type="submit" name="removeFile" th:value="${index}">remove</button>
+                </th:block>
+            </div>
         </fieldset>
 
         <ul class="comp-setup-section-navigation" th:if="${index > 0}">
@@ -105,6 +109,8 @@
         </ul>
         <hr />
     </fieldset>
-
+    <div class="alignright">
+        <button class="buttonlink" type="button">+ add new section</button>
+    </div>
 
 </div>
