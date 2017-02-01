@@ -2,10 +2,7 @@ package org.innovateuk.ifs.registration.builder;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
 import java.util.List;
@@ -18,13 +15,15 @@ import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Disability.YES;
 import static org.innovateuk.ifs.user.resource.Gender.*;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.user.resource.Title.Miss;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.junit.Assert.assertEquals;
 
 public class UserRegistrationResourceBuilderTest {
 
     @Test
     public void testBuildOne() {
-        String expectedTitle = "Title";
+        Title expectedTitle = Title.Dr;
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedPhoneNumber = "01234 567890";
@@ -65,7 +64,7 @@ public class UserRegistrationResourceBuilderTest {
 
     @Test
     public void testBuildMany() {
-        String[] expectedTitles = {"Mr", "Miss"};
+        Title[] expectedTitles = {Mr, Miss};
         String[] expectedFirstNames = {"James", "Sarah"};
         String[] expectedLastNames = {"Smith", "Smythe"};
         String[] expectedPhoneNumbers = {"01234 567890", "02345 678901"};
