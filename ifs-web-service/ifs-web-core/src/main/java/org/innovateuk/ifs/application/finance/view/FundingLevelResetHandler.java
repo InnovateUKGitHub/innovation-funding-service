@@ -52,7 +52,6 @@ public class FundingLevelResetHandler {
                 .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
                 .findFirst();
 
-        //set your funding section to marked as incomplete
         sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
                 .forEach(fundingSection ->
                         sectionService.markAsInComplete(fundingSection.getId(),
@@ -73,7 +72,6 @@ public class FundingLevelResetHandler {
                 processRole -> processRole.getUser()).collect(Collectors.toSet());
 
         userIds.stream().forEach(userId ->
-                //set user's funding section to marked as incomplete
                 sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
                         .forEach(fundingSection ->
                                 sectionService.markAsInComplete(fundingSection.getId(),
@@ -86,7 +84,7 @@ public class FundingLevelResetHandler {
         });
     }
 
-    public void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
+    private void resetFundingLevel(ApplicationFinanceResource applicationFinance, Long financeQuestionId) {
         if (applicationFinance.getGrantClaim() != null) {
             applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
             financeRowService.add(applicationFinance.getId(), financeQuestionId, applicationFinance.getGrantClaim());
