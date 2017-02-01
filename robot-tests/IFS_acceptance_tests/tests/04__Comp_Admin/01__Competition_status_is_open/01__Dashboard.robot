@@ -4,7 +4,7 @@ Documentation     INFUND-7358 Inflight competition dashboards: Ready to open das
 ...               INFUND-7562 Inflight competition dashboards: Open dashboard
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 Resource          ../CompAdmin_Commons.robot
 

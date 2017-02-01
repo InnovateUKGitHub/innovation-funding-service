@@ -1,7 +1,7 @@
 *** Settings ***
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
