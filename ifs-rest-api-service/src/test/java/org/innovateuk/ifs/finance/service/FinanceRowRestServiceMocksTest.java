@@ -85,14 +85,4 @@ public class FinanceRowRestServiceMocksTest extends BaseRestServiceUnitTest<Fina
         assertTrue(financeRowItem.isSuccess());
         assertEquals(costToUpdate, financeRowItem.getSuccessObject());
     }
-
-    @Test
-    public void testAddProjectCostWithoutPersisting() {
-        LabourCost costToUpdate = new LabourCost();
-        String expectedUrl = costRestURL + "/project/add-without-persisting/" + 123L + "/" + 456L;
-        setupPostWithRestResultExpectations(expectedUrl, FinanceRowItem.class, null, costToUpdate, HttpStatus.OK);
-        RestResult<FinanceRowItem> financeRowItem = service.addProjectCostWithoutPersisting(123L, 456L);
-        assertTrue(financeRowItem.isSuccess());
-        assertEquals(costToUpdate, financeRowItem.getSuccessObject());
-    }
 }

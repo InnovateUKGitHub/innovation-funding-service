@@ -1,35 +1,46 @@
 // Set up the handlers for adding and removing Cost Category costs rows
-IFS.application.repeatableRows = (function () {
+IFS.core.repeatableFinanceRows = (function () {
   'use strict'
 
   return {
     init: function () {
-      IFS.application.repeatableRows.backForwardCacheReload()
+      IFS.core.repeatableFinanceRows.backForwardCacheReload()
       jQuery('body').on('click', '[data-repeatable-rowcontainer]', function (e) {
         e.preventDefault()
-        IFS.application.repeatableRows.backForwardCacheInvalidate()
-        IFS.application.repeatableRows.addRow(this, e)
+        IFS.core.repeatableFinanceRows.backForwardCacheInvalidate()
+        IFS.core.repeatableFinanceRows.addRow(this, e)
       })
       jQuery('body').on('click', '.js-remove-row', function (e) {
-        IFS.application.repeatableRows.backForwardCacheInvalidate()
-        IFS.application.repeatableRows.removeRow(this, e)
+        IFS.core.repeatableFinanceRows.backForwardCacheInvalidate()
+        IFS.core.repeatableFinanceRows.removeRow(this, e)
       })
 
       jQuery('body').on('persistUnsavedRow', function (event, name, newFieldId) {
-        IFS.application.repeatableRows.persistUnsavedRow(name, newFieldId)
+        IFS.core.repeatableFinanceRows.persistUnsavedRow(name, newFieldId)
       })
     },
-
     getAjaxUrl: function (el) {
-      var url = ''
-      if (typeof (jQuery(el).val()) !== 'undefined' && typeof (jQuery(el).attr('name')) !== 'undefined' && jQuery('#application_id').length === 1) {
-        var applicationId = jQuery('#application_id').val()
-        url = window.location.protocol + '//' + window.location.host + '/application/' + applicationId + '/form/' + jQuery(el).attr('name') + '/' + jQuery(el).val()
+      var inst = jQuery(el)
+      var elValue = inst.val()
+      var elName = inst.prop('name')
+      var hasValue = typeof (elValue) !== 'undefined'
+      var hasName = typeof (elName) !== 'undefined'
+
+      if (hasName && hasValue) {
+        var host = window.location.protocol + '//' + window.location.host
+        var url = ''
+        if (jQuery('#application_id').length === 1) {
+          url = host + '/application/' + jQuery('#application_id').val() + '/form/' + elName + '/' + elValue
+        }
+        if (jQuery('#projectId').length === 1) {
+          url = host + '/project-setup-management/project/' + jQuery('#projectId').val() + '/finance-check/organisation/' + jQuery('#organisationId').val() + '/eligibility/' + elName + '/' + elValue
+        }
       }
+
       return url
     },
     addRow: function (el, event) {
-      var url = IFS.application.repeatableRows.getAjaxUrl(el)
+      var url = IFS.core.repeatableFinanceRows.getAjaxUrl(el)
       if (url.length) {
         event.preventDefault()
         jQuery.ajaxProtected({
@@ -51,7 +62,7 @@ IFS.application.repeatableRows = (function () {
       }
     },
     removeRow: function (el, event) {
-      var url = IFS.application.repeatableRows.getAjaxUrl(el)
+      var url = IFS.core.repeatableFinanceRows.getAjaxUrl(el)
       if (url.length) {
         event.preventDefault()
         jQuery.ajaxProtected({
