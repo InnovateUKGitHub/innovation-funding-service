@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
@@ -187,6 +188,9 @@ public class ApplicationFormController {
 
     @Autowired
     private OverheadFileSaver overheadFileSaver;
+
+    @Autowired
+    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -979,7 +983,7 @@ public class ApplicationFormController {
         if (fieldName.startsWith("application.")) {
 
             if (fieldName.equals("application.researchCategoryId")) {
-                financeHandler.getFinanceFormHandler(organisationType).updateFinancePosition(userId, applicationId, fieldName, value, competitionId);
+                fundingLevelResetHandler.resetFundingLevelAndMarkAsIncompleteForAllCollaborators(competitionId, applicationId);
             }
 
             // this does not need id
