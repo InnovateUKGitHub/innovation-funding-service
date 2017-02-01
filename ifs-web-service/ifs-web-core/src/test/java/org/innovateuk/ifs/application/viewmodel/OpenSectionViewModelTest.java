@@ -2,6 +2,8 @@ package org.innovateuk.ifs.application.viewmodel;
 
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.form.resource.FormInputResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -14,6 +16,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -72,6 +75,7 @@ public class OpenSectionViewModelTest {
         viewModel.setHasFinanceSection(Boolean.FALSE);
         viewModel.setFinanceSectionId(sectionId);
         viewModel.setCurrentUser(currentUser);
+        viewModel.setSubFinanceSection(Boolean.FALSE);
 
         viewModel.setAcademicOrganisations(academicOrganisations);
         viewModel.setAllQuestionsCompleted(Boolean.FALSE);
@@ -157,6 +161,77 @@ public class OpenSectionViewModelTest {
         viewModel.setFinanceViewModel(financeViewModel);
 
         assertEquals(Boolean.TRUE, viewModel.getHasFinanceView());
+    }
+
+    @Test
+    public void testIsOrgFinancialOverview() {
+        Long questionId = 8284L;
+
+        assertEquals(Boolean.FALSE, viewModel.isOrgFinancialOverview(questionId));
+
+        viewModel.setSubFinanceSection(Boolean.TRUE);
+
+        assertEquals(Boolean.FALSE, viewModel.isOrgFinancialOverview(questionId));
+
+        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
+
+        assertEquals(Boolean.FALSE, viewModel.isOrgFinancialOverview(questionId));
+
+        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.FINANCIAL_OVERVIEW_ROW).build(1)));
+
+        assertEquals(Boolean.TRUE, viewModel.isOrgFinancialOverview(questionId));
+    }
+
+    @Test
+    public void testGetFormInputsOrganisationSize() {
+        Long questionId = 8284L;
+
+        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
+        assertEquals(Collections.emptyList(), viewModel.getFormInputsOrganisationSize(questionId));
+
+        List<FormInputResource> expected = newFormInputResource().withQuestion(questionId).withType(FormInputType.ORGANISATION_SIZE).build(1);
+        viewModel.setQuestionFormInputs(asMap(questionId, expected));
+
+        assertEquals(expected, viewModel.getFormInputsOrganisationSize(questionId));
+    }
+
+    @Test
+    public void testGetFormInputsFinancialOverview() {
+        Long questionId = 8284L;
+
+        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
+        assertEquals(Collections.emptyList(), viewModel.getFormInputsFinancialOverview(questionId));
+
+        List<FormInputResource> expected = newFormInputResource().withQuestion(questionId).withType(FormInputType.FINANCIAL_OVERVIEW_ROW).build(1);
+        viewModel.setQuestionFormInputs(asMap(questionId, expected));
+
+        assertEquals(expected, viewModel.getFormInputsFinancialOverview(questionId));
+    }
+
+    @Test
+    public void testGetFormInputsFinancialEndYear() {
+        Long questionId = 8284L;
+
+        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
+        assertEquals(Collections.emptyList(), viewModel.getFormInputsFinancialEndYear(questionId));
+
+        List<FormInputResource> expected = newFormInputResource().withQuestion(questionId).withType(FormInputType.FINANCIAL_YEAR_END).build(1);
+        viewModel.setQuestionFormInputs(asMap(questionId, expected));
+
+        assertEquals(expected, viewModel.getFormInputsFinancialEndYear(questionId));
+    }
+
+    @Test
+    public void testGetFormInputsFinancialStaffCount() {
+        Long questionId = 8284L;
+
+        viewModel.setQuestionFormInputs(asMap(questionId, newFormInputResource().withQuestion(questionId).withType(FormInputType.APPLICATION_DETAILS).build(1)));
+        assertEquals(Collections.emptyList(), viewModel.getFormInputsFinancialStaffCount(questionId));
+
+        List<FormInputResource> expected = newFormInputResource().withQuestion(questionId).withType(FormInputType.FINANCIAL_STAFF_COUNT).build(1);
+        viewModel.setQuestionFormInputs(asMap(questionId, expected));
+
+        assertEquals(expected, viewModel.getFormInputsFinancialStaffCount(questionId));
     }
 
 }

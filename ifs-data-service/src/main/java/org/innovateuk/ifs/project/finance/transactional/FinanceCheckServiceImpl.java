@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
@@ -72,6 +73,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private FinanceRowService financeRowService;
+
+    @Autowired
+    private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
     private ProjectService projectService;
@@ -161,7 +165,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Project project = projectRepository.findOne(projectId);
         Application application = project.getApplication();
 
-        return financeRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
+        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
 
             financeRowService.financeDetails(application.getId(), organisationId).
                     andOnSuccessReturn(applicationFinanceResource -> {
