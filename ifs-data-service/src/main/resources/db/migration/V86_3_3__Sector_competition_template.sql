@@ -246,20 +246,23 @@ SET @past_month_validator_id = (SELECT id FROM form_validator WHERE title = 'Pas
 INSERT INTO form_input_validator (`form_input_id`, `form_validator_id`)
      SELECT fi.id, @past_month_validator_id
      FROM form_input AS fi
-    WHERE fi.form_input_type_id IN (@financial_year_end_id);
+    WHERE fi.form_input_type_id IN (@financial_year_end_id)
+    AND fi.competition_id=@sector_template_id;
 
 SET @integer_validator_id = (SELECT id FROM form_validator WHERE title = 'IntegerValidator');
 INSERT INTO form_input_validator (`form_input_id`, `form_validator_id`)
      SELECT fi.id, @integer_validator_id
      FROM form_input AS fi
-    WHERE fi.form_input_type_id IN (@financial_overview_row_id);
+    WHERE fi.form_input_type_id IN (@financial_overview_row_id)
+    AND fi.competition_id=@sector_template_id;
 
 -- Connect the validator to the form inputs
 SET @non_negative_integer_validator_id = (SELECT id FROM form_validator WHERE title = 'NonNegativeIntegerValidator');
 INSERT INTO form_input_validator (`form_input_id`, `form_validator_id`)
      SELECT fi.id, @non_negative_integer_validator_id
      FROM form_input AS fi
-    WHERE fi.form_input_type_id IN (@financial_staff_count_id);
+    WHERE fi.form_input_type_id IN (@financial_staff_count_id)
+    AND fi.competition_id=@sector_template_id;
 
 SET @financial_year_end_type_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_YEAR_END');
 SET @financial_overview_row_type_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_OVERVIEW_ROW');
