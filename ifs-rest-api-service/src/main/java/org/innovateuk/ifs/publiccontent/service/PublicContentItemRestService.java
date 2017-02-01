@@ -15,7 +15,7 @@ public interface PublicContentItemRestService {
     RestResult<PublicContentItemPageResource> getByFilterValues(Optional<Long> innovationAreaId,
                                                                 Optional<String> searchString,
                                                                 Optional<Integer> pageNumber,
-                                                                Optional<Integer> pageSize) throws UnsupportedEncodingException;
+                                                                Integer pageSize) throws UnsupportedEncodingException;
 
     RestResult<PublicContentItemResource> getItemByCompetitionId(final Long competitionId);
 }
