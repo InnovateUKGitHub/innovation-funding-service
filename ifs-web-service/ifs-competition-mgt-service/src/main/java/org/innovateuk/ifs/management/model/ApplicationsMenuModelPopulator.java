@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
- * Build the model for the Competition Management Applications Menu view model.
+ * Builds the model for the Competition Management Applications Menu view model.
  */
 @Component
 public class ApplicationsMenuModelPopulator {

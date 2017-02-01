@@ -70,7 +70,7 @@
         <ul class="grid-row">
 
             <li class="column-quarter dashboard-actions">
-                <a class="button" href="#">All applications</a>
+                <a class="button" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
             </li>
 
             <li class="column-quarter dashboard-actions">
