@@ -97,9 +97,8 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     public void test_findByRole() {
 
         loginCompAdmin();
-        List<UserResource> users = controller.findByRole(UserRoleType.COMP_EXEC.getName()).getSuccessObject();
-        int compExecUserCount = 2;
-        assertEquals(compExecUserCount, users.size());
+        List<UserResource> users = controller.findByRole(UserRoleType.COMP_ADMIN.getName()).getSuccessObject();
+        assertTrue(users.size() > 0);
     }
 
     @Test

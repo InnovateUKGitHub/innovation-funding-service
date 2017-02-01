@@ -133,8 +133,8 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Exec can read the user's profile status")
-    public boolean usersAndCompAdminExecCanViewProfileStatus(UserProfileStatusResource profileStatus, UserResource user) {
-        return profileStatus.getUser().equals(user.getId()) || isCompAdmin(user) || isCompExec(user);
+    public boolean usersAndCompAdminCanViewProfileStatus(UserProfileStatusResource profileStatus, UserResource user) {
+        return profileStatus.getUser().equals(user.getId()) || isCompAdmin(user);
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {

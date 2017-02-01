@@ -78,7 +78,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentStates state = AssessmentStates.CREATED;
         long competitionId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN);
     }
 
     @Test
@@ -86,7 +86,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentStates state = AssessmentStates.CREATED;
         long competitionId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN);
     }
 
     @Test
@@ -102,7 +102,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void notifyAssessor() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notify(assessmentId), COMP_ADMIN);
     }
 
     @Test
@@ -130,7 +130,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void withdrawAssessment() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN);
     }
 
     @Test
@@ -160,7 +160,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 .withAssessorId(3L)
                 .build();
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN);
     }
 
     public static class TestAssessmentService implements AssessmentService {
