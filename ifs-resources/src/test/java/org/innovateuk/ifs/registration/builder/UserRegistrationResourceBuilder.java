@@ -31,8 +31,8 @@ public class UserRegistrationResourceBuilder extends BaseBuilder<UserRegistratio
         return new UserRegistrationResource();
     }
 
-    public UserRegistrationResourceBuilder withTitle(String... titles) {
-        return withArray((title, userRegistrationResource) -> setField("title", title, userRegistrationResource), titles);
+    public UserRegistrationResourceBuilder withTitle(Title... titles) {
+        return withArray((title, userRegistrationResource) -> userRegistrationResource.setTitle(title), titles);
     }
 
     public UserRegistrationResourceBuilder withFirstName(String... firstNames) {
