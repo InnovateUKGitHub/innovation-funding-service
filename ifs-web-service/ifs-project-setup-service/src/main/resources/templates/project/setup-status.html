@@ -26,13 +26,13 @@
 
     <p th:unless="${model.projectComplete}" class="form-hint">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
 
-    <!--TODO INFUND-3008 INFUND-4622 Not being implemented in the current release, tickets in backlog for creation of the companies house pages.-->
+    <!--/*TODO INFUND-3008 INFUND-4622 Not being implemented in the current release, tickets in backlog for creation of the companies house pages.-->
     <!--<div class="warning-alert extra-margin-bottom" th:unless="${model.hasCompanyHouse}">-->
         <!--<h2 class="heading-small no-margin">Your business is not currently linked with Companies House</h2>-->
         <!--<p>For your project to be funded by Innovate UK [Business Name] must be registered with Companies House. </p>-->
         <!--<p><a href="/prototypes/2537-partner-add-companies-house">Provide companies house details</a></p>-->
         <!--<p><a href="/prototypes/4242-register-no-companies-house">Business has no legal responsibility to register with Companies House</a></p>-->
-    <!--</div>-->
+    <!--</div>*/-->
 
     <strong><a th:unless="${model.projectComplete}" th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></strong>
 
