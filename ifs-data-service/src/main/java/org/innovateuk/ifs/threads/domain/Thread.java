@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.threads.generic.domain;
+package org.innovateuk.ifs.threads.domain;
 
 
-import org.innovateuk.ifs.threads.generic.post.domain.Post;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;

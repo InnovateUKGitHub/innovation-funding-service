@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.threads.generic.post.domain;
+package org.innovateuk.ifs.threads.domain;
 
 import org.innovateuk.ifs.user.domain.User;
 

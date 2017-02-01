@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.threads.concrete.query.domain;
+package org.innovateuk.ifs.threads.domain;
 
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.security.SecurityRuleUtil;
-import org.innovateuk.ifs.threads.generic.domain.Thread;
-import org.innovateuk.ifs.threads.generic.domain.Threadable;
-import org.innovateuk.ifs.threads.generic.post.domain.Post;
+import org.innovateuk.ifs.threads.domain.Thread;
+import org.innovateuk.ifs.threads.domain.Threadable;
+import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
