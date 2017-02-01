@@ -11,6 +11,7 @@ import org.mapstruct.Mappings;
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
+            ContentEventMapper.class,
             ContentSectionMapper.class,
             KeywordMapper.class
     }

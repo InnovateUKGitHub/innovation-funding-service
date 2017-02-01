@@ -5,7 +5,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
 @Mapper(
@@ -16,12 +15,11 @@ import org.mapstruct.Mappings;
 )
 public abstract class ContentSectionMapper extends BaseMapper<ContentSection, PublicContentSectionResource, Long> {
 
-
     @Override
     public abstract PublicContentSectionResource mapToResource(ContentSection domain);
 
     @Mappings({
-            @Mapping(target = "contentGroup", ignore = true)
+            //@Mapping(target = "contentGroup", ignore = true)
     })
     public abstract ContentSection mapToDomain(PublicContentSectionResource domain);
 
