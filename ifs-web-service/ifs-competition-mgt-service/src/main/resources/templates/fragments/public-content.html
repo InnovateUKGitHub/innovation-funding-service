@@ -100,10 +100,10 @@
             </th:block>
             <th:block th:unless="*{contentGroups[__${index}__].attachment} == null">
                 <p class="uploaded-file" th:text="*{contentGroups[__${index}__].attachment}">Filename.pdf</p>
-                <button class="button-secondary" type="submit" name="removeFile" th:value="${index}">remove</button>
+                <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
             </th:block>
         </div>
         <button type="button" class="buttonlink" th:if="${index > 0}">Remove section</button>
-        <hr />
+        <hr />O
     </div>
 </div>

@@ -26,6 +26,9 @@ public abstract class AbstractContentGroupFormPopulator<F extends AbstractConten
         if (!optionalSection.isPresent()) {
             return Collections.emptyList();
         } else {
+            if (!getType().isAllowEmptyContentGroups() && optionalSection.get().getContentGroups().isEmpty())  {
+                return Collections.singletonList(new ContentGroupForm());
+            }
             return optionalSection.get().getContentGroups().stream().map(contentGroupResource -> {
                 ContentGroupForm contentGroupForm = new ContentGroupForm();
                 contentGroupForm.setId(contentGroupResource.getId());
