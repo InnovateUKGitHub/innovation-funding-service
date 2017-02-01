@@ -34,6 +34,17 @@ public class ProjectMonitoringOfficerController {
         return "project/monitoring-officer";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_MONITORING_OFFICER_SECTION')")
+    @RequestMapping(value = "/readonly",method = GET)
+    public String viewMonitoringOfficerInReadOnly(@PathVariable("projectId") Long projectId, Model model) {
+
+        ProjectMonitoringOfficerViewModel viewModel = getMonitoringOfficerViewModel(projectId);
+        model.addAttribute("model", viewModel);
+        model.addAttribute("readOnlyView", true);
+        return "project/monitoring-officer";
+    }
+
+
     private ProjectMonitoringOfficerViewModel getMonitoringOfficerViewModel(Long projectId) {
         ProjectResource project = projectService.getById(projectId);
         Optional<MonitoringOfficerResource> monitoringOfficer = projectService.getMonitoringOfficerForProject(projectId);

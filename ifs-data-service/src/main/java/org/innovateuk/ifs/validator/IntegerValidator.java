@@ -24,7 +24,7 @@ public class IntegerValidator extends BaseValidator {
         String responseValue = response.getValue();
         BigDecimal value = toBigDecimal(responseValue);
         if (value == null){
-            rejectValue(errors, "value", "validation.standard.non.negative.integer.format");
+            rejectValue(errors, "value", "validation.field.must.not.be.blank");
         }
         else {
             if (fractionalPartLength(value) > 0){

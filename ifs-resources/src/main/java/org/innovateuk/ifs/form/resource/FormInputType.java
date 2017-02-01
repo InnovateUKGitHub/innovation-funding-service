@@ -83,6 +83,10 @@ public enum FormInputType implements Identifiable {
         return ACADEMIC_FINANCE_TYPES.contains(this);
     }
 
+    public boolean isDisplayableFinancialSummaryType() {
+        return FINANCIAL_SUMMARY_TYPES.contains(this);
+    }
+
     public boolean isDisplayableFinanceType(String financeView) {
 
         switch (financeView) {
@@ -90,10 +94,6 @@ public enum FormInputType implements Identifiable {
             case "academic-finance": return isDisplayableAcademicFinanceType();
             default: throw new IllegalArgumentException("Don't know how to filter financial fields based on view " + financeView);
         }
-    }
-
-    public boolean isDisplayableFinancialSummaryType() {
-        return FINANCIAL_SUMMARY_TYPES.contains(this);
     }
 
     public boolean isDisplayablePrintType() {

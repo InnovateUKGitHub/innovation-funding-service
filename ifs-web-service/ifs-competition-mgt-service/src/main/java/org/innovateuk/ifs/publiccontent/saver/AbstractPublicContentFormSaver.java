@@ -8,6 +8,10 @@ import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+/**
+ * Abstract class to save all public content section forms.
+ * @param <F> the form class.
+ */
 public abstract class AbstractPublicContentFormSaver<F extends AbstractPublicContentForm> implements PublicContentFormSaver<F> {
 
     @Autowired

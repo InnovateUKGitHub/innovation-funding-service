@@ -3,6 +3,9 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -56,6 +59,7 @@ import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -143,6 +147,14 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
+
+        ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
+        when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        financeViewModel.setOrganisationGrantClaimPercentage(76);
+
+        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 
     @Test

@@ -2,18 +2,24 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationNavigationPopulator;
 import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
+import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
 import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
+import org.innovateuk.ifs.project.finance.view.ProjectFinanceFormHandler;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -42,8 +48,6 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -71,21 +75,19 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
     @Mock
     private Model model;
 
-    private OrganisationResource industrialOrganisation = newOrganisationResource().
-            withName("Industrial Org").
-            withOrganisationSize(OrganisationSize.MEDIUM).
-            withCompanyHouseNumber("123456789").
-            withOrganisationTypeName("Business").
-            build();
+    @Mock
+    private ProjectFinanceRowService financeRowService;
 
-    private OrganisationResource academicOrganisation = newOrganisationResource().
-            withName("Academic Org").
-            withOrganisationSize(OrganisationSize.LARGE).
-            build();
+    @Mock
+    private ProjectFinanceFormHandler projectFinanceFormHandler;
+
+    private OrganisationResource industrialOrganisation;
+
+    private OrganisationResource academicOrganisation;
 
     private ApplicationResource application = newApplicationResource().withId(123L).build();
 
-    private ProjectResource project = newProjectResource().withName("Project1").withApplication(application).build();
+    private ProjectResource project = newProjectResource().withId(1L).withName("Project1").withApplication(application).build();
 
     private FinanceCheckEligibilityResource eligibilityOverview = newFinanceCheckEligibilityResource().build();
 
@@ -106,6 +108,20 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         application = applications.get(0);
         project.setApplication(application.getId());
 
+        industrialOrganisation = newOrganisationResource().
+                withId(2L).
+                withName("Industrial Org").
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withCompanyHouseNumber("123456789").
+                withOrganisationTypeName("Business").
+                build();
+
+        academicOrganisation = newOrganisationResource().
+                withId(1L).
+                withName("Academic Org").
+                withOrganisationSize(OrganisationSize.LARGE).
+                build();
+
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
@@ -120,6 +136,12 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
         when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(financeHandler.getProjectFinanceModelManager("Business")).thenReturn(defaultProjectFinanceModelManager);
+        when(financeHandler.getProjectFinanceFormHandler("Business")).thenReturn(projectFinanceFormHandler);
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        financeViewModel.setOrganisationGrantClaimPercentage(74);
+
+        when(defaultProjectFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 
     @Test
@@ -166,13 +188,6 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         eligibility.setEligibilityApprovalUserFirstName("Lee");
         eligibility.setEligibilityApprovalUserLastName("Bowman");
 
-        when(projectService.getById(project.getId())).thenReturn(project);
-        when(applicationService.getById(application.getId())).thenReturn(application);
-        when(organisationService.getOrganisationById(industrialOrganisation.getId())).thenReturn(industrialOrganisation);
-
-        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
-
-        when(financeCheckServiceMock.getFinanceCheckEligibilityDetails(project.getId(), industrialOrganisation.getId())).thenReturn(eligibilityOverview);
         when(projectFinanceService.getEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
     }
 
@@ -180,7 +195,7 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
 
         Map<String, Object> model = result.getModelAndView().getModel();
 
-        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("model");
+        FinanceChecksEligibilityViewModel viewModel = (FinanceChecksEligibilityViewModel) model.get("summaryModel");
 
         assertEquals(expectedIsLeadPartnerOrganisation, viewModel.isLeadPartnerOrganisation());
         assertTrue(viewModel.getApplicationId().equals(application.getFormattedId()));
@@ -364,6 +379,41 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
 
         verify(projectFinanceService).saveEligibility(projectId, organisationId, Eligibility.REVIEW, EligibilityRagStatus.GREEN);
 
+    }
+
+    @Test
+    public void testAjaxAddCost() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        Long questionId = 3L;
+
+        FinanceRowItem costItem = new Materials();
+        when(projectFinanceFormHandler.addCostWithoutPersisting(anyLong(), anyLong(), anyLong())).thenReturn(costItem);
+        mockMvc.perform(
+                get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/add_cost/{questionId}", projectId, organisationId, questionId)).
+                andExpect(status().isOk());
+    }
+
+    @Test
+    public void testAjaxRemoveCost() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+        Long costId = 3L;
+
+        mockMvc.perform(
+                get("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/remove_cost/{costId}", projectId, organisationId, costId)).
+                andExpect(status().isOk());;
+    }
+
+    @Test
+    public void testProjectFinanceFormSubmit() throws Exception {
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        mockMvc.perform(post("/project/{projectId}/finance-check/organisation/{organisationId}/eligibility", projectId, organisationId).
+                        param("save-eligibility", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/" + projectId + "/finance-check/organisation/" + 2 +"/eligibility"));
     }
 
     @Override

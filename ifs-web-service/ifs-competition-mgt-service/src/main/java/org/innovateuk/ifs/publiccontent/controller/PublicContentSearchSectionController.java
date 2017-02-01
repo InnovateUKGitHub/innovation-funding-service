@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
-import org.innovateuk.ifs.publiccontent.form.SearchForm;
+import org.innovateuk.ifs.publiccontent.form.SearchInformationForm;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
-import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentSearchFormPopulator;
-import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentSearchModelPopulator;
+import org.innovateuk.ifs.publiccontent.formpopulator.SearchInformationFormPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.SearchInformationViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
-import org.innovateuk.ifs.publiccontent.saver.PublicContentSearchFormSaver;
-import org.innovateuk.ifs.publiccontent.viewmodel.SearchViewModel;
+import org.innovateuk.ifs.publiccontent.saver.SearchInformationFormSaver;
+import org.innovateuk.ifs.publiccontent.viewmodel.SearchInformationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -19,30 +19,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/setup/public-content/search")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class PublicContentSearchSectionController extends AbstractPublicContentSectionController<SearchViewModel, SearchForm> {
+public class PublicContentSearchSectionController extends AbstractPublicContentSectionController<SearchInformationViewModel, SearchInformationForm> {
 
     @Autowired
-    private PublicContentSearchFormPopulator publicContentSearchFormPopulator;
+    private SearchInformationFormPopulator searchInformationFormPopulator;
 
     @Autowired
-    private PublicContentSearchModelPopulator publicContentSearchModelPopulator;
+    private SearchInformationViewModelPopulator searchInformationViewModelPopulator;
 
     @Autowired
-    private PublicContentSearchFormSaver publicContentSearchFormSaver;
+    private SearchInformationFormSaver searchInformationFormSaver;
 
     @Override
-    protected PublicContentViewModelPopulator<SearchViewModel> modelPopulator() {
-        return publicContentSearchModelPopulator;
+    protected PublicContentViewModelPopulator<SearchInformationViewModel> modelPopulator() {
+        return searchInformationViewModelPopulator;
     }
 
     @Override
-    protected PublicContentFormPopulator<SearchForm> formPopulator() {
-        return publicContentSearchFormPopulator;
+    protected PublicContentFormPopulator<SearchInformationForm> formPopulator() {
+        return searchInformationFormPopulator;
     }
 
     @Override
-    protected PublicContentFormSaver<SearchForm> formSaver() {
-        return publicContentSearchFormSaver;
+    protected PublicContentFormSaver<SearchInformationForm> formSaver() {
+        return searchInformationFormSaver;
     }
 
 }

@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * The resouce for a public content section.
+ * The resource for a public content section.
  */
 public class PublicContentSectionResource {
     private Long id;
