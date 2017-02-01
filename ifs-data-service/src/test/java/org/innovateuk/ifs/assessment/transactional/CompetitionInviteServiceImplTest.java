@@ -138,6 +138,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
         when(profileRepositoryMock.findOne(user.getProfileId())).thenReturn(profile);
 
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
+
         ReflectionTestUtils.setField(service, "webBaseUrl", "https://ifs-local-dev");
     }
 

@@ -26,6 +26,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -122,6 +123,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -350,9 +354,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private CompetitionInvite sendInvite(CompetitionInvite invite, EmailContent content) {
-        invite.setSentOn(LocalDateTime.now());
-        invite.setSentBy(getSender());
-        competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
+        competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), LocalDateTime.now())));
 
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR, emptyMap());

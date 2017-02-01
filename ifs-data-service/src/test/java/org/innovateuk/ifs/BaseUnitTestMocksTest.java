@@ -83,6 +83,7 @@ import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -555,6 +556,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UsersRolesService usersRolesServiceMock;
+
+    @Mock
+    protected LoggedInUserSupplier loggedInUserSupplierMock;
 
     @Before
     public void setupMockInjection() {
