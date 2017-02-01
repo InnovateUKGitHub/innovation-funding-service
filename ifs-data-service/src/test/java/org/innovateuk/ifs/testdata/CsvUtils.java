@@ -239,6 +239,8 @@ class CsvUtils {
         String targetName;
         String ownerName;
         String innovationAreaName;
+        String sentByEmail;
+        LocalDateTime sentOn;
 
         private InviteLine(List<String> line) {
             int i = 0;
@@ -250,6 +252,8 @@ class CsvUtils {
             targetName = line.get(i++);
             ownerName = line.get(i++);
             innovationAreaName = line.get(i++);
+            sentByEmail = nullable(line.get(i++));
+            sentOn = nullableDateTime(line.get(i++));
         }
     }
 
