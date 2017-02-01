@@ -14,6 +14,7 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
+import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
@@ -411,15 +412,23 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         } else if (participant.getStatus() == REJECTED) {
             return ServiceResult.serviceFailure(new Error(COMPETITION_PARTICIPANT_CANNOT_ACCEPT_ALREADY_REJECTED_INVITE, getInviteCompetitionName(participant)));
         } else {
-          return
-                  getProfileForUser(user)
-                          .andOnSuccessReturn(
-                                  profile -> participant
-                                          .getInvite()
-                                          .ifNewAssessorInvite( invite -> profile.addInnovationArea(invite.getInnovationArea()) )
-                          )
-                          .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+            return
+                    applyInnovationAreaToUserProfile(participant, user)
+                            .andOnSuccessReturn(() -> participant.acceptAndAssignUser(user));
+        }
+    }
 
+    private ServiceResult<Participant> applyInnovationAreaToUserProfile(CompetitionParticipant participant, User user) {
+        if (participant.getInvite().isNewAssessorInvite()) {
+            return getProfileForUser(user).andOnSuccessReturn(
+                    profile -> {
+                        profile.addInnovationArea(participant.getInvite().getInnovationArea());
+                        return participant;
+                    }
+            );
+        }
+        else {
+            return serviceSuccess(participant);
         }
     }
 
