@@ -5,8 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 
 import org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesController;
-import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesNewQueryForm;
-import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -18,11 +16,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.validation.MapBindingResult;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.HashMap;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
@@ -32,7 +28,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -92,7 +87,38 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(applicantOrganisationId, queryViewModel.getOrganisationId());
         assertEquals(projectId, queryViewModel.getProjectId());
 
-        assertTrue(queryDataLoadedCorrectly(queryViewModel));
+        assertEquals(2, queryViewModel.getQueries().size());
+        assertEquals("Query title", queryViewModel.getQueries().get(0).getTitle());
+        assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(0).getSectionType());
+        assertEquals(false, queryViewModel.getQueries().get(0).isAwaitingResponse());
+        assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(0).getOrganisationId());
+        assertEquals(projectId, queryViewModel.getQueries().get(0).getProjectId());
+        assertEquals(1L, queryViewModel.getQueries().get(0).getId().longValue());
+        assertEquals(2, queryViewModel.getQueries().get(0).getViewModelPosts().size());
+        assertEquals("Question", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getPostBody());
+        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUserId());
+        assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUsername());
+        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getCreatedOn()));
+        assertEquals(1, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().size());
+        assertEquals(23L, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().get(0).getFileEntryId().longValue());
+        assertEquals("file0", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().get(0).getFilename());
+        assertEquals("Response", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getPostBody());
+        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUserId());
+        assertEquals("B Z - Org1", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUsername());
+        assertTrue(LocalDateTime.now().plusMinutes(20L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getCreatedOn()));
+        assertEquals(0, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getViewModelAttachments().size());
+        assertEquals("Query2 title", queryViewModel.getQueries().get(1).getTitle());
+        assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(1).getSectionType());
+        assertEquals(true, queryViewModel.getQueries().get(1).isAwaitingResponse());
+        assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(1).getOrganisationId());
+        assertEquals(projectId, queryViewModel.getQueries().get(1).getProjectId());
+        assertEquals(3L, queryViewModel.getQueries().get(1).getId().longValue());
+        assertEquals(1, queryViewModel.getQueries().get(1).getViewModelPosts().size());
+        assertEquals("Question2", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getPostBody());
+        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUserId());
+        assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUsername());
+        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getCreatedOn()));
+        assertEquals(0, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getViewModelAttachments().size());
     }
 
     @Test
@@ -107,44 +133,6 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("", response.getContentAsString());
         assertEquals(null, response.getHeader("Content-Disposition"));
         assertEquals(0, response.getContentLength());
-    }
-
-    private boolean queryDataLoadedCorrectly(FinanceChecksQueriesViewModel queryViewModel) {
-        boolean result = true;
-        result &= 2 == queryViewModel.getQueries().size();
-        result &= "Query title".equals(queryViewModel.getQueries().get(0).getTitle());
-        result &= FinanceChecksSectionType.ELIGIBILITY.equals(queryViewModel.getQueries().get(0).getSectionType());
-        result &= false == queryViewModel.getQueries().get(0).isAwaitingResponse();
-        result &= applicantOrganisationId == queryViewModel.getQueries().get(0).getOrganisationId();
-        result &= projectId == queryViewModel.getQueries().get(0).getProjectId();
-        result &= 1L == queryViewModel.getQueries().get(0).getId();
-        result &= 2 == queryViewModel.getQueries().get(0).getViewModelPosts().size();
-        result &= "Question".equals(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getPostBody());
-        result &= financeTeamUserId == queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUserId();
-        result &= "A Z - Innovate (Finance team)".equals(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUsername());
-        result &= LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getCreatedOn());
-        result &= 1 == queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().size();
-        result &= 23L == queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().get(0).getFileEntryId();
-        result &= "file0".equals(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().get(0).getFilename());
-        result &= "Response".equals(queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getPostBody());
-        result &= applicantFinanceContactUserId == queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUserId();
-        result &= "B Z - Org1".equals(queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUsername());
-        result &= LocalDateTime.now().plusMinutes(20L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getCreatedOn());
-        result &= 0 == queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getViewModelAttachments().size();
-        result &= "Query2 title".equals(queryViewModel.getQueries().get(1).getTitle());
-        result &= FinanceChecksSectionType.ELIGIBILITY.equals(queryViewModel.getQueries().get(1).getSectionType());
-        result &= true == (queryViewModel.getQueries().get(1).isAwaitingResponse());
-        result &= applicantOrganisationId.equals(queryViewModel.getQueries().get(1).getOrganisationId());
-        result &= projectId.equals(queryViewModel.getQueries().get(1).getProjectId());
-        result &= 3L == queryViewModel.getQueries().get(1).getId();
-        result &= 1 == queryViewModel.getQueries().get(1).getViewModelPosts().size();
-        result &= "Question2".equals(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getPostBody());
-        result &= financeTeamUserId.equals(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUserId());
-        result &= "A Z - Innovate (Finance team)".equals(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUsername());
-        result &= LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getCreatedOn());
-        result &= 0 == queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getViewModelAttachments().size();
-
-        return result;
     }
 
     @Override

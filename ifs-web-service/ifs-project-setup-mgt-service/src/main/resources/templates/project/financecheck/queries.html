@@ -9,7 +9,7 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content">
+<main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
 
@@ -35,14 +35,14 @@
     </p>
     <div class="grid-row extra-margin-top">
         <div class="column-half">
-            <a id="post-new-query" th:href="@{/${model.baseUrl}/new-query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${model.querySection})}" class="button button-large">Post a new query</a>
+            <a id="post-new-query" th:href="@{{baseUrl}/new-query(baseUrl=${baseUrl},query_section=${model.querySection})}" class="button button-large" th:test="${baseUrl}">Post a new query</a>
         </div>
     </div>
 
     <th:block th:each="query : ${model.getQueries()}">
         <hr />
         <h2 class="heading-medium non-margin-bottom" th:text="${query.title}">Query Thread Title</h2>
-        <h3 class="heading-small no-margin" th:text="${query.sectionType}">Query Thread Section</h3>
+        <h3 class="heading-small no-margin" th:text="${#strings.capitalize(#strings.toLowerCase(query.sectionType))}">Query Thread Section</h3>
         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
             <th:block th:if="${iteration.index == 0}">
                 <p class="heading-small no-margin">
@@ -52,7 +52,7 @@
                 <p th:text="${post.postBody}"></p>
                 <legend th:if="${post.viewModelAttachments.size() > 0}" class="heading-small">Supporting documentation</legend>
                 <th:block th:each="attachment : ${post.viewModelAttachments}">
-                    <a th:href="@{/${model.baseUrl}/attachment/{attachmentId}(projectId=${model.projectId},organisationId=${model.organisationId},attachmentId=${attachment.localFileId})}" th:text="${attachment.filename}">file</a>
+                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.localFileId})}" th:text="${attachment.filename}">file</a>
                 </th:block>
             </th:block>
             <th:block th:unless="${iteration.index == 0}">
@@ -64,7 +64,7 @@
                     <p th:text="${post.postBody}"></p>
                     <h3 th:if="${post.viewModelAttachments.size() > 0}" class="heading-small">Supporting documentation</h3>
                     <th:block th:each="attachment : ${post.viewModelAttachments}">
-                        <a th:href="@{/${model.baseUrl}/attachment/{attachmentId}(projectId=${model.projectId},organisationId=${model.organisationId},attachmentId=${attachment.localFileId})}" th:text="${attachment.filename}">file</a>
+                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.localFileId})}" th:text="${attachment.filename}">file</a>
                     </th:block>
                 </div>
             </th:block>
@@ -72,7 +72,7 @@
         <hr />
         <th:block th:if="${!query.awaitingResponse}">
             <div class="grid-row extra-margin-top">
-                <div class="column-half"><a id="post-new-response" th:href="@{/${model.baseUrl}/{queryId}/new-response(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${model.querySection},queryId=${query.id})}" class="button button-secondary">Respond</a><br />
+                <div class="column-half"><a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="button button-secondary">Respond</a><br />
                 </div>
             </div>
         </th:block>

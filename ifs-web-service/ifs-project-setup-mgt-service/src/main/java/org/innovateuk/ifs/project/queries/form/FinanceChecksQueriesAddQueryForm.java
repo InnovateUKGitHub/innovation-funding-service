@@ -4,12 +4,13 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotBlank;
 import org.innovateuk.ifs.commons.validation.constraints.EnumValidator;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
+import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.Size;
 
-public class FinanceChecksQueriesNewQueryForm {
+public class FinanceChecksQueriesAddQueryForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.notesandqueries.query.required}")
     @Size(max = FinanceChecksQueriesFormConstraints.MAX_QUERY_CHARACTERS, message = "{validation.notesandqueries.query.character.length.max}")
@@ -63,7 +64,7 @@ public class FinanceChecksQueriesNewQueryForm {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        FinanceChecksQueriesNewQueryForm that = (FinanceChecksQueriesNewQueryForm) o;
+        FinanceChecksQueriesAddQueryForm that = (FinanceChecksQueriesAddQueryForm) o;
 
         if (query != null ? !query.equals(that.query) : that.query != null) return false;
         if (title != null ? !title.equals(that.title) : that.title != null) return false;

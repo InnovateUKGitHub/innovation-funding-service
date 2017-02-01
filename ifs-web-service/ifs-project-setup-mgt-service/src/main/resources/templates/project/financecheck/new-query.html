@@ -9,7 +9,7 @@
 <div th:include="fragments/layout :: body-start" th:remove="tag" />
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<main id="content">
+<main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
 
@@ -34,7 +34,7 @@
         You must confirm any finance changes with the contact before you approve.
     </p>
 
-    <form class="extra-margin" th:action="@{/${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+    <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
         <fieldset>
             <legend class="heading-medium">Post new query</legend>
             <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
@@ -118,7 +118,8 @@
             <fieldset>
                 <legend class="heading-small">Supporting documentation</legend>
                 <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                    <a th:href="@{/${model.baseUrl}/attachment/{attachmentId}(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a><br />
+                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                    <button name="removeAttachment" class="button-secondary no-margin" th:value="${attachmentId}">Remove</button><br />
                 </th:block>
             </fieldset>
         </th:block>
@@ -142,7 +143,7 @@
                 <button class="button button-large no-margin">Post Query</button>
             </div>
             <div class="column-half alignright">
-                <a th:href="@{/${model.baseUrl}/cancel(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${model.querySection})}">Cancel</a>
+                <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
             </div>
         </div>
     </form>

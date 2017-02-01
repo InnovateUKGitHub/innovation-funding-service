@@ -121,7 +121,6 @@
         <button th:if="${model.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
         <a th:if="${model.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
     </form>
-
     <th:block th:include="fragments/layout :: main-content-end" />
 </main>
 <th:block th:include="fragments/layout :: footer" />
