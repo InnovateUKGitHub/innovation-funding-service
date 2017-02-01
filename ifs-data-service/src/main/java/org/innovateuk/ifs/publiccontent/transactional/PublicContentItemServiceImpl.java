@@ -3,6 +3,7 @@ package org.innovateuk.ifs.publiccontent.transactional;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
@@ -24,6 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -49,9 +51,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     @Autowired
     private CompetitionRepository competitionRepository;
 
-    private static Integer MAX_ALLOWED_KEYWORDS = 10;
+    public static Integer MAX_ALLOWED_KEYWORDS = 10;
 
-    private static Integer DEFAULT_PAGESIZE = 20;
+    public static Integer DEFAULT_PAGESIZE = 20;
 
     @Override
     public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
@@ -59,6 +61,10 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         Optional<Set<Long>> publicContentIds = getSearchString(searchString);
 
         Page<PublicContent> publicContentPage = getPublicContentPage(competitionIds, publicContentIds, pageNumber, pageSize);
+
+        if(null == publicContentPage) {
+            return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND));
+        }
 
         return ServiceResult.serviceSuccess(mapPageToPageItemResource(publicContentPage));
     }
@@ -95,12 +101,14 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
         innovationAreaId.ifPresent(id -> {
             InnovationArea innovationArea = innovationAreaRepository.findOne(id);
-            competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getSector().getId()).stream()
-                    .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
-                    .collect(Collectors.toList()));
+            if(null != innovationArea) {
+                competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getSector().getId()).stream()
+                        .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
+                        .collect(Collectors.toList()));
+            }
         });
 
-        return !competitionIds.isEmpty() ? Optional.ofNullable(competitionIds) : Optional.empty();
+        return innovationAreaId.isPresent() ? Optional.of(competitionIds) : Optional.empty();
     }
 
     private Optional<Set<Long>> getSearchString(Optional<String> searchString) {
@@ -123,7 +131,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             keywords.forEach(keyword -> publicContentIds.add(keyword.getPublicContent().getId()));
         });
 
-        return !publicContentIds.isEmpty() ? Optional.ofNullable(publicContentIds) : Optional.empty();
+        return searchString.isPresent() ? Optional.of(publicContentIds) : Optional.empty();
     }
 
     private Pageable getPageable(Optional<Integer> pageNumber, Optional<Integer> pageSize) {
@@ -146,7 +154,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
         List<PublicContentItemResource> publicContentItemResources = new ArrayList<>();
 
-        publicContentList.forEach(publicContent -> {
+        publicContentList.getContent().forEach(publicContent -> {
             PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
 
             Competition competition = competitionRepository.findById(publicContent.getCompetitionId());
