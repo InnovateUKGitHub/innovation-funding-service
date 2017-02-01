@@ -9,11 +9,11 @@ import java.util.List;
 /**
  * Interface for CRUD operations on {@link FinanceRowItem} related data.
  */
-public interface FinanceRowRestService {
-    RestResult<ValidationMessages> add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem);
-    RestResult<FinanceRowItem> addWithoutPersisting(Long applicationFinanceId, Long questionId);
-    RestResult<List<FinanceRowItem>> getCosts(Long applicationFinanceId);
+public interface ProjectFinanceRowRestService {
+    RestResult<ValidationMessages> add(Long projectFinanceId, Long questionId, FinanceRowItem costItem);
     RestResult<ValidationMessages> update(FinanceRowItem costItem);
-    RestResult<FinanceRowItem> findById(Long id);
     RestResult<Void> delete(Long costId);
+    RestResult<FinanceRowItem> addWithoutPersisting(Long projectFinanceId, Long questionId);
+    RestResult<List<FinanceRowItem>> getCosts(Long projectFinanceId);
+    RestResult<FinanceRowItem> findById(Long id);
 }

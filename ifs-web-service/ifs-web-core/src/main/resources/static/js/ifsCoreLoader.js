@@ -39,5 +39,11 @@ IFS.core.loadOrder = {
       IFS.core.mirrorElements.init()
       IFS.core.debug.init()
     }
+  },
+  //  this should be in a seperate project setup management area loader, however that nidyke doesn't contain any custom js therefore we load this here.
+  'eligibility-form': {
+    init: function () {
+      IFS.core.repeatableFinanceRows.init()
+    }
   }
 }
