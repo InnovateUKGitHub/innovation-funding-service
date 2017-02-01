@@ -6,15 +6,15 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
 import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
-import org.innovateuk.ifs.management.viewmodel.AllApplicationsRowViewModel;
-import org.innovateuk.ifs.management.viewmodel.AllApplicationsViewModel;
-import org.innovateuk.ifs.management.viewmodel.ApplicationsMenuViewModel;
+import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -39,6 +39,10 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     @InjectMocks
     @Spy
     private AllApplicationsPageModelPopulator allApplicationsPageModelPopulator;
+
+    @InjectMocks
+    @Spy
+    private SubmittedApplicationsModelPopulator submittedApplicationsModelPopulator;
 
     @Override
     protected CompetitionManagementApplicationsController supplyControllerUnderTest() {
@@ -127,5 +131,59 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
         assertEquals(expectedApplicationRows, model.getApplications());
+    }
+
+    @Test
+    public void submittedApplications() throws Exception {
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] innovationAreas = {"Innovation Area 1", "Innovation Area 1", "Innovation Area 1"};
+        Integer[] numberOfPartners = {5, 10, 12};
+        BigDecimal[] grantRequested = {BigDecimal.valueOf(1000), BigDecimal.valueOf(2000), BigDecimal.valueOf(3000)};
+        BigDecimal[] totalProjectCost = {BigDecimal.valueOf(5000), BigDecimal.valueOf(10000), BigDecimal.valueOf(15000)};
+        Long[] durations = {10L, 20L, 30L};
+
+        List<SubmittedApplicationsRowViewModel> expectedApplicationRows = asList(
+                new SubmittedApplicationsRowViewModel(ids[0], titles[0], leads[0], innovationAreas[0], numberOfPartners[0], grantRequested[0], totalProjectCost[0], durations[0]),
+                new SubmittedApplicationsRowViewModel(ids[1], titles[1], leads[1], innovationAreas[1], numberOfPartners[1], grantRequested[1], totalProjectCost[1], durations[1]),
+                new SubmittedApplicationsRowViewModel(ids[2], titles[2], leads[2], innovationAreas[2], numberOfPartners[2], grantRequested[2], totalProjectCost[2], durations[2])
+        );
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withInnovationArea(innovationAreas)
+                .withNumberOfPartners(numberOfPartners)
+                .withGrantRequested(grantRequested)
+                .withTotalProjectCost(totalProjectCost)
+                .withDuration(durations)
+                .build(3);
+
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(expectedSummaries);
+
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/submitted", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/submitted-applications"))
+                .andReturn();
+
+        SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
+        assertEquals(defaultExpectedCompetitionSummary.getAssessorDeadline(), model.getAssessmentDeadline());
+        assertEquals(expectedApplicationRows, model.getApplications());
+
     }
 }
