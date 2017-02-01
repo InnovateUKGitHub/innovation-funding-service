@@ -120,18 +120,18 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionStatusOpen(){
+    public void competitionStatusOpen() {
         assertEquals(OPEN, competition.getCompetitionStatus());
     }
 
     @Test
-    public void competitionStatusReadyToOpen(){
+    public void competitionStatusReadyToOpen() {
         competition.setStartDate(LocalDateTime.now().plusDays(1));
         assertEquals(READY_TO_OPEN, competition.getCompetitionStatus());
     }
 
     @Test
-    public void competitionClosingSoon(){
+    public void competitionClosingSoon() {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
@@ -140,7 +140,7 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionNotClosingSoon(){
+    public void competitionNotClosingSoon() {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
@@ -149,32 +149,46 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionStatusInAssessment(){
+    public void competitionStatusInAssessment() {
         competition.setEndDate(LocalDateTime.now().minusDays(1));
         competition.notifyAssessors(LocalDateTime.now().minusDays(1));
         competition.setFundersPanelDate(LocalDateTime.now().plusDays(1));
         assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void competitionStatusInAssessment_notMoreThanOnce() throws Exception {
+    @Test
+    public void competitionStatusInAssessment_notCompetitionClosed() throws Exception {
         competition.setEndDate(LocalDateTime.now().minusDays(3));
         competition.notifyAssessors(LocalDateTime.now().minusDays(2));
         competition.closeAssessment(LocalDateTime.now().minusDays(1));
-        competition.notifyAssessors(LocalDateTime.now());
+
+        try {
+            competition.notifyAssessors(LocalDateTime.now());
+        } catch (IllegalStateException e) {
+            assertEquals("Tried to notify assessors when in competitionStatus=FUNDERS_PANEL. " +
+                    "Applications can only be distributed when competitionStatus=CLOSED", e.getMessage());
+        }
     }
 
     @Test
-    public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent(){
+    public void competitionStatusInAssessment_alreadyInAssessment() throws Exception {
+        competition.setEndDate(LocalDateTime.now().minusDays(3));
+        competition.notifyAssessors(LocalDateTime.now().minusDays(2));
+        competition.notifyAssessors(LocalDateTime.now().minusDays(1));
+        assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent() {
         competition.setEndDate(LocalDateTime.now().minusDays(5));
         competition.notifyAssessors(LocalDateTime.now().minusDays(4));
         competition.closeAssessment(LocalDateTime.now().minusDays(3));
         competition.setFundersPanelDate(LocalDateTime.now().minusDays(2));
         assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
     }
-    
+
     @Test
-    public void competitionStatusFundersPanelAsFundersPanelEndDatePresentButInFuture(){
+    public void competitionStatusFundersPanelAsFundersPanelEndDatePresentButInFuture() {
         competition.setEndDate(LocalDateTime.now().minusDays(6));
         competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(5));
         competition.notifyAssessors(LocalDateTime.now().minusDays(4));
@@ -183,9 +197,9 @@ public class CompetitionTest {
         competition.setFundersPanelEndDate(LocalDateTime.now().plusDays(1));
         assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
     }
-    
+
     @Test
-    public void competitionStatusAssessorFeedback(){
+    public void competitionStatusAssessorFeedback() {
         competition.setEndDate(LocalDateTime.now().minusDays(6));
         competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(5));
         competition.notifyAssessors(LocalDateTime.now().minusDays(4));
