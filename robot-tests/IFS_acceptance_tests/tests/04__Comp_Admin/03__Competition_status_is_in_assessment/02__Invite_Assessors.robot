@@ -47,9 +47,9 @@ The User can Add and Remove Assessors
     [Teardown]    The user clicks the button/link    link=Find
 
 The user can select the profile link
-    [Documentation]    INFUND-6999
+    [Documentation]    INFUND-6669
     [Tags]
-    Given the user clicks the button/link    link=Will Smith
+    When the user clicks the button/link    link=Will Smith
     Then the user should see the text in the page    will.smith@gmail.com
     And the user should see the text in the page    028572565937
     And the user should see the text in the page    Solar energy research

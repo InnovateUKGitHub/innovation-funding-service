@@ -28,12 +28,8 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
                 .withDisplayInAssessmentApplicationSummary(true);
     }
 
-    public SectionResourceBuilder withQuestions(List<Long> questions) {
-        return with(section -> section.setQuestions(questions));
-    }
-
-    public SectionResourceBuilder withQuestionSets(List<List<Long>> questionSets) {
-        return withList(questionSets, (questions, section) -> section.setQuestions(questions));
+    public SectionResourceBuilder withQuestions(List<Long>... questions) {
+        return withArraySetFieldByReflection("questions", questions);
     }
 
     public SectionResourceBuilder withDisplayInAssessmentApplicationSummary(boolean displayInSummary) {
@@ -67,7 +63,7 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
         return withArray((description, object) -> setField("description", description, object), descriptions);
     }
 
-    public SectionResourceBuilder withassessorGuidanceDescription(String... assessorGuidanceDescriptions) {
+    public SectionResourceBuilder withAssessorGuidanceDescription(String... assessorGuidanceDescriptions) {
         return withArray((assessorGuidanceDescription, object) -> setField("assessorGuidanceDescription", assessorGuidanceDescription, object), assessorGuidanceDescriptions);
     }
 
@@ -81,10 +77,6 @@ public class SectionResourceBuilder extends BaseBuilder<SectionResource, Section
 
     public SectionResourceBuilder withCompetition(Long... competitions) {
         return withArray((competition, object) -> setField("competition", competition, object), competitions);
-    }
-
-    public SectionResourceBuilder withQuestions(List<Long>... questionss) {
-        return withArray((questions, object) -> setField("questions", questions, object), questionss);
     }
 
     public SectionResourceBuilder withParentSection(Long... parentSections) {

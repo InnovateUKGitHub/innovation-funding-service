@@ -12,35 +12,30 @@ ${email_success_message}    We are pleased to inform you that your application
 ${email_failure_message}    Unfortunately Innovate UK is unable to fund
 
 *** Test Cases ***
-Comp admin can visit a competition page at "Funder's Panel" stage and the option to notify applicants is disabled
+Notify applicants should be disabled
     [Documentation]    INFUND-2601
     [Tags]    HappyPath
-    When the user navigates to the page    ${funders_panel_competition_url}
+    Given The user clicks the button/link    link=${FUNDERS_PANEL_COMPETITION_NAME}
+    When The user clicks the button/link    jQuery=.button:contains("Application")
     Then the user should see the text in the page    Funders Panel
-    And the user should see the element    css=h2.bold-small.blue-block
     And the option to notify applicants is disabled
 
-If a Fund Project option is chosen for each application then the option to notify applicants is enabled
+User should be able to Notify applicants when the fund project have chosen
     [Documentation]    INFUND-2601
     [Tags]    HappyPath
     When the user selects the option from the drop-down menu    Yes    id=fund24
     And the user selects the option from the drop-down menu    No    id=fund25
     Then the option to notify applicants is enabled
 
-Comp admin can navigate away from the page and the fund project options persist
+Autosave of the page should work
     [Documentation]    INFUND-2885
     [Tags]
     When the user reloads the page
     Then the user should see the dropdown option selected    Yes    id=fund24
     And the user should see the dropdown option selected    No    id=fund25
     And the option to notify applicants is enabled
-    When the user navigates to the page    ${competition_details_url}
-    And the user navigates to the page    ${funders_panel_competition_url}
-    Then the user should see the dropdown option selected    Yes    id=fund24
-    And the user should see the dropdown option selected    No    id=fund25
-    And the option to notify applicants is enabled
 
-Comp admin can unselect a Fund Project and the option to notify applicants become disabled
+When a Fund Project option is unselected the Notify button become disabled
     [Documentation]    INFUND-2601
     [Tags]
     When the user selects the option from the drop-down menu    -    id=fund24
@@ -82,7 +77,7 @@ Successful applicants are notified of the funding decision
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user reads his email from the second default mailbox   worth.email.test.two+fundfailure@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    unable to fund your application
+    Then the user reads his email from the second default mailbox    worth.email.test.two+fundfailure@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    unable to fund your application
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604
@@ -103,7 +98,7 @@ Successful applicants can see the assessment outcome on the overview page
 Unsuccessful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2605
     [Tags]
-    [Setup]    Log in as a different user   &{unsuccessful_applicant_credentials}
+    [Setup]    Log in as a different user    &{unsuccessful_applicant_credentials}
     When the user navigates to the page    ${server}
     Then the user should not see the text in the page    Projects in setup
     And the unsuccessful application shows in the previous applications section

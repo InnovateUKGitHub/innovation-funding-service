@@ -36,7 +36,6 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
-import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -44,6 +43,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NO;
 import static org.innovateuk.ifs.user.resource.Gender.NOT_STATED;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -61,7 +61,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String email = "email@example.com";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
@@ -134,7 +134,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String hash = "inviteHashNotExists";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
@@ -164,7 +164,7 @@ public class AssessorServiceImplTest extends BaseUnitTestMocksTest {
         String hash = "testhash";
 
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withFirstName("First")
                 .withLastName("Last")
                 .withPhoneNumber("01234 567890")
