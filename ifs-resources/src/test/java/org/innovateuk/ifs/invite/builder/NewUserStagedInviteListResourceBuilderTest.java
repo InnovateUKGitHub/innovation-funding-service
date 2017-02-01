@@ -21,7 +21,7 @@ public class NewUserStagedInviteListResourceBuilderTest {
                 .withName("Tester 1", "Tester2")
                 .withEmail("test1@test.com", "test2@test.com")
                 .withCompetitionId(expectedCompetitionId)
-                .withInnovationCategoryId(expectedInnovationCategoryId)
+                .withInnovationAreaId(expectedInnovationCategoryId)
                 .build(2);
 
         NewUserStagedInviteListResource newUserInviteList = newNewUserStagedInviteListResource()
@@ -39,13 +39,13 @@ public class NewUserStagedInviteListResourceBuilderTest {
                 .withName("Tester 1", "Tester2")
                 .withEmail("test1@test.com", "test2@test.com")
                 .withCompetitionId(7L, 11L)
-                .withInnovationCategoryId(13L, 17L)
+                .withInnovationAreaId(13L, 17L)
                 .build(2);
         List<NewUserStagedInviteResource> expectedInvites2 = newNewUserStagedInviteResource()
                 .withName("Tester 3", "Tester4")
                 .withEmail("test3@test.com", "test4@test.com")
                 .withCompetitionId(20L, 25L)
-                .withInnovationCategoryId(10L, 11L)
+                .withInnovationAreaId(10L, 11L)
                 .build(2);
 
         List<NewUserStagedInviteListResource> newUserInviteLists = newNewUserStagedInviteListResource()

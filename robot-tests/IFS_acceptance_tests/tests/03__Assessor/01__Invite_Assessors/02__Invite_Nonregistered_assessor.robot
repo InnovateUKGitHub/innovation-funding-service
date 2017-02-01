@@ -48,7 +48,8 @@ Create assessor account: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user clicks the button/link    jQuery=button:contains("Continue")
-    Then the user should see an error    Please enter a first name.
+    Then the user should see an error    Please select a title.
+    And the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please select a gender.
     And the user should see an error    Please select an ethnicity.
@@ -65,6 +66,8 @@ Create assessor account: server-side validations
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
+    When the user selects the radio button    title    title2
+    Then the user should not see the validation error in the create assessor form    Please select a title.
     When The user enters text to a text field    id=firstName    Thomas
     Then the user should not see the validation error in the create assessor form    Please enter a first name.
     When The user enters text to a text field    id=lastName    Fister
