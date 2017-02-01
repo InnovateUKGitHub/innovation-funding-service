@@ -9,16 +9,13 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.List;
 
 /**
  * Base class for user profile DTOs
  */
 public abstract class UserProfileBaseResource {
-    @NotEmpty(message = "{validation.standard.title.selectionrequired}")
-    @Size(max = 5, message = "{validation.standard.title.length.max}")
-    @Pattern(regexp = "^(Mr|Miss|Mrs|Ms|Dr)$", message = "{validation.standard.title.format}")
-    private String title;
+    @NotNull(message = "{validation.standard.title.selectionrequired}")
+    private Title title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
@@ -59,11 +56,11 @@ public abstract class UserProfileBaseResource {
 
     private String email;
 
-    public String getTitle() {
+    public Title getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Title title) {
         this.title = title;
     }
 

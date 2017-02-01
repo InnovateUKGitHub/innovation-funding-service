@@ -40,12 +40,15 @@ public enum FormInputType implements Identifiable {
     ASSESSOR_APPLICATION_IN_SCOPE(22),
     ASSESSOR_SCORE(23),
     STAFF_TURNOVER(24),
-    STAFF_COUNT(25);
+    STAFF_COUNT(25),
+    FINANCIAL_YEAR_END(26),
+    FINANCIAL_OVERVIEW_ROW(27),
+    FINANCIAL_STAFF_COUNT(28);
 
     private static List<FormInputType> COST_CATEGORIES =
             asList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING, TRAVEL, OTHER_COSTS);
 
-    private static List<FormInputType> FINANCE_TYPES = combineLists(COST_CATEGORIES, FINANCE, YOUR_FINANCE, OTHER_FUNDING, ORGANISATION_SIZE, STAFF_COUNT, STAFF_TURNOVER);
+    private static List<FormInputType> FINANCE_TYPES = combineLists(COST_CATEGORIES, FINANCE, YOUR_FINANCE, OTHER_FUNDING, ORGANISATION_SIZE, STAFF_COUNT, STAFF_TURNOVER, FINANCIAL_YEAR_END, FINANCIAL_OVERVIEW_ROW, FINANCIAL_STAFF_COUNT);
 
     private static List<FormInputType> ACADEMIC_FINANCE_TYPES = asList(YOUR_FINANCE, FINANCE_UPLOAD);
 
@@ -80,6 +83,10 @@ public enum FormInputType implements Identifiable {
         return ACADEMIC_FINANCE_TYPES.contains(this);
     }
 
+    public boolean isDisplayableFinancialSummaryType() {
+        return FINANCIAL_SUMMARY_TYPES.contains(this);
+    }
+
     public boolean isDisplayableFinanceType(String financeView) {
 
         switch (financeView) {
@@ -87,10 +94,6 @@ public enum FormInputType implements Identifiable {
             case "academic-finance": return isDisplayableAcademicFinanceType();
             default: throw new IllegalArgumentException("Don't know how to filter financial fields based on view " + financeView);
         }
-    }
-
-    public boolean isDisplayableFinancialSummaryType() {
-        return FINANCIAL_SUMMARY_TYPES.contains(this);
     }
 
     public boolean isDisplayablePrintType() {
