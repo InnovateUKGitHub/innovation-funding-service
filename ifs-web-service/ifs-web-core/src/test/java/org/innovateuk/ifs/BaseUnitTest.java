@@ -21,6 +21,7 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.contract.service.ContractService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -224,6 +225,8 @@ public class BaseUnitTest {
     public MilestoneService milestoneServiceMock;
     @Mock
     public AssessorRestService assessorRestService;
+    @Mock
+    public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
 
     @Spy
     @InjectMocks

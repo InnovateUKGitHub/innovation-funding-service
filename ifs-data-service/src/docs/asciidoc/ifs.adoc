@@ -203,3 +203,7 @@ include::processOutcome.adoc[]
 [[applicationCountSummary]]
 == ApplicationCountSummary
 include::applicationCountSummary.adoc[]
+
+[[competitionKeyStatistics]]
+== CompetitionKeyStatistics
+include::competitionKeyStatistics.adoc[]
