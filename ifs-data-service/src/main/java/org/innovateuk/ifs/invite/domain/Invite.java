@@ -140,11 +140,17 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     }
 
     public LocalDateTime getSentOn() {
-        return sentOn;
+        if (InviteStatus.CREATED == getStatus()) {
+            throw new IllegalStateException("cannot get sentOn for an unsent Invite");
+        }
+        return requireNonNull(sentOn, "Unexpected null sentOn on a " + getStatus() + " Invite");
     }
 
     public User getSentBy() {
-        return requireNonNull(sentBy);
+        if (InviteStatus.CREATED == getStatus()) {
+            throw new IllegalStateException("cannot get sentBy for an unsent Invite");
+        }
+        return requireNonNull(sentBy, "Unexpected null sentBy on a " + getStatus() + " Invite");
     }
 
     // TODO rename to getProcess() and delete the setter
@@ -153,8 +159,8 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     public abstract void setTarget(T target);
 
     public I send(User sentBy, LocalDateTime sentOn) {
-        requireNonNull(sentBy);
-        requireNonNull(sentOn);
+        requireNonNull(sentBy, "sentBy cannot be null");
+        requireNonNull(sentOn, "sendOn cannot be null");
         setStatus(InviteStatus.SENT);
 
         return (I) this; // for object chaining

@@ -969,6 +969,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         List<CompetitionInvite> invites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
+                .withStatus(SENT, SENT, SENT)
                 .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .build(3);
 
@@ -1029,6 +1030,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
+                .withStatus(SENT, SENT, SENT)
+                .withSentOn(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
                 .buildArray(3, CompetitionInvite.class);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
