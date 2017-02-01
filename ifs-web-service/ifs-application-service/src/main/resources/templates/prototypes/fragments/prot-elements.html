@@ -259,7 +259,7 @@
     <ul>
       <li>
         <div class="task">
-          <h4 class="heading-medium"><a href="#">A new innovative solution to tidal energy</a></h4>
+          <h4 class="heading-small"><a href="#">A new innovative solution to tidal energy</a></h4>
           <ul class="application-details">
             <li>Application number: 0457208</li>
             <li>Competition: Renewable Energy</li>
@@ -281,7 +281,7 @@
       </li>
       <li>
         <div class="task">
-          <h4 class="heading-medium"><a href="#">A new innovative solution</a></h4>
+          <h4 class="heading-small"><a href="#">A new innovative solution</a></h4>
           <ul class="application-details">
             <li>Application number: 0457209</li>
             <li>Competition: Renewable Energy</li>
@@ -300,7 +300,7 @@
       </li>
       <li>
         <div class="task">
-          <h4 class="heading-medium"><a href="#">Magic material</a></h4>
+          <h4 class="heading-small"><a href="#">Magic material</a></h4>
           <ul class="application-details">
             <li>Application number: 0457210</li>
             <li>Competition: Renewable Energy</li>
@@ -340,14 +340,7 @@
             <li>Competition: Renewable Energy</li>
           </ul>
         </div>
-        <div class="status"><strong class="status-msg msg-progress">Not successful</strong></div>
-      </li>
-      <li class="positive">
-        <div class="task">
-          <h4 class="heading-small"><a href="#">Task 2</a></h4>
-          <span>Application number: 0000008</span>
-        </div>
-        <div class="status"><strong>Successful</strong></div>
+        <div class="status"><strong class="status-msg msg-progress">Successful</strong></div>
       </li>
     </ul>
   </div>
@@ -365,8 +358,14 @@
           <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
           <strong>Empire Gas Ltd</strong>
         </div>
-        <div class="notification"><strong class="pending">Pending</strong></div>
-        <div class="status"><a href="#">Accept or reject</a></div>
+        <div class="status">
+          <div class="status-msg msg-deadline-waiting ">
+            Pending
+          </div>
+          <div class="status-msg msg-progress">
+            <a href="#">Accept or reject</a>
+          </div>
+        </div>
       </li>
     </ul>
   </div>
@@ -380,7 +379,11 @@
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
-          <div class="notification"><strong>Ready for assessment</strong></div>
+          <div class="status">
+            <strong class="status-msg msg-progress">
+              Ready for assessment
+            </strong>
+          </div>
         </li>
         <li class="positive">
           <div class="task task-half-width">
@@ -392,13 +395,13 @@
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
-          <div class="notification"><strong>Assessed</strong></div>
           <div class="status">
             <div class="score">
               <strong class="percent">72%</strong>
               <span>Overall score</span>
               <strong>Recommended</strong>
             </div>
+            <div class="status-msg msg-progress"><strong>Assessed</strong></div>
           </div>
         </li>
         <li class="negative">
@@ -411,13 +414,13 @@
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
-          <div class="notification"><strong>Assessed</strong></div>
           <div class="status">
             <div class="score">
               <strong class="percent">37%</strong>
               <span>Overall score</span>
               <strong>Not recommended</strong>
             </div>
+            <div class="status-msg msg-progress"><strong>Assessed</strong></div>
           </div>
         </li>
         <li>
