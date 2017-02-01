@@ -2,10 +2,7 @@ package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.user.resource.Disability;
-import org.innovateuk.ifs.user.resource.EthnicityResource;
-import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.UserProfileBaseResource;
+import org.innovateuk.ifs.user.resource.*;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -18,8 +15,8 @@ public abstract class UserProfileBaseResourceBuilder<T extends UserProfileBaseRe
         super(newActions);
     }
 
-    public S withTitle(String... titles) {
-        return withArraySetFieldByReflection("title", titles);
+    public S withTitle(Title... titles) {
+        return withArray((title, userProfile) -> userProfile.setTitle(title), titles);
     }
 
     public S withFirstName(String... firstNames) {

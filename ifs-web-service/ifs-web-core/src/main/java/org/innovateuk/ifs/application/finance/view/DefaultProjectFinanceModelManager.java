@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.finance.view;
 
-import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
@@ -17,6 +16,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
     private QuestionService questionService;
 
     @Autowired
-    private FinanceService financeService;
+    private ProjectFinanceService financeService;
 
     @Autowired
     private OrganisationTypeRestService organisationTypeService;
@@ -69,9 +69,6 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", projectFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", projectFinanceResource.getTotal());
-            model.addAttribute("organisationTotalFundingSought", projectFinanceResource.getTotalFundingSought());
-            model.addAttribute("organisationTotalContribution", projectFinanceResource.getTotalContribution());
-            model.addAttribute("organisationTotalOtherFunding", projectFinanceResource.getTotalOtherFunding());
             model.addAttribute("financeView", "finance");
             addGrantClaim(model, form, projectFinanceResource);
         }
@@ -99,9 +96,6 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationType(organisationType);
             financeViewModel.setOrganisationFinanceId(projectFinanceResource.getId());
             financeViewModel.setOrganisationFinanceTotal(projectFinanceResource.getTotal());
-            financeViewModel.setOrganisationTotalFundingSought(projectFinanceResource.getTotalFundingSought());
-            financeViewModel.setOrganisationTotalContribution(projectFinanceResource.getTotalContribution());
-            financeViewModel.setOrganisationTotalOtherFunding(projectFinanceResource.getTotalOtherFunding());
             financeViewModel.setFinanceView("finance");
             addGrantClaim(financeViewModel, form, projectFinanceResource);
         }
@@ -137,7 +131,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
 	        	FinanceRowType costType = costTypeForQuestion(question);
 	        	if(costType != null) {
 		        	FinanceRowCostCategory category = projectFinanceResource.getFinanceOrganisationDetails(costType);
-		            FinanceRowItem costItem = financeHandler.getFinanceFormHandler(organisationType).addProjectCostWithoutPersisting(projectId, organisationId, question.getId());
+		            FinanceRowItem costItem = financeHandler.getProjectFinanceFormHandler(organisationType).addCostWithoutPersisting(projectId, organisationId, question.getId());
 		        	category.addCost(costItem);
 	        	}
 	        }

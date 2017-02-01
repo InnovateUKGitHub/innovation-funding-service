@@ -5,6 +5,7 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -21,10 +22,8 @@ import javax.validation.constraints.Size;
 @FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class AssessorRegistrationForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "{validation.standard.title.selectionrequired}")
-    @Size(max = 5, message = "{validation.standard.title.length.max}")
-    @Pattern(regexp = "^(Mr|Miss|Mrs|Ms|Dr)$", message = "{validation.standard.title.format}")
-    private String title;
+    @NotNull(message = "{validation.standard.title.selectionrequired}")
+    private Title title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
@@ -76,11 +75,11 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
 
-    public String getTitle() {
+    public Title getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Title title) {
         this.title = title;
     }
 
