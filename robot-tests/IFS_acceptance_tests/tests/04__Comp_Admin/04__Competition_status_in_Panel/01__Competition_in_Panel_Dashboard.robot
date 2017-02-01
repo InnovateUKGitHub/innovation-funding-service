@@ -17,3 +17,4 @@ In Panel Dashboard
     And the user should see the element    jQuery=.button:contains("Funding decision")
     And the user should see the element    jQuery=.button:contains("Invite assessors")
     And the user should see the element    jQuery=.button:contains("Manage applications")
+    And the user should see that the element is disabled    jQuery=.button:contains("Manage funding notifications")
