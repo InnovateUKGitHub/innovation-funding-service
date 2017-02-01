@@ -160,7 +160,7 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     }
 
     @Test
-    public void testFinanceChecksNonFinanceContactAccess() {
+    public void testFinanceChecksNonFinanceContactNoAccess() {
         long projectId = 123L;
         long organisationId = 234L;
 
