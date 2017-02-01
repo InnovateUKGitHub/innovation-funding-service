@@ -73,8 +73,8 @@ function blockUntilServiceIsUp() {
     while [ ${UNREADY_PODS} -ne "0" ]
     do
         UNREADY_PODS=$(oc get pods -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}' | grep -v True | sed 1d | wc -l)
-        oc get pods -o custom-columns='NAME:{.metadata.name},READY:{.status.conditions[?(@.type=="Ready")].status}'
-        echo "pods not Ready: $UNREADY_PODS"
+        oc get pods
+        echo "$UNREADY_PODS pods still not ready"
         sleep 5s
     done
     oc get routes
