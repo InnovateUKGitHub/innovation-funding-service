@@ -288,6 +288,7 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         assertEquals(organisation.getName(), viewModel.getOrganisationName());
         assertEquals(organisation.getOrganisationSize(), viewModel.getOrganisationSize());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());
+        assertEquals(organisation.getId(), viewModel.getOrganisationId());
         assertNull(viewModel.getHeadCount());
         assertNull(viewModel.getTurnover());
         assertEquals(organisation.getCompanyHouseNumber(), viewModel.getCompanyRegistrationNumber());

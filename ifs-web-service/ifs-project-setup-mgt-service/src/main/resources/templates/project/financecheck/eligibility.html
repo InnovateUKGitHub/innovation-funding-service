@@ -133,7 +133,9 @@
         <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
         <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}">Return to finance checks</a>
     </form>
-
+    <div class="extra-margin">
+        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId},query_section=${T(org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType).ELIGIBILITY.name()})}" class="button button-secondary">Queries</a>
+    </div>
     <th:block th:include="fragments/layout :: main-content-end" />
 </main>
 <th:block th:include="fragments/layout :: footer" />

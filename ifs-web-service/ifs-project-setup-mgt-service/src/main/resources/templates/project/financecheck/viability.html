@@ -82,6 +82,9 @@
           <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
         </label>
       </div>
+      <div class="extra-margin">
+        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType).VIABILITY.name()})}" class="button button-secondary">Queries</a>
+      </div>
       <th:block th:unless="${model.isReadOnly()}">
           <h2 class="heading-medium">Approve viability</h2>
           <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
