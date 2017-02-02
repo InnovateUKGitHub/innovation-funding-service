@@ -7,7 +7,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 /**
- * TODO
+ *  Process outcome for the {@code REJECT} assessment outcome event.
  */
 @Entity
 @DiscriminatorValue(value = "reject")
