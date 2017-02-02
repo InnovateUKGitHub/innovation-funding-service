@@ -57,6 +57,16 @@ public class CompetitionInviteTest {
         invite.open().send(newUser().build(), LocalDateTime.now());
     }
 
+    @Test(expected = NullPointerException.class)
+    public void sent_nullBy() {
+        invite.send(null, LocalDateTime.now());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void sent_nullOn() {
+        invite.send(newUser().build(), null);
+    }
+
     @Test
     public void open_created() {
         // this probably shouldn't allow an invite that hasn't been sent from being opened
