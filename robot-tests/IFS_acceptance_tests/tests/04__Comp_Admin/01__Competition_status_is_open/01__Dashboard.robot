@@ -24,7 +24,7 @@ Competition dashboard open competition
     And the user should see the element   jQuery=a:contains("Manage applications")[aria-disabled="true"]
     #And the user should see that the element is disabled    jQuery=.button:contains("View panel sheet")
     #And the user should see that the element is disabled    jQuery=.button:contains("Funding")
-    #TODO IEnable the checks when NFUND-7934 is ready
+    # TODO IEnable the checks when NFUND-7934 is ready
 
 Competition dashboard ready to open competition
     [Documentation]    INFUND-7358
@@ -43,4 +43,4 @@ Competition dashboard ready to open competition
     And the user should see the element     jQuery=a:contains("Invite assessors")
     #And the user should see that the element is disabled    jQuery=.button:contains("View panel sheet")
     #And the user should see that the element is disabled    jQuery=.button:contains("Funding")
-    #TODO IEnable the checks when NFUND-7934 is ready
+    # TODO IEnable the checks when NFUND-7934 is ready
