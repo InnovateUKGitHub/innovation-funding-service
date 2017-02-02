@@ -10,6 +10,7 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.management.form.SendInviteForm;
 import org.innovateuk.ifs.management.model.SendInvitePopulator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/competition/assessors/invite/{inviteId}")
+@PreAuthorize("hasAuthority('comp_admin')")
 public class CompetitionManagementSendInviteController {
 
     @Autowired

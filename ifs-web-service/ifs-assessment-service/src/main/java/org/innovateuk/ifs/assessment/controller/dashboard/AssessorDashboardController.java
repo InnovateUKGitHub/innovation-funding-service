@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.controller.dashboard;
 import org.innovateuk.ifs.assessment.model.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping(value = "/assessor")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessorDashboardController {
 
     @Autowired

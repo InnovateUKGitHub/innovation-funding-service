@@ -16,6 +16,7 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,6 +39,7 @@ import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
 
 @Controller
 @RequestMapping("/profile")
+@PreAuthorize("hasAuthority('applicant') or hasAuthority('assessor')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 

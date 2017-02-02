@@ -5,6 +5,7 @@ import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -19,6 +20,7 @@ import org.innovateuk.ifs.util.MapFunctions;
  * This controller handles restful calls from javascript to autosave funding decisions.
  */
 @RestController
+@PreAuthorize("hasAuthority('comp_admin')")
 public class FundingDecisionRestController {
 
 	private static final Log LOG = LogFactory.getLog(FundingDecisionRestController.class);

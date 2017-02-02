@@ -5,6 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.innovateuk.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +19,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
  * This controller is to submit the assessor feedback.
  */
 @Controller
+@PreAuthorize("hasAuthority('comp_admin')")
 public class AssessorFeedbackController {
 	
 	@Autowired

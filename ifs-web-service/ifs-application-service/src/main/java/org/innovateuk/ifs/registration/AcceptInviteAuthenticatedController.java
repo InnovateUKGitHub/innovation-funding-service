@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +36,7 @@ import java.util.Optional;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
+@PreAuthorize("permitAll")
 public class AcceptInviteAuthenticatedController extends BaseController{
     @Autowired
     private InviteRestService inviteRestService;
