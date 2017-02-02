@@ -6,19 +6,28 @@ import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
+import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
@@ -26,7 +35,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * A Component separate from the main ProjectService for specifically generating Finances for Projects
  */
 @Component
-public class FinanceChecksGenerator {
+public class FinanceChecksGenerator /*extends BaseTransactionalService*/ {
 
     @Autowired
     private FinanceCheckRepository financeCheckRepository;
@@ -52,6 +61,12 @@ public class FinanceChecksGenerator {
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
 
+    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private PartnerOrganisationRepository partnerOrganisationRepository;
+
     public ServiceResult<Void> createMvpFinanceChecksFigures(Project newProject, Organisation organisation, CostCategoryType costCategoryType) {
         FinanceCheck newFinanceCheck = createMvpFinanceCheckEmptyCosts(newProject, organisation, costCategoryType);
         populateFinanceCheck(newFinanceCheck);
@@ -71,10 +86,18 @@ public class FinanceChecksGenerator {
         ProjectFinance projectFinance = new ProjectFinance(organisation, applicationFinanceForOrganisation.getOrganisationSize(), newProject);
 
         if (organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())) {
-            projectFinance.setViability(Viability.NOT_APPLICABLE);
-        } else {
+
+            PartnerOrganisation partnerOrganisation = partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId());
+            viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, null);
+
+/*            getCurrentlyLoggedInUser()
+                    .andOnSuccessReturn(currentUser -> viabilityWorkflowHandler.organisationIsAcademic(partnerOrganisation, currentUser))
+                    .getSuccessObjectOrThrowException();*/
+
+            //projectFinance.setViability(Viability.NOT_APPLICABLE);
+        } /*else {
             projectFinance.setViability(Viability.REVIEW);
-        }
+        }*/
 
         ProjectFinance projectFinanceForOrganisation =
                 projectFinanceRepository.save(projectFinance);

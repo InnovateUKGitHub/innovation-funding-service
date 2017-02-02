@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.finance.workflow.financechecks.configuration;
 
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.finance.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
+import org.innovateuk.ifs.project.gol.domain.GOLProcess;
+import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;
@@ -57,6 +60,11 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
 
     public boolean organisationIsAcademic(PartnerOrganisation partnerOrganisation, User internalUser) {
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ORGANISATION_IS_ACADEMIC), partnerOrganisation);
+    }
+
+    public ViabilityState getState(PartnerOrganisation partnerOrganisation) {
+        ViabilityProcess process = getCurrentProcess(partnerOrganisation);
+        return process != null? process.getActivityState() : ViabilityState.REVIEW;
     }
 
     @Override

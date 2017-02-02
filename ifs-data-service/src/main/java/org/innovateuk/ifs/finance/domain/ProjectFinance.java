@@ -37,8 +37,8 @@ public class ProjectFinance extends Finance {
     @JoinColumn(name="eligibilityApprovalUserId", referencedColumnName="id")
     private User eligibilityApprovalUser;
 
-    @Enumerated(EnumType.STRING)
-    private Viability viability = Viability.REVIEW;
+/*    @Enumerated(EnumType.STRING)
+    private Viability viability = Viability.REVIEW;*/
 
     @Enumerated(EnumType.STRING)
     private Eligibility eligibility = Eligibility.REVIEW;
@@ -80,13 +80,13 @@ public class ProjectFinance extends Finance {
         this.viabilityApprovalUser = viabilityApprovalUser;
     }
 
-    public Viability getViability() {
+/*    public Viability getViability() {
         return viability;
     }
 
     public void setViability(Viability viability) {
         this.viability = viability;
-    }
+    }*/
 
     public boolean getCreditReportConfirmed() { return creditReportConfirmed; }
 
