@@ -146,7 +146,7 @@ task robotTestsFilter (type: Copy) {
     into 'robot-tests/IFS_acceptance_tests/resources/variables/'
     include 'EMAIL_VARIABLES_TEMPLATE.robot'
     rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
-    filter(ReplaceTokens, tokens: [valid_email: project.properties['ifs.robot.valid.email'], valid_email_two: project.properties['ifs.robot.valid.email_two'], sender : project.properties['ifs.robot.sender'] ,test_mailbox_one : project.properties['ifs.robot.mailbox_one'],  test_mailbox_two : project.properties['ifs.robot.mailbox_two'], test_mailbox_password : project.properties['ifs.robot.mailbox.password']])
+    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
 
 
 }
