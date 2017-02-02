@@ -5,10 +5,6 @@ import org.innovateuk.ifs.user.resource.*;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import java.util.List;
 
@@ -29,7 +25,7 @@ public class UserRegistrationResource extends UserProfileBaseResource{
     public UserRegistrationResource() {
     }
 
-    public UserRegistrationResource(String title, String firstName, String lastName, String phoneNumber, Gender gender, Disability disability, EthnicityResource ethnicity, String password, AddressResource address) {
+    public UserRegistrationResource(Title title, String firstName, String lastName, String phoneNumber, Gender gender, Disability disability, EthnicityResource ethnicity, String password, AddressResource address) {
         setTitle(title);
         setFirstName(firstName);
         setLastName(lastName);
