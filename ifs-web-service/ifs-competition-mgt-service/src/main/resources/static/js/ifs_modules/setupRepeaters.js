@@ -92,9 +92,9 @@ IFS.competitionManagement.repeater = (function () {
     addContentGroup: function () {
       var count = parseInt(jQuery('[id^=contentGroup-row-]').length, 10) // name attribute has to be 0,1,2,3
       // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
-      var idCount = parseInt(jQuery('[id^=contentGroup-row-]').last().attr('id').split('contentGroup-row-')[1], 10) + 1
+      var idCount = parseInt(jQuery('[id^=contentGroup-row-]').last().prop('id').split('contentGroup-row-')[1], 10) + 1
 
-      var html = '<div id="contentGroup-row-' + count + '">' +
+      var html = '<div id="contentGroup-row-' + idCount + '">' +
                   '<div class="form-group">' +
                     '<label class="form-label-bold" for="heading-' + idCount + '">Heading</label>' +
                     '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" />' +
@@ -182,12 +182,13 @@ IFS.competitionManagement.repeater = (function () {
     reindexRows: function (rowSelector) {
       jQuery(rowSelector + ' [name]').each(function () {
         var inst = jQuery(this)
-        var thisIndex = inst.closest(rowSelector).index(rowSelector)
-
-        var oldAttr = inst.attr('name')
-        var oldAttrName = oldAttr.split('[')[0]
-        var oldAttrElement = oldAttr.split(']')[1]
-        inst.attr('name', oldAttrName + '[' + thisIndex + ']' + oldAttrElement)
+        if (inst.prop('name').indexOf('[') !== -1) {
+          var thisIndex = inst.closest(rowSelector).index(rowSelector)
+          var oldAttr = inst.attr('name')
+          var oldAttrName = oldAttr.split('[')[0]
+          var oldAttrElement = oldAttr.split(']')[1]
+          inst.prop('name', oldAttrName + '[' + thisIndex + ']' + oldAttrElement)
+        }
       })
       jQuery(rowSelector + ' [data-remove-row]').each(function () {
         var inst = jQuery(this)
