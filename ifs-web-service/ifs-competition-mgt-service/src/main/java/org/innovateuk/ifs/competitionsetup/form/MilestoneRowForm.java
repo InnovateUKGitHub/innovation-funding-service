@@ -21,11 +21,12 @@ public class MilestoneRowForm {
     private MilestoneType milestoneType;
     private String dayOfWeek;
     private boolean editable;
+    private LocalDateTime date;
 
     private static final Log LOG = LogFactory.getLog(MilestoneRowForm.class);
 
     public MilestoneRowForm() {
-        
+
     }
 
     public MilestoneRowForm(MilestoneType milestoneType, LocalDateTime dateTime) {
@@ -34,6 +35,7 @@ public class MilestoneRowForm {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
+            this.setDate(dateTime);
             this.editable = LocalDateTime.now().isBefore(dateTime);
         } else {
             this.editable = true;
@@ -90,6 +92,14 @@ public class MilestoneRowForm {
 
     public void setEditable(boolean editable) {
         this.editable = editable;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     private String getNameOfDay() {
