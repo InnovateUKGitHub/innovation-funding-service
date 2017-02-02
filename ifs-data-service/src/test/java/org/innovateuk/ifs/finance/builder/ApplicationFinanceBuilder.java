@@ -31,6 +31,10 @@ public class ApplicationFinanceBuilder extends BaseBuilder<ApplicationFinance, A
         return with(finance -> finance.setOrganisationSize(organisationSize));
     }
 
+    public ApplicationFinanceBuilder withOrganisation(Organisation organisation) {
+        return with(finance -> finance.setOrganisation(organisation));
+    }
+
     private ApplicationFinanceBuilder(List<BiConsumer<Integer, ApplicationFinance>> newMultiActions) {
         super(newMultiActions);
     }
