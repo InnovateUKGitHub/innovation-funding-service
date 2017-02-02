@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.assessment.workflow.actions;
 
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflow;
-import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
+import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
-
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
 
 /**
  * The {@code RejectAction} is used by the assessor. It handles the rejection event
@@ -18,11 +17,8 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
 public class RejectAction extends BaseAssessmentAction {
 
     @Override
-    protected void doExecute(Assessment assessment, Optional<ProcessOutcome> processOutcome) {
-        ProcessOutcome processOutcomeValue = processOutcome.get();
-
-        processOutcomeValue.setProcess(assessment);
-        processOutcomeValue.setOutcomeType(REJECT.getType());
-        assessment.getProcessOutcomes().add(processOutcomeValue);
+    protected void doExecute(Assessment assessment, StateContext<AssessmentStates, AssessmentOutcomes> context) {
+        AssessmentRejectOutcome assessmentRejectOutcome = (AssessmentRejectOutcome) context.getMessageHeader("rejection");
+        assessment.setRejection(assessmentRejectOutcome);
     }
 }

@@ -95,6 +95,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
 
         List<Assessment> assessments = newAssessment()
+                .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
                 .withActivityState(openState)
@@ -122,6 +123,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
 
         List<Assessment> assessments = newAssessment()
+                .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
                 .withActivityState(openState)
