@@ -29,16 +29,14 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -354,7 +352,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
         }
 
-        List<ValidationMessages> applicationIsValid = markAsComplete ? validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()): new ArrayList<>();
+        List<ValidationMessages> validationMessages = markAsComplete ? validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()): new ArrayList<>();
 
         if (questionStatus == null) {
             questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
@@ -369,7 +367,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         application.setCompletion(completion);
         applicationRepository.save(application);
 
-        return serviceSuccess(applicationIsValid);
+        return serviceSuccess(validationMessages);
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
