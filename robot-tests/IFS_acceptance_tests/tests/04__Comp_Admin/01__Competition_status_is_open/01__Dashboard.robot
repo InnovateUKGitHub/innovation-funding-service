@@ -21,22 +21,6 @@ Competition dashboard open competition
     And the user should see the element   jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")
     And the user should see the element   jQuery=a:contains("Manage applications")[aria-disabled="true"]
 
-Invite Assessors open competition
-    [Documentation]    INFUND-7562
-    [Tags]
-    When the user clicks the button/Link    link=Invite assessors
-    Then The user should see the element    link=Overview
-    And the user should see the element    link=Find
-    And the user should see the element    link=Invite
-    [Teardown]    The user clicks the button/link    link=Competition
-
-View and update open competition setup
-    [Documentation]    INFUND-7562
-    [Tags]
-    When the user clicks the button/link    link=View and update competition setup
-    Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_UPDATE_COMP}
-    [Teardown]    the user navigates to the page    ${CA_UpcomingComp}
-
 Competition dashboard ready to open competition
     [Documentation]    INFUND-7358
     [Tags]
@@ -50,20 +34,3 @@ Competition dashboard ready to open competition
     And the user should see the element     jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")
     And the user should see the element     jQuery=a:contains("Manage applications")[aria-disabled="true"]
     And the user should see the element     jQuery=a:contains("Applications")[aria-disabled="true"]
-
-Invite Assessors ready to open competition
-    [Documentation]    INFUND-7358
-    [Tags]
-    When the user clicks the button/Link    link=Invite assessors
-    Then The user should see the element    link=Overview
-    And the user should see the element    link=Find
-    And the user should see the element    link=Invite
-    [Teardown]    The user clicks the button/link    link=Competition
-
-
-View and update ready to open competition setup
-    [Documentation]    INFUND-7358
-    [Tags]
-    When the user clicks the button/link    link=View and update competition setup
-    Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_READY_TO_OPEN}
-
