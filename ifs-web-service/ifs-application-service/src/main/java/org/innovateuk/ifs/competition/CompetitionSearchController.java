@@ -21,14 +21,13 @@ public class CompetitionSearchController {
 
     private static final String TEMPLATE_FOLDER = "competition/";
 
-
     @Autowired
     private CompetitionSearchPopulator itemSearchPopulator;
 
     @GetMapping
-    public String publicContentSearch(Model model, @RequestParam(KEYWORDS_KEY) Optional<String> keywords,
-                                      @RequestParam(INNOVATION_AREA_ID_KEY) Optional<Long> innovationAreaId,
-                                      @RequestParam(PAGE_NUMBER_KEY) Optional<Integer> pageNumber) {
+    public String publicContentSearch(Model model, @RequestParam(value = KEYWORDS_KEY, required = false) Optional<String> keywords,
+                                      @RequestParam(value = INNOVATION_AREA_ID_KEY, required = false) Optional<Long> innovationAreaId,
+                                      @RequestParam(value = PAGE_NUMBER_KEY, required = false) Optional<Integer> pageNumber) {
 
         model.addAttribute("model", itemSearchPopulator.createItemSearchViewModel(innovationAreaId, keywords,  pageNumber));
 
