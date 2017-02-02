@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.resource.ProcessStates;
 
@@ -128,4 +130,39 @@ public abstract class Process<ParticipantType, TargetType, StatesType extends Pr
     }
 
     public abstract StatesType getActivityState();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Process<?, ?, ?> process = (Process<?, ?, ?>) o;
+
+        // Note: processOutcomes have been taken out as there is a cycle relationship
+        // between Process and ProcessOutcome causing issues if you call Process#equals
+
+        return new EqualsBuilder()
+                .append(id, process.id)
+                .append(event, process.event)
+                .append(activityState, process.activityState)
+                .append(lastModified, process.lastModified)
+                .append(startDate, process.startDate)
+                .append(endDate, process.endDate)
+                .append(internalParticipant, process.internalParticipant)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(event)
+                .append(activityState)
+                .append(lastModified)
+                .append(startDate)
+                .append(endDate)
+                .append(internalParticipant)
+                .toHashCode();
+    }
 }
