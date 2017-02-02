@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.queries.controller;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.application.service.OrganisationService;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -43,10 +44,13 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+import static org.springframework.http.HttpStatus.UNSUPPORTED_MEDIA_TYPE;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -127,10 +131,10 @@ public class FinanceChecksQueriesController {
     @RequestMapping(value = "/{queryId}/new-response", method = POST)
     public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
-                               @PathVariable Long organisationId,
-                               @PathVariable Long queryId,
+                               @PathVariable final Long organisationId,
+                               @PathVariable final Long queryId,
                                @RequestParam(value = "query_section", required = false) String querySection,
-                               @Valid @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
+                               @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksQueriesAddResponseForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                ValidationHandler validationHandler,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -145,13 +149,33 @@ public class FinanceChecksQueriesController {
             return "project/financecheck/queries";
         };
 
+        Supplier<String> saveFailureView = () -> {
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
+            model.addAttribute("model", viewModel);
+            model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
+            model.addAttribute(FORM_ATTR, null);
+            return "project/financecheck/queries";
+        };
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
+
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
-                        // TODO delete attachments
-                        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
-                        return redirectToQueryPage(projectId, organisationId, querySection);
+                        // TODO save response
+                        //hardcoded test to show response write failure message
+                        ValidationMessages errors = new ValidationMessages();
+                        if (queryId == 5L) {
+                            errors.addError(fieldError("saveError", null, "validation.notesandqueries.query.response.save.failed"));
+                            validationHandler.addAnyErrors(errors);
+                            //TODO delete attachments
+                            saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId, queryId);
+                        }
+                        return validationHandler.failNowOrSucceedWith( saveFailureView, () -> {
+                            // TODO delete attachments
+                            cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
+                            return redirectToQueryPage(projectId, organisationId, querySection);
+                        });
                     });
         });
     }
@@ -290,7 +314,28 @@ public class FinanceChecksQueriesController {
         firstPost2.setPostBody("Question2");
         firstPost2.setAttachments(new LinkedList<>());
         thread2.setPosts (Arrays.asList(firstPost2));
-        List<ThreadResource> queries = Arrays.asList(thread2, thread);
+
+        ThreadResource thread3 = new ThreadResource();
+        PostResource firstPost1 = new PostResource();
+        PostResource firstResponse1 = new PostResource();
+        thread3.setCreatedOn(LocalDateTime.now());
+        thread3.setAwaitingResponse(false);
+        thread3.setOrganisationId(22L);
+        thread3.setProjectId(3L);
+        thread3.setTitle("Query title3");
+        thread3.setSectionType(FinanceChecksSectionType.ELIGIBILITY);
+        thread3.setId(5L);
+        firstPost1.setCreatedOn(LocalDateTime.now());
+        firstPost1.setUserId(18L);
+        firstPost1.setPostBody("Question3");
+        firstResponse1.setCreatedOn(LocalDateTime.now());
+        firstResponse1.setUserId(55L);
+        firstResponse1.setPostBody("Response3");
+        firstResponse1.setAttachments(new LinkedList<>());
+        firstPost1.setAttachments(new LinkedList<>());
+        thread3.setPosts(Arrays.asList(firstPost1, firstResponse1));
+
+        List<ThreadResource> queries = Arrays.asList(thread2, thread, thread3);
 
         // TODO read data from service
 

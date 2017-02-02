@@ -23,6 +23,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
@@ -103,7 +104,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(applicantOrganisationId, queryViewModel.getOrganisationId());
         assertEquals(projectId, queryViewModel.getProjectId());
 
-        assertEquals(2, queryViewModel.getQueries().size());
+        assertEquals(3, queryViewModel.getQueries().size());
         assertEquals("Query title", queryViewModel.getQueries().get(0).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(0).getSectionType());
         assertEquals(false, queryViewModel.getQueries().get(0).isAwaitingResponse());
@@ -135,6 +136,24 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUsername());
         assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getCreatedOn()));
         assertEquals(0, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getViewModelAttachments().size());
+
+        assertEquals("Query title3", queryViewModel.getQueries().get(2).getTitle());
+        assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(2).getSectionType());
+        assertEquals(false, queryViewModel.getQueries().get(2).isAwaitingResponse());
+        assertEquals(applicantOrganisationId, queryViewModel.getQueries().get(2).getOrganisationId());
+        assertEquals(projectId, queryViewModel.getQueries().get(2).getProjectId());
+        assertEquals(5L, queryViewModel.getQueries().get(2).getId().longValue());
+        assertEquals(2, queryViewModel.getQueries().get(2).getViewModelPosts().size());
+        assertEquals("Question3", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getPostBody());
+        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getUserId());
+        assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getUsername());
+        assertTrue(LocalDateTime.now().isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getCreatedOn()));
+        assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getViewModelAttachments().size());
+        assertEquals("Response3", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getPostBody());
+        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUserId());
+        assertEquals("B Z - Org1", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUsername());
+        assertTrue(LocalDateTime.now().isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getCreatedOn()));
+        assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getViewModelAttachments().size());
     }
 
     @Test
@@ -181,7 +200,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("query", "Query text"))
+                .param("response", "Query text"))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 
@@ -189,7 +208,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         //verify()
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
-        assertEquals("Query text", form.getQuery());
+        assertEquals("Query text", form.getResponse());
         assertEquals(null, form.getAttachment());
     }
 
@@ -198,12 +217,12 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("query", ""))
+                .param("response", ""))
                 .andExpect(view().name("project/financecheck/queries"))
                 .andReturn();
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
-        assertEquals("", form.getQuery());
+        assertEquals("", form.getResponse());
         assertEquals(null, form.getAttachment());
 
         BindingResult bindingResult = form.getBindingResult();
@@ -211,8 +230,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("query"));
-        assertEquals("The response cannot be empty.", bindingResult.getFieldError("query").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("response"));
+        assertEquals("The response cannot be empty.", bindingResult.getFieldError("response").getDefaultMessage());
     }
 
     @Test
@@ -222,13 +241,13 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("query", tooLong))
+                .param("response", tooLong))
                 .andExpect(view().name("project/financecheck/queries"))
                 .andReturn();
 
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
-        assertEquals(tooLong, form.getQuery());
+        assertEquals(tooLong, form.getResponse());
         assertEquals(null, form.getAttachment());
 
         BindingResult bindingResult = form.getBindingResult();
@@ -236,8 +255,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("query"));
-        assertEquals("The response is too long, please reduce it to {1} characters.", bindingResult.getFieldError("query").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("response"));
+        assertEquals("The response is too long, please reduce it to {1} characters.", bindingResult.getFieldError("response").getDefaultMessage());
     }
 
     @Test
@@ -247,12 +266,12 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("query", tooManyWords))
+                .param("response", tooManyWords))
                 .andExpect(view().name("project/financecheck/queries"))
                 .andReturn();
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
-        assertEquals(tooManyWords, form.getQuery());
+        assertEquals(tooManyWords, form.getResponse());
         assertEquals(null, form.getAttachment());
 
         BindingResult bindingResult = form.getBindingResult();
@@ -260,8 +279,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("query"));
-        assertEquals("The response is too long, please reduce it {0} words.", bindingResult.getFieldError("query").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("response"));
+        assertEquals("The response is too long, please reduce it {0} words.", bindingResult.getFieldError("response").getDefaultMessage());
     }
 
     @Test
@@ -357,7 +376,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .param("removeAttachment", "1")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("query", "Query"))
+                .param("response", "Query"))
                 .andExpect(view().name("project/financecheck/queries"))
                 .andReturn();
 
@@ -367,9 +386,24 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         // TODO verify file removed
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
-        assertEquals("Query", form.getQuery());
+        assertEquals("Query", form.getResponse());
         assertEquals(null, form.getAttachment());
     }
+
+    @Test
+    public void testSaveNewResponseQueryCannotRespondToQuery() throws Exception {
+
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/5/new-response?query_section=Eligibility")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("response", "Query"))
+                .andExpect(view().name("project/financecheck/queries"))
+                .andReturn();
+
+        List<? extends ObjectError> errors = (List<? extends ObjectError>) result.getModelAndView().getModel().get("nonFormErrors");
+        assertEquals(1, errors.size());
+        assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(0).getCode());
+    }
+
     @Override
     protected FinanceChecksQueriesController supplyControllerUnderTest() {
         return new FinanceChecksQueriesController();
