@@ -31,7 +31,7 @@ public class NewUserStagedInviteResourceBuilder extends StagedInviteResourceBuil
         return withArraySetFieldByReflection("name", names);
     }
 
-    public NewUserStagedInviteResourceBuilder withInnovationCategoryId(Long... innovationCategoryIds) {
-        return withArraySetFieldByReflection("innovationCategoryId", innovationCategoryIds);
+    public NewUserStagedInviteResourceBuilder withInnovationAreaId(Long... innovationCategoryIds) {
+        return withArraySetFieldByReflection("innovationAreaId", innovationCategoryIds);
     }
 }

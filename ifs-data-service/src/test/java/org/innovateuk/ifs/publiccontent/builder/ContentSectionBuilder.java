@@ -3,6 +3,7 @@ package org.innovateuk.ifs.publiccontent.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
+import org.innovateuk.ifs.publiccontent.domain.ContentGroup;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 
@@ -34,6 +35,11 @@ public class ContentSectionBuilder extends BaseBuilder<ContentSection, ContentSe
 
     public ContentSectionBuilder withStatus(PublicContentStatus status) {
         return with(section -> setField("status", status, section));
+    }
+
+
+    public ContentSectionBuilder withContentGroups(List<ContentGroup> contentGroups) {
+        return with(section -> setField("contentGroups", contentGroups, section));
     }
 
     @Override

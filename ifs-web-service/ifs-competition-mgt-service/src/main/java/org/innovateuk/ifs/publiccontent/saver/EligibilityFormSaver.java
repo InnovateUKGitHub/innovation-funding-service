@@ -16,8 +16,4 @@ public class EligibilityFormSaver extends AbstractContentGroupFormSaver<Eligibil
         return PublicContentSectionType.ELIGIBILITY;
     }
 
-    @Override
-    protected boolean canHaveEmptyGroups() {
-        return false;
-    }
 }

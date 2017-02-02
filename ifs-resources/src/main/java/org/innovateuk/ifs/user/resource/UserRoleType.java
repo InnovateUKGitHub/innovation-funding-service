@@ -15,7 +15,6 @@ public enum UserRoleType {
     ASSESSOR("assessor","Assessor"),
     LEADAPPLICANT("leadapplicant", "Lead Applicant"),
     COMP_ADMIN("comp_admin", "Competition Administrator"),
-    COMP_EXEC("competition_executive", "Competition Executive"),
     COMP_TECHNOLOGIST("competition_technologist", "Competition Technologist"),
     SYSTEM_MAINTAINER("system_maintainer", "System Maintainer"),
     SYSTEM_REGISTRATION_USER("system_registrar", "System Registration User"),
