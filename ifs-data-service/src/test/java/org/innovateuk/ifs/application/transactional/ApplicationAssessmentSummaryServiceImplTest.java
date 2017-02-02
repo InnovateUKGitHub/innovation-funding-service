@@ -237,6 +237,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName(application.getName())
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("Liquid Dynamics")
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
                 .build();
 
@@ -250,6 +251,91 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getApplicationAssessmentSummary_noLeadOrganisation() throws Exception {
+        Organisation[] organisations = newOrganisation()
+                .withName("Acme Ltd.", "IO systems", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
+        Application application = newApplication()
+                .withName("Progressive machines")
+                .withCompetition(newCompetition()
+                        .withName("Connected digital additive manufacturing")
+                        .build())
+                .withProcessRoles(newProcessRole()
+                        .withRole(COLLABORATOR, COLLABORATOR, COLLABORATOR, COMP_ADMIN)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
+                        .buildArray(4, ProcessRole.class))
+                .build();
+
+        ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
+                .withId(application.getId())
+                .withName(application.getName())
+                .withCompetitionId(application.getCompetition().getId())
+                .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("")
+                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems", "Liquid Dynamics"))
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, found);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getApplicationAssessmentSummary_partnersSortedAlphabetically() throws Exception {
+        Organisation[] organisations = newOrganisation()
+                .withName("IO systems", "Acme Ltd.", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
+        Application application = newApplication()
+                .withName("Progressive machines")
+                .withCompetition(newCompetition()
+                        .withName("Connected digital additive manufacturing")
+                        .build())
+                .withProcessRoles(newProcessRole()
+                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
+                        .buildArray(4, ProcessRole.class))
+                .build();
+
+        ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
+                .withId(application.getId())
+                .withName(application.getName())
+                .withCompetitionId(application.getCompetition().getId())
+                .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("Liquid Dynamics")
+                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, found);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
         inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
         inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();
