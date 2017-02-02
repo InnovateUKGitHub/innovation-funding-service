@@ -145,7 +145,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
                         newNewUserStagedInviteResource()
                                 .withName("Tester 1", "Tester 2")
                                 .withEmail("test1@test.com", "test2@test.com")
-                                .withInnovationCategoryId(1L)
+                                .withInnovationAreaId(1L)
                                 .build(2)
                 )
                 .build();
