@@ -70,14 +70,14 @@ public class FundingLevelResetHandler {
 
         QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
 
-        Set<Long> userIds = processRoleService.getByApplicationId(applicationId).stream().filter(processRole -> processRole.getUser() != null).map(
-                processRole -> processRole.getUser()).collect(Collectors.toSet());
+        Set<Long> processRoleIds = processRoleService.getByApplicationId(applicationId).stream().filter(processRole -> processRole.getUser() != null).map(
+                processRole -> processRole.getId()).collect(Collectors.toSet());
 
-        userIds.stream().forEach(userId ->
+        processRoleIds.stream().forEach(processRoleId ->
                 sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
                         .forEach(fundingSection ->
                                 sectionService.markAsInComplete(fundingSection.getId(),
-                                        applicationId, userId))
+                                        applicationId, processRoleId))
         );
 
         financeService.getApplicationFinanceDetails(applicationId).stream().forEach(applicationFinance -> {
