@@ -67,7 +67,7 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
         resolver.setPrefix(this.properties.getPrefix());
         resolver.setSuffix(this.properties.getSuffix());
         resolver.setCacheable(this.properties.isCache());
-        resolver.setTemplateMode(TemplateMode.XML);
+        resolver.setTemplateMode(TemplateMode.HTML);
         return resolver;
     }
 }
