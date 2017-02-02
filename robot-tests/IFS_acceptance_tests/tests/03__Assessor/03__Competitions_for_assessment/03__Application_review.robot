@@ -131,7 +131,7 @@ Economic Benefit: word count
     [Tags]
     [Setup]    The user clicks the button/link    link=Back to your assessment overview
     Given I open one of the application questions    link=4. Economic benefit
-    And I should see word count underneath feedback form    Words remaining: 400
+    And I should see word count underneath feedback form    Words remaining: 100
     When I enter feedback of words    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco ullamcoullamco ullamco test test
     Then I should see validation message above the feedback form text field    Maximum word count exceeded. Please reduce your word count to 100.
     When I enter feedback of words    Test words count to enter only 10 words test test
