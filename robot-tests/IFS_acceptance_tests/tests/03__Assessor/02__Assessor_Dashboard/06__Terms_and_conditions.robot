@@ -6,12 +6,12 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Terms and Conditions
+Terms and conditions
     [Documentation]    INFUND-7058
     [Tags]
     Given The user should see the element    link=read terms and conditions
     When the user clicks the button/link    jQuery=a:contains("read terms and conditions")
-    Then the user should see the text in the page    Terms and Conditions
+    Then the user should see the text in the page    Terms and conditions
     And the user should see the text in the page    Overview
     And the user should see the text in the page    General terms of use
     And the user should see the text in the page    Acceptable use policy

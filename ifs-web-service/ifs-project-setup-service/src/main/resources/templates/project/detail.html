@@ -102,20 +102,21 @@
             <tr th:each="organisation: ${model.partnerOrganisations}">
 
                 <td>
-                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id)}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
-                    <span th:unless="${model.isUserPartnerInOrganisation(organisation.id)}" th:text="${organisation.name}" th:remove="tag">organisation name</span>
+                    <a th:if="${model.isUserPartnerInOrganisation(organisation.id) and !model.isReadOnly()}" th:href="@{/project/{id}/details/finance-contact?organisation={orgId}(id=${model.project.getId()},orgId=${organisation.id})}" th:text="${organisation.name}">organisation name</a>
+                    <th:block th:if="${model.isUserPartnerInOrganisation(organisation.id) and model.isReadOnly()}" th:text="${organisation.name}">organisation name</th:block>
+                    <th:block th:unless="${model.isUserPartnerInOrganisation(organisation.id)}" th:text="${organisation.name}">organisation name</th:block>
                 </td>
                 <td>
-                  <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" th:remove="tag">
+                  <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
                         <span th:text="${model.getFinanceContactForPartnerOrganisation(organisation.id).userName}" />
-                  </span>
-                  <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" th:remove="tag">
+                  </th:block>
+                  <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}">
                         <span>-</span>
-                  </span>
+                  </th:block>
                 </td>
                 <td>
-                  <span th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</span>
-                  <span th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</span>
+                  <th:block th:unless="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="yes">Yes</th:block>
+                  <th:block th:if="${model.getFinanceContactForPartnerOrganisation(organisation.id) == null}" class="no">No</th:block>
                 </td>
             </tr>
         </tbody>

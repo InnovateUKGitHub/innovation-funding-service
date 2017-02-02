@@ -9,7 +9,6 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_EXEC;
 
 public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<AssessorService> {
 
@@ -22,7 +21,7 @@ public class AssessorServiceSecurityTest extends BaseServiceSecurityTest<Assesso
     public void getAssessorProfile() {
         Long assessorId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorProfile(assessorId), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessorProfile(assessorId), COMP_ADMIN);
     }
 
     public static class TestAssessorService implements AssessorService {
