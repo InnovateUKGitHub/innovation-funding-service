@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -23,7 +24,7 @@ public class ApplicationAssessorResource {
     private BusinessType businessType;
     private Set<InnovationAreaResource> innovationAreas;
     private String skillAreas;
-    private String rejectReason;
+    private AssessmentRejectOutcomeValue rejectReason;
     private String rejectComment;
     private boolean available;
     private Long mostRecentAssessmentId;
@@ -41,7 +42,7 @@ public class ApplicationAssessorResource {
                                        BusinessType businessType,
                                        Set<InnovationAreaResource> innovationAreas,
                                        String skillAreas,
-                                       String rejectReason,
+                                       AssessmentRejectOutcomeValue rejectReason,
                                        String rejectComment,
                                        boolean available,
                                        Long mostRecentAssessmentId,
@@ -113,11 +114,11 @@ public class ApplicationAssessorResource {
         this.skillAreas = skillAreas;
     }
 
-    public String getRejectReason() {
+    public AssessmentRejectOutcomeValue getRejectReason() {
         return rejectReason;
     }
 
-    public void setRejectReason(String rejectReason) {
+    public void setRejectReason(AssessmentRejectOutcomeValue rejectReason) {
         this.rejectReason = rejectReason;
     }
 

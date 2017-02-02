@@ -20,9 +20,9 @@ public interface AssessmentRestService {
 
     RestResult<AssessmentTotalScoreResource> getTotalScore(long id);
 
-    RestResult<Void> recommend(long id, AssessmentFundingDecisionResource assessmentFundingDecision);
+    RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision);
 
-    RestResult<Void> rejectInvitation(long id, ApplicationRejectionResource applicationRejection);
+    RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource);
 
     RestResult<Void> acceptInvitation(long id);
 

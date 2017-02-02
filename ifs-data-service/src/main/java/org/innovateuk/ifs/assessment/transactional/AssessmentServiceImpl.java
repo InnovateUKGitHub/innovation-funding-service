@@ -2,7 +2,9 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.mapper.AssessmentFundingDecisionOutcomeMapper;
 import org.innovateuk.ifs.assessment.mapper.AssessmentMapper;
+import org.innovateuk.ifs.assessment.mapper.AssessmentRejectOutcomeMapper;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
@@ -43,6 +45,12 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     private AssessmentMapper assessmentMapper;
 
     @Autowired
+    private AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapper;
+
+    @Autowired
+    private AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapper;
+
+    @Autowired
     private AssessmentWorkflowHandler assessmentWorkflowHandler;
 
     @Autowired
@@ -80,9 +88,10 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
+    public ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecision)) {
+            // TODO map to resource here?
+            if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecision))) {
                 return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
             }
             return serviceSuccess();
@@ -100,19 +109,22 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<Void> rejectInvitation(long assessmentId, ApplicationRejectionResource applicationRejection) {
-        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowHandler.rejectInvitation(found, applicationRejection)) {
-                return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
-            }
-            return serviceSuccess();
-        });
+    public ServiceResult<Void> rejectInvitation(long assessmentId,
+                                                AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
+        return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId))
+                .andOnSuccess(found -> {
+                    if (!assessmentWorkflowHandler.rejectInvitation(found,
+                            assessmentRejectOutcomeMapper.mapToDomain(assessmentRejectOutcomeResource))) {
+                        return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
+                    }
+                    return serviceSuccess();
+                });
     }
 
     @Override
     public ServiceResult<Void> withdrawAssessment(long assessmentId) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
-            if (!assessmentWorkflowHandler.withdrawAssessment(found)) {
+            if (!assessmentWorkflowHandler.withdraw(found)) {
                 return serviceFailure(new Error(ASSESSMENT_WITHDRAW_FAILED));
             }
             return serviceSuccess();

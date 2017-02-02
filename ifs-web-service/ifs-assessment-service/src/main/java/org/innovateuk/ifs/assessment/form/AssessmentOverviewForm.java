@@ -1,12 +1,14 @@
 package org.innovateuk.ifs.assessment.form;
 
 
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.commons.validation.constraints.WordCount;
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 /**
@@ -14,17 +16,17 @@ import javax.validation.constraints.Size;
  */
 public class AssessmentOverviewForm extends BaseBindingResultTarget {
 
-    @NotEmpty(message = "{validation.applicationRejection.rejectReason.required}")
-    private String rejectReason;
+    @NotNull(message = "{validation.assessmentRejectOutcome.rejectReason.required}")
+    private AssessmentRejectOutcomeValue rejectReason;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String rejectComment;
 
-    public String getRejectReason() {
+    public AssessmentRejectOutcomeValue getRejectReason() {
         return rejectReason;
     }
 
-    public void setRejectReason(String rejectReason) {
+    public void setRejectReason(AssessmentRejectOutcomeValue rejectReason) {
         this.rejectReason = rejectReason;
     }
 

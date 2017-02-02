@@ -56,7 +56,7 @@ public class AssessmentController {
     }
 
     @RequestMapping(value = "/{id}/recommend", method = PUT)
-    public RestResult<Void> recommend(@PathVariable("id") long id, @RequestBody @Valid AssessmentFundingDecisionResource assessmentFundingDecision) {
+    public RestResult<Void> recommend(@PathVariable("id") long id, @RequestBody @Valid AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
     }
 
@@ -66,8 +66,8 @@ public class AssessmentController {
     }
 
     @RequestMapping(value = "/{id}/rejectInvitation", method = PUT)
-    public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid ApplicationRejectionResource applicationRejection) {
-        return assessmentService.rejectInvitation(id, applicationRejection).toPutResponse();
+    public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
+        return assessmentService.rejectInvitation(id, assessmentRejectOutcomeResource).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/acceptInvitation", method = PUT)

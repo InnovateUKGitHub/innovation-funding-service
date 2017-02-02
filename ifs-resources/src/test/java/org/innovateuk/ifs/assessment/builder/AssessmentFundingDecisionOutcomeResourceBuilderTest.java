@@ -1,16 +1,16 @@
 package org.innovateuk.ifs.assessment.builder;
 
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.junit.Assert.assertEquals;
 
-public class AssessmentFundingDecisionResourceBuilderTest {
+public class AssessmentFundingDecisionOutcomeResourceBuilderTest {
 
     @Test
     public void buildOne() {
@@ -18,15 +18,15 @@ public class AssessmentFundingDecisionResourceBuilderTest {
         String expectedComment = "Comment";
         String expectedFeedback = "Feedback";
 
-        AssessmentFundingDecisionResource assessmentFundingDecisionResource = newAssessmentFundingDecisionResource()
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource = newAssessmentFundingDecisionOutcomeResource()
                 .withFundingConfirmation(expectedFundingConfirmation)
                 .withComment(expectedComment)
                 .withFeedback(expectedFeedback)
                 .build();
 
-        assertEquals(expectedFundingConfirmation, assessmentFundingDecisionResource.getFundingConfirmation());
-        assertEquals(expectedComment, assessmentFundingDecisionResource.getComment());
-        assertEquals(expectedFeedback, assessmentFundingDecisionResource.getFeedback());
+        assertEquals(expectedFundingConfirmation, assessmentFundingDecisionOutcomeResource.getFundingConfirmation());
+        assertEquals(expectedComment, assessmentFundingDecisionOutcomeResource.getComment());
+        assertEquals(expectedFeedback, assessmentFundingDecisionOutcomeResource.getFeedback());
     }
 
     @Test
@@ -35,19 +35,19 @@ public class AssessmentFundingDecisionResourceBuilderTest {
         String[] expectedComments = {"Comment 1", "Comment 2"};
         String[] expectedFeedbacks = {"Feedback 1", "Feedback 2"};
 
-        List<AssessmentFundingDecisionResource> assessmentFundingDecisionResources = newAssessmentFundingDecisionResource()
+        List<AssessmentFundingDecisionOutcomeResource> assessmentFundingDecisionOutcomeResources = newAssessmentFundingDecisionOutcomeResource()
                 .withFundingConfirmation(expectedFundingConfirmations)
                 .withComment(expectedComments)
                 .withFeedback(expectedFeedbacks)
                 .build(2);
 
-        AssessmentFundingDecisionResource first = assessmentFundingDecisionResources.get(0);
+        AssessmentFundingDecisionOutcomeResource first = assessmentFundingDecisionOutcomeResources.get(0);
 
         assertEquals(expectedFundingConfirmations[0], first.getFundingConfirmation());
         assertEquals(expectedComments[0], first.getComment());
         assertEquals(expectedFeedbacks[0], first.getFeedback());
 
-        AssessmentFundingDecisionResource second = assessmentFundingDecisionResources.get(1);
+        AssessmentFundingDecisionOutcomeResource second = assessmentFundingDecisionOutcomeResources.get(1);
 
         assertEquals(expectedFundingConfirmations[1], second.getFundingConfirmation());
         assertEquals(expectedComments[1], second.getComment());

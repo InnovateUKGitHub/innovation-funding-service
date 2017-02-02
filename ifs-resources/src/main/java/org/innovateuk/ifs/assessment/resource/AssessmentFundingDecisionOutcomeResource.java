@@ -11,10 +11,10 @@ import javax.validation.constraints.Size;
 /**
  * DTO for recommending applications for funding during assessment.
  */
-@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentFundingDecision.feedback.required}")
-public class AssessmentFundingDecisionResource {
+@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentFundingDecisionOutcome.feedback.required}")
+public class AssessmentFundingDecisionOutcomeResource {
 
-    @NotNull(message = "{validation.assessmentFundingDecision.fundingConfirmation.required}")
+    @NotNull(message = "{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
@@ -23,10 +23,10 @@ public class AssessmentFundingDecisionResource {
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String comment;
 
-    public AssessmentFundingDecisionResource() {
+    public AssessmentFundingDecisionOutcomeResource() {
     }
 
-    public AssessmentFundingDecisionResource(Boolean fundingConfirmation, String feedback, String comment) {
+    public AssessmentFundingDecisionOutcomeResource(Boolean fundingConfirmation, String feedback, String comment) {
         this.fundingConfirmation = fundingConfirmation;
         this.feedback = feedback;
         this.comment = comment;
@@ -62,7 +62,7 @@ public class AssessmentFundingDecisionResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        AssessmentFundingDecisionResource that = (AssessmentFundingDecisionResource) o;
+        AssessmentFundingDecisionOutcomeResource that = (AssessmentFundingDecisionOutcomeResource) o;
 
         return new EqualsBuilder()
                 .append(fundingConfirmation, that.fundingConfirmation)

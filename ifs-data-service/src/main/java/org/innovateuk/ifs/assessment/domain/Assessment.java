@@ -6,26 +6,29 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.Process;
-import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
-import org.innovateuk.ifs.workflow.resource.OutcomeType;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.Optional;
 
 @Entity
 public class Assessment extends Process<ProcessRole, Application, AssessmentStates> {
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="participant_id", referencedColumnName = "id")
+    @JoinColumn(name = "participant_id", referencedColumnName = "id")
     private ProcessRole participant;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="target_id", referencedColumnName = "id")
+    @JoinColumn(name = "target_id", referencedColumnName = "id")
     private Application target;
 
     @OneToMany(mappedBy = "assessment")
     private List<AssessorFormInputResponse> responses;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process")
+    private AssessmentFundingDecisionOutcome fundingDecision;
+
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "process")
+    private AssessmentRejectOutcome rejection;
 
     public Assessment() {
         super();
@@ -36,12 +39,26 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
         this.target = application;
     }
 
-    public Optional<ProcessOutcome> getLastOutcome() {
-        return Optional.ofNullable(this.processOutcomes).flatMap(outcomes -> outcomes.stream().reduce((outcome1, outcome2) -> outcome2));
+    public AssessmentFundingDecisionOutcome getFundingDecision() {
+        return fundingDecision;
     }
 
-    public Optional<ProcessOutcome> getLastOutcome(OutcomeType outcomeType) {
-        return Optional.ofNullable(this.processOutcomes).flatMap(outcomes -> outcomes.stream().filter(outcome -> outcomeType.getType().equals(outcome.getOutcomeType())).reduce((outcome1, outcome2) -> outcome2));
+    public void setFundingDecision(AssessmentFundingDecisionOutcome fundingDecision) {
+        if (fundingDecision != null) {
+            fundingDecision.setAssessment(this);
+        }
+        this.fundingDecision = fundingDecision;
+    }
+
+    public AssessmentRejectOutcome getRejection() {
+        return rejection;
+    }
+
+    public void setRejection(AssessmentRejectOutcome rejection) {
+        if (rejection != null) {
+            rejection.setAssessment(this);
+        }
+        this.rejection = rejection;
     }
 
     @Override
@@ -78,9 +95,13 @@ public class Assessment extends Process<ProcessRole, Application, AssessmentStat
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
+        if (this == o) {
+            return true;
+        }
 
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Assessment that = (Assessment) o;
 
