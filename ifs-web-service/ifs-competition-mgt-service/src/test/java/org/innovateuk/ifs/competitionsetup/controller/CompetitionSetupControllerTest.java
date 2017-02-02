@@ -75,7 +75,7 @@ public class CompetitionSetupControllerTest extends BaseControllerMockMVCTest<Co
     public void setUp() {
         super.setUp();
 
-        when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Exec").build()));
+        when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Admin").build()));
 
         when(userService.findUserByType(UserRoleType.COMP_TECHNOLOGIST)).thenReturn(asList(UserResourceBuilder.newUserResource().withFirstName("Comp").withLastName("Technologist").build()));
 
