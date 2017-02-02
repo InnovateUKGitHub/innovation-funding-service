@@ -31,15 +31,15 @@ public class AssessmentFundingDecisionOutcomeResourceBuilder
         return new AssessmentFundingDecisionOutcomeResource();
     }
 
-    public AssessmentFundingDecisionOutcomeResourceBuilder withFundingConfirmation(Boolean... values) {
-        return withArray((value, object) -> object.setFundingConfirmation(value), values);
+    public AssessmentFundingDecisionOutcomeResourceBuilder withFundingConfirmation(Boolean... fundingConfirmations) {
+        return withArray((value, assessmentFundingDecisionOutcomeResource) -> assessmentFundingDecisionOutcomeResource.setFundingConfirmation(value), fundingConfirmations);
     }
 
-    public AssessmentFundingDecisionOutcomeResourceBuilder withComment(String... values) {
-        return withArray((value, object) -> object.setComment(value), values);
+    public AssessmentFundingDecisionOutcomeResourceBuilder withComment(String... comments) {
+        return withArray((value, assessmentFundingDecisionOutcomeResource) -> assessmentFundingDecisionOutcomeResource.setComment(value), comments);
     }
 
-    public AssessmentFundingDecisionOutcomeResourceBuilder withFeedback(String... values) {
-        return withArray((value, object) -> object.setFeedback(value), values);
+    public AssessmentFundingDecisionOutcomeResourceBuilder withFeedback(String... feedback) {
+        return withArray((value, assessmentFundingDecisionOutcomeResource) -> assessmentFundingDecisionOutcomeResource.setFeedback(value), feedback);
     }
 }

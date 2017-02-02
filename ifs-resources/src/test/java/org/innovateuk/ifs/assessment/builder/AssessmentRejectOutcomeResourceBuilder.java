@@ -31,11 +31,11 @@ public class AssessmentRejectOutcomeResourceBuilder
         return new AssessmentRejectOutcomeResource();
     }
 
-    public AssessmentRejectOutcomeResourceBuilder withRejectReason(AssessmentRejectOutcomeValue... values) {
-        return withArray((value, object) -> object.setRejectReason(value), values);
+    public AssessmentRejectOutcomeResourceBuilder withRejectReason(AssessmentRejectOutcomeValue... rejectReasons) {
+        return withArray((value, assessmentRejectOutcomeResource) -> assessmentRejectOutcomeResource.setRejectReason(value), rejectReasons);
     }
 
-    public AssessmentRejectOutcomeResourceBuilder withRejectComment(String... values) {
-        return withArray((value, object) -> object.setRejectComment(value), values);
+    public AssessmentRejectOutcomeResourceBuilder withRejectComment(String... rejectComments) {
+        return withArray((value, assessmentRejectOutcomeResource) -> assessmentRejectOutcomeResource.setRejectComment(value), rejectComments);
     }
 }

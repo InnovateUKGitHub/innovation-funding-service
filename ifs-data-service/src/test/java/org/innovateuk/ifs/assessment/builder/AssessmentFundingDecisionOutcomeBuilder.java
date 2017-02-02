@@ -31,20 +31,20 @@ public class AssessmentFundingDecisionOutcomeBuilder
         return new AssessmentFundingDecisionOutcome();
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withId(Long... values) {
-        return withArray(BaseBuilderAmendFunctions::setId, values);
+    public AssessmentFundingDecisionOutcomeBuilder withId(Long... ids) {
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withFundingConfirmation(Boolean... values) {
-        return withArray((value, object) -> object.setFundingConfirmation(value), values);
+    public AssessmentFundingDecisionOutcomeBuilder withFundingConfirmation(Boolean... fundingConfirmations) {
+        return withArray((value, assessmentFundingDecisionOutcome) -> assessmentFundingDecisionOutcome.setFundingConfirmation(value), fundingConfirmations);
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withComment(String... values) {
-        return withArray((value, object) -> object.setComment(value), values);
+    public AssessmentFundingDecisionOutcomeBuilder withComment(String... comments) {
+        return withArray((value, assessmentFundingDecisionOutcome) -> assessmentFundingDecisionOutcome.setComment(value), comments);
     }
 
-    public AssessmentFundingDecisionOutcomeBuilder withFeedback(String... values) {
-        return withArray((value, object) -> object.setFeedback(value), values);
+    public AssessmentFundingDecisionOutcomeBuilder withFeedback(String... feedback) {
+        return withArray((value, assessmentFundingDecisionOutcome) -> assessmentFundingDecisionOutcome.setFeedback(value), feedback);
     }
 
 }

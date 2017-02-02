@@ -30,15 +30,15 @@ public class AssessmentRejectOutcomeBuilder extends BaseBuilder<AssessmentReject
         return new AssessmentRejectOutcome();
     }
 
-    public AssessmentRejectOutcomeBuilder withId(Long... values) {
-        return withArray(BaseBuilderAmendFunctions::setId, values);
+    public AssessmentRejectOutcomeBuilder withId(Long... ids) {
+        return withArray(BaseBuilderAmendFunctions::setId, ids);
     }
 
-    public AssessmentRejectOutcomeBuilder withRejectReason(AssessmentRejectOutcomeValue... values) {
-        return withArray((value, object) -> object.setRejectReason(value), values);
+    public AssessmentRejectOutcomeBuilder withRejectReason(AssessmentRejectOutcomeValue... rejectReasons) {
+        return withArray((value, assessmentRejectOutcome) -> assessmentRejectOutcome.setRejectReason(value), rejectReasons);
     }
 
-    public AssessmentRejectOutcomeBuilder withRejectComment(String... values) {
-        return withArray((value, object) -> object.setRejectComment(value), values);
+    public AssessmentRejectOutcomeBuilder withRejectComment(String... rejectComments) {
+        return withArray((value, assessmentRejectOutcome) -> assessmentRejectOutcome.setRejectComment(value), rejectComments);
     }
 }
