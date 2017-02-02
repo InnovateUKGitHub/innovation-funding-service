@@ -94,7 +94,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("title", "Title")
+                .param("queryTitle", "Title")
                 .param("query", "Query text")
                 .param("section", FinanceChecksSectionType.ELIGIBILITY.name()))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
@@ -104,7 +104,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         //verify()
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
-        assertEquals("Title", form.getTitle());
+        assertEquals("Title", form.getQueryTitle());
         assertEquals("Query text", form.getQuery());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY.name(), form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());
@@ -115,7 +115,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("title", "")
+                .param("queryTitle", "")
                 .param("query", "")
                 .param("section", ""))
                 .andExpect(view().name("project/financecheck/new-query"))
@@ -123,7 +123,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
-        assertEquals("", form.getTitle());
+        assertEquals("", form.getQueryTitle());
         assertEquals("", form.getQuery());
         assertEquals("", form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());
@@ -133,8 +133,8 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(3, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("title"));
-        assertEquals("The title cannot be empty.", bindingResult.getFieldError("title").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("queryTitle"));
+        assertEquals("The title cannot be empty.", bindingResult.getFieldError("queryTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("query"));
         assertEquals("The query cannot be empty.", bindingResult.getFieldError("query").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("section"));
@@ -148,7 +148,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("title", tooLong)
+                .param("queryTitle", tooLong)
                 .param("query", tooLong)
                 .param("section", FinanceChecksSectionType.VIABILITY.name()))
                 .andExpect(view().name("project/financecheck/new-query"))
@@ -156,7 +156,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
-        assertEquals(tooLong, form.getTitle());
+        assertEquals(tooLong, form.getQueryTitle());
         assertEquals(tooLong, form.getQuery());
         assertEquals(FinanceChecksSectionType.VIABILITY.name(), form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());
@@ -166,8 +166,8 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(2, bindingResult.getFieldErrorCount());
-        assertTrue(bindingResult.hasFieldErrors("title"));
-        assertEquals("The title is too long, please reduce it to {1} characters.", bindingResult.getFieldError("title").getDefaultMessage());
+        assertTrue(bindingResult.hasFieldErrors("queryTitle"));
+        assertEquals("The title is too long, please reduce it to {1} characters.", bindingResult.getFieldError("queryTitle").getDefaultMessage());
         assertTrue(bindingResult.hasFieldErrors("query"));
         assertEquals("The query is too long, please reduce it to {1} characters.", bindingResult.getFieldError("query").getDefaultMessage());
     }
@@ -179,7 +179,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("title", "Title")
+                .param("queryTitle", "Title")
                 .param("query", tooManyWords)
                 .param("section", FinanceChecksSectionType.VIABILITY.name()))
                 .andExpect(view().name("project/financecheck/new-query"))
@@ -187,7 +187,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
-        assertEquals("Title", form.getTitle());
+        assertEquals("Title", form.getQueryTitle());
         assertEquals(tooManyWords, form.getQuery());
         assertEquals(FinanceChecksSectionType.VIABILITY.name(), form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());
@@ -294,7 +294,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 .param("removeAttachment", "1")
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("title", "Title")
+                .param("queryTitle", "Title")
                 .param("query", "Query")
                 .param("section", FinanceChecksSectionType.VIABILITY.name()))
                 .andExpect(view().name("project/financecheck/new-query"))
@@ -306,7 +306,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         // TODO verify file removed
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
-        assertEquals("Title", form.getTitle());
+        assertEquals("Title", form.getQueryTitle());
         assertEquals("Query", form.getQuery());
         assertEquals(FinanceChecksSectionType.VIABILITY.name(), form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());

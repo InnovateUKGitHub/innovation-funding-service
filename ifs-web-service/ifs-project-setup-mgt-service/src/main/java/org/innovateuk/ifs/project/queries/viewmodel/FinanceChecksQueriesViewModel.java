@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.queries.viewmodel;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * View model backing the internal Finance Team members view of the Finance Check Queries page
@@ -17,6 +18,10 @@ public class FinanceChecksQueriesViewModel {
     List<FinanceChecksQueriesQueryViewModel> queries;
     private Long organisationId;
     private String baseUrl;
+    private Map<Long, String> newAttachmentLinks;
+    private int maxQueryWords;
+    private int maxQueryCharacters;
+    private Long queryId;
 
     public FinanceChecksQueriesViewModel(String organisationName,
                                          boolean leadPartnerOrganisation,
@@ -28,7 +33,11 @@ public class FinanceChecksQueriesViewModel {
                                          String projectName,
                                          List<FinanceChecksQueriesQueryViewModel> queries,
                                          Long organisationId,
-                                         String baseUrl) {
+                                         String baseUrl,
+                                         Map<Long, String> newAttachmentLinks,
+                                         int maxQueryWords,
+                                         int maxQueryCharacters,
+                                         Long queryId) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;
@@ -40,7 +49,10 @@ public class FinanceChecksQueriesViewModel {
         this.queries = queries;
         this.organisationId = organisationId;
         this.baseUrl = baseUrl;
-
+        this.newAttachmentLinks = newAttachmentLinks;
+        this.maxQueryWords = maxQueryWords;
+        this.maxQueryCharacters = maxQueryCharacters;
+        this.queryId = queryId;
     }
 
     public String getOrganisationName() {
@@ -129,4 +141,38 @@ public class FinanceChecksQueriesViewModel {
     public void setBaseUrl(String baseUrl) {
         this.baseUrl = baseUrl;
     }
+
+    public int getMaxQueryWords() {
+        return maxQueryWords;
+    }
+
+    public void setMaxQueryWords(int maxQueryWords) {
+        this.maxQueryWords = maxQueryWords;
+    }
+
+    public int getMaxQueryCharacters() {
+        return maxQueryCharacters;
+    }
+
+    public void setMaxQueryCharacters(int maxQueryCharacters) {
+        this.maxQueryCharacters = maxQueryCharacters;
+    }
+
+    public Long getQueryId() {
+        return queryId;
+    }
+
+    public void setQueryId(Long queryId) {
+        this.queryId = queryId;
+    }
+
+    public Map<Long, String> getNewAttachmentLinks() {
+
+        return newAttachmentLinks;
+    }
+
+    public void setNewAttachmentLinks(Map<Long, String> newAttachmentLinks) {
+        this.newAttachmentLinks = newAttachmentLinks;
+    }
+
 }

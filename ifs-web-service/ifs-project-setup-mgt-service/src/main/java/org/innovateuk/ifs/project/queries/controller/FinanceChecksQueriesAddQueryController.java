@@ -91,9 +91,10 @@ public class FinanceChecksQueriesAddQueryController {
                             @Valid @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddQueryForm form,
                             @SuppressWarnings("unused") BindingResult bindingResult,
                             ValidationHandler validationHandler,
-                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
                             Model model,
-                            HttpServletRequest request)
+                            @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                            HttpServletRequest request,
+                            HttpServletResponse response)
     {
         Supplier<String> failureView = () -> {
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
@@ -106,7 +107,11 @@ public class FinanceChecksQueriesAddQueryController {
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
-                    failNowOrSucceedWith(failureView, () -> redirectToQueryPage(projectId, organisationId, querySection));
+                    failNowOrSucceedWith(failureView, () -> {
+                        // TODO delete attachments
+                        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
+                        return redirectToQueryPage(projectId, organisationId, querySection);
+                    });
         });
     }
 

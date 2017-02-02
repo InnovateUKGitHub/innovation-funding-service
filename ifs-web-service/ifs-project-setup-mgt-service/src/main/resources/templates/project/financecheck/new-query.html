@@ -37,21 +37,21 @@
     <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
         <fieldset>
             <legend class="heading-medium">Post new query</legend>
-            <div th:class="${#fields.hasErrors('title')}? 'form-group error':'form-group'">
-                <label for="title" class="form-label-bold">
+            <div th:class="${#fields.hasErrors('queryTitle')}? 'form-group error':'form-group'">
+                <label for="queryTitle" class="form-label-bold">
                     <span class="heading-small no-margin">Title</span>
-                    <th:block th:if="${#fields.hasErrors('title')}">
+                    <th:block th:if="${#fields.hasErrors('queryTitle')}">
                         <span>
-                            <span class="error-message" th:each="err : ${#fields.errors('title')}" th:text="${err}" />
+                            <span class="error-message" th:each="err : ${#fields.errors('queryTitle')}" th:text="${err}" />
                         </span>
                     </th:block>
                 </label>
-                <input name="title"
-                       id="title"
+                <input name="queryTitle"
+                       id="queryTitle"
                        type="text"
-                       th:class="${#fields.hasErrors('title') ? 'form-control field-error width-full' : 'form-control width-full'}"
+                       th:class="${#fields.hasErrors('queryTitle') ? 'form-control field-error width-full' : 'form-control width-full'}"
                        required="required"
-                       th:field="*{title}"
+                       th:field="*{queryTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
                                 data-required-errormessage=#{validation.notesandqueries.thread.title.required},
                                 data-maxlength-errormessage=#{validation.notesandqueries.thread.title.length.max(null,${model.maxTitleCharacters})}" />

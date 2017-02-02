@@ -79,7 +79,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
     @Test
     public void testSaveQuery() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -89,7 +89,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null, null);
+                classUnderTest.saveQuery(1L, 2L, "", null, null, null, null, null, null, null);
                 Assert.fail("Should not have been able to save query without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour

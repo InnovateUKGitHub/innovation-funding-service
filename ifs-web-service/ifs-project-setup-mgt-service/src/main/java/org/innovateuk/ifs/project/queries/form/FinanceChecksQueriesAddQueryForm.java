@@ -19,7 +19,7 @@ public class FinanceChecksQueriesAddQueryForm extends BaseBindingResultTarget {
 
     @NotBlank(message = "{validation.notesandqueries.thread.title.required}")
     @Size(max = FinanceChecksQueriesFormConstraints.MAX_TITLE_CHARACTERS, message = "{validation.notesandqueries.thread.title.length.max}")
-    private String title;
+    private String queryTitle;
 
     @Size(max = FinanceChecksQueriesFormConstraints.MAX_SECTION_CHARACTERS, message = "{validation.notesandqueries.thread.section.length.max}")
     @EnumValidator( enumClazz=FinanceChecksSectionType.class, message="{validation.notesandqueries.thread.section.enum}")
@@ -43,12 +43,12 @@ public class FinanceChecksQueriesAddQueryForm extends BaseBindingResultTarget {
         this.query = query;
     }
 
-    public String getTitle() {
-        return title;
+    public String getQueryTitle() {
+        return queryTitle;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setQueryTitle(String title) {
+        this.queryTitle = title;
     }
 
     public String getSection() {
@@ -67,7 +67,7 @@ public class FinanceChecksQueriesAddQueryForm extends BaseBindingResultTarget {
         FinanceChecksQueriesAddQueryForm that = (FinanceChecksQueriesAddQueryForm) o;
 
         if (query != null ? !query.equals(that.query) : that.query != null) return false;
-        if (title != null ? !title.equals(that.title) : that.title != null) return false;
+        if (queryTitle != null ? !queryTitle.equals(that.queryTitle) : that.queryTitle != null) return false;
         if (section != null ? !section.equals(that.section) : that.section != null) return false;
         return attachment != null ? attachment.equals(that.attachment) : that.attachment == null;
 
@@ -77,7 +77,7 @@ public class FinanceChecksQueriesAddQueryForm extends BaseBindingResultTarget {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(query)
-                .append(title)
+                .append(queryTitle)
                 .append(section)
                 .append(attachment)
                 .toHashCode();
