@@ -21,7 +21,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.util.Arrays.asList;
@@ -36,7 +35,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 			ApplicationStatusConstants.REJECTED.getId(),
 			ApplicationStatusConstants.SUBMITTED.getId());
 
-	public static final Collection<Long> CREATED_AND_OPEN_STATUS_IDS = asSet(
+	public static final Collection<Long> CREATED_AND_OPEN_STATUS_IDS = asList(
 			ApplicationStatusConstants.CREATED.getId(),
 			ApplicationStatusConstants.OPEN.getId());
 

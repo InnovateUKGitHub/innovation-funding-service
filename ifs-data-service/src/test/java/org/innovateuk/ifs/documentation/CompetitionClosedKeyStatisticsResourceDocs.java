@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.documentation;
 
+import org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionClosedKeyStatisticsResourceDocs {
@@ -13,4 +15,13 @@ public class CompetitionClosedKeyStatisticsResourceDocs {
             fieldWithPath("assessorsWithoutApplications").description("The number of assessors without any applications"),
             fieldWithPath("assignmentCount").description("The number of assignments")
     };
+
+    public static final CompetitionClosedKeyStatisticsResourceBuilder competitionClosedKeyStatisticsResourceBuilder =
+            newCompetitionClosedKeyStatisticsResource()
+                    .withAssessorsAccepted(1L)
+                    .withAssessorsInvited(2L)
+                    .withApplicationsPerAssessor(3L)
+                    .withApplicationsRequiringAssessors(4L)
+                    .withAssessorsWithoutApplications(5L)
+                    .withAssignmentCount(6L);
 }

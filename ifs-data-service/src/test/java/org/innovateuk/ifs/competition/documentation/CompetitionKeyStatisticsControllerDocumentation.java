@@ -13,9 +13,13 @@ import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatist
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
+import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionClosedKeyStatisticsResourceDocs.competitionClosedKeyStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyStatisticsResourceDocs.competitionInAssessmentKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInAssessmentKeyStatisticsResourceDocs.competitionInAssessmentKeyStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionOpenKeyStatisticsResourceDocs.competitionOpenKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionOpenKeyStatisticsResourceDocs.competitionOpenKeyStatisticsResourceFields;
+import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyStatisticsResourceDocs.competitionReadyToOpenKeyStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionReadyToOpenKeyStatisticsResourceDocs.competitionReadyToOpenKeyStatisticsResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -35,7 +39,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getReadyToOpenKeyStatistics() throws Exception {
         long competitionId = 1L;
-        CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource = newCompetitionReadyToOpenKeyStatisticsResource().build();
+        CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource = competitionReadyToOpenKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getReadyToOpenKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
 
@@ -52,7 +56,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getOpenKeyStatistics() throws Exception {
         long competitionId = 1L;
-        CompetitionOpenKeyStatisticsResource keyStatisticsResource = newCompetitionOpenKeyStatisticsResource().build();
+        CompetitionOpenKeyStatisticsResource keyStatisticsResource = competitionOpenKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getOpenKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/open", competitionId))
@@ -69,7 +73,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getClosedKeyStatistics() throws Exception {
         long competitionId = 1L;
-        CompetitionClosedKeyStatisticsResource keyStatisticsResource = newCompetitionClosedKeyStatisticsResource().build();
+        CompetitionClosedKeyStatisticsResource keyStatisticsResource = competitionClosedKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getClosedKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/closed", competitionId))
@@ -86,7 +90,7 @@ public class CompetitionKeyStatisticsControllerDocumentation extends BaseControl
     @Test
     public void getInAssessmentKeyStatistics() throws Exception {
         long competitionId = 1L;
-        CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = newCompetitionInAssessmentKeyStatisticsResource().build();
+        CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = competitionInAssessmentKeyStatisticsResourceBuilder.build();
 
         when(competitionKeyStatisticsServiceMock.getInAssessmentKeyStatisticsByCompetition(competitionId)).thenReturn(serviceSuccess(keyStatisticsResource));
         mockMvc.perform(get("/competitionStatistics/{id}/inAssessment", competitionId))

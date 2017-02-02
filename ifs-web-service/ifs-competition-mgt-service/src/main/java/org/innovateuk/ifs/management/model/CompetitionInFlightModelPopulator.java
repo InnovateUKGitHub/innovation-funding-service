@@ -36,7 +36,7 @@ public class CompetitionInFlightModelPopulator {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competition.getId());
         CompetitionInFlightStatsViewModel statsViewModel = populateStatsViewModel(competition);
 
-        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId()).getSuccessObject();
+        long changesSinceLastNotify = assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competition.getId()).getSuccessObjectOrThrowException();
         milestones.sort(Comparator.comparing(MilestoneResource::getType));
         return new CompetitionInFlightViewModel(competition,
                 simpleMap(milestones, MilestonesRowViewModel::new),
@@ -46,13 +46,13 @@ public class CompetitionInFlightModelPopulator {
     private CompetitionInFlightStatsViewModel populateStatsViewModel(CompetitionResource competitionResource) {
         switch (competitionResource.getCompetitionStatus()) {
             case READY_TO_OPEN:
-                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getReadyToOpenKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObject());
+                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getReadyToOpenKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
             case OPEN:
-                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getOpenKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObject());
+                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getOpenKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
             case CLOSED:
-                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getClosedKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObject());
+                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getClosedKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
             case IN_ASSESSMENT:
-                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObject());
+                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
             case FUNDERS_PANEL:
             case ASSESSOR_FEEDBACK:
                 break;
