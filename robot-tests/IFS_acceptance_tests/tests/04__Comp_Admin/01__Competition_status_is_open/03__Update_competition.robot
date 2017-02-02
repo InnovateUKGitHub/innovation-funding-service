@@ -28,8 +28,9 @@ Resource          ../CompAdmin_Commons.robot
 *** Test Cases ***
 User can update initial details of a competition before notify date
     [Documentation]    INFUND-6661
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
-    Given the user clicks the button/link    link=Initial details
+    [Setup]    The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    Given the user clicks the button/link    link=View and update competition setup
+    And the user clicks the button/link    link=Initial details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
     And the user should see that the element is disabled    id=openingDateDay
     And the user should see that the element is disabled    id=openingDateMonth
@@ -105,7 +106,7 @@ Application details are not editable after Open date
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail
     Then the user should not see the element    jQuery=.button:contains("Edit this question")
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
-    Then the user should be redirected to the correct page without error checking  ${CA_Live}
+    Then the user should be redirected to the correct page without error checking    ${CA_Live}
 
 Assessed Questions are not editable after open date
     [Documentation]    INFUND-6936
@@ -118,7 +119,7 @@ Assessed Questions are not editable after open date
     Then the user should see the element    jquery=h1:contains("Business opportunity")
     And the user should not see the element    jquery=.button:contains("Edit")
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/question/690/edit
-    Then the user should be redirected to the correct page without error checking  ${CA_Live}
+    Then the user should be redirected to the correct page without error checking    ${CA_Live}
 
 Project summary is editable before Open date
     [Documentation]    INFUND-6938
@@ -209,9 +210,9 @@ Funding Information not editable after notifications date
 Eligibility is not editable when the competition is open
     [Documentation]    INFUND-6792
     [Tags]
+    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
     # Changing competition to ${NOT_EDITABLE_COMPETITION} as the orginal competition (live) does not have some of the questions
     # required in order to view some of the pages - in this case the finance section with - is growth table include.
-    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input

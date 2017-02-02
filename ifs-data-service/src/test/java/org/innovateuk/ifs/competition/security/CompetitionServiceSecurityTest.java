@@ -17,6 +17,8 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_EXEC;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -125,20 +127,12 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
     @Test
     public void testCloseAssessment() {
-        setLoggedInUser(null);
-
-        assertAccessDenied(() -> classUnderTest.closeAssessment(1L), () -> {
-            verifyNoMoreInteractions(rules);
-        });
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessors(1L), COMP_EXEC, COMP_ADMIN);
     }
 
     @Test
     public void testNotifyAssessors() {
-        setLoggedInUser(null);
-
-        assertAccessDenied(() -> classUnderTest.notifyAssessors(1L), () -> {
-            verifyNoMoreInteractions(rules);
-        });
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessors(1L), COMP_EXEC, COMP_ADMIN);
     }
 
     /**
