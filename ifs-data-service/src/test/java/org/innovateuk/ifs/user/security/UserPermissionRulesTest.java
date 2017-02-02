@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
@@ -433,28 +432,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void testUsersCanViewTheirOwnProfileStatus() {
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
-        assertTrue(rules.usersAndCompAdminExecCanViewProfileStatus(userProfileStatus, user));
+        assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, user));
     }
 
     @Test
     public void testUsersCanViewTheirOwnProfileStatusButNotAnotherUsersProfileStatus() {
         UserResource user = newUserResource().withId(1L).build();
         UserProfileStatusResource anotherUsersProfileStatus = newUserProfileStatusResource().withUser(2L).build();
-        assertFalse(rules.usersAndCompAdminExecCanViewProfileStatus(anotherUsersProfileStatus, user));
+        assertFalse(rules.usersAndCompAdminCanViewProfileStatus(anotherUsersProfileStatus, user));
     }
 
     @Test
     public void testCompAdminCanViewUserProfileStatus() {
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
-        assertTrue(rules.usersAndCompAdminExecCanViewProfileStatus(userProfileStatus, compAdminUser()));
-    }
-
-    @Test
-    public void testCompExecCanViewUserProfileStatus() {
-        UserResource user = newUserResource().build();
-        UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
-        assertTrue(rules.usersAndCompAdminExecCanViewProfileStatus(userProfileStatus, compExecUser()));
+        assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, compAdminUser()));
     }
 
     @Override

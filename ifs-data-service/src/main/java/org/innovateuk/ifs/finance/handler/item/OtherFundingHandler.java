@@ -40,6 +40,15 @@ public class OtherFundingHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        if (costItem instanceof OtherFunding) {
+            cost = mapOtherFundingToProjectCost(costItem);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
         return buildRowItem(cost);
     }
@@ -62,6 +71,17 @@ public class OtherFundingHandler extends FinanceRowHandler {
             item = otherFunding.getSecuredDate();
         }
         return new ApplicationFinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+    }
+
+    private ProjectFinanceRow mapOtherFundingToProjectCost(FinanceRowItem costItem) {
+        OtherFunding otherFunding = (OtherFunding) costItem;
+        String item;
+        if (otherFunding.getOtherPublicFunding() != null) {
+            item = otherFunding.getOtherPublicFunding();
+        } else {
+            item = otherFunding.getSecuredDate();
+        }
+        return new ProjectFinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 
     @Override

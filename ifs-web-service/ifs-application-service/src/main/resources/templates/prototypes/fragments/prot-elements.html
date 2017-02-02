@@ -127,8 +127,8 @@
     <ul class="task-list">
         <li><div class="task"><h4 class="heading-small"><a href="#">Task 1</a></h4></div></li>
         <li><div class="task"><h4 class="heading-small"><a href="#">Task 2</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>
-        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required">Assigned to <strong>you</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
-        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to <strong>Jessica Doe</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 3</a></h4></div><span class="action-required"><strong>Assigned to you</strong></span><div class="task-status-complete"><span>Completed</span></div></li>
+        <li><div class="task"><h4 class="heading-small"><a href="#">Task 4</a></h4></div><span class="secondary-notification">Assigned to Jessica Doe</span><div class="task-status-complete"><span>Completed</span></div></li>
         <li><div class="task"><h4 class="heading-small">Task 5</h4></div></li>
         <li><div class="task"><h4 class="heading-small">Task 6</h4></div><span class="notification">Jessica Doe</span></li>
         <li class="read-only"><div class="task"><h4 class="heading-small">Task 7</h4></div><span class="notification">-</span></li>
@@ -224,24 +224,33 @@
     <ul>
       <li>
         <div class="task">
-          <h4 class="heading-small"><a href="#">Task 1</a></h4>
-          <span>Application number: 0000008</span>
+          <h4 class="heading-small"><a href="#">Sensing &#38; control network using the lighting infrastructure</a></h4>
+          <ul class="application-details">
+            <li>Application number: 045720</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
         </div>
-        <div class="status"><strong>In progress</strong></div>
+        <div class="status"><strong class="status-msg msg-progress">In progress</strong></div>
       </li>
       <li>
         <div class="task">
           <h4 class="heading-small"><a href="#">Task 2</a></h4>
-          <span>Application number: 0000008</span>
+          <ul class="application-details">
+            <li>Application number: 045720</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
         </div>
-        <div class="status"><strong>In progress</strong></div>
+        <div class="status"><strong class="status-msg msg-progress">In progress</strong></div>
       </li>
       <li>
         <div class="task">
           <h4 class="heading-small"><a href="#">Task 3</a></h4>
-          <span>Application number: 0000008</span>
+          <ul class="application-details">
+            <li>Application number: 045720</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
         </div>
-        <div class="status"><strong>In progress</strong></div>
+        <div class="status"><strong class="status-msg msg-progress">In progress</strong></div>
       </li>
     </ul>
   </div>
@@ -250,69 +259,63 @@
     <ul>
       <li>
         <div class="task">
-          <h4 class="heading-small"><a href="#">Task 1</a></h4>
-          <span>Application number: 0000008</span>
+          <h4 class="heading-small"><a href="#">A new innovative solution to tidal energy</a></h4>
+          <ul class="application-details">
+            <li>Application number: 0457208</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
+          <div class="action-required">
+            <strong>12 sections assigned to you</strong>
+          </div>
         </div>
         <div class="status">
-          <div class="pie-container">
-            <div class="pie medium">75%</div>
-            <div class="pie-overlay">
-              <span class="day">28</span>
-              <span>days left</span>
-            </div>
+          <div class="status-msg msg-deadline-today">
+            <strong class="bold-medium">4:32</strong><br />
+              hours:minutes left<br />
+              Deadline today
           </div>
-          <span class="deadline">Deadline 28 January</span>
-          <strong>75% complete</strong>
-        </div>
-        <div class="action-required">
-          <strong>12 sections assigned to you</strong>
+          <div class="status-msg msg-progress">
+            15% complete
+          </div>
         </div>
       </li>
       <li>
         <div class="task">
-          <h4 class="heading-small"><a href="#">Task 2</a></h4>
-          <span>Application number: 0000008</span>
+          <h4 class="heading-small"><a href="#">A new innovative solution</a></h4>
+          <ul class="application-details">
+            <li>Application number: 0457209</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
         </div>
         <div class="status">
-          <div class="pie-container">
-            <div class="pie medium">50%</div>
-            <div class="pie-overlay">
-              <span class="day">41</span>
-              <span>days left</span>
-            </div>
+          <div class="status-msg msg-deadline">
+            <strong class="bold-medium">23</strong><br />
+              days left<br />
+              Deadline 28 January
           </div>
-          <span class="deadline">Deadline 28 January</span>
-          <strong>50% complete</strong>
+          <div class="status-msg msg-progress">
+            15% complete
+          </div>
         </div>
       </li>
       <li>
         <div class="task">
-          <h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
-          <span>Application number: 0000002</span>
+          <h4 class="heading-small"><a href="#">Magic material</a></h4>
+          <ul class="application-details">
+            <li>Application number: 0457210</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
         </div>
         <div class="status">
-          <img src="../images/icons/icon-awaiting-assessment.svg" width="70" height="70" alt="Awaiting assessment" />
-          <span class="awaiting">Awaiting assessment</span>
-          <strong>Application submitted</strong>
-        </div>
-      </li>
-      <li>
-        <div class="task">
-          <h4 class="heading-small"><a href="#">Task 3</a></h4>
-          <span>Application number: 0000008</span>
-        </div>
-        <div class="status">
-          <div class="pie-container">
-            <div class="pie medium">25%</div>
-            <div class="pie-overlay">
-              <span class="day">147</span>
-              <span>days left</span>
-            </div>
+          <div class="status-msg msg-deadline-waiting">
+            Awaiting assessment
           </div>
-          <span class="deadline">Deadline 28 January</span>
-          <strong>15% complete</strong>
+          <div class="status-msg msg-progress">
+            15% complete
+          </div>
         </div>
       </li>
+
     </ul>
   </div>
 
@@ -321,17 +324,23 @@
     <ul>
       <li class="negative">
         <div class="task">
-          <h4 class="heading-small"><a href="#">Task 1</a></h4>
-          <span>Application number: 0000008</span>
+          <h4 class="heading-small"><a href="#">Magic material</a></h4>
+          <ul class="application-details">
+            <li>Application number: 0457210</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
         </div>
-        <div class="status"><strong>Not successful</strong></div>
+        <div class="status"><strong class="status-msg msg-progress">Not successful</strong></div>
       </li>
       <li class="positive">
         <div class="task">
-          <h4 class="heading-small"><a href="#">Task 2</a></h4>
-          <span>Application number: 0000008</span>
+          <h4 class="heading-small"><a href="#">Sensing &#38; control network using the lighting infrastructure</a></h4>
+          <ul class="application-details">
+            <li>Application number: 0457210</li>
+            <li>Competition: Renewable Energy</li>
+          </ul>
         </div>
-        <div class="status"><strong>Successful</strong></div>
+        <div class="status"><strong class="status-msg msg-progress">Successful</strong></div>
       </li>
     </ul>
   </div>
@@ -349,8 +358,14 @@
           <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
           <strong>Empire Gas Ltd</strong>
         </div>
-        <div class="notification"><strong class="pending">Pending</strong></div>
-        <div class="status"><a href="#">Accept or reject</a></div>
+        <div class="status">
+          <div class="status-msg msg-deadline-waiting ">
+            Pending
+          </div>
+          <div class="status-msg msg-progress">
+            <a href="#">Accept or reject</a>
+          </div>
+        </div>
       </li>
     </ul>
   </div>
@@ -364,7 +379,11 @@
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
-          <div class="notification"><strong>Ready for assessment</strong></div>
+          <div class="status">
+            <strong class="status-msg msg-progress">
+              Ready for assessment
+            </strong>
+          </div>
         </li>
         <li class="positive">
           <div class="task task-half-width">
@@ -376,32 +395,32 @@
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
-          <div class="notification"><strong>Assessed</strong></div>
           <div class="status">
-            <div class="score">
+            <div class="status-msg score">
               <strong class="percent">72%</strong>
               <span>Overall score</span>
               <strong>Recommended</strong>
             </div>
+            <div class="status-msg msg-progress"><strong>Assessed</strong></div>
           </div>
         </li>
         <li class="negative">
           <div class="task task-half-width">
             <div class="label-holder">
-              <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
-                <input id="assessment-submit-checkbox2" type="checkbox" value="" />
+              <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox-2">
+                <input id="assessment-submit-checkbox-2" type="checkbox" value="" />
               </label>
             </div>
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
-          <div class="notification"><strong>Assessed</strong></div>
           <div class="status">
-            <div class="score">
+            <div class="status-msg score">
               <strong class="percent">37%</strong>
               <span>Overall score</span>
               <strong>Not recommended</strong>
             </div>
+            <div class="status-msg msg-progress"><strong>Assessed</strong></div>
           </div>
         </li>
         <li>
