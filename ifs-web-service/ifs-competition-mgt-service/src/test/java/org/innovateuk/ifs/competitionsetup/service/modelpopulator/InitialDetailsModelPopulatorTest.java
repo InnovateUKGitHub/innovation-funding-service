@@ -60,7 +60,7 @@ public class InitialDetailsModelPopulatorTest {
 				.build();
 		
 		List<UserResource> compExecs = new ArrayList<>();
-		when(userService.findUserByType(UserRoleType.COMP_EXEC)).thenReturn(compExecs);
+		when(userService.findUserByType(UserRoleType.COMP_ADMIN)).thenReturn(compExecs);
 		List<InnovationSectorResource> innovationSectors = new ArrayList<>();
 		when(categoryService.getInnovationSectors()).thenReturn(innovationSectors);
 		List<InnovationAreaResource> innovationAreas = new ArrayList<>();

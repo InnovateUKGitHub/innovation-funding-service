@@ -199,7 +199,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
                             .filter(c -> c.getValue() != null)
                             .filter(c -> !"null".equals(c.getValue()))
                             .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
-                            .forEach(costValue -> updateCostValue(costValue, savedCost));
+                            .forEach(costValue -> updateOrCreateCostValue(costValue, savedCost));
 
                     // refresh the object, since we need to reload the costvalues, on the cost object.
                     return savedCost;
@@ -447,16 +447,34 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         return currentCost;
     }
 
-    private void updateCostValue(FinanceRowMetaValue costValue, FinanceRow savedCost) {
-        if (costValue.getFinanceRowMetaField() == null) {
+    private void updateOrCreateCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
+        if (newMetaValue.getFinanceRowMetaField() == null) {
             LOG.error("FinanceRowMetaField is null");
             return;
         }
-        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(costValue.getFinanceRowMetaField().getId());
-        costValue.setFinanceRowId(savedCost.getId());
-        costValue.setFinanceRowMetaField(financeRowMetaField);
-        costValue = financeRowMetaValueRepository.save(costValue);
-        savedCost.addCostValues(costValue);
+        newMetaValue.setFinanceRowId(savedCost.getId());
+
+        getMetaValueByFieldForFinanceRow(newMetaValue, savedCost)
+                .andOnSuccessReturnVoid(currentMetaValue ->  {    updateCostValue(currentMetaValue, newMetaValue);})
+                .andOnFailure(() -> {   createCostValue(newMetaValue, savedCost);
+                                        return serviceSuccess(); });
+
+    }
+
+    private void updateCostValue(FinanceRowMetaValue currentMetaValue, FinanceRowMetaValue newMetaValue) {
+        currentMetaValue.setValue(newMetaValue.getValue());
+        financeRowMetaValueRepository.save(currentMetaValue);
+    }
+
+    private void createCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
+        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(newMetaValue.getFinanceRowMetaField().getId());
+        newMetaValue.setFinanceRowMetaField(financeRowMetaField);
+        newMetaValue = financeRowMetaValueRepository.save(newMetaValue);
+        savedCost.addCostValues(newMetaValue);
+    }
+
+    private ServiceResult<FinanceRowMetaValue> getMetaValueByFieldForFinanceRow(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
+        return find(financeRowMetaValueRepository.financeRowIdAndFinanceRowMetaFieldId(savedCost.getId(), newMetaValue.getFinanceRowMetaField().getId()), notFoundError(FinanceRowMetaValue.class, newMetaValue.getId()));
     }
 
     private ServiceResult<ApplicationFinanceRow> getCost(Long costId) {
