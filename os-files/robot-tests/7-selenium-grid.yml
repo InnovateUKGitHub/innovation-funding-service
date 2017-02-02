@@ -44,7 +44,7 @@ items:
           deploymentconfig: chrome
       spec:
         containers:
-        - image: selenium/node-chrome-debug:3.0.1-dysprosium
+        - image: selenium/node-chrome:3.0.1-dysprosium
           name: chrome
           imagePullPolicy: Always
           lifecycle:
