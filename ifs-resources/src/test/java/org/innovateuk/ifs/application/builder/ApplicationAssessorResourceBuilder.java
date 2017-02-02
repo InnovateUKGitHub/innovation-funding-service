@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -56,7 +57,7 @@ public class ApplicationAssessorResourceBuilder extends BaseBuilder<ApplicationA
         return withArraySetFieldByReflection("skillAreas", value);
     }
 
-    public ApplicationAssessorResourceBuilder withRejectReason(String... value) {
+    public ApplicationAssessorResourceBuilder withRejectReason(AssessmentRejectOutcomeValue... value) {
         return withArraySetFieldByReflection("rejectReason", value);
     }
 
