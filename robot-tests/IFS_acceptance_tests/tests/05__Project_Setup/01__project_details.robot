@@ -615,7 +615,7 @@ Non-lead partner cannot change any project details
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
 
-Internal user can see the Project details as sumbmitted
+Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}

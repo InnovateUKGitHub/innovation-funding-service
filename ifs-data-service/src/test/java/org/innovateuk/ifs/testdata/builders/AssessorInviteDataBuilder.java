@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -28,7 +29,9 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                                                                    String inviteHash,
                                                                    InviteStatus inviteStatus,
                                                                    Optional<User> existingUser,
-                                                                   String innovationAreaName
+                                                                   String innovationAreaName,
+                                                                   Optional<User> sentBy,
+                                                                   Optional<LocalDateTime> sentOn
     ) {
 
         return with(data -> doAs(systemRegistrar(), () -> {
@@ -44,11 +47,17 @@ public class AssessorInviteDataBuilder extends BaseDataBuilder<Void, AssessorInv
                     withName(name).
                     withUser(existingUser.orElse(null)).
                     withInnovationArea(innovationArea).
+                    withSentBy(sentBy.orElse(getDefaultAdminUser())).
+                    withSentOn(sentOn.orElse(LocalDateTime.now())).
                     build();
 
             CompetitionInvite savedInvite = competitionInviteRepository.save(invite);
             competitionParticipantRepository.save(new CompetitionParticipant(savedInvite));
         }));
+    }
+
+    private User getDefaultAdminUser() {
+        return userRepository.findOne(16L);
     }
 
     public AssessorInviteDataBuilder acceptInvite(String hash, String assessorEmail) {

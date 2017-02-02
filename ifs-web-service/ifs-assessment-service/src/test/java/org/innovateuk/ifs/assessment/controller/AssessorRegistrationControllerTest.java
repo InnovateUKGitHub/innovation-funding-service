@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -115,7 +116,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails() throws Exception {
-        String title = "Mr";
+        Title title = Title.Mr;
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
@@ -159,7 +160,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
@@ -181,7 +182,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_weakPassword() throws Exception {
-        String title = "Mr";
+        Title title = Title.Mr;
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
@@ -226,7 +227,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
@@ -249,7 +250,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_Incomplete() throws Exception {
-        String title = "Mr";
+        Title title = Title.Mr;
         String phoneNumber = "12345678";
         Gender gender = Gender.MALE;
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
@@ -264,7 +265,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("phoneNumber", phoneNumber)
                 .param("gender", gender.name())
                 .param("ethnicity", ethnicity.getId().toString())

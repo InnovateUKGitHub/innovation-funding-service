@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.util;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.junit.Test;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.innovateuk.ifs.util.MapFunctions.combineMaps;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
+import static org.innovateuk.ifs.util.MapFunctions.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -85,6 +85,26 @@ public class MapFunctionsTest {
         assertEquals(emptyMap(), combineMaps(null, null));
         assertEquals(asMap(1L, "1"), combineMaps(asMap(1L, "1"), null));
         assertEquals(asMap(1L, "1"), combineMaps(null, asMap(1L, "1")));
+    }
+
+    @Test
+    public void testSimplePartition() {
+        Map<Long, String> map1 = asMap(1L, "1", 2L, "2", 3L, "3");
+
+        Pair<Map<Long, String>, Map<Long, String>> result = simplePartition(map1, longStringEntry -> longStringEntry.getKey().equals(2L));
+
+        assertEquals(asMap(2L, "2"), result.getLeft());
+        assertEquals(asMap(1L, "1", 3L, "3"), result.getRight());
+
+        Pair<Map<Long, String>, Map<Long, String>> result2 = simplePartition(map1, longStringEntry -> longStringEntry.getValue().equals("3"));
+
+        assertEquals(asMap(3L, "3"), result2.getLeft());
+        assertEquals(asMap(1L, "1", 2L, "2"), result2.getRight());
+
+        Pair<Map<Long, String>, Map<Long, String>> result3 = simplePartition(map1, longStringEntry -> longStringEntry.getValue().equals("4"));
+
+        assertEquals(emptyMap(), result3.getLeft());
+        assertEquals(asMap(1L, "1", 2L, "2", 3L, "3"), result3.getRight());
     }
 
     private class SortGroupTest {

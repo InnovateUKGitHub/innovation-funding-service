@@ -67,7 +67,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(financeRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         // Method under test
@@ -96,7 +96,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(financeRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(asList(expectedCct)); // This is the one already created and should be returned
         // Method under test
         ServiceResult<CostCategoryType> result = service.getOrCreateCostCategoryTypeForSpendProfile(pr.getId(), or.getId());
@@ -123,7 +123,7 @@ public class ByProjectFinanceCostCategoriesStrategyTest extends BaseServiceUnitT
         // Mocks
         when(projectServiceMock.getProjectById(pr.getId())).thenReturn(serviceSuccess(pr));
         when(organisationServiceMock.findById(or.getId())).thenReturn(serviceSuccess(or));
-        when(financeRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceRowServiceMock.financeChecksDetails(pr.getId(), or.getId())).thenReturn(serviceSuccess(projectFinance));
         when(costCategoryTypeRepositoryMock.findAll()).thenReturn(new ArrayList<>()); // Force a create code execution
         when(costCategoryTypeRepositoryMock.save(matcherForCostCategoryType(expectedCct))).thenReturn(expectedCct);
         // Method under test
