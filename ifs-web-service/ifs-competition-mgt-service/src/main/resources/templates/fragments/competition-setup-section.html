@@ -859,7 +859,7 @@
                         th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                        <td th:text="${#temporals.format(milestoneEntry.value.date, 'dd MMMM yyyy')}"></td>
+                        <td th:text="${#temporals.format(milestoneEntry.value.date, 'd MMMM yyyy')}"></td>
                     </tr>
                 </tbody>
             </table>
