@@ -77,7 +77,6 @@ subprojects {
 buildscript {
 
     ext['thymeleaf.version'] = '3.0.3.RELEASE'
-    ext['thymeleaf-layout-dialect.version'] = '2.1.2'
 
     ext {
         springBootVersion = '1.5.1.RELEASE'

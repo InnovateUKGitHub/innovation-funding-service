@@ -50,8 +50,7 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
         return resolver;
     }
 
-    @Bean
-    public TemplateEngine templateEngine() {
+    private TemplateEngine templateEngine() {
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver());
         engine.setEnableSpringELCompiler(true);
