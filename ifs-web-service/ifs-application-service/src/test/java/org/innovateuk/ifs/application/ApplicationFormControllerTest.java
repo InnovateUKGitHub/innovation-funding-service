@@ -3,6 +3,7 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
@@ -103,6 +104,9 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
+    @Mock
+    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @Mock
     private Model model;
@@ -750,7 +754,9 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         ).andExpect(status().isOk())
                 .andExpect(content().json("{\"success\":\"true\"}"));
 
-        Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+        InOrder inOrder = Mockito.inOrder(fundingLevelResetHandler, applicationService);
+        inOrder.verify(fundingLevelResetHandler, calls(1)).resetFundingLevelAndMarkAsIncompleteForAllCollaborators(anyLong(), anyLong());
+        inOrder.verify(applicationService, calls(1)).save(any(ApplicationResource.class));
     }
 
     @Test
