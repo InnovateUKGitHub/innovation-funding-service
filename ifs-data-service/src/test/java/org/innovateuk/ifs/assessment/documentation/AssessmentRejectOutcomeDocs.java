@@ -10,7 +10,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class AssessmentRejectOutcomeDocs {
     public static final FieldDescriptor[] assessmentRejectOutcomeResourceFields = {
-            fieldWithPath("rejectReason").description("The reason for rejecting the application."),
+            fieldWithPath("rejectReason").description("The reason for rejecting the assessment."),
             fieldWithPath("rejectComment").description("Any other comments about the reason why this application is being rejected.")
     };
 
