@@ -12,13 +12,13 @@ public class AllApplicationsRowViewModel extends BaseApplicationsRowViewModel {
     private String status;
     private int percentageComplete;
 
-    public AllApplicationsRowViewModel(long applicationNumber,
+    public AllApplicationsRowViewModel(long id,
                                        String projectTitle,
                                        String lead,
                                        String innovationArea,
                                        String status,
                                        int percentageComplete) {
-        super(applicationNumber, projectTitle, lead);
+        super(id, projectTitle, lead);
         this.innovationArea = innovationArea;
         this.status = status;
         this.percentageComplete = percentageComplete;

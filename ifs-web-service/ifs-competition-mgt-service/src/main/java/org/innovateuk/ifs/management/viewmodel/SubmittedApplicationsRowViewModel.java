@@ -16,7 +16,7 @@ public class SubmittedApplicationsRowViewModel extends BaseApplicationsRowViewMo
     private BigDecimal totalProjectCost;
     private long durationInMonths;
 
-    public SubmittedApplicationsRowViewModel(long applicationNumber,
+    public SubmittedApplicationsRowViewModel(long id,
                                              String projectTitle,
                                              String lead,
                                              String innovationArea,
@@ -24,7 +24,7 @@ public class SubmittedApplicationsRowViewModel extends BaseApplicationsRowViewMo
                                              BigDecimal grantRequested,
                                              BigDecimal totalProjectCost,
                                              long durationInMonths) {
-        super(applicationNumber, projectTitle, lead);
+        super(id, projectTitle, lead);
         this.innovationArea = innovationArea;
         this.numberOfPartners = numberOfPartners;
         this.grantRequested = grantRequested;

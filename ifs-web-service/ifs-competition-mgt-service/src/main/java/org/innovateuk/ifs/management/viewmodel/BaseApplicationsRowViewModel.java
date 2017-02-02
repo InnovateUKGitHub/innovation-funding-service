@@ -8,18 +8,18 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 abstract class BaseApplicationsRowViewModel {
 
-    private long applicationNumber;
+    private long id;
     private String projectTitle;
     private String lead;
 
-    BaseApplicationsRowViewModel(long applicationNumber, String projectTitle, String lead) {
-        this.applicationNumber = applicationNumber;
+    BaseApplicationsRowViewModel(long id, String projectTitle, String lead) {
+        this.id = id;
         this.projectTitle = projectTitle;
         this.lead = lead;
     }
 
-    public long getApplicationNumber() {
-        return applicationNumber;
+    public long getId() {
+        return id;
     }
 
     public String getProjectTitle() {
@@ -39,7 +39,7 @@ abstract class BaseApplicationsRowViewModel {
         BaseApplicationsRowViewModel that = (BaseApplicationsRowViewModel) o;
 
         return new EqualsBuilder()
-                .append(applicationNumber, that.applicationNumber)
+                .append(id, that.id)
                 .append(projectTitle, that.projectTitle)
                 .append(lead, that.lead)
                 .isEquals();
@@ -48,7 +48,7 @@ abstract class BaseApplicationsRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(applicationNumber)
+                .append(id)
                 .append(projectTitle)
                 .append(lead)
                 .toHashCode();
