@@ -363,12 +363,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         return invite;
     }
 
-    private User getSender() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserResource user = (UserResource) authentication.getDetails();
-        return userMapper.mapToDomain(user);
-    }
-
     @Override
     public ServiceResult<Void> deleteInvite(String email, long competitionId) {
         return getByEmailAndCompetition(email, competitionId).andOnSuccess(this::deleteInvite);
