@@ -14,7 +14,7 @@ task endpointDocumentation {
     def combinedFilename = 'build/web-endpoints.csv'
 
     def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
-    def lines = ["path, method, constraint, rule, description"]
+    def lines = []
     files.each {
         it.eachLine { line ->
             lines << line
@@ -24,10 +24,16 @@ task endpointDocumentation {
     def buildFolder = new File("build")
     buildFolder.mkdirs()
     def combinedFile = new File(combinedFilename)
-    combinedFile.text = lines
+    if (combinedFile.exists()) {
+        combinedFile.delete()
+    }
+    combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
+    combinedFile.append(
+        lines
             .findAll {
                 it.startsWith('"/')
             }
             .sort()
             .join("\n")
+    )
 }
