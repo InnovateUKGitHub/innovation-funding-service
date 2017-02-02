@@ -14,7 +14,7 @@ In Assessment dashboard page
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
     And The user should see the text in the page    Earth Observation
-    And the user should not see the element     link=View and update competition setup
-    #And the user should see that the element is disabled    jQuery=.button:contains("View panel sheet")
+    And the user should not see the element    link=View and update competition setup
+    #And the user should see the element    jQuery=.button:contains("View panel sheet")
     #And the user should see that the element is disabled    jQuery=.button:contains("Funding")
     #TODO IEnable the checks when NFUND-7934 is ready
