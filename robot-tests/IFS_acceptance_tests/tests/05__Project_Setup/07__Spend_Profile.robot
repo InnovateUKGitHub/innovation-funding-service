@@ -50,6 +50,8 @@ Documentation     INFUND-3970 As a partner I want a spend profile page in Projec
 ...               INFUND-6138 Partners should be able to see the correct status of SP so to take action
 ...
 ...               INFUND-7409 PM is redirected to the wrong screen when saving their spend profile
+...
+...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 Suite Setup       all previous sections of the project are completed
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -90,7 +92,7 @@ Project Finance generates the Spend Profile
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
 Lead partner can view spend profile page
-    [Documentation]    INFUND-3970, INFUND-6138
+    [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
@@ -104,6 +106,9 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Katz_Name} - Spend profile
+    And the user clicks the button/link    link=Spend profile overview
+    And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
+    [Teardown]    the user goes back to the previous page
 
 Lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -247,7 +252,7 @@ Links to other sections in Project setup dependent on project details (applicabl
 
 
 Non-lead partner can view spend profile page
-    [Documentation]    INFUND-3970, INFUND-6138
+    [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
@@ -260,6 +265,9 @@ Non-lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Meembee_Name} - Spend profile
+    And the user clicks the button/link    link=Project setup status
+    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see correct project start date and duration
     [Documentation]    INFUND-3970
@@ -305,7 +313,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     #The complete name of the button is anyways not selected. Please use the short version of it.
 
 Academic partner can view spend profile page
-    [Documentation]    INFUND-3970
+    [Documentation]    INFUND-3970, INFUND-5899
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
@@ -313,6 +321,9 @@ Academic partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Zooveo_Name} - Spend profile
+    And the user clicks the button/link    link=Project setup status
+    And the user should see the text in the page    You need to complete the following steps before this project can begin.
+    [Teardown]    the user goes back to the previous page
 
 Academic partner can see correct project start date and duration
     [Documentation]    INFUND-3970

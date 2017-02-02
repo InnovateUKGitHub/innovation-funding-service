@@ -781,6 +781,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         AssessorDataBuilder builder = assessorUserBuilder;
 
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
+        Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
+        Optional<LocalDateTime> sentOn = Optional.of(LocalDateTime.now());
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(
@@ -790,7 +792,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.hash,
                     invite.status,
                     existingUser,
-                    invite.innovationAreaName
+                    invite.innovationAreaName,
+                    sentBy,
+                    sentOn
             );
         }
 
@@ -804,7 +808,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 inviteHash,
                 line.inviteStatus,
                 existingUser,
-                innovationArea
+                innovationArea,
+                sentBy,
+                sentOn
         );
 
         if (!existingUser.isPresent()) {
@@ -854,7 +860,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 line.hash,
                 line.status,
                 userRepository.findByEmail(line.email),
-                line.innovationAreaName
+                line.innovationAreaName,
+                userRepository.findByEmail(line.sentByEmail),
+                Optional.of(line.sentOn)
         ).
                 build();
     }
