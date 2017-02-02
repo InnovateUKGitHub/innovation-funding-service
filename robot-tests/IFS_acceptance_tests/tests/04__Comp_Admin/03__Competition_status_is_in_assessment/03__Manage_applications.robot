@@ -39,7 +39,7 @@ View application progress page
     [Tags]
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then The user should see the text in the page    00000015: Rainfall
-    [Teardown]
+    And the user should see the text in the page    Everyday Im Juggling Ltd (Lead)
 
 Review the application
     [Documentation]    INFUND-7046
