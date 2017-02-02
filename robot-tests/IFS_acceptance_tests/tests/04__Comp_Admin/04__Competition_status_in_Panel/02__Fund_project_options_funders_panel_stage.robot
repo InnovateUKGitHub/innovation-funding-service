@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
-Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
+Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
@@ -15,8 +15,7 @@ ${email_failure_message}    Unfortunately Innovate UK is unable to fund
 Notify applicants should be disabled
     [Documentation]    INFUND-2601
     [Tags]    HappyPath
-    Given The user clicks the button/link    link=${FUNDERS_PANEL_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=.button:contains("Application")
+    When the user navigates to the page    ${funders_panel_competition_url}
     Then the user should see the text in the page    Funders Panel
     And the option to notify applicants is disabled
 
