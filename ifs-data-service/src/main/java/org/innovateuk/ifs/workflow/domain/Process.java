@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.workflow.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.DiscriminatorOptions;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.resource.ProcessStates;
 
