@@ -98,7 +98,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), projectDetailsSubmitted,
-                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed));
+                getProjectManager(projectResource.getId()).orElse(null), isSubmissionAllowed, false));
 
         return "project/detail";
     }
@@ -122,9 +122,7 @@ public class ProjectDetailsController extends AddressLookupBaseController {
                 getUsersPartnerOrganisations(loggedInUser, projectUsers),
                 partnerOrganisations, applicationResource, projectUsers, competitionResource,
                 projectService.isUserLeadPartner(projectId, loggedInUser.getId()), true,
-                getProjectManager(projectResource.getId()).orElse(null), false));
-
-        model.addAttribute("readOnlyView", true);
+                getProjectManager(projectResource.getId()).orElse(null), false, true));
 
         return "project/detail";
     }
