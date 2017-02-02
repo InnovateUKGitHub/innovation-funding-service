@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml"
-      th:with="inAssessment=${model.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).IN_ASSESSMENT}">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <div th:include="fragments/layout :: head"
-             th:with="pageTitle=${inAssessment} ? 'Manage applications' : 'Allocate Applications'" th:remove="tag"/>
+             th:with="pageTitle=${model.inAssessment} ? 'Manage applications' : 'Allocate Applications'"
+             th:remove="tag"/>
     </head>
 
     <body th:with="context='comp-management'" class="competition-management">
@@ -16,8 +16,8 @@
             <h1 class="heading-xlarge">
                 <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block
                     th:text="${model.competitionName}"/><th:block
-                    th:text="${inAssessment} ? ', in assessment' : ', competition closed'"/></span>
-                <span th:text="${inAssessment} ? 'Manage applications' : 'Allocate Applications'"></span>
+                    th:text="${model.inAssessment} ? ', in assessment' : ', competition closed'"/></span>
+                <span th:text="${model.inAssessment} ? 'Manage applications' : 'Allocate Applications'"></span>
             </h1>
 
             <p class="extra-margin">Assign assessors to applications. You will need to confirm assignments before assessors are notified.</p>
@@ -80,8 +80,8 @@
                             <th scope="col">Title</th>
                             <th scope="col">Lead organisation</th>
                             <th class="aligncentre" scope="col">Assessors</th>
-                            <th class="aligncentre" scope="col" th:if="${inAssessment}">Accepted</th>
-                            <th class="aligncentre" scope="col" th:if="${inAssessment}">Completed</th>
+                            <th class="aligncentre" scope="col" th:if="${model.inAssessment}">Accepted</th>
+                            <th class="aligncentre" scope="col" th:if="${model.inAssessment}">Completed</th>
                             <th scope="col"><span class="visuallyhidden">Action</span></th>
                         </tr>
                     </thead>
@@ -91,12 +91,12 @@
                             <td th:text="${app.title}">The potential for glucose based contact lens monitoring in the management of type 2 diabetes 123</td>
                             <td th:text="${app.leadOrganisation}">Wessex University</td>
                             <td class="aligncentre" th:text="${app.assessors}">4</td>
-                            <td class="aligncentre" th:text="${app.accepted}" th:if="${inAssessment}">2</td>
-                            <td class="aligncentre" th:text="${app.completed}" th:if="${inAssessment}">1</td>
+                            <td class="aligncentre" th:text="${app.accepted}" th:if="${model.inAssessment}">2</td>
+                            <td class="aligncentre" th:text="${app.completed}" th:if="${model.inAssessment}">1</td>
                             <td class="alignright">
                                 <a class="button-secondary no-margin"
                                    th:href="@{/competition/{competitionId}/application/{applicationId}/assessors(competitionId=${model.competitionId},applicationId=${app.id})}"
-                                   th:text="${inAssessment} ? 'View progress' : 'Assign'"></a>
+                                   th:text="${model.inAssessment} ? 'View progress' : 'Assign'"></a>
                             </td>
                         </tr>
                     </tbody>
