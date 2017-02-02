@@ -4,6 +4,6 @@ import java.util.List;
 
 public interface Threadable {
 
-    List<Post> posts();
+    void addPost();
 
 }

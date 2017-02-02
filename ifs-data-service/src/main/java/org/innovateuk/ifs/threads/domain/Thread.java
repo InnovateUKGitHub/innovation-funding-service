@@ -17,7 +17,7 @@ import static java.util.Optional.of;
 @Entity
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "thread_type", discriminatorType = DiscriminatorType.STRING)
-public abstract class Thread {
+public abstract class Thread implements Threadable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
