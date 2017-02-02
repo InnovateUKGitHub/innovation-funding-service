@@ -110,11 +110,12 @@ IFS.competitionManagement.repeater = (function () {
                   '<hr /></div>'
       jQuery('[id^=contentGroup-row-]').last().after(html)
 
-      var editorOptions = jQuery.extend(true, {}, IFS.core.editor.settings, {
+      var editor = IFS.core.editor.prepareEditorHTML('#content-' + idCount)
+      // make a copy of the global wysiwyg-editor settings object and add the html link functionality
+      var editorOptions = jQuery.extend(true, {}, IFS.core.editor.settings.editorOptions, {
         plugins: {'hallolink': {}}
       })
-
-      jQuery('#content-' + idCount).hallo(editorOptions)
+      jQuery(editor).hallo(editorOptions)
     },
     addCoFunder: function () {
       var count = 0

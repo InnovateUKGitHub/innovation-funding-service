@@ -40,27 +40,29 @@ IFS.core.editor = (function () {
       var editorType = el.attr('data-editor')
       if (editorType !== '') {
         var labelledby = ''
-        if (jQuery('[for="' + el.attr('id') + '"]').length) {
-          labelledby = jQuery('[for="' + el.attr('id') + '"]').attr('id')
+        if (jQuery('[for="' + el.prop('id') + '"]').length) {
+          labelledby = 'labelledby="' + el.prop('id') + '"'
         }
 
         if (el.attr('readonly')) {
           // don't add the editor but do render the html on page load
           el.before('<div class="readonly"></div>')
         } else {
-          el.before('<div data-editor="' + editorType + '" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" labelledby="' + labelledby + '" role="textbox"></div>')
+          el.before('<div data-editor="' + editorType + '" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" ' + labelledby + ' role="textbox"></div>')
         }
-
         el.attr('aria-hidden', 'true')
+
+        var editorDiv = el.prev()
         switch (editorType) {
           case 'md':
             IFS.core.editor.textareaMarkdownToHtml(el, el.prev())
             break
           case 'html':
             var html = jQuery.htmlClean(el.val(), s.editorOptions.plugins.hallocleanhtml)
-            el.prev().html(html)
+            editorDiv.html(html)
             break
         }
+        return editorDiv
       }
     },
     initEditors: function () {
@@ -76,7 +78,6 @@ IFS.core.editor = (function () {
 
       jQuery('[role="textbox"][data-editor="md"]').on('hallomodified', function (event, data) {
         var source = jQuery(this).next()
-        console.log('data.content', data.content)
         IFS.core.editor.editorHtmlToMarkdown(data.content, source)
         jQuery(source).trigger('keyup')
       })
