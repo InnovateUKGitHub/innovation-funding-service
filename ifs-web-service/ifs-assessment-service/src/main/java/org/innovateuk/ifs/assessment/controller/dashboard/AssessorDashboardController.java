@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping(value = "/assessor")
-@PreAuthorize("hasAuthority('assessor')")
 public class AssessorDashboardController {
 
     @Autowired
     private AssessorDashboardModelPopulator assessorDashboardModelPopulator;
 
+    @PreAuthorize("hasAuthority('assessor')")
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
