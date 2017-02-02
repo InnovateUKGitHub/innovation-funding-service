@@ -87,8 +87,8 @@ public class UserResourceBuilder extends BaseBuilder<UserResource, UserResourceB
         return withArray((email, user) -> setField("email", email, user), emails);
     }
 
-    public UserResourceBuilder withTitle(String... titles) {
-        return withArray((title, user) -> setField("title", title, user), titles);
+    public UserResourceBuilder withTitle(Title... titles) {
+        return withArray((title, user) -> user.setTitle(title), titles);
     }
 
     public UserResourceBuilder withPassword(String... passwords) {

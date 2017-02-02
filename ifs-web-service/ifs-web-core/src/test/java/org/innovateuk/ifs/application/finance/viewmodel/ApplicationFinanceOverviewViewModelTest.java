@@ -45,4 +45,30 @@ public class ApplicationFinanceOverviewViewModelTest {
 
         assertEquals(Boolean.TRUE, viewModel.hasTooHighResearchRatio(23.6));
     }
+
+    @Test
+    public void getHasOrganisationFinancesTest(){
+        assertEquals(Boolean.FALSE, viewModel.getHasOrganisationFinances());
+
+        viewModel.setOrganisationFinances(asMap());
+
+        assertEquals(Boolean.TRUE, viewModel.getHasOrganisationFinances());
+    }
+
+    @Test
+    public void getHasFinancesForOrganisationTest() {
+        assertEquals(Boolean.FALSE, viewModel.hasFinancesForOrganisation(22L));
+        assertEquals(Boolean.FALSE, viewModel.hasFinancesForOrganisation(null));
+
+        viewModel.setOrganisationFinances(asMap());
+
+        assertEquals(Boolean.FALSE, viewModel.hasFinancesForOrganisation(22L));
+        assertEquals(Boolean.FALSE, viewModel.hasFinancesForOrganisation(null));
+
+        viewModel.setOrganisationFinances(asMap(22L, null));
+
+        assertEquals(Boolean.TRUE, viewModel.hasFinancesForOrganisation(22L));
+        assertEquals(Boolean.FALSE, viewModel.hasFinancesForOrganisation(23L));
+        assertEquals(Boolean.FALSE, viewModel.hasFinancesForOrganisation(null));
+    }
 }

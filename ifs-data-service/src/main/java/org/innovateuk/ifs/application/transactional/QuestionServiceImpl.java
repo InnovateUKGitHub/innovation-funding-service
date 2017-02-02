@@ -95,7 +95,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
-        return find(getQuestion(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+        return find(getQuestionSupplier(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
 
             QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
 
@@ -146,7 +146,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<QuestionResource> getNextQuestion(final Long questionId) {
 
-        return find(getQuestion(questionId)).andOnSuccess(question -> {
+        return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
 
             // retrieve next question within current section
             Question nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
@@ -213,7 +213,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId) {
 
-        return find(getQuestion(questionId)).andOnSuccess(question -> {
+        return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
 
             Question previousQuestion = null;
             if (question != null) {
@@ -319,7 +319,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId) {
-        return find(getAssessment(assessmentId), getQuestion(questionId)).andOnSuccess((assessment, question) -> {
+        return find(getAssessment(assessmentId), getQuestionSupplier(questionId)).andOnSuccess((assessment, question) -> {
             if (question.getCompetition().getId().equals(assessment.getTarget().getCompetition().getId())) {
                 return serviceSuccess(questionMapper.mapToResource(question));
             }
@@ -337,7 +337,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
     
     private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
-        return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
                 -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete));
     }
 
@@ -463,7 +463,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return () -> find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
     }
 
-    private Supplier<ServiceResult<Question>> getQuestion(Long questionId) {
+    private Supplier<ServiceResult<Question>> getQuestionSupplier(Long questionId) {
         return () -> find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
 

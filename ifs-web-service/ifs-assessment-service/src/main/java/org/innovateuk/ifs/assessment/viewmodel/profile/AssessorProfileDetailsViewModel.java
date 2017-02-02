@@ -9,7 +9,7 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  * Holder of model attributes for the Assessor user details view.
  */
 public class AssessorProfileDetailsViewModel {
-    private String title;
+    private Title title;
     private String firstName;
     private String lastName;
     private Gender gender;
@@ -31,11 +31,11 @@ public class AssessorProfileDetailsViewModel {
         this.email = profileDetails.getEmail();
     }
 
-    public String getTitle() {
+    public Title getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Title title) {
         this.title = title;
     }
 
