@@ -1,4 +1,4 @@
-
+<!-- =================== Public content section - Competition information and search  ============================== -->
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
@@ -54,4 +54,56 @@
         </fieldset>
     </th:block>
 </div>
+
+<!-- =================== Public content section - Summary  ========================================================= -->
+<div th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <p>Text entered into this section will appear within the summary tab.</p>
+    <th:block th:if="${model.readOnly}">
+        <dl>
+            <dt>Competition description</dt>
+            <dd th:text="${form.description}">Long description. Contains links. Really. Really. Long.</dd>
+            <dt>Funding type</dt>
+            <dd th:text="${form.fundingType}">Procurement</dd>
+            <dt>Project size</dt>
+            <dd th:text="${form.projectSize}">Very large</dd>
+        </dl>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <fieldset>
+            <div class="form-group">
+                <label class="form-label-bold" for="description">
+                    Competition description
+                </label>
+                <input class="form-control width-full" id="description" type="text" th:field="${form.description}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.description.required}" />
+            </div>
+
+
+            <div class="form-group" th:with="fundingTypes=${model.fundingTypes}">
+                <label class="form-label-bold" for="funding-type">
+                    Funding type
+                </label>
+
+                <label class="block-label selection-button-radio" th:each="fundingType:${model.fundingTypes}" id="funding-type" >
+                    <input type="radio" th:field="${form.fundingType}"
+                          th:value="${fundingType}"
+                          required="required"
+                          th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
+                    <span th:text="${fundingType.displayName}" th:remove="tag"/>
+                </label>
+
+            </div>
+            <div class="form-group">
+                <label class="form-label-bold" for="project-size">
+                    Project size
+                </label>
+                <input class="form-control" id="project-size" type="text" th:field="${form.projectSize}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
+            </div>
+        </fieldset>
+    </th:block>
+</div>
+
 

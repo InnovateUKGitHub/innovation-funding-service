@@ -18,7 +18,7 @@ public class SearchInformationFormPopulator extends AbstractPublicContentFormPop
 
     @Override
     protected void populateSection(SearchInformationForm form, PublicContentResource publicContentResource) {
-        form.setEligibilitySummary(publicContentResource.getEligibilitySummary());
+        form.setEligibilitySummary(publicContentResource.getEligibilitySummary()); //TODO: should this be setShortDescription, not eligibility??
         form.setProjectFundingRange(publicContentResource.getProjectFundingRange());
         form.setShortDescription(publicContentResource.getShortDescription());
         form.setKeywords(publicContentResource.getKeywords().stream().collect(Collectors.joining(",")));
