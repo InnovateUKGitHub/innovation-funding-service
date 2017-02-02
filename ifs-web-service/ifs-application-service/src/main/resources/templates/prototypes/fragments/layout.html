@@ -273,19 +273,19 @@
 
     <th:block th:if="${status == 'assigned'}">
       <div class="assign-button">
-          Assigned to: <strong th:text="${name}">You</strong>
+         Assigned to <span th:text="${name}">you</span>
       </div>
     </th:block>
 
     <th:block th:if="${status == 'assignedToYou'}">
       <div class="assign-button">
-          Assigned to: <strong>You</strong>
+          <strong> Assigned to you</strong>
       </div>
     </th:block>
 
     <th:block th:if="${status == 'reassignedToYou'}">
       <div class="assign-button">
-          Reassigned to: <strong>You</strong>
+          <strong> Reassigned to you</strong>
       </div>
     </th:block>
 

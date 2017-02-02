@@ -97,9 +97,8 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     public void test_findByRole() {
 
         loginCompAdmin();
-        List<UserResource> users = controller.findByRole(UserRoleType.COMP_EXEC.getName()).getSuccessObject();
-        int compExecUserCount = 2;
-        assertEquals(compExecUserCount, users.size());
+        List<UserResource> users = controller.findByRole(UserRoleType.COMP_ADMIN.getName()).getSuccessObject();
+        assertTrue(users.size() > 0);
     }
 
     @Test
@@ -265,7 +264,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         userResource.setLastName("How");
         userResource.setPassword("Password123");
         userResource.setEmail("email@Nope.com");
-        userResource.setTitle("King");
+        userResource.setTitle(Title.Miss);
         userResource.setPhoneNumber("0123335787888");
 
         RestResult<UserResource> restResult = controller.createUser(1L, 1L, userResource);

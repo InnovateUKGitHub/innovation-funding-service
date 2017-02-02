@@ -11,6 +11,8 @@ Documentation     INFUND-4821: As a project finance team member I want to have a
 ...                            statuses and access pages appropriate to my role
 ...
 ...               INFUND-7109 Bank Details Status - Internal user
+...
+...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 Suite Setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -54,12 +56,16 @@ Comp Admin user cannot see the finance check summary page(duplicate)
     Given the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 Comp Admin user can see the internal project summary page
-    [Documentation]    INFUND-4049
+    [Documentation]    INFUND-4049, INFUND-5899
     [Tags]
     Given the user navigates to the page    ${internal_project_summary}
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_TITLE}
     And the user clicks the button/link    xpath=//a[contains(@href, '/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/monitoring-officer')]
     And the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    link=Competition dashboard
+    Then the user should see the text in the page    All competitions
+    [Teardown]    the user goes back to the previous page
 
 
 Project Finance has a dashboard and can see projects in PS

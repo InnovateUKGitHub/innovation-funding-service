@@ -38,7 +38,7 @@
             <p>The organisation size is used to calculate your funding level in the application.</p>
             <p>Changing this selection will reset your funding level.</p>
         </div>
-        <div class="form-group">
+        <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
             <fieldset>
                 <legend>
                     <span class="form-label form-label-bold" th:text="${question.name}"/>
@@ -54,7 +54,7 @@
                            th:value="${size}"
                            th:checked="${size == model.finance.organisationFinanceSize}"
                            required="required" />
-                    <span th:text="${size.name}" />
+                    <th:block th:text="${size.name}" />
                 </label>
             </fieldset>
         </div>
@@ -72,11 +72,10 @@
                th:id="${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
                th:value="*{formInput[__${formInput.id}__]}"
-               required="true"
+               required="required"
                min="0"
                max="2147483647"
                type="number"
-
         />
     </div>
 
@@ -95,7 +94,74 @@
                th:min="0"
                th:max="2147483647"
                th:value="*{formInput[__${formInput.id}__]}"
-               th:required="true"
+               th:required="required"
+        />
+    </div>
+
+    <!-- =========================== Form: Financial Year End =========================== -->
+    <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''">
+        <fieldset th:with="value=(*{formInput[__${formInput.id}__]})">
+            <legend>
+                <span class="form-label form-label-bold">End of last financial year</span>
+                <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+                <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+            </legend>
+            <div class="date-group" data-past-date="">
+                <!--/* this is added for javascript date validation, if we have more mm yyyy fields we might want to do this in a cleaner way */-->
+                <div class="day">
+                    <input type="hidden" value="1" class="js-visited" disabled="disabled" />
+                </div>
+                <div class="month" th:with="month=${#strings.substringBefore(value, '-')}">
+                    <label class="form-label" th:for="${formInput.id}+'.MMYYYY.month'">
+                        <span>Month</span>
+                    </label>
+                    <input class="form-control width-extra-small"
+                           th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                           th:id="${formInput.id}+'.MMYYYY.month'"
+                           th:name="'formInput['+${formInput.id}+'].MMYYYY.month'"
+                           th:value="${month}"
+                           th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
+                           required="required"
+                           placeholder="MM"
+                           max="12"
+                           min="0"
+                           type="number" />
+                </div>
+                <div class="year" th:with="year=${#strings.substringAfter(value, '-')}">
+                    <label class="form-label" th:for="${formInput.id}+'.MMYYYY.year'">
+                        <span>Year</span>
+                    </label>
+                    <input class="form-control width-extra-small"
+                           th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+                           th:id="${formInput.id}+'.MMYYYY.year'"
+                           th:name="'formInput['+${formInput.id}+'].MMYYYY.year'"
+                           th:value="${year}"
+                           th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'field-error' : ''"
+                           placeholder="YYYY"
+                           required="required"
+                           min="0"
+                           type="number" />
+                </div>
+            </div>
+        </fieldset>
+    </div>
+
+    <!-- =========================== Form: Financial Staff Count =========================== -->
+    <div th:fragment="financial_staff_count" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+        <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
+            <span th:text="${formInput.description}"/>
+            <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
+            <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
+        </label>
+        <input class="form-control width-medium"
+               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
+               type="number"
+               th:id="${formInput.id}"
+               th:name="'formInput['+${formInput.id}+']'"
+               th:min="0"
+               th:max="2147483647"
+               th:value="*{formInput[__${formInput.id}__]}"
+               th:required="required"
         />
     </div>
 
