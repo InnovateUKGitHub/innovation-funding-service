@@ -106,7 +106,7 @@ IFS.competitionManagement.repeater = (function () {
                       '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="file-upload-' + idCount + '" value="' + count + '">Save</button>' +
                       '<p class="uploaded-file">No file currently uploaded</p>' +
                   '</div>' +
-                  '<button type="button" class="buttonlink">Remove section</button>' +
+                  '<button type="button" class="buttonlink" data-remove-row="">Remove section</button>' +
                   '<hr /></div>'
       jQuery('[id^=contentGroup-row-]').last().after(html)
 
