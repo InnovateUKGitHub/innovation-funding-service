@@ -13,9 +13,9 @@ import org.innovateuk.ifs.publiccontent.viewmodel.submodel.DateViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 @Service
 public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopulator<DatesViewModel> implements PublicContentViewModelPopulator<DatesViewModel> {
@@ -40,6 +40,9 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
                 .collect(Collectors.toList());
 
         milestonesNeeded.forEach(milestoneResource -> {
+            if(null == model.getPublicContentDates()) {
+                model.setPublicContentDates(new ArrayList<>());
+            }
             model.getPublicContentDates().add(mapMilestoneToDateViewModel(milestoneResource));
         });
 

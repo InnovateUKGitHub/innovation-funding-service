@@ -5,8 +5,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -21,9 +19,6 @@ public abstract class PublicContentMapper extends BaseMapper<PublicContent, Publ
     @Override
     public abstract PublicContentResource mapToResource(PublicContent domain);
 
-    @Mappings({
-            @Mapping(target = "contentEvents", ignore = true)
-    })
     public abstract PublicContent mapToDomain(PublicContentResource domain);
 
     public Long mapPublicContentToId(PublicContent object) {

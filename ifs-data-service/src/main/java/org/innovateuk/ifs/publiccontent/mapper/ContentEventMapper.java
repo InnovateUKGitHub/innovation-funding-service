@@ -5,8 +5,6 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.Mappings;
 
 @Mapper(
     config = GlobalMapperConfig.class,
@@ -19,10 +17,7 @@ public abstract class ContentEventMapper extends BaseMapper<ContentEvent, Public
     @Override
     public abstract PublicContentEventResource mapToResource(ContentEvent domain);
 
-    @Mappings({
-            @Mapping(target = "contentGroup", ignore = true)
-    })
-    public abstract ContentEvent mapToDomain(PublicContentEventResource domain);
+    public abstract ContentEvent mapToDomain(PublicContentEventResource resource);
 
     public Long mapContentEventToId(ContentEvent object) {
         if (object == null) {
