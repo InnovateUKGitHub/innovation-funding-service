@@ -24,6 +24,7 @@ import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.Collator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -77,6 +78,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                     application.getName(),
                     competition.getId(),
                     competition.getName(),
+                    getLeadOrganisationName(application),
                     getPartnerOrganisationNames(application));
         });
     }
@@ -85,7 +87,16 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         return application.getProcessRoles().stream()
                 .filter(ProcessRole::isCollaborator)
                 .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
+                .sorted(Collator.getInstance())
                 .collect(toList());
+    }
+
+    private String getLeadOrganisationName(Application application) {
+        return application.getProcessRoles().stream()
+                .filter(ProcessRole::isLeadApplicant)
+                .findFirst()
+                .map(processRole -> organisationRepository.findOne(processRole.getOrganisationId()).getName())
+                .orElse("");
     }
 
     private ApplicationAssessorResource getApplicationAssessor(CompetitionParticipant competitionParticipant, Long applicationId) {
