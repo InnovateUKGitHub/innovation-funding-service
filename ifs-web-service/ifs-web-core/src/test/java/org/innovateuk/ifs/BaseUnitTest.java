@@ -53,7 +53,6 @@ import org.innovateuk.ifs.project.status.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.workflow.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -166,8 +165,6 @@ public class BaseUnitTest {
     public OrganisationTypeRestService organisationTypeRestService;
     @Mock
     public OrganisationAddressRestService organisationAddressRestService;
-    @Mock
-    public ProcessOutcomeService processOutcomeService;
     @Mock
     public SectionService sectionService;
     @Mock
