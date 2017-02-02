@@ -165,7 +165,6 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
 
-        // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
         // when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
@@ -259,6 +258,8 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
 
         verifyInteractions(mock -> mock.isLeadPartnerOrganisation(organisation));
+
+
     }
 
     @Test
