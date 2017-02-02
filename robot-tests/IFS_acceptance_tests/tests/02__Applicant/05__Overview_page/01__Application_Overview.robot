@@ -16,23 +16,27 @@ Force Tags        Applicant
 Default Tags
 Resource          ../../../resources/defaultResources.robot
 
+#This Test Suite is using the Application: Robot test application
+
 *** Test Cases ***
 Navigation to the Overview page
     [Tags]    HappyPath
     When the user navigates to the overview page of the Robot test application
-    Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
+    Then the user should see the text in the page  Please provide Innovate UK with information about your project
+    And the user should see the element            jQuery=h1:contains("Application overview")
 
 Review and submit button
     [Documentation]    -INFUND-195
     ...    -INFUND-214
     [Tags]
     When the user clicks the button/link    link=Review and submit
-    Then the user redirects to the page    You will not be able to make changes to your application or resubmit after this point    Application Summary
+    Then the user should see the text in the page  You will not be able to make changes to your application or resubmit after this point.
+    And the user should see the element            jQuery=h1:contains("Application Summary")
 
 List with the sections
     [Tags]    HappyPath
     When the user navigates to the overview page of the Robot test application
-    Then the applicant should see three sections
+    Then the applicant can see the overview page divided in three sections
 
 File uploads not visible
     [Documentation]    INFUND-428
@@ -44,7 +48,7 @@ File uploads not visible
 Days left to submit are visible
     [Documentation]    -INFUND-37
     [Tags]    HappyPath
-    Then the user should see the element    css=.progress-indicator
+    Then the user should see the element  jQuery=.deadline:contains("Days left to submit")
 
 The Progress bar is visible
     [Documentation]    INFUND-32
@@ -53,8 +57,7 @@ The Progress bar is visible
 
 User can print the application
     [Documentation]    INFUND-1162
-    [Tags]    HappyPath  Pending
-    #TODO 6390
+    [Tags]    HappyPath
     When the user navigates to the page without the usual headers    ${SERVER}/application/9/print?noprint    #This URL its only for testing purposes
     Then the user should see the element    jQuery=.button:contains("Print your application")
     And The user navigates to the overview page of the Robot test application
@@ -62,10 +65,10 @@ User can print the application
     Then the user should get a new print window
 
 *** Keywords ***
-the applicant should see three sections
-    the user should see the element    css=#section-1 .bold-medium
-    the user should see the element    css=#section-2 .heading-medium
-    the user should see the element    css=#section-6 .heading-medium
+the applicant can see the overview page divided in three sections
+    the user should see the element  jQuery=#section-1 h2:contains("Project details")
+    the user should see the element  jQuery=#section-2 h2:contains("Application questions")
+    the user should see the element  jQuery=#section-6 h2:contains("Finances")
 
 the user should get a new print window
     Select Window    Title=Print Application - Innovation Funding Service

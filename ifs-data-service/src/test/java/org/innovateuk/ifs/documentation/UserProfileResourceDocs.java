@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.documentation;
 
-import org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder;
 import org.innovateuk.ifs.user.builder.UserProfileResourceBuilder;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
@@ -8,12 +7,9 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class UserProfileResourceDocs {
@@ -33,7 +29,7 @@ public class UserProfileResourceDocs {
 
     public static final UserProfileResourceBuilder userProfileResourceBuilder = newUserProfileResource()
             .withUser(1L)
-            .withTitle("Mr")
+            .withTitle(Mr)
             .withFirstName("First")
             .withLastName("Last")
             .withPhoneNumber("012434 567890")
