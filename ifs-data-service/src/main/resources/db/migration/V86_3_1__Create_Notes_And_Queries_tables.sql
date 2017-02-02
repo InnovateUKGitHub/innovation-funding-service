@@ -20,7 +20,7 @@ CREATE TABLE `post` (
   CONSTRAINT `post_author_fk` FOREIGN KEY (`author_id`) REFERENCES `ifs`.`user` (`id`));
 
 
-CREATE TABLE `ifs`.`post_attachment` (
+CREATE TABLE `post_attachment` (
   `id` BIGINT(20) NOT NULL,
   `post_id` BIGINT(20) NOT NULL,
   `file_entry_id` BIGINT(20) NOT NULL,

@@ -7,6 +7,8 @@ import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,21 +29,17 @@ public class ProjectFinanceQueriesController {
     ThreadService<Query, ProjectFinance> service;
 
     @RequestMapping(value = "", method = GET)
-    public RestResult<List<Query>> queries(@PathVariable("projectFinanceId") final Long projectFinanceId) {
+    public RestResult<List<QueryResource>> queries(@PathVariable("projectFinanceId") final Long projectFinanceId) {
         return service.findAll(projectFinanceId).toGetResponse();
     }
 
     @RequestMapping(value = "", method = POST)
-    public RestResult<Void> createQuery(@RequestBody Query query ) {
+    public RestResult<Void> createQuery(@RequestBody QueryResource query ) {
         return service.create(query).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/{queryId}/post", method = POST)
-    public RestResult<Void> addPost(@PathVariable("queryId") Long queryId, @RequestBody Post post ) {
+    public RestResult<Void> addPost(@PathVariable("queryId") Long queryId, @RequestBody PostResource post ) {
         return service.addPost(post, queryId).toPostCreateResponse();
     }
-
-
-
-
 }
