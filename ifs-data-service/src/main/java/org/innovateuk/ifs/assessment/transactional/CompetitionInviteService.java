@@ -19,7 +19,7 @@ public interface CompetitionInviteService {
 
     @SecuredBySpring(value = "GET_CREATED_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can get a competition invite that has been created")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<AssessorInviteToSendResource> getCreatedInvite(long inviteId);
 
     @PreAuthorize("hasAuthority('system_registrar')")
@@ -52,44 +52,44 @@ public interface CompetitionInviteService {
             additionalComments = "The hash should be unguessable so the only way to successfully call this method would be to have been given the hash in the first place")
     ServiceResult<Boolean> checkExistingUser(@P("inviteHash") String inviteHash);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
             description = "Competition Administrators and Executives can retrieve available assessors by competition",
             additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
     ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",
             description = "Competition Administrators and Executives can retrieve created invites by competition")
     ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
             description = "Competition Administrators and Executives can retrieve invitation overview by competition")
     ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "INVITE_NEW_USER",
             description = "The Competition Admin user, or the Competition Executive user can create a competition invite for a new user")
     ServiceResult<CompetitionInviteResource> inviteUser(NewUserStagedInviteResource stagedInvite);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value="INVITE_NEW_USERS",
             description = "The Competition Admin user, or the Competition Executive user can create competition invites for new users")
     ServiceResult<Void> inviteNewUsers(List<NewUserStagedInviteResource> newUserStagedInvites, long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "INVITE_EXISTING_USER",
             description = "The Competition Admin user, or the Competition Executive user can create a competition invite for an existing user")
     ServiceResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInviteResource);
 
     @SecuredBySpring(value = "SEND_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can send a competition invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<AssessorInviteToSendResource> sendInvite(long inviteId, EmailContent content);
 
     @SecuredBySpring(value = "DELETE_INVITE",
             description = "The Competition Admin user, or the Competition Executive user can delete a competition invite")
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<Void> deleteInvite(String email, long competitionId);
 }
