@@ -55,4 +55,8 @@ public abstract class Thread {
     public List<Post> posts() {
         return posts;
     }
+
+    public void addPost(Post post) {
+        posts.add(post);
+    }
 }
