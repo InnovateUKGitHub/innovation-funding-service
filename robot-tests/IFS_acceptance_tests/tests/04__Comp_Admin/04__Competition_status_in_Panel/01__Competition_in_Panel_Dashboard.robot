@@ -1,7 +1,7 @@
 *** Settings ***
 Suite Setup       Log in as user    email=john.doe@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
@@ -17,3 +17,4 @@ In Panel Dashboard
     And the user should see the element    jQuery=.button:contains("Funding decision")
     And the user should see the element    jQuery=.button:contains("Invite assessors")
     And the user should see the element    jQuery=.button:contains("Manage applications")
+    And the user should see that the element is disabled    jQuery=.button:contains("Manage funding notifications")

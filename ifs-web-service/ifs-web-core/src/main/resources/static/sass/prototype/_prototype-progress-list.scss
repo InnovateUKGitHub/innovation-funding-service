@@ -17,6 +17,11 @@
     display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
     flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
+
+    @include media-down(mobile) {
+      padding: 15px;
+    }
 
     .task{
       @include core-19;
@@ -39,7 +44,7 @@
 
       @include media-down(mobile) {
         float: none;
-        width: 100%;
+        width: 90%;
         margin-bottom: 15px;
         //font-size: 15px;
       }
@@ -52,9 +57,9 @@
         }
       }
       &.task-half-width {
-        width: 50%;
+        //width: 50%;
         @include media-down(mobile) {
-          width: 100%;
+          width: 90%;
         }
       }
     }
@@ -107,21 +112,35 @@
       flex: 1 0 300px;
       justify-content: flex-end;
       align-items: center;
-      margin: 1em 0;
+      margin: 0;
+
+      @include media-down(mobile) {
+        flex: 1 0 auto;
+      }
 
       .status-msg {
+        @include core-14;
         display: block;
         text-align: center;
         font-weight: bold;
         box-sizing: border-box;
         width: 50%;
         float: left;
+        padding: 0 0.5em;
+        border-right: 1px dashed $border-colour;
+        margin: 0;
 
         &.msg-deadline{
-          @include core-14;
-          color: $red;
-          border-right: 1px dashed $border-colour;
           font-weight: bold;
+
+          &-today{
+            color: $red;
+          }
+
+          &-waiting{
+            color: $secondary-text-colour;
+          }
+
         }
 
         &.msg-progress{
@@ -129,6 +148,7 @@
           color: $text-colour;
           border: none;
           font-weight: bold;
+          float: right;
         }
       }
 
@@ -163,7 +183,7 @@
       }
       > strong, a {
         display: block;
-        margin-top: 15px;
+        //margin-top: 15px;
         font-size: 17px;
         text-align: center;
         font-weight: bold;
@@ -201,38 +221,19 @@
 
     }
     .status-complete {
-      position: absolute;
-      bottom: 50%;
-      right: 10px;
-      margin-bottom: -10px;
-      span {
-        @extend %icon-tick;
-        padding-left: 20px;
-        background-size: 14px;
-        background-position: left center;
-        color: $button-colour;
-        font-weight: bold;
-        font-size: 17px;
-        @include media-down(mobile) {
-          font-size: 15px;
-        }
-      }
-      @include media-down(mobile) {
-        position: static;
-        margin: 10px 0;
-        text-align: right;
-      }
+      @extend %icon-tick;
+      padding-left: 20px;
+      background-size: 14px;
+      background-position: left center;
+      color: $button-colour;
+      @include bold-16;
     }
     .status-action-required {
       @extend .status-complete;
-      span {
-        @extend %action-required;
-        color: $text-colour
-      }
+      @extend %action-required;
+      color: $text-colour;
     }
     &.positive {
-      border-right: 5px solid $button-colour;
-      padding: 15px 15px 15px 30px;
       .status > strong {
         color: $button-colour;
       }
@@ -244,8 +245,6 @@
       }
     }
     &.negative {
-      border-right: 5px solid $red;
-      padding: 15px 15px 15px 30px;
       .score > strong {
         color: $red;
       }

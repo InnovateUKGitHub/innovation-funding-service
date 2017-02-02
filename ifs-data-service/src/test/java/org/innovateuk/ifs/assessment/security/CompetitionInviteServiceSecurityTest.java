@@ -29,7 +29,7 @@ import static org.mockito.Mockito.*;
 
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
 
-    private static final EnumSet<UserRoleType> ASSESSOR_MANAGEMENT_ROLES = EnumSet.of(COMP_ADMIN, COMP_EXEC);
+    private static final EnumSet<UserRoleType> ASSESSOR_MANAGEMENT_ROLES = EnumSet.of(COMP_ADMIN);
 
     private CompetitionInvitePermissionRules competitionInvitePermissionRules;
     private CompetitionInviteLookupStrategy competitionInviteLookupStrategy;

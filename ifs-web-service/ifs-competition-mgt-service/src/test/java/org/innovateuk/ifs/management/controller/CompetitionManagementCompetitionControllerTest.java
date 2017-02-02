@@ -115,7 +115,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
                 .withCompetitionTypeName("Programme")
                 .withInnovationSectorName("Materials and manufacturing")
                 .withInnovationAreaNames(asLinkedSet("Earth Observation", "Transport Systems"))
-                .withExecutiveName("Toby Reader")
+                .withExecutiveName("John Doe")
                 .withLeadTechnologistName("Ian Cooper")
                 .withFunders(newCompetitionFunderResource()
                         .withFunderBudget(new BigInteger("1000000"))
@@ -148,7 +148,7 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         assertEquals("Programme", model.getCompetitionType());
         assertEquals("Materials and manufacturing", model.getInnovationSector());
         assertEquals("Earth Observation, Transport Systems", model.getInnovationArea());
-        assertEquals("Toby Reader", model.getExecutive());
+        assertEquals("John Doe", model.getExecutive());
         assertEquals("Ian Cooper", model.getLead());
         assertTrue(new BigInteger("2000000").compareTo(model.getFunding()) == 0);
         assertMilestones(milestoneResources, model.getMilestones());
