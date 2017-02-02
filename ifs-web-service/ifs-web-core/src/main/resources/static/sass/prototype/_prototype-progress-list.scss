@@ -18,13 +18,17 @@
     flex-wrap: wrap;
     align-items: center;
 
+    @include media-down(mobile) {
+      padding: 15px;
+    }
+
     .task{
       @include core-19;
       float: left;
       width: 58%;
       padding-right: 19px;
       vertical-align: top;
-      flex: 1 0 auto;
+      flex: 2 0 auto;
 
       .heading-small,
       .heading-medium {
@@ -107,21 +111,35 @@
       flex: 1 0 300px;
       justify-content: flex-end;
       align-items: center;
-      margin: 1em 0;
+      margin: 0.5em 0;
+
+      @include media-down(mobile) {
+        flex: 1 0 auto;
+      }
 
       .status-msg {
+        @include core-14;
         display: block;
         text-align: center;
         font-weight: bold;
         box-sizing: border-box;
         width: 50%;
         float: left;
+        padding: 0 0.5em;
+        border-right: 1px dashed $border-colour;
+        margin: 0;
 
         &.msg-deadline{
-          @include core-14;
-          color: $red;
-          border-right: 1px dashed $border-colour;
           font-weight: bold;
+
+          &-today{
+            color: $red;
+          }
+
+          &-waiting{
+            color: $secondary-text-colour;
+          }
+
         }
 
         &.msg-progress{
@@ -163,7 +181,7 @@
       }
       > strong, a {
         display: block;
-        margin-top: 15px;
+        //margin-top: 15px;
         font-size: 17px;
         text-align: center;
         font-weight: bold;
@@ -231,8 +249,8 @@
       }
     }
     &.positive {
-      border-right: 5px solid $button-colour;
-      padding: 15px 15px 15px 30px;
+      /*border-right: 5px solid $button-colour;
+      padding: 15px 15px 15px 30px;*/
       .status > strong {
         color: $button-colour;
       }
@@ -244,8 +262,8 @@
       }
     }
     &.negative {
-      border-right: 5px solid $red;
-      padding: 15px 15px 15px 30px;
+      /*border-right: 5px solid $red;
+      padding: 15px 15px 15px 30px;*/
       .score > strong {
         color: $red;
       }
