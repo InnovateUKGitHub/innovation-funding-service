@@ -3,34 +3,50 @@
   background-color: $panel-colour;
   margin: 20px 0 50px;
   padding: 15px;
+
   > .heading-medium {
     margin-top: 0;
   }
+
   > ul > li {
     margin-top: 10px;
-    padding: 15px 19px 15px 30px;
+    padding: 15px 0 15px 30px;
     background-color: $white;
     border: 1px solid $border-colour;
     overflow: auto;
+    display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+
+    @include media-down(mobile) {
+      padding: 15px;
+    }
+
     .task{
+      @include core-19;
       float: left;
-      width: 75%;
+      width: 58%;
+      padding-right: 19px;
       vertical-align: top;
-      font-size: 17px;
-      .heading-small {
+      flex: 1 0 auto;
+
+      .heading-small,
+      .heading-medium {
         margin-top: 0;
+        margin-bottom: 0.3em;
       }
-      span {
-        font-size: 16px;
-        @include media-down(mobile) {
-          font-size: 14px;
-        }
+
+      span,
+      .application-details {
+        @include core-16;
       }
+
       @include media-down(mobile) {
         float: none;
-        width: 100%;
+        width: 90%;
         margin-bottom: 15px;
-        font-size: 15px;
+        //font-size: 15px;
       }
       .label-holder {
         float: left;
@@ -41,30 +57,28 @@
         }
       }
       &.task-half-width {
-        width: 50%;
+        //width: 50%;
         @include media-down(mobile) {
-          width: 100%;
+          width: 90%;
         }
       }
     }
     .action-required {
-      float: left;
-      width: 75%;
-      margin-top: 30px;
+      /*float: left;
+      width: 75%;*/
+      margin-top: 10px;
       vertical-align: top;
       strong {
         @extend  %action-required;
         padding-left: 20px;
-        font-size: 17px;
-        @include media-down(mobile) {
-          font-size: 15px;
-        }
+        @include core-19;
+        font-weight: 700;
       }
-      @include media-down(mobile) {
+      /*@include media-down(mobile) {
         width: 50%;
         margin-top: 0;
         vertical-align: middle;
-      }
+      }*/
     }
     .notification {
       float: left;
@@ -88,22 +102,56 @@
         color: $secondary-text-colour;
       }
     }
+
     .status {
       float: right;
-      width: 24%;
+      width: 39%;
       vertical-align: middle;
       text-align: center;
-      .deadline {
+      display: flex;
+      flex: 1 0 300px;
+      justify-content: flex-end;
+      align-items: center;
+      margin: 0;
+
+      @include media-down(mobile) {
+        flex: 1 0 auto;
+      }
+
+      .status-msg {
+        @include core-14;
         display: block;
         text-align: center;
-        color: $red;
-        font-size: 15px;
         font-weight: bold;
-        margin-top: 0;
-        @include media-down(mobile) {
-          font-size: 13px;
+        box-sizing: border-box;
+        width: 50%;
+        float: left;
+        padding: 0 0.5em;
+        border-right: 1px dashed $border-colour;
+        margin: 0;
+
+        &.msg-deadline{
+          font-weight: bold;
+
+          &-today{
+            color: $red;
+          }
+
+          &-waiting{
+            color: $secondary-text-colour;
+          }
+
+        }
+
+        &.msg-progress{
+          @include core-16;
+          color: $text-colour;
+          border: none;
+          font-weight: bold;
+          float: right;
         }
       }
+
       .awaiting {
         @extend .deadline;
         color: $secondary-text-colour;
@@ -135,7 +183,7 @@
       }
       > strong, a {
         display: block;
-        margin-top: 15px;
+        //margin-top: 15px;
         font-size: 17px;
         text-align: center;
         font-weight: bold;
@@ -173,38 +221,19 @@
 
     }
     .status-complete {
-      position: absolute;
-      bottom: 50%;
-      right: 10px;
-      margin-bottom: -10px;
-      span {
-        @extend %icon-tick;
-        padding-left: 20px;
-        background-size: 14px;
-        background-position: left center;
-        color: $button-colour;
-        font-weight: bold;
-        font-size: 17px;
-        @include media-down(mobile) {
-          font-size: 15px;
-        }
-      }
-      @include media-down(mobile) {
-        position: static;
-        margin: 10px 0;
-        text-align: right;
-      }
+      @extend %icon-tick;
+      padding-left: 20px;
+      background-size: 14px;
+      background-position: left center;
+      color: $button-colour;
+      @include bold-16;
     }
     .status-action-required {
       @extend .status-complete;
-      span {
-        @extend %action-required;
-        color: $text-colour
-      }
+      @extend %action-required;
+      color: $text-colour;
     }
     &.positive {
-      border-right: 5px solid $button-colour;
-      padding: 15px 15px 15px 30px;
       .status > strong {
         color: $button-colour;
       }
@@ -216,8 +245,6 @@
       }
     }
     &.negative {
-      border-right: 5px solid $red;
-      padding: 15px 15px 15px 30px;
       .score > strong {
         color: $red;
       }

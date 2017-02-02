@@ -67,7 +67,7 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening year.
     When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
-    When the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
+    When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
 
@@ -363,7 +363,7 @@ the user should see the correct values in the initial details form
     ${input_value} =    Get Value    id=openingDateYear
     Should Be Equal As Strings    ${input_value}    2017
     Page Should Contain    Ian Cooper
-    page should contain    Toby Reader
+    page should contain    John Doe
 
 the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id=funders0.funder
@@ -432,7 +432,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
     And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
+    And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
 
 The user navigates to the Validation competition
     The user navigates to the page    ${SERVER}/management/dashboard/upcoming
