@@ -8,15 +8,19 @@ import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -28,7 +32,11 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,7 +55,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Test
-    public void testDisplayApplicationForCompetitionAdministrator() throws Exception {
+    public void testDisplayApplicationOverview() throws Exception {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -109,7 +117,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         when(assessorFeedbackRestService.getAssessorFeedbackFile(applications.get(0).getId())).thenReturn(restSuccess(fileContents));
         when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(applications.get(0).getId())).thenReturn(restSuccess(fileEntry));
 
-        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessorFeedback") )
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId() + "/assessorFeedback"))
                 .andExpect(status().isOk())
                 .andExpect(content().string("The returned file data"))
                 .andExpect(header().string("Content-Type", "text/hello"))
@@ -135,8 +143,8 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 thenReturn(restSuccess(successfulCreationResult));
 
         mockMvc.perform(fileUpload("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()).
-                    file(uploadedFile).
-                    param("uploadAssessorFeedback", ""))
+                file(uploadedFile).
+                param("uploadAssessorFeedback", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()));
 
@@ -156,7 +164,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         when(assessorFeedbackRestService.removeAssessorFeedbackDocument(applications.get(0).getId())).thenReturn(restSuccess());
 
         mockMvc.perform(post("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()).
-                    param("removeAssessorFeedback", ""))
+                param("removeAssessorFeedback", ""))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(view().name("redirect:/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()));
 
@@ -172,14 +180,23 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
 
+        when(cookieUtil.getCookieValue(isA(HttpServletRequest.class), eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY)))
+                .thenReturn("/redirect-to-me");
+
         try {
-            mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()) )
+            MvcResult result = mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()))
                     .andExpect(status().isOk())
                     .andExpect(view().name("competition-mgt-application-overview"))
                     .andExpect(model().attribute("applicationReadyForSubmit", false))
                     .andExpect(model().attribute("isCompManagementDownload", true))
                     .andExpect(model().attribute("responses", mappedFormInputResponsesToFormInput))
-                    .andExpect(model().attribute("assessorFeedback", expectedAssessorFeedback));
+                    .andExpect(model().attribute("assessorFeedback", expectedAssessorFeedback))
+                    .andReturn();
+
+            assertEquals("/redirect-to-me", result.getModelAndView().getModel().get("backUrl"));
+
+            verify(cookieUtil, atLeastOnce()).getCookieValue(isA(HttpServletRequest.class), eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY));
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

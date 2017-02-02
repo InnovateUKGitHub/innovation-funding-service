@@ -11,12 +11,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.function.Consumer;
 
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryResourceBuilder.newApplicationCountSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -53,6 +59,14 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
                 .andExpect(view().name("competition/manage-applications"))
                 .andExpect(model().attributeExists("model"))
                 .andReturn().getModelAndView().getModel().get("model");
+
+        verify(cookieUtil).saveToCookie(
+                isA(HttpServletResponse.class),
+                eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY),
+                createLambdaMatcher(arg -> {
+                    assertEquals("http://localhost/assessment/competition/" + competitionResource.getId(), arg);
+                })
+        );
 
         assertEquals(competitionResource.getId(), model.getCompetitionId());
         assertEquals(competitionResource.getName(), model.getCompetitionName());

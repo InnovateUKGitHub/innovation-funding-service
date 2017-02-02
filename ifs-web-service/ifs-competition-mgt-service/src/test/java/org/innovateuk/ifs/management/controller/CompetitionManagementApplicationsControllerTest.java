@@ -14,10 +14,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 
+import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.util.List;
 
+import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -123,6 +126,13 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+        verify(cookieUtil).saveToCookie(
+                isA(HttpServletResponse.class),
+                eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY),
+                createLambdaMatcher(arg -> {
+                    assertEquals(format("http://localhost/competition/%s/applications/all", COMPETITION_ID), arg);
+                })
+        );
 
         assertEquals(COMPETITION_ID, model.getCompetitionId());
         assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
@@ -178,6 +188,13 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+        verify(cookieUtil).saveToCookie(
+                isA(HttpServletResponse.class),
+                eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY),
+                createLambdaMatcher(arg -> {
+                    assertEquals(format("http://localhost/competition/%s/applications/submitted", COMPETITION_ID), arg);
+                })
+        );
 
         assertEquals(COMPETITION_ID, model.getCompetitionId());
         assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());

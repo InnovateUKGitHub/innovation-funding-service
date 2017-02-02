@@ -34,6 +34,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
@@ -66,6 +67,8 @@ public class CompetitionManagementApplicationController extends BaseController {
 
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(CompetitionManagementApplicationController.class);
+
+    public static final String APPLICATION_OVERVIEW_ORIGIN_URL_KEY = "competitionManagementApplication.originUrl";
 
     @Autowired
     private FormInputResponseService formInputResponseService;
@@ -109,13 +112,16 @@ public class CompetitionManagementApplicationController extends BaseController {
     @Autowired
     protected ApplicationService applicationService;
 
-    @RequestMapping(value= "/{applicationId}", method = GET)
-    public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
-                                                                @PathVariable("competitionId") final Long competitionId,
-                                                                @ModelAttribute("form") ApplicationForm form,
-                                                                Model model,
-                                                                HttpServletRequest request
-    ){
+    @Autowired
+    protected CookieUtil cookieUtil;
+
+    @RequestMapping(value = "/{applicationId}", method = GET)
+    public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
+                                             @PathVariable("competitionId") final Long competitionId,
+                                             @ModelAttribute("form") ApplicationForm form,
+                                             Model model,
+                                             HttpServletRequest request
+    ) {
         return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
             UserResource user = getLoggedUser(request);
             form.setAdminMode(true);
@@ -140,12 +146,17 @@ public class CompetitionManagementApplicationController extends BaseController {
             OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
+            String originUrl = cookieUtil.getCookieValue(request, APPLICATION_OVERVIEW_ORIGIN_URL_KEY);
+            model.addAttribute("backUrl", originUrl);
+
             return "competition-mgt-application-overview";
         });
     }
 
     @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") final Long applicationId) {
 
         final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
@@ -163,7 +174,7 @@ public class CompetitionManagementApplicationController extends BaseController {
             Model model,
             HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, competitionId, applicationForm, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -187,7 +198,7 @@ public class CompetitionManagementApplicationController extends BaseController {
                                              ValidationHandler validationHandler,
                                              HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationForCompetitionAdministrator(applicationId, competitionId, applicationForm, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -200,12 +211,12 @@ public class CompetitionManagementApplicationController extends BaseController {
     }
 
     @RequestMapping(value = "/{applicationId}/finances/{organisationId}", method = RequestMethod.GET)
-    public String displayApplicationForCompetitionAdministrator(@PathVariable("applicationId") final Long applicationId,
-                                                                @PathVariable("competitionId") final Long competitionId,
-                                                                @PathVariable("organisationId") final Long organisationId,
-                                                                @ModelAttribute("form") ApplicationForm form,
-                                                                Model model,
-                                                                BindingResult bindingResult
+    public String displayApplicationFinances(@PathVariable("applicationId") final Long applicationId,
+                                             @PathVariable("competitionId") final Long competitionId,
+                                             @PathVariable("organisationId") final Long organisationId,
+                                             @ModelAttribute("form") ApplicationForm form,
+                                             Model model,
+                                             BindingResult bindingResult
     ) throws ExecutionException, InterruptedException {
 
         return validateApplicationAndCompetitionIds(applicationId, competitionId, (application) -> {
@@ -215,7 +226,7 @@ public class CompetitionManagementApplicationController extends BaseController {
             UserResource impersonatingUser;
             try {
                 impersonatingUser = getImpersonateUserByOrganisationId(organisationId, form, applicationId);
-            } catch(ExecutionException | InterruptedException e) {
+            } catch (ExecutionException | InterruptedException e) {
                 throw new RuntimeException(e);
             }
 
@@ -251,13 +262,15 @@ public class CompetitionManagementApplicationController extends BaseController {
     }
 
     @RequestMapping(value = "/{applicationId}/forminput/{formInputId}/download", method = GET)
-    public @ResponseBody ResponseEntity<ByteArrayResource> downloadQuestionFile(
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadQuestionFile(
             @PathVariable("applicationId") final Long applicationId,
             @PathVariable("formInputId") final Long formInputId,
             HttpServletRequest request) throws ExecutionException, InterruptedException {
         final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ProcessRoleResource processRole;
-        if(user.hasRole(UserRoleType.COMP_ADMIN)){
+        if (user.hasRole(UserRoleType.COMP_ADMIN)) {
             long processRoleId = formInputResponseService.getByFormInputIdAndApplication(formInputId, applicationId).getSuccessObjectOrThrowException().get(0).getUpdatedBy();
             processRole = processRoleService.getById(processRoleId).get();
         } else {
@@ -273,7 +286,7 @@ public class CompetitionManagementApplicationController extends BaseController {
     /**
      * Printable version of the application
      */
-    @RequestMapping(value="/{applicationId}/print")
+    @RequestMapping(value = "/{applicationId}/print")
     public String printManagementApplication(@PathVariable("applicationId") Long applicationId,
                                              @PathVariable("competitionId") Long competitionId,
                                              Model model, HttpServletRequest request) {
