@@ -243,6 +243,18 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
     }
 
     @Test
+    public void countByActiviteStateStateInAndTargetCommpetitionId() throws Exception {
+        Set<State> states = EnumSet.of(State.CREATED, State.OPEN );
+
+        Application application = applicationRepository.findOne(1L);
+
+        long found = repository
+                .countByActivityStateStateInAndTargetCompetitionId(states, application.getCompetition().getId());
+
+        assertEquals(3L, found);
+    }
+
+    @Test
     public void isFeedbackComplete() throws Exception {
         Application application = applicationRepository.findOne(1L);
         Competition competition = application.getCompetition();
