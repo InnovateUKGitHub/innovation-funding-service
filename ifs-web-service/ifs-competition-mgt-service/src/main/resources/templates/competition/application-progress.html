@@ -42,7 +42,7 @@
 
             <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
-            <div class="table-overflow" th:if="${#lists.size(model.assigned) > 0}">
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
                 <table class="assessors-assigned">
                     <thead>
                         <tr>
@@ -100,7 +100,7 @@
 
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
-            <div class="table-overflow" th:if="${#lists.size(model.rejected) > 0}">
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.rejected)}">
                 <table class="assessors-rejected">
                     <thead>
                         <tr>
@@ -130,7 +130,7 @@
 
             <h2 class="heading-medium" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
 
-            <div class="table-overflow" th:if="${#lists.size(model.previouslyAssigned) > 0}">
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.previouslyAssigned)}">
                 <table class="assessors-previous">
                     <thead>
                         <tr>
