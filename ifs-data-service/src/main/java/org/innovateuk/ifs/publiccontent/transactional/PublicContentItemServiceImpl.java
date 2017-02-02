@@ -166,11 +166,10 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         List<PublicContentItemResource> publicContentItemResources = new ArrayList<>();
 
         publicContentList.getContent().forEach(publicContent -> {
-            PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
-
             Competition competition = competitionRepository.findById(publicContent.getCompetitionId());
 
             if(CompetitionStatus.OPEN.equals(competition.getCompetitionStatus()) && null != publicContent.getPublishDate()) {
+                PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
                 publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
                 publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
                 publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
@@ -180,14 +179,20 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             }
         });
 
+        publicContentItemPageResource.setTotalElements(getRemainingItemsAmount(publicContentItemResources, publicContentList));
         publicContentItemResources.sort((o1, o2) -> o1.getCompetitionCloseDate().compareTo(o2.getCompetitionCloseDate()));
 
         publicContentItemPageResource.setContent(publicContentItemResources);
         publicContentItemPageResource.setTotalPages(publicContentList.getTotalPages());
-        publicContentItemPageResource.setTotalElements(publicContentList.getTotalElements());
         publicContentItemPageResource.setNumber(publicContentList.getNumber());
         publicContentItemPageResource.setSize(publicContentList.getSize());
 
         return publicContentItemPageResource;
+    }
+
+    private long getRemainingItemsAmount(List<PublicContentItemResource> publicContentItemResources, Page<PublicContent> publicContentList) {
+        long filterDelta = publicContentItemResources.size() - publicContentList.getContent().size();
+
+        return publicContentList.getTotalElements() + filterDelta;
     }
 }
