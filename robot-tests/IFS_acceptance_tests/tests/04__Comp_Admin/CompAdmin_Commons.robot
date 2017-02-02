@@ -30,7 +30,7 @@ the user sees the correct assessed question information
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the Initial details
-    [Arguments]  ${day}  ${month}  ${nextyear}
+    [Arguments]  ${day}  ${month}  ${year}
     the user clicks the button/link                      link=Initial details
     the user enters text to a text field                 css=#title  From new Competition to New Application
     the user selects the option from the drop-down menu  Programme  id=competitionTypeId
@@ -38,13 +38,72 @@ the user fills in the Initial details
     the user selects the option from the drop-down menu  Robotics and AS  css=select[id^=innovationAreaCategory]
     the user enters text to a text field                 css=#openingDateDay  ${day}
     the user enters text to a text field                 css=#openingDateMonth  ${month}
-    the user enters text to a text field                 css=#openingDateMonth  ${year}
+    the user enters text to a text field                 css=#openingDateYear  ${year}
     the user selects the option from the drop-down menu  Ian Cooper  id=leadTechnologistUserId
     the user selects the option from the drop-down menu  Robert Johnson  id=executiveUserId
-    the user clicks the button/link                      jQuery=.button:contains("Done")
+    the user clicks the button/link                      jQuery=button:contains("Done")
     the user clicks the button/link                      link=Competition setup
+    the user should see the element                      jQuery=img[title$="is done"] + h3:contains("Initial details")
 
 the user fills in the Funding Information
-    the user clicks the button/link  link=Funding information
-    the user enters text to a text field    id=funders0.funder    FunderName FamilyName
-    the user enters text to a text field    id=0-funderBudget     1=
+    the user clicks the button/link       link=Funding information
+    the user enters text to a text field  id=funders0.funder  FunderName FamilyName
+    the user enters text to a text field  id=0-funderBudget  142424242
+    the user enters text to a text field  id=pafNumber  2424
+    the user enters text to a text field  id=budgetCode  Ch0col@73
+    the user enters text to a text field  id=activityCode  133t
+    the user clicks the button/link       jQuery=button:contains("Generate code")
+    the user clicks the button/link       jQuery=button:contains("Done")
+    the user clicks the button/link       link=Competition setup
+
+the user fills in the Eligibility
+    the user clicks the button/link  link=Eligibility
+    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
+    the user clicks the button/link  jQuery=label[for="research-categories-33"]
+    the user clicks the button/link  jQuery=label[for="lead-applicant-type-research"]
+    the user selects the option from the drop-down menu  1  researchParticipation
+    the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
+    the user clicks the button/link  jQuery=button:contains("Done")
+    the user clicks the button/link  link=Competition setup
+
+the user fills in the Milestones
+    [Arguments]  ${day}  ${month}  ${nextyear}
+    the user clicks the button/link       link=Milestones
+    the user enters text to a text field  th:contains("Briefing event") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Briefing event") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Briefing event") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Submission date") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Submission date") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Submission date") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Allocate assessors") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Allocate assessors") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Allocate assessors") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Assessor briefing") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Assessor briefing") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Assessor briefing") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Assessor accepts") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Assessor accepts") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Assessor accepts") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Assessor deadline") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Assessor deadline") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Assessor deadline") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Line draw") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Line draw") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Line draw") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Assessment panel") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Assessment panel") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Assessment panel") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Panel date") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Panel date") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Panel date") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Funders panel") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Funders panel") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Funders panel") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Notifications") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Notifications") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Notifications") ~ td.year  ${nextyear}
+    the user enters text to a text field  th:contains("Release feedback") ~ td.day  ${day}
+    the user enters text to a text field  th:contains("Release feedback") ~ td.month  ${month}
+    the user enters text to a text field  th:contains("Release feedback") ~ td.year  ${nextyear}
+    the user clicks the button/link       jQuery=button:contains("Done")
+    the user clicks the button/link       link=Competition setup

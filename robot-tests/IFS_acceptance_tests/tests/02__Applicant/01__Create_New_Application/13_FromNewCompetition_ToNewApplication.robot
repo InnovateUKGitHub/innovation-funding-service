@@ -12,13 +12,25 @@ Resource       ../../04__Comp_Admin/CompAdmin_Commons.robot
 *** Test Cases ***
 # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
 # Then continue with the applying to this Competition, in order to see the new Fields applied
-Comp Admin creates new Competition
+Comp Admin starts a new Competition
     [Documentation]  INFUND-6393
     [Tags]  HappyPath
     [Setup]  guest user log-in  &{Comp_admin1_credentials}
     Given the user navigates to the page  ${CA_UpcomingComp}
     When the user clicks the button/link  jQuery=.button:contains("Create competition")
     Then the user fills in the Initial details  ${day}  ${month}  ${year}
+    And the user fills in the Funding Information
+    And the user fills in the Eligibility
+    And the user fills in the Milestones  ${day}  ${month}  ${nextyear}
+
+Comp Admin fills in the Milestone Dates and can see the fortmatted afterwards
+    [Documentation]  INFUND-7820
+    [Tags]
+    Given the user should see the element  css=img[title$="is done"] + h3:contains("Milestones")
+    When the user clicks the button/link  link=Milestones
+    Then the user should see the element  css=button:contains("Edit")
+    And the user should see the dates in full format
+
 
 
 *** Keywords ***
@@ -29,3 +41,9 @@ Custom Suite Setup
     set suite variable  ${month}
     ${year} =  get tomorrow year
     Set suite variable  ${year}
+    ${nextyear} =  get next year
+    Set suite variable  ${nextyear}
+    ${tomorrowfull} =  get tomorrow full
+    Set suite variable  ${tomorrowfull}
+
+the user should see the dates in full format

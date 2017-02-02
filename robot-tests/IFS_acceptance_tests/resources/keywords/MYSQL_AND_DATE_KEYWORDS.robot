@@ -65,9 +65,9 @@ get today
     ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
     [Return]    ${today}
 
-get tomorrow
+get tomorrow full
     ${today}=    get time
-    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%d %m %Y  exclude_millis=true
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%d %B %Y  exclude_millis=true
     [Return]  ${tomorrow}
 
 get tomorrow day
