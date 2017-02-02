@@ -845,15 +845,13 @@
 
         </fieldset>
 
-        <th:block th:if="${!editable}">
+        <th:block th:unless="${editable}">
             <table>
                 <thead>
                     <tr>
                       <th scope="col" id="milestone">Milestone</th>
                       <th scope="col">Weekday</th>
-                      <th scope="col">Day</th>
-                      <th scope="col">Month</th>
-                      <th scope="col">Year</th>
+                      <th scope="col">Date</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -861,9 +859,7 @@
                         th:if="${milestoneEntry.value.milestoneType.presetDate}">
                         <td th:text="${milestoneEntry.value.milestoneType.milestoneDescription}"></td>
                         <td th:text="${milestoneEntry.value.dayOfWeek}"></td>
-                        <td th:text="${milestoneEntry.value.day}"></td>
-                        <td th:text="${milestoneEntry.value.month}"></td>
-                        <td th:text="${milestoneEntry.value.year}" />
+                        <td th:text="${#temporals.format(milestoneEntry.value.date, 'dd MMMM yyyy')}"></td>
                     </tr>
                 </tbody>
             </table>
