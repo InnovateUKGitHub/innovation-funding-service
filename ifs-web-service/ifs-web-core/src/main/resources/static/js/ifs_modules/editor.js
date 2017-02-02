@@ -83,7 +83,6 @@ IFS.core.editor = (function () {
       })
 
       jQuery(document).on('hallomodified', '[role="textbox"][data-editor="html"]', function (event, data) {
-        console.log('brent is gek')
         var textarea = jQuery(this).next()
         var html = jQuery.htmlClean(data.content, s.editorOptions.plugins.hallocleanhtml)
         if (html.replace(/<[^>]+>/ig, '').length === 0) {

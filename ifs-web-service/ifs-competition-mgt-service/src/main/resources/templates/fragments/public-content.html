@@ -67,12 +67,14 @@
         </th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:each="contentGroup,iter: ${form.contentGroups}">
-            <th:block th:include="fragments/public-content :: content-group(contentGroup=${contentGroup},index=${iter.index})"></th:block>
-        </th:block>
+        <h2 class="heading-medium">Content</h2>
+        <div>
+            <th:block th:each="contentGroup,iter: ${form.contentGroups}">
+                <th:block th:include="fragments/public-content :: content-group(contentGroup=${contentGroup},index=${iter.index})"></th:block>
+            </th:block>
+        </div>
         <div class="alignright">
-            <button class="buttonlink no-margin" type="button" data-add-row="contentGroup">+ add new section</button>
+            <button class="buttonlink" type="button" data-add-row="contentGroup">+ add new section</button>
         </div>
     </th:block>
 </div>
@@ -98,10 +100,10 @@
                 <p class="uploaded-file">No file currently uploaded</p>
             </th:block>
             <th:block th:unless="*{contentGroups[__${index}__].attachment} == null">
-                <p class="uploaded-file" th:text="*{contentGroups[__${index}__].attachment}">Filename.pdf</p>
+                <p class="uploaded-file">File uploaded</p>
                 <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
             </th:block>
         </div>
-        <button th:if="${index > 0}" type="button" class="buttonlink" data-remove-row="contentGroup">Remove section</button>
+        <button th:if="${index > 0}" type="button" class="buttonlink no-margin" data-remove-row="contentGroup">Remove section</button>
     </div>
 </div>
