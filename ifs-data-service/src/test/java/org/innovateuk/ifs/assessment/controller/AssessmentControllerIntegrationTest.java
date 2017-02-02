@@ -246,23 +246,4 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(assessmentResult.getFailure().is(notFoundError(Assessment.class, assessmentId)));
 
     }
-
-    @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 9L;
-
-        loginFelixWilson();
-        RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
-        assertTrue(assessmentResource.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
-
-        loginCompAdmin();
-        RestResult<Void> result = controller.notify(assessmentId);
-        assertTrue(result.isSuccess());
-
-        loginFelixWilson();
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(PENDING, assessmentResult.getAssessmentState());
-    }
-
-
 }
