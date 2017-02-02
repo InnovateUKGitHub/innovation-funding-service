@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 
@@ -20,6 +20,8 @@ import static org.innovateuk.ifs.user.resource.Disability.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Disability.YES;
 import static org.innovateuk.ifs.user.resource.Gender.FEMALE;
 import static org.innovateuk.ifs.user.resource.Gender.MALE;
+import static org.innovateuk.ifs.user.resource.Title.Miss;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.Arrays.asList;
@@ -49,7 +51,7 @@ public class UserBuilderTest {
     @Test
     public void buildOne() {
         Long expectedId = 1L;
-        String expectedTitle = "Title";
+        Title expectedTitle = Mr;
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedInviteName = "Invite Name";
@@ -105,7 +107,7 @@ public class UserBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        String[] expectedTitles = {"Miss", "Mr"};
+        Title[] expectedTitles = {Miss, Mr};
         String[] expectedFirstNames = {"First 1", "First 2"};
         String[] expectedLastNames = {"Last 1", "Last 2"};
         String[] expectedInviteNames = {"Invite Name 1", "Invite Name 2"};
