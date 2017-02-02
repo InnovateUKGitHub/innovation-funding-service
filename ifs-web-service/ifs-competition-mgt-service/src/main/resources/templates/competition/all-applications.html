@@ -80,7 +80,8 @@
 
             <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
                 <td>
-                    <a href="#" th:text="${#numbers.formatInteger(row.applicationNumber,8)}">194731</a>
+                    <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.applicationNumber})}"
+                       th:text="${#numbers.formatInteger(row.applicationNumber,8)}">194731</a>
                 </td>
                 <td th:text="${row.projectTitle}">Machine learning in robots</td>
                 <td th:text="${row.lead}">PWC</td>
