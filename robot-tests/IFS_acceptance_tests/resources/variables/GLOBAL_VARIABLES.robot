@@ -166,7 +166,7 @@ ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    75
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    99
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    66
 ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}    56
 ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    89
