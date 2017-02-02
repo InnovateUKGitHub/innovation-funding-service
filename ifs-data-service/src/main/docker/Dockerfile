@@ -11,9 +11,10 @@ WORKDIR $JAVA_HOME
 RUN bin/keytool -import -trustcacerts -keystore jre/lib/security/cacerts -storepass changeit -noprompt -alias iuk-auth-localdev -file /certificate
 WORKDIR /
 VOLUME /tmp
-ADD ifs-data-service-1.0-SNAPSHOT.jar app.jar
-RUN sh -c 'touch /app.jar'
-ENTRYPOINT ["java", "-Xmx250m", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n", "-jar", "/app.jar"]
 
 HEALTHCHECK --interval=10s --timeout=3s \
   CMD curl -f http://localhost:8080/monitoring/health || exit 1
+
+RUN sh -c 'touch /app.jar'
+ENTRYPOINT ["java", "-Xmx250m", "-Xdebug", "-Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n", "-jar", "/app.jar"]
+ADD ifs-data-service-1.0-SNAPSHOT.jar app.jar
