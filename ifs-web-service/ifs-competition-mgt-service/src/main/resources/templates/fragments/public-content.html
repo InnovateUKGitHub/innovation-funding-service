@@ -2,7 +2,7 @@
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
-        <dl>
+        <dl class="readonly-list">
             <dt>Short description</dt>
             <dd th:text="${form.shortDescription}"></dd>
             <dt>Project funding range</dt>
@@ -59,13 +59,13 @@
 <div th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>Text entered into this section will appear within the summary tab.</p>
     <th:block th:if="${model.readOnly}">
-        <dl>
+        <dl class="readonly-list">
             <dt>Competition description</dt>
-            <dd th:text="${form.description}">Long description. Contains links. Really. Really. Long.</dd>
+            <dd th:text="${form.description}"></dd>
             <dt>Funding type</dt>
-            <dd th:text="${form.fundingType}">Procurement</dd>
+            <dd th:text="${form.fundingType}"></dd>
             <dt>Project size</dt>
-            <dd th:text="${form.projectSize}">Very large</dd>
+            <dd th:text="${form.projectSize}"></dd>
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
@@ -78,7 +78,6 @@
                        required="required"
                        th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.description.required}" />
             </div>
-
 
             <div class="form-group" th:with="fundingTypes=${model.fundingTypes}">
                 <label class="form-label-bold" for="funding-type">
