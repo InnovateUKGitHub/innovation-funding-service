@@ -8,3 +8,26 @@ project(':ifs-web-service').bootRepackage {
 
 build.enabled = false
 jar.enabled=false
+
+task endpointDocumentation {
+
+    def combinedFilename = 'build/web-endpoints.csv'
+
+    def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
+    def lines = ["path, method, constraint, rule, description"]
+    files.each {
+        it.eachLine { line ->
+            lines << line
+        }
+    }
+
+    def buildFolder = new File("build")
+    buildFolder.mkdirs()
+    def combinedFile = new File(combinedFilename)
+    combinedFile.text = lines
+            .findAll {
+                it.startsWith('"/')
+            }
+            .sort()
+            .join("\n")
+}
