@@ -6,6 +6,8 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,22 +28,18 @@ public abstract class Thread {
     private String title;
 
     @OneToMany
-    private List<Post> posts;
+    private ArrayDeque<Post> posts;
 
     @CreatedDate
     private LocalDateTime createdOn;
 
 
     public final Optional<Post> latestPost() {
-        return postAtIndex(numberOfPosts()-1);
+        return of(posts.peekFirst());
     }
 
     public final Optional<Post> initialPost() {
-        return postAtIndex(0);
-    }
-
-    private final Optional<Post> postAtIndex(int i) {
-        return hasPosts() ? of(posts.get(i)) : empty();
+        return of(posts.peekLast());
     }
 
     public final int numberOfPosts() {
@@ -52,11 +50,11 @@ public abstract class Thread {
         return !posts.isEmpty();
     }
 
-    public List<Post> posts() {
+    public ArrayDeque<Post> posts() {
         return posts;
     }
 
     public void addPost(Post post) {
-        posts.add(post);
+        posts.addFirst(post);
     }
 }
