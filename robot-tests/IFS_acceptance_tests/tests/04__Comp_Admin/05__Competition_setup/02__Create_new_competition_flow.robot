@@ -319,7 +319,7 @@ Application - Application process Page
     And the user should see the element    link=Scope
     And the user should see the element    link=Finances
 
-Application: Business opportunity
+Application: Need or challenge
     [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
     When the user clicks the button/link    link=Need or challenge
     Then the user should see the element    jQuery=h1:contains("Need or challenge")
