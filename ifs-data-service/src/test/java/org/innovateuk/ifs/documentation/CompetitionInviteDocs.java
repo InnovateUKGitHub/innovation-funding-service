@@ -57,7 +57,7 @@ public class CompetitionInviteDocs {
             fieldWithPath("email").description("Email of the recipient of the invite"),
             fieldWithPath("competitionId").description("The id of the competition"),
             fieldWithPath("name").description("Name of the recipient of the invite"),
-            fieldWithPath("innovationCategoryId").description("The id of the recipient's innovation category")
+            fieldWithPath("innovationAreaId").description("The id of the recipient's innovation area")
     };
 
     public static final CompetitionInviteResourceBuilder competitionInviteResourceBuilder = newCompetitionInviteResource()
@@ -97,7 +97,7 @@ public class CompetitionInviteDocs {
             .withEmail("paul.plum@gmail.com")
             .withCompetitionId(1L)
             .withName("Paul Plum")
-            .withInnovationCategoryId(8L);
+            .withInnovationAreaId(8L);
 
     public static final NewUserStagedInviteListResourceBuilder newUserStagedInviteListResourceBuilder = newNewUserStagedInviteListResource()
             .withInvites(newUserStagedInviteResourceBuilder.build(2));
