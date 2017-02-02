@@ -37,7 +37,6 @@ IFS.competitionManagement.repeater = (function () {
         case 'cofunder':
           jQuery('[name="removeFunder"]').val(inst.val())
           IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
-
           inst.closest('.funder-row').remove()
           IFS.competitionManagement.repeater.reindexRows('.funder-row')
           jQuery('body').trigger('recalculateAllFinances')
@@ -53,6 +52,10 @@ IFS.competitionManagement.repeater = (function () {
           IFS.competitionManagement.repeater.reindexRows('.form-group[id^="innovation-row"]')
           IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
           IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
+          break
+        case 'contentGroup':
+          inst.closest('[id^="contentGroup-row-"]').remove()
+          IFS.competitionManagement.repeater.reindexRows('[id^="contentGroup-row-"]')
           break
       }
     },
@@ -106,7 +109,7 @@ IFS.competitionManagement.repeater = (function () {
                       '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="file-upload-' + idCount + '" value="' + count + '">Save</button>' +
                       '<p class="uploaded-file">No file currently uploaded</p>' +
                   '</div>' +
-                  '<button type="button" class="buttonlink" data-remove-row="">Remove section</button>' +
+                  '<button type="button" class="buttonlink" data-remove-row="contentGroup">Remove section</button>' +
                   '<hr /></div>'
       jQuery('[id^=contentGroup-row-]').last().after(html)
 
@@ -186,7 +189,6 @@ IFS.competitionManagement.repeater = (function () {
         var oldAttrElement = oldAttr.split(']')[1]
         inst.attr('name', oldAttrName + '[' + thisIndex + ']' + oldAttrElement)
       })
-
       jQuery(rowSelector + ' [data-remove-row]').each(function () {
         var inst = jQuery(this)
         var thisIndex = inst.closest(rowSelector).index(rowSelector)

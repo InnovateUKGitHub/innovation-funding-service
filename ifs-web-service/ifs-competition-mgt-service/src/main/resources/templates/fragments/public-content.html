@@ -79,7 +79,7 @@
 </div>
 
 <div th:fragment="content-group(contentGroup, index)" xmlns:th="http://www.w3.org/1999/html">
-    <div th:id="${'contentGroup-row-'+index}">
+    <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
         <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
         <div class="form-group">
             <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
@@ -103,7 +103,6 @@
                 <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
             </th:block>
         </div>
-        <button type="button" class="buttonlink" th:if="${index > 0}">Remove section</button>
-        <hr />O
+        <button th:if="${index > 0}" type="button" class="buttonlink" data-remove-row="contentGroup">Remove section</button>
     </div>
 </div>
