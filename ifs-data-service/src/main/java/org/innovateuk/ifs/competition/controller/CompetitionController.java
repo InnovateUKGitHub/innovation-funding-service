@@ -63,7 +63,8 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource, @PathVariable("id") final Long id) {
+    public RestResult<CompetitionResource> saveCompetition(@RequestBody CompetitionResource competitionResource,
+                                                           @PathVariable("id") final Long id) {
         return competitionSetupService.update(id, competitionResource).toGetResponse();
     }
 
@@ -73,7 +74,8 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}/initialise-form/{competitionTypeId}", method = RequestMethod.POST)
-    public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId, @PathVariable("competitionTypeId") Long competitionType) {
+    public RestResult<Void> initialiseForm(@PathVariable("id") Long competitionId,
+                                           @PathVariable("competitionTypeId") Long competitionType) {
         return competitionSetupService.copyFromCompetitionTypeTemplate(competitionId, competitionType).toPostResponse();
     }
 
@@ -84,12 +86,14 @@ public class CompetitionController {
     }
 
     @RequestMapping("/sectionStatus/complete/{competitionId}/{section}")
-    public RestResult<Void> markSectionComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("section") final CompetitionSetupSection section) {
+    public RestResult<Void> markSectionComplete(@PathVariable("competitionId") final Long competitionId,
+                                                @PathVariable("section") final CompetitionSetupSection section) {
         return competitionSetupService.markSectionComplete(competitionId, section).toGetResponse();
     }
 
     @RequestMapping("/sectionStatus/incomplete/{competitionId}/{section}")
-    public RestResult<Void> markSectionInComplete(@PathVariable("competitionId") final Long competitionId, @PathVariable("section") final CompetitionSetupSection section) {
+    public RestResult<Void> markSectionInComplete(@PathVariable("competitionId") final Long competitionId,
+                                                  @PathVariable("section") final CompetitionSetupSection section) {
         return competitionSetupService.markSectionInComplete(competitionId, section).toGetResponse();
     }
 
@@ -109,9 +113,9 @@ public class CompetitionController {
     }
 
     @RequestMapping(value = "/{id}/notify-assessors", method = RequestMethod.PUT)
-    public RestResult<Void> notifyAssessors(@PathVariable("id") final Long id) {
-        assessmentService.notifyAssessorsByCompetition(id);
-
-        return competitionService.notifyAssessors(id).toPutResponse();
+    public RestResult<Void> notifyAssessors(@PathVariable("id") final long competitionId) {
+        return competitionService.notifyAssessors(competitionId)
+                .andOnSuccess(() -> assessmentService.notifyAssessorsByCompetition(competitionId))
+                .toPutResponse();
     }
 }

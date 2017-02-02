@@ -143,7 +143,7 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
         assertAccessDenied(() -> classUnderTest.getUserProfileStatus(userId), () -> {
-            verify(rules).usersAndCompAdminExecCanViewProfileStatus(isA(UserProfileStatusResource.class), eq(getLoggedInUser()));
+            verify(rules).usersAndCompAdminCanViewProfileStatus(isA(UserProfileStatusResource.class), eq(getLoggedInUser()));
             verifyNoMoreInteractions(rules);
         });
     }

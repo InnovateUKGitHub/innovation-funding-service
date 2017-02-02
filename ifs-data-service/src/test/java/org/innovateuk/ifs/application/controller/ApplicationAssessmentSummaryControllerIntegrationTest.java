@@ -66,7 +66,7 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
 
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = serviceResult.getSuccessObjectOrThrowException();
 
-        assertEquals(application.getId(), applicationAssessmentSummary.getId());
+        assertEquals(application.getId().longValue(), applicationAssessmentSummary.getId());
         assertEquals(application.getName(), applicationAssessmentSummary.getName());
         assertEquals(competition.getId(), applicationAssessmentSummary.getCompetitionId());
         assertEquals(competition.getName(), applicationAssessmentSummary.getCompetitionName());
