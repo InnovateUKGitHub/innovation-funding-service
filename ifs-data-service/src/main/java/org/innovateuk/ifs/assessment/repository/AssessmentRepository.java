@@ -34,9 +34,9 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
 
-    long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long applicationId, Set<State> states);
+    long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long competitionId, Set<State> states);
 
-    List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+    List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
 
     long countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
 
