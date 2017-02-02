@@ -12,9 +12,9 @@ import org.springframework.security.access.method.P;
 import java.util.List;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
@@ -107,10 +107,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void recommend() {
         Long assessmentId = 1L;
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
-        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
+                newAssessmentFundingDecisionOutcomeResource().build();
+        when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource()
+                .withId(assessmentId)
+                .build());
         assertAccessDenied(
-                () -> classUnderTest.recommend(assessmentId, assessmentFundingDecision),
+                () -> classUnderTest.recommend(assessmentId, assessmentFundingDecisionOutcomeResource),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -118,10 +121,10 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void rejectInvitation() {
         Long assessmentId = 1L;
-        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
         when(assessmentLookupStrategy.getAssessmentResource(assessmentId)).thenReturn(newAssessmentResource().withId(assessmentId).build());
         assertAccessDenied(
-                () -> classUnderTest.rejectInvitation(assessmentId, applicationRejection),
+                () -> classUnderTest.rejectInvitation(assessmentId, assessmentRejectOutcomeResource),
                 () -> verify(assessmentPermissionRules).userCanUpdateAssessment(isA(AssessmentResource.class), isA(UserResource.class))
         );
     }
@@ -194,12 +197,13 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Void> recommend(@P("assessmentId") long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision) {
+        public ServiceResult<Void> recommend(@P("assessmentId") long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> rejectInvitation(@P("assessmentId") long assessmentId, ApplicationRejectionResource applicationRejection) {
+        public ServiceResult<Void> rejectInvitation(@P("assessmentId") long assessmentId,
+                                                    AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
             return null;
         }
 
