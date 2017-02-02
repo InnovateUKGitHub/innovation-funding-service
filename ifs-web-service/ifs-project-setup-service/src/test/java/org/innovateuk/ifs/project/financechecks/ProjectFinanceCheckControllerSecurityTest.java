@@ -3,7 +3,7 @@ package org.innovateuk.ifs.project.financechecks;
 
 import org.innovateuk.ifs.project.BaseProjectSetupControllerSecurityTest;
 import org.innovateuk.ifs.project.ProjectSetupSectionsPermissionRules;
-import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
+import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceCheckController;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
@@ -12,11 +12,11 @@ import java.util.function.Consumer;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectFinanceChecksControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectFinanceChecksController> {
+public class ProjectFinanceCheckControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectFinanceCheckController> {
 
         @Override
-        protected Class<? extends ProjectFinanceChecksController> getClassUnderTest() {
-            return ProjectFinanceChecksController.class;
+        protected Class<? extends ProjectFinanceCheckController> getClassUnderTest() {
+            return ProjectFinanceCheckController.class;
         }
 
         @Test

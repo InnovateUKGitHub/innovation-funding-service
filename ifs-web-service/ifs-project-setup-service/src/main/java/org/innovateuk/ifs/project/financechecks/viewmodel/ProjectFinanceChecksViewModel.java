@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
+import org.innovateuk.ifs.notesandqueries.resource.thread.ThreadResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+
+import java.util.List;
 
 /**
  * View model to back the Finance Checks page.
@@ -10,13 +13,15 @@ public class ProjectFinanceChecksViewModel {
     private Long projectId;
     private Long organisationId;
     private String projectName;
+    private List<ThreadViewModel> queries;
     private boolean approved;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
-                                         boolean approved) {
+                                         List<ThreadViewModel> queries, boolean approved) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
+        this.queries = queries;
         this.approved = approved;
     }
 
@@ -42,6 +47,14 @@ public class ProjectFinanceChecksViewModel {
 
     public void setProjectName(String projectName) {
         this.projectName = projectName;
+    }
+
+    public List<ThreadViewModel> getQueries() {
+        return queries;
+    }
+
+    public void setQueries(List<ThreadViewModel> queries) {
+        this.queries = queries;
     }
 
     public boolean isApproved() {
