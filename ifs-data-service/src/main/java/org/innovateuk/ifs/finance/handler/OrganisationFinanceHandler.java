@@ -21,6 +21,7 @@ public interface OrganisationFinanceHandler {
     Map<FinanceRowType,FinanceRowCostCategory> getOrganisationFinanceTotals(Long id, Competition competition);
 
     ApplicationFinanceRow costItemToCost(FinanceRowItem costItem);
+    ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem);
     FinanceRowItem costToCostItem(ApplicationFinanceRow cost);
     FinanceRowItem costToCostItem(ProjectFinanceRow cost);
     FinanceRowHandler getCostHandler(FinanceRowType costType);

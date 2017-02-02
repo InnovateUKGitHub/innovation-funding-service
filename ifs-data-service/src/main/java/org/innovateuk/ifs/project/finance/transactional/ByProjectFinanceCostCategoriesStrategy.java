@@ -6,7 +6,7 @@ import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.CostCategoryGenerator;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.finance.domain.CostCategory;
 import org.innovateuk.ifs.project.finance.domain.CostCategoryGroup;
@@ -23,11 +23,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.EnumSet.allOf;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.isResearch;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.util.EnumSet.allOf;
 
 /**
  * An implementation of CostCategoryTypeStrategy that uses the original Application Finances for the given Organisation
@@ -43,7 +43,7 @@ public class ByProjectFinanceCostCategoriesStrategy implements CostCategoryTypeS
     private ProjectService projectService;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private ProjectFinanceRowService financeRowService;
 
     @Autowired
     private CostCategoryTypeRepository costCategoryTypeRepository;

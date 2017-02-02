@@ -28,7 +28,10 @@
                 <div class="column-quarter">
                     <h3 class="heading-small">Partners</h3>
                     <ul>
-                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
+                        <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
+                            th:text="${model.leadOrganisation} + ' (Lead)'">Aptrans Ltd (Lead)
+                        </li>
+                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Biotech Corp.</li>
                     </ul>
                 </div>
                 <div class="column-quarter">
@@ -152,7 +155,7 @@
                 </table>
             </div>
 
-            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">There are no assessors previously assigned to this application.</p>
+            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
 
             <h2 class="heading-medium">Available assessors</h2>
 

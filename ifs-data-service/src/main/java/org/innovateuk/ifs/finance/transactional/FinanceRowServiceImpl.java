@@ -5,7 +5,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
-import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -24,9 +23,13 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceRowMapper;
 import org.innovateuk.ifs.finance.mapper.FinanceRowMetaFieldMapper;
-import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
-import org.innovateuk.ifs.finance.repository.*;
-import org.innovateuk.ifs.finance.resource.*;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
+import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
+import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
+import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -70,13 +73,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     private ApplicationFinanceMapper applicationFinanceMapper;
 
     @Autowired
-    private ProjectFinanceMapper projectFinanceMapper;
-
-    @Autowired
     private ApplicationFinanceRowMapper applicationFinanceRowMapper;
-
-    @Autowired
-    private QuestionRepository questionRepository;
 
     @Autowired
     private ApplicationFinanceRowRepository financeRowRepository;
@@ -89,9 +86,6 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
-
-    @Autowired
-    private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
@@ -155,18 +149,6 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     }
 
     @Override
-    public ServiceResult<FinanceRowItem> addProjectCostWithoutPersisting(final Long projectFinanceId, final Long questionId) {
-        return find(question(questionId), projectFinance(projectFinanceId)).andOnSuccess((question, projectFinance) ->
-                getProject(projectFinance.getProject().getId()).andOnSuccess(project -> {
-                    OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(projectFinance.getOrganisation().getOrganisationType().getName());
-                    ProjectFinanceRow cost = new ProjectFinanceRow(projectFinance, question);
-                    return serviceSuccess(organisationFinanceHandler.costToCostItem(cost));
-                })
-        );
-    }
-
-
-    @Override
     public ServiceResult<FinanceRowItem> updateCost(final Long id, final FinanceRowItem newCostItem) {
         Application application = financeRowRepository.findOne(id).getTarget().getApplication();
         return getOpenApplication(application.getId()).andOnSuccess(app ->
@@ -217,7 +199,7 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
                             .filter(c -> c.getValue() != null)
                             .filter(c -> !"null".equals(c.getValue()))
                             .peek(c -> LOG.debug("FinanceRowMetaValue: " + c.getValue()))
-                            .forEach(costValue -> updateCostValue(costValue, savedCost));
+                            .forEach(costValue -> updateOrCreateCostValue(costValue, savedCost));
 
                     // refresh the object, since we need to reload the costvalues, on the cost object.
                     return savedCost;
@@ -301,17 +283,6 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         );
     }
 
-    @Override
-    public ServiceResult<ProjectFinanceResource> updateProjectCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
-        return getProject(projectFinance.getProject()).andOnSuccess(project ->
-                find(projectFinance(projectFinanceId)).andOnSuccess(dbFinance -> {
-                    dbFinance.setOrganisationSize(projectFinance.getOrganisationSize());
-                    dbFinance = projectFinanceRepository.save(dbFinance);
-                    return serviceSuccess(projectFinanceMapper.mapToResource(dbFinance));
-                })
-        );
-    }
-
     private ApplicationFinance setFinanceUpload(ApplicationFinance applicationFinance, Long fileEntryId) {
         if (fileEntryId == null || fileEntryId == 0L) {
             applicationFinance.setFinanceFileEntry(null);
@@ -328,17 +299,6 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
     public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
         ApplicationFinanceResourceId applicationFinanceResourceId = new ApplicationFinanceResourceId(applicationId, organisationId);
         return getApplicationFinanceForOrganisation(applicationFinanceResourceId);
-    }
-
-    @Override
-    public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId) {
-        ProjectFinanceResourceId projectFinanceResourceId = new ProjectFinanceResourceId(projectId, organisationId);
-        return getProjectFinanceForOrganisation(projectFinanceResourceId);
-    }
-
-    @Override
-    public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
-        return find(applicationFinanceHandler.getFinanceChecksTotals(projectId), notFoundError(ProjectFinance.class, projectId));
     }
 
     @Override
@@ -444,10 +404,6 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         return serviceSuccess(applicationFinanceHandler.getApplicationOrganisationFinances(applicationFinanceResourceId));
     }
 
-    private ServiceResult<ProjectFinanceResource> getProjectFinanceForOrganisation(ProjectFinanceResourceId projectFinanceResourceId) {
-        return serviceSuccess(applicationFinanceHandler.getProjectOrganisationFinances(projectFinanceResourceId));
-    }
-
     private FinanceRow addCostItem(ApplicationFinance applicationFinance, Question question, FinanceRowItem newCostItem) {
         OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(applicationFinance.getOrganisation().getOrganisationType().getName());
 
@@ -486,26 +442,34 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         return currentCost;
     }
 
-    private void updateCostValue(FinanceRowMetaValue costValue, FinanceRow savedCost) {
-        if (costValue.getFinanceRowMetaField() == null) {
+    private void updateOrCreateCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
+        if (newMetaValue.getFinanceRowMetaField() == null) {
             LOG.error("FinanceRowMetaField is null");
             return;
         }
-        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(costValue.getFinanceRowMetaField().getId());
-        costValue.setFinanceRowId(savedCost.getId());
-        costValue.setFinanceRowMetaField(financeRowMetaField);
-        costValue = financeRowMetaValueRepository.save(costValue);
-        savedCost.addCostValues(costValue);
+        newMetaValue.setFinanceRowId(savedCost.getId());
+
+        getMetaValueByFieldForFinanceRow(newMetaValue, savedCost)
+                .andOnSuccessReturnVoid(currentMetaValue ->  {    updateCostValue(currentMetaValue, newMetaValue);})
+                .andOnFailure(() -> {   createCostValue(newMetaValue, savedCost);
+                                        return serviceSuccess(); });
+
     }
 
-
-    private Supplier<ServiceResult<Question>> question(Long questionId) {
-        return () -> getQuestion(questionId);
+    private void updateCostValue(FinanceRowMetaValue currentMetaValue, FinanceRowMetaValue newMetaValue) {
+        currentMetaValue.setValue(newMetaValue.getValue());
+        financeRowMetaValueRepository.save(currentMetaValue);
     }
 
+    private void createCostValue(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
+        FinanceRowMetaField financeRowMetaField = financeRowMetaFieldRepository.findOne(newMetaValue.getFinanceRowMetaField().getId());
+        newMetaValue.setFinanceRowMetaField(financeRowMetaField);
+        newMetaValue = financeRowMetaValueRepository.save(newMetaValue);
+        savedCost.addCostValues(newMetaValue);
+    }
 
-    private ServiceResult<Question> getQuestion(Long questionId) {
-        return find(questionRepository.findOne(questionId), notFoundError(Question.class));
+    private ServiceResult<FinanceRowMetaValue> getMetaValueByFieldForFinanceRow(FinanceRowMetaValue newMetaValue, FinanceRow savedCost) {
+        return find(financeRowMetaValueRepository.financeRowIdAndFinanceRowMetaFieldId(savedCost.getId(), newMetaValue.getFinanceRowMetaField().getId()), notFoundError(FinanceRowMetaValue.class, newMetaValue.getId()));
     }
 
     private ServiceResult<ApplicationFinanceRow> getCost(Long costId) {
@@ -521,16 +485,8 @@ public class FinanceRowServiceImpl extends BaseTransactionalService implements F
         return () -> getApplicationFinance(applicationFinanceId);
     }
 
-    private Supplier<ServiceResult<ProjectFinance>> projectFinance(Long projectFinanceId) {
-        return () -> getProjectFinance(projectFinanceId);
-    }
-
     private ServiceResult<ApplicationFinance> getApplicationFinance(Long applicationFinanceId) {
         return find(applicationFinanceRepository.findOne(applicationFinanceId), notFoundError(ApplicationFinance.class, applicationFinanceId));
-    }
-
-    private ServiceResult<ProjectFinance> getProjectFinance(Long projectFinanceId) {
-        return find(projectFinanceRepository.findOne(projectFinanceId), notFoundError(ProjectFinance.class, projectFinanceId));
     }
 
     /**

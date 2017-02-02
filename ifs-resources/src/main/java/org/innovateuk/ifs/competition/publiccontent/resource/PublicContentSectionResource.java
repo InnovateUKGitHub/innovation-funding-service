@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.competition.publiccontent.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 /**
- * The resouce for a public content section.
+ * The resource for a public content section.
  */
 public class PublicContentSectionResource {
     private Long id;
@@ -43,5 +46,31 @@ public class PublicContentSectionResource {
 
     public void setPublicContent(Long publicContent) {
         this.publicContent = publicContent;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PublicContentSectionResource that = (PublicContentSectionResource) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(publicContent, that.publicContent)
+                .append(type, that.type)
+                .append(status, that.status)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(id)
+                .append(publicContent)
+                .append(type)
+                .append(status)
+                .toHashCode();
     }
 }

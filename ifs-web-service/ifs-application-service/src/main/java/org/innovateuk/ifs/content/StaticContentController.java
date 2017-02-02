@@ -10,6 +10,6 @@ public class StaticContentController {
 
     @RequestMapping("/{contentName}")
     public String displayContentPage(@PathVariable("contentName") String contentName){
-        return "/content/"+contentName;
+        return "content/"+contentName;
     }
 }
