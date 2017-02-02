@@ -18,10 +18,12 @@ import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
+import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
@@ -46,12 +48,6 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
         return new CompetitionInviteController();
     }
 
-    @Before
-    public void setup() {
-        this.document = document("competitioninvite/{method-name}",
-                preprocessResponse(prettyPrint()));
-    }
-
     @Test
     public void getCreatedInvite() throws Exception {
         long inviteId = 1L;
@@ -61,7 +57,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getCreated/{inviteId}", inviteId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("inviteId").description("Id of the created invite being requested")
                         ),
@@ -78,7 +74,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getInvite/{hash}", hash))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being requested")
                         ),
@@ -95,7 +91,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(post("/competitioninvite/openInvite/{hash}", hash))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being opened")
                         ),
@@ -114,7 +110,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(post("/competitioninvite/acceptInvite/{hash}", hash))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being accepted")
                         )
@@ -132,7 +128,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .contentType(APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(compRejection)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         requestFields(competitionRejectionFields),
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being rejected")
@@ -149,7 +145,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
         mockMvc.perform(get("/competitioninvite/checkExistingUser/{hash}", hash))
                 .andExpect(status().isOk())
                 .andExpect(content().string("true"))
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("hash").description("hash of the invite being checked")
                         )
@@ -165,7 +161,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -186,7 +182,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", 1L))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -207,7 +203,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
 
         mockMvc.perform(get("/competitioninvite/getInvitationOverview/{competitionId}", 1L))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
@@ -220,6 +216,23 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     }
 
     @Test
+    public void getInviteStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionInviteStatisticsResource statisticsResource = newCompetitionInviteStatisticsResource().build();
+
+        when(competitionInviteServiceMock.getInviteStatistics(competitionId)).thenReturn(serviceSuccess(statisticsResource));
+
+        mockMvc.perform(get("/competitioninvite/getInviteStatistics/{competitionId}", competitionId))
+                .andExpect(status().isOk())
+                .andDo(document("competitioninvite/{method-name}",
+                        pathParameters(
+                                parameterWithName("competitionId").description("Id of the competition the invite stats are for")
+                        ),
+                        responseFields(competitionInviteStatisticsResourceFields)
+                ));
+    }
+
+    @Test
     public void inviteUser() throws Exception {
         ExistingUserStagedInviteResource existingUserStagedInviteResource = existingUserStagedInviteResourceBuilder.build();
 
@@ -229,7 +242,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(existingUserStagedInviteResource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         requestFields(existingUserStagedInviteResourceFields),
                         responseFields(competitionInviteFields)
                 ));
@@ -247,7 +260,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(newUserStagedInviteResource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         requestFields(newUserStagedInviteResourceFields),
                         responseFields(competitionInviteFields)
                 ));
@@ -268,7 +281,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(toJson(newUserStagedInviteListResource)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition to invite the users to")
                         ),
@@ -291,7 +304,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .param("email", email)
                 .param("competitionId", String.valueOf(competitionId)))
                 .andExpect(status().isNoContent())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         requestParameters(
                                 parameterWithName("email").description("Email address of the invite"),
                                 parameterWithName("competitionId").description("Id of the competition")
@@ -318,7 +331,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(content)))
                 .andExpect(status().isOk())
-                .andDo(this.document.snippets(
+                .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("inviteId").description("Id of the created invite being sent")
                         ),

@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.transactional;
 
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
-import org.innovateuk.ifs.assessment.mapper.CompetitionInviteStatisticsMapper;
 import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
@@ -13,15 +12,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.email.resource.EmailContent;
-import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionInviteStatistics;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.RejectionReason;
 import org.innovateuk.ifs.invite.mapper.ParticipantStatusMapper;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
-import org.innovateuk.ifs.invite.repository.CompetitionInviteStatisticsRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.repository.RejectionReasonRepository;
 import org.innovateuk.ifs.invite.resource.*;
@@ -60,8 +56,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -96,9 +91,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private InnovationAreaRepository innovationAreaRepository;
 
     @Autowired
-    private CompetitionInviteStatisticsRepository competitionInviteStatisticsRepository;
-
-    @Autowired
     private CompetitionInviteMapper competitionInviteMapper;
 
     @Autowired
@@ -109,9 +101,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private ParticipantStatusMapper participantStatusMapper;
-
-    @Autowired
-    private CompetitionInviteStatisticsMapper competitionInviteStatisticsMapper;
 
     @Autowired
     private UserRepository userRepository;
@@ -221,9 +210,12 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
-        return find(competitionInviteStatisticsRepository.findOne(competitionId), notFoundError(CompetitionInviteStatistics.class, competitionId))
-                .andOnSuccessReturn(competitionInviteStatisticsMapper::mapToResource);
-
+        CompetitionInviteStatisticsResource statisticsResource = new CompetitionInviteStatisticsResource();
+        statisticsResource.setInvited(competitionInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        statisticsResource.setInviteList(competitionInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED)));
+        statisticsResource.setAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED));
+        statisticsResource.setDeclined(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED));
+        return serviceSuccess(statisticsResource);
     }
 
     @Override

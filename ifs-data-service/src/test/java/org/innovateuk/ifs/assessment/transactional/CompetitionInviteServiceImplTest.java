@@ -29,6 +29,7 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -42,7 +43,6 @@ import static java.util.Collections.*;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
-import static org.innovateuk.ifs.assessment.builder.CompetitionInviteStatisticsBuilder.newCompetitionInviteStatistics;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -61,9 +61,7 @@ import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResou
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -1007,21 +1005,25 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     @Test
     public void getInviteStatistics() throws Exception {
         long competitionId = 1L;
-
-        CompetitionInviteStatistics competitionInviteStatistics = newCompetitionInviteStatistics()
-                .build();
         CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
+                .withAccepted(1L)
+                .withDeclined(2L)
+                .withInviteList(3L)
+                .withInvited(4L)
                 .build();
 
-        when(competitionInviteStatisticsRepositoryMock.findOne(competitionId)).thenReturn(competitionInviteStatistics);
-        when(competitionInviteStatisticsMapperMock.mapToResource(competitionInviteStatistics)).thenReturn(expected);
-
+        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED,SENT))).thenReturn(expected.getInvited());
+        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED))).thenReturn(expected.getInviteList());
+        when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED)).thenReturn(expected.getAccepted());
+        when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED)).thenReturn(expected.getDeclined());
         CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccessObject();
         assertEquals(expected, actual);
 
-        InOrder inOrder = inOrder(competitionInviteStatisticsRepositoryMock, competitionInviteStatisticsMapperMock);
-        inOrder.verify(competitionInviteStatisticsRepositoryMock).findOne(competitionId);
-        inOrder.verify(competitionInviteStatisticsMapperMock).mapToResource(competitionInviteStatistics);
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
+        inOrder.verify(competitionInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED));
+        inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED);
+        inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED);
         inOrder.verifyNoMoreInteractions();
     }
 

@@ -252,9 +252,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected CompetitionInviteRepository competitionInviteRepositoryMock;
 
     @Mock
-    protected CompetitionInviteStatisticsRepository competitionInviteStatisticsRepositoryMock;
-
-    @Mock
     protected CompetitionParticipantRepository competitionParticipantRepositoryMock;
 
     @Mock
@@ -418,9 +415,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected InnovationAreaMapper innovationAreaMapperMock;
-
-    @Mock
-    protected CompetitionInviteStatisticsMapper competitionInviteStatisticsMapperMock;
 
     @Mock
     protected InnovationSectorMapper innovationSectorMapperMock;
