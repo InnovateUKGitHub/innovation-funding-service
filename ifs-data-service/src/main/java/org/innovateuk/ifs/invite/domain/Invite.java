@@ -159,8 +159,8 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     public abstract void setTarget(T target);
 
     public I send(User sentBy, LocalDateTime sentOn) {
-        requireNonNull(sentBy, "sentBy cannot be null");
-        requireNonNull(sentOn, "sendOn cannot be null");
+        this.sentBy = requireNonNull(sentBy, "sentBy cannot be null");
+        this.sentOn = requireNonNull(sentOn, "sendOn cannot be null");
         setStatus(InviteStatus.SENT);
 
         return (I) this; // for object chaining
