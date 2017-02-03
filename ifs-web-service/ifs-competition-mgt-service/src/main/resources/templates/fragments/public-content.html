@@ -132,8 +132,7 @@
                     <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}" data-remove-row="contentGroup">remove</button>
                 </th:block>
             </div>
-            <button type="button" class="buttonlink" th:if="${index > 0}">Remove section</button>
-            <hr />
+            <button type="button" class="buttonlink" th:if="${index > 0}" data-remove-row="contentGroup">Remove section</button>
         </div>
     </th:block>
     <div class="alignright">
