@@ -17,14 +17,15 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.singletonList;
-import static java.util.EnumSet.complementOf;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionParticipantResourceBuilder.newCompetitionParticipantResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
 
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
@@ -140,32 +141,32 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getCreatedInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L), COMP_ADMIN);
     }
 
     @Test
     public void getInvitationOverview() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L), COMP_ADMIN);
     }
 
     @Test
     public void getAvailableAssessors() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L), COMP_ADMIN);
     }
 
     @Test
     public void getInviteStatistics() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInviteStatistics(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInviteStatistics(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void inviteUser_existing() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()), COMP_ADMIN);
     }
 
     @Test
     public void inviteUser_new() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newNewUserStagedInviteResource().build()), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newNewUserStagedInviteResource().build()), COMP_ADMIN);
     }
 
     @Test
@@ -173,17 +174,17 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteNewUsers(
                 newNewUserStagedInviteResource().build(2), 1L)
-                , COMP_ADMIN, COMP_EXEC);
+                , COMP_ADMIN);
     }
 
     @Test
     public void sendInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendInvite(1L, newEmailContentResource().build()), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendInvite(1L, newEmailContentResource().build()), COMP_ADMIN);
     }
 
     @Test
     public void deleteInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN);
     }
 
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {

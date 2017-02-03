@@ -68,9 +68,9 @@ public interface CompetitionInviteService {
             description = "Competition Administrators and Executives can retrieve invitation overview by competition")
     ServiceResult<List<AssessorInviteOverviewResource>> getInvitationOverview(long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITE_OVERVIEW_BY_COMPETITION",
-            description = "Competition Administrators and Executives can retrieve invitation statistics by competition")
+            description = "Competition Administrators and Project Finance can retrieve invitation statistics by competition")
     ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
