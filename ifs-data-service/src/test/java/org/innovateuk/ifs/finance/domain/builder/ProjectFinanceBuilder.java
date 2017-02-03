@@ -16,9 +16,9 @@ import static org.innovateuk.ifs.BuilderAmendFunctions.uniqueIds;
  */
 public class ProjectFinanceBuilder extends BaseBuilder<ProjectFinance, ProjectFinanceBuilder> {
 
-    public ProjectFinanceBuilder withViability(Viability... value) {
+/*    public ProjectFinanceBuilder withViability(Viability... value) {
         return withArray((v, finance) -> finance.setViability(v), value);
-    }
+    }*/
 
     public ProjectFinanceBuilder withOrganisation(Organisation... value) {
         return withArray((v, finance) -> finance.setOrganisation(v), value);

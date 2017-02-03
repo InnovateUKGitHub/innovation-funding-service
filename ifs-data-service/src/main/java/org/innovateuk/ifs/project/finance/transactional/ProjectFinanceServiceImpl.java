@@ -46,6 +46,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -352,12 +353,15 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     private ServiceResult<Void> validateCreditReport(PartnerOrganisation partnerOrganisation) {
-        if (ViabilityState.APPROVED == getViabilityState(partnerOrganisation)) {
-            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
-        } else {
-            return serviceSuccess();
-        }
 
+        return getViabilityState(partnerOrganisation)
+        .andOnSuccess(viabilityState -> {
+                        if (ViabilityState.APPROVED == viabilityState) {
+                            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+                        } else {
+                            return serviceSuccess();
+                        }
+                    });
     }
 
     @Override
@@ -479,8 +483,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    @Override
-    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+/*    @Override
+    public ServiceResult<ViabilityResource> getViabilityOLD(ProjectOrganisationCompositeId projectOrganisationCompositeId){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -489,18 +493,34 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 .andOnSuccessReturn(partnerOrganisation -> getViabilityState(partnerOrganisation)).getSuccessObjectOrThrowException();
 
         return getProjectFinance(projectId, organisationId)
-                .andOnSuccessReturn(projectFinance -> {
-                    ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityState), projectFinance.getViabilityStatus());
-                    viabilityResource.setViabilityApprovalDate(projectFinance.getViabilityApprovalDate());
-                    setViabilityApprovalUser(viabilityResource, projectFinance.getViabilityApprovalUser());
+                .andOnSuccess(projectFinance -> buildViabilityResource(viabilityState, projectFinance));
+    }*/
 
-                    return viabilityResource;
-                });
+
+    @Override
+    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> getViabilityState(partnerOrganisation))
+                .andOnSuccess(viabilityState -> getProjectFinance(projectId, organisationId)
+                        .andOnSuccess(projectFinance -> buildViabilityResource(viabilityState, projectFinance))
+                );
     }
 
-    private ViabilityState getViabilityState(PartnerOrganisation partnerOrganisation) {
+    private ServiceResult<ViabilityState> getViabilityState(PartnerOrganisation partnerOrganisation) {
 
-        return viabilityWorkflowHandler.getState(partnerOrganisation);
+        return serviceSuccess(viabilityWorkflowHandler.getState(partnerOrganisation));
+    }
+
+    private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityState viabilityState, ProjectFinance projectFinance) {
+        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityState), projectFinance.getViabilityStatus());
+        viabilityResource.setViabilityApprovalDate(projectFinance.getViabilityApprovalDate());
+        setViabilityApprovalUser(viabilityResource, projectFinance.getViabilityApprovalUser());
+
+        return serviceSuccess(viabilityResource);
     }
 
     private Viability convertViabilityState(ViabilityState viabilityState) {
@@ -533,8 +553,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
+/*    @Override
+    public ServiceResult<Void> saveViabilityOLD(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
@@ -547,6 +567,38 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 .andOnSuccess(projectFinance -> validateViability(viabilityState, viability, viabilityRagStatus)
                         .andOnSuccess(() -> setViabilityApprovalDetails(partnerOrganisation, projectFinance, viability))
                         .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus)));
+    }*/
+
+/*    @Override
+    public ServiceResult<Void> saveViabilityOLD(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        PartnerOrganisation partnerOrganisation = getPartnerOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
+
+        ViabilityState viabilityState = getViabilityState(partnerOrganisation);
+
+        return validateViability(viabilityState, viability, viabilityRagStatus)
+                .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                        .andOnSuccess(projectFinance -> setViabilityApprovalDetails(partnerOrganisation, projectFinance, viability)
+                        .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus)));
+    }*/
+
+    @Override
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> getViabilityState(partnerOrganisation)
+                        .andOnSuccess(viabilityState -> validateViability(viabilityState, viability, viabilityRagStatus))
+                        .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                        .andOnSuccess(projectFinance -> setViabilityApprovalDetails(partnerOrganisation, projectFinance, viability)
+                                .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
+                        )
+                );
     }
 
     private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, Viability viability, ViabilityRagStatus viabilityRagStatus) {
