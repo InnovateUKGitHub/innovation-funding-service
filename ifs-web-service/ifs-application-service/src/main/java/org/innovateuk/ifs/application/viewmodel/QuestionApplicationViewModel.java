@@ -21,6 +21,7 @@ public class QuestionApplicationViewModel {
     private OrganisationResource userOrganisation;
     private List<ResearchCategoryResource> researchCategories;
     private Long researchCategoryId;
+    private boolean hasApplicationFinances;
 
     public QuestionApplicationViewModel(Set<Long> markedAsComplete, Boolean allReadOnly, ApplicationResource currentApplication,
                                         CompetitionResource competitionResource, OrganisationResource userOrganisation) {
@@ -81,5 +82,13 @@ public class QuestionApplicationViewModel {
 
     public void setResearchCategoryId(Long researchCategoryId) {
         this.researchCategoryId = researchCategoryId;
+    }
+
+    public boolean getHasApplicationFinances() {
+        return hasApplicationFinances;
+    }
+
+    public void setHasApplicationFinances(boolean hasApplicationFinances) {
+        this.hasApplicationFinances = hasApplicationFinances;
     }
 }

@@ -60,8 +60,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -215,6 +214,16 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
         return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
                 new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreasForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
+    }
+
+    @Override
+    public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
+        CompetitionInviteStatisticsResource statisticsResource = new CompetitionInviteStatisticsResource();
+        statisticsResource.setInvited(competitionInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        statisticsResource.setInviteList(competitionInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED)));
+        statisticsResource.setAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED));
+        statisticsResource.setDeclined(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED));
+        return serviceSuccess(statisticsResource);
     }
 
     @Override

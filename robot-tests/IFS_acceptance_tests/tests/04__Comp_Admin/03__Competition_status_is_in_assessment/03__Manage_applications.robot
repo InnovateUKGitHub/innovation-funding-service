@@ -58,7 +58,7 @@ View the available assessors
 View the assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
-    Given The user should see the element    jQuery=p:contains(There are no assessors assigned to this application.)
+    Given The user should see the element    jQuery=p:contains(No assessors have been assigned to this application.)
     When the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
@@ -97,6 +97,9 @@ Remove and notify an assessor (Notified)
     And the user clicks the button/link    jQuery=.button:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
+    And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
+    And the user should not see the element    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct
