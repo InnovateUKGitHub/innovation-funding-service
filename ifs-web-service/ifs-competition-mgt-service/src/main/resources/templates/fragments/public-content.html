@@ -74,21 +74,32 @@
                 <label class="form-label-bold" for="description">
                     Competition description
                 </label>
-                <input class="form-control width-full" id="description" type="text" th:field="${form.description}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.description.required}" />
+                <div class="textarea-wrapped">
+                        <textarea
+                            id="description"
+                            class="form-control width-full"
+                            maxlength="5000"
+                            th:errorclass="field-error"
+                            rows="4"
+                            th:field="${form.description}"
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.description.required}">
+                        </textarea>
+                </div>
             </div>
 
-            <div class="form-group" th:with="fundingTypes=${model.fundingTypes}">
-                <label class="form-label-bold" for="funding-type">
+            <div class="form-group">
+                <label class="form-label-bold">
                     Funding type
                 </label>
 
-                <label class="block-label selection-button-radio" th:each="fundingType:${model.fundingTypes}" id="funding-type" >
-                    <input type="radio" th:field="${form.fundingType}"
-                          th:value="${fundingType}"
-                          required="required"
-                          th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
+                <label class="block-label selection-button-radio" th:each="fundingType:${model.fundingTypes}" >
+                    <input type="radio"
+                           name="fundingType"
+                           th:value="${fundingType.displayName}"
+                           required="required"
+                           th:checked="${form.fundingType == fundingType.displayName}"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
                     <span th:text="${fundingType.displayName}" th:remove="tag"/>
                 </label>
 

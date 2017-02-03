@@ -16,15 +16,10 @@ public class SummaryFormSaver extends AbstractPublicContentFormSaver<SummaryForm
     @Override
     protected void populateResource(SummaryForm form, PublicContentResource publicContentResource) {
         publicContentResource.setSummary(form.getDescription());
-        publicContentResource.setFundingType(processFundingType(form.getFundingType()));
+        publicContentResource.setFundingType(FundingType.fromDisplayName(form.getFundingType()));
         publicContentResource.setProjectSize(form.getProjectSize());
     }
 
-    private FundingType processFundingType(String fundingType) {
-        // TODO: If 'procurement' return FundingType.PROCUREMENT
-        //       if 'grant'       return FundingType.GRANT
-        return FundingType.PROCUREMENT;
-    }
     @Override
     protected PublicContentSectionType getType() {
         return PublicContentSectionType.SUMMARY;

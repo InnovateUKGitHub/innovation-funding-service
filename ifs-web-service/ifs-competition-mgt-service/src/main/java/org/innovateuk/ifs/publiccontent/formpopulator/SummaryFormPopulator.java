@@ -19,6 +19,7 @@ public class SummaryFormPopulator extends AbstractPublicContentFormPopulator<Sum
     protected void populateSection(SummaryForm form, PublicContentResource publicContentResource) {
         form.setDescription(publicContentResource.getSummary());
 
+        //TODO: I think this can be improved...
         FundingType type = publicContentResource.getFundingType();
         if (type != null) {
             form.setFundingType(publicContentResource.getFundingType().getDisplayName());
