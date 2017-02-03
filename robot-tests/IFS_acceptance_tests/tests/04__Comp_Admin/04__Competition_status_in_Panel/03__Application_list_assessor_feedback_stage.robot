@@ -2,9 +2,9 @@
 Documentation     INFUND-2606 - As a competition administrator I want a view of all applications at the 'Assessor Feedback' stage so that I can publish their uploaded assessor feedback
 Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin    Pending
 Resource          ../../../resources/defaultResources.robot
-
+#TODO once new funding work is done
 *** Variables ***
 
 *** Test Cases ***

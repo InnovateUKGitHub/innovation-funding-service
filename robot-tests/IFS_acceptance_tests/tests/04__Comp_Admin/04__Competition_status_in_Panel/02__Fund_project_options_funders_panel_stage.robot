@@ -2,8 +2,9 @@
 Documentation     INFUND-2601 As a competition administrator I want a view of all applications at the 'Funders Panel' stage
 Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin
+Force Tags        CompAdmin    Pending
 Resource          ../../../resources/defaultResources.robot
+#TODO Needs rewriting as part of new funders panel flow
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
@@ -16,6 +17,7 @@ Notify applicants should be disabled
     [Documentation]    INFUND-2601
     [Tags]    HappyPath
     When the user navigates to the page    ${funders_panel_competition_url}
+    And the user clicks the button/link    link=Submitted applications
     Then the user should see the text in the page    Funders Panel
     And the option to notify applicants is disabled
 

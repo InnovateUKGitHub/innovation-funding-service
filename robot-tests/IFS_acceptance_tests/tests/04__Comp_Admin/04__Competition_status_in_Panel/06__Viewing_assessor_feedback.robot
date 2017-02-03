@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation     INFUND-2607 As an applicant I want to have a link to the feedback for my application from the Application Overview page when it becomes available so I can review the assessor feedback for my application
 Suite Teardown    the user closes the browser
-Force Tags        Upload    CompAdmin
+Force Tags        Upload    CompAdmin    Pending
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***

@@ -5,12 +5,13 @@ Documentation     INFUND-2672 As a competition administrator I want to be able t
 Suite Setup       Run Keywords    Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
 ...               AND    Run Keyword And Ignore Error Without Screenshots    Delete the emails from both test mailboxes
 Suite Teardown    the user closes the browser
-Force Tags        Upload    CompAdmin
+Force Tags        Upload    CompAdmin    Pending
 Resource          ../../../resources/defaultResources.robot
+#TODO once all the new funding working is done
 
 *** Variables ***
 ${assessor_feedback_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
-${successful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
+${successful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_CPETITION}/application/${FUNDERS_PANEL_APPLICATION_1}
 ${unsuccessful_application_overview}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/application/${FUNDERS_PANEL_APPLICATION_2}
 ${project_setup_status_view}    ${server}/project-setup-management/competition/${FUNDERS_PANEL_COMPETITION}/status
 ${dialogue_warning_message}    This will inform applicants that assessor feedback is available.
