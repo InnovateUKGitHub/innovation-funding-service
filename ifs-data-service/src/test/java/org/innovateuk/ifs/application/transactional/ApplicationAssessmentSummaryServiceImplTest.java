@@ -29,9 +29,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummar
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
-import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -109,11 +109,10 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 3L,
                 Optional.of(newAssessment()
                         .withActivityState(buildActivityStateWithState(REJECTED))
-                        .withProcessOutcome(newProcessOutcome()
-                                .withOutcomeType(REJECT.getType())
-                                .withDescription("Conflict of interest")
-                                .withComment("Member of board of directors")
-                                .build(1))
+                        .withRejection(newAssessmentRejectOutcome()
+                                .withRejectReason(CONFLICT_OF_INTEREST)
+                                .withRejectComment("Member of board of directors")
+                                .build())
                         .build()));
 
         Map<Long, Long> totalApplicationCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
@@ -154,7 +153,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         submittedCountsForParticipants.get(2L),
                         submittedCountsForParticipants.get(3L))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
-                .withRejectReason(null, null, "Conflict of interest")
+                .withRejectReason(null, null, CONFLICT_OF_INTEREST)
                 .withRejectComment(null, null, "Member of board of directors")
                 .build(3);
 
