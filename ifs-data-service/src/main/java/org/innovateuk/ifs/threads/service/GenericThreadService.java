@@ -12,7 +12,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-public class GenericThreadService<E extends Thread, P extends Post, C> implements ThreadService<E, P> {
+public class GenericThreadService<E extends Thread, C> implements ThreadService<E, Post> {
 
     private final ThreadRepository<E> repository;
     private final Class<C> contextClass;
@@ -41,7 +41,7 @@ public class GenericThreadService<E extends Thread, P extends Post, C> implement
     }
 
     @Override
-    public final ServiceResult<Void> addPost(P post, Long threadId) {
+    public final ServiceResult<Void> addPost(Post post, Long threadId) {
         return findOne(threadId).andOnSuccessReturn(thread -> {
             thread.addPost(post);
             return repository.save(thread);
