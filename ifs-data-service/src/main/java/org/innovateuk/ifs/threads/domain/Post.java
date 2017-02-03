@@ -16,10 +16,15 @@ public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+
+    @ManyToOne
+    @JoinColumn(name = "author_id", referencedColumnName = "id", insertable = false, updatable = false)
     private User author;
+
     @NotNull
     private String body;
 
+    @OneToMany
     @JoinTable(name = "post_attachment",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
