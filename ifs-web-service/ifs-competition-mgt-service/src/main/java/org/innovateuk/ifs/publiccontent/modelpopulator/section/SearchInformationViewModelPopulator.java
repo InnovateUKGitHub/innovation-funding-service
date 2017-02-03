@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.modelpopulator.section;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.modelpopulator.AbstractPublicContentViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
@@ -18,7 +19,7 @@ public class SearchInformationViewModelPopulator extends AbstractPublicContentVi
     }
 
     @Override
-    protected void populateSection(SearchInformationViewModel model, PublicContentResource publicContentResource) {
+    protected void populateSection(SearchInformationViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource sectionResource) {
         //Nothing specific to add to the view model.
     }
 

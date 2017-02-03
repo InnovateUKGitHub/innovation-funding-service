@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.publiccontent.formsaver;
+package org.innovateuk.ifs.publiccontent.formsaver.section;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;

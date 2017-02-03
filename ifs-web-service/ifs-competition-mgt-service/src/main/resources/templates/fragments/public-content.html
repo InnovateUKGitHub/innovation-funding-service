@@ -65,7 +65,6 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <hr />
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
     </th:block>
 </div>
@@ -76,11 +75,9 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <hr />
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
     </th:block>
 </div>
-
 
 <div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
@@ -88,11 +85,9 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <hr />
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
     </th:block>
 </div>
-
 
 <div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
@@ -100,7 +95,6 @@
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <hr />
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
     </th:block>
 </div>

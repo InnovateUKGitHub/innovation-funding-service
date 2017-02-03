@@ -26,7 +26,7 @@ public abstract class AbstractContentGroupFormSaver<F extends AbstractContentGro
         Optional<PublicContentSectionResource> optional = CollectionFunctions.simpleFindFirst(publicContentResource.getContentSections(),
                 contentSectionResource -> getType().equals(contentSectionResource.getType()));
         if (optional.isPresent()) {
-            if(getType().isAllowEmptyContentGroups() && form.getContentGroups().isEmpty()) {
+            if(!getType().isAllowEmptyContentGroups() && form.getContentGroups().isEmpty()) {
                 return Collections.singletonList(Error.fieldError("contentGroups", form.getContentGroups(),
                         "validation.publiccontent.contentgroup.notempty"));
             }

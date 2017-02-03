@@ -213,16 +213,35 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
 
     @Test
     public void testUpdateEligibilitySection() {
+        testUpdateContentGroupSection(PublicContentSectionType.ELIGIBILITY);
+    }
+
+    @Test
+    public void testUpdateSupportingInformationSection() {
+        testUpdateContentGroupSection(PublicContentSectionType.SUPPORTING_INFORMATION);
+    }
+
+    @Test
+    public void testUpdateScopeSection() {
+        testUpdateContentGroupSection(PublicContentSectionType.SCOPE);
+    }
+
+    @Test
+    public void testUpdateHowToApplySection() {
+        testUpdateContentGroupSection(PublicContentSectionType.HOW_TO_APPLY);
+    }
+
+    private void testUpdateContentGroupSection(PublicContentSectionType type) {
         PublicContent publicContent = newPublicContent().withContentSections(Collections.emptyList()).build();
         PublicContentResource publicContentResource = newPublicContentResource()
                 .withContentSections(COMPLETE_SECTIONS).build();
         when(publicContentMapper.mapToDomain(publicContentResource)).thenReturn(publicContent);
         when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
 
-        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.ELIGIBILITY);
+        ServiceResult<Void> result = service.updateSection(publicContentResource, type);
 
         verify(publicContentRepository).save(publicContent);
-        verify(contentGroupService).saveContentGroups(publicContentResource, publicContent, PublicContentSectionType.ELIGIBILITY);
+        verify(contentGroupService).saveContentGroups(publicContentResource, publicContent, type);
 
         assertTrue(result.isSuccess());
     }

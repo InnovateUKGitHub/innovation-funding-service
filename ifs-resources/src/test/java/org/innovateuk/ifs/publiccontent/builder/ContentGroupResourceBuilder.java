@@ -3,6 +3,7 @@ package org.innovateuk.ifs.publiccontent.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -21,6 +22,10 @@ public class ContentGroupResourceBuilder extends BaseBuilder<ContentGroupResourc
         return new ContentGroupResourceBuilder(emptyList()).with(uniqueIds());
     }
 
+    public ContentGroupResourceBuilder withId(Long id) {
+        return with(group -> setField("id", id, group));
+    }
+
     public ContentGroupResourceBuilder withHeading(String heading) {
         return with(group -> BaseBuilderAmendFunctions.setField("heading", heading, group));
     }
@@ -31,6 +36,10 @@ public class ContentGroupResourceBuilder extends BaseBuilder<ContentGroupResourc
 
     public ContentGroupResourceBuilder withPriority(Integer priority) {
         return with(group -> setField("priority", priority, group));
+    }
+
+    public  ContentGroupResourceBuilder withFileEntry(FileEntryResource fileEntry) {
+        return with(group -> setField("fileEntry", fileEntry, group));
     }
 
     @Override

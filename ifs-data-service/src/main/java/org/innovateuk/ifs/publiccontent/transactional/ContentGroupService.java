@@ -32,7 +32,14 @@ public interface ContentGroupService {
             description = "The Competition Admin, or project finance user can remove a content group file.")
     ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType section);
 
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "GET_CONTENT_GROUP_FILE_DETAILS",
+            description = "The Competition Admin, or project finance user can read a content group file details.")
     ServiceResult<FileEntryResource> getFileDetails(long contentGroupId);
 
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "GET_CONTENT_GROUP_FILE_CONTENTS",
+            description = "The Competition Admin, or project finance user can read a content group file contents.")
     ServiceResult<FileAndContents> getFileContents(long contentGroupId);
 }

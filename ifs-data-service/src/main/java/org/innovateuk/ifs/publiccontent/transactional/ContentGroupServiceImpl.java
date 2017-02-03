@@ -50,7 +50,6 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
     @Autowired
     private FileEntryMapper fileEntryMapper;
 
-
     @Autowired
     private FileService fileService;
 
