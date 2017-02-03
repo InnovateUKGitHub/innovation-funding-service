@@ -3,13 +3,14 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...
 ...            INFUND-6393 As an Applicant I will be invited to add Staff count and Turnover where the include projected growth table is set to 'No' within the Finances page of Competition setup
 Suite Setup    Custom Suite Setup
-Force Tags     Applicant  CompAdmin
+Force Tags     Applicant  CompAdmin  MySQL
 Resource       ../../../resources/defaultResources.robot
 Resource       ../../04__Comp_Admin/CompAdmin_Commons.robot
 
 *** Variables ***
 ${lastFourdigits}    \d*(\d{4})
 ${competitionForthisSuite}    From new Competition to New Application
+${applicationTitle}    New Application from the New Competition
 
 *** Test Cases ***
 # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
@@ -65,7 +66,29 @@ Competition is Open to Applications
     When Change the open date of the Competition in the database to one day before  ${competitionForthisSuite}
     Then the user navigates to the page  ${CA_Live}
     And the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competitionForthisSuite}")
+    [Teardown]  logout as user
 
+Create new Application for this Competition
+    [Documentation]  INFUND-6393
+    [Tags]  HappyPath
+    [Setup]  log in as a different user   &{lead_applicant_credentials}
+    Given the user navigates to the page  ${server}/competition/${competitionId}/info/eligibility
+    Then the user clicks the button/link  jQuery=a:contains("Apply now")
+    And the user clicks the button/link   jQuery=button:contains("Begin application")
+
+Applicant fills in the Application Details
+    [Documentation]  INFUND-6393
+    [Tags]  HappyPath
+    Given the user should see the element      jQuery=h1:contains("Application Overview")
+    When the user clicks the button/link       link=Application details
+    Then the user enters text to a text field  css=#application_details-title  ${applicationTitle}
+    And the user clicks the button/link        jQuery=label[for="financePosition-cat-33"]
+    And the user clicks the button/link        jQuery=label[for="resubmission-no"]
+    And the user enters text to a text field   css=#application_details-startdate_day  ${day}
+    And the user enters text to a text field   css=#application_details-startdate_month  ${month}
+    And the user enters text to a text field   css=#application_details-startdate_year  ${nextyear}
+    And the user enters text to a text field   css=#application_details-duration  24
+    The user clicks the button/link            jQuery=button:contains("Mark as complete")
 
 *** Keywords ***
 Custom Suite Setup
@@ -77,6 +100,8 @@ Custom Suite Setup
     Set suite variable  ${year}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
+    ${competitionId} =  execute sql string  SELECT `id` FROM ifs.competition WHERE `name`='From new Competition to New Application';
+    Set suite variable  ${competitionId}
 
 
 #    ${tomorrow_nextyear} =  get tomorrow full next year
