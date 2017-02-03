@@ -21,6 +21,7 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.contract.service.ContractService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -53,7 +54,6 @@ import org.innovateuk.ifs.project.status.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.workflow.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -167,8 +167,6 @@ public class BaseUnitTest {
     @Mock
     public OrganisationAddressRestService organisationAddressRestService;
     @Mock
-    public ProcessOutcomeService processOutcomeService;
-    @Mock
     public SectionService sectionService;
     @Mock
     public CompetitionService competitionService;
@@ -224,6 +222,8 @@ public class BaseUnitTest {
     public MilestoneService milestoneServiceMock;
     @Mock
     public AssessorRestService assessorRestService;
+    @Mock
+    public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
 
     @Spy
     @InjectMocks

@@ -18,11 +18,11 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.sort;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.*;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -102,7 +102,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn, available)));
 
         List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = setupExpectedAvailableAssessors();
-        sort(expectedAvailableAssessors, Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
+        expectedAvailableAssessors.sort(Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
 
         ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
                 applicationId,
@@ -315,7 +315,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                         newInnovationAreaResource()
                                 .withName("Creative Economy", "Bioscience")
                                 .buildSet(2))
-                .withRejectReason("Conflict of interest", "Not available", "Not my area of expertise")
+                .withRejectReason(CONFLICT_OF_INTEREST, TOO_MANY_ASSESSMENTS, NOT_AREA_OF_EXPERTISE)
                 .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.", "No prior experience")
                 .withMostRecentAssessmentState(REJECTED)
                 .withTotalApplicationsCount(6L, 7L, 1L)
@@ -388,11 +388,11 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
     private List<ApplicationAssessmentProgressRejectedRowViewModel> setupExpectedRejectedRows() {
         return asList(
                 new ApplicationAssessmentProgressRejectedRowViewModel(7L, "Angela Casey", 6, 6, ACADEMIC,
-                        asList("Infrastructure systems", "Earth Observation"), "Conflict of interest", "Member of board of directors"),
+                        asList("Infrastructure systems", "Earth Observation"), CONFLICT_OF_INTEREST, "Member of board of directors"),
                 new ApplicationAssessmentProgressRejectedRowViewModel(8L, "Anne Chadwick", 7, 4, BUSINESS,
-                        asList("Internet of Things", "Open"), "Not available", "I do like reviewing the applications to your competitions but please do not assign so many to me."),
+                        asList("Internet of Things", "Open"), TOO_MANY_ASSESSMENTS, "I do like reviewing the applications to your competitions but please do not assign so many to me."),
                 new ApplicationAssessmentProgressRejectedRowViewModel(9L, "David Cherrie", 1, 1, ACADEMIC,
-                        asList("Creative Economy", "Bioscience"), "Not my area of expertise", "No prior experience"));
+                        asList("Creative Economy", "Bioscience"), NOT_AREA_OF_EXPERTISE, "No prior experience"));
     }
 
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> setupExpectedPreviouslyAssignedRows() {
