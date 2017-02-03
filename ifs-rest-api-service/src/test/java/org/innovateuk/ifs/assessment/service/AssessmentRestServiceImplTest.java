@@ -8,8 +8,8 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
@@ -66,6 +66,17 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     }
 
     @Test
+    public void countByStateAndCompetition() throws Exception {
+        Long expected = 2L;
+
+        AssessmentStates state = AssessmentStates.CREATED;
+        Long competitionId = 2L;
+
+        setupGetWithRestResultExpectations(format("%s/state/%s/competition/%s/count", assessmentRestURL, state, competitionId), Long.TYPE, expected);
+        assertSame(expected, service.countByStateAndCompetition(state, competitionId).getSuccessObject());
+    }
+
+    @Test
     public void getTotalScore() throws Exception {
         AssessmentTotalScoreResource expected = newAssessmentTotalScoreResource().build();
 
@@ -79,9 +90,10 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void recommend() throws Exception {
         Long assessmentId = 1L;
 
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), assessmentFundingDecision, OK);
-        RestResult<Void> response = service.recommend(assessmentId, assessmentFundingDecision);
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
+                newAssessmentFundingDecisionOutcomeResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/recommend", assessmentRestURL, assessmentId), assessmentFundingDecisionOutcomeResource, OK);
+        RestResult<Void> response = service.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
         assertTrue(response.isSuccess());
     }
 
@@ -89,9 +101,10 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
     public void rejectInvitation() throws Exception {
         Long assessmentId = 1L;
 
-        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
-        setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId), applicationRejection, OK);
-        RestResult<Void> response = service.rejectInvitation(assessmentId, applicationRejection);
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
+        setupPutWithRestResultExpectations(format("%s/%s/rejectInvitation", assessmentRestURL, assessmentId),
+                assessmentRejectOutcomeResource, OK);
+        RestResult<Void> response = service.rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
         assertTrue(response.isSuccess());
     }
 
@@ -119,15 +132,6 @@ public class AssessmentRestServiceImplTest extends BaseRestServiceUnitTest<Asses
 
         setupPutWithRestResultExpectations(format("%s/%s/withdraw", assessmentRestURL, assessmentId), null, OK);
         RestResult<Void> response = service.withdrawAssessment(assessmentId);
-        assertTrue(response.isSuccess());
-    }
-
-    @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 1L;
-
-        setupPutWithRestResultExpectations(format("%s/%s/notify", assessmentRestURL, assessmentId), null, OK);
-        RestResult<Void> response = service.notify(assessmentId);
         assertTrue(response.isSuccess());
     }
 }

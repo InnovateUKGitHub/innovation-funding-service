@@ -18,14 +18,16 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
-import static java.util.Collections.sort;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.*;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TITLE;
+import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TOTAL_APPLICATIONS;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -65,6 +67,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
                 setupExpectedRejectedRows(),
@@ -99,13 +102,14 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(combineLists(assigned, rejected, withdrawn, available)));
 
         List<ApplicationAvailableAssessorsRowViewModel> expectedAvailableAssessors = setupExpectedAvailableAssessors();
-        sort(expectedAvailableAssessors, Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
+        expectedAvailableAssessors.sort(Comparator.comparing(ApplicationAvailableAssessorsRowViewModel::getTotalApplicationsCount));
 
         ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
                 applicationId,
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
                 setupExpectedRejectedRows(),
@@ -113,7 +117,8 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 expectedAvailableAssessors
         );
 
-        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?sortField=TOTAL_APPLICATIONS", competitionId, applicationId))
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId)
+                .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("competition/application-progress"));
@@ -141,7 +146,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
 
         mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TITLE", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -163,9 +168,9 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(assessmentRestService.createAssessment(expectedAssessmentCreateResource)).thenReturn(restSuccess(expectedAssessmentResource));
 
         mockMvc.perform(post("/competition/{competitionId}/application/{applicationId}/assessors/assign/{assessorId}", competitionId, applicationId, assessorId)
-                .param("sortField", "TOTAL_APPLICATIONS"))
+                .param("sortField", TOTAL_APPLICATIONS.name()))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TOTAL_APPLICATIONS", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
 
         verify(assessmentRestService, only()).createAssessment(expectedAssessmentCreateResource);
         verifyNoMoreInteractions(assessmentRestService, applicationAssessmentSummaryRestService);
@@ -182,11 +187,73 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(
                 post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=TITLE", competitionId, applicationId)));
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TITLE.name())));
 
         InOrder inOrder = inOrder(assessmentRestService);
         inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessment_preservesQueryParams() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
+
+        when(assessmentRestService.withdrawAssessment(assessmentId)).thenReturn(restSuccess());
+
+        mockMvc.perform(
+                post("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}", competitionId, applicationId, assessmentId)
+                        .param("sortField", TOTAL_APPLICATIONS.name()))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/competition/%s/application/%s/assessors?sortField=%s", competitionId, applicationId, TOTAL_APPLICATIONS.name())));
+
+        InOrder inOrder = inOrder(assessmentRestService);
+        inOrder.verify(assessmentRestService).withdrawAssessment(assessmentId);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void withdrawAssessmentConfirm() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
+
+        ApplicationAssessmentProgressRemoveViewModel expectedModel = new ApplicationAssessmentProgressRemoveViewModel(
+                competitionId,
+                applicationId,
+                assessmentId,
+                TITLE
+        );
+
+        mockMvc.perform(
+                get("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/application-progress-remove-confirm"));
+    }
+
+    @Test
+    public void withdrawAssessmentConfirm_preservesQueryParams() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+        Long assessmentId = 3L;
+
+        ApplicationAssessmentProgressRemoveViewModel expectedModel = new ApplicationAssessmentProgressRemoveViewModel(
+                competitionId,
+                applicationId,
+                assessmentId,
+                TOTAL_APPLICATIONS
+        );
+
+        mockMvc.perform(
+                get("/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm", competitionId, applicationId, assessmentId)
+                        .param("sortField", TOTAL_APPLICATIONS.name()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("competition/application-progress-remove-confirm"));
     }
 
     private ApplicationAssessmentSummaryResource setupApplicationAssessmentSummaryResource(Long competitionId, Long applicationId) {
@@ -195,6 +262,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withName("Progressive Machines")
                 .withCompetitionId(competitionId)
                 .withCompetitionName("Connected digital additive manufacturing")
+                .withLeadOrganisation("Liquid Dynamics")
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO Systems"))
                 .build();
     }
@@ -247,7 +315,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                         newInnovationAreaResource()
                                 .withName("Creative Economy", "Bioscience")
                                 .buildSet(2))
-                .withRejectReason("Conflict of interest", "Not available", "Not my area of expertise")
+                .withRejectReason(CONFLICT_OF_INTEREST, TOO_MANY_ASSESSMENTS, NOT_AREA_OF_EXPERTISE)
                 .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.", "No prior experience")
                 .withMostRecentAssessmentState(REJECTED)
                 .withTotalApplicationsCount(6L, 7L, 1L)
@@ -320,11 +388,11 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
     private List<ApplicationAssessmentProgressRejectedRowViewModel> setupExpectedRejectedRows() {
         return asList(
                 new ApplicationAssessmentProgressRejectedRowViewModel(7L, "Angela Casey", 6, 6, ACADEMIC,
-                        asList("Infrastructure systems", "Earth Observation"), "Conflict of interest", "Member of board of directors"),
+                        asList("Infrastructure systems", "Earth Observation"), CONFLICT_OF_INTEREST, "Member of board of directors"),
                 new ApplicationAssessmentProgressRejectedRowViewModel(8L, "Anne Chadwick", 7, 4, BUSINESS,
-                        asList("Internet of Things", "Open"), "Not available", "I do like reviewing the applications to your competitions but please do not assign so many to me."),
+                        asList("Internet of Things", "Open"), TOO_MANY_ASSESSMENTS, "I do like reviewing the applications to your competitions but please do not assign so many to me."),
                 new ApplicationAssessmentProgressRejectedRowViewModel(9L, "David Cherrie", 1, 1, ACADEMIC,
-                        asList("Creative Economy", "Bioscience"), "Not my area of expertise", "No prior experience"));
+                        asList("Creative Economy", "Bioscience"), NOT_AREA_OF_EXPERTISE, "No prior experience"));
     }
 
     private List<ApplicationAssessmentProgressPreviouslyAssignedRowViewModel> setupExpectedPreviouslyAssignedRows() {

@@ -21,8 +21,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInputController> {
 
-    private ObjectMapper objectMapper = new ObjectMapper();
-
     @Override
     protected FormInputController supplyControllerUnderTest() {
         return new FormInputController();
@@ -56,7 +54,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
         mockMvc.perform(get("/forminput/findByQuestionId/{questionId}/scope/{scope}", questionId, scope))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(formInputServiceMock, only()).findByQuestionIdAndScope(questionId, scope);
     }
@@ -74,7 +72,7 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
         mockMvc.perform(get("/forminput/findByCompetitionId/{competitionId}/scope/{scope}", competitionId, scope))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
 
         verify(formInputServiceMock, only()).findByCompetitionIdAndScope(competitionId, scope);
     }
@@ -90,9 +88,9 @@ public class FormInputControllerTest extends BaseControllerMockMVCTest<FormInput
 
         mockMvc.perform(put("/forminput/", competitionId)
                     .contentType(MediaType.APPLICATION_JSON_UTF8)
-                    .content(new ObjectMapper().writeValueAsString(expected)))
+                    .content(objectMapper.writeValueAsString(expected)))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(expected)));
+                .andExpect(content().string(objectMapper.writeValueAsString(expected)));
     }
 
     @Test

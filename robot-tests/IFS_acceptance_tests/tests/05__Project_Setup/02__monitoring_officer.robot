@@ -42,7 +42,7 @@ Status updates correctly for internal user's table
     When the user navigates to the page    ${internal_project_summary}
     Then the user should see the element   jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok       # Project details
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.action   # MO
-    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting  # Bank details are not yet provided by any partner yet
+    And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status  # Bank details are not yet provided by any partner yet
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action   # Finance checks-always action flag for private beta
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status          # Spend Profile
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.waiting  # Other Docs
@@ -83,7 +83,7 @@ Project finance user can view MO page, and go on to assign MO
     And the user should see the text in the page    Empire Ltd
     And the user should see the text in the page    EGGS
     And the user should see the text in the page    Ludlow
-    [Teardown]  the user clicks the button/link     link=Competition dashboard
+    [Teardown]  the user clicks the button/link     link=Projects in setup
 
 
 MO server-side validation
@@ -215,7 +215,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should see the element    jQuery=ul li.complete:nth-child(1)
     And the user should see the text in the page    Successful application
     Then the user should see the element    link = Monitoring Officer
-    And the user should not see the element    link = Finance checks
+    And the user should see the element    link = Finance checks
     And the user should not see the element    link= Spend profile
     And the user should not see the element    link = Grant offer letter
 
@@ -235,10 +235,10 @@ standard verification for email address follows
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=.button:contains("Assign Monitoring Officer")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the user edits the MO details

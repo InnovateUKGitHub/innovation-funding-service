@@ -9,6 +9,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
@@ -72,6 +73,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private FinanceRowService financeRowService;
+
+    @Autowired
+    private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
     private ProjectService projectService;
@@ -161,7 +165,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Project project = projectRepository.findOne(projectId);
         Application application = project.getApplication();
 
-        return financeRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
+        return projectFinanceRowService.financeChecksDetails(projectId, organisationId).andOnSuccess(projectFinance ->
 
             financeRowService.financeDetails(application.getId(), organisationId).
                     andOnSuccessReturn(applicationFinanceResource -> {
@@ -193,7 +197,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            Pair<Viability, ViabilityStatus> viability = getViability(org);
+            Pair<Viability, ViabilityRagStatus> viability = getViability(org);
 
             FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
@@ -207,14 +211,14 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private Pair<Viability, ViabilityStatus> getViability(PartnerOrganisation org) {
+    private Pair<Viability, ViabilityRagStatus> getViability(PartnerOrganisation org) {
 
         ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
                 org.getProject().getId(), org.getOrganisation().getId());
 
         ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
 
-        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityStatus());
+        return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityRagStatus());
 
     }
 

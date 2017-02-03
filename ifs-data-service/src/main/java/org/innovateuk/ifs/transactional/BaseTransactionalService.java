@@ -3,13 +3,16 @@ package org.innovateuk.ifs.transactional;
 import org.innovateuk.ifs.address.repository.AddressTypeRepository;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatus;
+import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.repository.ApplicationStatusRepository;
+import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.application.repository.SectionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -73,6 +76,9 @@ public abstract class BaseTransactionalService  {
     @Autowired
     protected AddressTypeRepository addressTypeRepository;
 
+    @Autowired
+    private QuestionRepository questionRepository;
+
     protected Supplier<ServiceResult<ProcessRole>> processRole(Long processRoleId) {
         return () -> getProcessRole(processRoleId);
     }
@@ -91,6 +97,14 @@ public abstract class BaseTransactionalService  {
 
     protected Supplier<ServiceResult<Application>> application(final Long id) {
         return () -> getApplication(id);
+    }
+
+    protected Supplier<ServiceResult<Project>> project(final Long id) {
+        return () -> getProject(id);
+    }
+
+    protected ServiceResult<Project> getProject(final Long id) {
+        return find(projectRepository.findOne(id), notFoundError(Project.class, id));
     }
 
     protected final Supplier<ServiceResult<Application>> openApplication(long applicationId) {
@@ -171,5 +185,13 @@ public abstract class BaseTransactionalService  {
         }
 
         return getUser(currentUser.getId());
+    }
+
+    protected Supplier<ServiceResult<Question>> question(Long questionId) {
+        return () -> getQuestion(questionId);
+    }
+
+    protected ServiceResult<Question> getQuestion(Long questionId) {
+        return find(questionRepository.findOne(questionId), notFoundError(Question.class));
     }
 }

@@ -49,7 +49,6 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
         setupGetWithRestResultExpectations(projectRestURL + "/123", ProjectResource.class, returnedResponse);
         ProjectResource result = service.getProjectById(123L).getSuccessObject();
         Assert.assertEquals(returnedResponse, result);
-
     }
 
     @Test
@@ -617,6 +616,21 @@ public class ProjectRestServiceImplTest extends BaseRestServiceUnitTest<ProjectR
 
         assertTrue(result.isSuccess());
         assertEquals(GOLState.APPROVED, result.getSuccessObject());
+    }
+
+    @Test
+    public void testGetProjectManager() {
+        ProjectUserResource returnedResponse = new ProjectUserResource();
+        setupGetWithRestResultExpectations(projectRestURL + "/123/project-manager", ProjectUserResource.class, returnedResponse);
+        ProjectUserResource result = service.getProjectManager(123L).getSuccessObject();
+        Assert.assertEquals(returnedResponse, result);
+    }
+
+    @Test
+    public void testGetProjectManagerNotFound() {
+        setupGetWithRestResultExpectations(projectRestURL + "/123/project-manager", ProjectUserResource.class, null, NOT_FOUND);
+        Optional<ProjectUserResource> result = service.getProjectManager(123L).toOptionalIfNotFound().getSuccessObject();
+        Assert.assertFalse(result.isPresent());
     }
 
 }

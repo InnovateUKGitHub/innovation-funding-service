@@ -35,7 +35,7 @@
     <p>This overview shows the spend profile status of each partner in your project.</p>
 
     <div th:if="${model.submitted}" th:remove="tag">
-        <h2 class="heading-medium">Profile spend</h2>
+        <h2 class="heading-medium">Spend profile</h2>
         <p th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
            You may view these profiles.</p>
         <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
@@ -94,7 +94,7 @@
         <p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must
             make sure they fit the timelines of your project plan.</p>
 
-        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and submit total project profile
+        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project profile
             spend</a>
 
     </div>

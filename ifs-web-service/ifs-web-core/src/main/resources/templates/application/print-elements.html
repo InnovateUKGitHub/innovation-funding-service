@@ -3,30 +3,36 @@
 
 <!-- ===========================Application Details =========================== -->
 
-    <div th:fragment="application_details" th:remove="tag">
+<div th:fragment="application_details" th:remove="tag">
 
-            <h2 class="heading-small">Project title</h2>
-              <div class="textarea-wrapped">
-                  <div class="readonly" th:text="${application_title}" />
-              </div>
-            <h2 class="heading-small">Estimated timescales</h2>
-            <p>Project start date :<br/>
-                <span th:text="${application_startdate_day}" th:remove="tag" />-<span th:remove="tag" th:text="${application_startdate_month}" />-<span th:remove="tag" th:text="${application_startdate_year}" />
-            </p>
-           <p>Duration in months :<br/>
-
-              <span th:text="${application_duration}" th:remove="tag" />
-           </p>
-        <h2 class="heading-small">Lead organisation</h2>
-        <div th:text="${leadOrganisation.getName()}"></div>
-
-        <h2 class="heading-small">Partners</h2>
-        <ul class="list list-bullet">
-            <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
-                <span th:text="${organisation.getName()}"></span>
-            </li>
-        </ul>
+    <h2 class="heading-small">Project title</h2>
+    <div class="textarea-wrapped">
+        <div class="readonly" th:text="${application_title}" />
     </div>
+
+    <h2 class="heading-small">Research category</h2>
+    <div class="textarea-wrapped">
+        <div class="readonly" th:text="${researchCategoryName}" />
+    </div>
+
+    <h2 class="heading-small">Estimated timescales</h2>
+    <p>Project start date :<br/>
+        <span th:text="${application_startdate_day}" th:remove="tag" />-<span th:remove="tag" th:text="${application_startdate_month}" />-<span th:remove="tag" th:text="${application_startdate_year}" />
+    </p>
+    <p>Duration in months :<br/>
+      <span th:text="${application_duration}" th:remove="tag" />
+    </p>
+
+    <h2 class="heading-small">Lead organisation</h2>
+    <div th:text="${leadOrganisation.getName()}"></div>
+
+    <h2 class="heading-small">Partners</h2>
+    <ul class="list list-bullet">
+        <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
+            <span th:text="${organisation.getName()}"></span>
+        </li>
+    </ul>
+</div>
 
 <!-- ===================== Textarea ======================!-->
 <div th:fragment="textarea" th:remove="tag">

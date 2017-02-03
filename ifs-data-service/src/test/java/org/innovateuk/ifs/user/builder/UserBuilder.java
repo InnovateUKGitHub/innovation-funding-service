@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.user.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserStatus;
 
 import java.util.List;
@@ -73,8 +73,8 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((phoneNumber, user) -> setField("phoneNumber", phoneNumber, user), phoneNumbers);
     }
 
-    public UserBuilder withTitle(String... titles) {
-        return withArray((title, user) -> setField("title", title, user), titles);
+    public UserBuilder withTitle(Title... titles) {
+        return withArray((title, user) -> user.setTitle(title), titles);
     }
 
     public UserBuilder withId(Long... ids) {
@@ -93,8 +93,8 @@ public class UserBuilder extends BaseBuilder<User, UserBuilder> {
         return withArray((uid, object) -> setField("uid", uid, object), uids);
     }
 
-    public UserBuilder withProfile(Profile... profiles) {
-        return withArray((profile, user) -> setField("profileId", profile.getId(), user), profiles);
+    public UserBuilder withProfileId(Long... profileIds) {
+        return withArraySetFieldByReflection("profileId", profileIds);
     }
 
     public UserBuilder withAffiliations(List<Affiliation>... affiliationsList) {

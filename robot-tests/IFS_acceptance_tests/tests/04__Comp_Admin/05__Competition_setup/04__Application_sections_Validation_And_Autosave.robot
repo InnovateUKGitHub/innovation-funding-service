@@ -122,7 +122,7 @@ the validation error above the question should be visible
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     focus    jQuery=.button[value="Save and close"]
-    wait until element is not visible    css=error-message
+    Wait Until Element Is Not Visible Without Screenshots    css=error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user moves focus and waits for autosave
@@ -163,6 +163,6 @@ User creates a new competition for Application tests
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
     And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
+    And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=.button:contains("Done")
     And the user clicks the button/link    link=Competition setup

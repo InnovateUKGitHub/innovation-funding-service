@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Resource Class for a generic {@link org.innovateuk.ifs.category.domain.Category}
+ * Resource Class for a generic {@code Category}
  */
 public abstract class CategoryResource {
     private Long id;

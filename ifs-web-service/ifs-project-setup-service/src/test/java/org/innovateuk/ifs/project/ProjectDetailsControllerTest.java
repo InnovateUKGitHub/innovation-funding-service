@@ -27,6 +27,9 @@ import org.springframework.test.web.servlet.MvcResult;
 import java.time.LocalDate;
 import java.util.*;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.address.builder.AddressTypeResourceBuilder.newAddressTypeResource;
 import static org.innovateuk.ifs.address.resource.OrganisationAddressType.*;
@@ -50,9 +53,7 @@ import static org.innovateuk.ifs.project.viewmodel.ProjectUserInviteStatus.PENDI
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
@@ -114,6 +115,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         MvcResult result = mockMvc.perform(get("/project/{id}/details", projectId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/detail"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
         ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
@@ -127,6 +129,60 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertTrue(model.isUserLeadPartner());
         assertTrue(model.isSubmitProjectDetailsAllowed());
         assertFalse(model.isAnySectionIncomplete());
+        assertFalse(model.isReadOnly());
+    }
+
+    @Test
+    public void testProjectDetailsReadOnlyView() throws Exception {
+        Long projectId = 20L;
+
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+                build(1);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(false));
+
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/detail"))
+                .andReturn();
+
+        ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        Boolean readOnlyView = (Boolean) result.getModelAndView().getModel().get("readOnlyView");
+
+        assertEquals(applicationResource, model.getApp());
+        assertEquals(competitionResource, model.getCompetition());
+        assertEquals(project, model.getProject());
+        assertEquals(singletonList(leadOrganisation), model.getPartnerOrganisations());
+        assertEquals(null, model.getProjectManager());
+        assertTrue(model.isProjectDetailsSubmitted());
+        assertFalse(model.isSubmissionAllowed());
+        assertTrue(model.isUserLeadPartner());
+        assertFalse(model.isSubmitProjectDetailsAllowed());
+        assertFalse(model.isAnySectionIncomplete());
+        assertTrue(model.isReadOnly());
     }
 
     @Test
@@ -472,6 +528,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 contentType(MediaType.APPLICATION_FORM_URLENCODED).
                 param("addressType", REGISTERED.name())).
                 andExpect(status().is3xxRedirection()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
                 andReturn();
     }
@@ -500,8 +557,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("addressForm.selectedPostcode.addressLine1", addressResource.getAddressLine1())
                 .param("addressForm.selectedPostcode.town", addressResource.getTown())
                 .param("addressForm.selectedPostcode.postcode", addressResource.getPostcode()))
-                .andExpect(redirectedUrl("/project/" + project.getId() + "/details")).
-                andReturn();
+                .andExpect(redirectedUrl("/project/" + project.getId() + "/details"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
+                .andReturn();
     }
 
     @Test
@@ -525,6 +583,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("search-address", "")
                 .param("addressForm.postcodeInput", "")).
                 andExpect(model().hasErrors()).
+                andExpect(model().attributeDoesNotExist("readOnlyView")).
                 andExpect(model().attributeHasFieldErrors("form", "addressForm.postcodeInput")).
                 andReturn();
     }
@@ -533,8 +592,9 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
     public void testSubmitProjectDetails() throws Exception {
         when(projectService.setApplicationDetailsSubmitted(1L)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{id}/details/submit", 1L)).
-        andExpect(redirectedUrl("/project/1/details"));
+        mockMvc.perform(post("/project/{id}/details/submit", 1L))
+        .andExpect(model().attributeDoesNotExist("readOnlyView"))
+        .andExpect(redirectedUrl("/project/1/details"));
     }
 
     @Test
@@ -576,6 +636,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("organisation", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/finance-contact"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
         SelectFinanceContactViewModel model = (SelectFinanceContactViewModel) result.getModelAndView().getModel().get("model");
@@ -622,12 +683,69 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
                 .param("organisation", String.valueOf(organisationId)))
                 .andExpect(status().isOk())
                 .andExpect(view().name("project/finance-contact"))
+                .andExpect(model().attributeDoesNotExist("readOnlyView"))
                 .andReturn();
 
         SelectFinanceContactViewModel model = (SelectFinanceContactViewModel) result.getModelAndView().getModel().get("model");
 
         assertTrue(model.getInvitedUsers().isEmpty());
     }
+    @Test
+    public void testViewProjectDetailsInReadOnly() throws Exception {
+        Long projectId = 15L;
 
+        CompetitionResource competitionResource = newCompetitionResource().build();
+        ApplicationResource applicationResource = newApplicationResource().withCompetition(competitionResource.getId()).build();
+        ProjectResource project = newProjectResource().withId(projectId).build();
+
+        OrganisationResource leadOrganisation = newOrganisationResource().build();
+
+        List<ProjectUserResource> projectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                withRoleName(PARTNER.getName()).
+
+                build(1);
+
+        List<ProjectUserResource> projectManagerProjectUsers = newProjectUserResource().
+                withUser(loggedInUser.getId()).
+                withOrganisation(leadOrganisation.getId()).
+                        withRoleName(PROJECT_MANAGER.getName()).
+                        build(1);
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().build()).
+                build();
+
+
+
+        when(applicationService.getById(project.getApplication())).thenReturn(applicationResource);
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(projectManagerProjectUsers);
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(leadOrganisation);
+        when(organisationService.getOrganisationById(leadOrganisation.getId())).thenReturn(leadOrganisation);
+        when(projectService.isUserLeadPartner(projectId, loggedInUser.getId())).thenReturn(true);
+        when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(teamStatus);
+        when(projectService.isSubmitAllowed(projectId)).thenReturn(serviceSuccess(true));
+
+        when(organisationRestService.getOrganisationById(leadOrganisation.getId())).thenReturn(restSuccess(leadOrganisation));
+
+        MvcResult result = mockMvc.perform(get("/project/{id}/readonly", projectId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("project/detail"))
+                .andReturn();
+
+        ProjectDetailsViewModel model = (ProjectDetailsViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(applicationResource, model.getApp());
+        assertEquals(competitionResource, model.getCompetition());
+        assertEquals(project, model.getProject());
+        assertEquals(projectManagerProjectUsers.get(0), model.getProjectManager());
+        assertTrue(model.isProjectDetailsSubmitted());
+        assertFalse(model.isSubmissionAllowed());
+        assertFalse(model.isSubmitProjectDetailsAllowed());
+        assertFalse(model.isAnySectionIncomplete());
+        assertTrue(model.isReadOnly());
+    }
 }
 

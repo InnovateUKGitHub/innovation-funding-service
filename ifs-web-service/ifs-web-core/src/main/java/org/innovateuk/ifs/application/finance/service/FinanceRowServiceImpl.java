@@ -35,7 +35,8 @@ public class FinanceRowServiceImpl implements FinanceRowService {
 
     @Override
     public void delete(Long costId) {
-        financeRowRestService.delete(costId);}
+        financeRowRestService.delete(costId);
+    }
 
     @Override
     public ValidationMessages add(Long applicationFinanceId, Long questionId, FinanceRowItem costItem) {

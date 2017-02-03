@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.finance.view;
 
 import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -57,11 +58,12 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
     
     @Autowired
     private CompetitionService competitionService;
-    
-    @Override
-    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
 
-        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId);
+    //TODO: INFUND-7849 - make sure this function is not going to be used anymore
+    @Override
+    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
+
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
 
         if (applicationFinanceResource != null) {
             OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
@@ -70,9 +72,6 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
             model.addAttribute("organisationType", organisationType);
             model.addAttribute("organisationFinanceId", applicationFinanceResource.getId());
             model.addAttribute("organisationFinanceTotal", applicationFinanceResource.getTotal());
-            model.addAttribute("organisationTotalFundingSought", applicationFinanceResource.getTotalFundingSought());
-            model.addAttribute("organisationTotalContribution", applicationFinanceResource.getTotalContribution());
-            model.addAttribute("organisationTotalOtherFunding", applicationFinanceResource.getTotalOtherFunding());
             model.addAttribute("financeView", "finance");
             addGrantClaim(model, form, applicationFinanceResource);
         }
@@ -88,14 +87,40 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
         }
     }
 
-    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, List<QuestionResource> costsQuestions, Long userId) {
-        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
+    @Override
+    public FinanceViewModel getFinanceViewModel(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, costsQuestions, userId, organisationId);
+
+        if (applicationFinanceResource != null) {
+            OrganisationTypeResource organisationType = organisationTypeService.getForOrganisationId(applicationFinanceResource.getOrganisation()).getSuccessObjectOrThrowException();
+            financeViewModel.setOrganisationFinance(applicationFinanceResource.getFinanceOrganisationDetails());
+            financeViewModel.setOrganisationFinanceSize(applicationFinanceResource.getOrganisationSize());
+            financeViewModel.setOrganisationType(organisationType);
+            financeViewModel.setOrganisationFinanceId(applicationFinanceResource.getId());
+            financeViewModel.setOrganisationFinanceTotal(applicationFinanceResource.getTotal());
+            financeViewModel.setFinanceView("finance");
+            addGrantClaim(financeViewModel, applicationFinanceResource);
+        }
+
+        return financeViewModel;
+    }
+
+    private void addGrantClaim(FinanceViewModel financeViewModel, ApplicationFinanceResource applicationFinanceResource) {
+        if(applicationFinanceResource.getGrantClaim()!=null) {
+            financeViewModel.setOrganisationGrantClaimPercentage(ofNullable(applicationFinanceResource.getGrantClaim().getGrantClaimPercentage()).orElse(0));
+            financeViewModel.setOrganisationGrantClaimPercentageId(applicationFinanceResource.getGrantClaim().getId());
+        }
+    }
+
+    protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Long organisationId) {
+        ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId, organisationId);
         if(applicationFinanceResource == null) {
             financeService.addApplicationFinance(userId, applicationId);
             // ugly fix since the addApplicationFinance method does not return the correct results.
             applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
         }
-        
+
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
         
         ApplicationResource application = applicationService.getById(applicationId);
@@ -136,7 +161,7 @@ public class DefaultFinanceModelManager implements FinanceModelManager {
 	}
 
 	@Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, FinanceRowType costType) {
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
         if (FinanceRowType.LABOUR == costType) {
             ApplicationFinanceResource applicationFinanceResource = financeService.getApplicationFinanceDetails(userId, applicationId);
             LabourCostCategory costCategory = (LabourCostCategory) applicationFinanceResource.getFinanceOrganisationDetails(FinanceRowType.LABOUR);

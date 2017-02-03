@@ -12,32 +12,31 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})})" th:remove="tag" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge">Accept application</h1>
             </div>
 
+            <h2 class="visually-hidden">Application details</h2>
             <div class="boxed">
                 <div class="grid-row">
                     <div class="column-half">
-                        <h2 class="heading-small no-margin">Title:</h2>
+                        <p class="heading-small no-margin">Title:</p>
                         <p th:text="${model.application.name}"></p>
                     </div>
                     <div class="column-half">
-                        <h2 class="heading-small no-margin">Partners:</h2>
+                        <p class="heading-small no-margin">Partners:</p>
                         <ul class="list list-bullet">
-                            <li th:each="partner : ${model.partners}"  >
-                                <span th:text="${partner.name}"></span>
-                                <span th:if="${partner.id.equals(model.leadPartner.id)}">
-                                    <strong> (Lead)</strong>
-                                </span>
+                            <li th:each="partner : ${model.partners}">
+                                <th:block th:text="${partner.name}"></th:block>
+                                <strong th:if="${partner.id.equals(model.leadPartner.id)}">(Lead)</strong>
                             </li>
                         </ul>
                     </div>
                 </div>
 
-                <h2 class="heading-small no-margin">Project summary:</h2>
+                <h3 class="heading-small no-margin">Project summary:</h3>
                 <p th:text="${model.projectSummary}" data-md-to-html="">This is the applicant response for project summary.</p>
             </div>
 

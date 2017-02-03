@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.view;
 
+import org.innovateuk.ifs.application.finance.view.OrganisationApplicationFinanceOverviewImpl;
 import org.innovateuk.ifs.application.finance.view.OrganisationFinanceOverview;
 import org.innovateuk.ifs.finance.builder.OrganisationFinanceOverviewBuilder;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
@@ -42,7 +43,7 @@ public class OrganisationFinanceOverviewTest {
 
     @Test
     public void costCalculationsShouldReturnZeroWhenThereAreNoOrganisationFinances() throws Exception {
-        OrganisationFinanceOverview organisationFinanceOverview = new OrganisationFinanceOverview();
+        OrganisationApplicationFinanceOverviewImpl organisationFinanceOverview = new OrganisationApplicationFinanceOverviewImpl();
         Assert.assertEquals(organisationFinanceOverview.getTotal(), new BigDecimal(0));
         Assert.assertEquals(organisationFinanceOverview.getTotalContribution(), new BigDecimal(0));
         Assert.assertEquals(organisationFinanceOverview.getTotalOtherFunding(), new BigDecimal(0));

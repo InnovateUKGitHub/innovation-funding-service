@@ -27,7 +27,11 @@ public class InnovationAreaResourceBuilder extends CategoryResourceBuilder<Innov
         return new InnovationAreaResource();
     }
 
-    public InnovationAreaResourceBuilder withParent(Long... parents) {
-        return withArraySetFieldByReflection("parent", parents);
+    public InnovationAreaResourceBuilder withSector(Long... sectors) {
+        return withArraySetFieldByReflection("sector", sectors);
+    }
+
+    public InnovationAreaResourceBuilder withSectorName(String... sectorNames) {
+        return withArraySetFieldByReflection("sectorName", sectorNames);
     }
 }

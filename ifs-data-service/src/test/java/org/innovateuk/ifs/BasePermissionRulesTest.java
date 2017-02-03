@@ -57,10 +57,6 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(COMP_ADMIN);
     }
 
-    protected UserResource compExecUser() {
-        return getUserWithRole(COMP_EXEC);
-    }
-
     protected UserResource projectFinanceUser() {
         return getUserWithRole(PROJECT_FINANCE);
     }
@@ -170,7 +166,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         Role leadApplicantRole = newRole().build();
         Role partnerRole = newRole().build();
         Organisation leadOrganisation = newOrganisation().build();
-        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisation(leadOrganisation).build();
+        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);

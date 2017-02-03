@@ -67,7 +67,7 @@ Initial details: client-side validations
     #Then the user should not see the error any more    Please enter an opening year.
     When the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
     Then the user should not see the error any more    Please select an Innovation Lead.
-    When the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
+    When the user selects the option from the drop-down menu    John Doe     id=executiveUserId
     Then The user should not see the text in the page    Please select a competition executive.    #Couldn't use this keyword : "Then the user should not see the error any more" . Because there is not any error in the page
     ##    State aid value is tested in 'Initial details correct state aid status'
 
@@ -249,7 +249,7 @@ the user fills the empty question fields
 the validation error above the question should not be visible
     [Arguments]    ${QUESTION}    ${ERROR}
     focus    jQuery=.button[value="Save and close"]
-    wait until element is not visible    css=error-message
+    Wait Until Element Is Not Visible Without Screenshots    css=error-message
     Element Should not Contain    ${QUESTION}    ${ERROR}
 
 the user fills the milestones with invalid data
@@ -363,13 +363,13 @@ the user should see the correct values in the initial details form
     ${input_value} =    Get Value    id=openingDateYear
     Should Be Equal As Strings    ${input_value}    2017
     Page Should Contain    Ian Cooper
-    page should contain    Toby Reader
+    page should contain    John Doe
 
 the user should see the correct details in the funding information form
     ${input_value} =    Get Value    id=funders0.funder
     Should Be Equal    ${input_value}    FunderName
     ${input_value} =    Get Value    id=0-funderBudget
-    Should Be Equal As Strings    ${input_value}    20000.00
+    Should Be Equal As Strings    ${input_value}    20000
     ${input_value} =    Get Value    id=pafNumber
     Should Be Equal As Strings    ${input_value}    2016
     ${input_value} =    Get Value    id=budgetCode
@@ -388,9 +388,9 @@ the user should see the correct details in the eligibility form
 
 The user should not see the error text in the page
     [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
-    Wait Until Page Does Not Contain    ${ERROR_TEXT}
+    Wait Until Page Does Not Contain Without Screenshots    ${ERROR_TEXT}
 
 the users waits until the page is autosaved
     Focus    jQuery=button:contains(Done)
@@ -432,7 +432,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear    2017
     And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
+    And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
 
 The user navigates to the Validation competition
     The user navigates to the page    ${SERVER}/management/dashboard/upcoming
@@ -440,8 +440,8 @@ The user navigates to the Validation competition
 
 the user should not see the error any more
     [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=.button:contains("Done")
     Wait for autosave
-    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
 

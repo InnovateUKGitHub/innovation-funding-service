@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
-import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import com.google.common.collect.Lists;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.CostCategoryRepository;
@@ -23,6 +22,7 @@ import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -97,7 +97,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private ProjectFinanceRowService financeRowService;
 
     @Autowired
     private UserMapper userMapper;
@@ -396,36 +396,36 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     }
 
     @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityStatus)
+                .andOnSuccess(projectFinance -> validateViability(projectFinance, viability, viabilityRagStatus)
                 .andOnSuccess(() -> setViabilityApprovalUser(projectFinance, viability))
-                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityStatus)));
+                .andOnSuccess(() -> saveViability(projectFinance, viability, viabilityRagStatus)));
     }
 
     @Override
-    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityStatus eligibilityStatus){
+    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
 
         Long projectId = projectOrganisationCompositeId.getProjectId();
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> validateEligibility(projectFinance, eligibility, eligibilityStatus)
+                .andOnSuccess(projectFinance -> validateEligibility(projectFinance, eligibility, eligibilityRagStatus)
                         .andOnSuccess(() -> setEligibilityApprovalUser(projectFinance, eligibility))
-                        .andOnSuccess(() -> saveEligibility(projectFinance, eligibility, eligibilityStatus)));
+                        .andOnSuccess(() -> saveEligibility(projectFinance, eligibility, eligibilityRagStatus)));
     }
 
-    private ServiceResult<Void> validateEligibility(ProjectFinance projectFinanceInDB, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
+    private ServiceResult<Void> validateEligibility(ProjectFinance projectFinanceInDB, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         if (Eligibility.APPROVED == projectFinanceInDB.getEligibility()) {
             return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
-        if (Eligibility.APPROVED == eligibility && EligibilityStatus.UNSET == eligibilityStatus) {
+        if (Eligibility.APPROVED == eligibility && EligibilityRagStatus.UNSET == eligibilityRagStatus) {
             return serviceFailure(ELIGIBILITY_RAG_STATUS_MUST_BE_SET);
         }
 
@@ -444,10 +444,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     }
 
-    private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, Eligibility eligibility, EligibilityStatus eligibilityStatus) {
+    private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
 
         projectFinance.setEligibility(eligibility);
-        projectFinance.setEligibilityStatus(eligibilityStatus);
+        projectFinance.setEligibilityStatus(eligibilityRagStatus);
 
         projectFinanceRepository.save(projectFinance);
 
@@ -487,13 +487,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         }
     }
 
-    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
+    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         if (Viability.APPROVED == projectFinanceInDB.getViability()) {
             return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
-        if (Viability.APPROVED == viability && ViabilityStatus.UNSET == viabilityStatus) {
+        if (Viability.APPROVED == viability && ViabilityRagStatus.UNSET == viabilityRagStatus) {
             return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
         }
 
@@ -509,10 +509,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     }
 
-    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
+    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityRagStatus viabilityRagStatus) {
 
         projectFinance.setViability(viability);
-        projectFinance.setViabilityStatus(viabilityStatus);
+        projectFinance.setViabilityStatus(viabilityRagStatus);
 
         if (Viability.APPROVED == viability) {
             projectFinance.setViabilityApprovalDate(LocalDate.now());
@@ -695,15 +695,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
         });
     }
-
-    private Supplier<ServiceResult<Project>> project(Long id) {
-        return () -> getProject(id);
-    }
-
-    private ServiceResult<Project> getProject(Long id) {
-        return find(projectRepository.findOne(id), notFoundError(Project.class, id));
-    }
-
 
     private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
         return spendProfileRepository.findByProjectId(projectId);

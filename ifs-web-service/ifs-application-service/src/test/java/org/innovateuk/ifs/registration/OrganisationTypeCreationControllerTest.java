@@ -57,7 +57,7 @@ public class OrganisationTypeCreationControllerTest extends BaseControllerMockMV
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("registration/organisation/organisation-type"))
                 .andExpect(model().attributeExists("organisationTypeForm", "organisationTypes", "organisationTypeForm", "invite"))
-                .andExpect(model().attribute("organisationTypes", Matchers.hasSize(4)));
+                .andExpect(model().attribute("organisationTypes", Matchers.hasSize(5)));
 
     }
 

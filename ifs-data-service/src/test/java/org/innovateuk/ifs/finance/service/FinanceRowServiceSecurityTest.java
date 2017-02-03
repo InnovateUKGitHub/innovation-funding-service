@@ -13,7 +13,6 @@ import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
 import org.innovateuk.ifs.finance.resource.FinanceRowMetaFieldResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.security.*;
@@ -21,15 +20,22 @@ import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.security.ProjectLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.access.method.P;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.util.Collections.singletonList;
+import static java.util.EnumSet.complementOf;
+import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -38,6 +44,9 @@ import static org.innovateuk.ifs.finance.builder.ApplicationFinanceRowBuilder.ne
 import static org.innovateuk.ifs.finance.builder.FinanceRowMetaFieldResourceBuilder.newFinanceRowMetaFieldResource;
 import static org.innovateuk.ifs.finance.service.FinanceRowServiceSecurityTest.TestFinanceRowService.ARRAY_SIZE_FOR_POST_FILTER_TESTS;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -186,7 +195,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         assertAccessDenied(
                 () -> classUnderTest.addCost(applicationFinanceId, questionId, new AcademicCost()),
                 () -> {
-                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -200,7 +209,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         assertAccessDenied(
                 () -> classUnderTest.addCost(applicationFinanceId),
                 () -> {
-                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -213,7 +222,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         assertAccessDenied(
                 () -> classUnderTest.updateCost(applicationFinanceId, applicationFinanceResource),
                 () -> {
-                    verify(applicationFinanceRules).consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -331,6 +340,23 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
                 });
     }
 
+    @Test
+    public void testAddProjectCostWithoutPersisting(){
+        final Long projectFinanceId = 1L;
+        final Long questionId = 2L;
+
+        EnumSet<UserRoleType> nonProjectFinanceRoles = complementOf(of(PROJECT_FINANCE));
+        nonProjectFinanceRoles.forEach(role -> {
+            setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
+            try {
+                classUnderTest.addCostWithoutPersisting(projectFinanceId, questionId);
+                Assert.fail("Should not have been able to add a project cost without the project finance role");
+            } catch (AccessDeniedException e) {
+                // expected behaviour
+            }
+        });
+    }
+
     @Override
     protected Class<TestFinanceRowService> getClassUnderTest() {
         return TestFinanceRowService.class;
@@ -435,6 +461,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         }
 
         @Override
+        public ServiceResult<List<ApplicationFinanceResource>> financeDetails(Long applicationId) {
+            return serviceSuccess(newApplicationFinanceResource().build(2));
+        }
+
+        @Override
         public ServiceResult<List<ApplicationFinanceResource>> financeTotals(Long applicationId) {
             return serviceSuccess(newApplicationFinanceResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
@@ -466,21 +497,6 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
 
         @Override
         public ServiceResult<Boolean> organisationSeeksFunding(Long projectId, Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectFinanceResource> updateProjectCost(Long projectFinanceId, ProjectFinanceResource projectFinance) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<ProjectFinanceResource> financeChecksDetails(Long applicationId, Long organisationId) {
-            return null;
-        }
-
-        @Override
-        public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
             return null;
         }
     }

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.eligibility.viewmodel;
 
 
 import org.apache.commons.lang3.StringUtils;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
 
 import java.time.LocalDate;
@@ -17,16 +17,17 @@ public class FinanceChecksEligibilityViewModel {
     private String projectName;
     private String applicationId;
     private Long projectId;
+    private Long organisationId;
 
     private boolean eligibilityApproved;
-    private EligibilityStatus eligibilityStatus;
+    private EligibilityRagStatus eligibilityRagStatus;
     private String approverFirstName;
     private String approverLastName;
     private LocalDate approvalDate;
 
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName,
-                                             String applicationId, boolean leadPartnerOrganisation, Long projectId,
-                                             boolean eligibilityApproved, EligibilityStatus eligibilityStatus, String approverFirstName,
+                                             String applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
+                                             boolean eligibilityApproved, EligibilityRagStatus eligibilityRagStatus, String approverFirstName,
                                              String approverLastName, LocalDate approvalDate) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
@@ -34,9 +35,10 @@ public class FinanceChecksEligibilityViewModel {
         this.applicationId = applicationId;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.projectId = projectId;
+        this.organisationId = organisationId;
 
         this.eligibilityApproved = eligibilityApproved;
-        this.eligibilityStatus = eligibilityStatus;
+        this.eligibilityRagStatus = eligibilityRagStatus;
         this.approverFirstName = approverFirstName;
         this.approverLastName = approverLastName;
         this.approvalDate = approvalDate;
@@ -123,12 +125,12 @@ public class FinanceChecksEligibilityViewModel {
         this.eligibilityApproved = eligibilityApproved;
     }
 
-    public EligibilityStatus getEligibilityStatus() {
-        return eligibilityStatus;
+    public EligibilityRagStatus getEligibilityRagStatus() {
+        return eligibilityRagStatus;
     }
 
-    public void setEligibilityStatus(EligibilityStatus eligibilityStatus) {
-        this.eligibilityStatus = eligibilityStatus;
+    public void setEligibilityRagStatus(EligibilityRagStatus eligibilityRagStatus) {
+        this.eligibilityRagStatus = eligibilityRagStatus;
     }
 
     public String getApproverFirstName() {
@@ -153,5 +155,13 @@ public class FinanceChecksEligibilityViewModel {
 
     public void setApprovalDate(LocalDate approvalDate) {
         this.approvalDate = approvalDate;
+    }
+
+    public Long getOrganisationId() {
+        return organisationId;
+    }
+
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 }

@@ -16,6 +16,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.junit.Assert.assertEquals;
@@ -126,6 +127,16 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     }
 
     @Test
+    public void getInviteStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource().build();
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getInviteStatistics", competitionId), CompetitionInviteStatisticsResource.class, expected);
+
+        CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
     public void inviteUser() {
         ExistingUserStagedInviteResource existingUserStagesInviteResource = new ExistingUserStagedInviteResource("firstname.example@example.com", 1L);
         CompetitionInviteResource expected = newCompetitionInviteResource().build();
@@ -145,7 +156,7 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
                         newNewUserStagedInviteResource()
                                 .withName("Tester 1", "Tester 2")
                                 .withEmail("test1@test.com", "test2@test.com")
-                                .withInnovationCategoryId(1L)
+                                .withInnovationAreaId(1L)
                                 .build(2)
                 )
                 .build();

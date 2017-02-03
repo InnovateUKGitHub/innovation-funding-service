@@ -2,8 +2,8 @@ package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
-import org.innovateuk.ifs.project.finance.resource.EligibilityStatus;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -46,10 +46,10 @@ public class ProjectFinance extends Finance {
     private boolean creditReportConfirmed = false;
 
     @Enumerated(EnumType.STRING)
-    private ViabilityStatus viabilityStatus = ViabilityStatus.UNSET;
+    private ViabilityRagStatus viabilityStatus = ViabilityRagStatus.UNSET;
 
     @Enumerated(EnumType.STRING)
-    private EligibilityStatus eligibilityStatus = EligibilityStatus.UNSET;
+    private EligibilityRagStatus eligibilityStatus = EligibilityRagStatus.UNSET;
 
     private LocalDate viabilityApprovalDate;
 
@@ -92,11 +92,11 @@ public class ProjectFinance extends Finance {
 
     public void setCreditReportConfirmed(boolean creditReportConfirmed) { this.creditReportConfirmed = creditReportConfirmed; }
 
-    public ViabilityStatus getViabilityStatus() {
+    public ViabilityRagStatus getViabilityStatus() {
         return viabilityStatus;
     }
 
-    public void setViabilityStatus(ViabilityStatus viabilityStatus) {
+    public void setViabilityStatus(ViabilityRagStatus viabilityStatus) {
         this.viabilityStatus = viabilityStatus;
     }
 
@@ -124,11 +124,11 @@ public class ProjectFinance extends Finance {
         this.eligibility = eligibility;
     }
 
-    public EligibilityStatus getEligibilityStatus() {
+    public EligibilityRagStatus getEligibilityStatus() {
         return eligibilityStatus;
     }
 
-    public void setEligibilityStatus(EligibilityStatus eligibilityStatus) {
+    public void setEligibilityStatus(EligibilityRagStatus eligibilityStatus) {
         this.eligibilityStatus = eligibilityStatus;
     }
 

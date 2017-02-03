@@ -34,7 +34,7 @@ public abstract class AssessorInviteToSendMapper extends BaseMapper<CompetitionI
             @Mapping(target="hash", ignore=true),
             @Mapping(target="user", ignore=true),
             @Mapping(target="target", ignore=true),
-            @Mapping(target="email", ignore=true)
+            @Mapping(target="email", ignore=true),
     })
     @Override
     public abstract CompetitionInvite mapToDomain(AssessorInviteToSendResource resource);

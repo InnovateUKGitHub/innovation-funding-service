@@ -9,6 +9,7 @@ import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddre
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static java.util.Arrays.asList;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -34,7 +35,7 @@ public class UserRegistrationResourceDocs {
     };
 
     public static final UserRegistrationResourceBuilder userRegistrationResourceBuilder = newUserRegistrationResource()
-            .withTitle("Mr")
+            .withTitle(Mr)
             .withFirstName("First")
             .withLastName("Last")
             .withPhoneNumber("012434 567890")

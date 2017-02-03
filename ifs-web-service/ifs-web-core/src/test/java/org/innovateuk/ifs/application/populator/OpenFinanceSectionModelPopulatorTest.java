@@ -1,10 +1,13 @@
 package org.innovateuk.ifs.application.populator;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -20,11 +23,13 @@ import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteRestService;
+import org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,10 +55,8 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.*;
-import static org.mockito.Matchers.anyList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -61,7 +64,7 @@ import static org.mockito.Mockito.when;
 public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
-    private OpenFinanceSectionModelPopulator populator;
+    private OpenApplicationFinanceSectionModelPopulator populator;
 
     @Mock
     private FormInputResponseService formInputResponseService;
@@ -91,7 +94,7 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     private InviteRestService inviteRestService;
 
     @Mock
-    private FinanceOverviewModelManager financeOverviewModelManager;
+    private ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
 
     @Mock
     private FinanceHandler financeHandler;
@@ -108,10 +111,12 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
     @Mock
     private ApplicationNavigationPopulator applicationNavigationPopulator;
 
+    @Mock
+    private UserRestService userRestService;
+
     @Before
     public void setUp() {
         super.setUp();
-
     }
 
     @Test
@@ -138,7 +143,11 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(section.getQuestions().get(0)).build(2);
         setupServices(competition, application, user, formInputs);
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
+        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
+
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;
@@ -177,7 +186,11 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         List<FormInputResource> formInputs = newFormInputResource().withQuestion(123L).build(1);
         setupServices(competition, application, user, formInputs);
 
-        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections);
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
+        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(newOrganisationResource().withId(processRole.getOrganisationId()).build());
+
+        BaseSectionViewModel result = populator.populateModel(applicationForm, model, application, section, user, bindingResult, allSections, processRole.getOrganisationId());
 
         assertEquals(OpenFinanceSectionViewModel.class, result.getClass());
         OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) result;
@@ -225,5 +238,13 @@ public class OpenFinanceSectionModelPopulatorTest extends BaseUnitTestMocksTest 
         Map<Long, QuestionStatusResource> statuses = new HashMap<>();
         statuses.put(question.getId(), newQuestionStatusResource().withMarkedAsComplete(true).build());
         when(questionService.getQuestionStatusesForApplicationAndOrganisation(eq(applicationResource.getId()), anyLong())).thenReturn(statuses);
+
+        ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
+        when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), applicationResource.getId())).thenReturn(financeOverviewViewModel);
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        financeViewModel.setOrganisationGrantClaimPercentage(76);
+
+        when(financeManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 }

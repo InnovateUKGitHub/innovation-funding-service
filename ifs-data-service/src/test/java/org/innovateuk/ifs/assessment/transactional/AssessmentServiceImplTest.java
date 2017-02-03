@@ -3,31 +3,43 @@ package org.innovateuk.ifs.assessment.transactional;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.resource.*;
-import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.email.resource.EmailContent;
+import org.innovateuk.ifs.notifications.resource.Notification;
+import org.innovateuk.ifs.notifications.resource.NotificationTarget;
+import org.innovateuk.ifs.notifications.resource.UserNotificationTarget;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
+import org.springframework.test.util.ReflectionTestUtils;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
+import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
@@ -35,10 +47,14 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
@@ -49,8 +65,10 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     @InjectMocks
     private AssessmentService assessmentService = new AssessmentServiceImpl();
 
-    @Mock
-    private AssessmentWorkflowHandler assessmentWorkflowHandler;
+    @Before
+    public void setUp() throws Exception {
+        ReflectionTestUtils.setField(assessmentService, "webBaseUrl", "https://ifs-local-dev");
+    }
 
     @Test
     public void findById() throws Exception {
@@ -127,17 +145,20 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+        AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource = newAssessmentFundingDecisionOutcomeResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.fundingDecision(assessment, assessmentFundingDecision)).thenReturn(true);
+        when(assessmentFundingDecisionOutcomeMapperMock.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
+        when(assessmentWorkflowHandlerMock.fundingDecision(assessment, assessmentFundingDecisionOutcome)).thenReturn(true);
 
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecision);
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).fundingDecision(assessment, assessmentFundingDecision);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentFundingDecisionOutcomeMapperMock, assessmentWorkflowHandlerMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentFundingDecisionOutcomeMapperMock).mapToDomain(assessmentFundingDecisionOutcomeResource);
+        inOrder.verify(assessmentWorkflowHandlerMock).fundingDecision(assessment, assessmentFundingDecisionOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -150,18 +171,21 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+        AssessmentFundingDecisionOutcome assessmentFundingDecisionOutcome = newAssessmentFundingDecisionOutcome().build();
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource = newAssessmentFundingDecisionOutcomeResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.fundingDecision(assessment, assessmentFundingDecision)).thenReturn(false);
+        when(assessmentFundingDecisionOutcomeMapperMock.mapToDomain(assessmentFundingDecisionOutcomeResource)).thenReturn(assessmentFundingDecisionOutcome);
+        when(assessmentWorkflowHandlerMock.fundingDecision(assessment, assessmentFundingDecisionOutcome)).thenReturn(false);
 
-        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecision);
+        ServiceResult<Void> result = assessmentService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_RECOMMENDATION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentFundingDecisionOutcomeMapperMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler).fundingDecision(assessment, assessmentFundingDecision);
+        inOrder.verify(assessmentFundingDecisionOutcomeMapperMock).mapToDomain(assessmentFundingDecisionOutcomeResource);
+        inOrder.verify(assessmentWorkflowHandlerMock).fundingDecision(assessment, assessmentFundingDecisionOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -174,17 +198,20 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        ApplicationRejectionResource applicationRejectionResource = newApplicationRejectionResource().build();
+        AssessmentRejectOutcome assessmentRejectOutcome = newAssessmentRejectOutcome().build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.rejectInvitation(assessment, applicationRejectionResource)).thenReturn(true);
+        when(assessmentRejectOutcomeMapperMock.mapToDomain(assessmentRejectOutcomeResource)).thenReturn(assessmentRejectOutcome);
+        when(assessmentWorkflowHandlerMock.rejectInvitation(assessment, assessmentRejectOutcome)).thenReturn(true);
 
-        ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, applicationRejectionResource);
+        ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentRejectOutcomeMapperMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler).rejectInvitation(assessment, applicationRejectionResource);
+        inOrder.verify(assessmentRejectOutcomeMapperMock).mapToDomain(assessmentRejectOutcomeResource);
+        inOrder.verify(assessmentWorkflowHandlerMock).rejectInvitation(assessment, assessmentRejectOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -197,18 +224,21 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, OPEN.getBackingState()))
                 .build();
 
-        ApplicationRejectionResource applicationRejectionResource = newApplicationRejectionResource().build();
+        AssessmentRejectOutcome assessmentRejectOutcome = newAssessmentRejectOutcome().build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.rejectInvitation(assessment, applicationRejectionResource)).thenReturn(false);
+        when(assessmentRejectOutcomeMapperMock.mapToDomain(assessmentRejectOutcomeResource)).thenReturn(assessmentRejectOutcome);
+        when(assessmentWorkflowHandlerMock.rejectInvitation(assessment, assessmentRejectOutcome)).thenReturn(false);
 
-        ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, applicationRejectionResource);
+        ServiceResult<Void> result = assessmentService.rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_REJECTION_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentRejectOutcomeMapperMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler).rejectInvitation(assessment, applicationRejectionResource);
+        inOrder.verify(assessmentRejectOutcomeMapperMock).mapToDomain(assessmentRejectOutcomeResource);
+        inOrder.verify(assessmentWorkflowHandlerMock).rejectInvitation(assessment, assessmentRejectOutcome);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -219,14 +249,14 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
-        when(assessmentWorkflowHandler.withdrawAssessment(assessment)).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.withdraw(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessmentService.withdrawAssessment(assessment.getId());
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock).findOne(assessment.getId());
-        inOrder.verify(assessmentWorkflowHandler).withdrawAssessment(assessment);
+        inOrder.verify(assessmentWorkflowHandlerMock).withdraw(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -237,59 +267,263 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessment.getId())).thenReturn(assessment);
-        when(assessmentWorkflowHandler.withdrawAssessment(assessment)).thenReturn(false);
+        when(assessmentWorkflowHandlerMock.withdraw(assessment)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.withdrawAssessment(assessment.getId());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_WITHDRAW_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock).findOne(assessment.getId());
-        inOrder.verify(assessmentWorkflowHandler).withdrawAssessment(assessment);
+        inOrder.verify(assessmentWorkflowHandlerMock).withdraw(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 1L;
+    public void notifyAssessorsByCompetition() throws Exception {
+        Long competitionId = 1L;
 
-        Assessment assessment = newAssessment()
-                .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, CREATED.getBackingState()))
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withName("Test Competition")
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().minusDays(1))
                 .build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.notify(assessment)).thenReturn(true);
+        List<User> users = newUser()
+                .withFirstName("Johnny", "Mary")
+                .withLastName("Doe", "Poppins")
+                .build(2);
+        List<Assessment> assessments = newAssessment()
+                .withId(2L, 3L)
+                .withActivityState(activityState)
+                .withApplication(
+                        newApplication().withCompetition(competition).build(),
+                        newApplication().withCompetition(competition).build()
+                )
+                .withParticipant(
+                        newProcessRole().withUser(users.get(0)).build(),
+                        newProcessRole().withUser(users.get(1)).build()
+                )
+                .build(2);
 
-        ServiceResult<Void> result = assessmentService.notify(assessmentId);
-        assertTrue(result.isSuccess());
+        List<EmailContent> emailContents = newEmailContentResource()
+                .build(2);
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler).notify(assessment);
+        List<NotificationTarget> recipients = asList(
+                new UserNotificationTarget(users.get(0)),
+                new UserNotificationTarget(users.get(1))
+        );
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
+        Notification expectedNotification1 = new Notification(
+                systemNotificationSourceMock,
+                singletonList(recipients.get(0)),
+                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                asMap(
+                        "name", users.get(0).getName(),
+                        "competitionName", competition.getName(),
+                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
+                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
+                        "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
+        );
+
+        Notification expectedNotification2 = new Notification(
+                systemNotificationSourceMock,
+                singletonList(recipients.get(1)),
+                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                asMap(
+                        "name", users.get(1).getName(),
+                        "competitionName", competition.getName(),
+                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
+                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
+                        "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
+        );
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
+
+        when(notificationSender.renderTemplates(expectedNotification1))
+                .thenReturn(serviceSuccess(asMap(recipients.get(0), emailContents.get(0))));
+        when(notificationSender.renderTemplates(expectedNotification2))
+                .thenReturn(serviceSuccess(asMap(recipients.get(1), emailContents.get(1))));
+        when(notificationSender.sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0)))
+                .thenReturn(serviceSuccess(emptyList()));
+        when(notificationSender.sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1)))
+                .thenReturn(serviceSuccess(emptyList()));
+
+        ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verify(notificationSender).renderTemplates(expectedNotification1);
+        inOrder.verify(notificationSender).sendEmailWithContent(expectedNotification1, recipients.get(0), emailContents.get(0));
+        inOrder.verify(notificationSender).renderTemplates(expectedNotification2);
+        inOrder.verify(notificationSender).sendEmailWithContent(expectedNotification2, recipients.get(1), emailContents.get(1));
         inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getErrors().isEmpty());
     }
 
     @Test
-    public void notifyAssessor_eventNotAccepted() throws Exception {
-        Long assessmentId = 1L;
+    public void notifyAssessorsByCompetition_oneEmailPerUser() throws Exception {
+        Long competitionId = 1L;
 
-        Assessment assessment = newAssessment()
-                .withId(assessmentId)
-                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, CREATED.getBackingState()))
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .withName("Test Competition")
+                .withAssessorAcceptsDate(now().minusDays(2))
+                .withAssessorDeadlineDate(now().minusDays(1))
                 .build();
+        User user = newUser().build();
 
-        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.notify(assessment)).thenReturn(false);
+        List<Assessment> assessments = newAssessment()
+                .withId(2L, 3L)
+                .withActivityState(activityState)
+                .withApplication(
+                        newApplication().withCompetition(competition).build(),
+                        newApplication().withCompetition(competition).build()
+                )
+                .withParticipant(
+                        newProcessRole().withUser(user).build(),
+                        newProcessRole().withUser(user).build()
+                )
+                .build(2);
 
-        ServiceResult<Void> result = assessmentService.notify(assessmentId);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(ASSESSMENT_NOTIFY_FAILED));
+        EmailContent emailContent = newEmailContentResource().build();
+        NotificationTarget recipient = new UserNotificationTarget(user);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
-        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler).notify(assessment);
+        Notification expectedNotification = new Notification(
+                systemNotificationSourceMock,
+                singletonList(recipient),
+                AssessmentServiceImpl.Notifications.ASSESSOR_HAS_ASSESSMENTS,
+                asMap(
+                        "name", user.getName(),
+                        "competitionName", competition.getName(),
+                        "acceptsDeadline", competition.getAssessorAcceptsDate().format(formatter),
+                        "assessmentDeadline", competition.getAssessorDeadlineDate().format(formatter),
+                        "competitionUrl", format("%s/assessor/dashboard/competition/%s", "https://ifs-local-dev/assessment", competition.getId()))
+        );
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId)).thenReturn(assessments);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(true);
+
+        when(notificationSender.renderTemplates(expectedNotification))
+                .thenReturn(serviceSuccess(asMap(recipient, emailContent)));
+        when(notificationSender.sendEmailWithContent(expectedNotification, recipient, emailContent))
+                .thenReturn(serviceSuccess(emptyList()));
+
+        ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verify(notificationSender).renderTemplates(expectedNotification);
+        inOrder.verify(notificationSender).sendEmailWithContent(expectedNotification, recipient, emailContent);
         inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isSuccess());
+        assertTrue(serviceResult.getErrors().isEmpty());
+
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition_competitionNotFound() throws Exception {
+        long competitionId = 1L;
+
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(null);
+
+        ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
+
+        verify(competitionRepositoryMock).findOne(competitionId);
+        verifyNoMoreInteractions(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(1, serviceResult.getErrors().size());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition_oneTransitionFails() throws Exception {
+        Long competitionId = 1L;
+
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .build();
+        List<Assessment> assessments = newAssessment()
+                .withActivityState(activityState)
+                .withId(2L, 3L)
+                .build(2);
+
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+                .thenReturn(assessments);
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(false);
+
+        ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(1, serviceResult.getErrors().size());
+        assertEquals(ASSESSMENT_NOTIFY_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void notifyAssessorsByCompetition_allTransitionsFail() throws Exception {
+        Long competitionId = 1L;
+
+        ActivityState activityState = new ActivityState(APPLICATION_ASSESSMENT, State.CREATED);
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .build();
+        List<Assessment> assessments = newAssessment()
+                .withActivityState(activityState)
+                .withId(2L, 3L)
+                .build(2);
+
+        when(assessmentRepositoryMock.findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId))
+                .thenReturn(assessments);
+        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(competition);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(0)))).thenReturn(false);
+        when(assessmentWorkflowHandlerMock.notify(same(assessments.get(1)))).thenReturn(false);
+
+        ServiceResult<Void> serviceResult = assessmentService.notifyAssessorsByCompetition(competitionId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, competitionRepositoryMock, assessmentWorkflowHandlerMock, notificationSender);
+        inOrder.verify(competitionRepositoryMock).findOne(competitionId);
+        inOrder.verify(assessmentRepositoryMock).findByActivityStateStateAndTargetCompetitionId(State.CREATED, competitionId);
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(0)));
+        inOrder.verify(assessmentWorkflowHandlerMock).notify(same(assessments.get(1)));
+        inOrder.verifyNoMoreInteractions();
+
+        assertTrue(serviceResult.isFailure());
+        assertEquals(2, serviceResult.getErrors().size());
+        assertEquals(ASSESSMENT_NOTIFY_FAILED.getErrorKey(), serviceResult.getErrors().get(0).getErrorKey());
+        assertEquals(ASSESSMENT_NOTIFY_FAILED.getErrorKey(), serviceResult.getErrors().get(1).getErrorKey());
     }
 
     @Test
@@ -302,14 +536,14 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.acceptInvitation(assessment)).thenReturn(true);
+        when(assessmentWorkflowHandlerMock.acceptInvitation(assessment)).thenReturn(true);
 
         ServiceResult<Void> result = assessmentService.acceptInvitation(assessmentId);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler).acceptInvitation(assessment);
+        inOrder.verify(assessmentWorkflowHandlerMock).acceptInvitation(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -323,15 +557,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
                 .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
-        when(assessmentWorkflowHandler.acceptInvitation(assessment)).thenReturn(false);
+        when(assessmentWorkflowHandlerMock.acceptInvitation(assessment)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.acceptInvitation(assessmentId);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(ASSESSMENT_ACCEPT_FAILED));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findOne(assessmentId);
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).acceptInvitation(assessment);
+        inOrder.verify(assessmentWorkflowHandlerMock, calls(1)).acceptInvitation(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -352,11 +586,11 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
 
         when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(assessments);
 
-        when(assessmentWorkflowHandler.submit(assessments.get(0))).thenAnswer(invocation -> {
+        when(assessmentWorkflowHandlerMock.submit(assessments.get(0))).thenAnswer(invocation -> {
             assessments.get(0).setActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()));
             return Boolean.TRUE;
         });
-        when(assessmentWorkflowHandler.submit(assessments.get(1))).thenAnswer(invocation -> {
+        when(assessmentWorkflowHandlerMock.submit(assessments.get(1))).thenAnswer(invocation -> {
             assessments.get(1).setActivityState(new ActivityState(APPLICATION_ASSESSMENT, SUBMITTED.getBackingState()));
             return Boolean.TRUE;
         });
@@ -364,10 +598,10 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
         assertTrue(result.isSuccess());
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessments.get(0));
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessments.get(1));
+        inOrder.verify(assessmentWorkflowHandlerMock, calls(1)).submit(assessments.get(0));
+        inOrder.verify(assessmentWorkflowHandlerMock, calls(1)).submit(assessments.get(1));
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -389,15 +623,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(1, assessmentSubmissions.getAssessmentIds().size());
 
         when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(singletonList(assessment));
-        when(assessmentWorkflowHandler.submit(assessment)).thenReturn(false);
+        when(assessmentWorkflowHandlerMock.submit(assessment)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
         assertTrue(result.isFailure());
         assertEquals(result.getErrors().get(0), new Error(ASSESSMENT_SUBMIT_FAILED, 1L, "Test Application"));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessment);
+        inOrder.verify(assessmentWorkflowHandlerMock, calls(1)).submit(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -413,9 +647,9 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(Assessment.class, 1L), notFoundError(Assessment.class, 2L)));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
-        inOrder.verify(assessmentWorkflowHandler, never()).submit(any());
+        inOrder.verify(assessmentWorkflowHandlerMock, never()).submit(any());
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -438,15 +672,15 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         assertEquals(2, assessmentSubmissions.getAssessmentIds().size());
 
         when(assessmentRepositoryMock.findAll(assessmentSubmissions.getAssessmentIds())).thenReturn(singletonList(assessment));
-        when(assessmentWorkflowHandler.submit(assessment)).thenReturn(false);
+        when(assessmentWorkflowHandlerMock.submit(assessment)).thenReturn(false);
 
         ServiceResult<Void> result = assessmentService.submitAssessments(assessmentSubmissions);
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(new Error(ASSESSMENT_SUBMIT_FAILED, 1L, "Test Application"), notFoundError(Assessment.class, 2L)));
 
-        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandler);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentWorkflowHandlerMock);
         inOrder.verify(assessmentRepositoryMock, calls(1)).findAll(assessmentSubmissions.getAssessmentIds());
-        inOrder.verify(assessmentWorkflowHandler, calls(1)).submit(assessment);
+        inOrder.verify(assessmentWorkflowHandlerMock, calls(1)).submit(assessment);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -518,7 +752,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, expectedBackingState);
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
-        inOrder.verify(assessmentMapperMock).mapToResource(expectedAssessment);
+        inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());
@@ -597,7 +831,7 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         inOrder.verify(activityStateRepositoryMock).findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, CREATED.getBackingState());
         inOrder.verify(processRoleRepositoryMock).save(expectedProcessRole);
         inOrder.verify(assessmentRepositoryMock).save(expectedAssessment);
-        inOrder.verify(assessmentMapperMock).mapToResource(expectedAssessment);
+        inOrder.verify(assessmentMapperMock).mapToResource(savedAssessment);
         inOrder.verifyNoMoreInteractions();
 
         assertTrue(serviceResult.isSuccess());

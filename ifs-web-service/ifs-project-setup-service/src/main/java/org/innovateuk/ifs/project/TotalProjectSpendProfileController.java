@@ -30,7 +30,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
- * This controller will handle all requests that are related to the reviewing and submitting of total project spend profiles.
+ * This controller will handle all requests that are related to the reviewing and sending of total project spend profiles.
  */
 @Controller
 @RequestMapping("/" + TotalProjectSpendProfileController.BASE_DIR + "/{projectId}/spend-profile/total")
@@ -60,7 +60,7 @@ public class TotalProjectSpendProfileController {
     }
 
     @RequestMapping(method = POST)
-    public String submitForReview(@PathVariable("projectId") final Long projectId,
+    public String sendForReview(@PathVariable("projectId") final Long projectId,
                                   @ModelAttribute(FORM_ATTR_NAME) TotalSpendProfileForm form,
                                   @SuppressWarnings("unused") BindingResult bindingResult,
                                   ValidationHandler validationHandler,

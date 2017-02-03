@@ -39,7 +39,7 @@ public class SimpleEmailEndpointControllerMockMvcTest extends BaseControllerMock
         SilEmailBody htmlBody = new SilEmailBody("text/html", "Some HTML");
 
         SilEmailMessage silEmail = new SilEmailMessage(from, to, "A subject", plainTextBody, htmlBody);
-        String requestBody = new ObjectMapper().writeValueAsString(silEmail);
+        String requestBody = objectMapper.writeValueAsString(silEmail);
 
         mockMvc.
             perform(

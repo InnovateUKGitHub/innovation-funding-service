@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.OtherFunding;
@@ -39,7 +40,25 @@ public class OtherFundingHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        if (costItem instanceof OtherFunding) {
+            cost = mapOtherFundingToProjectCost(costItem);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+        return buildRowItem(cost);
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+        return buildRowItem(cost);
+    }
+
+    private FinanceRowItem buildRowItem(FinanceRow cost){
         return new OtherFunding(cost.getId(), cost.getItem(), cost.getDescription(), cost.getItem(), cost.getCost());
     }
 
@@ -52,6 +71,17 @@ public class OtherFundingHandler extends FinanceRowHandler {
             item = otherFunding.getSecuredDate();
         }
         return new ApplicationFinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
+    }
+
+    private ProjectFinanceRow mapOtherFundingToProjectCost(FinanceRowItem costItem) {
+        OtherFunding otherFunding = (OtherFunding) costItem;
+        String item;
+        if (otherFunding.getOtherPublicFunding() != null) {
+            item = otherFunding.getOtherPublicFunding();
+        } else {
+            item = otherFunding.getSecuredDate();
+        }
+        return new ProjectFinanceRow(otherFunding.getId(), COST_KEY, item, otherFunding.getFundingSource(), 0, otherFunding.getFundingAmount(), null, null);
     }
 
     @Override

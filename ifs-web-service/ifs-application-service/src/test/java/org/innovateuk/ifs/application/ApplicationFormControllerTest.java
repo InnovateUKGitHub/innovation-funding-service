@@ -3,6 +3,10 @@ package org.innovateuk.ifs.application;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
 import org.innovateuk.ifs.application.finance.view.DefaultFinanceFormHandler;
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.ApplicationFinanceOverviewViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -17,6 +21,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
 import org.innovateuk.ifs.form.resource.FormInputType;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,12 +53,14 @@ import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.anyList;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.isA;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -77,7 +84,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Spy
     @InjectMocks
-    private OpenFinanceSectionModelPopulator openFinanceSectionModel;
+    private OpenApplicationFinanceSectionModelPopulator openFinanceSectionModel;
 
     @Spy
     @InjectMocks
@@ -97,6 +104,9 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
     @Mock
     private DefaultFinanceFormHandler defaultFinanceFormHandler;
+
+    @Mock
+    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @Mock
     private Model model;
@@ -130,16 +140,25 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         this.setupQuestionStatus(applications.get(0));
 
         application = applications.get(0);
-        sectionId = Long.valueOf(1);
-        questionId = Long.valueOf(1);
-        formInputId = Long.valueOf(111);
-        costId = Long.valueOf(1);
+        sectionId = 1L;
+        questionId = 1L;
+        formInputId = 111L;
+        costId = 1L;
 
         // save actions should always succeed.
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), eq(""), anyBoolean())).thenReturn(new ValidationMessages(fieldError("value", "", "Please enter some text 123")));
         when(formInputResponseService.save(anyLong(), anyLong(), anyLong(), anyString(), anyBoolean())).thenReturn(noErrors());
+        when(organisationService.getOrganisationById(anyLong())).thenReturn(organisations.get(0));
         when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(noErrors());
         when(financeHandler.getFinanceFormHandler(any())).thenReturn(defaultFinanceFormHandler);
+
+        ApplicationFinanceOverviewViewModel financeOverviewViewModel = new ApplicationFinanceOverviewViewModel();
+        when(applicationFinanceOverviewModelManager.getFinanceDetailsViewModel(competitionResource.getId(), application.getId())).thenReturn(financeOverviewViewModel);
+
+        FinanceViewModel financeViewModel = new FinanceViewModel();
+        financeViewModel.setOrganisationGrantClaimPercentage(76);
+
+        when(defaultFinanceModelManager.getFinanceViewModel(anyLong(), anyList(), anyLong(), any(Form.class), anyLong())).thenReturn(financeViewModel);
     }
 
     @Test
@@ -157,10 +176,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
         assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
-        assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(1)));
+        assertEquals(application1Organisations.get(0), viewModel.getLeadOrganisation());
+        assertEquals(application1Organisations.size(), viewModel.getApplicationOrganisations().size());
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(0)));
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(1)));
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
         assertEquals(users.get(0), viewModel.getLeadApplicant());
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
@@ -182,10 +201,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         assertEquals(OpenSectionViewModel.class, viewModelResult.getClass());
         OpenSectionViewModel viewModel = (OpenSectionViewModel) viewModelResult;
         assertEquals(application, viewModel.getApplication().getCurrentApplication());
-        assertEquals(organisations.get(0), viewModel.getLeadOrganisation());
-        assertEquals(organisations.size(), viewModel.getApplicationOrganisations().size());
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(0)));
-        assertTrue(viewModel.getApplicationOrganisations().contains(organisations.get(1)));
+        assertEquals(application1Organisations.get(0), viewModel.getLeadOrganisation());
+        assertEquals(application1Organisations.size(), viewModel.getApplicationOrganisations().size());
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(0)));
+        assertTrue(viewModel.getApplicationOrganisations().contains(application1Organisations.get(1)));
         assertEquals(Boolean.TRUE, viewModel.getUserIsLeadApplicant());
         assertEquals(users.get(0), viewModel.getLeadApplicant());
         assertEquals(currentSectionId, viewModel.getCurrentSectionId());
@@ -198,6 +217,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Long currentSectionId = sectionResources.get(6).getId();
 
         when(sectionService.getAllByCompetitionId(anyLong())).thenReturn(sectionResources);
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         MvcResult result = mockMvc.perform(get("/application/1/form/section/" + currentSectionId))
                 .andExpect(view().name("application-form"))
                 .andReturn();
@@ -259,7 +282,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(view().name("application-form"));
         verify(applicationNavigationPopulator).addAppropriateBackURLToModel(any(Long.class), any(HttpServletRequest.class), any(Model.class), any(SectionResource.class));
     }
-
 
     @Test
     public void testQuestionSubmitAssign() throws Exception {
@@ -400,6 +422,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFinanceMarkAsCompleteFailWithTerms() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -414,6 +440,10 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     public void testApplicationFinanceMarkAsCompleteFailWithStateAid() throws Exception {
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
         when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).build());
+
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(application.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), application.getId())).thenReturn(restSuccess(userApplicationRole));
+
         mockMvc.perform(
                 post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
                         .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
@@ -477,6 +507,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 post("/application/{applicationId}/form/question/{questionId}", application.getId(), questionId)
                         .param("mark_as_complete", questionId.toString())
                         .param("application.name", "")
+                        .param("application.researchCategoryId", "")
                         .param("application.resubmission", "")
                         .param("application.startDate", "")
                         .param("application.startDate.year", "")
@@ -487,6 +518,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         BindingResult bindingResult = (BindingResult)result.getModelAndView().getModel().get("org.springframework.validation.BindingResult.form");
 
         assertEquals("NotBlank", bindingResult.getFieldError("application.name").getCode());
+        assertEquals("NotNull", bindingResult.getFieldError("application.researchCategoryId").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.durationInMonths").getCode());
         assertEquals("FutureLocalDate", bindingResult.getFieldError("application.startDate").getCode());
         assertEquals("NotNull", bindingResult.getFieldError("application.resubmission").getCode());
@@ -710,6 +742,24 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
     }
 
     @Test
+    public void testSaveFormElementApplicationResearchCategory() throws Exception {
+        String value = "1";
+        String fieldName = "application.researchCategoryId";
+
+        mockMvc.perform(
+                post("/application/" + application.getId().toString() + "/form/123/saveFormElement")
+                        .param("formInputId", "")
+                        .param("fieldName", fieldName)
+                        .param("value", value)
+        ).andExpect(status().isOk())
+                .andExpect(content().json("{\"success\":\"true\"}"));
+
+        InOrder inOrder = Mockito.inOrder(fundingLevelResetHandler, applicationService);
+        inOrder.verify(fundingLevelResetHandler, calls(1)).resetFundingLevelAndMarkAsIncompleteForAllCollaborators(anyLong(), anyLong());
+        inOrder.verify(applicationService, calls(1)).save(any(ApplicationResource.class));
+    }
+
+    @Test
      public void testSaveFormElementApplicationDuration() throws Exception {
         String value = "12";
         String fieldName = "application.durationInMonths";
@@ -747,7 +797,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         String jsonExpectedContent = "{\"success\":\"false\"}";
         assertEquals(jsonExpectedContent, content);
     }
-
 
     @Test
     public void testSaveFormElementApplicationInvalidDurationLength() throws Exception {
@@ -826,8 +875,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Assert.assertEquals(jsonExpectedContent, content);
     }
 
-
-
     @Test
     public void testSaveFormElementApplicationValidStartDateDDMMYYYY() throws Exception {
         String value = "25-10-2025";
@@ -849,7 +896,6 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
         Mockito.inOrder(applicationService).verify(applicationService, calls(1)).save(any(ApplicationResource.class));
 
     }
-
 
     @Test
     public void testSaveFormElementApplicationInvalidStartDateMMDDYYYY() throws Exception {
