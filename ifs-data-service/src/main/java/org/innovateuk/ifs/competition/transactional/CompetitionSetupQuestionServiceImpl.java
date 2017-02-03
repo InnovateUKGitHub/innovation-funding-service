@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.GuidanceRow;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
@@ -8,18 +10,20 @@ import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionType;
+import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.mapper.GuidanceRowMapper;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputScope;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
 
 /**
  * Service for operations around the usage and processing of Competitions questions in setup.
@@ -85,7 +89,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setWrittenFeedback(formInput.getActive());
                 setupResource.setAssessmentMaxWords(formInput.getWordCount());
                 setupResource.setAssessmentGuidance(formInput.getGuidanceAnswer());
-                setupResource.setGuidanceRows(Lists.newArrayList(guidanceRowMapper.mapToResource(formInput.getGuidanceRows())));
+                setupResource.setGuidanceRows(sortByPriority((guidanceRowMapper.mapToResource(formInput.getGuidanceRows()))));
                 setupResource.setAssessmentGuidanceTitle(formInput.getGuidanceTitle());
                 break;
             case ASSESSOR_SCORE:
@@ -98,6 +102,12 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
                 setupResource.setResearchCategoryQuestion(formInput.getActive());
                 break;
         }
+    }
+
+    private List<GuidanceRowResource> sortByPriority(Iterable<GuidanceRowResource> guidanceRowResources) {
+        List<GuidanceRowResource> resources = Lists.newArrayList(guidanceRowResources);
+        Collections.sort(resources, (o1, o2) -> o1.getPriority().compareTo(o2.getPriority()));
+        return resources;
     }
 
     @Override
@@ -173,7 +183,7 @@ public class CompetitionSetupQuestionServiceImpl extends BaseTransactionalServic
             writtenFeedbackFormInput.setWordCount(competitionSetupQuestionResource.getAssessmentMaxWords());
 
             // Delete all existing guidance rows and replace with new list
-            List<GuidanceRow> newRows = Lists.newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
+            List<GuidanceRow> newRows = newArrayList(guidanceRowMapper.mapToDomain(competitionSetupQuestionResource.getGuidanceRows()));
             // Ensure form input and priority set against newly added rows
             newRows.forEach(row -> {
                 row.setFormInput(writtenFeedbackFormInput);

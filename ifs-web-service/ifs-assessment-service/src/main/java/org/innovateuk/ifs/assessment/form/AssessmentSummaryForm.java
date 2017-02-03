@@ -15,10 +15,10 @@ import java.util.List;
 /**
  * Form field model for the decision made by an assessor about an application while reviewing the assessment summary.
  */
-@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentFundingDecision.feedback.required}")
+@FieldRequiredIf(required = "feedback", argument = "fundingConfirmation", predicate = false, message = "{validation.assessmentFundingDecisionOutcome.feedback.required}")
 public class AssessmentSummaryForm implements BindingResultTarget {
 
-    @NotNull(message = "{validation.assessmentFundingDecision.fundingConfirmation.required}")
+    @NotNull(message = "{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}")
     private Boolean fundingConfirmation;
     @Size(max = 5000, message = "{validation.field.too.many.characters}")
     @WordCount(max = 100, message = "{validation.field.max.word.count}")

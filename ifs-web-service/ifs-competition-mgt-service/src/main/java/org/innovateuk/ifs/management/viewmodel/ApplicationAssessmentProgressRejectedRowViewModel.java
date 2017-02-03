@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public class ApplicationAssessmentProgressRejectedRowViewModel extends Applicati
 
     private BusinessType businessType;
     private List<String> innovationAreas;
-    private String rejectReason;
+    private AssessmentRejectOutcomeValue rejectReason;
     private String rejectComment;
 
     public ApplicationAssessmentProgressRejectedRowViewModel(
@@ -23,7 +24,7 @@ public class ApplicationAssessmentProgressRejectedRowViewModel extends Applicati
             long assignedCount,
             BusinessType businessType,
             List<String> innovationAreas,
-            String rejectReason,
+            AssessmentRejectOutcomeValue rejectReason,
             String rejectComment) {
         super(id, name, totalApplicationsCount, assignedCount);
         this.businessType = businessType;
@@ -40,7 +41,7 @@ public class ApplicationAssessmentProgressRejectedRowViewModel extends Applicati
         return innovationAreas;
     }
 
-    public String getRejectReason() {
+    public AssessmentRejectOutcomeValue getRejectReason() {
         return rejectReason;
     }
 
