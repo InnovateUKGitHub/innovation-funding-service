@@ -49,6 +49,11 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
     }
 
+    @Test
+    public void testSaveFinanceCheckQuery(){
+        assertRolesCanPerform(() -> classUnderTest.saveNewQuery(1L, 2L), PROJECT_FINANCE);
+    }
+
     private void assertInternalRolesCanPerform(Runnable actionFn) {
         assertRolesCanPerform(actionFn, COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -103,6 +108,9 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return null; }
+
+        @Override
+        public ServiceResult<Void> saveNewQuery(Long projectId, Long organisationId) { return null; }
     }
 }
 
