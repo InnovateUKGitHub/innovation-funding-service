@@ -9,7 +9,12 @@ project(':ifs-web-service').bootRepackage {
 build.enabled = false
 jar.enabled=false
 
-task endpointDocumentation {
+task endpointDocumentation(type: Test) {
+    dependsOn "ifs-application-service:test"
+    dependsOn "ifs-assessment-service:test"
+    dependsOn "ifs-competition-mgt-service:test"
+    dependsOn "ifs-project-setup-mgt-service:test"
+    dependsOn "ifs-project-setup-service:test"
 
     def combinedFilename = 'build/web-endpoints.csv'
 
