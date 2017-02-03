@@ -199,3 +199,7 @@ include::bank-details.adoc[]
 [[applicationCountSummary]]
 == ApplicationCountSummary
 include::applicationCountSummary.adoc[]
+
+[[competitionKeyStatistics]]
+== CompetitionKeyStatistics
+include::competitionKeyStatistics.adoc[]
