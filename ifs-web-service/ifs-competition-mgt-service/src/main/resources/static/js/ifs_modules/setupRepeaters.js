@@ -37,7 +37,6 @@ IFS.competitionManagement.repeater = (function () {
         case 'cofunder':
           jQuery('[name="removeFunder"]').val(inst.val())
           IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
-
           inst.closest('.funder-row').remove()
           IFS.competitionManagement.repeater.reindexRows('.funder-row')
           jQuery('body').trigger('recalculateAllFinances')
@@ -53,6 +52,10 @@ IFS.competitionManagement.repeater = (function () {
           IFS.competitionManagement.repeater.reindexRows('.form-group[id^="innovation-row"]')
           IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
           IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
+          break
+        case 'contentGroup':
+          inst.closest('[id^="contentGroup-row-"]').remove()
+          IFS.competitionManagement.repeater.reindexRows('[id^="contentGroup-row-"]')
           break
       }
     },
@@ -89,25 +92,25 @@ IFS.competitionManagement.repeater = (function () {
     addContentGroup: function () {
       var count = parseInt(jQuery('[id^=contentGroup-row-]').length, 10) // name attribute has to be 0,1,2,3
       // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
-      var idCount = parseInt(jQuery('[id^=contentGroup-row-]').last().attr('id').split('contentGroup-row-')[1], 10) + 1
+      var idCount = parseInt(jQuery('[id^=contentGroup-row-]').last().prop('id').split('contentGroup-row-')[1], 10) + 1
 
-      var html = '<div id="contentGroup-row-' + count + '">' +
-                  '<div class="form-group">' +
-                    '<label class="form-label-bold" for="heading-' + idCount + '">Heading</label>' +
-                    '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" />' +
-                  '</div>' +
-                  '<div class="form-group"><div class="textarea-wrapped">' +
-                    '<label class="form-label-bold" for="content-' + idCount + '">Content</label>' +
-                        '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content"></textarea>' +
-                    '</div></div>' +
-                  '<div class="form-group upload-section">' +
-                      '<input type="file" id="file-upload-' + idCount + '" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
-                      '<label for="file-upload-' + idCount + '" class="button-secondary extra-margin">+ Upload</label>' +
-                      '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="file-upload-' + idCount + '" value="' + count + '">Save</button>' +
-                      '<p class="uploaded-file">No file currently uploaded</p>' +
-                  '</div>' +
-                  '<button type="button" class="buttonlink" data-remove-row="">Remove section</button>' +
-                  '<hr /></div>'
+      var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
+                    '<div class="form-group">' +
+                      '<label class="form-label-bold" for="heading-' + idCount + '">Heading</label>' +
+                      '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" />' +
+                    '</div>' +
+                    '<div class="form-group"><div class="textarea-wrapped">' +
+                      '<label class="form-label-bold" for="content-' + idCount + '">Content</label>' +
+                          '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content"></textarea>' +
+                      '</div></div>' +
+                    '<div class="form-group upload-section">' +
+                        '<input type="file" id="file-upload-' + idCount + '" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
+                        '<label for="file-upload-' + idCount + '" class="button-secondary extra-margin">+ Upload</label>' +
+                        '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="file-upload-' + idCount + '" value="' + count + '">Save</button>' +
+                        '<p class="uploaded-file">No file currently uploaded</p>' +
+                    '</div>' +
+                    '<button type="button" class="buttonlink no-margin" data-remove-row="contentGroup">Remove section</button>' +
+                  '</div>'
       jQuery('[id^=contentGroup-row-]').last().after(html)
 
       var editor = IFS.core.editor.prepareEditorHTML('#content-' + idCount)
@@ -179,14 +182,14 @@ IFS.competitionManagement.repeater = (function () {
     reindexRows: function (rowSelector) {
       jQuery(rowSelector + ' [name]').each(function () {
         var inst = jQuery(this)
-        var thisIndex = inst.closest(rowSelector).index(rowSelector)
-
-        var oldAttr = inst.attr('name')
-        var oldAttrName = oldAttr.split('[')[0]
-        var oldAttrElement = oldAttr.split(']')[1]
-        inst.attr('name', oldAttrName + '[' + thisIndex + ']' + oldAttrElement)
+        if (inst.prop('name').indexOf('[') !== -1) {
+          var thisIndex = inst.closest(rowSelector).index(rowSelector)
+          var oldAttr = inst.attr('name')
+          var oldAttrName = oldAttr.split('[')[0]
+          var oldAttrElement = oldAttr.split(']')[1]
+          inst.prop('name', oldAttrName + '[' + thisIndex + ']' + oldAttrElement)
+        }
       })
-
       jQuery(rowSelector + ' [data-remove-row]').each(function () {
         var inst = jQuery(this)
         var thisIndex = inst.closest(rowSelector).index(rowSelector)

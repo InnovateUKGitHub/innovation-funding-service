@@ -107,7 +107,7 @@
 
 <div th:fragment="content-groups(form, model)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:each="contentGroup,iter: ${form.contentGroups}" th:with="index=${iter.index}">
-        <div th:id="${'contentGroup-row-'+index}">
+        <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
             <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
             <div class="form-group">
                 <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
@@ -135,14 +135,13 @@
                         <a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
                            th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a>
                     </p>
-                    <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
+                    <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}" data-remove-row="contentGroup">remove</button>
                 </th:block>
             </div>
             <button type="button" class="buttonlink" th:if="${index > 0}">Remove section</button>
             <hr />
         </div>
     </th:block>
-
     <div class="alignright">
         <button class="buttonlink" type="button" data-add-row="contentGroup">+ add new section</button>
     </div>
