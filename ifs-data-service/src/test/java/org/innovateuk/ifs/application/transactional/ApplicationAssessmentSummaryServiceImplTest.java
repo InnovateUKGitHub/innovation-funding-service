@@ -29,9 +29,9 @@ import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummar
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
-import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -109,11 +109,10 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 3L,
                 Optional.of(newAssessment()
                         .withActivityState(buildActivityStateWithState(REJECTED))
-                        .withProcessOutcome(newProcessOutcome()
-                                .withOutcomeType(REJECT.getType())
-                                .withDescription("Conflict of interest")
-                                .withComment("Member of board of directors")
-                                .build(1))
+                        .withRejection(newAssessmentRejectOutcome()
+                                .withRejectReason(CONFLICT_OF_INTEREST)
+                                .withRejectComment("Member of board of directors")
+                                .build())
                         .build()));
 
         Map<Long, Long> totalApplicationCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
@@ -154,7 +153,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         submittedCountsForParticipants.get(2L),
                         submittedCountsForParticipants.get(3L))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
-                .withRejectReason(null, null, "Conflict of interest")
+                .withRejectReason(null, null, CONFLICT_OF_INTEREST)
                 .withRejectComment(null, null, "Member of board of directors")
                 .build(3);
 
@@ -238,6 +237,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName(application.getName())
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("Liquid Dynamics")
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
                 .build();
 
@@ -251,6 +251,91 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getApplicationAssessmentSummary_noLeadOrganisation() throws Exception {
+        Organisation[] organisations = newOrganisation()
+                .withName("Acme Ltd.", "IO systems", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
+        Application application = newApplication()
+                .withName("Progressive machines")
+                .withCompetition(newCompetition()
+                        .withName("Connected digital additive manufacturing")
+                        .build())
+                .withProcessRoles(newProcessRole()
+                        .withRole(COLLABORATOR, COLLABORATOR, COLLABORATOR, COMP_ADMIN)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
+                        .buildArray(4, ProcessRole.class))
+                .build();
+
+        ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
+                .withId(application.getId())
+                .withName(application.getName())
+                .withCompetitionId(application.getCompetition().getId())
+                .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("")
+                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems", "Liquid Dynamics"))
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, found);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getApplicationAssessmentSummary_partnersSortedAlphabetically() throws Exception {
+        Organisation[] organisations = newOrganisation()
+                .withName("IO systems", "Acme Ltd.", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
+        Application application = newApplication()
+                .withName("Progressive machines")
+                .withCompetition(newCompetition()
+                        .withName("Connected digital additive manufacturing")
+                        .build())
+                .withProcessRoles(newProcessRole()
+                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
+                        .buildArray(4, ProcessRole.class))
+                .build();
+
+        ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
+                .withId(application.getId())
+                .withName(application.getName())
+                .withCompetitionId(application.getCompetition().getId())
+                .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("Liquid Dynamics")
+                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, found);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
         inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
         inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();

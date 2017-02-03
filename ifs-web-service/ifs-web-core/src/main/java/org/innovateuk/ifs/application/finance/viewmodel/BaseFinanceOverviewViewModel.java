@@ -113,4 +113,12 @@ public abstract class BaseFinanceOverviewViewModel {
     public Boolean hasTooHighResearchRatio(Double maxRatio) {
         return Boolean.FALSE;
     }
+
+    public Boolean getHasOrganisationFinances() {
+        return null != organisationFinances;
+    }
+
+    public Boolean hasFinancesForOrganisation(Long organisationId) {
+        return (organisationId != null) && getHasOrganisationFinances() && organisationFinances.containsKey(organisationId);
+    }
 }

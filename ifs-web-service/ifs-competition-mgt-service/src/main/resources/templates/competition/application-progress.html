@@ -28,7 +28,10 @@
                 <div class="column-quarter">
                     <h3 class="heading-small">Partners</h3>
                     <ul>
-                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
+                        <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
+                            th:text="${model.leadOrganisation} + ' (Lead)'">Aptrans Ltd (Lead)
+                        </li>
+                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Biotech Corp.</li>
                     </ul>
                 </div>
                 <div class="column-quarter">
@@ -42,8 +45,8 @@
 
             <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
-            <div class="table-overflow">
-                <table>
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
+                <table class="assessors-assigned">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -91,17 +94,17 @@
                                    th:unless="${assessor.submitted}">Remove</a>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(model.assigned)}">
-                            <td colspan="10">There are no assessors assigned to this application.</td>
-                        </tr>
                     </tbody>
                 </table>
             </div>
 
+            <p th:if="${#lists.isEmpty(model.assigned)}">There are no assessors assigned to this application.</p>
+
+
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
-            <div class="table-overflow" th:if="${#lists.size(model.rejected) > 0}">
-                <table>
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.rejected)}">
+                <table class="assessors-rejected">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -119,7 +122,7 @@
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td><strong th:text="${assessor.rejectReason}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
+                            <td><strong th:text="${assessor.rejectReason.displayLabel}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -127,10 +130,11 @@
 
             <p th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
 
+
             <h2 class="heading-medium" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
 
-            <div class="table-overflow" th:if="${#lists.size(model.previouslyAssigned) > 0}">
-                <table>
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.previouslyAssigned)}">
+                <table class="assessors-previous">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -152,7 +156,7 @@
                 </table>
             </div>
 
-            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">There are no assessors previously assigned to this application.</p>
+            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
 
             <h2 class="heading-medium">Available assessors</h2>
 
@@ -248,7 +252,7 @@
             </div>
 
             <div class="table-overflow">
-                <table>
+                <table class="assessors-available">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>

@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.invite.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.InviteOrganisation;
@@ -58,8 +57,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .withOrganisationName("new organisation")
                 .build();
 
-        ObjectMapper mapper = new ObjectMapper();
-        String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
+        String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
         InviteResultsResource inviteResultsResource = new InviteResultsResource();
         when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceSuccess(inviteResultsResource));
@@ -85,8 +83,7 @@ public class ApplicationInviteControllerTest extends BaseControllerMockMVCTest<A
                 .withInviteResources(inviteResources)
                 .build();
 
-        ObjectMapper mapper = new ObjectMapper();
-        String organisationResourceString = mapper.writeValueAsString(inviteOrganisationResource);
+        String organisationResourceString = objectMapper.writeValueAsString(inviteOrganisationResource);
 
         when(inviteService.createApplicationInvites(inviteOrganisationResource)).thenReturn(serviceFailure(badRequestError("no invites")));
 

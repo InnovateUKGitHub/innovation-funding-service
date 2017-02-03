@@ -57,10 +57,6 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         return getUserWithRole(COMP_ADMIN);
     }
 
-    protected UserResource compExecUser() {
-        return getUserWithRole(COMP_EXEC);
-    }
-
     protected UserResource projectFinanceUser() {
         return getUserWithRole(PROJECT_FINANCE);
     }

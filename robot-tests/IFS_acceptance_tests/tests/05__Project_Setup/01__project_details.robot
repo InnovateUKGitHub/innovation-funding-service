@@ -376,7 +376,7 @@ Non lead partner nominates finance contact
     And the user selects the radio button    financeContact    financeContact1
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated    project-details-finance    2    yes
+    And the matching status checkbox is updated differently    project-details-finance    2    Yes
     And the user should see the element    link=Ludlow
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
@@ -465,7 +465,7 @@ Invited finance contact registration flow
     And the user should see the text in the page    Empire Ltd
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     And the user creates the account    John    Smith
-    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify account
+    And the user reads his email and clicks the link    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Please verify your email address    Verify
     Then the user should see the text in the page    Account verified
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
     And the guest user inserts user email & password    ${test_mailbox_one}+invitedfinancecontact@gmail.com    Passw0rd123
@@ -493,7 +493,7 @@ Lead partner selects a finance contact
     And the user selects the radio button    financeContact    financeContact2
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated    project-details-finance    1    yes
+    And the matching status checkbox is updated differently   project-details-finance    1    Yes
     And the user should see the text in the page    Elmo Chenault
     And the user should see the element    link=Empire Ltd
 
@@ -531,7 +531,7 @@ Academic Partner nominates Finance contact
     And the user selects the radio button          financeContact    financeContact1
     And the user clicks the button/link            jQuery=.button:contains("Save")
     Then the user should be redirected to the correct page    ${project_in_setup_page}
-    And the matching status checkbox is updated    project-details-finance    2    yes
+    And the matching status checkbox is updated differently    project-details-finance    2    Yes
     And the user should see the element     link=EGGS
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(2)
@@ -615,7 +615,7 @@ Non-lead partner cannot change any project details
     And the user navigates to the page    ${project_address_page}
     And the user should be redirected to the correct page    ${project_in_setup_page}
 
-Internal user can see the Project details as sumbmitted
+Internal user can see the Project details as submitted
     [Documentation]    INFUND-5856
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
@@ -637,6 +637,11 @@ the matching status checkbox is updated
     [Arguments]    ${table_id}    ${ROW}    ${STATUS}
     the user should see the element    ${table_id}
     the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}) .${STATUS}
+
+the matching status checkbox is updated differently
+    [Arguments]    ${table_id}    ${ROW}    ${STATUS}
+    the user should see the element    ${table_id}
+    the user should see the element    jQuery=#${table_id} tr:nth-of-type(${ROW}):contains("${STATUS}")
 
 the duration should be visible
     Element Should Contain    xpath=//*[@id="content"]/form/fieldset/div/p[5]/strong    36 months
@@ -671,9 +676,9 @@ all the fields are completed
     the matching status checkbox is updated    project-details    1    yes
     the matching status checkbox is updated    project-details    2    yes
     the matching status checkbox is updated    project-details    3    yes
-    the matching status checkbox is updated    project-details-finance    1    yes
-    the matching status checkbox is updated    project-details-finance    2    yes
-    the matching status checkbox is updated    project-details-finance    3    yes
+    the matching status checkbox is updated differently    project-details-finance    1    Yes
+    the matching status checkbox is updated differently  project-details-finance    2    Yes
+    the matching status checkbox is updated differently   project-details-finance    3    Yes
 
 the user changes the start date back again
     the user clicks the button/link    link=Target start date

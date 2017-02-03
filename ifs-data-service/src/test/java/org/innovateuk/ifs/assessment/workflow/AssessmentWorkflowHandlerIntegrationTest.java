@@ -1,16 +1,15 @@
 package org.innovateuk.ifs.assessment.workflow;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.ApplicationRejectionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.actions.BaseAssessmentAction;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowHandlerIntegrationTest;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,26 +18,22 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static java.lang.Boolean.TRUE;
 import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
-import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
-import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.*;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,7 +69,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     @Test
     public void withdrawAssessment_createdToWithdrawn() throws Exception {
-        assertWorkflowStateChangeForWithdrawnFromCreated((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(CREATED));
+        assertWorkflowStateChangeForWithdrawnFromCreated((assessment -> assessmentWorkflowHandler.withdraw(assessment)), setupIncompleteAssessment(CREATED));
     }
 
     @Test
@@ -89,7 +84,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     @Test
     public void withdrawAssessment_pendingToWithdrawn() throws Exception {
-        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(PENDING));
+        assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(PENDING), WITHDRAWN);
     }
 
     @Test
@@ -99,7 +94,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     @Test
     public void withdrawAssessment_acceptedToWithdrawn() throws Exception {
-        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(ACCEPTED));
+        assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(ACCEPTED), WITHDRAWN);
     }
 
     @Test
@@ -129,7 +124,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     @Test
     public void withdrawAssessment_openToWithdrawn() throws Exception {
-        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupIncompleteAssessment(OPEN));
+        assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(OPEN), WITHDRAWN);
     }
 
     @Test
@@ -159,8 +154,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
 
     @Test
     public void withdrawAssessment_readyToSubmitToWithdrawn() throws Exception {
-        assertWorkflowStateChangeForWithdrawn((assessment -> assessmentWorkflowHandler.withdrawAssessment(assessment)), setupCompleteAssessment(READY_TO_SUBMIT));
-
+        assertWorkflowStateChange(assessment -> assessmentWorkflowHandler.withdraw(assessment), setupIncompleteAssessment(READY_TO_SUBMIT), WITHDRAWN);
     }
 
     @Test
@@ -227,44 +221,43 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         assertEquals(READY_TO_SUBMIT, assessment.getActivityState());
     }
 
-    private AssessmentFundingDecisionResource createFundingDecision() {
-        return newAssessmentFundingDecisionResource()
-                .withFundingConfirmation(TRUE)
+    private AssessmentFundingDecisionOutcome createFundingDecision() {
+        return newAssessmentFundingDecisionOutcome()
+                .withFundingConfirmation(true)
                 .withComment("comment")
                 .withFeedback("feedback")
                 .build();
     }
 
-    private ApplicationRejectionResource createRejection() {
-        return newApplicationRejectionResource()
-                .withRejectReason("reason")
+    private AssessmentRejectOutcome createRejection() {
+        return newAssessmentRejectOutcome()
+                .withRejectReason(CONFLICT_OF_INTEREST)
                 .withRejectComment("comment")
                 .build();
     }
 
     private void assertWorkflowStateChangeForFeedback(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState) {
-        assertWorkflowStateChange(handlerMethod, assessmentSupplier, expectedState, (assessment) -> {
-            verify(assessmentRepositoryMock).isFeedbackComplete(assessment.getId());
-        });
+        assertWorkflowStateChange(handlerMethod, assessmentSupplier, expectedState, (assessment) ->
+                verify(assessmentRepositoryMock).isFeedbackComplete(assessment.getId()));
     }
 
     private void assertWorkflowStateChangeForFundingDecision(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState) {
         assertWorkflowStateChange(handlerMethod, assessmentSupplier, expectedState, (assessment) -> {
             verify(assessmentRepositoryMock).isFeedbackComplete(assessment.getId());
-            Optional<ProcessOutcome> fundingDecision = assessment.getLastOutcome(FUNDING_DECISION);
-            assertTrue(fundingDecision.isPresent());
-            assertEquals("yes", fundingDecision.get().getOutcome());
-            assertEquals("comment", fundingDecision.get().getComment());
-            assertEquals("feedback", fundingDecision.get().getDescription());
+            AssessmentFundingDecisionOutcome fundingDecision = assessment.getFundingDecision();
+            assertNotNull(fundingDecision);
+            assertTrue(fundingDecision.isFundingConfirmation());
+            assertEquals("comment", fundingDecision.getComment());
+            assertEquals("feedback", fundingDecision.getFeedback());
         });
     }
 
     private void assertWorkflowStateChangeForRejection(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {
         assertWorkflowStateChange(handlerMethod, assessmentSupplier, REJECTED, (assessment) -> {
-            Optional<ProcessOutcome> rejection = assessment.getLastOutcome(REJECT);
-            assertTrue(rejection.isPresent());
-            assertEquals("comment", rejection.get().getComment());
-            assertEquals("reason", rejection.get().getDescription());
+            AssessmentRejectOutcome rejection = assessment.getRejection();
+            assertNotNull(rejection);
+            assertEquals(CONFLICT_OF_INTEREST, rejection.getRejectReason());
+            assertEquals("comment", rejection.getRejectComment());
         });
     }
 
@@ -277,13 +270,6 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         verify(assessmentRepositoryMock).delete(assessment);
         verify(processRoleRepositoryMock).delete(assessment.getParticipant());
         verifyNoMoreInteractionsWithMocks();
-    }
-
-    private void assertWorkflowStateChangeForWithdrawn(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier) {
-        assertWorkflowStateChange(handlerMethod, assessmentSupplier, WITHDRAWN, (assessment) -> {
-            Optional<ProcessOutcome> withdrawn = assessment.getLastOutcome(WITHDRAW);
-            assertTrue(withdrawn.isPresent());
-        });
     }
 
     private void assertWorkflowStateChange(Function<Assessment, Boolean> handlerMethod, Supplier<Assessment> assessmentSupplier, AssessmentStates expectedState) {
@@ -320,7 +306,6 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
     private Supplier<Assessment> setupIncompleteAssessment(AssessmentStates initialState) {
         return () -> newAssessment()
                 .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, initialState.getBackingState()))
-                .withProcessOutcome(new ArrayList<>())
                 .build();
     }
 
@@ -328,9 +313,7 @@ public class AssessmentWorkflowHandlerIntegrationTest extends BaseWorkflowHandle
         return () -> {
             Assessment assessment = newAssessment()
                     .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, initialState.getBackingState()))
-                    .withProcessOutcome(newProcessOutcome()
-                            .withOutcomeType(FUNDING_DECISION.getType())
-                            .build(1))
+                    .withFundingDecision(newAssessmentFundingDecisionOutcome().build())
                     .build();
             when(assessmentRepositoryMock.isFeedbackComplete(assessment.getId())).thenReturn(true);
             return assessment;
