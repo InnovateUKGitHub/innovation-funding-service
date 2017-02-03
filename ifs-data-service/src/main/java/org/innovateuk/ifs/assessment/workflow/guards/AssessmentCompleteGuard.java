@@ -21,7 +21,7 @@ public class AssessmentCompleteGuard implements Guard<AssessmentStates, Assessme
 
     @Override
     public boolean evaluate(StateContext<AssessmentStates, AssessmentOutcomes> context) {
-        Assessment assessment = (Assessment) context.getMessageHeader("assessment");
+        Assessment assessment = (Assessment) context.getMessageHeader("target");
         return isFeedbackComplete(assessment) && isFundingDecisionComplete(assessment);
     }
 
@@ -30,6 +30,6 @@ public class AssessmentCompleteGuard implements Guard<AssessmentStates, Assessme
     }
 
     private boolean isFundingDecisionComplete(Assessment assessment) {
-        return assessment.getLastOutcome(AssessmentOutcomes.FUNDING_DECISION).isPresent();
+        return assessment.getFundingDecision() != null;
     }
 }

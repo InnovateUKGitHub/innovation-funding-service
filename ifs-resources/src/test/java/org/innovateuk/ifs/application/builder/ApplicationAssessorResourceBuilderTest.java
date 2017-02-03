@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -10,6 +11,8 @@ import java.util.List;
 import java.util.Set;
 
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.NOT_AREA_OF_EXPERTISE;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.OPEN;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
@@ -29,7 +32,7 @@ public class ApplicationAssessorResourceBuilderTest {
                 .withName("Early Stage Manufacturing", "Bioscience")
                 .buildSet(2);
         String expectedSkillAreas = "skillAreas";
-        String expectedRejectReason = "rejectReason";
+        AssessmentRejectOutcomeValue expectedRejectReason = NOT_AREA_OF_EXPERTISE;
         String expectedRejectComment = "rejectComment";
         boolean expectedAvailable = true;
         Long expectedMostRecentAssessmentId = 1L;
@@ -86,7 +89,7 @@ public class ApplicationAssessorResourceBuilderTest {
                         .buildSet(2)
         };
         String[] expectedSkillAreas = {"skillAreas1", "skillAreas2"};
-        String[] expectedRejectReasons = {"rejectReason1", "rejectReason2"};
+        AssessmentRejectOutcomeValue[] expectedRejectReasons = {NOT_AREA_OF_EXPERTISE, CONFLICT_OF_INTEREST};
         String[] expectedRejectComments = {"rejectComment1", "rejectComment2"};
         Boolean[] expectedAvailable = {true, false};
         Long[] expectedMostRecentAssessmentIds = {1L, 2L};

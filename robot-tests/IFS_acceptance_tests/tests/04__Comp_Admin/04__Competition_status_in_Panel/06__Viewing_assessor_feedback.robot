@@ -15,7 +15,7 @@ Comp admin can view uploaded feedback
     [Documentation]    INFUND-2607
     [Tags]    HappyPath
     [Setup]
-    Given guest user log-in    john.doe@innovateuk.test    Passw0rd
+    Given guest user log-in    lee.bowman@innovateuk.test    Passw0rd
     When the user navigates to the page    ${successful_application_comp_admin_view}
     And the user should see the text in the page    ${valid_pdf}
     And the user clicks the button/link    link=testing.pdf (7.94 KB)
