@@ -20,7 +20,7 @@ import org.innovateuk.ifs.util.MapFunctions;
  * This controller handles restful calls from javascript to autosave funding decisions.
  */
 @RestController
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class FundingDecisionRestController {
 
 	private static final Log LOG = LogFactory.getLog(FundingDecisionRestController.class);

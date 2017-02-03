@@ -25,7 +25,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
  * This controller gets the decision to fund or not fund the applications for a given competition.
  */
 @Controller
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class FundingDecisionController {
 	
 	@Autowired

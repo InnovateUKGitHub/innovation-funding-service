@@ -19,7 +19,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
  * This controller is to submit the assessor feedback.
  */
 @Controller
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class AssessorFeedbackController {
 	
 	@Autowired

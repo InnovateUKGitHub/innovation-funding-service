@@ -63,7 +63,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
 public class CompetitionManagementApplicationController extends BaseController {
 
     @SuppressWarnings("unused")
