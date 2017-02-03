@@ -158,7 +158,7 @@ the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(4)    Other public sector funding
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(4)    £0
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(5)    Contribution to project
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
+    pullthe user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
