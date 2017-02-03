@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.threads.domain;
 
 
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.threads.resource.PostResource;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -26,17 +28,25 @@ public abstract class Thread {
 
     @OneToMany
     @OrderBy("created_on ASC")
-    private ArrayDeque<Post> posts;
+    private List<Post> posts;
 
     @CreatedDate
     private LocalDateTime createdOn;
 
+    Thread() {}
+    Thread(Long id, List<Post> posts, String title, LocalDateTime createdOn) {
+        this.id = id;
+        this.posts = new LinkedList<>(posts);
+        this.title = title;
+        this.createdOn = createdOn;
+
+    }
     public final Optional<Post> latestPost() {
-        return of(posts.peekFirst());
+        return postAtIndex(0);
     }
 
-    public final Optional<Post> initialPost() {
-        return of(posts.peekLast());
+    private final Optional<Post> postAtIndex(int index) {
+        return posts.size() >= (index-1) ? of(posts.get(index)): empty();
     }
 
     public final int numberOfPosts() {
@@ -52,6 +62,18 @@ public abstract class Thread {
     }
 
     public void addPost(Post post) {
-        posts.addFirst(post);
+        posts.add(0, post);
+    }
+
+    public Long id() {
+        return id;
+    }
+
+    public String title() {
+        return title;
+    }
+
+    public LocalDateTime createdOn() {
+        return createdOn;
     }
 }
