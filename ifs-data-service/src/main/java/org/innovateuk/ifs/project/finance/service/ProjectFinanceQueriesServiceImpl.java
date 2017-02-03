@@ -5,6 +5,7 @@ import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
+import org.innovateuk.ifs.threads.service.MappingThreadService;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

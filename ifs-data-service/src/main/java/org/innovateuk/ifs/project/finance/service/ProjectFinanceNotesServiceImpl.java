@@ -5,6 +5,7 @@ import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.mapper.NoteMapper;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.repository.NoteRepository;
+import org.innovateuk.ifs.threads.service.MappingThreadService;
 import org.innovateuk.threads.resource.NoteResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -13,7 +13,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 public class GenericThreadService<E extends Thread, C> implements ThreadService<E, Post> {
-
     private final ThreadRepository<E> repository;
     private final Class<C> contextClass;
 

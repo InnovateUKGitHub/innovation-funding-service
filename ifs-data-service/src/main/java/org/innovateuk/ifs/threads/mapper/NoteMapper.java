@@ -7,9 +7,29 @@ import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.mapstruct.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {PostMapper.class}
 )
-public abstract class NoteMapper extends BaseMapper<Note, NoteResource, Long> {}
+public abstract class NoteMapper extends BaseMapper<Note, NoteResource, Long> {
+    @Autowired
+    private PostMapper postMapper;
+
+    @Override
+    public NoteResource mapToResource(Note note) {
+        return new NoteResource(note.id(), simpleMap(note.posts(), postMapper::mapToResource),
+                note.title(), note.createdOn());
+    }
+
+    @Override
+    public Note mapToDomain(NoteResource noteResource) {
+        return new Note(noteResource.id, simpleMap(noteResource.posts, postMapper::mapToDomain),
+                noteResource.title, noteResource.createdOn);
+    }
+}
