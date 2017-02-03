@@ -1,32 +1,26 @@
 package org.innovateuk.ifs.workflow.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
 @Entity
-public class ProcessOutcome {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "outcome_type", discriminatorType = DiscriminatorType.STRING)
+public abstract class ProcessOutcome<ProcessType extends Process> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String outcome;
-    private String description;
-    private String comment;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="processId", referencedColumnName="id")
-    private Process process;
-    private String outcomeType;
+    protected String outcome;
+    protected String description;
+    protected String comment;
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Process.class)
+    @JoinColumn(name = "process_id", referencedColumnName = "id")
+    private ProcessType process;
 
-    @JsonIgnore
-    public Process getProcess() {
-        return process;
-    }
-
-    public void setProcess(Process process) {
-        this.process = process;
+    protected ProcessOutcome() {
     }
 
     public Long getId() {
@@ -37,36 +31,12 @@ public class ProcessOutcome {
         this.id = id;
     }
 
-    public String getOutcome() {
-        return outcome;
+    public ProcessType getProcess() {
+        return process;
     }
 
-    public void setOutcome(String outcome) {
-        this.outcome = outcome;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public String getOutcomeType() {
-        return outcomeType;
-    }
-
-    public void setOutcomeType(String outcomeType) {
-        this.outcomeType = outcomeType;
+    public void setProcess(ProcessType process) {
+        this.process = process;
     }
 
     @Override
@@ -79,7 +49,7 @@ public class ProcessOutcome {
             return false;
         }
 
-        ProcessOutcome that = (ProcessOutcome) o;
+        ProcessOutcome<?> that = (ProcessOutcome<?>) o;
 
         return new EqualsBuilder()
                 .append(id, that.id)
@@ -87,7 +57,6 @@ public class ProcessOutcome {
                 .append(description, that.description)
                 .append(comment, that.comment)
                 .append(process, that.process)
-                .append(outcomeType, that.outcomeType)
                 .isEquals();
     }
 
@@ -99,7 +68,6 @@ public class ProcessOutcome {
                 .append(description)
                 .append(comment)
                 .append(process)
-                .append(outcomeType)
                 .toHashCode();
     }
 }

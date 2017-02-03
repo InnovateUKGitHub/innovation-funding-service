@@ -43,7 +43,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -52,9 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -239,6 +236,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
     @Test
@@ -280,6 +278,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
+        when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
@@ -296,6 +295,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(financeCheckWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
+        verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
