@@ -94,7 +94,7 @@
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <h2 class="heading-medium no-margin">Content</h2>
+        <h2 class="heading-medium">Content</h2>
         <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
     </th:block>
 </div>
@@ -143,7 +143,7 @@
 <div th:fragment="content-groups-read-only(form, model)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:each="contentGroup: ${form.contentGroups}">
         <h2 class="heading-small no-margin-bottom" th:text="${contentGroup.heading}"></h2>
-        <p ifs:utext="${contentGroup.content}"></p>
+        <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
         <th:block th:if="${model.hasAttachment(contentGroup.id)}">
             <p><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
                    th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a></p>
