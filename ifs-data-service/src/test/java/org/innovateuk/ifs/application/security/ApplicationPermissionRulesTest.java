@@ -117,15 +117,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testCompAdminsCanViewApplications() {
-        assertTrue(rules.compAdminsCanViewApplications(applicationResource1, compAdmin));
-        assertFalse(rules.compAdminsCanViewApplications(applicationResource1, leadOnApplication1));
-    }
-
-    @Test
-    public void testProjectFinanceUsersCanViewApplications() {
-        assertTrue(rules.projectFinanceUsersCanViewApplications(applicationResource1, projectFinanceUser()));
-        assertFalse(rules.projectFinanceUsersCanViewApplications(applicationResource1, leadOnApplication1));
+    public void testInternalUsersCanViewApplications() {
+        assertTrue(rules.internalUsersCanViewApplications(applicationResource1, compAdmin));
+        assertTrue(rules.internalUsersCanViewApplications(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.internalUsersCanViewApplications(applicationResource1, leadOnApplication1));
     }
 
     @Test
@@ -175,15 +170,10 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void compAdminCanSeeTheResearchParticipantPercentageInApplications() {
-        assertTrue(rules.compAdminCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
-        assertFalse(rules.compAdminCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
-    }
-
-    @Test
-    public void projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications() {
-        assertTrue(rules.projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
-        assertFalse(rules.projectFinanceUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
+    public void internalUsersCanSeeTheResearchParticipantPercentageInApplications() {
+        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
+        assertTrue(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, projectFinanceUser()));
+        assertFalse(rules.internalUsersCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));
     }
 
     @Test
@@ -199,13 +189,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
-        assertTrue(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, projectFinanceUser()));
-        assertFalse(rules.projectFinanceUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(applicationResource1, user2));
-    }
-
-    @Test
-    public void testCompAdminCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
+    public void testInternalUserCanUploadAssessorFeedbackToApplicationWhenCompetitionInFundersPanelOrAssessorFeedbackState() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -215,44 +199,16 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
 
                 // if the user is not a Comp Admin, immediately fail
-                if (!user.equals(compAdminUser())) {
-                    assertFalse(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                if (!allInternalUsers.contains(user)) {
+                    assertFalse(rules.internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
 
                 } else {
 
                     if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
-                        assertTrue(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                        assertTrue(rules.internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     } else {
-                        assertFalse(rules.compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
-                    }
-                }
-            });
-        });
-    }
-
-
-    @Test
-    public void projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState() {
-        // For each possible Competition Status...
-        asList(CompetitionStatus.values()).forEach(competitionStatus -> {
-
-            // For each possible role
-            allGlobalRoleUsers.forEach(user -> {
-
-                ApplicationResource application = newApplicationResource().withCompetitionStatus(competitionStatus).build();
-
-                // if the user is not a Comp Admin, immediately fail
-                if (!user.equals(projectFinanceUser())) {
-                    assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
-                    verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
-
-                } else {
-
-                    if (asList(FUNDERS_PANEL, ASSESSOR_FEEDBACK).contains(competitionStatus)) {
-                        assertTrue(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
-                    } else {
-                        assertFalse(rules.projectFinanceUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
+                        assertFalse(rules.internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, user));
                     }
                 }
             });
@@ -290,7 +246,7 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
-    public void testCompAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
+    public void testInternalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime() {
         // For each possible Competition Status...
         asList(CompetitionStatus.values()).forEach(competitionStatus -> {
 
@@ -301,14 +257,14 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
                 ApplicationResource application = newApplicationResource().withCompetition(competition.getId()).build();
 
                 // if the user is not a Comp Admin, immediately fail
-                if (!user.equals(compAdminUser())) {
+                if (!allInternalUsers.contains(user)) {
 
-                    assertFalse(rules.compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, user));
+                    assertFalse(rules.internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, user));
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
 
                 } else {
 
-                    assertTrue(rules.compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, user));
+                    assertTrue(rules.internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, user));
                     verifyNoMoreInteractions(competitionRepositoryMock, processRoleRepositoryMock);
                 }
             });

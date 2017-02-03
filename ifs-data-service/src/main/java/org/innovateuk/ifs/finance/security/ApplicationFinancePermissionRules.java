@@ -1,15 +1,16 @@
 package org.innovateuk.ifs.finance.security;
 
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 /**
@@ -37,14 +38,9 @@ public class ApplicationFinancePermissionRules {
         return isAssessor;
     }
 
-    @PermissionRule(value = "READ", description = "A comp admin can see application finances for organisations")
-    public boolean compAdminCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(value = "READ", description = "A Project Finance team member can see application finances for organisations")
-    public boolean projectFinanceCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isProjectFinanceUser(user);
+    @PermissionRule(value = "READ", description = "An internal user can see application finances for organisations")
+    public boolean internalUserCanSeeApplicationFinancesForOrganisations(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation")
@@ -62,14 +58,9 @@ public class ApplicationFinancePermissionRules {
         return isAConsortiumMemberOnApplication(applicationFinanceResource.getApplication(), user);
     }
 
-    @PermissionRule(value = "READ_FILE_ENTRY", description = "A comp admin can get file entry resource for finance section of a collaborator")
-    public boolean compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(value = "READ_FILE_ENTRY", description = "A project finance user can get file entry resource for finance section of a collaborator")
-    public boolean projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isProjectFinanceUser(user);
+    @PermissionRule(value = "READ_FILE_ENTRY", description = "An internal user can get file entry resource for finance section of a collaborator")
+    public boolean internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(value = "CREATE_FILE_ENTRY", description = "A consortium member can create a file entry for the finance section for their organisation")
