@@ -122,7 +122,7 @@ public class CompetitionInAssessmentGuardTest extends BaseUnitTestMocksTest {
 
     private StateContext<AssessmentStates, AssessmentOutcomes> setupContext(Assessment assessment) {
         StateContext<AssessmentStates, AssessmentOutcomes> context = mock(StateContext.class);
-        when(context.getMessageHeader("assessment")).thenReturn(assessment);
+        when(context.getMessageHeader("target")).thenReturn(assessment);
         return context;
     }
 }

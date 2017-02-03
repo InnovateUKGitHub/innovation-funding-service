@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.assessment.workflow.actions;
 
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflow;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
-import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.statemachine.StateContext;
 import org.springframework.stereotype.Component;
-
-import java.util.Optional;
 
 /**
  * The {@code WithdrawAction} is used by the assessor. If handles the withdrawal event
@@ -21,10 +21,9 @@ public class WithdrawCreatedAction extends BaseAssessmentAction {
     private ProcessRoleRepository processRoleRepository;
 
     @Override
-    protected void doExecute(Assessment assessment, Optional<ProcessOutcome> processOutcome) {
+    protected void doExecute(Assessment assessment, StateContext<AssessmentStates, AssessmentOutcomes> context) {
 
         assessmentRepository.delete(assessment);
         processRoleRepository.delete(assessment.getParticipant());
-
     }
 }

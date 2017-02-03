@@ -9,8 +9,7 @@ import org.mockito.InjectMocks;
 import org.springframework.statemachine.StateContext;
 
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
-import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.FUNDING_DECISION;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeBuilder.newAssessmentFundingDecisionOutcome;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -58,15 +57,13 @@ public class AssessmentCompleteGuardTest extends BaseUnitTestMocksTest {
 
     private Assessment setUpAssessmentWithFundingDecision() {
         return newAssessment()
-                .withProcessOutcome(newProcessOutcome()
-                        .withOutcomeType(FUNDING_DECISION.getType())
-                        .build(1))
+                .withFundingDecision(newAssessmentFundingDecisionOutcome().build())
                 .build();
     }
 
     private StateContext<AssessmentStates, AssessmentOutcomes> setupContext(Assessment assessment) {
         StateContext<AssessmentStates, AssessmentOutcomes> context = mock(StateContext.class);
-        when(context.getMessageHeader("assessment")).thenReturn(assessment);
+        when(context.getMessageHeader("target")).thenReturn(assessment);
         return context;
     }
 }

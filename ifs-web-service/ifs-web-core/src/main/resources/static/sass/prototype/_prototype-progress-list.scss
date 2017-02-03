@@ -158,27 +158,29 @@
       }
       .score {
         .percent {
-          font-size: 35px;
+          @include bold-36;
           display: block;
           text-align: center;
         }
         > span {
           display: block;
           text-align: center;
-          font-size: 15px;
+          @include core-16;
           color: $secondary-text-colour;
-          @include media-down(mobile) {
+          /*@include media-down(mobile) {
             font-size: 13px;
             margin-top: 0;
-          }
+          }*/
         }
         strong {
           display: block;
           text-align: center;
-          font-size: 17px;
+          @include core-16;
+          font-weight: bold;
+          /*font-size: 17px;
           @include media-down(mobile) {
             font-size: 15px;
-          }
+          }*/
         }
       }
       > strong, a {
@@ -243,6 +245,11 @@
       .score .percent {
         color: $text-colour
       }
+      .status{
+        .msg-progress{
+          color: $green;
+        }
+      }
     }
     &.negative {
       .score > strong {
@@ -250,6 +257,11 @@
       }
       .score .percent {
         color: $text-colour
+      }
+      .status{
+        .msg-progress{
+          color: $red;
+        }
       }
     }
   }
@@ -264,6 +276,13 @@
     &.read-only {
       background-color: $highlight-colour;
       color: $secondary-text-colour;
+
+      .status{
+        .msg-progress{
+          color: $secondary-text-colour;
+        }
+      }
+
     }
     .task {
       overflow: hidden;
