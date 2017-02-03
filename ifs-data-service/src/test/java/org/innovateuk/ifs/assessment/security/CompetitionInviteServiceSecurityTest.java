@@ -141,17 +141,17 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getCreatedInvites() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getCreatedInvites(1L), COMP_ADMIN,PROJECT_FINANCE);
     }
 
     @Test
     public void getInvitationOverview() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInvitationOverview(1L), COMP_ADMIN,PROJECT_FINANCE);
     }
 
     @Test
     public void getAvailableAssessors() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -161,12 +161,12 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void inviteUser_existing() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newExistingUserStagedInviteResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void inviteUser_new() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newNewUserStagedInviteResource().build()), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteUser(newNewUserStagedInviteResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -174,17 +174,17 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.inviteNewUsers(
                 newNewUserStagedInviteResource().build(2), 1L)
-                , COMP_ADMIN);
+                , COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void sendInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendInvite(1L, newEmailContentResource().build()), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.sendInvite(1L, newEmailContentResource().build()), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void deleteInvite() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.deleteInvite("email", 1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     private void runAsRole(UserRoleType roleType, Runnable serviceCall) {
