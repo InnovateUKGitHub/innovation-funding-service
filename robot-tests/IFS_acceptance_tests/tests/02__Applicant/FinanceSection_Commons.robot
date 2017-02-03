@@ -76,7 +76,8 @@ the user marks the finances as complete
     Applicant navigates to the finances of the Robot application
     the user fills in the project costs
     the user fills in the organisation information
-    the user fills in the funding information  Robot test application
+    the user checks Your Funding section
+    #the user fills in the funding information  Robot test application
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application Overview
     the user should see the element  jQuery=img.complete[alt*="finances"]
@@ -94,7 +95,7 @@ the user fills in the project costs
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
 
 the user fills in Labour
-    the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
+    the user clicks the button/link            jQuery=#form-input-20.question button:contains("Labour")
     the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
     the user enters text to a text field       css=[name^="labour-labourDaysYearly"]    230
@@ -159,7 +160,7 @@ the user fills in Other Costs
     the user removes prev costs if there are any
     the user enters text to a text field  jQuery=textarea.form-control[name^=other_costs-description]  some other costs
     the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
-    focus                                 css=#section-total-15
+    focus                                 css=#section-total-15./
     #    textfield should contain              css=#section-total-15  £ 50  #This is commented out because the value in the field differs in full run vs run only the suite.
     the user clicks the button/link       jQuery=#form-input-20 button:contains("Other Costs")
 
@@ -173,6 +174,16 @@ the user fills in the organisation information
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit your organisation")
     the user selects the radio button  financePosition-organisationSize  financePosition-organisationSize-SMALL
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
+
+the user checks Your Funding section
+    ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
+    Run Keyword if   '${Research_category_selected}' == False    the user selects research area
+    Run Keyword if   '${Research_category_selected}' == True  the user fills in the funding information    Robot test application
+
+the user selects research area
+    When The user clicks the button/link   link= application details
+    then the applicant completes the application details
+    And the user fills in the funding information  Robot test application
 
 the user fills in the funding information
     [Arguments]  ${Application}

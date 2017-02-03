@@ -43,8 +43,8 @@ Calculations for the first collaborator
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    And the applicant enters a bigger funding amount
-    Then the contribution to project and funding sought should be 0 and not a negative number
+    #And the applicant enters a bigger funding amount
+    #Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
@@ -57,13 +57,12 @@ Your Finance includes Finance summary table for lead applicant
 
 Your Finance inludes Finance summary table for collaborator
      [Documentation]    INFUND-6893
-     [Tags]         Pending
-     #Pending due to INFUND-7688
+     [Tags]
      [Setup]  log in as a different user    &{collaborator2_credentials}
      When the user navigates to the page   ${YOUR_FINANCES_URL}
      Then The user should see the text in the page     Your finances
      And the finance summary table in Your Finances has correct values for collaborator
-     And The user clicks the button/link        link=Return to application ovreview
+     And The user clicks the button/link        link=Return to application overview
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
@@ -158,7 +157,7 @@ the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(4)    Other public sector funding
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(4)    £0
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(5)    Contribution to project
-    pullthe user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
 
 the applicant enters a bigger funding amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
