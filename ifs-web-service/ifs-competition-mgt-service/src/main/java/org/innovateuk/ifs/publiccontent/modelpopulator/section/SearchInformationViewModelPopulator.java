@@ -1,9 +1,11 @@
-package org.innovateuk.ifs.publiccontent.modelpopulator;
+package org.innovateuk.ifs.publiccontent.modelpopulator.section;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.viewmodel.SearchInformationViewModel;
+import org.innovateuk.ifs.publiccontent.modelpopulator.AbstractPublicContentViewModelPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
+import org.innovateuk.ifs.publiccontent.viewmodel.section.SearchInformationViewModel;
 import org.springframework.stereotype.Service;
 
 

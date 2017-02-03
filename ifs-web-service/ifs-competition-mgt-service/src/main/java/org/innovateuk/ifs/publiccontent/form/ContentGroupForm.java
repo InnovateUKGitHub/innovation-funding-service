@@ -10,10 +10,10 @@ public class ContentGroupForm {
 
     private Long id;
 
-    @NotEmpty
+    @NotEmpty(message = "{validation.publiccontent.contentgroup.heading.required}")
     private String heading;
 
-    @NotEmpty
+    @NotEmpty(message = "{validation.publiccontent.contentgroup.content.required}")
     private String content;
 
     private MultipartFile attachment;

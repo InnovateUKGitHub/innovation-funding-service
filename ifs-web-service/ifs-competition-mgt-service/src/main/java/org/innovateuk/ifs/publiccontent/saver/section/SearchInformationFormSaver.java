@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.publiccontent.saver;
+package org.innovateuk.ifs.publiccontent.saver.section;
 
 
 import com.google.common.base.Splitter;
@@ -6,7 +6,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.form.SearchInformationForm;
+import org.innovateuk.ifs.publiccontent.form.section.SearchInformationForm;
+import org.innovateuk.ifs.publiccontent.saver.AbstractPublicContentFormSaver;
+import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -30,4 +31,8 @@ public interface ContentGroupService {
     @SecuredBySpring(value = "SAVE_CONTENT_GROUPS",
             description = "The Competition Admin, or project finance user can remove a content group file.")
     ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType section);
+
+    ServiceResult<FileEntryResource> getFileDetails(long contentGroupId);
+
+    ServiceResult<FileAndContents> getFileContents(long contentGroupId);
 }

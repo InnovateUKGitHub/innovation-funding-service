@@ -1,14 +1,15 @@
-package org.innovateuk.ifs.publiccontent.controller;
+package org.innovateuk.ifs.publiccontent.controller.section;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.form.EligibilityForm;
-import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentEligibilityFormPopulator;
+import org.innovateuk.ifs.publiccontent.controller.AbstractContentGroupController;
+import org.innovateuk.ifs.publiccontent.form.section.EligibilityForm;
+import org.innovateuk.ifs.publiccontent.formpopulator.section.PublicContentEligibilityFormPopulator;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
-import org.innovateuk.ifs.publiccontent.modelpopulator.EligibilityViewModelPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.section.EligibilityViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
-import org.innovateuk.ifs.publiccontent.saver.EligibilityFormSaver;
+import org.innovateuk.ifs.publiccontent.saver.section.EligibilityFormSaver;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
-import org.innovateuk.ifs.publiccontent.viewmodel.EligibilityViewModel;
+import org.innovateuk.ifs.publiccontent.viewmodel.section.EligibilityViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;

@@ -8,9 +8,11 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.domain.FileEntry;
+import org.innovateuk.ifs.file.mapper.FileEntryMapper;
 import org.innovateuk.ifs.file.repository.FileEntryRepository;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.publiccontent.domain.ContentGroup;
@@ -45,6 +47,8 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
 
     @Autowired
     private FileEntryService fileEntryService;
+    @Autowired
+    private FileEntryMapper fileEntryMapper;
 
 
     @Autowired
@@ -67,9 +71,13 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
         return find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
                 .andOnSuccess(contentGroup -> {
                     FileEntry fileEntry = contentGroup.getFileEntry();
-                    contentGroup.setFileEntry(null);
-                    return fileService.deleteFile(fileEntry.getId());
-                }).andOnSuccessReturnVoid();
+                    if (fileEntry != null) {
+                        contentGroup.setFileEntry(null);
+                        return fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid();
+                    } else {
+                        return serviceSuccess();
+                    }
+                });
     }
 
     public ServiceResult<Void> saveContentGroups(PublicContentResource resource, PublicContent publicContent, PublicContentSectionType sectionType) {
@@ -94,13 +102,34 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
 
         addNewGroups(toAdd, optionalSection.get());
         updateGroups(toUpdate, optionalSection.get());
-        deleteGroups(toDeleteIds);
-
-        return serviceSuccess();
+        return deleteGroups(toDeleteIds);
     }
 
-    private void deleteGroups(Set<Long> toDeleteIds) {
-        toDeleteIds.forEach(contentGroupRepository::delete);
+    @Override
+    public ServiceResult<FileEntryResource> getFileDetails(long contentGroupId) {
+        return find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
+                .andOnSuccessReturn(contentGroup -> fileEntryMapper.mapToResource(contentGroup.getFileEntry()));
+    }
+
+    @Override
+    public ServiceResult<FileAndContents> getFileContents(long contentGroupId) {
+
+        return find(contentGroupRepository.findOne(contentGroupId), notFoundError(ContentGroup.class, contentGroupId))
+                .andOnSuccess(contentGroup -> {
+                    ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(contentGroup.getFileEntry().getId());
+                    return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(contentGroup.getFileEntry()), inputStream));
+                });
+    }
+
+    private ServiceResult<Void> deleteGroups(Set<Long> toDeleteIds) {
+        ServiceResult<Void> result = serviceSuccess();
+        for (Long deleteId : toDeleteIds) {
+            result = result.andOnSuccessReturnVoid(() -> {
+                removeFile(deleteId);
+                contentGroupRepository.delete(deleteId);
+            });
+        }
+        return result;
     }
 
     private void updateGroups(Set<ContentGroupResource> toUpdate, ContentSection contentSection) {

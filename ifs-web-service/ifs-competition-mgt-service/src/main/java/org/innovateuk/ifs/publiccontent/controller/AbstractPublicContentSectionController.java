@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
@@ -66,7 +64,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return getPage(publicContent, model, form, false);
     }
 
-    private String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
+    protected String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
         model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
         if(form.isPresent()) {
             model.addAttribute("form", form.get());
@@ -84,16 +82,5 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
 
     }
-
-    protected String saveAndFileAction(Long competitionId, Model model, F form, ValidationHandler validationHandler, Function<PublicContentResource, FailingOrSucceedingResult<?, ?>> action) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
-        Supplier<String> successAndFailureView = () -> getPage(publicContent, model, Optional.of(form), false);
-        return validationHandler.performActionOrBindErrorsToField("", successAndFailureView, successAndFailureView,
-                () -> formSaver().save(form, publicContent).andOnSuccess(() -> action.apply(publicContent)));
-
-    }
-
-
-
 
 }

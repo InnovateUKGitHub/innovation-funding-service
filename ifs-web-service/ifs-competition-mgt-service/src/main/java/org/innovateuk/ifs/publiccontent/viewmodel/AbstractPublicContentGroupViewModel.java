@@ -15,4 +15,19 @@ public abstract class AbstractPublicContentGroupViewModel extends AbstractPublic
     public void setFileEntries(Map<Long, FileEntryResource> fileEntries) {
         this.fileEntries = fileEntries;
     }
+
+    public boolean hasAttachment(Long contentGroupId) {
+        return fileEntries.get(contentGroupId) != null && fileEntries.get(contentGroupId).getId() != null;
+    }
+
+    public Long id(Long contentGroupId) {
+        if (hasAttachment(contentGroupId)) {
+            return fileEntries.get(contentGroupId).getId();
+        }
+        return null;
+    }
+
+    public String fileName(Long contentGroupId) {
+        return fileEntries.get(contentGroupId).getName();
+    }
 }

@@ -22,7 +22,7 @@ public abstract class AbstractPublicContentGroupViewModelPopulator<M extends Abs
 
     protected void populateSection(M model, PublicContentResource publicContentResource) {
         Optional<PublicContentSectionResource> optionalSection = publicContentResource.getContentSections().stream().filter(filterSection -> getType().equals(filterSection.getType())).findAny();
-        if (!optionalSection.isPresent()) {
+        if (optionalSection.isPresent()) {
             model.setFileEntries(CollectionFunctions.simpleToMap(optionalSection.get().getContentGroups(),
                     ContentGroupResource::getId, ContentGroupResource::getFileEntry));
         }

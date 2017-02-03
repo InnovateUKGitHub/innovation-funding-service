@@ -4,10 +4,12 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.publiccontent.form.AbstractContentGroupForm;
 import org.innovateuk.ifs.publiccontent.form.ContentGroupForm;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,7 +60,8 @@ public class PublicContentServiceImpl implements PublicContentService {
     }
 
     @Override
-    public ServiceResult<Void> uploadFile(PublicContentResource resource, PublicContentSectionType type, List<ContentGroupForm> contentGroups) {
+    public ServiceResult<Void> uploadFile(Long competitionId, PublicContentSectionType type, List<ContentGroupForm> contentGroups) {
+        PublicContentResource resource = getCompetitionById(competitionId);
         Optional<PublicContentSectionResource> optionalSection = CollectionFunctions.simpleFindFirst(resource.getContentSections(),
                 contentSectionResource -> type.equals(contentSectionResource.getType()));
         Optional<ContentGroupForm> withAttachment = CollectionFunctions.simpleFindFirst(contentGroups,
@@ -77,6 +80,15 @@ public class PublicContentServiceImpl implements PublicContentService {
         }
     }
 
+    @Override
+    public ByteArrayResource downloadAttachment(Long contentGroupId) {
+        return contentGroupRestService.getFile(contentGroupId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public FileEntryResource getFileDetails(Long contentGroupId) {
+        return contentGroupRestService.getFileDetails(contentGroupId).getSuccessObjectOrThrowException();
+    }
 
 
     private Long getIdFromResourceIndex(PublicContentSectionResource sectionResource, List<ContentGroupForm> contentGroups, ContentGroupForm contentGroupForm) {
