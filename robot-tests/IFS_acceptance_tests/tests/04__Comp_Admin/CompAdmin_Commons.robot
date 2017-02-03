@@ -30,9 +30,9 @@ the user sees the correct assessed question information
     the user should not see the text in the page    The business opportunity is plausible
 
 the user fills in the Initial details
-    [Arguments]  ${day}  ${month}  ${year}
+    [Arguments]  ${compTitle}  ${day}  ${month}  ${year}
     the user clicks the button/link                      link=Initial details
-    the user enters text to a text field                 css=#title  From new Competition to New Application
+    the user enters text to a text field                 css=#title  ${compTitle}
     the user selects the option from the drop-down menu  Programme  id=competitionTypeId
     the user selects the option from the drop-down menu  Emerging and enabling technologies  id=innovationSectorCategoryId
     the user selects the option from the drop-down menu  Robotics and AS  css=select[id^=innovationAreaCategory]
@@ -59,51 +59,78 @@ the user fills in the Funding Information
 the user fills in the Eligibility
     the user clicks the button/link  link=Eligibility
     the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
+    the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
     the user clicks the button/link  jQuery=label[for="research-categories-33"]
+    the user clicks the button/link  jQuery=label[for="research-categories-33"]
+    the user clicks the button/link  jQuery=label[for="lead-applicant-type-research"]
     the user clicks the button/link  jQuery=label[for="lead-applicant-type-research"]
     the user selects the option from the drop-down menu  1  researchParticipation
     the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
+    the user clicks the button/link  jQuery=label[for="comp-resubmissions-yes"]
     the user clicks the button/link  jQuery=button:contains("Done")
     the user clicks the button/link  link=Competition setup
+    the user should see the element   jQuery=img[title$="is done"] + h3:contains("Eligibility")
+    #Elements in this page need double clicking
 
 the user fills in the Milestones
     [Arguments]  ${day}  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
-    the user enters text to a text field  th:contains("Briefing event") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Briefing event") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Briefing event") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Submission date") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Submission date") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Submission date") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Allocate assessors") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Allocate assessors") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Allocate assessors") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Assessor briefing") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Assessor briefing") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Assessor briefing") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Assessor accepts") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Assessor accepts") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Assessor accepts") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Assessor deadline") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Assessor deadline") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Assessor deadline") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Line draw") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Line draw") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Line draw") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Assessment panel") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Assessment panel") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Assessment panel") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Panel date") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Panel date") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Panel date") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Funders panel") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Funders panel") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Funders panel") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Notifications") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Notifications") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Notifications") ~ td.year  ${nextyear}
-    the user enters text to a text field  th:contains("Release feedback") ~ td.day  ${day}
-    the user enters text to a text field  th:contains("Release feedback") ~ td.month  ${month}
-    the user enters text to a text field  th:contains("Release feedback") ~ td.year  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${day}
+    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Submission date") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Allocate assessors") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessor briefing") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessor accepts") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessor deadline") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Line draw") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Assessment panel") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Panel date") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Funders panel") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Notifications") ~ td.year input  ${nextyear}
+    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.day input  ${day}
+    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.month input  ${month}
+    the user enters text to a text field  jQuery=th:contains("Release feedback") ~ td.year input  ${nextyear}
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
+
+the user marks the Application as done
+    the user clicks the button/link  link=Application
+    the user clicks the button/link  jQuery=button:contains("Done")
+    the user clicks the button/link  link=Competition setup
+    the user should see the element  jQuery=img[title$="is done"] + h3:contains("Application")
+
+
+the user fills in the Assessors
+    the user clicks the button/link  link=Assessors
+    the user clicks the button/link  jQuery=label[for="assessors-62"]
+    the user should see the element  css=#assessorPay[value="100"]
+    the user clicks the button/link  jQuery=button:contains("Done")
+    the user clicks the button/link  link=Competition setup
+    the user should see the element  jQuery=img[title$="is done"] + h3:contains("Assessors")
+
+
+Change the open date of the Competition in the database to one day before
+    [Arguments]  ${competition}
+    ${yesterday} =  get yesterday
+    execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
