@@ -104,6 +104,18 @@ include::{snippets}/competitioninvite/get-invitation-overview/response-fields.ad
 ==== Curl Example
 include::{snippets}/competitioninvite/get-invitation-overview/curl-request.adoc[]
 
+=== Get the invite statistics by competition
+==== Request
+include::{snippets}/competitioninvite/get-invite-statistics/http-request.adoc[]
+include::{snippets}/competitioninvite/get-invite-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-invite-statistics/http-response.adoc[]
+include::{snippets}/competitioninvite/get-invite-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-invite-statistics/curl-request.adoc[]
+
 === Add a user to the assessor invite list for a competition
 ==== Request
 include::{snippets}/competitioninvite/invite-user/http-request.adoc[]

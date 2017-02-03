@@ -31,7 +31,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -56,12 +59,11 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -1007,6 +1009,31 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         inOrder.verify(profileRepositoryMock, calls(2)).findOne(isA(Long.class));
         inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
 
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getInviteStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
+                .withAccepted(1L)
+                .withDeclined(2L)
+                .withInviteList(3L)
+                .withInvited(4L)
+                .build();
+
+        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED,SENT))).thenReturn(expected.getInvited());
+        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED))).thenReturn(expected.getInviteList());
+        when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED)).thenReturn(expected.getAccepted());
+        when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED)).thenReturn(expected.getDeclined());
+        CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
+        inOrder.verify(competitionInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED));
+        inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED);
+        inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED);
         inOrder.verifyNoMoreInteractions();
     }
 
