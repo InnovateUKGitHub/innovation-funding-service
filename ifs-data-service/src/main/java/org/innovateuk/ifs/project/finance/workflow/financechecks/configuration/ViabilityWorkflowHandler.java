@@ -1,14 +1,11 @@
 package org.innovateuk.ifs.project.finance.workflow.financechecks.configuration;
 
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
-import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.ViabilityProcess;
 import org.innovateuk.ifs.project.finance.repository.ViabilityProcessRepository;
 import org.innovateuk.ifs.project.finance.resource.ViabilityOutcomes;
 import org.innovateuk.ifs.project.finance.resource.ViabilityState;
-import org.innovateuk.ifs.project.gol.domain.GOLProcess;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.user.domain.User;

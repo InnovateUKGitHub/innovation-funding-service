@@ -46,7 +46,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -326,18 +325,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return getProject(projectId).andOnSuccessReturnVoid(project -> project.setSpendProfileSubmittedDate(null));
     }
 
-/*    @Override
-    public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
-
-        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance ->
-               validateCreditReport(projectFinance).andOnSuccessReturnVoid(() -> {
-
-           projectFinance.setCreditReportConfirmed(reportPresent);
-           projectFinanceRepository.save(projectFinance);
-
-       }));
-    }*/
-
     @Override
     public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
 
@@ -466,16 +453,11 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
 
-        //List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(project.getId());
-
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
                         getViabilityState(partnerOrganisation)
                 .andOnSuccessReturn(viabilityState -> ViabilityState.REVIEW.equals(viabilityState)).getSuccessObjectOrThrowException());
-
-/*        Optional<ProjectFinance> existingReviewableFinance = simpleFindFirst(finances, finance ->
-                Viability.REVIEW.equals(finance.getViability()));*/
 
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
@@ -483,20 +465,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
         }
     }
-
-/*    @Override
-    public ServiceResult<ViabilityResource> getViabilityOLD(ProjectOrganisationCompositeId projectOrganisationCompositeId){
-
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
-
-        ViabilityState viabilityState = getPartnerOrganisation(projectId, organisationId)
-                .andOnSuccessReturn(partnerOrganisation -> getViabilityState(partnerOrganisation)).getSuccessObjectOrThrowException();
-
-        return getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> buildViabilityResource(viabilityState, projectFinance));
-    }*/
-
 
     @Override
     public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
@@ -513,10 +481,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<ViabilityState> getViabilityState(PartnerOrganisation partnerOrganisation) {
 
-        //TODO - For debug
-        ViabilityState state = viabilityWorkflowHandler.getState(partnerOrganisation);
-
-        return serviceSuccess(state);
+        return serviceSuccess(viabilityWorkflowHandler.getState(partnerOrganisation));
     }
 
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityState viabilityState, ProjectFinance projectFinance) {
@@ -556,38 +521,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             viabilityResource.setViabilityApprovalUserLastName(viabilityApprovalUser.getLastName());
         }
     }
-
-/*    @Override
-    public ServiceResult<Void> saveViabilityOLD(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
-
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
-
-        PartnerOrganisation partnerOrganisation = getPartnerOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
-
-        ViabilityState viabilityState = getViabilityState(partnerOrganisation);
-
-        return getProjectFinance(projectId, organisationId)
-                .andOnSuccess(projectFinance -> validateViability(viabilityState, viability, viabilityRagStatus)
-                        .andOnSuccess(() -> setViabilityApprovalDetails(partnerOrganisation, projectFinance, viability))
-                        .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus)));
-    }*/
-
-/*    @Override
-    public ServiceResult<Void> saveViabilityOLD(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
-
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
-
-        PartnerOrganisation partnerOrganisation = getPartnerOrganisation(projectId, organisationId).getSuccessObjectOrThrowException();
-
-        ViabilityState viabilityState = getViabilityState(partnerOrganisation);
-
-        return validateViability(viabilityState, viability, viabilityRagStatus)
-                .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> setViabilityApprovalDetails(partnerOrganisation, projectFinance, viability)
-                        .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus)));
-    }*/
 
     @Override
     public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
@@ -636,7 +569,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
 
-        //projectFinance.setViability(viability);
         projectFinance.setViabilityStatus(viabilityRagStatus);
 
         projectFinanceRepository.save(projectFinance);

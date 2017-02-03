@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
-import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
@@ -36,9 +35,6 @@ public class ProjectFinance extends Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="eligibilityApprovalUserId", referencedColumnName="id")
     private User eligibilityApprovalUser;
-
-/*    @Enumerated(EnumType.STRING)
-    private Viability viability = Viability.REVIEW;*/
 
     @Enumerated(EnumType.STRING)
     private Eligibility eligibility = Eligibility.REVIEW;
@@ -79,14 +75,6 @@ public class ProjectFinance extends Finance {
     public void setViabilityApprovalUser(User viabilityApprovalUser) {
         this.viabilityApprovalUser = viabilityApprovalUser;
     }
-
-/*    public Viability getViability() {
-        return viability;
-    }
-
-    public void setViability(Viability viability) {
-        this.viability = viability;
-    }*/
 
     public boolean getCreditReportConfirmed() { return creditReportConfirmed; }
 

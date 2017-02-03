@@ -237,7 +237,6 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     }
 
     private void assertCreateFinanceChecksFiguresResults(ProjectFinanceRow newProjectFinanceRow1, ProjectFinanceRow newProjectFinanceRow2) {
-        //verify(viabilityWorkflowHandlerMock).organisationIsAcademic(partnerOrganisation, null);
 
         verify(projectFinanceRowRepositoryMock).save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1));
         verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow1.getFinanceRowMetadata().get(0)));
