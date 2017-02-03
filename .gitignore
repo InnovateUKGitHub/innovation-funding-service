@@ -121,3 +121,4 @@ ifs-web-service.iws
 */libs/
 ifs-libs/*
 .gradletasknamecache
+EMAIL_VARIABLES_SENSITIVE.robot

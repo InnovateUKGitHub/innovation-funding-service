@@ -92,6 +92,14 @@ function buildAndDeploy() {
     ./gradlew -Pcloud=development composeUp
 }
 
+function injectRobotParameters() {
+    section "=> INJECTING ENVIRONMENT BUILD PARAMETERS"
+    cd ${rootDir}
+    echo "=> Injecting environment specific build parameters..."
+        ./gradlew robotTestsFilter
+
+}
+
 function startSeleniumGrid() {
     section "=> STARTING SELENIUM GRID"
 
@@ -356,6 +364,7 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
 done
 
 startSeleniumGrid
+injectRobotParameters
 
 if [[ ${rerunFailed} -eq 0 ]]
 then

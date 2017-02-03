@@ -57,9 +57,12 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     @Autowired
     private ApplicationFinanceRestService applicationFinanceRestService;
-    
+
     @Autowired
     private UnsavedFieldsManager unsavedFieldsManager;
+
+    @Autowired
+    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @Override
     public ValidationMessages update(HttpServletRequest request, Long userId, Long applicationId, Long competitionId) {
@@ -100,7 +103,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
         return financeRowService.add(applicationFinance.getId(), questionId, null);
     }
-    
+
     @Override
     public FinanceRowItem addCostWithoutPersisting(Long applicationId, Long userId, Long questionId) {
         ApplicationFinanceResource applicationFinance = financeService.getApplicationFinance(userId, applicationId);
@@ -158,22 +161,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
 
     private void handleOrganisationSizeChange(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId, OrganisationSize oldValue, OrganisationSize newValue) {
         if(null != oldValue && !oldValue.equals(newValue)) {
-            Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
-                    .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
-                    .findFirst();
-
-            //set your funding section to marked as in complete
-            sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
-                    .forEach(fundingSection ->
-                        sectionService.markAsInComplete(fundingSection.getId(),
-                                applicationFinance.getApplication(),
-                                (processRole.isPresent() ? processRole.get().getId() : null))
-                    );
-
-            //reset your funding level
-            QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-            applicationFinance.getGrantClaim().setGrantClaimPercentage(0);
-            financeRowService.add(applicationFinance.getId(), financeQuestion.getId(), applicationFinance.getGrantClaim());
+            fundingLevelResetHandler.resetFundingAndMarkAsIncomplete(applicationFinance, competitionId, userId);
         }
     }
 
@@ -191,35 +179,35 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         // create new cost items
         for (Map.Entry<Long, List<FinanceFormField>> entry : costFieldMap.entrySet()) {
             try{
-            	Long id = entry.getKey();
-            	List<FinanceFormField> fields = entry.getValue();
-            	
-            	if(id == -1L) {
-            		List<List<FinanceFormField>> fieldsSeparated = unsavedFieldsManager.separateFields(fields);
-            		for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
-            			FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
+                Long id = entry.getKey();
+                List<FinanceFormField> fields = entry.getValue();
+
+                if(id == -1L) {
+                    List<List<FinanceFormField>> fieldsSeparated = unsavedFieldsManager.separateFields(fields);
+                    for(List<FinanceFormField> fieldGroup: fieldsSeparated) {
+                        FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(null, fieldGroup);
                         if (costItem != null && fieldGroup.size() > 0) {
-                    		Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
-                    		ValidationMessages addResult = financeRowService.add(applicationFinanceId, questionId, costItem);
-                    		Either<FinanceRowItem, ValidationMessages> either;
-                    		if(addResult.hasErrors()) {
-                    			either = Either.right(addResult);
-                    		} else {
-                    			FinanceRowItem added = financeRowService.findById(addResult.getObjectId());
-                    			either = Either.left(added);
-                    		}
-                            
+                            Long questionId = Long.valueOf(fieldGroup.get(0).getQuestionId());
+                            ValidationMessages addResult = financeRowService.add(applicationFinanceId, questionId, costItem);
+                            Either<FinanceRowItem, ValidationMessages> either;
+                            if(addResult.hasErrors()) {
+                                either = Either.right(addResult);
+                            } else {
+                                FinanceRowItem added = financeRowService.findById(addResult.getObjectId());
+                                either = Either.left(added);
+                            }
+
                             costItems.add(either);
                         }
-            		}
-            	} else {
-            		FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(id, fields);
+                    }
+                } else {
+                    FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(id, fields);
                     if (costItem != null) {
                         Either<FinanceRowItem, ValidationMessages> either = Either.left(costItem);
                         costItems.add(either);
                     }
-            	}
-                
+                }
+
             }catch(NumberFormatException e){
                 ValidationMessages validationMessages = getValidationMessageFromException(entry, e);
                 Either<FinanceRowItem, ValidationMessages> either = Either.right(validationMessages);
@@ -229,7 +217,7 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         return costItems;
     }
 
-	private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
+    private ValidationMessages storeField(String fieldName, String value, Long userId, Long applicationId) {
         FinanceFormField financeFormField = getCostFormField(fieldName, value);
         FinanceRowType costType = FinanceRowType.fromType(FormInputType.findByName(financeFormField.getKeyType()));
         FinanceRowHandler financeRowHandler = getFinanceRowItemHandler(costType);
@@ -239,9 +227,9 @@ public class DefaultFinanceFormHandler extends BaseFinanceFormHandler implements
         }
         FinanceRowItem costItem = financeRowHandler.toFinanceRowItem(costFormFieldId, Arrays.asList(financeFormField));
         if(costItem != null) {
-        	return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
+            return storeFinanceRowItem(costItem, userId, applicationId, financeFormField.getQuestionId());
         } else {
-        	return new ValidationMessages();
+            return new ValidationMessages();
         }
     }
 

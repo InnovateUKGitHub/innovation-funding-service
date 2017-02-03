@@ -140,6 +140,7 @@ task osTestRemote(type:Exec) {
     args = [openshiftEnv]
 }
 
+import org.apache.tools.ant.filters.*
 task osStopTests(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-stop-tests.sh'
     args = [openshiftEnv]
@@ -148,6 +149,14 @@ task osStopTests(type:Exec) {
 task osTestResults(type:Exec) {
     executable = 'setup-files/scripts/openshift/os-test-results.sh'
     args = [openshiftEnv]
+}
+
+task robotTestsFilter (type: Copy) {
+    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    include 'EMAIL_VARIABLES_TEMPLATE.robot'
+    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
+    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
 }
 
 task happyRobotTests(type:Exec) {
