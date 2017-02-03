@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.*;
+import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.CostCategory;
@@ -17,6 +18,7 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -41,6 +43,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisatio
 import static org.innovateuk.ifs.util.CollectionFunctions.zip;
 import static java.util.Collections.singletonList;
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -109,7 +112,47 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
     }
 
     @Test
-    public void testCreateFinanceChecksFigures() {
+    public void testCreateFinanceChecksFiguresWhenOrganisationIsNotUsingJesFinances() {
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking();
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+        verify(viabilityWorkflowHandlerMock, never()).organisationIsAcademic(Mockito.any(), Mockito.any());
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+    }
+
+    @Test
+    public void testCreateFinanceChecksFiguresWhenOrganisationIsUsingJesFinances() {
+
+        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationType().getName())).thenReturn(true);
+        PartnerOrganisation partnerOrganisation = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(newProject.getId(), organisation.getId())).thenReturn(partnerOrganisation);
+        when(viabilityWorkflowHandlerMock.organisationIsAcademic(partnerOrganisation, null)).thenReturn(true);
+
+        List<ProjectFinanceRow> newProjectFinanceRows = setUpCreateFinanceChecksFiguresMocking();
+        ProjectFinanceRow newProjectFinanceRow1 = newProjectFinanceRows.get(0);
+        ProjectFinanceRow newProjectFinanceRow2 = newProjectFinanceRows.get(1);
+
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
+        when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
+
+        ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
+        assertTrue(result.isSuccess());
+
+        verify(viabilityWorkflowHandlerMock).organisationIsAcademic(partnerOrganisation, null);
+
+        assertCreateFinanceChecksFiguresResults(newProjectFinanceRow1, newProjectFinanceRow2);
+    }
+
+    private List<ProjectFinanceRow> setUpCreateFinanceChecksFiguresMocking() {
 
         ApplicationFinance applicationFinance = newApplicationFinance().withOrganisationSize(organisation.getOrganisationSize()).build();
         ProjectFinance newProjectFinance = new ProjectFinance(organisation, organisation.getOrganisationSize(), newProject);
@@ -174,16 +217,8 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1))).thenReturn(newProjectFinanceRow1);
         when(projectFinanceRowRepositoryMock.save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2))).thenReturn(newProjectFinanceRow2);
 
-        ServiceResult<Void> result = service.createFinanceChecksFigures(newProject, organisation);
-        assertTrue(result.isSuccess());
+        return newProjectFinanceRows;
 
-        verify(projectFinanceRowRepositoryMock).save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1));
-        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow1.getFinanceRowMetadata().get(0)));
-        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow1.getFinanceRowMetadata().get(1)));
-
-        verify(projectFinanceRowRepositoryMock).save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2));
-        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow2.getFinanceRowMetadata().get(0)));
-        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow2.getFinanceRowMetadata().get(1)));
     }
 
     private ProjectFinanceRow createSavedProjectFinanceRowExpectation(ProjectFinanceRow expected) {
@@ -199,6 +234,18 @@ public class FinanceChecksGeneratorTest extends BaseServiceUnitTest<FinanceCheck
             assertEquals(expected.getQuantity(), actual.getQuantity());
             assertEquals(expected.getQuestion(), actual.getQuestion());
         });
+    }
+
+    private void assertCreateFinanceChecksFiguresResults(ProjectFinanceRow newProjectFinanceRow1, ProjectFinanceRow newProjectFinanceRow2) {
+        //verify(viabilityWorkflowHandlerMock).organisationIsAcademic(partnerOrganisation, null);
+
+        verify(projectFinanceRowRepositoryMock).save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow1));
+        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow1.getFinanceRowMetadata().get(0)));
+        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow1.getFinanceRowMetadata().get(1)));
+
+        verify(projectFinanceRowRepositoryMock).save(createSavedProjectFinanceRowExpectation(newProjectFinanceRow2));
+        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow2.getFinanceRowMetadata().get(0)));
+        verify(financeRowMetaValueRepositoryMock).save(createSavedFinanceRowMetaValueExpectation(newProjectFinanceRow2.getFinanceRowMetadata().get(1)));
     }
 
     private FinanceRowMetaValue createSavedFinanceRowMetaValueExpectation(FinanceRowMetaValue original) {

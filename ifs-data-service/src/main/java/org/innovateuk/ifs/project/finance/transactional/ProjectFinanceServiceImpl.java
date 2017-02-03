@@ -471,7 +471,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                ViabilityState.REVIEW.equals(getViabilityState(partnerOrganisation)));
+                        getViabilityState(partnerOrganisation)
+                .andOnSuccessReturn(viabilityState -> ViabilityState.REVIEW.equals(viabilityState)).getSuccessObjectOrThrowException());
 
 /*        Optional<ProjectFinance> existingReviewableFinance = simpleFindFirst(finances, finance ->
                 Viability.REVIEW.equals(finance.getViability()));*/
@@ -512,7 +513,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<ViabilityState> getViabilityState(PartnerOrganisation partnerOrganisation) {
 
-        return serviceSuccess(viabilityWorkflowHandler.getState(partnerOrganisation));
+        //TODO - For debug
+        ViabilityState state = viabilityWorkflowHandler.getState(partnerOrganisation);
+
+        return serviceSuccess(state);
     }
 
     private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityState viabilityState, ProjectFinance projectFinance) {
