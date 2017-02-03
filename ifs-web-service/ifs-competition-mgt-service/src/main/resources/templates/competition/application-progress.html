@@ -98,7 +98,7 @@
                 </table>
             </div>
 
-            <p th:if="${#lists.isEmpty(model.assigned)}">There are no assessors assigned to this application.</p>
+            <p th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
 
 
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
@@ -122,7 +122,7 @@
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td><strong th:text="${assessor.rejectReason}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
+                            <td><strong th:text="${assessor.rejectReason.displayLabel}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
                         </tr>
                     </tbody>
                 </table>

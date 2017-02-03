@@ -33,6 +33,7 @@ import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -89,9 +90,7 @@ import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
-import org.innovateuk.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -137,6 +136,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
 
     @Mock
+    protected AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapperMock;
+
+    @Mock
     protected AssessmentMapper assessmentMapperMock;
 
     @Mock
@@ -144,6 +146,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
+
+    @Mock
+    protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
 
     @Mock
     protected AssessorFormInputResponseMapper assessorFormInputResponseMapperMock;
@@ -180,6 +185,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionService competitionServiceMock;
+
+    @Mock
+    protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
@@ -285,12 +293,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressService addressService;
-
-    @Mock
-    protected ProcessOutcomeService processOutcomeServiceMock;
-
-    @Mock
-    protected ProcessOutcomeMapper processOutcomeMapperMock;
 
     @Mock
     protected OrganisationService organisationServiceMock;

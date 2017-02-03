@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.service.AssessorFormInputResponseService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentSummaryQuestionViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
@@ -41,9 +40,6 @@ public class AssessmentSummaryModelPopulator {
     private AssessorFormInputResponseService assessorFormInputResponseService;
 
     @Autowired
-    private AssessmentService assessmentService;
-
-    @Autowired
     private FormInputService formInputService;
 
     @Autowired
@@ -55,27 +51,22 @@ public class AssessmentSummaryModelPopulator {
     @Autowired
     private CompetitionService competitionService;
 
-    public AssessmentSummaryViewModel populateModel(Long assessmentId) {
-        AssessmentResource assessment = getAssessment(assessmentId);
+    public AssessmentSummaryViewModel populateModel(AssessmentResource assessment) {
         ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = getCompetition(application.getCompetition());
 
-        List<AssessmentSummaryQuestionViewModel> questions = getQuestions(assessmentId, competition.getId());
+        List<AssessmentSummaryQuestionViewModel> questions = getQuestions(assessment.getId(), competition.getId());
         List<AssessmentSummaryQuestionViewModel> questionsForScoreOverview = getQuestionsForScoreOverview(questions);
 
         int totalScoreGiven = getTotalScoreGiven(questions);
         int totalScorePossible = getTotalScorePossible(questions);
         int totalScorePercentage = totalScorePossible == 0 ? 0 : Math.round(totalScoreGiven * 100.0f / totalScorePossible);
 
-        return new AssessmentSummaryViewModel(assessmentId, competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, questionsForScoreOverview, questions, totalScoreGiven, totalScorePossible, totalScorePercentage);
+        return new AssessmentSummaryViewModel(assessment.getId(), competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, questionsForScoreOverview, questions, totalScoreGiven, totalScorePossible, totalScorePercentage);
     }
 
     private CompetitionResource getCompetition(Long competitionId) {
         return competitionService.getById(competitionId);
-    }
-
-    private AssessmentResource getAssessment(Long assessmentId) {
-        return assessmentService.getById(assessmentId);
     }
 
     private ApplicationResource getApplication(Long applicationId) {
