@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.documentation;
 
+import org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionInviteStatisticsResourceDocs {
@@ -11,4 +13,11 @@ public class CompetitionInviteStatisticsResourceDocs {
             fieldWithPath("declined").description("The number of assessors declined"),
             fieldWithPath("inviteList").description("The number of assessors on the invite list")
     };
+
+    public static final CompetitionInviteStatisticsResourceBuilder competitionInviteStatisticsResourceBuilder =
+            newCompetitionInviteStatisticsResource()
+                    .withInviteList(1L)
+                    .withInvited(2L)
+                    .withAccepted(3L)
+                    .withDeclined(4L);
 }

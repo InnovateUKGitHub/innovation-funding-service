@@ -18,6 +18,7 @@ import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
+import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
@@ -218,7 +219,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void getInviteStatistics() throws Exception {
         long competitionId = 1L;
-        CompetitionInviteStatisticsResource statisticsResource = newCompetitionInviteStatisticsResource().build();
+        CompetitionInviteStatisticsResource statisticsResource = competitionInviteStatisticsResourceBuilder.build();
 
         when(competitionInviteServiceMock.getInviteStatistics(competitionId)).thenReturn(serviceSuccess(statisticsResource));
 
