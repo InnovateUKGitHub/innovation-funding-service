@@ -26,7 +26,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
 public class ProjectFinanceQueriesController {
 
     @Autowired
-    ThreadService<Query, ProjectFinance> service;
+    ProjectFinanceQueriesService service;
 
     @RequestMapping(value = "", method = GET)
     public RestResult<List<QueryResource>> queries(@PathVariable("projectFinanceId") final Long projectFinanceId) {

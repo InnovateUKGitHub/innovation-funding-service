@@ -3,6 +3,7 @@ package org.innovateuk.ifs.threads.domain;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.security.SecurityRuleUtil;
 import org.innovateuk.ifs.user.mapper.UserMapper;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +15,7 @@ import javax.persistence.Entity;
 @Component
 public final class Query extends Thread {
 
-    private SectionType section; //TODO Nuno: move this to use the correct one once it gets merged in
+    private FinanceChecksSectionType section;
 
     @Autowired
     private UserMapper userMapper;
@@ -25,7 +26,7 @@ public final class Query extends Thread {
                 .orElse(false);
     }
 
-    public final SectionType section() {
+    public final FinanceChecksSectionType section() {
         return section;
     }
 }

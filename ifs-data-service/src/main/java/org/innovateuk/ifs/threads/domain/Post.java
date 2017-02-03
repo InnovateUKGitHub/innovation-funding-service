@@ -3,9 +3,7 @@ package org.innovateuk.ifs.threads.domain;
 import org.innovateuk.ifs.user.domain.User;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +17,9 @@ public class Post {
     @NotNull
     private String body;
 
+    @JoinTable(name = "post_attachment",
+            joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
     private List<PostAttachment> attachments;
 
     @CreatedDate
