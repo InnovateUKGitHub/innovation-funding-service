@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 public class WebCredentialsValidator implements CredentialsValidator {
 
     public static final Cache<String, UserResource> USER_CACHE
-            = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build();
+            = CacheBuilder.newBuilder().expireAfterWrite(30, TimeUnit.SECONDS).build();
 
     @Autowired
     private UserRestService userRestService;
