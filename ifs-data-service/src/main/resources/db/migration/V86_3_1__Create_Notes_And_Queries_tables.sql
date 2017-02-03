@@ -21,9 +21,8 @@ CREATE TABLE `post` (
 
 
 CREATE TABLE `post_attachment` (
-  `id` BIGINT(20) NOT NULL,
   `post_id` BIGINT(20) NOT NULL,
   `file_entry_id` BIGINT(20) NOT NULL,
-  PRIMARY KEY (`id`),
+  CONSTRAINT post_attachment_pk PRIMARY KEY (`post_id`, `file_entry_id`),
   CONSTRAINT `post_attachment_post_fk` FOREIGN KEY (`post_id`) REFERENCES `ifs`.`post` (`id`),
   CONSTRAINT `post_attachment_file_entry_fk` FOREIGN KEY (`file_entry_id`) REFERENCES `ifs`.`file_entry` (`id`));
