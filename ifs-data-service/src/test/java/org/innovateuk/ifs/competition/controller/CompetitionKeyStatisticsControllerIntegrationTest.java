@@ -33,7 +33,7 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
     }
 
     @Autowired
-    CompetitionRepository competitionRepository;
+    private CompetitionRepository competitionRepository;
 
     @Before
     public void setup() {

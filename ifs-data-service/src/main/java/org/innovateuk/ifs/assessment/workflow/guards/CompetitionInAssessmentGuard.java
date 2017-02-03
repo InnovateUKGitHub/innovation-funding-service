@@ -18,7 +18,7 @@ public class CompetitionInAssessmentGuard implements Guard<AssessmentStates, Ass
 
     @Override
     public boolean evaluate(StateContext<AssessmentStates, AssessmentOutcomes> context) {
-        Assessment assessment = (Assessment) context.getMessageHeader("assessment");
+        Assessment assessment = (Assessment) context.getMessageHeader("target");
         Competition competition = assessment.getTarget().getCompetition();
 
         return competition.getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT;

@@ -198,11 +198,15 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" th:attr="data-required-errormessage=#{validation.applicationRejection.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control"
+                    th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
+                    th:errorclass="field-error"
+                    required="required"
+                    th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
-                <option value="conflict-of-interest">Conflict of interest</option>
-                <option value="not-my-area-of-interest">Not my area of expertise</option>
-                <option value="too-many-assessments">Too many assessments</option>
+                <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                        th:value="${reason}"
+                        th:text="${reason.displayLabel}">Conflict of interest</option>
             </select>
         </div>
         <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">

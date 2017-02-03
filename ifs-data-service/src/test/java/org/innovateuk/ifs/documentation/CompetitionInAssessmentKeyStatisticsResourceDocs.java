@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.documentation;
 
+import org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionInAssessmentKeyStatisticsResourceDocs {
@@ -12,4 +14,12 @@ public class CompetitionInAssessmentKeyStatisticsResourceDocs {
             fieldWithPath("assessmentsStarted").description("The number of assignments started"),
             fieldWithPath("assessmentsSubmitted").description("The number of assignments submitted")
     };
+
+    public static final CompetitionInAssessmentKeyStatisticsResourceBuilder competitionInAssessmentKeyStatisticsResourceBuilder =
+            newCompetitionInAssessmentKeyStatisticsResource()
+                    .withAssignmentCount(1L)
+                    .withAssignmentsWaiting(2L)
+                    .withAssignmentsAccepted(3L)
+                    .withAssessmentsStarted(4L)
+                    .withAssessmentsSubmitted(5L);
 }

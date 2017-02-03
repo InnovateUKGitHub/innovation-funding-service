@@ -95,6 +95,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
 
         List<Assessment> assessments = newAssessment()
+                .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
                 .withActivityState(openState)
@@ -122,6 +123,7 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
         ActivityState openState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT, OPEN.getBackingState());
 
         List<Assessment> assessments = newAssessment()
+                .with(id(null))
                 .withApplication(application)
                 .withParticipant(participant1, participant2)
                 .withActivityState(openState)
@@ -240,6 +242,18 @@ public class AssessmentRepositoryIntegrationTest extends BaseRepositoryIntegrati
                 .countByActivityStateStateAndTargetCompetitionId(state, application.getCompetition().getId());
 
         assertEquals(1L, found);
+    }
+
+    @Test
+    public void countByActiviteStateStateInAndTargetCommpetitionId() throws Exception {
+        Set<State> states = EnumSet.of(State.CREATED, State.OPEN );
+
+        Application application = applicationRepository.findOne(1L);
+
+        long found = repository
+                .countByActivityStateStateInAndTargetCompetitionId(states, application.getCompetition().getId());
+
+        assertEquals(3L, found);
     }
 
     @Test

@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsServ
 import org.junit.Test;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_EXEC;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecurityTest<CompetitionKeyStatisticsService> {
 
@@ -22,22 +22,22 @@ public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecu
 
     @Test
     public void getReadyToOpenKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getReadyToOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getReadyToOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void getOpenKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getOpenKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void getClosedKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getClosedKeyStatisticsByCompetition(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getClosedKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
     public void getInAssessmentKeyStatisticsByCompetition() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInAssessmentKeyStatisticsByCompetition(1L), COMP_ADMIN, COMP_EXEC);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInAssessmentKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     public static class TestCompetitionKeyStatisticsService implements CompetitionKeyStatisticsService {

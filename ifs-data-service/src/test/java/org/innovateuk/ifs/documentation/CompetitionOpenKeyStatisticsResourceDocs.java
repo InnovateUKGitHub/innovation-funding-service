@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.documentation;
 
+import org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder;
 import org.springframework.restdocs.payload.FieldDescriptor;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
 public class CompetitionOpenKeyStatisticsResourceDocs {
@@ -13,4 +15,13 @@ public class CompetitionOpenKeyStatisticsResourceDocs {
             fieldWithPath("applicationsPastHalf").description("The number of applications past 50% completion"),
             fieldWithPath("applicationsSubmitted").description("The number of applications submitted")
     };
+
+    public static final CompetitionOpenKeyStatisticsResourceBuilder competitionOpenKeyStatisticsResourceBuilder =
+            newCompetitionOpenKeyStatisticsResource()
+                    .withAssessorsAccepted(1L)
+                    .withAssessorsInvited(2L)
+                    .withApplicationsPerAssessor(3L)
+                    .withApplicationsStarted(4L)
+                    .withApplicationsPastHalf(5L)
+                    .withApplicationsSubmitted(6L);
 }
