@@ -61,7 +61,7 @@
     <th:block th:if="${model.readOnly}">
         <dl class="readonly-list">
             <dt>Competition description</dt>
-            <dd th:text="${form.description}"></dd>
+            <dd ifs:utext="${form.description}"></dd>
             <dt>Funding type</dt>
             <dd th:text="${form.fundingType}"></dd>
             <dt>Project size</dt>
@@ -78,11 +78,13 @@
                         <textarea
                             id="description"
                             class="form-control width-full"
+                            data-editor="html"
                             maxlength="5000"
                             th:errorclass="field-error"
                             rows="4"
                             th:field="${form.description}"
                             required="required"
+                            ifs:utext="${form.description}"
                             th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.description.required}">
                         </textarea>
                 </div>
