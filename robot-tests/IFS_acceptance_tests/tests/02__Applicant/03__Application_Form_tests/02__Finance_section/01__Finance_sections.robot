@@ -8,7 +8,7 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...
 ...               INFUND-2051: Remove the '0' in finance fields
 ...
-...               INFUND-2961: ‘Working Days Per Year’ in Labour Costs do not default to 232.
+...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
 Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
