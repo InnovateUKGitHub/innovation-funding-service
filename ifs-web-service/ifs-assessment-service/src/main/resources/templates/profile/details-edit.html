@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
         <div th:include="fragments/layout :: head" th:with="pageTitle='Edit your details'" th:remove="tag"></div>
     </head>
@@ -82,7 +82,8 @@
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('gender')}? error">
-                    <fieldset class="inline">
+                    <fieldset
+                    >
                         <legend>
                             <span class="heading-small">Gender</span>
                             <span th:if="${#fields.hasErrors('gender')}" th:remove="tag">
@@ -101,7 +102,7 @@
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('ethnicity')}? error">
-                    <fieldset class="inline">
+                    <fieldset>
                         <legend>
                             <span class="heading-small">Your ethnic group</span>
                             <span th:if="${#fields.hasErrors('ethnicity')}" th:remove="tag">
@@ -120,7 +121,7 @@
                 </div>
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('disability')}? error">
-                    <fieldset class="inline">
+                    <fieldset>
                         <legend>
                             <span class="heading-small">Do you consider yourself disabled?</span>
                             <span th:if="${#fields.hasErrors('disability')}" th:remove="tag">
@@ -219,7 +220,10 @@
 
                 <div class="form-group">
                     <h3 class="heading-small">Email</h3>
-                    <p class="form-hint">Your email address cannot be changed in the system<br><strong>jsmith@assessor.co.uk</strong></br></p>
+                    <p class="form-hint">
+                        Your email address cannot be changed in the system<br />
+                        <strong>jsmith@assessor.co.uk</strong>
+                    </p>
                 </div>
 
                 <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>

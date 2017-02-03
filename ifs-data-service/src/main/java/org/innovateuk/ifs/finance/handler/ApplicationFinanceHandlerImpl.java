@@ -63,6 +63,21 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
     }
 
     @Override
+    public List<ApplicationFinanceResource> getApplicationFinances(Long applicationId) {
+
+        List<ApplicationFinance> applicationFinances = applicationFinanceRepository.findByApplicationId(applicationId);
+        List<ApplicationFinanceResource> applicationFinanceResources = new ArrayList<>();;
+
+        //TODO: INFUND-5102 This to me seems like a very messy way of building resource object. You don't only need to map the domain object using the mapper, but then also do a bunch of things in setApplicationFinanceDetails.  We should find a better way to handle this.
+        for(ApplicationFinance applicationFinance : applicationFinances) {
+            ApplicationFinanceResource applicationFinanceResource = applicationFinanceMapper.mapToResource(applicationFinance);
+            setApplicationFinanceDetails(applicationFinanceResource);
+            applicationFinanceResources.add(applicationFinanceResource);
+        }
+        return applicationFinanceResources;
+    }
+
+    @Override
     public ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId) {
         ProjectFinance projectFinance = projectFinanceRepository.findByProjectIdAndOrganisationId(
                 projectFinanceResourceId.getProjectId(), projectFinanceResourceId.getOrganisationId());
@@ -121,13 +136,13 @@ public class ApplicationFinanceHandlerImpl implements ApplicationFinanceHandler 
         List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(projectId);
         List<ProjectFinanceResource> financeResources = new ArrayList<>();
 
-        for(ProjectFinance finance : finances) {
+        finances.stream().forEach(finance -> {
             ProjectFinanceResource financeResource = projectFinanceMapper.mapToResource(finance);
             OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(finance.getOrganisation().getOrganisationType().getName());
             EnumMap<FinanceRowType, FinanceRowCostCategory> costs = new EnumMap<>(organisationFinanceHandler.getProjectOrganisationFinanceTotals(financeResource.getId(), finance.getProject().getApplication().getCompetition()));
             financeResource.setFinanceOrganisationDetails(costs);
             financeResources.add(financeResource);
-        }
+        });
         return financeResources;
     }
 

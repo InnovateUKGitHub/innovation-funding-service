@@ -16,6 +16,7 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.junit.Assert.assertEquals;
@@ -122,6 +123,16 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
         setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getInvitationOverview", competitionId), assessorInviteOverviewResourceListType(), expected);
 
         List<AssessorInviteOverviewResource> actual = service.getInvitationOverview(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getInviteStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource().build();
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getInviteStatistics", competitionId), CompetitionInviteStatisticsResource.class, expected);
+
+        CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccessObject();
         assertEquals(expected, actual);
     }
 

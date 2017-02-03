@@ -17,6 +17,7 @@
     display: flex; // Using flex as a progressive enhancement for vertical alignment of dashboard elements. Container heights are varaiable depending on length of application titles.
     flex-wrap: wrap;
     align-items: center;
+    justify-content: flex-end;
 
     @include media-down(mobile) {
       padding: 15px;
@@ -28,7 +29,7 @@
       width: 58%;
       padding-right: 19px;
       vertical-align: top;
-      flex: 2 0 auto;
+      flex: 1 0 auto;
 
       .heading-small,
       .heading-medium {
@@ -43,7 +44,7 @@
 
       @include media-down(mobile) {
         float: none;
-        width: 100%;
+        width: 90%;
         margin-bottom: 15px;
         //font-size: 15px;
       }
@@ -56,9 +57,9 @@
         }
       }
       &.task-half-width {
-        width: 50%;
+        //width: 50%;
         @include media-down(mobile) {
-          width: 100%;
+          width: 90%;
         }
       }
     }
@@ -111,7 +112,7 @@
       flex: 1 0 300px;
       justify-content: flex-end;
       align-items: center;
-      margin: 0.5em 0;
+      margin: 0;
 
       @include media-down(mobile) {
         flex: 1 0 auto;
@@ -147,6 +148,7 @@
           color: $text-colour;
           border: none;
           font-weight: bold;
+          float: right;
         }
       }
 
@@ -156,27 +158,29 @@
       }
       .score {
         .percent {
-          font-size: 35px;
+          @include bold-36;
           display: block;
           text-align: center;
         }
         > span {
           display: block;
           text-align: center;
-          font-size: 15px;
+          @include core-16;
           color: $secondary-text-colour;
-          @include media-down(mobile) {
+          /*@include media-down(mobile) {
             font-size: 13px;
             margin-top: 0;
-          }
+          }*/
         }
         strong {
           display: block;
           text-align: center;
-          font-size: 17px;
+          @include core-16;
+          font-weight: bold;
+          /*font-size: 17px;
           @include media-down(mobile) {
             font-size: 15px;
-          }
+          }*/
         }
       }
       > strong, a {
@@ -219,38 +223,19 @@
 
     }
     .status-complete {
-      position: absolute;
-      bottom: 50%;
-      right: 10px;
-      margin-bottom: -10px;
-      span {
-        @extend %icon-tick;
-        padding-left: 20px;
-        background-size: 14px;
-        background-position: left center;
-        color: $button-colour;
-        font-weight: bold;
-        font-size: 17px;
-        @include media-down(mobile) {
-          font-size: 15px;
-        }
-      }
-      @include media-down(mobile) {
-        position: static;
-        margin: 10px 0;
-        text-align: right;
-      }
+      @extend %icon-tick;
+      padding-left: 20px;
+      background-size: 14px;
+      background-position: left center;
+      color: $button-colour;
+      @include bold-16;
     }
     .status-action-required {
       @extend .status-complete;
-      span {
-        @extend %action-required;
-        color: $text-colour
-      }
+      @extend %action-required;
+      color: $text-colour;
     }
     &.positive {
-      /*border-right: 5px solid $button-colour;
-      padding: 15px 15px 15px 30px;*/
       .status > strong {
         color: $button-colour;
       }
@@ -260,15 +245,23 @@
       .score .percent {
         color: $text-colour
       }
+      .status{
+        .msg-progress{
+          color: $green;
+        }
+      }
     }
     &.negative {
-      /*border-right: 5px solid $red;
-      padding: 15px 15px 15px 30px;*/
       .score > strong {
         color: $red;
       }
       .score .percent {
         color: $text-colour
+      }
+      .status{
+        .msg-progress{
+          color: $red;
+        }
       }
     }
   }
@@ -283,6 +276,13 @@
     &.read-only {
       background-color: $highlight-colour;
       color: $secondary-text-colour;
+
+      .status{
+        .msg-progress{
+          color: $secondary-text-colour;
+        }
+      }
+
     }
     .task {
       overflow: hidden;
