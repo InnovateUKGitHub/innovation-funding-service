@@ -39,7 +39,7 @@ import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
 
 @Controller
 @RequestMapping("/profile")
-@PreAuthorize("hasAuthority('applicant') or hasAuthority('assessor')")
+@PreAuthorize("hasAuthority('applicant')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 

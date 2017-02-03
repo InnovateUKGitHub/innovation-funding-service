@@ -36,7 +36,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/project")
-@PreAuthorize("permitAll")
+@PreAuthorize("hasAuthority('applicant')")
 public class ProjectSetupStatusController {
 
     public static final String PROJECT_SETUP_COMPLETE_PAGE = "project/setup-complete-status";

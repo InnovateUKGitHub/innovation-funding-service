@@ -36,7 +36,7 @@ import java.util.Optional;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
-@PreAuthorize("permitAll")
+@PreAuthorize("hasAuthority('applicant')")
 public class AcceptInviteAuthenticatedController extends BaseController{
     @Autowired
     private InviteRestService inviteRestService;
