@@ -82,7 +82,7 @@ Create new Application for this Competition
 Applicant visits his Finances
     [Documentation]
     [Tags]
-    Given the user should see the element  jQuery=h1:contains("Application Overview")
+    Given the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link   link=Your finances
     Then the user should see the element   jQuery=img.assigned[alt*=project]
     And the user should see the element    jQuery=img.assigned[alt*=organisation]
@@ -94,7 +94,7 @@ Applicant visits his Finances
 Applicant fills in the Application Details
     [Documentation]
     [Tags]  HappyPath
-    Given the user should see the element      jQuery=h1:contains("Application Overview")
+    Given the user should see the element      jQuery=h1:contains("Application overview")
     When the user clicks the button/link       link=Application details
     Then the user enters text to a text field  css=#application_details-title  ${applicationTitle}
     And the user clicks the button/link        jQuery=label[for="financePosition-cat-33"]
@@ -103,7 +103,25 @@ Applicant fills in the Application Details
     And the user enters text to a text field   css=#application_details-startdate_month  ${month}
     And the user enters text to a text field   css=#application_details-startdate_year  ${nextyear}
     And the user enters text to a text field   css=#application_details-duration  24
-    [Teardown]  The user clicks the button/link  jQuery=button:contains("Mark as complete")
+    When The user clicks the button/link       jQuery=button[name="mark_as_complete"]
+    Then the user clicks the button/link       link=Application Overview
+    And the user should see the element        jQuery=img.complete[alt*="Application details"]
+
+Turnover and Staff count fields
+    [Documentation]  INFUND-6393
+    [Tags]
+    Given the user clicks the button/link  link=Your finances
+    Then the user clicks the button/link   link=Your organisation
+    And the user should see the text in the page  Turnover (£)
+    And the user should see the text in the page  Full time employees
+
+Organisation client side validation
+
+Organisation server side validation
+
+Mark Organisation as complete
+
+Funding subsection opens when Appl details and organisation info are provided
 
 *** Keywords ***
 Custom Suite Setup
