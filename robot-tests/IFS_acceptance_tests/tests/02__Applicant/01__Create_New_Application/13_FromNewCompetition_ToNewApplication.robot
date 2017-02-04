@@ -81,7 +81,7 @@ Create new Application for this Competition
 
 Applicant visits his Finances
     [Documentation]
-    [Tags]  Failing
+    [Tags]
     Given the user should see the element  jQuery=h1:contains("Application Overview")
     When the user clicks the button/link   link=Your finances
     Then the user should see the element   jQuery=img.assigned[alt*=project]
@@ -93,7 +93,7 @@ Applicant visits his Finances
 
 Applicant fills in the Application Details
     [Documentation]
-    [Tags]  HappyPath  Failing
+    [Tags]  HappyPath
     Given the user should see the element      jQuery=h1:contains("Application Overview")
     When the user clicks the button/link       link=Application details
     Then the user enters text to a text field  css=#application_details-title  ${applicationTitle}
