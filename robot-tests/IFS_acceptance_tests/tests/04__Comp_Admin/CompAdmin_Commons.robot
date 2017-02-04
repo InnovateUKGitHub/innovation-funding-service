@@ -29,7 +29,7 @@ the user sees the correct assessed question information
     the user should see the text in the page    Out of
     the user should not see the text in the page    The business opportunity is plausible
 
-the user fills in the Initial details
+the user fills in the CS Initial details
     [Arguments]  ${compTitle}  ${day}  ${month}  ${year}
     the user clicks the button/link                      link=Initial details
     the user enters text to a text field                 css=#title  ${compTitle}
@@ -45,7 +45,7 @@ the user fills in the Initial details
     the user clicks the button/link                      link=Competition setup
     the user should see the element                      jQuery=img[title$="is done"] + h3:contains("Initial details")
 
-the user fills in the Funding Information
+the user fills in the CS Funding Information
     the user clicks the button/link       link=Funding information
     the user enters text to a text field  id=funders0.funder  FunderName FamilyName
     the user enters text to a text field  id=0-funderBudget  142424242
@@ -56,7 +56,7 @@ the user fills in the Funding Information
     the user clicks the button/link       jQuery=button:contains("Done")
     the user clicks the button/link       link=Competition setup
 
-the user fills in the Eligibility
+the user fills in the CS Eligibility
     the user clicks the button/link  link=Eligibility
     the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
     the user clicks the button/link  jQuery=label[for="single-or-collaborative-collaborative"]
@@ -72,7 +72,7 @@ the user fills in the Eligibility
     the user should see the element   jQuery=img[title$="is done"] + h3:contains("Eligibility")
     #Elements in this page need double clicking
 
-the user fills in the Milestones
+the user fills in the CS Milestones
     [Arguments]  ${day}  ${month}  ${nextyear}
     the user clicks the button/link       link=Milestones
     the user enters text to a text field  jQuery=th:contains("Briefing event") ~ td.day input    ${day}
@@ -121,7 +121,7 @@ the user marks the Application as done
     the user should see the element  jQuery=img[title$="is done"] + h3:contains("Application")
 
 
-the user fills in the Assessors
+the user fills in the CS Assessors
     the user clicks the button/link  link=Assessors
     the user clicks the button/link  jQuery=label[for="assessors-62"]
     the user should see the element  css=#assessorPay[value="100"]
@@ -134,3 +134,12 @@ Change the open date of the Competition in the database to one day before
     [Arguments]  ${competition}
     ${yesterday} =  get yesterday
     execute sql string  UPDATE `${database_name}`.`milestone` INNER JOIN `${database_name}`.`competition` ON `${database_name}`.`milestone`.`competition_id` = `${database_name}`.`competition`.`id` SET `${database_name}`.`milestone`.`DATE`='${yesterday}' WHERE `${database_name}`.`competition`.`name`='${competition}' and `${database_name}`.`milestone`.`type` = 'OPEN_DATE';
+
+get comp id from comp title
+    [Arguments]  ${title}
+    ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
+    # the result of this query looks like ((13,),) so you need get the value array[0][0]
+    ${result} =  get from list  ${result}  0
+    ${competitionId} =  get from list  ${result}  0
+    Log  ${competitionId}
+    [Return]  ${competitionId}

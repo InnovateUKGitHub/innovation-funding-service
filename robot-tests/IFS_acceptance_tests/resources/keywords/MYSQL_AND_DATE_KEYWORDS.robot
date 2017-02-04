@@ -72,8 +72,10 @@ get tomorrow full
     [Return]  ${tomorrow}
 
 get tomorrow full next year
-    ${tomorrow} =  Convert Date  get tomorrow full
-    ${tomorrow_nextyear} =  Add time To Date  ${tomorrow}  365d  result_format=%-d %B %Y  exclude_millis=true
+    ${today} =    get time
+    ${tommorow} =  Add time To Date  ${today}  1 day  result_format=%-d %B  exclude_millis=true
+    ${nextyear} =  get next year
+    ${tomorrow_nextyear} =  Catenate  ${tommorow}  ${nextyear}
     [Return]  ${tomorrow_nextyear}
 
 get tomorrow day
