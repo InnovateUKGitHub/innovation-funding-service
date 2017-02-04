@@ -15,14 +15,10 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue("QUERY")
-@Component
 public final class Query extends Thread {
 
     @Enumerated(EnumType.STRING)
     private FinanceChecksSectionType section;
-
-    @Autowired
-    private UserMapper userMapper;
 
     public Query() {
         super();
@@ -35,7 +31,7 @@ public final class Query extends Thread {
 
     public boolean isAwaitingResponse() {
         return latestPost()
-                .map(Post::author).map(userMapper::mapToResource).map(SecurityRuleUtil::isInternal)
+                .map(Post::author).map(SecurityRuleUtil::isInternal)
                 .orElse(false);
     }
 

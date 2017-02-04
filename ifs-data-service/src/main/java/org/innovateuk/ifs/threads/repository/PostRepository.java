@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.threads.repository;
 
-import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.threads.domain.Post;
+import org.springframework.data.repository.PagingAndSortingRepository;
 
-public interface PostRepository extends ThreadRepository<Query> {}
+public interface PostRepository extends PagingAndSortingRepository<Post, Long> {
+}
