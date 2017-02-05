@@ -9,9 +9,9 @@ Resource       ../FinanceSection_Commons.robot
 Resource       ../../04__Comp_Admin/CompAdmin_Commons.robot
 
 *** Variables ***
-${lastFourdigits}    \d{4}
-${competitionForthisSuite}    From new Competition to New Application
+${compWithoutGrowth}    From new Competition to New Application
 ${applicationTitle}    New Application from the New Competition
+${compWITHGrowth}    Competition with growth table
 
 *** Test Cases ***
 # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
@@ -22,7 +22,7 @@ Comp Admin starts a new Competition
     [Setup]  guest user log-in  &{Comp_admin1_credentials}
     Given the user navigates to the page  ${CA_UpcomingComp}
     When the user clicks the button/link  jQuery=.button:contains("Create competition")
-    Then the user fills in the CS Initial details  From new Competition to New Application  ${day}  ${month}  ${year}
+    Then the user fills in the CS Initial details  ${compWithoutGrowth}  ${day}  ${month}  ${year}
     And the user fills in the CS Funding Information
     And the user fills in the CS Eligibility
     And the user fills in the CS Milestones  ${day}  ${month}  ${nextyear}
@@ -39,16 +39,7 @@ Comp Admin fills in the Milestone Dates and can see them fortmatted afterwards
 Application Finances should not include project growth
     [Documentation]  INFUND-6393
     [Tags]
-    Given the user should see the element  jQuery=h1:contains("Competition setup")
-    When the user clicks the button/link   link=Application
-    And the user clicks the button/link    link=Finances
-    When the user clicks the button/link   jQuery=a:contains("Edit this question")
-    Then the user clicks the button/link   jQuery=label[for="include-growth-table-no"]
-    And the user clicks the button/link    jQuery=button:contains("Save and close")
-    When the user clicks the button/link   link=Finances
-    Then the user should see the element   jQuery=dt:contains("Include project growth table") + dd:contains("No")
-    When the user clicks the button/link   link=Application
-    Then the user clicks the button/link   link=Competition setup
+    Given the user decides about the growth table  no  No
 
 Comp admin completes ths competition setup
     [Documentation]
@@ -58,23 +49,19 @@ Comp admin completes ths competition setup
     And the user fills in the CS Assessors
     When the user clicks the button/link  jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
-    Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${competitionForthisSuite}")
+    Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
 
 Competition is Open to Applications
     [Documentation]
     [Tags]  HappyPath  MySQL
-    [Setup]  Connect to Database  @{database}
-    When Change the open date of the Competition in the database to one day before  ${competitionForthisSuite}
-    Then the user navigates to the page  ${CA_Live}
-    And the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competitionForthisSuite}")
+    The competitions date changes so it is now Open
 
 Create new Application for this Competition
     [Documentation]
     [Tags]  HappyPath
     [Setup]  Connect to Database  @{database}
     Given log in as a different user   &{lead_applicant_credentials}
-    ${competitionId} =  get comp id from comp title  From new Competition to New Application
-    Log  ${competitionId}
+    ${competitionId} =  get comp id from comp title  ${compWithoutGrowth}
     When the user navigates to the page   ${server}/competition/${competitionId}/info/eligibility
     Then the user clicks the button/link  jQuery=a:contains("Apply now")
     And the user clicks the button/link   jQuery=button:contains("Begin application")
@@ -90,15 +77,13 @@ Applicant visits his Finances
     And the user should see his finances empty
     [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to application overview")
 
-
 Applicant fills in the Application Details
     [Documentation]
     [Tags]  HappyPath
     Given the user should see the element      jQuery=h1:contains("Application overview")
     When the user clicks the button/link       link=Application details
     Then the user enters text to a text field  css=#application_details-title  ${applicationTitle}
-    And the user clicks the button/link        jQuery=label[for="financePosition-cat-33"]
-    And the user clicks the button/link        jQuery=label[for="resubmission-no"]
+    And the user selects technical feasibility and no to resubmission
     And the user enters text to a text field   css=#application_details-startdate_day  ${day}
     And the user enters text to a text field   css=#application_details-startdate_month  ${month}
     And the user enters text to a text field   css=#application_details-startdate_year  ${nextyear}
@@ -115,9 +100,46 @@ Turnover and Staff count fields
     And the user should see the text in the page  Turnover (£)
     And the user should see the text in the page  Full time employees
 
+Once the project growth table is selected
+    [Documentation]  INFUND-6393
+    [Tags]
+    [Setup]  log in as a different user  &{Comp_admin1_credentials}
+    Given the user navigates to the page  ${CA_UpcomingComp}
+    When the user clicks the button/link  jQuery=.button:contains("Create competition")
+    Then the user fills in the CS Initial details  Competition with growth table  ${day}  ${month}  ${year}
+    And the user fills in the CS Funding Information
+    And the user fills in the CS Eligibility
+    And the user fills in the CS Milestones  ${day}  ${month}  ${nextyear}
+    When the user decides about the growth table  yes  Yes
+    Then the user marks the Application as done
+    And the user fills in the CS Assessors
+    When the user clicks the button/link  jQuery=a:contains("Save")
+    And the user navigates to the page    ${CA_UpcomingComp}
+    Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
+    [Teardown]  The competitions date changes so it is now Open
+
+As next step the Applicant cannot see the fields
+    [Documentation]  INFUND-6393
+    [Tags]
+    Given Lead Applicant applies to the new created competition
+    When the user clicks the button/link  link=Your finances
+    And the user clicks the button/link   link=Your organisation
+    Then the user should not see the text in the page  Turnover (£)
+    And the user should not see the text in the page  Full time employees
+
 Organisation client side validation
+    [Documentation]  INFUND-6393
+    [Tags]  HappyPath
+    [Setup]  log in as a different user            &{Comp_admin1_credentials}
+    Given the user navigates to his finances page  ${compWithoutGrowth}
+    Then the user clicks the button/link  link=Your organisation
+
+
 
 Organisation server side validation
+    [Documentation]  INFUND-6393
+    [Tags]  Pending
+    # TODO Pending due to INFDUND-8033
 
 Mark Organisation as complete
 
@@ -141,11 +163,45 @@ Custom Suite Setup
 the user should see the dates in full format
     the user should see the element  jQuery=td:contains("Briefing event") ~ td:contains("${tomorrow_nextyear}")
 
-the user selects no in project growth table
-    the user clicks the button/link   jQuery=label[for="include-growth-table-no"]
-
 the the user should see that the funding depends on the research area
     the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must give your project a research category in application details")
 
 the user should see his finances empty
     the user should see the element  jQuery=thead:contains("Total project costs") ~ *:contains("£0")
+
+the user selects technical feasibility and no to resubmission
+    # Often those labels need double click. Thus i made a separate keyword to looks more tidy
+    the user clicks the button/link        jQuery=label[for="financePosition-cat-33"]
+    the user clicks the button/link        jQuery=label[for="financePosition-cat-33"]
+    the user clicks the button/link        jQuery=label[for="resubmission-no"]
+    the user clicks the button/link        jQuery=label[for="resubmission-no"]
+
+the user decides about the growth table
+    [Arguments]  ${edit}  ${read}
+    the user should see the element  jQuery=h1:contains("Competition setup")
+    the user clicks the button/link  link=Application
+    the user clicks the button/link  link=Finances
+    the user clicks the button/link  jQuery=a:contains("Edit this question")
+    the user clicks the button/link  jQuery=label[for="include-growth-table-${edit}"]
+    the user clicks the button/link  jQuery=label[for="include-growth-table-${edit}"]  #Needs to be clicked twice
+    the user clicks the button/link  jQuery=button:contains("Save and close")
+    the user clicks the button/link  link=Finances
+    the user should see the element  jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
+    the user clicks the button/link  link=Application
+    the user clicks the button/link  link=Competition setup
+
+The competitions date changes so it is now Open
+    Connect to Database  @{database}
+    Change the open date of the Competition in the database to one day before  ${compWithoutGrowth}
+    the user navigates to the page  ${CA_Live}
+    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${compWithoutGrowth}")
+
+Lead Applicant applies to the new created competition
+    Connect to Database  @{database}
+    log in as a different user   &{lead_applicant_credentials}
+    ${competitionId} =  get comp id from comp title  From new Competition to New Application
+    the user navigates to the page   ${server}/competition/${competitionId}/info/eligibility
+    the user clicks the button/link  jQuery=a:contains("Apply now")
+    the user clicks the button/link  jQuery=label[for="new-application-yes"]
+    the user clicks the button/link  jQuery=button[type="submit"]
+    the user clicks the button/link  jQuery=button:contains("Begin application")
