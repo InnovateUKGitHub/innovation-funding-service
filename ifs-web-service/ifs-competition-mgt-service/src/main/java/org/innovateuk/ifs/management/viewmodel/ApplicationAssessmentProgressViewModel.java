@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class ApplicationAssessmentProgressViewModel {
     private String applicationName;
     private Long competitionId;
     private String competitionName;
+    private CompetitionStatus competitionStatus;
     private String leadOrganisation;
     private List<String> partnerOrganisations;
     private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
@@ -25,6 +27,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   String applicationName,
                                                   Long competitionId,
                                                   String competitionName,
+                                                  CompetitionStatus competitionStatus,
                                                   String leadOrganisation,
                                                   List<String> partnerOrganisations,
                                                   List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
@@ -35,6 +38,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.applicationName = applicationName;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.competitionStatus = competitionStatus;
         this.leadOrganisation = leadOrganisation;
         this.partnerOrganisations = partnerOrganisations;
         this.assigned = assigned;
@@ -57,6 +61,10 @@ public class ApplicationAssessmentProgressViewModel {
 
     public String getCompetitionName() {
         return competitionName;
+    }
+
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
     }
 
     public String getLeadOrganisation() {
@@ -96,12 +104,13 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(applicationName, that.applicationName)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
+                .append(competitionStatus, that.competitionStatus)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(assigned, that.assigned)
+                .append(available, that.available)
                 .append(rejected, that.rejected)
                 .append(previouslyAssigned, that.previouslyAssigned)
-                .append(available, that.available)
                 .isEquals();
     }
 
@@ -112,12 +121,13 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(applicationName)
                 .append(competitionId)
                 .append(competitionName)
+                .append(competitionStatus)
                 .append(leadOrganisation)
                 .append(partnerOrganisations)
                 .append(assigned)
+                .append(available)
                 .append(rejected)
                 .append(previouslyAssigned)
-                .append(available)
                 .toHashCode();
     }
 }

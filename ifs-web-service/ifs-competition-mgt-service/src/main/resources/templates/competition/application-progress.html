@@ -54,10 +54,10 @@
                             <th scope="col">Innovation area</th>
                             <th class="aligncentre" scope="col">Total applications</th>
                             <th class="aligncentre" scope="col">Assigned</th>
-                            <th class="aligncentre" scope="col">Notified</th>
-                            <th class="aligncentre" scope="col">Accepted</th>
-                            <th class="aligncentre" scope="col">Started</th>
-                            <th class="aligncentre" scope="col">Submitted</th>
+                            <th th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}" class="aligncentre" scope="col">Notified</th>
+                            <th th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}" class="aligncentre" scope="col">Accepted</th>
+                            <th th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}" class="aligncentre" scope="col">Started</th>
+                            <th th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}" class="aligncentre" scope="col">Submitted</th>
                             <th scope="col"><span class="visuallyhidden">Actions</span></th>
                         </tr>
                     </thead>
