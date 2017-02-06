@@ -200,7 +200,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             Map<String, Object> notificationArguments = new HashMap<>();
             notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
-            notificationArguments.put("applcationName", application.getName());
+            notificationArguments.put("applicationName", application.getName());
 
             Notification notification = new Notification(from, Collections.singletonList(pmTarget), FinanceCheckServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
             ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, NotificationMedium.EMAIL);

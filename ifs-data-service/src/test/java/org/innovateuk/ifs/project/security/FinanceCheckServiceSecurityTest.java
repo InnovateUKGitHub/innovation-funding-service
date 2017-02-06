@@ -49,6 +49,11 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
     }
 
+    @Test
+    public void testSaveFinanceCheckQueryResponse(){
+        assertRolesCanPerform(() -> classUnderTest.saveNewResponse(1L, 2L, 3L), PROJECT_FINANCE);
+    }
+
     private void assertInternalRolesCanPerform(Runnable actionFn) {
         assertRolesCanPerform(actionFn, COMP_ADMIN, PROJECT_FINANCE);
     }
