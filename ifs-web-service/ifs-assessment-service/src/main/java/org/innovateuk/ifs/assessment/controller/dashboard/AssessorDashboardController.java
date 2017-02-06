@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  */
 @Controller
 @RequestMapping(value = "/assessor")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessorDashboardController {
 
     @Autowired
