@@ -803,6 +803,109 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
+    public void testGetEligibilityWhenPartnerOrganisationDoesNotExist() {
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isFailure());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+    }
+
+    @Test
+    public void testGetEligibilityWhenEligibilityIsReviewInDB() {
+
+        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+
+        assertGetEligibilityResults(returnedEligibilityResource, Eligibility.REVIEW, EligibilityRagStatus.RED,
+                null, null, null);
+
+    }
+
+    @Test
+    public void testGetEligibilityWhenEligibilityIsNotApplicableInDB() {
+
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+
+        assertGetEligibilityResults(returnedEligibilityResource, Eligibility.NOT_APPLICABLE, EligibilityRagStatus.AMBER,
+                null, null, null);
+
+    }
+
+    @Test
+    public void testGetEligibilityWhenEligibilityIsApprovedInDB() {
+
+        Long userId = 7L;
+
+        User user = newUser()
+                .withId(userId)
+                .withFirstName("Lee")
+                .withLastName("Bowman")
+                .build();
+
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now());
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+
+        assertGetEligibilityResults(returnedEligibilityResource, Eligibility.APPROVED, EligibilityRagStatus.GREEN,
+                "Lee", "Bowman", LocalDate.now());
+
+    }
+
+    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
+                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate) {
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(eligibilityStateInDB);
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setEligibilityStatus(eligibilityRagStatusInDB);
+        projectFinanceInDB.setEligibilityApprovalUser(eligibilityApprovalUser);
+        projectFinanceInDB.setEligibilityApprovalDate(eligibilityApprovalDate);
+
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+    }
+
+    private void assertGetEligibilityResults(EligibilityResource returnedEligibilityResource, Eligibility expectedEligibility,
+                                             EligibilityRagStatus expectedEligibilityRagStatus,
+                                             String expectedEligibilityApprovalUserFirstName, String expectedEligibilityApprovalUserLastName,
+                                             LocalDate expectedEligibilityApprovalDate) {
+
+        assertEquals(expectedEligibility, returnedEligibilityResource.getEligibility());
+        assertEquals(expectedEligibilityRagStatus, returnedEligibilityResource.getEligibilityRagStatus());
+
+        assertEquals(expectedEligibilityApprovalUserFirstName, returnedEligibilityResource.getEligibilityApprovalUserFirstName());
+        assertEquals(expectedEligibilityApprovalUserLastName, returnedEligibilityResource.getEligibilityApprovalUserLastName());
+        assertEquals(expectedEligibilityApprovalDate, returnedEligibilityResource.getEligibilityApprovalDate());
+
+    }
+
+    @Test
     public void testSaveViabilityWhenViabilityAlreadyApproved() {
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
@@ -921,46 +1024,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGetEligibilitySuccess() {
-
-        Long userId = 7L;
-
-        User user = newUser()
-                .withId(userId)
-                .withFirstName("Lee")
-                .withLastName("Bowman")
-                .build();
-
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setEligibility(Eligibility.APPROVED);
-        projectFinanceInDB.setEligibilityStatus(EligibilityRagStatus.GREEN);
-        projectFinanceInDB.setEligibilityApprovalDate(LocalDate.now());
-        projectFinanceInDB.setEligibilityApprovalUser(user);
-
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
-
-        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
-
-        assertTrue(result.isSuccess());
-
-        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
-
-        assertEquals(Eligibility.APPROVED, returnedEligibilityResource.getEligibility());
-        assertEquals(EligibilityRagStatus.GREEN, returnedEligibilityResource.getEligibilityRagStatus());
-
-        assertEquals("Lee", returnedEligibilityResource.getEligibilityApprovalUserFirstName());
-        assertEquals("Bowman", returnedEligibilityResource.getEligibilityApprovalUserLastName());
-        assertEquals(LocalDate.now(), returnedEligibilityResource.getEligibilityApprovalDate());
-
-    }
-
-    @Test
     public void testSaveEligibilityWhenEligibilityAlreadyApproved() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setEligibility(Eligibility.APPROVED);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(EligibilityState.APPROVED);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.AMBER);
@@ -969,14 +1037,15 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.getFailure().is(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        verify(projectFinanceRepositoryMock, never()).save((ProjectFinance)Mockito.any());
     }
 
     @Test
     public void testSaveEligibilityWhenEligibilityApprovedButStatusIsUnset() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(EligibilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.UNSET);
@@ -985,40 +1054,42 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         assertTrue(result.getFailure().is(ELIGIBILITY_RAG_STATUS_MUST_BE_SET));
 
-        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        verify(projectFinanceRepositoryMock, never()).save((ProjectFinance)Mockito.any());
     }
 
     @Test
     public void testSaveEligibilityWhenEligibilityNotApprovedAndStatusIsUnset() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking();
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.REVIEW, EligibilityRagStatus.UNSET, null, null);
+        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.UNSET, null, null);
+
+        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(Mockito.any(), Mockito.any());
     }
 
     @Test
     public void testSaveEligibilityWhenEligibilityNotApprovedAndStatusIsSet() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking();
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.REVIEW, EligibilityRagStatus.AMBER, null, null);
+        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER, null, null);
+
+        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(Mockito.any(), Mockito.any());
 
     }
 
     @Test
-    public void testSaveEligibilitySuccess() {
+    public void testSaveEligibilityWhenEligibilityApprovedAndStatusIsSet() {
 
         Long userId = 7L;
         User user = newUser().withId(userId).build();
@@ -1026,21 +1097,33 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         setLoggedInUser(newUserResource().withId(user.getId()).build());
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking();
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
 
         assertTrue(result.isSuccess());
 
-        assertSaveEligibilityResults(projectFinanceInDB, Eligibility.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now());
+        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.GREEN, user, LocalDate.now());
+
+        verify(eligibilityWorkflowHandlerMock).eligibilityApproved(Mockito.any(), Mockito.any());
     }
 
-    private void assertSaveEligibilityResults(ProjectFinance projectFinanceInDB, Eligibility expectedEligibility, EligibilityRagStatus expectedEligibilityRagStatus,
+    private ProjectFinance setUpSaveEligibilityMocking() {
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+        when(eligibilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(EligibilityState.REVIEW);
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        return projectFinanceInDB;
+    }
+
+    private void assertSaveEligibilityResults(ProjectFinance projectFinanceInDB, EligibilityRagStatus expectedEligibilityRagStatus,
                                             User expectedApprovalUser, LocalDate expectedApprovalDate) {
 
-        assertEquals(expectedEligibility, projectFinanceInDB.getEligibility());
         assertEquals(expectedEligibilityRagStatus, projectFinanceInDB.getEligibilityStatus());
         assertEquals(expectedApprovalUser, projectFinanceInDB.getEligibilityApprovalUser());
         assertEquals(expectedApprovalDate, projectFinanceInDB.getEligibilityApprovalDate());
