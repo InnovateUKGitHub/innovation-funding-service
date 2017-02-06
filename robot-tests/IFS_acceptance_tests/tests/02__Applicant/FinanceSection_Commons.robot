@@ -57,7 +57,7 @@ the Application details are completed
     Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
 
 the applicant completes the application details
-    the user clicks the button/link       link=Application details
+    #the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for="resubmission-no"]
@@ -181,8 +181,8 @@ the user checks Your Funding section
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information    Robot test application
 
 the user selects research area
-    When The user clicks the button/link   link= application details
-    then the applicant completes the application details
+    When the user clicks the button/link      link = application details
+    the applicant completes the application details
     And the user fills in the funding information  Robot test application
 
 the user fills in the funding information
