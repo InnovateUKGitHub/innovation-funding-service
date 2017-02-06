@@ -12,6 +12,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.RedirectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -32,6 +33,7 @@ import static org.innovateuk.ifs.util.RestLookupCallbacks.find;
  * This class is use as an entry point to accept a invite to a project, to a application.
  */
 @Controller
+@PreAuthorize("permitAll")
 public class AcceptProjectInviteController extends BaseController {
 
     public static final String INVITE_HASH = "project_invite_hash";
