@@ -61,12 +61,7 @@ Competition is Open to Applications
 Create new Application for this Competition
     [Documentation]
     [Tags]  HappyPath
-    [Setup]  Connect to Database  @{database}
-    Given log in as a different user   &{lead_applicant_credentials}
-    ${competitionId} =  get comp id from comp title  ${compWithoutGrowth}
-    When the user navigates to the page   ${server}/competition/${competitionId}/info/eligibility
-    Then the user clicks the button/link  jQuery=a:contains("Apply now")
-    And the user clicks the button/link   jQuery=button:contains("Begin application")
+    Lead Applicant applies to the new created competition  ${compWithoutGrowth}
 
 Applicant visits his Finances
     [Documentation]  INFUND-6393
@@ -122,8 +117,7 @@ Once the project growth table is selected
 
 As next step the Applicant cannot see the fields
     [Documentation]  INFUND-6393
-    [Tags]  Failing
-    # TODO not always appears the Yes i want to create new application
+    [Tags]
     Given Lead Applicant applies to the new created competition  ${compWITHGrowth}
     When the user clicks the button/link  link=Your finances
     And the user clicks the button/link   link=Your organisation
@@ -210,6 +204,4 @@ Lead Applicant applies to the new created competition
     ${competitionId} =  get comp id from comp title  ${competition}
     the user navigates to the page   ${server}/competition/${competitionId}/info/eligibility
     the user clicks the button/link  jQuery=a:contains("Apply now")
-    the user clicks the button/link  jQuery=label[for="new-application-yes"]
-    the user clicks the button/link  jQuery=button[type="submit"]
     the user clicks the button/link  jQuery=button:contains("Begin application")
