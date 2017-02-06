@@ -63,6 +63,6 @@ public interface ProjectFinanceRowService {
             description = "Project Finance users can view financial overviews of Organisations on Projects")
     ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
 
-    @NotSecured(value = "This is not getting date from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
+    @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(Long costItemId);
 }
