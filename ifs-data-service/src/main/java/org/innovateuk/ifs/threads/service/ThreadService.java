@@ -12,7 +12,7 @@ public interface ThreadService<E, P> {
 
     ServiceResult<E> findOne(Long contextClassPk);
 
-    ServiceResult<Void> create(E e);
+    ServiceResult<Long> create(E e);
 
     ServiceResult<Void> addPost(P post, Long threadId);
 }

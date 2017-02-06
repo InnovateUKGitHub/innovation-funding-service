@@ -20,7 +20,7 @@ public interface ProjectFinanceNotesService extends ThreadService<NoteResource, 
 
     @Override
     @PreAuthorize("hasPermission(#noteResource, 'CREATE')")
-    ServiceResult<Void> create(NoteResource noteResource);
+    ServiceResult<Long> create(NoteResource noteResource);
 
     @Override
     @PreAuthorize("hasPermission(#noteId, 'org.innovateuk.threads.resource.NoteResource', 'ADD_POST')")

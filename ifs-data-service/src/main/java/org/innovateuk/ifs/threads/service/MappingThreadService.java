@@ -33,7 +33,7 @@ public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R
         return service.findOne(contextClassPk).andOnSuccessReturn(queryMapper::mapToResource);
     }
 
-    public ServiceResult<Void> create(R query) {
+    public ServiceResult<Long> create(R query) {
         return service.create(queryMapper.mapToDomain(query));
     }
 

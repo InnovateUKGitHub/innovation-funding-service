@@ -34,9 +34,8 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
     }
 
     @Override
-    public ServiceResult<Void> create(E e) {
-        repository.save(e);
-        return serviceSuccess();
+    public ServiceResult<Long> create(E e) {
+        return serviceSuccess(repository.save(e).id());
     }
 
     @Override

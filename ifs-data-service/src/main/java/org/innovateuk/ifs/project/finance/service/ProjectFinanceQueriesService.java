@@ -23,7 +23,7 @@ public interface ProjectFinanceQueriesService extends ThreadService<QueryResourc
 
     @Override
     @PreAuthorize("hasPermission(#QueryResource, 'CREATE')")
-    ServiceResult<Void> create(QueryResource QueryResource);
+    ServiceResult<Long> create(QueryResource QueryResource);
 
     @Override
     @PreAuthorize("hasPermission(#querId, 'org.innovateuk.threads.resource.QueryResource', 'ADD_POST')")
