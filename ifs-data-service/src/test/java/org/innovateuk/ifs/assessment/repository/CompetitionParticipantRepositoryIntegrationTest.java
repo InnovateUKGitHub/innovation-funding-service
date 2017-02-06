@@ -239,6 +239,34 @@ public class CompetitionParticipantRepositoryIntegrationTest extends BaseReposit
     }
 
     @Test
+    public void countByCompetitionIdAndRoleAndStatus() {
+        List<Competition> competitions = newCompetition().withId(1L, 7L).build(2);
+
+        List<CompetitionParticipant> savedParticipants = saveNewCompetitionParticipants(
+                newCompetitionInviteWithoutId()
+                        .withName("name1", "name2", "name3")
+                        .withEmail("test1@test.com", "test2@test.com", "test3@test.com")
+                        .withHash(generateInviteHash(), generateInviteHash(), generateInviteHash())
+                        .withCompetition(competitions.get(0), competitions.get(0), competitions.get(1))
+                        .withInnovationArea(innovationArea)
+                        .withStatus(SENT)
+                        .build(3));
+
+        // Now accept two of the invites
+        for (int i = 0; i < 2; i++) {
+            CompetitionParticipant competitionParticipantToAccept = savedParticipants.get(i);
+            competitionParticipantToAccept.getInvite().open();
+            competitionParticipantToAccept.acceptAndAssignUser(user);
+        }
+
+        flushAndClearSession();
+
+        long count = repository.countByCompetitionIdAndRoleAndStatus(1L, ASSESSOR, ParticipantStatus.ACCEPTED);
+
+        assertEquals(2L, count);
+    }
+
+    @Test
     public void getByInviteEmail() {
         List<Competition> competitions = newCompetition()
                 .with(id(null))

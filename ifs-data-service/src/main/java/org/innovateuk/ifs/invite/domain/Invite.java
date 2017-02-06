@@ -7,14 +7,12 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.annotations.DiscriminatorOptions;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.UUID;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * An invitation for a person (who may or may not be an existing {@link User}) to participate in some business activity,
@@ -142,21 +140,17 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
     }
 
     public LocalDateTime getSentOn() {
-        return sentOn;
-    }
-
-    // TODO remove #setSentOn and #setSentBy, and add user and date parameters to #send : https://devops.innovateuk.org/issue-tracking/browse/INFUND-7959
-    public void setSentOn(LocalDateTime sentOn) {
-        this.sentOn = sentOn;
+        if (InviteStatus.CREATED == getStatus()) {
+            throw new IllegalStateException("cannot get sentOn for an unsent Invite");
+        }
+        return requireNonNull(sentOn, "Unexpected null sentOn on a " + getStatus() + " Invite");
     }
 
     public User getSentBy() {
-        return sentBy;
-    }
-
-    // TODO remove #setSentOn and #setSentBy, and add user and date parameters to #send : https://devops.innovateuk.org/issue-tracking/browse/INFUND-7959
-    public void setSentBy(User sentBy) {
-        this.sentBy = sentBy;
+        if (InviteStatus.CREATED == getStatus()) {
+            throw new IllegalStateException("cannot get sentBy for an unsent Invite");
+        }
+        return requireNonNull(sentBy, "Unexpected null sentBy on a " + getStatus() + " Invite");
     }
 
     // TODO rename to getProcess() and delete the setter
@@ -164,8 +158,11 @@ public abstract class Invite<T extends ProcessActivity, I extends Invite<T,I>> {
 
     public abstract void setTarget(T target);
 
-    public I send() {
+    public I send(User sentBy, LocalDateTime sentOn) {
+        this.sentBy = requireNonNull(sentBy, "sentBy cannot be null");
+        this.sentOn = requireNonNull(sentOn, "sendOn cannot be null");
         setStatus(InviteStatus.SENT);
+
         return (I) this; // for object chaining
     }
 
