@@ -37,6 +37,7 @@ public class CompetitionProjectsStatusController {
     private BankDetailsService bankDetailsService;
 
     @RequestMapping(method = GET)
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String viewCompetitionStatus(
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser,

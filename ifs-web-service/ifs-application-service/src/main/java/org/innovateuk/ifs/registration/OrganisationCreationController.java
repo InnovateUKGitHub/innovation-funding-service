@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.context.NoSuchMessageException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BeanPropertyBindingResult;
@@ -60,6 +61,7 @@ import static org.innovateuk.ifs.invite.service.InviteServiceImpl.ORGANISATION_T
  */
 @Controller
 @RequestMapping("/organisation/create")
+@PreAuthorize("permitAll")
 public class OrganisationCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationCreationController.class);
 
