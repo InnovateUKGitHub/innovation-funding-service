@@ -11,6 +11,7 @@ import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,6 +28,7 @@ import static org.innovateuk.ifs.registration.service.AcceptProjectInviteControl
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 
 @Controller
+@PreAuthorize("permitAll")
 public class ProjectRegistrationController {
 
     @Autowired

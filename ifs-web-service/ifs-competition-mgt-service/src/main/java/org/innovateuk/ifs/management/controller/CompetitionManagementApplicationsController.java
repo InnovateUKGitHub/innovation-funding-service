@@ -6,6 +6,7 @@ import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.HttpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/applications")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class CompetitionManagementApplicationsController {
     
     @Autowired
