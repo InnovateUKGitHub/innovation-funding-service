@@ -138,6 +138,7 @@ Change the open date of the Competition in the database to one day before
 get comp id from comp title
     [Arguments]  ${title}
     ${result} =  query  SELECT `id` FROM `${database_name}`.`competition` WHERE `name`='${title}';
+    Log  ${result}
     # the result of this query looks like ((13,),) so you need get the value array[0][0]
     ${result} =  get from list  ${result}  0
     ${competitionId} =  get from list  ${result}  0

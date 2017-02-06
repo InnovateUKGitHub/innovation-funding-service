@@ -54,7 +54,7 @@ Comp admin completes ths competition setup
 Competition is Open to Applications
     [Documentation]
     [Tags]  HappyPath  MySQL
-    The competitions date changes so it is now Open
+    The competitions date changes so it is now Open  ${compWithoutGrowth}
 
 Create new Application for this Competition
     [Documentation]
@@ -116,12 +116,13 @@ Once the project growth table is selected
     When the user clicks the button/link  jQuery=a:contains("Save")
     And the user navigates to the page    ${CA_UpcomingComp}
     Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
-    [Teardown]  The competitions date changes so it is now Open
+    [Teardown]  The competitions date changes so it is now Open  ${compWITHGrowth}
 
 As next step the Applicant cannot see the fields
     [Documentation]  INFUND-6393
-    [Tags]
-    Given Lead Applicant applies to the new created competition
+    [Tags]  Failing
+    # TODO not always appears the Yes i want to create new application
+    Given Lead Applicant applies to the new created competition  ${compWITHGrowth}
     When the user clicks the button/link  link=Your finances
     And the user clicks the button/link   link=Your organisation
     Then the user should not see the text in the page  Turnover (£)
@@ -130,8 +131,8 @@ As next step the Applicant cannot see the fields
 Organisation client side validation
     [Documentation]  INFUND-6393
     [Tags]  HappyPath
-    [Setup]  log in as a different user            &{Comp_admin1_credentials}
-    Given the user navigates to his finances page  ${compWithoutGrowth}
+    [Setup]  log in as a different user            &{lead_applicant_credentials}
+    Given the user navigates to his finances page  ${applicationTitle}
     Then the user clicks the button/link  link=Your organisation
 
 
@@ -142,8 +143,12 @@ Organisation server side validation
     # TODO Pending due to INFDUND-8033
 
 Mark Organisation as complete
+    [Documentation]  INFUND-6393
+    [Tags]  Failing
 
 Funding subsection opens when Appl details and organisation info are provided
+    [Documentation]  something
+    [Tags]  Failing
 
 *** Keywords ***
 Custom Suite Setup
@@ -183,23 +188,26 @@ the user decides about the growth table
     the user clicks the button/link  link=Finances
     the user clicks the button/link  jQuery=a:contains("Edit this question")
     the user clicks the button/link  jQuery=label[for="include-growth-table-${edit}"]
-    the user clicks the button/link  jQuery=label[for="include-growth-table-${edit}"]  #Needs to be clicked twice
+    capture page screenshot
     the user clicks the button/link  jQuery=button:contains("Save and close")
     the user clicks the button/link  link=Finances
     the user should see the element  jQuery=dt:contains("Include project growth table") + dd:contains("${read}")
+    capture page screenshot
     the user clicks the button/link  link=Application
     the user clicks the button/link  link=Competition setup
 
 The competitions date changes so it is now Open
+    [Arguments]  ${competition}
     Connect to Database  @{database}
-    Change the open date of the Competition in the database to one day before  ${compWithoutGrowth}
+    Change the open date of the Competition in the database to one day before  ${competition}
     the user navigates to the page  ${CA_Live}
-    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${compWithoutGrowth}")
+    the user should see the element  jQuery=h2:contains("Open") ~ ul a:contains("${competition}")
 
 Lead Applicant applies to the new created competition
+    [Arguments]  ${competition}
     Connect to Database  @{database}
     log in as a different user   &{lead_applicant_credentials}
-    ${competitionId} =  get comp id from comp title  From new Competition to New Application
+    ${competitionId} =  get comp id from comp title  ${competition}
     the user navigates to the page   ${server}/competition/${competitionId}/info/eligibility
     the user clicks the button/link  jQuery=a:contains("Apply now")
     the user clicks the button/link  jQuery=label[for="new-application-yes"]
