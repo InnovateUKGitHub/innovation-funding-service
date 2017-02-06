@@ -14,6 +14,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.applicationFinanceResourceListType;
 
 
+import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.springframework.http.HttpStatus.OK;
@@ -84,5 +85,13 @@ public class ApplicationFinanceRestServiceMocksTest extends BaseRestServiceUnitT
         assertNull(service.addApplicationFinanceForOrganisation(123L, null));
         assertNull(service.addApplicationFinanceForOrganisation(null, 456L));
         assertNull(service.addApplicationFinanceForOrganisation(null, null));
+    }
+
+    @Test
+    public void test_getApplicationFinanceDetails_forApplicationId() {
+        List<ApplicationFinanceResource> returnedResponse = newApplicationFinanceResource().withApplication(1L).build(3);
+        setupGetWithRestResultExpectations(applicationFinanceRestURL + "/financeDetails/123", applicationFinanceResourceListType(), returnedResponse);
+        List<ApplicationFinanceResource> finances = service.getFinanceDetails(123L).getSuccessObject();
+        assertEquals(returnedResponse, finances);
     }
 }

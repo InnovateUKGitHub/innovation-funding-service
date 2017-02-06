@@ -12,6 +12,7 @@ import org.innovateuk.ifs.project.viewmodel.TotalProjectSpendProfileTableViewMod
 import org.innovateuk.ifs.project.viewmodel.TotalSpendProfileViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -34,6 +35,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @Controller
 @RequestMapping("/" + TotalProjectSpendProfileController.BASE_DIR + "/{projectId}/spend-profile/total")
+@PreAuthorize("hasAnyAuthority('project_finance', 'applicant', 'comp_admin')")
 public class TotalProjectSpendProfileController {
 
     public static final String BASE_DIR = "project";

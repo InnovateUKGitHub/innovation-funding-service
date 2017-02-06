@@ -6,15 +6,15 @@ import org.innovateuk.ifs.assessment.resource.*;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static java.util.Collections.emptyList;
-import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static java.lang.Boolean.TRUE;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -44,7 +44,6 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(Long.valueOf(21L), assessmentResource.getProcessRole());
         assertEquals(Long.valueOf(4L), assessmentResource.getApplication());
         assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
-        assertEquals(emptyList(), assessmentResource.getProcessOutcomes());
     }
 
     @Test
@@ -76,7 +75,6 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(Long.valueOf(17L), assessmentResource.getProcessRole());
         assertEquals(Long.valueOf(6L), assessmentResource.getApplication());
         assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
-        assertEquals(emptyList(), assessmentResource.getProcessOutcomes());
     }
 
     @Test
@@ -150,13 +148,19 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
+                newAssessmentFundingDecisionOutcomeResource()
+                .withFundingConfirmation(TRUE)
+                .withFeedback("Feedback")
+                .withComment("Comment")
+                .build();
 
-        RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecision);
+        RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecisionOutcomeResource);
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResult.getAssessmentState());
+        assertEquals(assessmentFundingDecisionOutcomeResource, assessmentResult.getFundingDecision());
     }
 
     @Test
@@ -167,9 +171,12 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
-        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource()
+                .withRejectReason(CONFLICT_OF_INTEREST)
+                .withRejectComment("comment")
+                .build();
 
-        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), applicationRejection);
+        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), assessmentRejectOutcomeResource);
         assertTrue(result.isSuccess());
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
@@ -184,9 +191,9 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
-        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
 
-        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), applicationRejection);
+        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), assessmentRejectOutcomeResource);
         assertTrue(result.isSuccess());
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
@@ -194,7 +201,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
 
         // Now reject the assessment again
-        assertTrue(controller.rejectInvitation(assessmentId, applicationRejection).isFailure());
+        assertTrue(controller.rejectInvitation(assessmentId, assessmentRejectOutcomeResource).isFailure());
     }
 
     @Test
@@ -246,23 +253,4 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(assessmentResult.getFailure().is(notFoundError(Assessment.class, assessmentId)));
 
     }
-
-    @Test
-    public void notifyAssessor() throws Exception {
-        Long assessmentId = 9L;
-
-        loginFelixWilson();
-        RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
-        assertTrue(assessmentResource.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
-
-        loginCompAdmin();
-        RestResult<Void> result = controller.notify(assessmentId);
-        assertTrue(result.isSuccess());
-
-        loginFelixWilson();
-        AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(PENDING, assessmentResult.getAssessmentState());
-    }
-
-
 }

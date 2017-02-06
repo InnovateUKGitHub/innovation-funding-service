@@ -128,20 +128,20 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
 
     @Test
     public void testUpdateCosts() {
-        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
-        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
 
-        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
-        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
     }
 
     @Test
     public void testAddCosts() {
-        assertTrue(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
-        assertTrue(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
 
-        assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
-        assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
     }
 
     @Test

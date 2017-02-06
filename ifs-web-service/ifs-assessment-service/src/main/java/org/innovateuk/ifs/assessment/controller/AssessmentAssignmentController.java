@@ -6,11 +6,10 @@ import org.innovateuk.ifs.assessment.model.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
-import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -31,13 +30,8 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping(value = "/{assessmentId}")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessmentAssignmentController extends BaseController {
-
-    @Autowired
-    private CompetitionInviteRestService inviteRestService;
-
-    @Autowired
-    private RejectionReasonRestService rejectionReasonRestService;
 
     @Autowired
     private AssessmentAssignmentModelPopulator assessmentAssignmentModelPopulator;

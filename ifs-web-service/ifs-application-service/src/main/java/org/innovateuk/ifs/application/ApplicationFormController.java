@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
@@ -50,6 +51,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -91,6 +93,7 @@ import static org.springframework.util.StringUtils.hasText;
  */
 @Controller
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form")
+@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationFormController {
 
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
@@ -188,6 +191,9 @@ public class ApplicationFormController {
 
     @Autowired
     private OverheadFileSaver overheadFileSaver;
+
+    @Autowired
+    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -985,7 +991,12 @@ public class ApplicationFormController {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
-        	// this does not need id
+
+            if (fieldName.equals("application.researchCategoryId")) {
+                fundingLevelResetHandler.resetFundingLevelAndMarkAsIncompleteForAllCollaborators(competitionId, applicationId);
+            }
+
+            // this does not need id
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {
