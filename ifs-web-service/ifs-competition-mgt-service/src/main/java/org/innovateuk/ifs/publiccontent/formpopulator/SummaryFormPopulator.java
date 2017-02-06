@@ -7,6 +7,10 @@ import org.springframework.stereotype.Service;
 
 import static java.util.Optional.ofNullable;
 
+/**
+ * Populates the form for the public content Summary screen.
+ */
+
 @Service
 public class SummaryFormPopulator extends AbstractPublicContentFormPopulator<SummaryForm> implements PublicContentFormPopulator<SummaryForm> {
 

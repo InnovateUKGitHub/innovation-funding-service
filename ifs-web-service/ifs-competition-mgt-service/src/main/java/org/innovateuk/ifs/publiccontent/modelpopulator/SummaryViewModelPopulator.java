@@ -6,6 +6,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.publiccontent.viewmodel.SummaryViewModel;
 import org.springframework.stereotype.Service;
 
+/**
+ * Populates a public content summary view model.
+ */
 
 @Service
 public class SummaryViewModelPopulator extends AbstractPublicContentViewModelPopulator<SummaryViewModel> implements PublicContentViewModelPopulator<SummaryViewModel> {

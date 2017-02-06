@@ -14,7 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Controller for setup of public content.
+ * This controller will handle all requests that are related to the public content Summary section.
+ * The Summary section data is the most basic information that will be displayed about a competition in its public listing.
  */
 @Controller
 @RequestMapping("/competition/setup/public-content/summary")
