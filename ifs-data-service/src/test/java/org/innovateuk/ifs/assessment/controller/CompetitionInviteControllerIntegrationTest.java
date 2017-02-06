@@ -691,7 +691,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build(3));
         competitionParticipantRepository.save(newCompetitionParticipant()
                 .with(id(null))
-                .withCompetition(competition)Comp
+                .withCompetition(competition)
                 .withRole(ASSESSOR)
                 .withStatus(ACCEPTED, REJECTED, ACCEPTED, REJECTED, REJECTED, ACCEPTED, ACCEPTED)
                 .build(7));
