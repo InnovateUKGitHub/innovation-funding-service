@@ -2,7 +2,6 @@ package org.innovateuk.ifs.management.viewmodel;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class ApplicationAssessmentProgressViewModel {
     private String applicationName;
     private Long competitionId;
     private String competitionName;
-    private CompetitionStatus competitionStatus;
+    private boolean inAssessment;
     private String leadOrganisation;
     private List<String> partnerOrganisations;
     private List<ApplicationAssessmentProgressAssignedRowViewModel> assigned;
@@ -27,7 +26,7 @@ public class ApplicationAssessmentProgressViewModel {
                                                   String applicationName,
                                                   Long competitionId,
                                                   String competitionName,
-                                                  CompetitionStatus competitionStatus,
+                                                  boolean inAssessment,
                                                   String leadOrganisation,
                                                   List<String> partnerOrganisations,
                                                   List<ApplicationAssessmentProgressAssignedRowViewModel> assigned,
@@ -38,7 +37,7 @@ public class ApplicationAssessmentProgressViewModel {
         this.applicationName = applicationName;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
-        this.competitionStatus = competitionStatus;
+        this.inAssessment = inAssessment;
         this.leadOrganisation = leadOrganisation;
         this.partnerOrganisations = partnerOrganisations;
         this.assigned = assigned;
@@ -63,8 +62,8 @@ public class ApplicationAssessmentProgressViewModel {
         return competitionName;
     }
 
-    public CompetitionStatus getCompetitionStatus() {
-        return competitionStatus;
+    public boolean isInAssessment() {
+        return inAssessment;
     }
 
     public String getLeadOrganisation() {
@@ -101,10 +100,10 @@ public class ApplicationAssessmentProgressViewModel {
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
+                .append(inAssessment, that.inAssessment)
                 .append(applicationName, that.applicationName)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
-                .append(competitionStatus, that.competitionStatus)
                 .append(leadOrganisation, that.leadOrganisation)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .append(assigned, that.assigned)
@@ -121,7 +120,7 @@ public class ApplicationAssessmentProgressViewModel {
                 .append(applicationName)
                 .append(competitionId)
                 .append(competitionName)
-                .append(competitionStatus)
+                .append(inAssessment)
                 .append(leadOrganisation)
                 .append(partnerOrganisations)
                 .append(assigned)
