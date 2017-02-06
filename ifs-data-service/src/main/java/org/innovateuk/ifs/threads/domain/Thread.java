@@ -38,7 +38,7 @@ public abstract class Thread {
     Thread() {
     }
 
-    Thread(Long id, List<Post> posts, String title, LocalDateTime createdOn) {
+    Thread(Long id, Long classPk, String className, List<Post> posts, String title, LocalDateTime createdOn) {
         this.id = id;
         this.posts = new LinkedList<>(posts);
         this.title = title;
@@ -65,6 +65,13 @@ public abstract class Thread {
         return id;
     }
 
+    public Long contextClassPk() {
+        return classPk;
+    }
+
+    public String contextClassName() {
+        return className;
+    }
     public String title() {
         return title;
     }

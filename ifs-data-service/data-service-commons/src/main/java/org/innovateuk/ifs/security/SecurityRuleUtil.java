@@ -29,6 +29,11 @@ public class SecurityRuleUtil {
         return user.hasRole( PROJECT_FINANCE);
     }
 
+    //TODO NUNO check if this ok
+    public static boolean isFinancialContact(UserResource user) {
+        return user.hasRole(FINANCE_CONTACT);
+    }
+
     public static boolean isSystemMaintenanceUser(UserResource user) {
         return user.hasRole( SYSTEM_MAINTAINER);
     }

@@ -11,7 +11,7 @@ import java.util.List;
 @DiscriminatorValue("NOTE")
 public class Note extends Thread {
 
-    public Note(Long id, List<Post> posts, String title, LocalDateTime createdOn) {
-        super(id, posts, title, createdOn);
+    public Note(Long id, Long classPk, String className, List<Post> posts, String title, LocalDateTime createdOn) {
+        super(id, classPk, className, posts, title, createdOn);
     }
 }
