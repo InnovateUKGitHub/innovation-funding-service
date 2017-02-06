@@ -44,7 +44,7 @@ Application Finances should not include project growth
     Given the user decides about the growth table  no  No
 
 Comp admin completes ths competition setup
-    [Documentation]
+    [Documentation]  INFUND-6393
     [Tags]  HappyPath
     Given the user should see the element  jQuery=h1:contains("Competition setup")
     Then the user marks the Application as done
@@ -54,7 +54,7 @@ Comp admin completes ths competition setup
     Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWithoutGrowth}")
 
 Competition is Open to Applications
-    [Documentation]
+    [Documentation]  INFUND-6393
     [Tags]  HappyPath  MySQL
     The competitions date changes so it is now Open  ${compWithoutGrowth}
 
@@ -69,7 +69,7 @@ Create new Application for this Competition
     And the user clicks the button/link   jQuery=button:contains("Begin application")
 
 Applicant visits his Finances
-    [Documentation]
+    [Documentation]  INFUND-6393
     [Tags]
     Given the user should see the element  jQuery=h1:contains("Application overview")
     When the user clicks the button/link   link=Your finances
@@ -80,7 +80,7 @@ Applicant visits his Finances
     [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to application overview")
 
 Applicant fills in the Application Details
-    [Documentation]
+    [Documentation]  INFUND-6895
     [Tags]  HappyPath
     Given the user should see the element      jQuery=h1:contains("Application overview")
     When the user clicks the button/link       link=Application details
