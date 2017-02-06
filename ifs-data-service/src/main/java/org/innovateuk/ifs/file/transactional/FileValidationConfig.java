@@ -84,6 +84,12 @@ public class FileValidationConfig {
         return createFileValidator(validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter);
     }
 
+    @Bean(name = "postAttachmentValidator")
+    public FileHttpHeadersValidator getPostAttachmentValidator() {
+        //TODO NUNO finish this
+        return createFileValidator(validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter);
+    }
+
     private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {
         List<MediaType> mediaTypes = simpleMap(validMediaTypes, MediaType::valueOf);
         return new FilesizeAndTypeFileValidator(maxFilesizeBytes, mediaTypes);
