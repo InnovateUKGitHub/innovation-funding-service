@@ -52,14 +52,6 @@ public abstract class Thread {
         return posts.size() >= (index - 1) ? of(posts.get(index)) : empty();
     }
 
-    public final int numberOfPosts() {
-        return posts.size();
-    }
-
-    public final boolean hasPosts() {
-        return !posts.isEmpty();
-    }
-
     public List<Post> posts() {
         return new ArrayList<>(posts);
     }
