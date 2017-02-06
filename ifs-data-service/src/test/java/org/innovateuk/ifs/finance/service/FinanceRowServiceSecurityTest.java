@@ -195,7 +195,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         assertAccessDenied(
                 () -> classUnderTest.addCost(applicationFinanceId, questionId, new AcademicCost()),
                 () -> {
-                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -209,7 +209,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         assertAccessDenied(
                 () -> classUnderTest.addCost(applicationFinanceId),
                 () -> {
-                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -222,7 +222,7 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         assertAccessDenied(
                 () -> classUnderTest.updateCost(applicationFinanceId, applicationFinanceResource),
                 () -> {
-                    verify(applicationFinanceRules).consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 
@@ -458,6 +458,11 @@ public class FinanceRowServiceSecurityTest extends BaseServiceSecurityTest<Finan
         @Override
         public ServiceResult<ApplicationFinanceResource> financeDetails(Long applicationId, Long organisationId) {
             return serviceSuccess(newApplicationFinanceResource().build());
+        }
+
+        @Override
+        public ServiceResult<List<ApplicationFinanceResource>> financeDetails(Long applicationId) {
+            return serviceSuccess(newApplicationFinanceResource().build(2));
         }
 
         @Override
