@@ -21,6 +21,10 @@ public class SecurityRuleUtil {
         return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
     }
 
+    public static boolean isInternal(UserResource user) {
+        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
+    }
+
     public static boolean isProjectFinanceUser(UserResource user) {
         return user.hasRole( PROJECT_FINANCE);
     }
