@@ -67,6 +67,7 @@ import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.finance.repository.*;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
@@ -84,6 +85,7 @@ import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
@@ -493,6 +495,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
 
     @Mock
+    protected EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+
+    @Mock
     protected GOLWorkflowHandler golWorkflowHandlerMock;
 
     @Mock
@@ -557,6 +562,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UsersRolesService usersRolesServiceMock;
+
+    @Mock
+    protected LoggedInUserSupplier loggedInUserSupplierMock;
 
     @Before
     public void setupMockInjection() {
