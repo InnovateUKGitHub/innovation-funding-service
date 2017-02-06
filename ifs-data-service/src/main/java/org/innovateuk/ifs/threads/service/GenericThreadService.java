@@ -28,19 +28,19 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
     }
 
     @Override
-    public final ServiceResult<E> findOne(Long contextClassPk) {
+    public ServiceResult<E> findOne(Long contextClassPk) {
         return find(repository.findByClassPkAndClassName(contextClassPk, ProjectFinance.class.getName()),
                 notFoundError(contextClass, contextClassPk));
     }
 
     @Override
-    public final ServiceResult<Void> create(E e) {
+    public ServiceResult<Void> create(E e) {
         repository.save(e);
         return serviceSuccess();
     }
 
     @Override
-    public final ServiceResult<Void> addPost(Post post, Long threadId) {
+    public ServiceResult<Void> addPost(Post post, Long threadId) {
         return findOne(threadId).andOnSuccessReturn(thread -> {
             thread.addPost(post);
             return repository.save(thread);
