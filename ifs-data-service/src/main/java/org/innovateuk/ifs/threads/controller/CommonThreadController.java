@@ -19,7 +19,7 @@ public class CommonThreadController<R> {
         this.service = service;
     }
 
-    @RequestMapping(value = "", method = GET)
+    @RequestMapping(value = "/{contextClassId}", method = GET)
     public RestResult<List<R>> allThreads(@PathVariable("contextClassId") final Long projectFinanceId) {
         return service.findAll(projectFinanceId).toGetResponse();
     }
