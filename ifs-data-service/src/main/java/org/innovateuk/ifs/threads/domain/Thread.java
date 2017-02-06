@@ -28,6 +28,7 @@ public abstract class Thread {
     private String title;
 
     @OneToMany
+    @JoinColumn(name = "thread_id", referencedColumnName = "id", nullable = false)
     @OrderBy("created_on ASC")
     private List<Post> posts;
 
@@ -49,7 +50,7 @@ public abstract class Thread {
     }
 
     private final Optional<Post> postAtIndex(int index) {
-        return posts.size() >= (index - 1) ? of(posts.get(index)) : empty();
+        return posts.size() > index ? of(posts.get(index)) : empty();
     }
 
     public List<Post> posts() {

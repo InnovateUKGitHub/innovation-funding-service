@@ -23,6 +23,9 @@ public class Post {
 
     @NotNull
     private String body;
+//
+//    @Column(name="project_id")
+//    private Long projectId;
 
     @OneToMany
     @JoinTable(name = "post_attachment",
