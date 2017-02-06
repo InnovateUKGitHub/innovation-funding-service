@@ -17,7 +17,7 @@ ${compWITHGrowth}    Competition with growth table
 # For the testing of the story INFUND-6393, we need to create New Competition in order to apply the new Comp Setup fields
 # Then continue with the applying to this Competition, in order to see the new Fields applied
 Comp Admin starts a new Competition
-    [Documentation]
+    [Documentation]  INFUND-6393
     [Tags]  HappyPath
     [Setup]  guest user log-in  &{Comp_admin1_credentials}
     Given the user navigates to the page  ${CA_UpcomingComp}
@@ -134,8 +134,6 @@ Organisation client side validation
     [Setup]  log in as a different user            &{lead_applicant_credentials}
     Given the user navigates to his finances page  ${applicationTitle}
     Then the user clicks the button/link  link=Your organisation
-
-
 
 Organisation server side validation
     [Documentation]  INFUND-6393
