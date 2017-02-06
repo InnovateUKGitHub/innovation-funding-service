@@ -27,7 +27,7 @@ Comp Admin starts a new Competition
     And the user fills in the CS Eligibility
     And the user fills in the CS Milestones  ${day}  ${month}  ${nextyear}
 
-Comp Admin fills in the Milestone Dates and can see them fortmatted afterwards
+Comp Admin fills in the Milestone Dates and can see them formatted afterwards
     [Documentation]  INFUND-7820
     [Tags]
     Given the user should see the element   jQuery=img[title$="is done"] + h3:contains("Milestones")
