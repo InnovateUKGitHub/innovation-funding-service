@@ -21,3 +21,25 @@ include::{snippets}/public-content/publish-by-competition-id/response-fields.ado
 
 ==== Curl Example
 include::{snippets}/public-content/publish-by-competition-id/curl-request.adoc[]
+
+
+=== Save public content event
+==== Request
+include::{snippets}/public-content/events/save-event/http-request.adoc[]
+
+==== Response
+include::{snippets}/public-content/events/save-event/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/public-content/events/save-event/curl-request.adoc[]
+
+=== Publish public content
+==== Request
+include::{snippets}/public-content/events/reset-and-save-events/http-request.adoc[]
+include::{snippets}/public-content/events/reset-and-save-events/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/public-content/events/reset-and-save-events/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/public-content/events/reset-and-save-events/curl-request.adoc[]

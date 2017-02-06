@@ -58,7 +58,7 @@ public class PublicContentEventControllerDocumentation extends BaseControllerMoc
     }
 
     @Test
-    public void resetAndSaveEvent() throws Exception {
+    public void resetAndSaveEvents() throws Exception {
         List<PublicContentEventResource> resources = publicContentEventResourceBuilder.build(2);
 
         when(publicContentEventService.resetAndSaveEvents(1L, resources)).thenReturn(serviceSuccess());

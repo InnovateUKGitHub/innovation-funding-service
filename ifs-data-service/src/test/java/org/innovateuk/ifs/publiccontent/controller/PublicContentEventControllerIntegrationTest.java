@@ -67,6 +67,7 @@ public class PublicContentEventControllerIntegrationTest extends BaseControllerI
     @Rollback
     public void resetAndSaveEvent() throws Exception {
         PublicContent publicContent = publicContentRepository.save(newPublicContent()
+                .withId(1000L)
                 .withPublishDate(LocalDateTime.now())
                 .withCompetitionId(1L)
                 .build());
@@ -77,7 +78,7 @@ public class PublicContentEventControllerIntegrationTest extends BaseControllerI
                 .withDate(LocalDateTime.of(2017,2,6,11,20,23)).build();
 
         loginCompAdmin();
-        RestResult<Void> result = controller.resetAndSaveEvent(1L, asList(event));
+        RestResult<Void> result = controller.resetAndSaveEvent(publicContent.getId(), asList(event));
 
         flushAndClearSession();
 

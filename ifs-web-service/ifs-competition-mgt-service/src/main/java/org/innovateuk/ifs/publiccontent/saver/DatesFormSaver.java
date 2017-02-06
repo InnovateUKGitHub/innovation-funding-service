@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.saver;
 
 
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -26,6 +27,11 @@ public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> im
     @Override
     protected void populateResource(DatesForm form, PublicContentResource publicContentResource) {
         publicContentEventRestService.resetAndSaveEvents(publicContentResource.getId(), mapDateToEventResource(publicContentResource.getId(), form.getDates()));
+    }
+
+    @Override
+    public ServiceResult<Void> save(DatesForm form, PublicContentResource publicContentResource) {
+        return ServiceResult.serviceSuccess();
     }
 
     private List<PublicContentEventResource> mapDateToEventResource(Long publicContentId, List<Date> dates) {
