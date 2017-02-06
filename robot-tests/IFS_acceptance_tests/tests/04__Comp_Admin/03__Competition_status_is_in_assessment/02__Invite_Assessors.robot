@@ -22,17 +22,28 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6449 As a member of the competitions team, I can see the invited assessors list so...
 ...
 ...               INFUND-6669 As a member of the competitions team I can view an assessors profile so that I can decide if they are suitable to assess the competition
+...
+...               INFUND-6388 As a member of the competitions team I can see the key statistics on the Invite Assessors dashboard so that I can easily see how invitations are progressing
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
+Check the initial key statistics
+    [Documentation]    INFUND-6388
+    [Tags]
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=.button:contains("Invite assessors")
+    And the key statistics are calculated
+    And the user should see the element    jQuery=.column-quarter:nth-child(1) span:contains(${ks_invited})
+    And the user should see the element    jQuery=.column-quarter:nth-child(2) span:contains(${ks_accepted})
+    And the user should see the element    jQuery=.column-quarter:nth-child(3) span:contains(${ks_declined})
+    And the user should see the element    jQuery=.column-quarter:nth-child(4) span:contains(${ks_assessors})
+
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412
     [Tags]
-    Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=.button:contains("Invite assessors")
     And The user should see the element    link=Overview
     When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
     And The user clicks the button/link    link=Invite
@@ -73,10 +84,12 @@ Remove users from the list
     When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
     And The user clicks the button/link    link=Invite
     And The user should see the text in the page    will.smith@gmail.com
+    And the user should see the element    jQuery=.column-quarter:nth-child(4) span:contains(${inc_ks_assessors})
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove from list)
     Then The user should not see the text in the page    will.smith@gmail.com
     And The user clicks the button/link    link=Find
     And the user should see the element    jQuery=tr:nth-child(1) button:contains(Add)
+    And the user should see the element    jQuery=.column-quarter:nth-child(4) span:contains(${ks_assessors})
     [Teardown]    The user clicks the button/link    link=Find
 
 Invite Individual Assessors
@@ -91,6 +104,7 @@ Invite Individual Assessors
     Then The user should not see the text in the page    Will Smith
     And The user clicks the button/link    link=Find
     And the user should not see the text in the page    Will Smith
+    And the user should see the element    jQuery=.column-quarter:nth-child(1) span:contains(${inc_ks_invited})
 
 Invite non-registered assessors server side validations
     [Documentation]    INFUND-6411
@@ -134,3 +148,19 @@ Assessor overview information
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Yes)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Invite declined as not available)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Manufacturing Readiness)
+
+*** Keywords ***
+The key statistics are calculated
+    ${ks_invited}=    Get Text    jQuery=.column-quarter:nth-child(1) span
+    ${increment}=   Set Variable      ${1}
+    ${inc_ks_invited} =     Evaluate     ${ks_invited}+${increment}
+    ${ks_accepted}=    Get Text    jQuery=.column-quarter:nth-child(2) span
+    ${ks_declined}=    Get Text    jQuery=.column-quarter:nth-child(3) span
+    ${ks_assessors}=    Get Text    jQuery=.column-quarter:nth-child(4) span
+    ${inc_ks_assessors}=    Evaluate    ${ks_assessors}+${increment}
+    Set Suite Variable    ${inc_ks_invited}
+    Set Suite Variable    ${inc_ks_assessors}
+    Set Suite Variable    ${ks_invited}
+    Set Suite Variable    ${ks_accepted}
+    Set Suite Variable    ${ks_declined}
+    Set Suite Variable    ${ks_assessors}
