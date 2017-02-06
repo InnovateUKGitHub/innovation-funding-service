@@ -8,7 +8,7 @@ Please make contact with the lead organisation to review the project details.
 Lead
 ${leadOrganisation}
 
-Project manager
+Project Manager
 ${projectManagerName}
 ${projectManagerEmail}
 

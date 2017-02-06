@@ -83,6 +83,8 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         localValidatorFactory = new LocalValidatorFactoryBean();
         localValidatorFactory.setProviderClass(HibernateValidator.class);
         localValidatorFactory.afterPropertiesSet();
+
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
 

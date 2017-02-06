@@ -50,18 +50,13 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<Void> recommend(long id, AssessmentFundingDecisionResource assessmentFundingDecision) {
+    public RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return putWithRestResult(format("%s/%s/recommend", assessmentRestURL, id), assessmentFundingDecision, Void.class);
     }
 
     @Override
-    public RestResult<Void> rejectInvitation(long id, ApplicationRejectionResource applicationRejection) {
-        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), applicationRejection, Void.class);
-    }
-
-    @Override
-    public RestResult<Void> notify(long id) {
-        return putWithRestResult(format("%s/%s/notify", assessmentRestURL, id), Void.class);
+    public RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
+        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), assessmentRejectOutcomeResource, Void.class);
     }
 
     @Override

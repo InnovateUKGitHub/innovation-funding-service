@@ -40,10 +40,10 @@ public interface AssessmentService {
     ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
-    ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionResource assessmentFundingDecision);
+    ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
-    ServiceResult<Void> rejectInvitation(long assessmentId, ApplicationRejectionResource applicationRejection);
+    ServiceResult<Void> rejectInvitation(long assessmentId, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     @SecuredBySpring(value = "WITHDRAW_ASSESSOR", description = "Comp Admins can withdraw an application from an assessor")
@@ -53,8 +53,10 @@ public interface AssessmentService {
     ServiceResult<Void> acceptInvitation(long assessmentId);
 
     @PreAuthorize("hasAnyAuthority('comp_admin')")
-    @SecuredBySpring(value = "NOTIFY_ASSESSOR", description = "Comp Admins can notify an assessor of an assigned application")
-    ServiceResult<Void> notify(long assessmentId);
+    @SecuredBySpring(
+            value = "NOTIFY_ASSESSORS",
+            description = "Comp admins and execs can notify all assessors of their assignments for a competition")
+    ServiceResult<Void> notifyAssessorsByCompetition(long competitionId);
 
     @PreAuthorize("hasPermission(#assessmentSubmissions, 'SUBMIT')")
     ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource);
@@ -62,10 +64,4 @@ public interface AssessmentService {
     @SecuredBySpring(value = "CREATE", description = "Comp Admins can assign an Assessor to an Application")
     @PreAuthorize("hasAnyAuthority('comp_admin')")
     ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
-    @SecuredBySpring(
-            value = "NOTIFY_ASSESSORS",
-            description = "Comp admins and execs can notify assessors")
-    ServiceResult<Void> notifyAssessorsByCompetition(Long competitionId);
 }

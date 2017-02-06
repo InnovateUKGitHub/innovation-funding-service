@@ -17,9 +17,15 @@ public class AssessorCompetitionDashboardApplicationViewModel {
     private String leadOrganisation;
     private AssessmentStates state;
     private int overallScore;
-    private boolean recommended;
+    private Boolean recommended;
 
-    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId, Long assessmentId, String displayLabel, String leadOrganisation, AssessmentStates state, int overallScore, boolean recommended) {
+    public AssessorCompetitionDashboardApplicationViewModel(Long applicationId,
+                                                            Long assessmentId,
+                                                            String displayLabel,
+                                                            String leadOrganisation,
+                                                            AssessmentStates state,
+                                                            int overallScore,
+                                                            Boolean recommended) {
         this.applicationId = applicationId;
         this.assessmentId = assessmentId;
         this.displayLabel = displayLabel;
@@ -33,56 +39,28 @@ public class AssessorCompetitionDashboardApplicationViewModel {
         return applicationId;
     }
 
-    public void setApplicationId(Long applicationId) {
-        this.applicationId = applicationId;
-    }
-
     public Long getAssessmentId() {
         return assessmentId;
-    }
-
-    public void setAssessmentId(Long assessmentId) {
-        this.assessmentId = assessmentId;
     }
 
     public String getDisplayLabel() {
         return displayLabel;
     }
 
-    public void setDisplayLabel(String displayLabel) {
-        this.displayLabel = displayLabel;
-    }
-
     public String getLeadOrganisation() {
         return leadOrganisation;
-    }
-
-    public void setLeadOrganisation(String leadOrganisation) {
-        this.leadOrganisation = leadOrganisation;
     }
 
     public AssessmentStates getState() {
         return state;
     }
 
-    public void setState(AssessmentStates state) {
-        this.state = state;
-    }
-
     public int getOverallScore() {
         return overallScore;
     }
 
-    public void setOverallScore(int overallScore) {
-        this.overallScore = overallScore;
-    }
-
-    public boolean isRecommended() {
+    public Boolean getRecommended() {
         return recommended;
-    }
-
-    public void setRecommended(boolean recommended) {
-        this.recommended = recommended;
     }
 
     public boolean isPending() {

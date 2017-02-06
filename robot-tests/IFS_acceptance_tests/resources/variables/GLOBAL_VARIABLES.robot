@@ -166,38 +166,16 @@ ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    75
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    66
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}    56
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    99
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    90
 ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    89
-${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION}    225
-${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION}    226
-${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION}    227
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
-${Assessment_summary_complete_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
-${Application_question_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/375
-${Application_question_168}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/376
-${Application_question_169}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/377
-${Application_question_170}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/378
-${Application_question_171}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/379
-${Application_question_172}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/380
-${Application_question_173}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/381
-${Application_question_174}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/382
-${Application_question_175}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/383
-${Application_question_176}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/384
-${Finance_summar_9_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/finances
-${Assessor_competition_dashboard}    ${server}/assessment/assessor/dashboard
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
-${Assessment_summary_Pending_12}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/summary
 ${Assessment_summary_open_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/summary
 ${assessment_declaration_url}    ${server}/assessment/profile/declaration
-${assessment_declaration_edit_url}    ${server}/assessment/profile/declaration/edit
 ${assessment_skills_url}    ${server}/assessment/profile/skills
-${assessment_skills_edit_url}   ${server}/assessment/profile/skills/edit
-${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
-${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
-${Application_management_dashboard}    ${server}/management/assessment/competition/4
+${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 
 # Database variables
 ${database_name}    ifs

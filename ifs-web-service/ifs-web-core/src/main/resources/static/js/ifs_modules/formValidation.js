@@ -4,15 +4,15 @@ IFS.core.formValidation = (function () {
   return {
     settings: {
       number: {
-        fields: '[type="number"]:not([data-date])',
+        fields: '[type="number"]:not([data-date],[readonly])',
         messageInvalid: 'This field can only accept whole numbers.'
       },
       min: {
-        fields: '[min]:not([data-date])',
+        fields: '[min]:not([data-date],[readonly])',
         messageInvalid: 'This field should be %min% or higher.'
       },
       max: {
-        fields: '[max]:not([data-date])',
+        fields: '[max]:not([data-date],[readonly])',
         messageInvalid: 'This field should be %max% or lower.'
       },
       passwordEqual: {
@@ -36,19 +36,19 @@ IFS.core.formValidation = (function () {
         }
       },
       email: {
-        fields: '[type="email"]',
+        fields: '[type="email"]:not([readonly])',
         messageInvalid: 'Please enter a valid email address.'
       },
       required: {
-        fields: '[required]:not([data-date])',
+        fields: '[required]:not([data-date],[readonly])',
         messageInvalid: 'This field cannot be left blank.'
       },
       minlength: {
-        fields: '[minlength]',
+        fields: '[minlength]:not([readonly])',
         messageInvalid: 'This field should contain at least %minlength% characters.'
       },
       maxlength: {
-        fields: '[maxlength]',
+        fields: '[maxlength]:not([readonly])',
         messageInvalid: 'This field cannot contain more than %maxlength% characters.'
       },
       minwordslength: {
@@ -68,11 +68,11 @@ IFS.core.formValidation = (function () {
         }
       },
       pattern: {
-        fields: '[pattern]:not([minlength])', // minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
+        fields: '[pattern]:not([minlength],[readonly])', // minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
         messageInvalid: 'Please correct this field.'
       },
       tel: {
-        fields: '[type="tel"]',
+        fields: '[type="tel"]:not([readonly])',
         messageInvalid: 'Please enter a valid phone number.'
       },
       typeTimeout: 1500,
