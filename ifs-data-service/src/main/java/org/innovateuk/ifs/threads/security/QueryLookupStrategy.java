@@ -1,7 +1,26 @@
 package org.innovateuk.ifs.threads.security;
 
-import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategies;
+import org.innovateuk.ifs.commons.security.PermissionEntityLookupStrategy;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.threads.resource.QueryResource;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
-public class QueryLookupStrategy extends ThreadLookupStrategy<Query, QueryResource, QueryMapper> {}
+@Component
+@PermissionEntityLookupStrategies
+public class QueryLookupStrategy {
+
+    @Autowired
+    private QueryRepository repository;
+
+    @Autowired
+    private QueryMapper mapper;
+
+    @PermissionEntityLookupStrategy
+    public QueryResource findById(final Long id) {
+        return mapper.mapToResource(repository.findOne(id));
+    }
+
+}
