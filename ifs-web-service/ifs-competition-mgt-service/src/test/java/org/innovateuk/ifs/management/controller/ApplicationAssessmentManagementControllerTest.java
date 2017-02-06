@@ -65,14 +65,6 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
                 .andExpect(model().attributeExists("model"))
                 .andReturn().getModelAndView().getModel().get("model");
 
-        verify(cookieUtil).saveToCookie(
-                isA(HttpServletResponse.class),
-                eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY),
-                createLambdaMatcher(arg -> {
-                    assertEquals("http://localhost/assessment/competition/" + competitionResource.getId(), arg);
-                })
-        );
-
         assertEquals(competitionResource.getId(), model.getCompetitionId());
         assertEquals(competitionResource.getName(), model.getCompetitionName());
         assertTrue(model.getInAssessment());

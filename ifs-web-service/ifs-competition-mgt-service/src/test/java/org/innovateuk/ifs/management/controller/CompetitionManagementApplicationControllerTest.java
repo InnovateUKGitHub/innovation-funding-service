@@ -8,35 +8,32 @@ import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin.ALL_APPLICATIONS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -55,8 +52,32 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
     @Test
-    public void testDisplayApplicationOverview() throws Exception {
+    public void buildOriginQueryString() throws Exception {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
+                "sort", asList("applicationNumber", "innovationArea")
+        ));
 
+        String result = CompetitionManagementApplicationController.buildOriginQueryString(ALL_APPLICATIONS, queryParams);
+        String expectedQuery = "?origin=ALL_APPLICATIONS&sort=applicationNumber&sort=innovationArea";
+
+        assertEquals(expectedQuery, result);
+    }
+
+    @Test
+    public void buildOriginQueryString_encodesReservedChars() throws Exception {
+        // Not exhaustive, but at least these characters should be covered
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
+                "p", asList("&", "=", "%", " ")
+        ));
+
+        String result = CompetitionManagementApplicationController.buildOriginQueryString(ALL_APPLICATIONS, queryParams);
+        String expectedQuery = "?origin=ALL_APPLICATIONS&p=%26&p=%3D&p=%25&p=%20";
+
+        assertEquals(expectedQuery, result);
+    }
+
+    @Test
+    public void displayApplicationOverview() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();
         this.loginDefaultUser();
@@ -67,7 +88,88 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void testDisplayApplicationForCompetitionAdministratorWithCorrectAssessorFeedbackReadonly() throws Exception {
+    public void displayApplicationOverview_backUrlPreservesQueryParams() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?param1=abc&param2=def%26ghi";
+
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId())
+                .param("param1", "abc")
+                .param("param2", "def&ghi"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", expectedBackUrl));
+    }
+
+    @Test
+    public void displayApplicationOverview_backUrlEncodesReservedChars() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        String expectedBackUrl = "/competition/" + competitionResource.getId() + "/applications/all?p1=%26&p2=%3D&p3=%25&p4=%20";
+
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId())
+                .param("p1", "&")
+                .param("p2", "=")
+                .param("p3", "%")
+                .param("p4", " "))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", expectedBackUrl));
+    }
+
+    @Test
+    public void displayApplicationOverview_submittedApplicationsOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId())
+                .param("origin", "SUBMITTED_APPLICATIONS"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/submitted"));
+    }
+
+    @Test
+    public void displayApplicationOverview_manageApplicationsOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId())
+                .param("origin", "MANAGE_APPLICATIONS"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/assessment/competition/" + competitionResource.getId()));
+    }
+
+    @Test
+    public void displayApplicationOverview_invalidOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId())
+                .param("origin", "NOT_A_VALID_ORIGIN"))
+                .andExpect(status().isInternalServerError());
+    }
+
+    @Test
+    public void displayApplicationForCompetitionAdministratorWithCorrectAssessorFeedbackReadonly() throws Exception {
 
         asList(CompetitionStatus.values()).forEach(status -> {
 
@@ -86,7 +188,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void testDisplayApplicationForCompetitionAdministratorWithCorrectAssessorFeedbackFileEntry() throws Exception {
+    public void displayApplicationForCompetitionAdministratorWithCorrectAssessorFeedbackFileEntry() throws Exception {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -103,7 +205,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void testDownloadAssessorFeedbackFile() throws Exception {
+    public void downloadAssessorFeedbackFile() throws Exception {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -126,7 +228,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void testUploadAssessorFeedbackFile() throws Exception {
+    public void uploadAssessorFeedbackFile() throws Exception {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -153,7 +255,7 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
-    public void testRemoveAssessorFeedbackFile() throws Exception {
+    public void removeAssessorFeedbackFile() throws Exception {
 
         this.setupCompetition();
         this.setupApplicationWithRoles();
@@ -180,23 +282,15 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
         ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(applications.get(0).getId()).withOrganisation(organisations.get(0).getId()).build();
         when(userRestServiceMock.findProcessRole(loggedInUser.getId(), applications.get(0).getId())).thenReturn(restSuccess(userApplicationRole));
 
-        when(cookieUtil.getCookieValue(isA(HttpServletRequest.class), eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY)))
-                .thenReturn("/redirect-to-me");
-
         try {
-            MvcResult result = mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()))
+            mockMvc.perform(get("/competition/" + competitionResource.getId() + "/application/" + applications.get(0).getId()))
                     .andExpect(status().isOk())
                     .andExpect(view().name("competition-mgt-application-overview"))
                     .andExpect(model().attribute("applicationReadyForSubmit", false))
                     .andExpect(model().attribute("isCompManagementDownload", true))
                     .andExpect(model().attribute("responses", mappedFormInputResponsesToFormInput))
                     .andExpect(model().attribute("assessorFeedback", expectedAssessorFeedback))
-                    .andReturn();
-
-            assertEquals("/redirect-to-me", result.getModelAndView().getModel().get("backUrl"));
-
-            verify(cookieUtil, atLeastOnce()).getCookieValue(isA(HttpServletRequest.class), eq(CompetitionManagementApplicationController.APPLICATION_OVERVIEW_ORIGIN_URL_KEY));
-
+                    .andExpect(model().attribute("backUrl", "/competition/" + competitionResource.getId() + "/applications/all"));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

@@ -34,19 +34,21 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.innovateuk.ifs.user.service.UserService;
-import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -59,6 +61,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.toField;
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -70,7 +73,21 @@ public class CompetitionManagementApplicationController extends BaseController {
     @SuppressWarnings("unused")
     private static final Log LOG = LogFactory.getLog(CompetitionManagementApplicationController.class);
 
-    public static final String APPLICATION_OVERVIEW_ORIGIN_URL_KEY = "competitionManagementApplication.originUrl";
+    enum ApplicationOverviewOrigin {
+        ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
+        SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
+        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}");
+
+        private String baseOriginUrl;
+
+        ApplicationOverviewOrigin(String baseOriginUrl) {
+            this.baseOriginUrl = baseOriginUrl;
+        }
+
+        public String getBaseOriginUrl() {
+            return baseOriginUrl;
+        }
+    }
 
     @Autowired
     private FormInputResponseService formInputResponseService;
@@ -114,13 +131,21 @@ public class CompetitionManagementApplicationController extends BaseController {
     @Autowired
     protected ApplicationService applicationService;
 
-    @Autowired
-    protected CookieUtil cookieUtil;
+    public static String buildOriginQueryString(ApplicationOverviewOrigin origin, MultiValueMap<String, String> queryParams) {
+        return UriComponentsBuilder.newInstance()
+                .queryParam("origin", origin.toString())
+                .queryParams(queryParams)
+                .build()
+                .encode()
+                .toUriString();
+    }
 
     @RequestMapping(value = "/{applicationId}", method = GET)
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
                                              @ModelAttribute("form") ApplicationForm form,
+                                             @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                             @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model,
                                              HttpServletRequest request
     ) {
@@ -148,17 +173,27 @@ public class CompetitionManagementApplicationController extends BaseController {
             OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
-            String originUrl = cookieUtil.getCookieValue(request, APPLICATION_OVERVIEW_ORIGIN_URL_KEY);
-            model.addAttribute("backUrl", originUrl);
+            model.addAttribute("backUrl", buildBackUrl(origin, competitionId, queryParams));
 
             return "competition-mgt-application-overview";
         });
     }
 
+    private String buildBackUrl(String origin, Long competitionId, MultiValueMap<String, String> queryParams) {
+        String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
+
+        queryParams.remove("origin");
+
+        return UriComponentsBuilder.fromPath(baseUrl)
+                .queryParams(queryParams)
+                .buildAndExpand(asMap("competitionId", competitionId))
+                .encode()
+                .toUriString();
+    }
+
     @RequestMapping(value = "/{applicationId}/assessorFeedback", method = GET)
-    public
     @ResponseBody
-    ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
+    public ResponseEntity<ByteArrayResource> downloadAssessorFeedbackFile(
             @PathVariable("applicationId") final Long applicationId) {
 
         final ByteArrayResource resource = assessorFeedbackRestService.getAssessorFeedbackFile(applicationId).getSuccessObjectOrThrowException();
@@ -170,13 +205,15 @@ public class CompetitionManagementApplicationController extends BaseController {
     public String uploadAssessorFeedbackFile(
             @PathVariable("competitionId") final Long competitionId,
             @PathVariable("applicationId") final Long applicationId,
+            @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+            @RequestParam MultiValueMap<String, String> queryParams,
             @ModelAttribute("form") ApplicationForm applicationForm,
             @SuppressWarnings("unused") BindingResult bindingResult,
             ValidationHandler validationHandler,
             Model model,
             HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, origin, queryParams, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -194,13 +231,15 @@ public class CompetitionManagementApplicationController extends BaseController {
     @RequestMapping(value = "/{applicationId}", params = "removeAssessorFeedback", method = POST)
     public String removeAssessorFeedbackFile(@PathVariable("competitionId") final Long competitionId,
                                              @PathVariable("applicationId") final Long applicationId,
+                                             @RequestParam(value = "origin", defaultValue = "ALL_APPLICATIONS") String origin,
+                                             @RequestParam MultiValueMap<String, String> queryParams,
                                              Model model,
                                              @ModelAttribute("form") ApplicationForm applicationForm,
                                              @SuppressWarnings("unused") BindingResult bindingResult,
                                              ValidationHandler validationHandler,
                                              HttpServletRequest request) {
 
-        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, model, request);
+        Supplier<String> failureView = () -> displayApplicationOverview(applicationId, competitionId, applicationForm, origin, queryParams, model, request);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
 
@@ -326,6 +365,11 @@ public class CompetitionManagementApplicationController extends BaseController {
         return "redirect:/competition/" + competitionId + "/application/" + applicationId;
     }
 
+    private String redirectToApplicationOverview(Long competitionId, Long applicationId, Map<String, String> queryParams) {
+        String baseUrl = redirectToApplicationOverview(competitionId, applicationId);
+
+        return "redirect:/competition/" + competitionId + "/application/" + applicationId;
+    }
 
     private String validateApplicationAndCompetitionIds(Long applicationId, Long competitionId, Function<ApplicationResource, String> success) {
         ApplicationResource application = applicationService.getById(applicationId);

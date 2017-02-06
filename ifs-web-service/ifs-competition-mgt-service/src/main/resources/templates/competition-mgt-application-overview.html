@@ -13,7 +13,7 @@
         <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
 
         <div th:include="fragments/layout :: header-sub"
-             th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{{backUrl}(backUrl=${backUrl})}"
+             th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}}"
              th:remove="tag" />
 
         <div class="grid-row">
