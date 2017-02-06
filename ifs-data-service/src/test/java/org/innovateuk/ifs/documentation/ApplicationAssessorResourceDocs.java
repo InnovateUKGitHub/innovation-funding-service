@@ -4,6 +4,8 @@ import org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder
 import org.springframework.restdocs.payload.FieldDescriptor;
 
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.TOO_MANY_ASSESSMENTS;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.READY_TO_SUBMIT;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.REJECTED;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
@@ -33,7 +35,7 @@ public class ApplicationAssessorResourceDocs {
             .withLastName("Romero", "Wolfe")
             .withBusinessType(ACADEMIC, BUSINESS)
             .withSkillAreas("Human computer interaction, Wearables, IoT", "Solar Power, Genetics, Recycling")
-            .withRejectReason("Conflict of interest", "Not available")
+            .withRejectReason(CONFLICT_OF_INTEREST, TOO_MANY_ASSESSMENTS)
             .withRejectComment("Member of board of directors", "I do like reviewing the applications to your competitions but please do not assign so many to me.")
             .withMostRecentAssessmentId(1L)
             .withMostRecentAssessmentState(READY_TO_SUBMIT, REJECTED)

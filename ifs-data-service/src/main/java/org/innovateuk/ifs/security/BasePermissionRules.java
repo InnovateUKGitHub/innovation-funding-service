@@ -3,7 +3,6 @@ package org.innovateuk.ifs.security;
 import java.util.List;
 
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.repository.ProcessOutcomeRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -48,9 +47,6 @@ public abstract class BasePermissionRules {
 
     @Autowired
     protected UserRepository userRepository;
-
-    @Autowired
-    protected ProcessOutcomeRepository processOutcomeRepository;
 
     @Autowired
     protected AssessmentRepository assessmentRepository;

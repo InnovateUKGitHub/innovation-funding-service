@@ -9,6 +9,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
@@ -35,5 +37,19 @@ public class FinanceServiceImplTest {
         ApplicationFinanceResource result = service.getApplicationFinanceByApplicationIdAndOrganisationId(applicationId, organisationId);
 
         assertEquals(applicationFinanceResource, result);
+    }
+
+    @Test
+    public void testGetApplicationFinanceDetailsByApplicationId() {
+
+        Long applicationId = 1L;
+
+        List<ApplicationFinanceResource> applicationFinanceResources = ApplicationFinanceResourceBuilder.newApplicationFinanceResource().build(3);
+
+        when(applicationFinanceRestService.getFinanceDetails(applicationId)).thenReturn(restSuccess(applicationFinanceResources));
+
+        List<ApplicationFinanceResource> result = service.getApplicationFinanceDetails(applicationId);
+
+        assertEquals(applicationFinanceResources, result);
     }
 }

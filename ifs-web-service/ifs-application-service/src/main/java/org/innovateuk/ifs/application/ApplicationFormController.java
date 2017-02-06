@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
@@ -187,6 +188,9 @@ public class ApplicationFormController {
 
     @Autowired
     private OverheadFileSaver overheadFileSaver;
+
+    @Autowired
+    private FundingLevelResetHandler fundingLevelResetHandler;
 
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
@@ -977,7 +981,12 @@ public class ApplicationFormController {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
-        	// this does not need id
+
+            if (fieldName.equals("application.researchCategoryId")) {
+                fundingLevelResetHandler.resetFundingLevelAndMarkAsIncompleteForAllCollaborators(competitionId, applicationId);
+            }
+
+            // this does not need id
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {

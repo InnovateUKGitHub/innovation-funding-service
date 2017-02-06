@@ -10,6 +10,7 @@ import org.innovateuk.ifs.assessment.form.AssessmentOverviewForm;
 import org.innovateuk.ifs.assessment.model.AssessmentFinancesSummaryModelPopulator;
 import org.innovateuk.ifs.assessment.model.AssessmentOverviewModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
@@ -48,6 +49,7 @@ import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.new
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_REJECTION_FAILED;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -332,7 +334,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     public void rejectInvitation() throws Exception {
         Long assessmentId = 1L;
         Long competitionId = 2L;
-        String reason = "reason";
+        AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
@@ -345,7 +347,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("rejectReason", reason)
+                .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
@@ -360,7 +362,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     public void rejectInvitation_noReason() throws Exception {
         Long assessmentId = 1L;
         Long applicationId = 2L;
-        String reason = "";
         String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
@@ -378,7 +379,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
-        expectedForm.setRejectReason(reason);
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
@@ -388,7 +388,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("rejectReason", reason)
+                .param("rejectReason", "")
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
@@ -399,9 +399,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
-
-        assertEquals(reason, form.getRejectReason());
-        assertEquals(comment, form.getRejectComment());
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
@@ -419,7 +416,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     public void rejectInvitation_exceedsCharacterSizeLimit() throws Exception {
         Long assessmentId = 1L;
         Long applicationId = 2L;
-        String reason = "reason";
+        AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = RandomStringUtils.random(5001);
 
         AssessmentResource assessment = newAssessmentResource()
@@ -447,7 +444,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("rejectReason", reason)
+                .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
@@ -458,9 +455,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
-
-        assertEquals(reason, form.getRejectReason());
-        assertEquals(comment, form.getRejectComment());
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
@@ -479,7 +473,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     public void rejectInvitation_exceedsWordLimit() throws Exception {
         Long assessmentId = 1L;
         Long applicationId = 2L;
-        String reason = "reason";
+        AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(101, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
@@ -507,7 +501,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("rejectReason", reason)
+                .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
@@ -518,9 +512,6 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         AssessmentOverviewForm form = (AssessmentOverviewForm) result.getModelAndView().getModel().get("form");
-
-        assertEquals(reason, form.getRejectReason());
-        assertEquals(comment, form.getRejectComment());
 
         BindingResult bindingResult = form.getBindingResult();
         assertEquals(0, bindingResult.getGlobalErrorCount());
@@ -539,7 +530,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
     public void rejectInvitation_eventNotAccepted() throws Exception {
         Long assessmentId = 1L;
         Long applicationId = 2L;
-        String reason = "reason";
+        AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         AssessmentResource assessment = newAssessmentResource()
@@ -568,7 +559,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .param("rejectReason", reason)
+                .param("rejectReason", reason.name())
                 .param("rejectComment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("form", expectedForm))
