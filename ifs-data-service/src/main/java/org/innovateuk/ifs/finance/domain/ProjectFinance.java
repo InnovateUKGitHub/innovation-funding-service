@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.domain.Project;
@@ -35,9 +34,6 @@ public class ProjectFinance extends Finance {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="eligibilityApprovalUserId", referencedColumnName="id")
     private User eligibilityApprovalUser;
-
-/*    @Enumerated(EnumType.STRING)
-    private Eligibility eligibility = Eligibility.REVIEW;*/
 
     private boolean creditReportConfirmed = false;
 
@@ -103,14 +99,6 @@ public class ProjectFinance extends Finance {
     public void setEligibilityApprovalUser(User eligibilityApprovalUser) {
         this.eligibilityApprovalUser = eligibilityApprovalUser;
     }
-
-/*    public Eligibility getEligibility() {
-        return eligibility;
-    }
-
-    public void setEligibility(Eligibility eligibility) {
-        this.eligibility = eligibility;
-    }*/
 
     public EligibilityRagStatus getEligibilityStatus() {
         return eligibilityStatus;
