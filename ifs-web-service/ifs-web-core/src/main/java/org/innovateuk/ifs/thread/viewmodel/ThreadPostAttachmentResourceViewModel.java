@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.queries.viewmodel;
+package org.innovateuk.ifs.thread.viewmodel;
 
 import org.innovateuk.ifs.notesandqueries.resource.post.PostAttachmentResource;
 
-public class FinanceChecksQueriesAttachmentResourceViewModel extends PostAttachmentResource {
+public class ThreadPostAttachmentResourceViewModel extends PostAttachmentResource {
     private String filename;
 
     public Long getLocalFileId() {
