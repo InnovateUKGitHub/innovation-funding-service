@@ -5,7 +5,7 @@ CREATE TABLE `thread` (
   `thread_type` VARCHAR(45) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
   `created_on` DATETIME NOT NULL,
-  `section_type` VARCHAR(45) NULL,
+  `section` VARCHAR(45) NULL,
   PRIMARY KEY (`id`));
 
 
