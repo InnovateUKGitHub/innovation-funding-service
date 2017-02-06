@@ -226,9 +226,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                andOnSuccess(this::validateProjectIsInSetup).
+                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
+                            andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                    andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -396,13 +397,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
+                andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     @Override
     public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
-        return getProject(projectId).andOnSuccess(project ->
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(project ->
                 getCollaborationAgreement(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeCollaborationAgreementFileFromProject(project))));
@@ -447,13 +451,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
+                andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
     }
 
     @Override
     public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
-        return getProject(projectId).andOnSuccess(project ->
+        return getProject(projectId).
+        andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
                 getExploitationPlan(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeExploitationPlanFileFromProject(project))));
@@ -524,7 +530,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void removeCollaborationAgreementFileFromProject(Project project) {
-        project.setCollaborationAgreement(null);
+        validateProjectIsInSetup(project).
+        andOnSuccess(() -> project.setCollaborationAgreement(null));
     }
 
     private ServiceResult<FileEntry> getExploitationPlan(Project project) {
@@ -547,7 +554,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void removeExploitationPlanFileFromProject(Project project) {
-        project.setExploitationPlan(null);
+
+        validateProjectIsInSetup(project).
+                andOnSuccess(() -> project.setExploitationPlan(null));
     }
 
     private NotificationTarget createPartnerNotificationTargets(final ProjectUser user) {
@@ -844,6 +853,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         }
 
         return serviceSuccess();
+    }
+
+    private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
+        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+            return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
+        }
+
+        return serviceSuccess(project);
     }
 
     private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
