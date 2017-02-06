@@ -1,0 +1,128 @@
+package org.innovateuk.ifs.publiccontent.transactional;
+
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
+import org.innovateuk.ifs.publiccontent.mapper.ContentEventMapper;
+import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PUBLIC_CONTENT_IDS_INCONSISTENT;
+import static org.innovateuk.ifs.publiccontent.builder.ContentEventBuilder.newContentEvent;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentEventResourceBuilder.newPublicContentEventResource;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.*;
+
+public class PublicContentEventServiceImplTest extends BaseServiceUnitTest<PublicContentEventServiceImpl> {
+
+    @Mock
+    private ContentEventRepository contentEventRepository;
+
+    @Mock
+    private ContentEventMapper contentEventMapper;
+
+    @Override
+    protected PublicContentEventServiceImpl supplyServiceUnderTest() {
+        return new PublicContentEventServiceImpl();
+    }
+
+    @Test
+    public void testSaveEvent() {
+        PublicContentEventResource resource = newPublicContentEventResource().withId(1L).withContent("Content").withDate(LocalDateTime.of(2017,1,1,1,1)).build();
+        ContentEvent domain = newContentEvent().withId(1L).withContent("Content").withDate(LocalDateTime.of(2017,1,1,1,1)).build();
+
+        when(contentEventMapper.mapToDomain(resource)).thenReturn(domain);
+
+        ServiceResult<Void> result = service.saveEvent(resource);
+
+        assertTrue(result.isSuccess());
+        verify(contentEventRepository, times(1)).save(domain);
+    }
+
+    @Test
+    public void testResetAndSaveEvents() {
+        Long publicContentId = 8L;
+
+        List<PublicContentEventResource> resources = newPublicContentEventResource()
+                .withId(1L)
+                .withContent("Content")
+                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withPublicContent(publicContentId)
+                .build(2);
+
+        PublicContent publicContent = newPublicContent().withId(publicContentId).build();
+        List<ContentEvent> domains = newContentEvent()
+                .withId(1L)
+                .withContent("Content")
+                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withPublicContent(publicContent)
+                .build(2);
+
+        when(contentEventMapper.mapToDomain(resources)).thenReturn(domains);
+
+        ServiceResult<Void> result = service.resetAndSaveEvents(publicContentId, resources);
+
+        assertTrue(result.isSuccess());
+        verify(contentEventRepository, times(1)).deleteByPublicContentId(publicContentId);
+        verify(contentEventRepository, times(1)).save(domains);
+    }
+
+    @Test
+    public void testResetAndSaveEventsFailure() {
+        Long publicContentId = -18L;
+
+        List<PublicContentEventResource> resources = newPublicContentEventResource()
+                .withId(1L)
+                .withContent("Content")
+                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withPublicContent(2L)
+                .build(2);
+
+        PublicContent publicContent = newPublicContent().withId(2L).build();
+        List<ContentEvent> domains = newContentEvent()
+                .withId(1L)
+                .withContent("Content")
+                .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
+                .withPublicContent(publicContent)
+                .build(2);
+
+        when(contentEventMapper.mapToDomain(resources)).thenReturn(domains);
+
+        ServiceResult<Void> result = service.resetAndSaveEvents(publicContentId, resources);
+
+        assertTrue(result.isFailure());
+        assertEquals(asList(new Error(PUBLIC_CONTENT_IDS_INCONSISTENT)), result.getFailure().getErrors());
+        verify(contentEventRepository, never()).deleteByPublicContentId(publicContentId);
+        verify(contentEventRepository, never()).save(domains);
+    }
+
+
+
+    @Test
+    public void testResetAndSaveEventsEmptyEvents() {
+        Long publicContentId = 8L;
+
+        List<PublicContentEventResource> resources = Collections.emptyList();
+
+        List<ContentEvent> domains = Collections.emptyList();
+
+        when(contentEventMapper.mapToDomain(resources)).thenReturn(domains);
+
+        ServiceResult<Void> result = service.resetAndSaveEvents(publicContentId, resources);
+
+        assertTrue(result.isSuccess());
+        verify(contentEventRepository, times(1)).deleteByPublicContentId(publicContentId);
+        verify(contentEventRepository, times(1)).save(domains);
+    }
+}

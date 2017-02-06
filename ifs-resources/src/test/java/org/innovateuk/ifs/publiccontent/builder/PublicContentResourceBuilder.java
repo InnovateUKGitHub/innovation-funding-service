@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 
@@ -57,6 +58,10 @@ public class PublicContentResourceBuilder extends BaseBuilder<PublicContentResou
 
     public PublicContentResourceBuilder withContentSections(List<PublicContentSectionResource> contentSections) {
         return with(publicContent -> setField("contentSections", contentSections, publicContent));
+    }
+
+    public PublicContentResourceBuilder withContentEvents(List<PublicContentEventResource> contentEvents) {
+        return with(publicContent -> setField("contentEvents", contentEvents, publicContent));
     }
 
     public PublicContentResourceBuilder withKeywords(List<String> keywords) {

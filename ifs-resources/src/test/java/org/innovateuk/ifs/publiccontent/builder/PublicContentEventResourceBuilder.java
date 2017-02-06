@@ -21,6 +21,10 @@ public class PublicContentEventResourceBuilder extends BaseBuilder<PublicContent
         return new PublicContentEventResourceBuilder(emptyList()).with(uniqueIds());
     }
 
+    public PublicContentEventResourceBuilder withId(Long id) {
+        return with(event -> setField("id", id, event));
+    }
+
     public PublicContentEventResourceBuilder withPublicContent(Long publicContent) {
         return with(event -> setField("publicContent", publicContent, event));
     }

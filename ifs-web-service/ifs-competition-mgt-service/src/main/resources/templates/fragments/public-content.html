@@ -1,5 +1,6 @@
 <!-- =================== Public content section - Information and search (1) ============================== -->
-<div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
+<div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html"
+     xmlns="http://www.w3.org/1999/html">
     <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
         <dl>
@@ -57,58 +58,81 @@
 
 <!-- =================== Public content section - Dates (5) ============================== -->
 <div th:fragment="section-dates(model, form)" xmlns:th="http://www.w3.org/1999/html">
-    <p>This information is used for search results and the opening section of the competition page.</p>
-    <th:block th:if="${model.readOnly}">
+    <th:block th:if="${model.readOnly}" class="readonly-data">
         <dl>
-            <dt>Short description</dt>
-            <dd th:text="${form.shortDescription}"></dd>
-            <dt>Project funding range</dt>
-            <dd th:text="${form.projectFundingRange}"></dd>
-            <dt>Eligibility summary</dt>
-            <dd th:text="${form.eligibilitySummary}"></dd>
-            <dt>Keywords</dt>
-            <dd th:text="${form.keywords}"></dd>
+            <th:block th:each="event : ${model.sortedEvents}">
+                <dt th:text="${event.dateTime}"></dt>
+                <dd th:text="${event.content}"></dd>
+            </th:block>
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <fieldset>
+        <hr>
+        <p>Generated automatically from the competition milestones.</p>
+        <dl>
+            <th:block th:each="event : ${model.sortedEvents}">
+                <dt th:text="${event.dateTime}"></dt>
+                <dd th:text="${event.content}"></dd>
+            </th:block>
+        </dl>
+        <hr>
+        <fieldset th:each="formDate, iteration : ${form.dates}">
             <div class="form-group">
-                <label class="form-label-bold" for="short-description">
-                    Short description
-                    <span class="form-hint">Appears at the top of the competition page.</span>
-                </label>
-                <input class="form-control width-full" id="short-description" type="text" th:field="${form.shortDescription}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.shortDescription.required}" />
+                <input type="hidden" th:field="${form.dates[__${iteration.index}__].id}">
+                <legend class="form-label form-label-bold">Date</legend>
+                <div class="date-group">
+                    <div class="day">
+                        <label class="form-label" th:for="form.dates[__${iteration.index}__].day">Day</label>
+                        <input class="form-control width-extra-small"
+                               placeholder="DD"
+                               type="number"
+                               th:field="${form.dates[__${iteration.index}__].day}"
+                               min="1"
+                               max="31"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.publiccontent.datesform.day.required}">
+                    </div>
+                    <div class="month">
+                        <label class="form-label" th:for="form.dates[__${iteration.index}__].month">Month</label>
+                        <input class="form-control width-extra-small"
+                               placeholder="MM"
+                               type="number"
+                               th:field="${form.dates[__${iteration.index}__].month}"
+                               min="1"
+                               max="12"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.publiccontent.datesform.month.required}">
+                    </div>
+                    <div class="year">
+                        <label class="form-label" th:for="form.dates[__${iteration.index}__].year">Year</label>
+                        <input class="form-control width-extra-small"
+                               placeholder="YYYY"
+                               type="number"
+                               th:field="${form.dates[__${iteration.index}__].year}"
+                               min="1"
+                               required="required"
+                               th:attr="data-required-errormessage=#{validation.publiccontent.datesform.year.required}">
+                    </div>
+                </div>
             </div>
             <div class="form-group">
-                <label class="form-label-bold" for="funding-range">
-                    Project funding range
-                    <span class="form-hint">Appears against the competition search result.</span>
+                <label class="form-label-bold" th:for="form.dates[__${iteration.index}__].content">
+                    Content
                 </label>
-                <input class="form-control" id="funding-range" type="text" th:field="${form.projectFundingRange}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.projectFundingRange.required}" />
+                <textarea cols="30" rows="5" class="width-full"
+                            th:field="${form.dates[__${iteration.index}__].content}"
+                            required="required"
+                            th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
+                </textarea>
             </div>
             <div class="form-group">
-                <label class="form-label-bold" for="eligibility-summary">
-                    Eligibility summary
-                    <span class="form-hint">Appears against the competition search result.</span>
-                </label>
-                <input class="form-control" id="eligibility-summary" type="text" th:field="${form.eligibilitySummary}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.eligibilitySummary.required}" />
+                <button class="buttonlink" type="button">Remove event</button>
             </div>
-            <div class="form-group">
-                <label class="form-label-bold" for="keywords">
-                    Keywords
-                    <span class="form-hint"> Keywords help competitions appear in search results but are not visible to applicants. Separate keywords with commas.</span>
-                </label>
-                <input class="form-control width-full" id="keywords" type="text" th:field="${form.keywords}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.publiccontent.searchinformationform.keywords.required}"/>
-            </div>
+            <hr>
         </fieldset>
+        <div class="alignright">
+            <button class="buttonlink" type="button">+ add new event</button>
+        </div>
     </th:block>
 </div>
 

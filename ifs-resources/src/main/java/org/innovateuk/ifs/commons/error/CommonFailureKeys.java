@@ -133,6 +133,11 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PROJECT_INVITE_INVALID(BAD_REQUEST),
 
     /**
+     * Public Content
+     */
+    PUBLIC_CONTENT_IDS_INCONSISTENT(BAD_REQUEST),
+
+    /**
      * Project Bank details
      */
     BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE(BAD_REQUEST),

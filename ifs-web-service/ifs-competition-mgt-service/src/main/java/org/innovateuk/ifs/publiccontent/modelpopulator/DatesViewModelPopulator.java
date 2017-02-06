@@ -39,18 +39,19 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
                         MilestoneType.SUBMISSION_DATE.equals(milestoneResource.getType()))
                 .collect(Collectors.toList());
 
+        List<DateViewModel> dates = new ArrayList<>();
+
         milestonesNeeded.forEach(milestoneResource -> {
-            if(null == model.getPublicContentDates()) {
-                model.setPublicContentDates(new ArrayList<>());
-            }
-            model.getPublicContentDates().add(mapMilestoneToDateViewModel(milestoneResource));
+            dates.add(mapMilestoneToDateViewModel(milestoneResource));
         });
 
         if(model.isReadOnly()) {
             publicContentResource.getContentEvents().forEach(publicContentEventResource -> {
-                model.getPublicContentDates().add(mapContentEventDateViewModel(publicContentEventResource));
+                dates.add(mapContentEventDateViewModel(publicContentEventResource));
             });
         }
+
+        model.setPublicContentDates(dates);
     }
 
     private DateViewModel mapContentEventDateViewModel(PublicContentEventResource publicContentEventResource) {

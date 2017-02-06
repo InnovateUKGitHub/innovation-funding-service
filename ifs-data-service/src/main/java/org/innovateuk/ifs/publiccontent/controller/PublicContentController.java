@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller for all public content actions.
  */
 @RestController
-@RequestMapping("/public-content")
+@RequestMapping("/public-content/")
 public class PublicContentController {
 
     @Autowired
