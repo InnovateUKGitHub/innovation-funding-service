@@ -18,7 +18,8 @@
                 </details>
                 <ul class="list-overview extra-margin">
                     <th:block th:each="subSection : ${model.subSections.get(model.currentSection.id)}">
-                        <div th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
+                        <div th:if="${model.isSectionDisplayed(subSection)}"
+                         th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
                     </th:block>
                 </ul>
             </div>
@@ -29,7 +30,6 @@
 
         </th:block>
     </div>
-
 
     <!-- =========================== Your organisation =========================== -->
     <div th:fragment="your_organisation">

@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.populator;
 
+import com.google.common.collect.Iterables;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -18,6 +19,8 @@ public class ApplicationNavigationPopulator {
     public static final String APPLICATION_BASE_URL = "/application/";
 
     private static final String REFERER = "referer";
+
+    public List<SectionType> sectionTypesToSkip = new ArrayList();
 
     @Autowired
     private QuestionService questionService;
@@ -54,43 +57,57 @@ public class ApplicationNavigationPopulator {
     }
 
     protected void addPreviousQuestionToModel(Optional<QuestionResource> previousQuestionOptional, Long applicationId, NavigationViewModel navigationViewModel) {
-        if (previousQuestionOptional.isPresent()) {
+        while (previousQuestionOptional.isPresent()) {
             String previousUrl;
             String previousText;
 
             QuestionResource previousQuestion = previousQuestionOptional.get();
             SectionResource previousSection = sectionService.getSectionByQuestionId(previousQuestion.getId());
-            if (previousSection.isQuestionGroup()) {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
-                previousText = previousSection.getName();
-            } else {
-                previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
-                previousText = previousQuestion.getShortName();
-            }
 
-            navigationViewModel.setPreviousUrl(previousUrl);
-            navigationViewModel.setPreviousText(previousText);
+            if (sectionTypesToSkip.contains(previousSection.getType())) {
+                previousQuestionOptional = questionService.getPreviousQuestion(previousSection.getQuestions().get(0));
+            } else {
+
+                if (previousSection.isQuestionGroup()) {
+                    previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + previousSection.getId();
+                    previousText = previousSection.getName();
+                } else {
+                    previousUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + previousQuestion.getId();
+                    previousText = previousQuestion.getShortName();
+                }
+
+                navigationViewModel.setPreviousUrl(previousUrl);
+                navigationViewModel.setPreviousText(previousText);
+                break;
+            }
         }
     }
 
     protected void addNextQuestionToModel(Optional<QuestionResource> nextQuestionOptional, Long applicationId, NavigationViewModel navigationViewModel) {
-        if (nextQuestionOptional.isPresent()) {
+        while (nextQuestionOptional.isPresent()) {
             String nextUrl;
             String nextText;
 
             QuestionResource nextQuestion = nextQuestionOptional.get();
             SectionResource nextSection = sectionService.getSectionByQuestionId(nextQuestion.getId());
 
-            if (nextSection.isQuestionGroup()) {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
-                nextText = nextSection.getName();
+            if (sectionTypesToSkip.contains(nextSection.getType())) {
+                Long lastQuestion = Iterables.getLast(nextSection.getQuestions());
+                nextQuestionOptional = questionService.getNextQuestion(lastQuestion);
             } else {
-                nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
-                nextText = nextQuestion.getShortName();
-            }
 
-            navigationViewModel.setNextUrl(nextUrl);
-            navigationViewModel.setNextText(nextText);
+                if (nextSection.isQuestionGroup()) {
+                    nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + SECTION_URL + nextSection.getId();
+                    nextText = nextSection.getName();
+                } else {
+                    nextUrl = APPLICATION_BASE_URL + applicationId + "/form" + QUESTION_URL + nextQuestion.getId();
+                    nextText = nextQuestion.getShortName();
+                }
+
+                navigationViewModel.setNextUrl(nextUrl);
+                navigationViewModel.setNextText(nextText);
+                break;
+            }
         }
     }
 
@@ -113,9 +130,14 @@ public class ApplicationNavigationPopulator {
                 backURL = "/application/" + appId;
             }
             model.addAttribute("backURL", backURL);
-
-
         }
+    }
 
+    public void setSectionTypesToSkip(List<SectionType> sectionTypesToSkip) {
+        this.sectionTypesToSkip = sectionTypesToSkip;
+    }
+
+    public void addSectionTypesToSkip(SectionType sectionTypeToSkip) {
+        this.sectionTypesToSkip.add(sectionTypeToSkip);
     }
 }

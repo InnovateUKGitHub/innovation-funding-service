@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
@@ -268,6 +269,11 @@ public class ApplicationFormController {
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
             OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+
+            if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
+                applicationNavigationPopulator.addSectionTypesToSkip(SectionType.ORGANISATION_FINANCES);
+            }
+
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
         applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);
@@ -495,7 +501,9 @@ public class ApplicationFormController {
     private void setRequestingFunding(String requestingFunding, Long userId, Long applicationId, Long competitionId, Long processRoleId, ValidationMessages errors) {
         ApplicationFinanceResource finance = financeService.getApplicationFinanceDetails(userId, applicationId);
         QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-        finance.getGrantClaim().setGrantClaimPercentage(0);
+        if (finance.getGrantClaim() != null ){
+            finance.getGrantClaim().setGrantClaimPercentage(0);
+        }
         errors.addAll(financeRowService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
 
         if (!errors.hasErrors()) {
