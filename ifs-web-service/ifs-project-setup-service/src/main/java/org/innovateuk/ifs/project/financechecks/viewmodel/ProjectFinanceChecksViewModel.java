@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.financechecks.viewmodel;
 
-import org.innovateuk.ifs.notesandqueries.resource.thread.ThreadResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
