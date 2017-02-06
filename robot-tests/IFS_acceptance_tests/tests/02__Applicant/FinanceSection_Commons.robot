@@ -177,8 +177,8 @@ the user fills in the organisation information
 
 the user checks Your Funding section
     ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
-    Run Keyword if   '${Research_category_selected}' == False    the user selects research area
-    Run Keyword if   '${Research_category_selected}' == True  the user fills in the funding information    Robot test application
+    Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area
+    Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information    Robot test application
 
 the user selects research area
     When The user clicks the button/link   link= application details
