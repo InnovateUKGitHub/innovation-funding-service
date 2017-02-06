@@ -79,7 +79,7 @@ Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]
     When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
-    Then the user should see the text in the page    This will generate a flat profile spend for all project partners.
+    Then the user should see the text in the page    This will generate a flat spend profile for all project partners.
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
 
 Project Finance generates the Spend Profile
@@ -246,7 +246,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should see the text in the page    Successful application
     Then the user should see the element            link = Monitoring Officer
     And the user should see the element             link = Bank details
-    And the user should not see the element         link = Finance checks
+    And the user should see the element         link = Finance checks
     And the user should see the element             link= Spend profile
     And the user should not see the element         link = Grant offer letter
 

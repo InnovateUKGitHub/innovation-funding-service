@@ -17,7 +17,7 @@ IFS.core.debug = (function () {
           IFS.core.debug.enableDebug()
         }
         // red a11y borders
-        jQuery('head').append('<style>a[href="#"],a:not([href]),a[href=""],a[href*="prototypes"]{ outline:5px solid red !important; }</style>')
+        jQuery('head').append('<style>a[href="#"],a[href=""],a[href*="prototypes"]{ outline:5px solid red !important; }</style>')
       }
     },
     toggleDebug: function () {

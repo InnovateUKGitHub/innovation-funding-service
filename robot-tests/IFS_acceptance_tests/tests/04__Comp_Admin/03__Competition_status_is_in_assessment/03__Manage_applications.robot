@@ -39,7 +39,7 @@ View application progress page
     [Tags]
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then The user should see the text in the page    00000015: Rainfall
-    [Teardown]
+    And the user should see the text in the page    Everyday Im Juggling Ltd (Lead)
 
 Review the application
     [Documentation]    INFUND-7046
@@ -58,7 +58,7 @@ View the available assessors
 View the assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
-    Given The user should see the element    jQuery=tr:contains(There are no assessors assigned to this application.)
+    Given The user should see the element    jQuery=p:contains(No assessors have been assigned to this application.)
     When the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
@@ -97,6 +97,9 @@ Remove and notify an assessor (Notified)
     And the user clicks the button/link    jQuery=.button:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
+    And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
+    And the user should not see the element    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct
@@ -121,18 +124,18 @@ the application list is correct before changes
     #TODO checks disabled due toINFUND-7745
 
 the available assessors information is correct
-    the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
-    the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(2):contains('Town Planning, Construction')
-    #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(3):contains('8')
-    #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(4):contains('4')
-    #the user should see the element    jQuery=h2:contains('Available assessors') ~ .table-overflow td:nth-child(5):contains('0')
+    the user should see the element    jQuery=.assessors-available td:nth-child(1):contains('Paul Plum')
+    the user should see the element    jQuery=.assessors-available td:nth-child(2):contains('Town Planning, Construction')
+    #the user should see the element    jQuery=.assessors-available td:nth-child(3):contains('8')
+    #the user should see the element    jQuery=.assessors-available td:nth-child(4):contains('4')
+    #the user should see the element    jQuery=.assessors-available td:nth-child(5):contains('0')
     #TODO checks disabled due toINFUND-7745
 
 the assigned list is correct before notification
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(1):contains("Paul Plum")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(2):contains("ACADEMIC")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Urban living")
-    the user should see the element    jQuery=tr:eq(1) td:nth-child(3):contains("Infrastructure")
+    the user should see the element    jQuery=.assessors-assigned td:nth-child(1):contains("Paul Plum")
+    the user should see the element    jQuery=.assessors-assigned td:nth-child(2):contains("ACADEMIC")
+    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Urban living")
+    the user should see the element    jQuery=.assessors-assigned td:nth-child(3):contains("Infrastructure")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(4):contains("9")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(5):contains("5")
     #the user should see the element    jQuery=tr:eq(1) td:nth-child(6):contains("-")
@@ -142,27 +145,10 @@ the assigned list is correct before notification
     #TODO checks disabled due toINFUND-7745
 
 the previously assigned list is correct
-    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(1):contains('Paul Plum')
-    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(2):contains('ACADEMIC')
-    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Urban living')
-    the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(3):contains('Infrastructure')
-    #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(4):contains('8')
-    #the user should see the element    jQuery=h2:contains('Previously assigned') ~ .table-overflow td:nth-child(5):contains('4')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(1):contains('Paul Plum')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(2):contains('ACADEMIC')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Urban living')
+    the user should see the element    jQuery=.assessors-previous td:nth-child(3):contains('Infrastructure')
+    #the user should see the element    jQuery=.assessors-previous td:nth-child(4):contains('8')
+    #the user should see the element    jQuery=.assessors-previous td:nth-child(5):contains('4')
     #TODO checks disabled due toINFUND-7745
-
-Custom suite setup
-    Guest user log-in    &{Comp_admin1_credentials}
-    The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    The user clicks the button/link    jQuery=.button:contains("Manage applications")
-    ${initial_application_assesors} =    Get Table Cell    css=.table-overflow    4    4    loglevel=INFO
-    ${initial_application_assigned} =    Get Value    jQuery=tr:nth-child(1) td:nth-child(5)
-    ${initial_application_submitted} =    Get Value    jQuery=tr:nth-child(1) td:nth-child(6)
-    the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
-    ${initial_assessors_application} =    Get Value    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(4)
-    ${initial_assessors_assigned} =    Get Value    jQuery=h2:contains('Available assessors') ~ .table-overflow td:contains('Paul Plum') ~ td:nth-child(5)
-    Set suite variable    ${initial_application_assesors}
-    Set suite variable    ${initial_application_assigned}
-    Set suite variable    ${initial_application_submitted}
-    Set suite variable    ${initial_assessors_application}
-    Set suite variable    ${initial_assessors_assigned}
-    The user navigates to the page    ${Application_management_dashboard}
