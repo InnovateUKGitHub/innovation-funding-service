@@ -10,8 +10,11 @@ import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.notifications.resource.*;
+import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
+import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
@@ -23,10 +26,12 @@ import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.user.domain.OrganisationType;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.GraphBuilderContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -35,7 +40,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -85,6 +93,19 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private SystemNotificationSource systemNotificationSource;
+
+    @Autowired
+    private NotificationService notificationService;
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
+
+    enum Notifications {
+        NEW_FINANCE_CHECK_QUERY_RESPONSE
+    }
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -159,6 +180,37 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(new FinanceCheckSummaryResource(project.getId(), project.getName(), competition.getId(), competition.getName(), project.getTargetStartDate(),
                 project.getDurationInMonths().intValue(), totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, spendProfile.isPresent(),
                 getPartnerStatuses(partnerOrganisations), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
+    }
+
+    @Override
+    public ServiceResult<Void> saveNewResponse(Long projectId, Long organisationId, Long queryId) {
+
+        return getProject(projectId).andOnSuccess( project -> {
+            NotificationSource from = systemNotificationSource;
+
+            List<ProjectUser> projectUsers = project.getProjectUsers();
+            List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getRole().isFinanceContact());
+            User financeContact =  getOnlyElementOrEmpty(financeContacts).get().getUser();
+
+            String fullName = financeContact.getName();
+
+            Application application = project.getApplication();
+
+            NotificationTarget pmTarget =  new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+
+            Map<String, Object> notificationArguments = new HashMap<>();
+            notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
+            notificationArguments.put("applcationName", application.getName());
+
+            Notification notification = new Notification(from, Collections.singletonList(pmTarget), FinanceCheckServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
+            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, NotificationMedium.EMAIL);
+
+            if (!notificationResult.isSuccess()) {
+                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+            }
+            // TODO call actual save
+            return serviceSuccess();
+        });
     }
 
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {

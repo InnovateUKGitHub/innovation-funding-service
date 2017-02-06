@@ -100,6 +100,19 @@ public class FinanceCheckControllerTest extends BaseControllerMockMVCTest<Financ
                 andExpect(status().isOk());
     }
 
+    @Test
+    public void testSaveResponse() throws Exception {
+        Long projectId = 123L;
+        Long organisationId = 456L;
+        Long queryId = 987L;
+        when(financeCheckServiceMock.saveNewResponse(projectId, organisationId, queryId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post(FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}" +  FinanceCheckURIs.PATH + "/query/{queryId}/response", projectId, organisationId, queryId))
+                .andExpect(status().isOk());
+
+        verify(financeCheckServiceMock).saveNewResponse(123L, 456L, 987L);
+    }
+
     @Override
     protected FinanceCheckController supplyControllerUnderTest() {
         return new FinanceCheckController();
