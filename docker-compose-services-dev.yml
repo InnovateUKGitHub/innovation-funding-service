@@ -1,40 +1,40 @@
 version: '2'
 services:
 
-  application-svc:
-    hostname: application-svc
+  application-service:
+    hostname: application-service
     links:
       - admin
     ports:
       - "8081:8080"
       - "9001:8000"
 
-  assessment-svc:
-    hostname: assessment-svc
+  assessment-service:
+    hostname: assessment-service
     links:
       - admin
     ports:
       - "8082:8080"
       - "9002:8000"
 
-  competition-mgt-svc:
-    hostname: competition-mgt-svc
+  competition-mgt-service:
+    hostname: competition-mgt-service
     links:
       - admin
     ports:
       - "8083:8080"
       - "9003:8000"
 
-  project-setup-mgt-svc:
-    hostname: project-setup-mgt-svc
+  project-setup-mgt-service:
+    hostname: project-setup-mgt-service
     links:
       - admin
     ports:
       - "8084:8080"
       - "9004:8000"
 
-  project-setup-svc:
-    hostname: project-setup-svc
+  project-setup-service:
+    hostname: project-setup-service
     links:
       - admin
     ports:

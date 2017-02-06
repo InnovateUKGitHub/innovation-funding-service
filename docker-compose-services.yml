@@ -1,64 +1,39 @@
 version: '2'
 services:
-
   shib:
-    image: innovateuk/ifs-shib-sp:1.0-SNAPSHOT
+    image: innovateuk/shibboleth:1.0-SNAPSHOT
+    cap_add:
+      - SYS_PTRACE
     ports:
       - "443:443"
-    environment:
-      - "SPHOST=ifs.local-dev"
-      - "IDPHOST=auth.local-dev:9443"
-      - "HTTPSPORT=443"
-      - "HTTPPORT=80"
-    networks:
-      ifs:
-        aliases:
-          - ifs.local-dev
-
-  idp:
-    image: innovateuk/ifs-shib-idp:1.0-SNAPSHOT
-    ports:
-      - "9443:9443"
-    environment:
-      - "SPHOST=ifs.local-dev"
-      - "IDPHOST=auth.local-dev:9443"
-      - "HTTPSPORT=9443"
-      - "HTTPPORT=9080"
-    networks:
-      ifs:
-        aliases:
-          - auth.local-dev
-
-  ldap:
-    image: innovateuk/ifs-ldap:1.0-SNAPSHOT
-    ports:
       - "389:389"
-    environment:
-      - "LDAPPORT=389"
     networks:
       ifs:
+        aliases:
+          - iuk-auth-localdev
 
-  application-svc:
+  application-service:
     image: innovateuk/application-service:1.0-SNAPSHOT
     networks:
       - ifs
+    
 
-  assessment-svc:
+  assessment-service:
     image: innovateuk/assessment-service:1.0-SNAPSHOT
     networks:
       - ifs
 
-  competition-mgt-svc:
+  competition-mgt-service:
     image: innovateuk/competition-management-service:1.0-SNAPSHOT
     networks:
       - ifs
 
-  project-setup-mgt-svc:
+  project-setup-mgt-service:
     image: innovateuk/project-setup-management-service:1.0-SNAPSHOT
     networks:
       - ifs
 
-  project-setup-svc:
+  project-setup-service:
     image: innovateuk/project-setup-service:1.0-SNAPSHOT
     networks:
       - ifs
