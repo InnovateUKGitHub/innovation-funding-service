@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.controller.dashboard;
 import org.innovateuk.ifs.assessment.model.AssessorDashboardModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -19,6 +20,7 @@ public class AssessorDashboardController {
     @Autowired
     private AssessorDashboardModelPopulator assessorDashboardModelPopulator;
 
+    @PreAuthorize("hasAuthority('assessor')")
     @RequestMapping(value = "/dashboard", method = RequestMethod.GET)
     public String dashboard(Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
 
