@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competition;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequestMapping("/competition")
+@PreAuthorize("permitAll")
 public class CompetitionController {
     public static final String TEMPLATE_PATH = "competition/";
     @Autowired
