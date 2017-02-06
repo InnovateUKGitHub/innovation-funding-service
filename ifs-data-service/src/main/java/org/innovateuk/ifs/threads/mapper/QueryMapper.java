@@ -29,7 +29,7 @@ public abstract class QueryMapper extends BaseMapper<Query, QueryResource, Long>
     @Override
     public Query mapToDomain(QueryResource queryResource) {
         return new Query(queryResource.id, simpleMap(queryResource.posts, postMapper::mapToDomain),
-                    queryResource.sectionType, queryResource.title, queryResource.createdOn);
+                    queryResource.section, queryResource.title, queryResource.createdOn);
     }
 
 }
