@@ -3,6 +3,8 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...
 ...            INFUND-6393 As an Applicant I will be invited to add Staff count and Turnover where the include projected growth table is set to 'No' within the Finances page of Competition setup
 ...
+...            INFUND-6395 s an Applicant I will be invited to add Projected growth, and Organisation size where the include projected growth table is set to Yes within the Finances page of Competition setup
+...
 ...            INFUND-6895 As an Lead Applicant I will be advised that changing my Research category after completing Funding level will reset the 'Funding level'
 Suite Setup    Custom Suite Setup
 Force Tags     Applicant  CompAdmin
@@ -96,6 +98,7 @@ Turnover and Staff count fields
     Then the user clicks the button/link   link=Your organisation
     And the user should see the text in the page  Turnover (£)
     And the user should see the text in the page  Full time employees
+    And the user should see the text in the page  Number of full time employees at your organisation.
 
 Once the project growth table is selected
     [Documentation]  INFUND-6393
@@ -115,14 +118,15 @@ Once the project growth table is selected
     Then the user should see the element  jQuery=h2:contains("Ready to open") ~ ul a:contains("${compWITHGrowth}")
     [Teardown]  The competitions date changes so it is now Open  ${compWITHGrowth}
 
-As next step the Applicant cannot see the fields
-    [Documentation]  INFUND-6393
+As next step the Applicant cannot see the turnover field
+    [Documentation]  INFUND-6393, INFUND-6395
     [Tags]
     Given Lead Applicant applies to the new created competition  ${compWITHGrowth}
     When the user clicks the button/link  link=Your finances
     And the user clicks the button/link   link=Your organisation
     Then the user should not see the text in the page  Turnover (£)
-    And the user should not see the text in the page  Full time employees
+    And the user should see the text in the page  Full time employees
+    And the user should see the text in the page  Number of full time employees at your organisation at the end of the last financial year.
 
 Organisation client side validation
     [Documentation]  INFUND-6393
