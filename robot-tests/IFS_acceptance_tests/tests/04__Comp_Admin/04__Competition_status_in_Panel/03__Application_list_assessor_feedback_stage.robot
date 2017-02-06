@@ -2,7 +2,7 @@
 Documentation     INFUND-2606 - As a competition administrator I want a view of all applications at the 'Assessor Feedback' stage so that I can publish their uploaded assessor feedback
 Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password=Passw0rd
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin    Pending
+Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 #TODO once new funding work is done
 *** Variables ***
@@ -11,7 +11,7 @@ Resource          ../../../resources/defaultResources.robot
 Status and applications are correct
     [Documentation]    INFUND-2606
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
+    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the text in the page    Matter - Planning for Web
     And the user should see the text in the page    Sensing & Control network using the lighting infrastructure
