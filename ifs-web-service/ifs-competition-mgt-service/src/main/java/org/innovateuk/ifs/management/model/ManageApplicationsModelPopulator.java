@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -19,7 +20,8 @@ public class ManageApplicationsModelPopulator {
     public ManageApplicationsViewModel populateModel(CompetitionResource competition, List<ApplicationCountSummaryResource> applicationCounts) {
         ManageApplicationsViewModel model = new ManageApplicationsViewModel(
                 competition.getId(), competition.getName(),
-                simpleMap(applicationCounts, this::getRowViewModel));
+                simpleMap(applicationCounts, this::getRowViewModel),
+                IN_ASSESSMENT.equals(competition.getCompetitionStatus()));
         return model;
     }
 

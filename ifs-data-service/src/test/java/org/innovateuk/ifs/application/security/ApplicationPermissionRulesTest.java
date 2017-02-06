@@ -175,6 +175,12 @@ public class ApplicationPermissionRulesTest extends BasePermissionRulesTest<Appl
     }
 
     @Test
+    public void leadApplicantCanSeeTheApplicationFinanceDetailsTest() {
+        assertTrue(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, leadOnApplication1));
+        assertFalse(rules.leadApplicantCanSeeTheApplicationFinanceDetails(applicationResource1, user2));
+    }
+
+    @Test
     public void compAdminCanSeeTheResearchParticipantPercentageInApplications() {
         assertTrue(rules.compAdminCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, compAdmin));
         assertFalse(rules.compAdminCanSeeTheResearchParticipantPercentageInApplications(applicationResource1, leadOnApplication1));

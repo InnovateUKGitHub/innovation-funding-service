@@ -40,6 +40,9 @@ View application progress page
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then The user should see the text in the page    00000015: Rainfall
     And the user should see the text in the page    Everyday Im Juggling Ltd (Lead)
+    And the user should see the text in the page    No assessors have been assigned to this application.
+    And the user should see the text in the page    No assessors have rejected this application.
+    And the user should see the text in the page    No assessors were previously assigned to this application.
 
 Review the application
     [Documentation]    INFUND-7046
@@ -58,7 +61,7 @@ View the available assessors
 View the assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
-    Given The user should see the element    jQuery=p:contains(There are no assessors assigned to this application.)
+    Given The user should see the element    jQuery=p:contains(No assessors have been assigned to this application.)
     When the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
