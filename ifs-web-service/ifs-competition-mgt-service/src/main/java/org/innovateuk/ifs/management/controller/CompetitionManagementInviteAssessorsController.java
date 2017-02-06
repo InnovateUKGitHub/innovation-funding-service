@@ -17,6 +17,7 @@ import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,6 +34,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
+@PreAuthorize("hasAuthority('comp_admin')")
 public class CompetitionManagementInviteAssessorsController {
 
     private static final String FORM_ATTR_NAME = "form";

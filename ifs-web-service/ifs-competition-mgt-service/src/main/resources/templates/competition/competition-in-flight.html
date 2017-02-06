@@ -195,7 +195,7 @@
                                th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}">Funding decision</a>
                             <a class="button button-block"
                                th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}"
-                               href="#">Funding decision</a>
+                               th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}">Funding decision</a>
                         </div>
                         <!--
                         <div class="column-third">

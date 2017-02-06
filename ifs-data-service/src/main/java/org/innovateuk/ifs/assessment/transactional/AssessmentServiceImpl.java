@@ -107,7 +107,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+    public ServiceResult<Integer> countByStateAndCompetition(AssessmentStates state, long competitionId) {
         return serviceSuccess(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId));
     }
 

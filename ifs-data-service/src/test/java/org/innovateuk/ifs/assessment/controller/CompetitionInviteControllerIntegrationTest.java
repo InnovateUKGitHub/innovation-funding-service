@@ -691,15 +691,15 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
                 .build(3));
         competitionParticipantRepository.save(newCompetitionParticipant()
                 .with(id(null))
-                .withCompetition(competition)
+                .withCompetition(competition)Comp
                 .withRole(ASSESSOR)
                 .withStatus(ACCEPTED, REJECTED, ACCEPTED, REJECTED, REJECTED, ACCEPTED, ACCEPTED)
                 .build(7));
         CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
-                .withInviteList(1L)
-                .withInvited(2L)
-                .withDeclined(3L)
-                .withAccepted(4L)
+                .withInviteList(1)
+                .withInvited(2)
+                .withDeclined(3)
+                .withAccepted(4)
                 .build();
 
         CompetitionInviteStatisticsResource statisticsResource = controller.getInviteStatistics(1L).getSuccessObject();

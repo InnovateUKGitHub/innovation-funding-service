@@ -4,6 +4,7 @@ import org.innovateuk.ifs.project.consortiumoverview.viewmodel.ProjectConsortium
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  */
 @Controller
 @RequestMapping("/project/{projectId}/team-status")
+@PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
 public class ProjectTeamStatusController {
 
     @Autowired

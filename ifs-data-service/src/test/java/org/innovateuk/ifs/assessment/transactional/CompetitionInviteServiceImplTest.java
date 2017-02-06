@@ -1019,10 +1019,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getInviteStatistics() throws Exception {
         long competitionId = 1L;
         CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
-                .withAccepted(1L)
-                .withDeclined(2L)
-                .withInviteList(3L)
-                .withInvited(4L)
+                .withAccepted(1)
+                .withDeclined(2)
+                .withInviteList(3)
+                .withInvited(4)
                 .build();
 
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED,SENT))).thenReturn(expected.getInvited());

@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -24,6 +25,7 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
  * This controller gets the decision to fund or not fund the applications for a given competition.
  */
 @Controller
+@PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
 public class FundingDecisionController {
 	
 	@Autowired
