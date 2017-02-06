@@ -2,6 +2,8 @@
 Documentation  INFUND-6390 As an Applicant I will be invited to add project costs, organisation and funding details via links within the 'Finances' section of my application
 ...
 ...            INFUND-6393 As an Applicant I will be invited to add Staff count and Turnover where the include projected growth table is set to 'No' within the Finances page of Competition setup
+...
+...            INFUND-6895 As an Lead Applicant I will be advised that changing my Research category after completing Funding level will reset the 'Funding level'
 Suite Setup    Custom Suite Setup
 Force Tags     Applicant  CompAdmin
 Resource       ../../../resources/defaultResources.robot
@@ -145,7 +147,7 @@ Mark Organisation as complete
     [Tags]  Failing
 
 Funding subsection opens when Appl details and organisation info are provided
-    [Documentation]  something
+    [Documentation]  INFUND-6895
     [Tags]  Failing
 
 *** Keywords ***
