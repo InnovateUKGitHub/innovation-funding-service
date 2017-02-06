@@ -23,6 +23,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -104,6 +105,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
 
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
     LocalValidatorFactoryBean validator;
 
     public InviteServiceImpl() {
@@ -150,7 +154,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private boolean handleInviteSuccess(ApplicationInvite i) {
-        applicationInviteRepository.save(i.send());
+        applicationInviteRepository.save(i.send(loggedInUserSupplier.get(), LocalDateTime.now()));
         return true;
     }
 

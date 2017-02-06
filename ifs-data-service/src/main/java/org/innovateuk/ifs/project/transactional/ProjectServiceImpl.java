@@ -54,6 +54,7 @@ import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
@@ -178,6 +179,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
 
     @Autowired
     private ProjectGrantOfferService projectGrantOfferLetterService;
+
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -798,7 +802,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private boolean handleInviteSuccess(ProjectInvite projectInvite) {
-        inviteProjectRepository.save(projectInvite.send());
+        inviteProjectRepository.save(projectInvite.send(loggedInUserSupplier.get(), LocalDateTime.now()));
         return true;
     }
 
