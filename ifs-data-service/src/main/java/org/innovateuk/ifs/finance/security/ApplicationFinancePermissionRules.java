@@ -47,14 +47,14 @@ public class ApplicationFinancePermissionRules {
         return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation")
-    public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isAConsortiumMemberOnApplication(applicationFinanceResource, user);
+    @PermissionRule(value = "ADD_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
+    public boolean consortiumCanAddACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
     }
 
-    @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation")
-    public boolean consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
-        return isAConsortiumMemberOnApplication(applicationFinanceResource, user);
+    @PermissionRule(value = "UPDATE_COST", description = "The consortium can update a cost to the application finances of their own organisation or if lead applicant")
+    public boolean consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        return isAConsortiumMemberOnApplicationOrIsLeadApplicant(applicationFinanceResource, user);
     }
 
     @PermissionRule(value = "READ_FILE_ENTRY", description = "The consortium can get file entry resource for finance section of a collaborator")
@@ -108,4 +108,10 @@ public class ApplicationFinancePermissionRules {
         return isLeadApplicant || isCollaborator;
     }
 
+    private boolean isAConsortiumMemberOnApplicationOrIsLeadApplicant(final ApplicationFinanceResource applicationFinanceResource, final UserResource user) {
+        final boolean isLeadApplicant = checkProcessRole(user, applicationFinanceResource.getApplication(), LEADAPPLICANT, processRoleRepository);
+        final boolean isCollaborator = checkProcessRole(user, applicationFinanceResource.getApplication(), applicationFinanceResource.getOrganisation(), COLLABORATOR, roleRepository, processRoleRepository);
+
+        return isLeadApplicant || isCollaborator;
+    }
 }

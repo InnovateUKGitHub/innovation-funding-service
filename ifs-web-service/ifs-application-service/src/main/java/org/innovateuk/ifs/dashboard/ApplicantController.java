@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +33,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  */
 @Controller
 @RequestMapping("/applicant")
+@PreAuthorize("hasAuthority('applicant')")
 public class ApplicantController {
 
     @Autowired

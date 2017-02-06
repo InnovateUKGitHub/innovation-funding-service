@@ -8,7 +8,7 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-
+//
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 public class SecurityRuleUtil {
@@ -21,17 +21,8 @@ public class SecurityRuleUtil {
         return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
     }
 
-    public static boolean isInternal(UserResource user) {
-        return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
-    }
-
     public static boolean isProjectFinanceUser(UserResource user) {
         return user.hasRole( PROJECT_FINANCE);
-    }
-
-    //TODO NUNO check if this ok
-    public static boolean isFinancialContact(UserResource user) {
-        return user.hasRole(FINANCE_CONTACT);
     }
 
     public static boolean isSystemMaintenanceUser(UserResource user) {
@@ -44,10 +35,6 @@ public class SecurityRuleUtil {
 
     public static boolean isAssessor(UserResource user) {
         return user.hasRole( ASSESSOR);
-    }
-
-    public static boolean isCompExec(UserResource user) {
-        return user.hasRole( COMP_EXEC);
     }
 
     public static boolean checkProcessRole(final UserResource user,

@@ -39,7 +39,7 @@ public class AssessmentServiceImpl implements AssessmentService {
 
     @Override
     public ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment) {
-        return assessmentRestService.recommend(assessmentId, new AssessmentFundingDecisionResourceBuilder()
+        return assessmentRestService.recommend(assessmentId, new AssessmentFundingDecisionOutcomeResourceBuilder()
                 .setFundingConfirmation(fundingConfirmation)
                 .setFeedback(feedback)
                 .setComment(comment)
@@ -47,12 +47,12 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
-    public ServiceResult<Void> rejectInvitation(Long assessmentId, String reason, String comment) {
-        ApplicationRejectionResource applicationRejection = new ApplicationRejectionResource();
-        applicationRejection.setRejectReason(reason);
-        applicationRejection.setRejectComment(comment);
+    public ServiceResult<Void> rejectInvitation(Long assessmentId, AssessmentRejectOutcomeValue reason, String comment) {
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = new AssessmentRejectOutcomeResource();
+        assessmentRejectOutcomeResource.setRejectReason(reason);
+        assessmentRejectOutcomeResource.setRejectComment(comment);
 
-        return assessmentRestService.rejectInvitation(assessmentId, applicationRejection).toServiceResult();
+        return assessmentRestService.rejectInvitation(assessmentId, assessmentRejectOutcomeResource).toServiceResult();
     }
 
     @Override
