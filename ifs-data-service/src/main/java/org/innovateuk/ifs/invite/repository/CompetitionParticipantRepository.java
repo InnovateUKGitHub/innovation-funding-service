@@ -29,5 +29,5 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
 
     int countByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
 
-    long countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
+    int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 }

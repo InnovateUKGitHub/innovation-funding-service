@@ -13,10 +13,10 @@ public class CompetitionInviteStatisticsResourceBuilderTest {
 
     @Test
     public void buildOne() {
-        long expectedInvited = 1L;
-        long expectedAccepted = 2L;
-        long expectedDeclined = 3L;
-        long expectedInviteList = 4L;
+        int expectedInvited = 1;
+        int expectedAccepted = 2;
+        int expectedDeclined = 3;
+        int expectedInviteList = 4;
         CompetitionInviteStatisticsResource competitionInviteStatisticsResource = newCompetitionInviteStatisticsResource()
                 .withInvited(expectedInvited)
                 .withAccepted(expectedAccepted)
@@ -32,10 +32,10 @@ public class CompetitionInviteStatisticsResourceBuilderTest {
 
     @Test
     public void buildMany() {
-        Long[] expectedInvited = {1L, 9L};
-        Long[] expectedAccepted = {2L, 8L};
-        Long[] expectedDeclined = {3L, 7L};
-        Long[] expectedInviteList = {4L, 6L};
+        Integer[] expectedInvited = {1, 9};
+        Integer[] expectedAccepted = {2, 8};
+        Integer[] expectedDeclined = {3, 7};
+        Integer[] expectedInviteList = {4, 6};
         List<CompetitionInviteStatisticsResource> competitionInviteStatisticsResources = newCompetitionInviteStatisticsResource()
                 .withInvited(expectedInvited)
                 .withAccepted(expectedAccepted)
@@ -45,10 +45,10 @@ public class CompetitionInviteStatisticsResourceBuilderTest {
 
         for (int i = 0; i < 2; i++) {
             CompetitionInviteStatisticsResource test = competitionInviteStatisticsResources.get(i);
-            assertEquals((long) expectedAccepted[i], test.getAccepted());
-            assertEquals((long) expectedDeclined[i], test.getDeclined());
-            assertEquals((long) expectedInvited[i], test.getInvited());
-            assertEquals((long) expectedInviteList[i], test.getInviteList());
+            assertEquals((int) expectedAccepted[i], test.getAccepted());
+            assertEquals((int) expectedDeclined[i], test.getDeclined());
+            assertEquals((int) expectedInvited[i], test.getInvited());
+            assertEquals((int) expectedInviteList[i], test.getInviteList());
         }
     }
 }

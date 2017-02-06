@@ -18,10 +18,10 @@ public class CompetitionOpenKeyStatisticsResourceDocs {
 
     public static final CompetitionOpenKeyStatisticsResourceBuilder competitionOpenKeyStatisticsResourceBuilder =
             newCompetitionOpenKeyStatisticsResource()
-                    .withAssessorsAccepted(1L)
-                    .withAssessorsInvited(2L)
-                    .withApplicationsPerAssessor(3L)
-                    .withApplicationsStarted(4L)
-                    .withApplicationsPastHalf(5L)
-                    .withApplicationsSubmitted(6L);
+                    .withAssessorsAccepted(1)
+                    .withAssessorsInvited(2)
+                    .withApplicationsPerAssessor(3)
+                    .withApplicationsStarted(4)
+                    .withApplicationsPastHalf(5)
+                    .withApplicationsSubmitted(6);
 }

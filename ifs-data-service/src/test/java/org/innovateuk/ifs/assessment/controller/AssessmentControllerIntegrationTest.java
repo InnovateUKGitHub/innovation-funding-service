@@ -125,7 +125,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long competitionId = 1L;
 
         loginCompAdmin();
-        RestResult<Long> result = controller.countByStateAndCompetition(state, competitionId);
+        RestResult<Integer> result = controller.countByStateAndCompetition(state, competitionId);
         assertTrue(result.isSuccess());
         long count = result.getSuccessObject();
         assertEquals(1L, count);

@@ -28,11 +28,11 @@ public class CompetitionReadyToOpenKeyStatisticsResourceBuilder extends BaseBuil
         super(newMultiActions);
     }
 
-    public CompetitionReadyToOpenKeyStatisticsResourceBuilder withAssessorsInvited(Long... assessorsInviteds) {
+    public CompetitionReadyToOpenKeyStatisticsResourceBuilder withAssessorsInvited(Integer... assessorsInviteds) {
         return withArraySetFieldByReflection("assessorsInvited", assessorsInviteds);
     }
 
-    public CompetitionReadyToOpenKeyStatisticsResourceBuilder withAssessorsAccepted(Long... assessorsAccepteds) {
+    public CompetitionReadyToOpenKeyStatisticsResourceBuilder withAssessorsAccepted(Integer... assessorsAccepteds) {
         return withArraySetFieldByReflection("assessorsAccepted", assessorsAccepteds);
     }
 
