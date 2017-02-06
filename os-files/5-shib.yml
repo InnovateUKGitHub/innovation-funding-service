@@ -17,9 +17,9 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: innovateuk/ifs-shib-sp:0.2.0
+        - image: 721685138178.dkr.ecr.eu-west-2.amazonaws.com/innovateuk/ifs-shib-sp:0.2.0
           name: shib
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
           - name: SPHOST
             value: <<SHIB-ADDRESS>>

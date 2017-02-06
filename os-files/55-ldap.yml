@@ -22,9 +22,9 @@ items:
             value: "8389"
           - name: LDAPSSLPORT
             value: "8636"
-          image: innovateuk/ifs-ldap:0.2.1
+          image: 721685138178.dkr.ecr.eu-west-2.amazonaws.com/innovateuk/ifs-ldap:0.2.1
           name: ldap
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8389
           - containerPort: 8636

@@ -25,7 +25,7 @@ items:
               path: /health
               port: 8123
           name: admin
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8123
           resources: {}

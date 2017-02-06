@@ -141,8 +141,13 @@ task robotTestsFilter (type: Copy) {
 
 
 task osDeployRemote(type:Exec) {
-    executable = 'setup-files/scripts/openshift/os-deploy-remote.sh'
-    args = [openshiftEnv]
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "remote", org.gradle.internal.os.OperatingSystem.current().isMacOsX()]
+}
+
+task osDeployLocal(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "local", org.gradle.internal.os.OperatingSystem.current().isMacOsX()]
 }
 
 task osTestRemote(type:Exec) {

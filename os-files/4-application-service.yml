@@ -27,7 +27,7 @@ items:
               path: /health
               port: 8080
           name: application-svc
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           env:
           - name: SPRING_APPLICATION_JSON
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'

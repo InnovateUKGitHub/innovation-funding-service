@@ -17,7 +17,7 @@ items:
         containers:
         - image: selenium/hub:3.0.1-dysprosium
           name: hub
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 4444
           - containerPort: 3000
@@ -46,7 +46,7 @@ items:
         containers:
         - image: selenium/node-chrome-debug:3.0.1-dysprosium
           name: chrome
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           lifecycle:
             postStart:
               exec:
