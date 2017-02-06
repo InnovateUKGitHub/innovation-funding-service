@@ -92,6 +92,17 @@ Applications should not have a check-box when the status is Open
     [Documentation]    INFUND-3726
     Then The user should not see the element    css=.assessment-submit-checkbox
 
+Check the comp admin see the assessor has rejected the application
+    [Documentation]
+    [Tags]
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=.button:contains("Manage applications")
+    And the user clicks the button/link    jQuery=tr:nth-child(4) a:contains(View progress)
+    And the user should see the text in the page    Rejected (1)
+    And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains(Not my area of expertise)
+    And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
+
 *** Keywords ***
 the assessor fills all fields with valid inputs
     Select From List By Index    id=rejectReason    2
