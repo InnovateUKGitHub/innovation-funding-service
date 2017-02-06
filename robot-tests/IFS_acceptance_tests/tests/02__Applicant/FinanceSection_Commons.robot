@@ -56,8 +56,24 @@ the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=img.complete[alt*="Application details"]
     Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
 
+the user completes the application details
+     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
+     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
+     the user clicks the button/link       jQuery=label[for="resubmission-no"]
+     the user clicks the button/link       jQuery=label[for="resubmission-no"]
+     # those Radio buttons need to be clicked twice.
+     Clear Element Text                    id=application_details-startdate_day
+     The user enters text to a text field  id=application_details-startdate_day  18
+     Clear Element Text                    id=application_details-startdate_year
+     The user enters text to a text field  id=application_details-startdate_year  2018
+     Clear Element Text                    id=application_details-startdate_month
+     The user enters text to a text field  id=application_details-startdate_month  11
+     The user enters text to a text field  id=application_details-duration  20
+     the user clicks the button/link       jQuery=button:contains("Mark as complete")
+
+
 the applicant completes the application details
-    #the user clicks the button/link       link=Application details
+    the user clicks the button/link       link=Application details
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for="resubmission-no"]
@@ -77,7 +93,6 @@ the user marks the finances as complete
     the user fills in the project costs
     the user fills in the organisation information
     the user checks Your Funding section
-    #the user fills in the funding information  Robot test application
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application Overview
     the user should see the element  jQuery=img.complete[alt*="finances"]
@@ -95,7 +110,7 @@ the user fills in the project costs
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
 
 the user fills in Labour
-    the user clicks the button/link            jQuery=#form-input-20.question button:contains("Labour")
+    the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
     the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
     the user enters text to a text field       css=[name^="labour-labourDaysYearly"]    230
@@ -182,7 +197,7 @@ the user checks Your Funding section
 
 the user selects research area
     When the user clicks the button/link      link = application details
-    the applicant completes the application details
+    the user completes the application details
     And the user fills in the funding information  Robot test application
 
 the user fills in the funding information
