@@ -14,6 +14,11 @@ Resource          ../../FinanceSection_Commons.robot
 
 
 *** Test Cases ***
+Before org size is selected, your funding link is not available
+    [Documentation]    INFUND-6394
+    [Tags]
+    When applicant navigates to the finances of the robot application
+    Then the user should not see the element    link=Your funding
 
 Small org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
@@ -58,6 +63,10 @@ Medium org can be selected
     When the user clicks the button/link   jQuery=.button:contains("Edit your organisation")
     And the user marks their organisation as    MEDIUM
 
+Funding section shows as incomplete
+    [Documentation]    INFUND-6394
+    [Tags]
+    When the user should see the element    css=.list-overview .section:nth-of-type(3) .assigned
 
 Funding section has been reset
     [Documentation]    INFUND-6894
@@ -93,6 +102,11 @@ Large organisation can be selected
     [Tags]    HappyPath
     When the user clicks the button/link   jQuery=.button:contains("Edit your organisation")
     And the user marks their organisation as    LARGE
+
+Funding section shows as incomplete again
+    [Documentation]    INFUND-6394
+    [Tags]
+    When the user should see the element    css=.list-overview .section:nth-of-type(3) .assigned
 
 
 Funding section has been reset again
