@@ -42,7 +42,6 @@ Funding section can be completed with under 70%
     [Tags]    HappyPath
     When the user completes the funding section with funding level    69
     Then the user should not see the element    jQuery=.error-message
-    [Teardown]    the user goes back to the previous page
 
 
 User sees warning that the funding section will be reset
@@ -56,7 +55,6 @@ User sees warning that the funding section will be reset
 Medium org can be selected
     [Documentation]    INFUND-1110, INFUND-6394
     [Tags]    HappyPath
-    And the user clicks the button/link    link=Your organisation
     When the user clicks the button/link   jQuery=.button:contains("Edit your organisation")
     And the user marks their organisation as    MEDIUM
 
@@ -80,7 +78,6 @@ Funding section can be completed with under 60%
     [Tags]    HappyPath
     When the user completes the funding section with funding level    57
     Then the user should not see the element    jQuery=.error-message
-    [Teardown]    the user goes back to the previous page
 
 
 User still sees warning that the funding section will be reset
@@ -94,7 +91,6 @@ User still sees warning that the funding section will be reset
 Large organisation can be selected
     [Documentation]    INFUND-1110, INFUND_6394
     [Tags]    HappyPath
-    And the user clicks the button/link    link=Your organisation
     When the user clicks the button/link   jQuery=.button:contains("Edit your organisation")
     And the user marks their organisation as    LARGE
 
