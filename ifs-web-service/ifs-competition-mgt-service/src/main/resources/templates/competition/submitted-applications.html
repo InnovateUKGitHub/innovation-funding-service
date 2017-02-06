@@ -1,97 +1,92 @@
 <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  th:remove="tag" />
-</head>
-<head>
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle=|Submitted applications - ${model.competitionName}|"  th:remove="tag" />
+    </head>
 
-<body class="dashboard-internal full-width">
+    <body class="dashboard-internal full-width">
+        <div th:include="fragments/layout :: body-start" th:remove="tag" />
+        <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
+            <div th:include="fragments/layout :: header-sub"
+                 th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
+                 th:remove="tag" />
 
-<main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <h1 class="heading-xlarge">
+                <span class="heading-secondary">
+                    <th:block th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">00000001: Connected digital additive manufacturing</th:block>
+                </span>
+                Submitted applications
+            </h1>
 
-    <div th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
-         th:remove="tag" />
+            <h2 class="heading-medium">Key statistics</h2>
+            <ul class="grid-row extra-margin-bottom">
+                <li class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-medium" th:text="${#temporals.format(model.assessmentDeadline, 'dd MMMM Y')}">17 November 2016</span>
+                        <br />
+                        <small>Assessment deadline</small>
+                    </div>
+                </li>
 
-    <h1 class="heading-xlarge">
-        <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(model.competitionId,8)}"/>: <th:block th:text="${model.competitionName}"/></span>
-        Submitted applications
-    </h1>
+                <li class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
+                        <span class="heading-large" th:text="${model.applicationsSubmitted}">18</span>
+                        <br />
+                        <small>Applications submitted</small>
+                    </div>
+                </li>
+            </ul>
 
-    <div class="no-constrain-width justify-left">
-        <h2 class="heading-medium">Key statistics</h2>
+            <div class="grid-row sorting">
+                <div class="column-two-thirds">
+                    <p><span class="heading-xlarge no-margin" th:text="${model.applicationsSubmitted}">22</span> <span class="heading-small">applications</span></p>
 
-        <ul class="grid-row">
+                    <!--/* TODO: Implement sort dropdown for the table - INFUND-7952 */-->
 
-            <li class="column-quarter">
-                <div class="highlight-panel">
-                    <span class="heading-large" th:text="${#temporals.format(model.assessmentDeadline, 'dd MMMM Y')}">17 November 2016</span>
-                    <br />
-                    <small>Assessment deadline</small>
                 </div>
-            </li>
+            </div>
 
-            <li class="column-quarter">
-                <div class="highlight-panel">
-                    <span class="heading-large" th:text="${model.applicationsSubmitted}">18</span>
-                    <br />
-                    <small>Applications submitted</small>
-                </div>
-            </li>
-        </ul>
-    </div>
+            <div class="table-overflow">
+                <table id="application-list">
+                    <thead>
+                        <tr>
+                            <th scope="col">Application number</th>
+                            <th scope="col">Project title</th>
+                            <th scope="col">Lead</th>
+                            <th scope="col">Innovation Area</th>
+                            <th scope="col">Number of partners</th>
+                            <th scope="col">Grant requested (£)</th>
+                            <th scope="col">Total project cost (£)</th>
+                            <th scope="col" class="alignright" style="width: 10%">Duration (months)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
+                            <td>
+                                <a
+                                th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})}"
+                                th:text="${#numbers.formatInteger(row.id,8)}">194731</a>
+                            </td>
+                            <td th:text="${row.projectTitle}">Machine learning in robots</td>
+                            <td th:text="${row.lead}">PWC</td>
+                            <td th:text="${row.innovationArea}">HVM</td>
+                            <td th:text="${row.numberOfPartners}">5</td>
+                            <td th:text="${#numbers.formatInteger(row.grantRequested, 3, 'COMMA')}">£203,000</td>
+                            <td th:text="${#numbers.formatInteger(row.totalProjectCost, 3, 'COMMA')}">£324,000</td>
+                            <td class="alignright" th:text="${row.durationInMonths}">12</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
 
-    <div class="grid-row sorting">
-        <div class="column-two-thirds">
-            <p><span class="heading-xlarge no-margin" th:text="${model.applicationsSubmitted}">22</span> <span class="heading-small">applications</span></p>
+            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        </main>
 
-            <!--/* TODO: Implement sort dropdown for the table - INFUND-7952 */-->
-
-        </div>
-    </div>
-
-    <div class="table-overflow">
-        <table id="application-list">
-            <thead>
-            <tr>
-                <th scope="col">Application number</th>
-                <th scope="col">Project title</th>
-                <th scope="col">Lead</th>
-                <th scope="col">Innovation Area</th>
-                <th scope="col">Number of partners</th>
-                <th scope="col">Grant requested (£)</th>
-                <th scope="col">Total project cost (£)</th>
-                <th scope="col" class="alignright" style="width: 10%">Duration (months)</th>
-            </tr>
-            </thead>
-            <tbody>
-
-            <tr class="filtered-result" th:each="row, iterStat : ${model.applications}">
-                <td>
-                    <a th:href="@{/competition/{cid}/application/{aid}(cid=${model.competitionId},aid=${row.id})}"
-                       th:text="${#numbers.formatInteger(row.id,8)}">194731</a>
-                </td>
-                <td th:text="${row.projectTitle}">Machine learning in robots</td>
-                <td th:text="${row.lead}">PWC</td>
-                <td th:text="${row.innovationArea}">HVM</td>
-                <td th:text="${row.numberOfPartners}">5</td>
-                <td th:text="${#numbers.formatInteger(row.grantRequested, 3, 'COMMA')}">£203,000</td>
-                <td th:text="${#numbers.formatInteger(row.totalProjectCost, 3, 'COMMA')}">£324,000</td>
-                <td class="alignright" th:text="${row.durationInMonths}">12</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
-</main>
-
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
-</body>
+        <div th:include="fragments/layout :: footer" th:remove="tag" />
+        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    </body>
 </html>
