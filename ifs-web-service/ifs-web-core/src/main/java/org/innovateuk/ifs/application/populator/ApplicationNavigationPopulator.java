@@ -137,7 +137,7 @@ public class ApplicationNavigationPopulator {
         this.sectionTypesToSkip = sectionTypesToSkip;
     }
 
-    public void addSectionTypesToSkip(SectionType sectionTypeToSkip) {
+    public void addSectionTypeToSkip(SectionType sectionTypeToSkip) {
         this.sectionTypesToSkip.add(sectionTypeToSkip);
     }
 }

@@ -278,7 +278,7 @@ public class ApplicationFormController {
             OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
 
             if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
-                applicationNavigationPopulator.addSectionTypesToSkip(SectionType.ORGANISATION_FINANCES);
+                applicationNavigationPopulator.addSectionTypeToSkip(SectionType.ORGANISATION_FINANCES);
             }
 
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
@@ -490,7 +490,7 @@ public class ApplicationFormController {
                 errors.addAll(saveErrors);
             }
 
-            if ((SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
+            if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
                     && "University (HEI)".equals(organisationType)) {
                 errors.addAll(setOrganisationFinancesComplete(application.getId(), competition.getId(), processRole.getId()));
             }
