@@ -38,8 +38,10 @@ public class AllApplicationsPageModelPopulator {
     }
 
     private List<AllApplicationsRowViewModel> getApplications(long competitionId) {
-        // TODO: Implement sorting - INFUND-7953
-        // TODO: Pagination needs to be implemented properly
+        // TODO: Implement sorting - INFUND-8054
+        // TODO: Implement filtering - INFUND-8010
+        // TODO: Pagination required - INFUND-8067
+
         ApplicationSummaryPageResource applicationSummaryPageResource = applicationSummaryRestService
                 .getAllApplications(competitionId, "", 0, Integer.MAX_VALUE)
                 .getSuccessObjectOrThrowException();

@@ -37,8 +37,9 @@ public class SubmittedApplicationsModelPopulator {
     }
 
     private List<SubmittedApplicationsRowViewModel> getApplications(long competitionId) {
-        // TODO: Implement sorting - INFUND-7952
-        // TODO: Pagination needs to be implemented properly
+        // TODO: Implement sorting - INFUND-8058
+        // TODO: Implement filtering - INFUND-8012
+        // TODO: Pagination required - INFUND-8067
 
         ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
                 .getSubmittedApplications(competitionId, "", 0, Integer.MAX_VALUE)
