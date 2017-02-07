@@ -41,7 +41,7 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
 
     @Test
     public void testGetPublicContentMenu() throws Exception {
-        when(publicContentMenuPopulator.populate(COMPETITION_ID)).thenReturn(serviceSuccess(new PublicContentMenuViewModel()));
+        when(publicContentMenuPopulator.populate(COMPETITION_ID)).thenReturn(new PublicContentMenuViewModel());
 
         mockMvc.perform(get(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is2xxSuccessful())
@@ -62,7 +62,7 @@ public class PublicContentMenuControllerTest extends BaseControllerMockMVCTest<P
     @Test
     public void testPublishPublicContentFailure() throws Exception {
         when(publicContentService.publishByCompetitionId(COMPETITION_ID)).thenReturn(serviceFailure(PUBLIC_CONTENT_NOT_COMPLETE_TO_PUBLISH));
-        when(publicContentMenuPopulator.populate(COMPETITION_ID)).thenReturn(serviceSuccess(new PublicContentMenuViewModel()));
+        when(publicContentMenuPopulator.populate(COMPETITION_ID)).thenReturn(new PublicContentMenuViewModel());
 
         mockMvc.perform(post(URL_PREFIX + "/" + COMPETITION_ID))
                 .andExpect(status().is2xxSuccessful())
