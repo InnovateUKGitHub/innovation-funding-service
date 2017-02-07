@@ -62,7 +62,7 @@
 	// <![CDATA[
   jQuery(document).ready(function(){
 
-    jQuery('.assessment-submit-checkbox').on('click',function(e){
+    jQuery('.selection-button-checkbox input').attr('type','checkbox').on('click',function(e){
       // update selected rows
 
       if (jQuery(this).is(':checked')) {

@@ -25,6 +25,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -46,6 +47,7 @@ import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
 
 @Controller
 @RequestMapping("/registration")
+@PreAuthorize("permitAll")
 public class RegistrationController {
     public static final String BASE_URL = "/registration/register";
 

@@ -35,7 +35,7 @@
             <tr>
                 <th scope="col">Project duration</th>
                 <th scope="col">Total costs</th>
-                <th scope="col" class="numeric">% grant</th>
+                <th scope="col" class="numeric">% Grant</th>
                 <th scope="col" class="numeric">Funding sought</th>
                 <th scope="col" class="numeric">Other public sector funding</th>
                 <th scope="col" class="numeric">Contribution to project</th>
@@ -62,10 +62,9 @@
         <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
             <h3>
                 <th:block th:text="${subSection.getName()}" />
-                <span th:attr="data-mirror='#section-total-'+${subSection.id}"></span>
                 <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
             </h3>
-            <th:block th:with="viewmode=${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly'">
+            <div class="collapsible-content" th:with="viewmode=${summaryModel.isReadOnly()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
                 <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
                     <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
 
@@ -86,7 +85,7 @@
                     <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
                     <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
                 </div>
-            </th:block>
+            </div>
         </section>
         <div class="grid-row total-cost">
             <div class="column-half">

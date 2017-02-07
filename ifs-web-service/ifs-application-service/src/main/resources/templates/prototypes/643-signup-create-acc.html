@@ -39,19 +39,21 @@
     </div>-->
 
 	<div class="grid-row">
+
 		<section class="column-half">
+
+			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/650-create-application?status'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}" />
+      <th:block th:if="${param.user != null and param.user[0] == 'assessor'}" th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" />
+
+		</section>
+    <section class="column-half">
 
 			<div th:include="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/643-create-acc-business-lead'})" th:remove="tag" />
 
 		</section>
-		<section class="column-half">
 
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/650-create-application?status'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}" />
+  </div>
 
-            <th:block th:if="${param.user != null and param.user[0] == 'assessor'}" th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" />
-
-		</section>
-	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -60,5 +62,30 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	// <![CDATA[
+  jQuery(document).ready(function(){
+
+      jQuery('.password-toggle').on('click',function(e){
+        e.preventDefault();
+
+        var inputType = jQuery('#id_password').attr('type');
+
+        //alert(inputType);
+
+        if (inputType == 'password'){
+            jQuery('#id_password').attr('type', 'text');
+            jQuery(this).text('Hide');
+        }else{
+            jQuery('#id_password').attr('type', 'password');
+            jQuery(this).text('Show');
+        }
+
+      });
+
+
+  });
+  // ]]>
+</script>
 </body>
 </html>
