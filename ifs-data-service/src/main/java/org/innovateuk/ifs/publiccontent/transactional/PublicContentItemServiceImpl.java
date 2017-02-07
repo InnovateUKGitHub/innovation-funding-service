@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.domain.InnovationArea;
