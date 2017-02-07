@@ -88,12 +88,12 @@ Green check should show when the finances are complete
 
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
-    [Tags]    Email     Pending
-    # Marked pending as not sure whether this is really a requirement as I can enter any amount in project costs and submit
+    [Tags]    Email
     [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
-    When the user enters text to a text field    id=incurred-staff    1000000000
+    And The user clicks the button/link       link=Your project costs
+    When the user enters text to a text field      id=incurred-staff    1000000000
     And Guest user log-in    &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
@@ -106,8 +106,7 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]      Pending
-     # Marked pending as not sure whether this is really a requirement as I can enter any amount in project costs and submit
+    [Tags]
     #TODO Pending due to INFUND-6390 will update ticket onces finances update is merged.
     [Setup]    Log in as a different user   &{lead_applicant_credentials}
     When Lead enters a valid research participation value
@@ -185,6 +184,7 @@ the red warning should be visible
 
 Lead enters a valid research participation value
     When The user navigates to the academic application finances
+    the user clicks the button/link       link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
