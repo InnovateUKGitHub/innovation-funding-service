@@ -15,7 +15,6 @@ public class PublicContentSectionResource {
     private PublicContentStatus status;
     private List<ContentGroupResource> contentGroups;
 
-
     public Long getId() {
         return id;
     }

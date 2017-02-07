@@ -86,22 +86,11 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
         Optional<ContentSection> optionalSection =  CollectionFunctions.simpleFindFirst(publicContent.getContentSections(),
                 section -> sectionType.equals(section.getType()));
 
-        if (!optionalResource.isPresent() || !optionalSection.isPresent()) {
+        if (optionalResource.isPresent() && optionalSection.isPresent()) {
+            return saveContentGroups(optionalResource.get(), optionalSection.get());
+        } else {
             return serviceFailure(CommonFailureKeys.PUBLIC_CONTENT_NOT_INITIALISED);
         }
-
-        Set<ContentGroupResource> toAdd = optionalResource.get().getContentGroups().stream()
-                .filter(group -> null == group.getId()).collect(Collectors.toSet());
-
-        Set<ContentGroupResource> toUpdate = Sets.difference(new HashSet<>(optionalResource.get().getContentGroups()), toAdd);
-
-        Set<Long> resourceIds = optionalResource.get().getContentGroups().stream().filter(contentGroupResource -> contentGroupResource != null).map(ContentGroupResource::getId).collect(Collectors.toSet());
-        Set<Long> entityIds = optionalSection.get().getContentGroups().stream().map(ContentGroup::getId).collect(Collectors.toSet());
-        Set<Long> toDeleteIds = Sets.difference(entityIds, resourceIds);
-
-        addNewGroups(toAdd, optionalSection.get());
-        updateGroups(toUpdate, optionalSection.get());
-        return deleteGroups(toDeleteIds);
     }
 
     @Override
@@ -118,6 +107,22 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
                     ServiceResult<Supplier<InputStream>> getFileResult = fileService.getFileByFileEntryId(contentGroup.getFileEntry().getId());
                     return getFileResult.andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntryMapper.mapToResource(contentGroup.getFileEntry()), inputStream));
                 });
+    }
+
+    private ServiceResult<Void> saveContentGroups(PublicContentSectionResource sectionResource, ContentSection section) {
+
+        Set<ContentGroupResource> toAdd = sectionResource.getContentGroups().stream()
+                .filter(group -> null == group.getId()).collect(Collectors.toSet());
+
+        Set<ContentGroupResource> toUpdate = Sets.difference(new HashSet<>(sectionResource.getContentGroups()), toAdd);
+
+        Set<Long> resourceIds = sectionResource.getContentGroups().stream().filter(contentGroupResource -> contentGroupResource != null).map(ContentGroupResource::getId).collect(Collectors.toSet());
+        Set<Long> entityIds = section.getContentGroups().stream().map(ContentGroup::getId).collect(Collectors.toSet());
+        Set<Long> toDeleteIds = Sets.difference(entityIds, resourceIds);
+
+        addNewGroups(toAdd, section);
+        updateGroups(toUpdate, section);
+        return deleteGroups(toDeleteIds);
     }
 
     private ServiceResult<Void> deleteGroups(Set<Long> toDeleteIds) {
@@ -152,7 +157,5 @@ public class ContentGroupServiceImpl extends BaseTransactionalService implements
             contentGroup.setContentSection(contentSection);
             contentGroupRepository.save(contentGroup);
         });
-
-
     }
 }

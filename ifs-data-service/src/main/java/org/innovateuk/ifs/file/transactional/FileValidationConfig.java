@@ -59,7 +59,6 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.publiccontentattachment.valid.media.types}")
     private List<String> validMediaTypesForPublicContentAttachment;
 
-
     @Bean(name = "formInputResponseFileValidator")
     public FileHttpHeadersValidator getFormInputResponseFileValidator() {
         return createFileValidator(validMediaTypesForFormInputResponses, maxFilesizeBytesForFormInputResponses);
@@ -94,7 +93,6 @@ public class FileValidationConfig {
     public FileHttpHeadersValidator getPublicContentAttachmentValidator() {
         return createFileValidator(validMediaTypesForPublicContentAttachment, maxFilesizeBytesForPublicContentAttachment);
     }
-
 
     private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {
         List<MediaType> mediaTypes = simpleMap(validMediaTypes, MediaType::valueOf);

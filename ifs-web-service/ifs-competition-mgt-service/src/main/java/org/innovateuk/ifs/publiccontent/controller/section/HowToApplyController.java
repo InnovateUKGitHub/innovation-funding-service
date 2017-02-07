@@ -16,7 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Controller for setup of public content.
+ * Controller for how to apply of public content.
  */
 @Controller
 @RequestMapping("/competition/setup/public-content/how-to-apply")

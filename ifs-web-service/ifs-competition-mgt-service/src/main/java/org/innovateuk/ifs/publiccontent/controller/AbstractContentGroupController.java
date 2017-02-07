@@ -23,6 +23,11 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 
+/**
+ * Abstract controller for all sections of public content with a repeating content group.
+ * @param <M> the view model class
+ * @param <F> the form class
+ */
 public abstract class AbstractContentGroupController<M extends AbstractPublicContentViewModel, F extends AbstractContentGroupForm> extends AbstractPublicContentSectionController<M, F> {
 
     @RequestMapping(value = "/{competitionId}/edit", params = "uploadFile" ,method = RequestMethod.POST)

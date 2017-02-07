@@ -55,8 +55,6 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
         publicContentResource.getContentSections()
                 .forEach(contentSectionResource -> Collections.sort(contentSectionResource.getContentGroups(),
                         (o1, o2) -> o1.getPriority().compareTo(o2.getPriority())));
-
-        //TODO Sort events INFUND-6919
         return publicContentResource;
     }
 

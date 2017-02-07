@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
 
 /**
- * Controller for setup of public content.
+ * Abstract controller for all public content sections.
  */
 public abstract class AbstractPublicContentSectionController<M extends AbstractPublicContentViewModel, F extends AbstractPublicContentForm> {
 
