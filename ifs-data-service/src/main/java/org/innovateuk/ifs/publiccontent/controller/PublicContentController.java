@@ -33,4 +33,11 @@ public class PublicContentController {
                                           @RequestBody final PublicContentResource resource) {
         return publicContentService.updateSection(resource, section).toPostResponse();
     }
+
+    @RequestMapping(value = "mark-section-as-complete/{section}/{id}", method = RequestMethod.POST)
+    public RestResult<Void> markSectionAsComplete(@PathVariable("id") final Long id,
+                                          @PathVariable("section") final PublicContentSectionType section,
+                                          @RequestBody final PublicContentResource resource) {
+        return publicContentService.markSectionAsComplete(resource, section).toPostResponse();
+    }
 }
