@@ -71,8 +71,8 @@ the user should not see the checkbox
 
 the user selects the radio button
     [Arguments]    ${RADIO_BUTTON}    ${RADIO_BUTTON_OPTION}
-    the user should see the element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
-    Click Element    xpath=//*[@name="${RADIO_BUTTON}"][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
+    the user should see the element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
+    Click Element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")][@value="${RADIO_BUTTON_OPTION}" or @id="${RADIO_BUTTON_OPTION}"]/ancestor::label
     # Error checking
     Page Should Not Contain    Error
     Page Should Not Contain    something went wrong

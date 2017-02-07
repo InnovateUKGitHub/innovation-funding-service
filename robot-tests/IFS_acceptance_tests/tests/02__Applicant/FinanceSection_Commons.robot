@@ -40,17 +40,7 @@ Mark application details as incomplete
     the user clicks the button/link       jQuery=button:contains("Save and return to application overview")
     the user should see the element       jQuery=img.assigned[alt*="Application details"]
 
-The applicant enters Org Size and Funding level
-    [Arguments]    ${org_size}    ${funding_level}
-    Applicant navigates to the finances of the Robot application
-    the user clicks the button/link        link=Your organisation
-    the user clicks the button/link        jQuery=.button:contains("Edit your organisation")
-    the user selects the radio button      financePosition-organisationSize  financePosition-organisationSize-${org_size}
-    the user clicks the button/link        jQuery=button:contains("Mark as complete")
-    Applicant navigates to the finances of the Robot application
-    the user clicks the button/link        link=Your funding
-    the user enters text to a text field   css=#cost-financegrantclaim  ${funding_level}
-    the user moves focus to the element    jQuery=label[data-target="other-funding-table"]
+
 
 the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=img.complete[alt*="Application details"]
