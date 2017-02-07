@@ -92,7 +92,7 @@ public interface QuestionService {
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<QuestionResource> save(QuestionResource questionResource);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ')")

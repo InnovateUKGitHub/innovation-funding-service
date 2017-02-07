@@ -13,11 +13,11 @@ import java.util.List;
  */
 public interface ApplicationAssessmentSummaryService {
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Competition Assessors and statistics about them", securedType = ApplicationAssessorResource.class)
     ServiceResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Application assessment summaries across the whole system", securedType = ApplicationAssessmentSummaryResource.class)
     ServiceResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId);
 

@@ -3,6 +3,8 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.List;
+
 /**
  * The resource for a public content section.
  */
@@ -10,11 +12,8 @@ public class PublicContentSectionResource {
     private Long id;
     private Long publicContent;
     private PublicContentSectionType type;
-
     private PublicContentStatus status;
-
-    // TOOD INFUND-7602 private List<ContentGroup> contentGroup;
-
+    private List<ContentGroupResource> contentGroups;
 
     public Long getId() {
         return id;
@@ -48,6 +47,14 @@ public class PublicContentSectionResource {
         this.publicContent = publicContent;
     }
 
+    public List<ContentGroupResource> getContentGroups() {
+        return contentGroups;
+    }
+
+    public void setContentGroups(List<ContentGroupResource> contentGroups) {
+        this.contentGroups = contentGroups;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -61,6 +68,7 @@ public class PublicContentSectionResource {
                 .append(publicContent, that.publicContent)
                 .append(type, that.type)
                 .append(status, that.status)
+                .append(contentGroups, that.contentGroups)
                 .isEquals();
     }
 
@@ -71,6 +79,7 @@ public class PublicContentSectionResource {
                 .append(publicContent)
                 .append(type)
                 .append(status)
+                .append(contentGroups)
                 .toHashCode();
     }
 }
