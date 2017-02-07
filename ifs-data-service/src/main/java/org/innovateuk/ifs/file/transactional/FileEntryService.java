@@ -16,6 +16,7 @@ public interface FileEntryService {
 
 
     ServiceResult<FileEntryResource> saveFile(FileEntryResource newFile);
+    ServiceResult<Void> removeFile(Long fileId);
 
 
 

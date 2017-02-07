@@ -5,7 +5,9 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 
 public interface FileUploadRestService {
 
-    RestResult<FileEntryResource> uploadFile(Long projectId, String contentType, long contentLength,
+    RestResult<FileEntryResource> uploadFile(String contentType, long contentLength,
                                              String originalFilename, byte[] bytes);
+
+    RestResult<Void> deleteFile(Long id);
 
 }

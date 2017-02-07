@@ -38,6 +38,12 @@ public class FileEntryServiceImpl extends BaseTransactionalService implements Fi
     public ServiceResult<FileEntryResource> saveFile(FileEntryResource newFile) {
         return serviceSuccess(mapper.mapToResource(repository.save(mapper.mapToDomain(newFile))));
     }
+
+    @Override
+    public ServiceResult<Void> removeFile(Long fileId) {
+        repository.delete(fileId);
+        return serviceSuccess();
+    }
     @Override
     public ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(Long applicationFinanceId) {
         return find(applicationFinance(applicationFinanceId)).andOnSuccessReturn(finance -> mapper.mapToResource(finance.getFinanceFileEntry()));

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
+import static org.springframework.web.bind.annotation.RequestMethod.DELETE;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 @RestController
@@ -25,7 +26,7 @@ public class UploadController {
     private FileEntryService fileEntryService;
 
     @RequestMapping(value = "", method = POST, produces = "application/json")
-    public RestResult<FileEntryResource> addAdditionalContractFile(
+    public RestResult<FileEntryResource> uploadFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
             @PathVariable(value = "projectId") long projectId,
@@ -35,5 +36,10 @@ public class UploadController {
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
                 fileEntryService.saveFile(fileAttributes.toFileEntryResource())
         );
+    }
+
+    @RequestMapping(value = "/{fileId}", method = DELETE, produces = "application/json")
+    public RestResult<Void> deleteFile(@PathVariable("fileId") Long fileId) {
+        return fileEntryService.removeFile(fileId).toDeleteResponse();
     }
 }

@@ -66,6 +66,10 @@ public class FileEntryServiceSecurityTest extends BaseServiceSecurityTest<FileEn
             return ServiceResult.serviceSuccess(file);
         }
 
+        @Override
+        public ServiceResult<Void> removeFile(@P("fileId") Long fileId) {
+            return ServiceResult.serviceSuccess();
+        }
 
     }
 }

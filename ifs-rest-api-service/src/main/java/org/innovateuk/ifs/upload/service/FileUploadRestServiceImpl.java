@@ -8,10 +8,15 @@ public class FileUploadRestServiceImpl extends BaseRestService implements FileUp
     private final static String baseURL = "/upload";
 
     @Override
-    public RestResult<FileEntryResource> uploadFile(Long projectId, String contentType, long contentLength,
+    public RestResult<FileEntryResource> uploadFile(String contentType, long contentLength,
                                                     String originalFilename, byte[] bytes)
     {
         String url =  baseURL + "/?filename=" + originalFilename;
         return postWithRestResult(url, bytes, createFileUploadHeader(contentType, contentLength), FileEntryResource.class);
+    }
+
+    @Override
+    public RestResult<Void> deleteFile(Long id) {
+        return deleteWithRestResult(baseURL + "/" + id);
     }
 }
