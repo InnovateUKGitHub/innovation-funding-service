@@ -359,8 +359,8 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
-    the user selects the option from the drop-down menu    Yes    id=fund24
-    the user selects the option from the drop-down menu    No    id=fund25
+    the user selects the option from the drop-down menu    Yes    id=fund25
+    the user selects the option from the drop-down menu    No    id=fund26
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     the user clicks the button/link    name=publish
     the user should see the text in the page    Assessor Feedback
