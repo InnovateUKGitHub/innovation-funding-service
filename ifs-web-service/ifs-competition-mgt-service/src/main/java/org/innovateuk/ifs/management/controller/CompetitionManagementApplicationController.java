@@ -76,7 +76,8 @@ public class CompetitionManagementApplicationController extends BaseController {
     enum ApplicationOverviewOrigin {
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
-        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}");
+        MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
+        FUNDING_APPLICATIONS("/competition/{competitionId}/funding");
 
         private String baseOriginUrl;
 

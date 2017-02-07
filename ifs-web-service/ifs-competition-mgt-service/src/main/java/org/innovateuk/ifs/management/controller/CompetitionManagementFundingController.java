@@ -8,16 +8,17 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.form.ApplicationSummaryQueryForm;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
+import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+
+import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
 
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
@@ -40,6 +41,7 @@ public class CompetitionManagementFundingController {
     @RequestMapping(method = RequestMethod.GET)
     public String applications(Model model,
                                @PathVariable("competitionId") Long competitionId,
+                               @RequestParam MultiValueMap<String, String> queryParams,
                                @ModelAttribute @Valid ApplicationSummaryQueryForm queryForm,
                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -48,6 +50,8 @@ public class CompetitionManagementFundingController {
 
         CompetitionSummaryResource competitionSummary = applicationSummaryService.getCompetitionSummaryByCompetitionId(competitionId);
         model.addAttribute("competitionSummary", competitionSummary);
+
+        model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.FUNDING_APPLICATIONS, queryParams));
 
         switch (competitionSummary.getCompetitionStatus()) {
             case FUNDERS_PANEL:
