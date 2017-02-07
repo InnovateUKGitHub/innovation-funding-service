@@ -86,7 +86,7 @@ function deploy() {
     else
         chmod 600 setup-files/scripts/openshift/ifs
         ssh-add setup-files/scripts/openshift/ifs
-        ssh ec2-user@52.56.119.142 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
+        ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ec2-user@52.56.119.142 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
     fi
 
 
