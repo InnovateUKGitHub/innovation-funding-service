@@ -40,6 +40,7 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     @Autowired
     private KeywordRepository keywordRepository;
 
+
     @Autowired
     private PublicContentMapper publicContentMapper;
 
