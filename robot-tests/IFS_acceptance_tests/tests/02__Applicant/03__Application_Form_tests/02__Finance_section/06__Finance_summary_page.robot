@@ -192,5 +192,6 @@ Lead enters a valid research participation value
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
-    Focus    jQuery= button:contains('Save and return')
+    then the user selects the checkbox      id=agree-state-aid-page
+    the user clicks the button/link        jQuery= button:contains('Mark as complete')
     wait for autosave
