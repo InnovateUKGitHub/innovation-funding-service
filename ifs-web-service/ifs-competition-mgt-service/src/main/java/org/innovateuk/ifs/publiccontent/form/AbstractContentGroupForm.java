@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.publiccontent.form;
 
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.validation.Valid;
 import java.util.List;
 
@@ -9,7 +7,6 @@ import java.util.List;
  * Abstract fields for public content form.
  */
 public abstract class AbstractContentGroupForm extends AbstractPublicContentForm {
-    @NotEmpty
     @Valid
     private List<ContentGroupForm> contentGroups;
 
