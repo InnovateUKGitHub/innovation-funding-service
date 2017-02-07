@@ -10,6 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Optional.ofNullable;
+
 @Entity
 public class Post {
 
@@ -38,7 +40,7 @@ public class Post {
         this.id = id;
         this.author = author;
         this.body = body;
-        this.attachments = new ArrayList<>(attachments);
+        this.attachments = ofNullable(attachments).map(ArrayList::new).orElse(new ArrayList<>());
         this.createdOn = createdOn;
     }
 

@@ -2,8 +2,6 @@ package org.innovateuk.ifs.thread.domain;
 
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
-import org.innovateuk.ifs.user.domain.Organisation;
-import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.junit.Assert;
 import org.junit.Before;
@@ -12,6 +10,9 @@ import org.junit.Test;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.of;
 
 public class QueryTest {
 
@@ -34,11 +35,11 @@ public class QueryTest {
         title = "Test Query Title";
         createdOn = LocalDateTime.now();
 
-        query = new Query(1L, classPk, className, posts, section, title, createdOn);
+        query = new Query(id, classPk, className, posts, section, title, createdOn);
     }
 
     @Test
-    public void organisationShouldReturnCorrectAttributeValues() throws Exception {
+    public void testItReturnsValuesAsTheyWereDefined() throws Exception {
         Assert.assertEquals(query.id(), id);
         Assert.assertEquals(query.contextClassPk(), classPk);
         Assert.assertEquals(query.contextClassName(), className);
@@ -46,6 +47,20 @@ public class QueryTest {
         Assert.assertEquals(query.section(), section);
         Assert.assertEquals(query.title(), title);
         Assert.assertEquals(query.createdOn(), createdOn);
+    }
+
+    @Test
+    public void testItReturnsOptionalEmptyWhenNoPosts() {
+        Assert.assertEquals(query.latestPost(), Optional.empty());
+    }
+
+    @Test
+    public void testItReturnsLatestAddedPostCorrectly() {
+        final Post p1 = new Post(33L, null, null, null, null);
+        final Post p2 = new Post(44L, null, null, null, null);
+        query.addPost(p1);
+        query.addPost(p2);
+        Assert.assertEquals(query.latestPost(), of(p2));
     }
 
 }
