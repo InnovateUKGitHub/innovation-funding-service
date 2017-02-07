@@ -11,6 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
 
@@ -74,7 +75,7 @@ public class KeywordRepositoryIntegrationTest extends BaseRepositoryIntegrationT
     private void setupTestSet() {
 
         PublicContent publicContentLink = newPublicContent().with(publicContent -> {
-            publicContent.setCompetitionId(1L);
+            publicContent.setCompetition(newCompetition().withId(1L).build());
         }).build();
 
         PublicContent publicContentSaved = publicContentRepository.save(publicContentLink);

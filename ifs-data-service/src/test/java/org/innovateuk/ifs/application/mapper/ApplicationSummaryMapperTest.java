@@ -40,7 +40,7 @@ public class ApplicationSummaryMapperTest {
 	private static final Long APPLICATION_ID = Long.valueOf(123L);
 
 	@InjectMocks
-	private ApplicationSummaryMapperImpl mapper;
+	private ApplicationSummaryMapper mapper;
 	
 	@Mock
 	private ApplicationService applicationService;

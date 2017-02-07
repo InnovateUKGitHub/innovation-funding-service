@@ -14,6 +14,7 @@ import org.springframework.test.annotation.Rollback;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.junit.Assert.*;
 
 public class PublicContentControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentController> {
@@ -38,7 +39,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
     @Test
     @Rollback
     public void testGetByCompetitionId() throws Exception {
-        PublicContent publicContent = publicContentRepository.save(PublicContentBuilder.newPublicContent().withCompetitionId(COMPETITION_ID).build());
+        PublicContent publicContent = publicContentRepository.save(PublicContentBuilder.newPublicContent().withCompetition(newCompetition().withId(1L).build()).build());
         flushAndClearSession();
 
         RestResult<PublicContentResource> result = controller.getCompetitionById(COMPETITION_ID);
@@ -54,7 +55,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
         LocalDateTime oldPublishDate = LocalDateTime.now().minusYears(1);
         publicContentRepository.save(PublicContentBuilder.newPublicContent()
                 .withPublishDate(oldPublishDate)
-                .withCompetitionId(COMPETITION_ID).build());
+                .withCompetition(newCompetition().withId(1L).build()).build());
         flushAndClearSession();
 
         RestResult<Void> result = controller.publishByCompetition(COMPETITION_ID);

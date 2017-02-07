@@ -229,7 +229,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     }
 
     private void makePublicContentIdsFound() {
-        PublicContent publicContent = newPublicContent().with(publicContent1 -> publicContent1.setId(PUBLIC_CONTENT_ID)).withCompetitionId(COMPETITION_ID).build();
+        PublicContent publicContent = newPublicContent().with(publicContent1 -> publicContent1.setId(PUBLIC_CONTENT_ID)).withCompetition(newCompetition().withId(COMPETITION_ID).build()).build();
 
         when(keywordRepository.findByKeywordLike("%Big%")).thenReturn(newKeyword().withKeyword("Big Data").withPublicContent(publicContent).build(2));
         when(keywordRepository.findByKeywordLike("%data%")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
@@ -242,7 +242,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(expected.getTotalPages()).thenReturn(2);
         when(expected.getContent()).thenReturn(newPublicContent().with((integer, publicContent) -> {
             publicContent.setId(integer + 1L);
-            publicContent.setCompetitionId(COMPETITION_ID);
+            publicContent.setCompetition(newCompetition().withId(COMPETITION_ID).build());
             publicContent.setPublishDate(LocalDateTime.now());
         }).build(40));
         when(expected.getNumber()).thenReturn(1);
