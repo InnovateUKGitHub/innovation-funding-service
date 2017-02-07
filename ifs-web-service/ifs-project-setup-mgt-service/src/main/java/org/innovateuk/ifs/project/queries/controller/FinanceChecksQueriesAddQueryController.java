@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -37,6 +38,7 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -57,6 +59,9 @@ public class FinanceChecksQueriesAddQueryController {
 
     @Autowired
     private CookieUtil cookieUtil;
+
+    @Autowired
+    private FinanceCheckService financeCheckService;
 
     public static final String FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query/new-query";
 
@@ -137,9 +142,12 @@ public class FinanceChecksQueriesAddQueryController {
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
-            // TODO store file, get file ID
-            attachments.add(Long.valueOf(attachments.size()));
-            saveAttachmentsToCookie(response, attachments, projectId, organisationId);
+
+            ServiceResult<FileEntryResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            if(result.isSuccess()) {
+                attachments.add(result.getSuccessObject().getId());
+                saveAttachmentsToCookie(response, attachments, projectId, organisationId);
+            }
 
             FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
             model.addAttribute("model", viewModel);
