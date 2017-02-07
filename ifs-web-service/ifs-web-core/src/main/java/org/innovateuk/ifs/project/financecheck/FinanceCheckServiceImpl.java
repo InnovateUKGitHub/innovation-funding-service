@@ -6,12 +6,18 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesRestService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.upload.service.PostAttachmentRestService;
+import org.innovateuk.thread.service.ThreadRestService;
+import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -22,6 +28,9 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Autowired
     private PostAttachmentRestService attachmentService;
+
+    @Autowired
+    private ProjectFinanceQueriesRestService queryService;
 
     @Override
     public FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key){
@@ -70,6 +79,21 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public ServiceResult<FileEntryResource> getFileInfo(Long fileId) {
-        return attachmentService.getFileInfo(fileId).toServiceResult();
+        return attachmentService.find(fileId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Long> saveQuery(QueryResource query) {
+        return queryService.createThread(query).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId) {
+        return queryService.allThreads(projectFinanceId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> savePost(PostResource post, long threadId) {
+        return queryService.addPost(post, threadId).toServiceResult();
     }
 }
