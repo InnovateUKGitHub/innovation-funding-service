@@ -1,12 +1,15 @@
 package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.junit.Test;
 
 import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.OPEN;
 import static org.junit.Assert.assertEquals;
 
 public class ApplicationAssessmentSummaryResourceBuilderTest {
@@ -18,6 +21,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         Long expectedCompetitionId = 2L;
         String expectedCompetitionName = "competition";
         String expectedLeadOrganisation = "leadOrganisation";
+        CompetitionStatus expectedCompetitionStatus = OPEN;
         List<String> expectedPartnerOrganisations = asList("partnerOrganisation1", "partnerOrganisation2");
 
         ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = newApplicationAssessmentSummaryResource()
@@ -26,6 +30,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
                 .withCompetitionId(expectedCompetitionId)
                 .withCompetitionName(expectedCompetitionName)
                 .withLeadOrganisation(expectedLeadOrganisation)
+                .withCompetitionStatus(expectedCompetitionStatus)
                 .withPartnerOrganisations(expectedPartnerOrganisations)
                 .build();
 
@@ -35,6 +40,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         assertEquals(expectedCompetitionName, applicationAssessmentSummaryResource.getCompetitionName());
         assertEquals(expectedLeadOrganisation, applicationAssessmentSummaryResource.getLeadOrganisation());
         assertEquals(expectedPartnerOrganisations, applicationAssessmentSummaryResource.getPartnerOrganisations());
+        assertEquals(expectedCompetitionStatus, applicationAssessmentSummaryResource.getCompetitionStatus());
     }
 
     @Test
@@ -46,6 +52,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         String[] expectedLeadOrganisations = {"leadOrganisation1", "leadOrganisation"};
         List<String> expectedPartnerOrganisations1 = asList("partnerOrganisation1", "partnerOrganisation2");
         List<String> expectedPartnerOrganisations2 = asList("partnerOrganisation3", "partnerOrganisation4");
+        CompetitionStatus[] expectedCompetitionStatuses = {OPEN, CLOSED};
 
         List<ApplicationAssessmentSummaryResource> applicationAssessmentSummaryResources = newApplicationAssessmentSummaryResource()
                 .withId(expectedIds)
@@ -54,6 +61,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
                 .withCompetitionName(expectedCompetitionNames)
                 .withLeadOrganisation(expectedLeadOrganisations)
                 .withPartnerOrganisations(expectedPartnerOrganisations1, expectedPartnerOrganisations2)
+                .withCompetitionStatus(expectedCompetitionStatuses)
                 .build(2);
 
         ApplicationAssessmentSummaryResource first = applicationAssessmentSummaryResources.get(0);
@@ -63,6 +71,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         assertEquals(expectedCompetitionNames[0], first.getCompetitionName());
         assertEquals(expectedLeadOrganisations[0], first.getLeadOrganisation());
         assertEquals(expectedPartnerOrganisations1, first.getPartnerOrganisations());
+        assertEquals(expectedCompetitionStatuses[0], first.getCompetitionStatus());
 
         ApplicationAssessmentSummaryResource second = applicationAssessmentSummaryResources.get(1);
         assertEquals(expectedIds[1].longValue(), second.getId());
@@ -71,6 +80,7 @@ public class ApplicationAssessmentSummaryResourceBuilderTest {
         assertEquals(expectedCompetitionNames[1], second.getCompetitionName());
         assertEquals(expectedLeadOrganisations[1], second.getLeadOrganisation());
         assertEquals(expectedPartnerOrganisations2, second.getPartnerOrganisations());
+        assertEquals(expectedCompetitionStatuses[1], second.getCompetitionStatus());
     }
 
 }

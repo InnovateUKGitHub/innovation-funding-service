@@ -23,7 +23,6 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class SearchInformationFormSaverTest {
 
-    private static final Long COMPETITION_ID = 1L;
     private static final String FUNDING_RANGE = "FUNDING_RANGE";
     private static final String ELIGIBILITY_SUMMARY = "SUMMARY";
     private static final String SHORT_DESCRIPTION = "SHORT_DESCRIPTION";
