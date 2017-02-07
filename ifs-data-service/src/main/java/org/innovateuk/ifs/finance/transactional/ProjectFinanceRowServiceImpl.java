@@ -9,7 +9,9 @@ import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
+import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
 import org.innovateuk.ifs.finance.repository.FinanceRowMetaValueRepository;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -57,6 +59,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private FinanceRowMetaFieldRepository financeRowMetaFieldRepository;
+
+    @Autowired
+    private ProjectFinanceRowMapper projectFinanceRowMapper;
 
     @Override
     public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {
@@ -150,6 +155,15 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
         return find(applicationFinanceHandler.getFinanceChecksTotals(projectId), notFoundError(ProjectFinance.class, projectId));
+    }
+
+    @Override
+    public FinanceRowHandler getCostHandler(Long costItemId) {
+        FinanceRow cost = projectFinanceRowMapper.mapIdToDomain(costItemId);
+        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ProjectFinanceRow)cost).getTarget().getOrganisation().getOrganisationType().getName());
+        FinanceRowItem costItem = organisationFinanceHandler.costToCostItem((ProjectFinanceRow)cost);
+        FinanceRowHandler financeRowHandler = organisationFinanceHandler.getCostHandler(costItem.getCostType());
+        return financeRowHandler;
     }
 
     private Supplier<ServiceResult<ProjectFinance>> projectFinance(Long projectFinanceId) {
