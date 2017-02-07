@@ -43,6 +43,8 @@ public abstract class Thread {
 
     Thread(Long id, Long classPk, String className, List<Post> posts, String title, LocalDateTime createdOn) {
         this.id = id;
+        this.classPk = classPk;
+        this.className = className;
         this.posts = new LinkedList<>(posts);
         this.title = title;
         this.createdOn = createdOn;
@@ -53,7 +55,11 @@ public abstract class Thread {
     }
 
     private final Optional<Post> postAtIndex(int index) {
-        return index < posts.size() ? empty() : of(posts.get(index));
+        return indexWithinBounds(index) ? of(posts.get(index)) : empty();
+    }
+
+    private boolean indexWithinBounds(int index) {
+        return index >= 0 && index < posts.size();
     }
 
     public List<Post> posts() {

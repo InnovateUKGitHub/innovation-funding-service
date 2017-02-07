@@ -45,7 +45,7 @@ public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermi
     }
 
     private QueryResource queryWithoutPosts() {
-        return new QueryResource(1L, 22L, PROJECT_FINANCE.getClass().getName(), new ArrayList<>(),
+        return new QueryResource(1L, 22L, new ArrayList<>(),
                 FinanceChecksSectionType.VIABILITY, "First Query", true, LocalDateTime.now());
     }
 
