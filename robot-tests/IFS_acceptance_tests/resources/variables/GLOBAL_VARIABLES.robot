@@ -166,8 +166,8 @@ ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    99
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    90
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    123
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    125
 ${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    113
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
