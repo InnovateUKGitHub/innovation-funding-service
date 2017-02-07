@@ -93,15 +93,16 @@ IFS.competitionManagement.repeater = (function () {
       var count = parseInt(jQuery('[id^=contentGroup-row-]').length, 10) // name attribute has to be 0,1,2,3
       // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
       var idCount = parseInt(jQuery('[id^=contentGroup-row-]').last().prop('id').split('contentGroup-row-')[1], 10) + 1
-
+      var headerRequiredErrorMessage = jQuery('[name="contentGroups[0].heading"]').attr('data-required-errormessage')
+      var contentRequiredErrorMessage = jQuery('[name="contentGroups[0].content"]').attr('data-required-errormessage')
       var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
                     '<div class="form-group">' +
                       '<label class="form-label-bold" for="heading-' + idCount + '">Heading</label>' +
-                      '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" />' +
+                      '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
                     '</div>' +
                     '<div class="form-group"><div class="textarea-wrapped">' +
                       '<label class="form-label-bold" for="content-' + idCount + '">Content</label>' +
-                          '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content"></textarea>' +
+                          '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
                       '</div></div>' +
                     '<div class="form-group upload-section">' +
                         '<input type="file" id="file-upload-' + idCount + '" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
