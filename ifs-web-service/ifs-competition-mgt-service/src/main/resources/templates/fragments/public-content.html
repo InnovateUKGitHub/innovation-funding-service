@@ -61,7 +61,7 @@
     <th:block th:if="${model.readOnly}" class="readonly-data">
         <dl>
             <th:block th:each="event : ${model.sortedEvents}">
-                <dt th:text="${event.dateTime}"></dt>
+                <dt th:text="${event.dateTimeFormatted}"></dt>
                 <dd th:text="${event.content}"></dd>
             </th:block>
         </dl>
@@ -71,7 +71,7 @@
         <p>Generated automatically from the competition milestones.</p>
         <dl>
             <th:block th:each="event : ${model.sortedEvents}">
-                <dt th:text="${event.dateTime}"></dt>
+                <dt th:text="${event.dateTimeFormatted}"></dt>
                 <dd th:text="${event.content}"></dd>
             </th:block>
         </dl>

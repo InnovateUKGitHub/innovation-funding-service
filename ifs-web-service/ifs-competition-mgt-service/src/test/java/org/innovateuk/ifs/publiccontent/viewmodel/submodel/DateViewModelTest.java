@@ -23,18 +23,18 @@ public class DateViewModelTest {
     }
 
     @Test
-    public void getDateTimeTest() {
-        String resultOne = viewModel.getDateTime();
+    public void getDateTimeFormattedTest() {
+        String resultOne = viewModel.getDateTimeFormatted();
         assertEquals("Unknown", resultOne);
 
         viewModel.setDateTime(LocalDateTime.of(2015,01,01,0,0));
-        String resultTwo = viewModel.getDateTime();
+        String resultTwo = viewModel.getDateTimeFormatted();
 
         assertEquals("1 January 2015", resultTwo);
 
         viewModel.setDateTime(LocalDateTime.of(2015,01,25,0,0));
 
-        String resultThree = viewModel.getDateTime();
+        String resultThree = viewModel.getDateTimeFormatted();
         assertEquals("25 January 2015", resultThree);
     }
 }

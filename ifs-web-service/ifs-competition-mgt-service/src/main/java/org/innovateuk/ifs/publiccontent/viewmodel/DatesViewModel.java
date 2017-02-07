@@ -2,6 +2,8 @@ package org.innovateuk.ifs.publiccontent.viewmodel;
 
 import org.innovateuk.ifs.publiccontent.viewmodel.submodel.DateViewModel;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -20,20 +22,22 @@ public class DatesViewModel extends AbstractPublicContentViewModel {
 
     public List<DateViewModel> getSortedEvents() {
         List<DateViewModel> listToBeSorted = getPublicContentDates();
-        listToBeSorted.sort((o1, o2) -> compareDateIfNotNull(o1, o2));
+        List<DateViewModel> emptyDates = new ArrayList();
+        List<DateViewModel> sortedList = new ArrayList();
 
-        return listToBeSorted;
+        listToBeSorted.stream()
+                .filter(dateViewModel -> null != dateViewModel.getDateTime())
+                .sorted(Comparator.comparing(DateViewModel::getDateTime))
+                .forEach(dateViewModel -> sortedList.add(dateViewModel));
+
+        listToBeSorted.stream()
+                .filter(dateViewModel -> null == dateViewModel.getDateTime())
+                .forEach(dateViewModel -> emptyDates.add(dateViewModel));
+
+        sortedList.addAll(emptyDates);
+
+        return sortedList;
     }
 
-    private Integer compareDateIfNotNull(DateViewModel dateViewModelOne, DateViewModel dateViewModelTwo) {
-        if(null == dateViewModelOne.getDateTime() && null == dateViewModelTwo.getDateTime()) {
-            return 0;
-        } else if(null == dateViewModelOne.getDateTime()) {
-            return 1;
-        } else if(null == dateViewModelTwo.getDateTime()) {
-            return -1;
-        }
 
-        return dateViewModelOne.getDateTime().compareTo(dateViewModelTwo.getDateTime());
-    }
 }

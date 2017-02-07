@@ -12,7 +12,11 @@ public class DateViewModel {
 
     public static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY");
 
-    public String getDateTime() {
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    public String getDateTimeFormatted() {
         if(null == dateTime) {
             return "Unknown";
         }
