@@ -3,7 +3,6 @@ set -ex
 
 PROJECT=$1
 TARGET=$2
-OSX=$3
 
 if [[ ${TARGET} == "remote" ]]
 then
@@ -77,18 +76,12 @@ function deploy() {
 
     if [[ ${TARGET} == "local" ]]
     then
-        if [ "$OSX" -eq true ]
-        then
-            oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
-        else
-            oc adm policy add-scc-to-user anyuid -n $PROJECT -z default --config=/var/lib/origin/openshift.local.config/master/admin.kubeconfig
-        fi
+        oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
     else
         chmod 600 setup-files/scripts/openshift/ifs
         ssh-add setup-files/scripts/openshift/ifs
         ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ec2-user@52.56.119.142 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
     fi
-
 
     oc create -f os-files-tmp/
 }
