@@ -1,12 +1,10 @@
 package org.innovateuk.ifs.threads.security;
 
-import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.security.BasePermissionRules;
-import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,11 @@ public class QueryPermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "CREATE", description = "Only Internal Users can create Queries")
     public boolean onlyInternalUsersCanCreateQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user);
+        return isProjectFinanceUser(user) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
+    }
+
+    private boolean queryHasOnePostWithAuthorBeingCurrentProjectFinance(QueryResource query, UserResource user) {
+        return query.posts.size() == 1 && query.posts.get(0).author.getId().equals(user.getId());
     }
 
     @PermissionRule(value = "VIEW", description = "Only Internal of Project Finance Users can view Queries")
@@ -46,7 +48,7 @@ public class QueryPermissionRules extends BasePermissionRules {
 
     private boolean isFinanceContact(UserResource user, Long projectFinance) {
         return findProjectFinance(projectFinance)
-                .map(pf-> pf.getOrganisation().isFinanceContact(user.getId())).orElse(false);
+                .map(pf -> pf.getOrganisation().isFinanceContact(user.getId())).orElse(false);
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {

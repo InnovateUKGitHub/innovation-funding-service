@@ -35,11 +35,18 @@ public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermi
     public void setUp() throws Exception {
         projectFinanceUser = projectFinanceUser();
         financeContactUser = getUserWithRole(FINANCE_CONTACT);
-        queryResource = new QueryResource(1L, 22L, PROJECT_FINANCE.getClass().getName(), new ArrayList<>(),
-                FinanceChecksSectionType.VIABILITY, "First Query", true, LocalDateTime.now());
+
+        queryResource = queryWithoutPosts();
+        queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), LocalDateTime.now()));
+
         incorrectFinanceContactUser = newUserResource().withId(1993L).withRolesGlobal(newRoleResource()
                 .withType(FINANCE_CONTACT).build(1)).build();
         incorrectFinanceContactUser.setId(1993L);
+    }
+
+    private QueryResource queryWithoutPosts() {
+        return new QueryResource(1L, 22L, PROJECT_FINANCE.getClass().getName(), new ArrayList<>(),
+                FinanceChecksSectionType.VIABILITY, "First Query", true, LocalDateTime.now());
     }
 
     @Override
@@ -55,18 +62,20 @@ public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermi
 
     @Test
     public void testThatFirstPostMustComeFromTheProjectFinanceUser() throws Exception {
-        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, projectFinanceUser));
-        assertFalse(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, financeContactUser));
+        QueryResource queryWithoutPosts = queryWithoutPosts();
+        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithoutPosts, projectFinanceUser));
+        when(projectFinanceRepositoryMock.findOne(queryWithoutPosts.contextClassPk))
+                .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
+        assertFalse(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithoutPosts, financeContactUser));
     }
 
     @Test
     public void testThatOnlyTheProjectFinanceUserOrTheCorrectFinanceContactCanReplyToAQuery() throws Exception {
-        QueryResource queryWithPost = queryWithAPost();
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
                 .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
-        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithPost, projectFinanceUser));
-        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithPost, financeContactUser));
-        assertFalse(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithPost, incorrectFinanceContactUser));
+        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, projectFinanceUser));
+        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, financeContactUser));
+        assertFalse(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, incorrectFinanceContactUser));
     }
 
     @Test
@@ -82,11 +91,6 @@ public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermi
                 .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
         assertTrue(rules.onlyInternalUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser));
         assertFalse(rules.onlyInternalUsersOrFinanceContactCanViewTheirQueries(queryResource, incorrectFinanceContactUser));
-    }
-
-    private QueryResource queryWithAPost() {
-        queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), LocalDateTime.now()));
-        return queryResource;
     }
 
 
