@@ -20,6 +20,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourc
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
@@ -77,7 +78,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentStates state = AssessmentStates.CREATED;
         long competitionId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.findByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -85,7 +86,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         AssessmentStates state = AssessmentStates.CREATED;
         long competitionId = 1L;
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.countByStateAndCompetition(state, competitionId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -101,7 +102,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void notifyAssessorsByCompetition() throws Exception {
         long competitionId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessorsByCompetition(competitionId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessorsByCompetition(competitionId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -132,7 +133,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
     @Test
     public void withdrawAssessment() {
         Long assessmentId = 1L;
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.withdrawAssessment(assessmentId), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -162,7 +163,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
                 .withAssessorId(3L)
                 .build();
 
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.createAssessment(assessmentCreateResource), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     public static class TestAssessmentService implements AssessmentService {
