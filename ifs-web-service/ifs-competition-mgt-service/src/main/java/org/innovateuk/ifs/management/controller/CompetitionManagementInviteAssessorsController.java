@@ -151,14 +151,14 @@ public class CompetitionManagementInviteAssessorsController {
         return "assessors/overview";
     }
 
-    // TODO INFUND-7831 -- move profile to a more suitable controller
+/*    // TODO INFUND-7831 -- move profile to a more suitable controller
     @RequestMapping(value = "/profile/{assessorId}", method = RequestMethod.GET)
     public String profile(Model model,
                           @PathVariable("competitionId") long competitionId,
                           @PathVariable("assessorId") long assessorId) {
         model.addAttribute("model", inviteAssessorProfileModelPopulator.populateModel(assessorId, competitionId));
         return "assessors/profile";
-    }
+    }*/
 
     private ServiceResult<CompetitionInviteResource> inviteUser(String email, Long competitionId) {
         return competitionInviteRestService.inviteUser(new ExistingUserStagedInviteResource(email, competitionId)).toServiceResult();
