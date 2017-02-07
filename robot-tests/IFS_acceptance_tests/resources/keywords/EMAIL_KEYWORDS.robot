@@ -20,14 +20,14 @@ the user reads his email from the default mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Documentation]    Please note that we need to keep this keyword as some email addresses are alread in the database, so we cannot over-ride them with our own custom mailboxes during the tests
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    worth.email.test
+    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_one}    ${test_mailbox_one_password}
 
 
 the user reads his email from the second default mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Documentation]    Please note that we need to keep this keyword as some email addresses are alread in the database, so we cannot over-ride them with our own custom mailboxes during the tests
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    worth.email.test.two
+    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_two}    ${test_mailbox_two_password}
 
 
 the user reads his email locally
@@ -54,12 +54,11 @@ the user reads his email from the second mailbox remotely
 
 
 the user reads his email from the default remote mailbox
-    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}
-    Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=testtest1
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${custom_mailbox}    ${custom_password}
+    Open Mailbox    server=imap.googlemail.com    user=${custom_mailbox}@gmail.com    password=${custom_password}
     ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     check pattern in email    ${email_to_test}    ${pattern}
-
 
 check pattern in email
     [Arguments]    ${email_to_test}    ${pattern}
@@ -156,7 +155,7 @@ Delete the emails from the default test mailbox
 
 
 delete the emails from the default remote test mailbox
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
     Delete All Emails
     close mailbox
 
@@ -173,9 +172,9 @@ Delete the emails from both default test mailboxes
 
 
 delete the emails from both default remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
     Delete All Emails
     close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=worth.email.test.two@gmail.com    password=testtest1
+    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_two}@gmail.com    password={test_mailbox_two_password}
     Delete All Emails
     close mailbox

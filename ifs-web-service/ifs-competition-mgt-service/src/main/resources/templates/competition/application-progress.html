@@ -98,7 +98,7 @@
                 </table>
             </div>
 
-            <p th:if="${#lists.isEmpty(model.assigned)}">There are no assessors assigned to this application.</p>
+            <p th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
 
 
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
