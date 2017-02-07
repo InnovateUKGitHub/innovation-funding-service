@@ -25,7 +25,7 @@ import javax.validation.Valid;
  */
 @Controller
 @RequestMapping("/competition/assessors/invite/{inviteId}")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementSendInviteController {
 
     @Autowired

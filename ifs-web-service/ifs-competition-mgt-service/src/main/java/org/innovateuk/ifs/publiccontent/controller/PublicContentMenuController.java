@@ -53,11 +53,9 @@ public class PublicContentMenuController {
     }
 
     private String menuPage(Long competitionId, Model model, PublishForm publishForm) {
-        return publicContentMenuPopulator.populate(competitionId).andOnSuccessReturn(viewModel -> {
-            model.addAttribute("model", viewModel);
-            model.addAttribute(FORM_ATTR_NAME, publishForm);
-            return TEMPLATE_FOLDER + "public-content-menu";
-        }).getSuccessObjectOrThrowException();
+        model.addAttribute("model", publicContentMenuPopulator.populate(competitionId));
+        model.addAttribute(FORM_ATTR_NAME, publishForm);
+        return TEMPLATE_FOLDER + "public-content-menu";
     }
 
 
