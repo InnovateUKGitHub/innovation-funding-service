@@ -15,9 +15,12 @@ import org.innovateuk.ifs.notesandqueries.resource.thread.ThreadResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
-import org.innovateuk.ifs.project.queries.viewmodel.*;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
+import org.innovateuk.ifs.thread.viewmodel.ThreadPostAttachmentResourceViewModel;
+import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -276,7 +279,7 @@ public class FinanceChecksQueriesController {
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
-    private List<FinanceChecksQueriesQueryViewModel> loadQueryModel(Long projectId, Long organisationId) {
+    private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
         // Dummy test data
         ThreadResource thread = new ThreadResource();
         PostResource firstPost = new PostResource();
@@ -348,14 +351,14 @@ public class FinanceChecksQueriesController {
                 .distinct()
                 .collect(Collectors.toList());
 
-        List<FinanceChecksQueriesQueryViewModel> queryModel = new LinkedList<>();
+        List<ThreadViewModel> queryModel = new LinkedList<>();
         Long attachmentIndex = 0L;
         for (ThreadResource t : sortedQueries) {
-            List<FinanceChecksQueriesPostViewModel> posts = new LinkedList<>();
+            List<ThreadPostViewModel> posts = new LinkedList<>();
             for (PostResource p : t.getPosts()) {
-                List<FinanceChecksQueriesAttachmentResourceViewModel> attachments = new LinkedList<>();
+                List<ThreadPostAttachmentResourceViewModel> attachments = new LinkedList<>();
                 for (PostAttachmentResource a : p.getAttachments()) {
-                    FinanceChecksQueriesAttachmentResourceViewModel attachment = new FinanceChecksQueriesAttachmentResourceViewModel();
+                    ThreadPostAttachmentResourceViewModel attachment = new ThreadPostAttachmentResourceViewModel();
                     // TODO get file details from service
                     attachment.setFileEntryId(a.getFileEntryId());
                     attachment.setPostId(a.getPostId());
@@ -368,7 +371,7 @@ public class FinanceChecksQueriesController {
                 }
                 UserResource user = userService.findById(p.getUserId());
                 OrganisationResource organisation = organisationService.getOrganisationForUser(p.getUserId());
-                FinanceChecksQueriesPostViewModel post = new FinanceChecksQueriesPostViewModel();
+                ThreadPostViewModel post = new ThreadPostViewModel();
                 post.setViewModelAttachments(attachments);
                 post.setUsername(user.getName() + " - " + organisation.getName() + (user.hasRole(UserRoleType.PROJECT_FINANCE)?  " (Finance team)" : ""));
                 post.setCreatedOn(p.getCreatedOn());
@@ -377,7 +380,7 @@ public class FinanceChecksQueriesController {
                 post.setAttachments(p.getAttachments());
                 posts.add(post);
             }
-            FinanceChecksQueriesQueryViewModel detail = new FinanceChecksQueriesQueryViewModel();
+            ThreadViewModel detail = new ThreadViewModel();
             detail.setViewModelPosts(posts);
             detail.setSectionType(t.getSectionType());
             detail.setCreatedOn(t.getCreatedOn());

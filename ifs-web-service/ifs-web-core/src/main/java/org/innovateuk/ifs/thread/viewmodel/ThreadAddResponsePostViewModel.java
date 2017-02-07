@@ -1,8 +1,8 @@
-package org.innovateuk.ifs.project.queries.viewmodel;
+package org.innovateuk.ifs.thread.viewmodel;
 
 import java.util.Map;
 
-public class FinanceChecksQueriesAddResponseViewModel {
+public class ThreadAddResponsePostViewModel {
     private String organisationName;
     private boolean leadPartnerOrganisation;
     private String financeContactName;
@@ -18,20 +18,20 @@ public class FinanceChecksQueriesAddResponseViewModel {
     private Long organisationId;
     private String baseUrl;
 
-    public FinanceChecksQueriesAddResponseViewModel(String organisationName,
-                                         boolean leadPartnerOrganisation,
-                                         String financeContactName,
-                                         String financeContactEmail,
-                                         String financeContactPhoneNumber,
-                                         String querySection,
-                                         Long projectId,
-                                         String projectName,
-                                         Map<Long, String> newAttachmentLinks,
-                                         int maxQueryWords,
-                                         int maxQueryCharacters,
-                                         Long queryId,
-                                         Long organisationId,
-                                         String baseUrl) {
+    public ThreadAddResponsePostViewModel(String organisationName,
+                                          boolean leadPartnerOrganisation,
+                                          String financeContactName,
+                                          String financeContactEmail,
+                                          String financeContactPhoneNumber,
+                                          String querySection,
+                                          Long projectId,
+                                          String projectName,
+                                          Map<Long, String> newAttachmentLinks,
+                                          int maxQueryWords,
+                                          int maxQueryCharacters,
+                                          Long queryId,
+                                          Long organisationId,
+                                          String baseUrl) {
         this.organisationName = organisationName;
         this.leadPartnerOrganisation = leadPartnerOrganisation;
         this.financeContactName = financeContactName;

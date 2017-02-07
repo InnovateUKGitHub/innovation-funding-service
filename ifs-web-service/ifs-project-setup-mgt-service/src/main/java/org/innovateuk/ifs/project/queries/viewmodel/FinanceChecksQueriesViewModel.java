@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.project.queries.viewmodel;
 
+import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
+
 import java.util.List;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class FinanceChecksQueriesViewModel {
     private String querySection;
     private Long projectId;
     private String projectName;
-    List<FinanceChecksQueriesQueryViewModel> queries;
+    List<ThreadViewModel> queries;
     private Long organisationId;
     private String baseUrl;
     private Map<Long, String> newAttachmentLinks;
@@ -31,7 +33,7 @@ public class FinanceChecksQueriesViewModel {
                                          String querySection,
                                          Long projectId,
                                          String projectName,
-                                         List<FinanceChecksQueriesQueryViewModel> queries,
+                                         List<ThreadViewModel> queries,
                                          Long organisationId,
                                          String baseUrl,
                                          Map<Long, String> newAttachmentLinks,
@@ -118,11 +120,11 @@ public class FinanceChecksQueriesViewModel {
         this.projectName = projectName;
     }
 
-    public List<FinanceChecksQueriesQueryViewModel> getQueries() {
+    public List<ThreadViewModel> getQueries() {
         return queries;
     }
 
-    public void setQueries(List<FinanceChecksQueriesQueryViewModel> queries) {
+    public void setQueries(List<ThreadViewModel> queries) {
         this.queries = queries;
     }
 
