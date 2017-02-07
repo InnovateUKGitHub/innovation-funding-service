@@ -81,7 +81,6 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
         Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().save(form, publicContent));
-
     }
 
 
