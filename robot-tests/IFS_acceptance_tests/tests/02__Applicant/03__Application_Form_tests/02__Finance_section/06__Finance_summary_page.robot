@@ -56,7 +56,7 @@ Your Finance includes Finance summary table for lead applicant
      And the finance summary table in Your Finances has correct values for lead
      And the user clicks the button/link       link=Return to application overview
 
-Your Finance inludes Finance summary table for collaborator
+Your Finance includes Finance summary table for collaborator
      [Documentation]    INFUND-6893
      [Tags]
      [Setup]  log in as a different user    &{collaborator2_credentials}
