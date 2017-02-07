@@ -18,14 +18,14 @@ import java.math.BigDecimal;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class CompetitionManagementApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationsController> {
 
@@ -117,6 +117,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/all-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS"))
                 .andReturn();
 
         AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -131,6 +132,25 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
         assertEquals(expectedApplicationRows, model.getApplications());
+    }
+
+    @Test
+    public void allApplications_preservesQueryParams() throws Exception {
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(emptyList());
+
+        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        mockMvc.perform(get("/competition/{competitionId}/applications/all?param1=abc&param2=def", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/all-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS&param1=abc&param2=def"));
+
+        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 
     @Test
@@ -172,6 +192,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition/submitted-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS"))
                 .andReturn();
 
         SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
@@ -184,7 +205,25 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getAssessorDeadline(), model.getAssessmentDeadline());
         assertEquals(expectedApplicationRows, model.getApplications());
+    }
 
-        String contextUrl = (String) result.getModelAndView().getModel().get("originQuery");
+    @Test
+    public void submittedApplications_preservesQueryParams() throws Exception {
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(emptyList());
+
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        mockMvc.perform(get("/competition/{competitionId}/applications/submitted?param1=abc&param2=def", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/submitted-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS&param1=abc&param2=def"))
+                .andReturn();
+
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 }
