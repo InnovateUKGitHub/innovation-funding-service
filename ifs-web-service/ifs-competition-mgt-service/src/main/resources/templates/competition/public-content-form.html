@@ -37,7 +37,7 @@
                 <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
             </div>
             <div class="column-half alignright">
-                <a class="button-secondary no-margin" th:href="@{${#ifsUtil.uriWithQueryString(#httpServletRequest) + '/edit'}}">Edit</a>
+                <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
             </div>
             </th:block>
             <th:block th:unless="${model.readOnly}">

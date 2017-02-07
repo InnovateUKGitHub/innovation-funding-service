@@ -4,6 +4,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
  */
 @Controller
 @RequestMapping("/competition")
+@PreAuthorize("hasAuthority('comp_admin')")
 public class CompetitionManagementCompetitionController {
 
     @Autowired

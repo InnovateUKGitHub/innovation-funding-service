@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,7 @@ import java.util.List;
 
 @Controller
 @Configuration
+@PreAuthorize("permitAll")
 public class LoginController {
     public static final String LOGIN_BASE = "login";
     public static final String RESET_PASSWORD = "reset-password";
