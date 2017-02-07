@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
+import javax.swing.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -51,6 +52,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
         return with(competition -> setField("assessorDeadlineDate", assessorDeadlineDate, competition));
+    }
+
+    public CompetitionBuilder withReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+        return with(competition -> setField("releaseFeedbackDate", releaseFeedbackDate, competition));
     }
 
     public CompetitionBuilder withFundersPanelDate(LocalDateTime fundersPanelDate) {
