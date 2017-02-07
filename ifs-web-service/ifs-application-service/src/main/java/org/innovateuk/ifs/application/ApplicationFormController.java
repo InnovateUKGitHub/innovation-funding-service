@@ -41,6 +41,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -484,8 +485,14 @@ public class ApplicationFormController {
         if(!isMarkSectionAsIncompleteRequest(params) ) {
             String organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
             ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
+
             if(!overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(saveErrors);
+            }
+
+            if ((SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
+                    && "University (HEI)".equals(organisationType)) {
+                errors.addAll(setOrganisationFinancesComplete(application.getId(), competition.getId(), processRole.getId()));
             }
         }
 
@@ -523,6 +530,12 @@ public class ApplicationFormController {
                 sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
             }
         }
+    }
+
+    private List<ValidationMessages> setOrganisationFinancesComplete(Long applicationId, Long competitionId, Long processRoleId) {
+
+        SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+        return sectionService.markAsComplete(organisationSection.getId(), applicationId, processRoleId);
     }
 
     private List<Error> sortValidationMessages(ValidationMessages errors) {

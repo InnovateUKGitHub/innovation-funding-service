@@ -94,10 +94,10 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
     }
 
     public boolean isSectionDisplayed(SectionResource subSection) {
-        return getIsOrganisationSizeDisplayed() || !SectionType.ORGANISATION_FINANCES.equals(subSection.getType());
+        return !getIsAcademicFinance() || !SectionType.ORGANISATION_FINANCES.equals(subSection.getType());
     }
 
-    public boolean getIsOrganisationSizeDisplayed() {
-        return !(getFinanceViewModel() instanceof AcademicFinanceViewModel);
+    public boolean getIsAcademicFinance() {
+        return (getFinanceViewModel() instanceof AcademicFinanceViewModel);
     }
 }

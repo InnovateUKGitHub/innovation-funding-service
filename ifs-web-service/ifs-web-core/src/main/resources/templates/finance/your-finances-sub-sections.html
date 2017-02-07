@@ -8,10 +8,10 @@
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
                 <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
 
-                <details class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+                <details class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}" th:unless="${model.isAcademicFinance}">
                     <summary><span class="summary">Not requesting funding</span></summary>
                     <div class="panel-indent">
-                        <p>If your organisation is not funded by Innovate UK then you do not need to submit <span th:if="${model.isOrganisationSizeDisplayed}">organisational or </span>funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
+                        <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
                         <button th:unless="${model.notRequestingFunding}" class="button" name="not_requesting_funding">Not requesting funding</button>
                         <button th:if="${model.notRequestingFunding}" class="button" name="requesting_funding">Requesting funding</button>
                     </div>
