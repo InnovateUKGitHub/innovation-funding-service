@@ -253,6 +253,7 @@ public class ValidationUtil {
 
     public ValidationMessages validateProjectCostItem(FinanceRowItem costItem) {
         BeanPropertyBindingResult bindingResult = new BeanPropertyBindingResult(costItem, "costItem");
+        invokeProjectCostValidator(costItem, bindingResult);
         return buildValidationMessages(costItem, bindingResult);
     }
 
@@ -268,6 +269,11 @@ public class ValidationUtil {
             LOG.debug("validated, no messages");
             return ValidationMessages.noErrors(costItem.getId());
         }
+    }
+
+    private void invokeProjectCostValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
+        FinanceRowHandler financeRowHandler = validatorService.getProjectCostHandler(costItem);
+        financeRowHandler.validate(costItem, bindingResult);
     }
 
     private void invokeValidator(FinanceRowItem costItem, BeanPropertyBindingResult bindingResult) {
