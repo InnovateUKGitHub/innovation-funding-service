@@ -3,6 +3,7 @@ package org.innovateuk.ifs.finance.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
@@ -133,6 +134,11 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public FinanceRowHandler getCostHandler(Long costItemId) {
             return null;
         }
     }
