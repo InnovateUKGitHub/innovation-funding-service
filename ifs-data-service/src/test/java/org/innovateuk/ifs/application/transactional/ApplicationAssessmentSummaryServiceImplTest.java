@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -36,6 +37,9 @@ import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -225,6 +229,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
+                        .withCompetitionStatus(CLOSED)
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
@@ -238,6 +243,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("Liquid Dynamics")
+                .withCompetitionStatus(CLOSED)
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
                 .build();
 
@@ -267,6 +273,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
+                        .withCompetitionStatus(CLOSED)
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, COLLABORATOR, COLLABORATOR, COMP_ADMIN)
@@ -280,6 +287,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("")
+                .withCompetitionStatus(CLOSED)
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems", "Liquid Dynamics"))
                 .build();
 
@@ -309,6 +317,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
+                        .withCompetitionStatus(FUNDERS_PANEL)
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
@@ -322,6 +331,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
                 .withLeadOrganisation("Liquid Dynamics")
+                .withCompetitionStatus(FUNDERS_PANEL)
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
                 .build();
 
