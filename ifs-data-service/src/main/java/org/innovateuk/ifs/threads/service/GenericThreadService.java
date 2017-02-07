@@ -35,6 +35,7 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
 
     @Override
     public ServiceResult<Long> create(E e) {
+        e.setContext(contextClass.getName());
         return serviceSuccess(repository.save(e).id());
     }
 

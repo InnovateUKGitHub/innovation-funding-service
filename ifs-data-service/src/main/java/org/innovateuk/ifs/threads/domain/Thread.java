@@ -82,4 +82,8 @@ public abstract class Thread {
     public LocalDateTime createdOn() {
         return createdOn;
     }
+
+    public void setContext(String context) {
+        this.className = context;
+    }
 }

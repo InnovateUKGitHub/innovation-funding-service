@@ -21,15 +21,15 @@ public abstract class QueryMapper extends BaseMapper<Query, QueryResource, Long>
 
     @Override
     public QueryResource mapToResource(Query query) {
-        return new QueryResource(query.id(), query.contextClassPk(), query.contextClassName(), simpleMap(query.posts(), postMapper::mapToResource), query.section(),
+        return new QueryResource(query.id(), query.contextClassPk(), simpleMap(query.posts(), postMapper::mapToResource), query.section(),
                     query.title(), query.isAwaitingResponse(), query.createdOn());
     }
 
 
     @Override
     public Query mapToDomain(QueryResource queryResource) {
-        return new Query(queryResource.id, queryResource.contextClassPk, queryResource.contextClassName,
-                simpleMap(queryResource.posts, postMapper::mapToDomain), queryResource.section, queryResource.title, queryResource.createdOn);
+        return new Query(queryResource.id, queryResource.contextClassPk, simpleMap(queryResource.posts, postMapper::mapToDomain),
+                queryResource.section, queryResource.title, queryResource.createdOn);
     }
 
 }

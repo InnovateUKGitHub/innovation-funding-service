@@ -29,6 +29,12 @@ public final class Query extends Thread {
         this.section = sectionType;
     }
 
+    public Query(Long id, Long classPk, List<Post> posts, FinanceChecksSectionType sectionType,
+                 String title, LocalDateTime createdOn) {
+        super(id, classPk, null, posts, title, createdOn);
+        this.section = sectionType;
+    }
+
     public boolean isAwaitingResponse() {
         return latestPost()
                 .map(Post::author).map(SecurityRuleUtil::isInternal)
