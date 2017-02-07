@@ -4,9 +4,9 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
@@ -20,7 +20,6 @@ import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
-import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -78,6 +77,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                     application.getName(),
                     competition.getId(),
                     competition.getName(),
+                    competition.getCompetitionStatus(),
                     getLeadOrganisationName(application),
                     getPartnerOrganisationNames(application));
         });
@@ -101,7 +101,6 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
 
     private ApplicationAssessorResource getApplicationAssessor(CompetitionParticipant competitionParticipant, Long applicationId) {
         Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
-        Optional<ProcessOutcome> rejectedOutcome = getRejectedOutcome(mostRecentAssessment);
 
         User user = competitionParticipant.getUser();
         Optional<Profile> profile = ofNullable(profileRepository.findOne(user.getProfileId()));
@@ -116,11 +115,14 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         applicationAssessorResource.setBusinessType(profile.map(Profile::getBusinessType).orElse(null));
         applicationAssessorResource.setInnovationAreas(innovationAreas);
         applicationAssessorResource.setSkillAreas(profile.map(Profile::getSkillsAreas).orElse(null));
-        applicationAssessorResource.setRejectReason(rejectedOutcome.map(ProcessOutcome::getDescription).orElse(null));
-        applicationAssessorResource.setRejectComment(rejectedOutcome.map(ProcessOutcome::getComment).orElse(null));
         applicationAssessorResource.setAvailable(!mostRecentAssessment.isPresent());
-        applicationAssessorResource.setMostRecentAssessmentId(mostRecentAssessment.map(Assessment::getId).orElse(null));
-        applicationAssessorResource.setMostRecentAssessmentState(mostRecentAssessment.map(Assessment::getActivityState).orElse(null));
+
+        mostRecentAssessment.ifPresent(assessment -> {
+            populateRejection(applicationAssessorResource, assessment);
+            applicationAssessorResource.setMostRecentAssessmentId(assessment.getId());
+            applicationAssessorResource.setMostRecentAssessmentState(assessment.getActivityState());
+        });
+
         applicationAssessorResource.setTotalApplicationsCount(countAssignedApplications(user.getId()));
         applicationAssessorResource.setAssignedCount(countAssignedApplicationsByCompetition(competitionParticipant));
         applicationAssessorResource.setSubmittedCount(countSubmittedApplicationsByCompetition(competitionParticipant));
@@ -132,8 +134,12 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
         return assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(competitionParticipant.getUser().getId(), applicationId);
     }
 
-    private Optional<ProcessOutcome> getRejectedOutcome(Optional<Assessment> assessment) {
-        return assessment.flatMap(value -> value.getLastOutcome(AssessmentOutcomes.REJECT));
+    private void populateRejection(ApplicationAssessorResource applicationAssessorResource, Assessment assessment) {
+        if (assessment.getActivityState() == REJECTED) {
+            AssessmentRejectOutcome rejection = assessment.getRejection();
+            applicationAssessorResource.setRejectReason(rejection.getRejectReason());
+            applicationAssessorResource.setRejectComment(rejection.getRejectComment());
+        }
     }
 
     private long countAssignedApplications(Long userId) {

@@ -69,6 +69,11 @@ public class CompetitionInviteController {
         return competitionInviteService.getInvitationOverview(competitionId).toGetResponse();
     }
 
+    @RequestMapping(value ="/getInviteStatistics/{competitionId}", method = RequestMethod.GET)
+    public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(@PathVariable Long competitionId) {
+        return competitionInviteService.getInviteStatistics(competitionId).toGetResponse();
+    }
+
     @RequestMapping(value = "/inviteUser", method = RequestMethod.POST)
     public RestResult<CompetitionInviteResource> inviteUser(@Valid @RequestBody ExistingUserStagedInviteResource existingUserStagedInvite) {
         return competitionInviteService.inviteUser(existingUserStagedInvite).toPostWithBodyResponse();

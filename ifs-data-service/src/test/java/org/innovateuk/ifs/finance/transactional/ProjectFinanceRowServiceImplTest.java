@@ -9,6 +9,8 @@ import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
+import org.innovateuk.ifs.finance.handler.item.MaterialsHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -37,6 +39,7 @@ import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -165,6 +168,17 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
     public void testDeleteCost(){
         ServiceResult<Void> result = service.deleteCost(materialCost.getId());
         assertTrue(result.isSuccess());
+    }
+
+    @Test
+    public void testGetCostHandler(){
+        when(projectFinanceRowMapperMock.mapIdToDomain(1L)).thenReturn(materialCost);
+        when(organisationFinanceDefaultHandlerMock.costToCostItem(materialCost)).thenReturn(material);
+        when(organisationFinanceDefaultHandlerMock.getCostHandler(FinanceRowType.MATERIALS)).thenReturn(new MaterialsHandler());
+
+        FinanceRowHandler financeRowHandler = service.getCostHandler(1L);
+        assertNotNull(financeRowHandler);
+        assertTrue(financeRowHandler instanceof MaterialsHandler);
     }
 
     @Override

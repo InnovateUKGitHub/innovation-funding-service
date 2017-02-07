@@ -93,15 +93,10 @@ public class FormInputResponsePermissionRulesTest extends BasePermissionRulesTes
     }
 
     @Test
-    public void testCompAdminCanSeeFormInputResponsesForApplications() {
-        assertTrue(rules.compAdminCanSeeFormInputResponsesForApplications(sharedInputResponse, compAdminUser()));
-        assertFalse(rules.compAdminCanSeeFormInputResponsesForApplications(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
-    }
-    
-    @Test
-    public void testProjectFinanceUserCanSeeFormInputResponsesForApplications() {
-        assertTrue(rules.projectFinanceUserCanSeeFormInputResponsesForApplications(sharedInputResponse, projectFinanceUser()));
-        assertFalse(rules.projectFinanceUserCanSeeFormInputResponsesForApplications(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
+    public void testInternalUserCanSeeFormInputResponsesForApplications() {
+        assertTrue(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, compAdminUser()));
+        assertTrue(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, projectFinanceUser()));
+        assertFalse(rules.internalUserCanSeeFormInputResponsesForApplications(sharedInputResponse, leadApplicantForApplicationOnOrganisation1));
     }
 
 }

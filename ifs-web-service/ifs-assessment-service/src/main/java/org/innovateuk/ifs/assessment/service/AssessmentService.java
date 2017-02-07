@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.service;
 
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentTotalScoreResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -21,7 +22,7 @@ public interface AssessmentService {
 
     ServiceResult<Void> recommend(Long assessmentId, Boolean fundingConfirmation, String feedback, String comment);
 
-    ServiceResult<Void> rejectInvitation(Long assessmentId, String reason, String comment);
+    ServiceResult<Void> rejectInvitation(Long assessmentId, AssessmentRejectOutcomeValue reason, String comment);
 
     ServiceResult<Void> acceptInvitation(Long assessmentId);
 

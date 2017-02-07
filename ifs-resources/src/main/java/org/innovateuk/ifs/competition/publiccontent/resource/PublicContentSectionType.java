@@ -4,21 +4,23 @@ package org.innovateuk.ifs.competition.publiccontent.resource;
  * Enum to represent the competition setup sections displayed for public content.
  */
 public enum PublicContentSectionType {
-    SEARCH("Competition information and search", "search"),
-    SUMMARY("Summary", "summary"),
-    ELIGIBILITY("Eligibility", "eligibility"),
-    SCOPE("Scope", "scope"),
-    DATES("Dates", "dates"),
-    HOW_TO_APPLY("How to apply", "how-to-apply"),
-    SUPPORTING_INFORMATION("Supporting information", "supporting-information");
+    SEARCH("Competition information and search", "search", true),
+    SUMMARY("Summary", "summary" , true),
+    ELIGIBILITY("Eligibility", "eligibility", false),
+    SCOPE("Scope", "scope", false),
+    DATES("Dates", "dates", true),
+    HOW_TO_APPLY("How to apply", "how-to-apply", false),
+    SUPPORTING_INFORMATION("Supporting information", "supporting-information", false);
 
     private String text;
     private String path;
+    private boolean allowEmptyContentGroups;
 
 
-    PublicContentSectionType(String text, String path) {
+    PublicContentSectionType(String text, String path, boolean allowEmptyContentGroups) {
         this.text = text;
         this.path = path;
+        this.allowEmptyContentGroups = allowEmptyContentGroups;
     }
 
     public String getText() {
@@ -29,4 +31,7 @@ public enum PublicContentSectionType {
         return path;
     }
 
+    public boolean isAllowEmptyContentGroups() {
+        return allowEmptyContentGroups;
+    }
 }

@@ -103,45 +103,34 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void compAdminCanSeeApplicationFinancesForOrganisations() {
+    public void internalUserCanSeeApplicationFinancesForOrganisations() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
-                if (user.equals(compAdminUser())) {
-                    assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
+                if (allInternalUsers.contains(user)) {
+                    assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
                 } else {
-                    assertFalse(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
+                    assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, user));
                 }
             });
         });
     }
 
     @Test
-    public void projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator() {
-        allGlobalRoleUsers.forEach(user -> {
-                if (user.equals(projectFinanceUser())) {
-                    assertTrue(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, user));
-                } else {
-                    assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, user));
-                }
-        });
-    }
-
-    @Test
     public void testUpdateCosts() {
-        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
-        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
 
-        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
-        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
     }
 
     @Test
     public void testAddCosts() {
-        assertTrue(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, leadApplicant));
-        assertTrue(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, collaborator));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, leadApplicant));
+        assertTrue(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, collaborator));
 
-        assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, otherLeadApplicant));
-        assertFalse(rules.consortiumCanAddACostToApplicationFinanceForTheirOrganisation(applicationFinance, compAdmin));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, otherLeadApplicant));
+        assertFalse(rules.consortiumCanUpdateACostToApplicationFinanceForTheirOrganisationOrIsLeadApplicant(applicationFinance, compAdmin));
     }
 
     @Test
@@ -153,17 +142,11 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testCompAdminCanGetFileResourceForPartner(){
-        assertTrue(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
-        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
-        assertFalse(rules.compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
-    }
-
-    @Test
-    public void testProjectFinanceUserCanGetFileResourceForPartner(){
-        assertTrue(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, projectFinanceUser()));
-        assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
-        assertFalse(rules.projectFinanceUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
+    public void testInternalUserCanGetFileResourceForPartner(){
+        assertTrue(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, compAdmin));
+        assertTrue(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, projectFinanceUser()));
+        assertFalse(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, collaborator));
+        assertFalse(rules.internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(applicationFinance, leadApplicant));
     }
 
     @Test
@@ -188,17 +171,11 @@ public class ApplicationFinancePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testCompAdminCanGetApplicationFinance(){
-        assertTrue(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, compAdmin));
-        assertFalse(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));
-        assertFalse(rules.compAdminCanSeeApplicationFinancesForOrganisations(applicationFinance, leadApplicant));
-    }
-
-    @Test
-    public void testProjectFinanceCanGetApplicationFinance(){
-        assertTrue(rules.projectFinanceCanSeeApplicationFinancesForOrganisations(applicationFinance, projectFinanceUser()));
-        assertFalse(rules.projectFinanceCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));
-        assertFalse(rules.projectFinanceCanSeeApplicationFinancesForOrganisations(applicationFinance, leadApplicant));
+    public void testInternalUserCanGetApplicationFinance(){
+        assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, compAdmin));
+        assertTrue(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, projectFinanceUser()));
+        assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, collaborator));
+        assertFalse(rules.internalUserCanSeeApplicationFinancesForOrganisations(applicationFinance, leadApplicant));
     }
 
 }

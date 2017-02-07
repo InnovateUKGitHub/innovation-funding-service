@@ -160,12 +160,8 @@ public class FinanceRowPermissionRulesTest extends BasePermissionRulesTest<Appli
     }
 
     @Test
-    public void testCompAdminsCanCheckFundingStatusOfTeam(){
-        assertTrue(rules.compAdminsCanCheckFundingStatusOfTeam(project, compAdmin));
-    }
-
-    @Test
-    public void testProjectFinanceUserCanCheckFundingStatusOfTeam(){
-        assertTrue(rules.projectFinanceUsersCanCheckFundingStatusOfTeam(project, projectFinance));
+    public void testInternalUsersCanCheckFundingStatusOfTeam(){
+        assertTrue(rules.internalUsersCanCheckFundingStatusOfTeam(project, compAdmin));
+        assertTrue(rules.internalUsersCanCheckFundingStatusOfTeam(project, projectFinance));
     }
 }
