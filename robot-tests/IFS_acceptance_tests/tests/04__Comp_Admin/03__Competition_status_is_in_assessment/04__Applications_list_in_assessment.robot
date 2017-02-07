@@ -28,7 +28,7 @@ Columns show of the submitted applications
     Then the user should see the text in the page    Application number
     And the user should see the text in the page    Project title
     And the user should see the text in the page    Lead
-    And the user should see the text in the page    Innovation Area
+    And the user should see the text in the page    Innovation area
     And the user should see the text in the page    Number of partners
     And the user should see the text in the page    Grant requested (£)
     And the user should see the text in the page    Total project cost (£)
