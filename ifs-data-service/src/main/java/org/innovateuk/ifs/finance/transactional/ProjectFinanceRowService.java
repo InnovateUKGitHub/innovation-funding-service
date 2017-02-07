@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.security.access.method.P;
@@ -47,17 +49,20 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can delete costs from project finance")
     ServiceResult<Void> deleteCost(@P("costId") Long costId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project finance users can update the finance checks details")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Internal users can update the finance checks details")
     ServiceResult<ProjectFinanceResource> updateCost(@P("projectFinanceId") Long projectFinanceId, ProjectFinanceResource applicationFinance);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
-            description = "Project finance users can access the finance checks details")
+            description = "Internal users can access the finance checks details")
     ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
             description = "Project Finance users can view financial overviews of Organisations on Projects")
     ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
+
+    @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
+    FinanceRowHandler getCostHandler(Long costItemId);
 }

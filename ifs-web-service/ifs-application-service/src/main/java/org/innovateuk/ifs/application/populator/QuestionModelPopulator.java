@@ -145,6 +145,9 @@ public class QuestionModelPopulator extends BaseModelPopulator {
                 questionApplicationViewModel.setLeadOrganisation(org)
         );
 
+        userOrganisation.ifPresent(org -> questionApplicationViewModel.setHasApplicationFinances(
+                financeService.getApplicationFinanceDetails(userId, application.getId(), org.getId()) != null));
+
         addApplicationFormDetailInputs(application, form);
 
         questionApplicationViewModel.setResearchCategories(categoryService.getResearchCategories());

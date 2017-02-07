@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -44,9 +45,15 @@ public class ApplicationAssessmentSummaryResourceBuilder extends BaseBuilder<App
         return withArraySetFieldByReflection("competitionName", value);
     }
 
+    public ApplicationAssessmentSummaryResourceBuilder withLeadOrganisation(String... value) {
+        return withArraySetFieldByReflection("leadOrganisation", value);
+    }
+
     public ApplicationAssessmentSummaryResourceBuilder withPartnerOrganisations(List<String>... value) {
         return withArraySetFieldByReflection("partnerOrganisations", value);
     }
 
-
+    public ApplicationAssessmentSummaryResourceBuilder withCompetitionStatus(CompetitionStatus... value) {
+        return withArraySetFieldByReflection("competitionStatus", value);
+    }
 }

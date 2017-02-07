@@ -43,7 +43,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
@@ -52,9 +51,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
@@ -239,6 +236,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
     }
 
     @Test
@@ -280,6 +278,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectDetailsWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(financeCheckWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(viabilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
+        when(eligibilityWorkflowHandlerMock.projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser)).thenReturn(true);
         when(golWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
         when(projectWorkflowHandlerMock.projectCreated(savedProject, leadPartnerProjectUser)).thenReturn(true);
 
@@ -296,6 +295,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         verify(projectDetailsWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(financeCheckWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(viabilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
+        verify(eligibilityWorkflowHandlerMock).projectCreated(savedProjectPartnerOrganisation, leadPartnerProjectUser);
         verify(golWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectWorkflowHandlerMock).projectCreated(savedProject, leadPartnerProjectUser);
         verify(projectMapperMock).mapToResource(savedProject);
@@ -486,6 +486,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_PARTNER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -512,6 +513,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         newProjectUser().withOrganisation(organisation).withUser(user).withProject(project).withRole(PROJECT_MANAGER).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(project);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(123L, 5L, 7L);
@@ -531,6 +533,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Project anotherProject = newProject().withId(9999L).build();
 
         when(projectRepositoryMock.findOne(123L)).thenReturn(existingProject);
+        when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.SETUP);
 
         Organisation organisation = newOrganisation().withId(5L).build();
         when(organisationRepositoryMock.findOne(5L)).thenReturn(organisation);
@@ -550,6 +553,36 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         User anotherUser = newUser().build();
         Project existingProject = newProject().build();
         when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
+        when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.SETUP);
+
+        Organisation organisation = newOrganisation().build();
+        when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
+
+        newProjectUser().
+                withOrganisation(organisation).
+                withUser(user, anotherUser).
+                withProject(existingProject).
+                withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).build(2);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+
+        ServiceResult<Void> updateResult = service.updateFinanceContact(existingProject.getId(), organisation.getId(), anotherUser.getId());
+        assertTrue(updateResult.isSuccess());
+
+        List<ProjectUser> organisationFinanceContacts = existingProject.getProjectUsers(pu -> pu.getRole().equals(PROJECT_FINANCE_CONTACT) &&
+                pu.getOrganisation().equals(organisation));
+
+        assertEquals(1, organisationFinanceContacts.size());
+        assertEquals(anotherUser, organisationFinanceContacts.get(0).getUser());
+    }
+
+    @Test
+    public void testUpdateFinanceContactNotAllowedWhenProjectLive() {
+
+        User anotherUser = newUser().build();
+        Project existingProject = newProject().build();
+        when(projectRepositoryMock.findOne(existingProject.getId())).thenReturn(existingProject);
+        when(projectWorkflowHandlerMock.getState(existingProject)).thenReturn(ProjectState.LIVE);
 
         Organisation organisation = newOrganisation().build();
         when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation);
@@ -564,13 +597,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         ServiceResult<Void> updateResult = service.updateFinanceContact(existingProject.getId(), organisation.getId(), anotherUser.getId());
 
-        assertTrue(updateResult.isSuccess());
-
-        List<ProjectUser> organisationFinanceContacts = existingProject.getProjectUsers(pu -> pu.getRole().equals(PROJECT_FINANCE_CONTACT) &&
-                pu.getOrganisation().equals(organisation));
-
-        assertEquals(1, organisationFinanceContacts.size());
-        assertEquals(anotherUser, organisationFinanceContacts.get(0).getUser());
+        assertTrue(updateResult.isFailure());
+        assertTrue(updateResult.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
     }
 
     @Test
@@ -1114,6 +1142,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         Supplier<InputStream> input = () -> null;
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(projectInDB);
+        when(projectWorkflowHandlerMock.getState(projectInDB)).thenReturn(ProjectState.SETUP);
+
         ServiceResult<Pair<File, FileEntry>> successfulFileUpdateResult = serviceSuccess(Pair.of(new File("updatedfile"), entry));
         when(fileServiceMock.updateFile(any(), any())).thenReturn(successfulFileUpdateResult);
 
@@ -1136,10 +1166,24 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testUpdateCollaborationAgreementFileEntry() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         assertUpdateFile(
                 project::getCollaborationAgreement,
                 (fileToUpdate, inputStreamSupplier) ->
                         service.updateCollaborationAgreementFileEntry(123L, fileToUpdate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testFailureUpdateCollaborationAgreementFileEntryProjectLive() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+
+        FileEntryResource fileToUpdate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        ServiceResult<Void> result = service.updateCollaborationAgreementFileEntry(123L, fileToUpdate, inputStreamSupplier);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+
     }
 
     @Test
@@ -1158,10 +1202,20 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testDeleteCollaborationAgreementFile() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         assertDeleteFile(
                 project::getCollaborationAgreement,
                 project::setCollaborationAgreement,
                 () -> service.deleteCollaborationAgreementFile(123L));
+    }
+
+    @Test
+    public void testFailureDeleteCollaborationAgreementFileEntryProjectLive() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+
+        ServiceResult<Void> result = service.deleteCollaborationAgreementFile(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
     }
 
     @Test
@@ -1174,10 +1228,26 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testUpdateExploitationPlanFileEntry() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
+
         assertUpdateFile(
                 project::getExploitationPlan,
                 (fileToUpdate, inputStreamSupplier) ->
                         service.updateExploitationPlanFileEntry(123L, fileToUpdate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testFailureUpdateExploitationPlanFileProjectLive() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+
+        FileEntryResource fileToUpdate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        ServiceResult<Void> result = service.updateExploitationPlanFileEntry(project.getId(), fileToUpdate, inputStreamSupplier);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+
     }
 
     @Test
@@ -1196,10 +1266,21 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
     @Test
     public void testDeleteExploitationPlanFile() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
+
         assertDeleteFile(
                 project::getExploitationPlan,
                 project::setExploitationPlan,
                 () -> service.deleteExploitationPlanFile(123L));
+    }
+
+    @Test
+    public void testFailureDeleteExploitationPlanFileProjectLive() {
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+
+        ServiceResult<Void> result = service.deleteCollaborationAgreementFile(123L);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
     }
 
     @Test

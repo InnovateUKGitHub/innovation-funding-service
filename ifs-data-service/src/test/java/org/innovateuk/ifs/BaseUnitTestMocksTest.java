@@ -33,6 +33,7 @@ import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.AssessorCountOptionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.innovateuk.ifs.competition.transactional.CompetitionService;
 import org.innovateuk.ifs.email.service.EmailService;
 import org.innovateuk.ifs.file.mapper.FileEntryMapper;
@@ -43,6 +44,7 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
+import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
@@ -66,6 +68,7 @@ import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.finance.repository.*;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
 import org.innovateuk.ifs.project.gol.workflow.configuration.GOLWorkflowHandler;
@@ -83,15 +86,14 @@ import org.innovateuk.ifs.project.users.ProjectUsersHelper;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
 import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
-import org.innovateuk.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
-import org.innovateuk.ifs.workflow.transactional.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -137,6 +139,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
 
     @Mock
+    protected AssessmentRejectOutcomeMapper assessmentRejectOutcomeMapperMock;
+
+    @Mock
     protected AssessmentMapper assessmentMapperMock;
 
     @Mock
@@ -144,6 +149,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AssessmentWorkflowHandler assessmentWorkflowHandlerMock;
+
+    @Mock
+    protected AssessmentFundingDecisionOutcomeMapper assessmentFundingDecisionOutcomeMapperMock;
 
     @Mock
     protected AssessorFormInputResponseMapper assessorFormInputResponseMapperMock;
@@ -180,6 +188,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected CompetitionService competitionServiceMock;
+
+    @Mock
+    protected CompetitionKeyStatisticsService competitionKeyStatisticsServiceMock;
 
     @Mock
     protected OrganisationRepository organisationRepositoryMock;
@@ -285,12 +296,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected AddressService addressService;
-
-    @Mock
-    protected ProcessOutcomeService processOutcomeServiceMock;
-
-    @Mock
-    protected ProcessOutcomeMapper processOutcomeMapperMock;
 
     @Mock
     protected OrganisationService organisationServiceMock;
@@ -491,6 +496,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected ViabilityWorkflowHandler viabilityWorkflowHandlerMock;
 
     @Mock
+    protected EligibilityWorkflowHandler eligibilityWorkflowHandlerMock;
+
+    @Mock
     protected GOLWorkflowHandler golWorkflowHandlerMock;
 
     @Mock
@@ -555,6 +563,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected UsersRolesService usersRolesServiceMock;
+
+    @Mock
+    protected LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    protected ProjectFinanceRowMapper projectFinanceRowMapperMock;
 
     @Before
     public void setupMockInjection() {

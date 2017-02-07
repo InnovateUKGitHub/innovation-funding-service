@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 
 import java.util.List;
 
@@ -10,28 +11,32 @@ import java.util.List;
  */
 public class ApplicationAssessmentSummaryResource {
 
-    private Long id;
+    private long id;
     private String name;
     private Long competitionId;
     private String competitionName;
+    private CompetitionStatus competitionStatus;
+    private String leadOrganisation;
     private List<String> partnerOrganisations;
 
     public ApplicationAssessmentSummaryResource() {
     }
 
-    public ApplicationAssessmentSummaryResource(Long id, String name, Long competitionId, String competitionName, List<String> partnerOrganisations) {
+    public ApplicationAssessmentSummaryResource(long id, String name, Long competitionId, String competitionName, CompetitionStatus competitionStatus, String leadOrganisation, List<String> partnerOrganisations) {
         this.id = id;
         this.name = name;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.competitionStatus = competitionStatus;
+        this.leadOrganisation = leadOrganisation;
         this.partnerOrganisations = partnerOrganisations;
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -59,6 +64,22 @@ public class ApplicationAssessmentSummaryResource {
         this.competitionName = competitionName;
     }
 
+    public CompetitionStatus getCompetitionStatus() {
+        return competitionStatus;
+    }
+
+    public void setCompetitionStatus(CompetitionStatus competitionStatus) {
+        this.competitionStatus = competitionStatus;
+    }
+
+    public String getLeadOrganisation() {
+        return leadOrganisation;
+    }
+
+    public void setLeadOrganisation(String leadOrganisation) {
+        this.leadOrganisation = leadOrganisation;
+    }
+
     public List<String> getPartnerOrganisations() {
         return partnerOrganisations;
     }
@@ -69,13 +90,9 @@ public class ApplicationAssessmentSummaryResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         ApplicationAssessmentSummaryResource that = (ApplicationAssessmentSummaryResource) o;
 
@@ -84,6 +101,8 @@ public class ApplicationAssessmentSummaryResource {
                 .append(name, that.name)
                 .append(competitionId, that.competitionId)
                 .append(competitionName, that.competitionName)
+                .append(competitionStatus, that.competitionStatus)
+                .append(leadOrganisation, that.leadOrganisation)
                 .append(partnerOrganisations, that.partnerOrganisations)
                 .isEquals();
     }
@@ -95,6 +114,8 @@ public class ApplicationAssessmentSummaryResource {
                 .append(name)
                 .append(competitionId)
                 .append(competitionName)
+                .append(competitionStatus)
+                .append(leadOrganisation)
                 .append(partnerOrganisations)
                 .toHashCode();
     }

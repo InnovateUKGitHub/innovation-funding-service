@@ -21,4 +21,7 @@ public interface ValidatorService {
 
     @NotSecured(value = "This is not getting date from the database, just getting a FinanceRowHandler", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(FinanceRowItem costItem);
+
+    @NotSecured(value = "This is not getting date from the database, just getting a FinanceRowHandler for project finance", mustBeSecuredByOtherServices = false)
+    FinanceRowHandler getProjectCostHandler(FinanceRowItem costItem);
 }

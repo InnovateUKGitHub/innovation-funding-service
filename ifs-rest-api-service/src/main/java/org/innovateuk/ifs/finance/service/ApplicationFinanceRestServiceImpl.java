@@ -75,6 +75,11 @@ public class ApplicationFinanceRestServiceImpl extends BaseRestService implement
     }
 
     @Override
+    public RestResult<List<ApplicationFinanceResource>> getFinanceDetails(Long applicationId) {
+        return getWithRestResult(applicationFinanceRestURL + "/financeDetails/" + applicationId, applicationFinanceResourceListType());
+    }
+
+    @Override
     public RestResult<List<ApplicationFinanceResource>> getFinanceTotals(Long applicationId) {
         return getWithRestResult(applicationFinanceRestURL + "/financeTotals/" + applicationId, applicationFinanceResourceListType());
     }
