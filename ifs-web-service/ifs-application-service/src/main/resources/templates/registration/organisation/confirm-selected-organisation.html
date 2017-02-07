@@ -34,8 +34,7 @@
                 </label>
             </div>
         </fieldset>
-        <div th:include="fragments/addresses :: company-address-details"
-             th:with="form=${organisationForm}" th:remove="tag"/>
+        <th:block th:insert="fragments/addresses :: company-address-details"              th:with="form=${organisationForm}"  />
 
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
     </form>

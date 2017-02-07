@@ -42,7 +42,7 @@
         </th:block>
         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})"  />
       </label>
-      <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
+      <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" th:unless="${readonly}"    />
       <th:block th:insert="question-type/form-elements :: form-textarea-wrapped"  />
     </div>
 
@@ -72,7 +72,7 @@
 		 		(questionAssignee?.assignee==null and !userIsLeadApplicant)}">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
 
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag"  />
+        <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" th:unless="${readonly}"    />
         <input th:unless="${readonly}" th:if="${noFileUploaded}" type="file" th:id="${formInput.getId()}" th:name="${name != null} ? ${name} : 'formInput['+${formInput.getId()}+']'" class="inputfile"/>
         <label th:unless="${readonly}" th:if="${noFileUploaded}" th:for="${formInput.getId()}" class="button-secondary extra-margin">+ Upload</label>
         <button th:unless="${readonly}" th:if="${noFileUploaded}" name="upload_file" class="button-secondary" type="submit" th:attr='data-for-file-upload=${formInput.getId()}'>Save</button>
@@ -114,7 +114,7 @@
         	        <div class="form-group" th:classappend="${#fields.hasErrors('*{__application.name__}')} ? 'error'">
         	            <label class="form-label form-label-bold" th:for="application_details-title">
         	                  <span>Project title</span>
-        	                  <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:remove="tag" />
+        	                  <th:block th:insert="question-type/form-elements :: form-hint (hint='Enter the full title of your project')" th:unless="${readonly}"   />
         	            </label>
                         <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.name')"  />
                         <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})"  />
@@ -140,7 +140,7 @@
                         <div class="form-group" th:classappend="${#fields.hasErrors('*{application.researchCategoryId}')} ? 'error'">
                             <legend>
                                 <span class="form-label-bold">Research category</span>
-                                <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Please confirm the research category for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" th:remove="tag" />
+                                <th:block th:insert="question-type/form-elements :: form-hint (hint='Please confirm the research category for your project, further guidance is available from the &lt;a href=https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules>Innovate UK funding rules.&lt;/a&gt;')" th:unless="${readonly}"   />
                                 <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.researchCategoryId')"  />
                             </legend>
 
@@ -163,7 +163,7 @@
                             <div class="form-group"  th:classappend="${#fields.hasErrors('*{__application.resubmission__}')} ? 'error'">
                                 <legend>
                                     <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
-                                    <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" th:remove="tag" />
+                                    <th:block th:insert="question-type/form-elements :: form-hint (hint='Let us know if this is an application you have previously submitted to Innovate UK in another competition.')" th:unless="${readonly}"   />
                                     <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.resubmission')"  />
                                 </legend>
 
@@ -233,7 +233,7 @@
                                      <legend>
                                          <span class="form-label form-label-bold">Estimated timescales</span>
                                          <span>Project start date</span>
-                                         <div th:unless="${readonly}" th:include="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:remove="tag" />
+                                         <th:block th:insert="question-type/form-elements :: form-hint (hint='For example: 31 12 2015')" th:unless="${readonly}"   />
                                          <th:block th:insert="question-type/form-elements :: form-validation-custom-messages (errorId='application.startDate')"  />
                                      </legend>
 
@@ -306,7 +306,7 @@
                     <!-- ===========================Form: empty / no question =========================== -->
     <div th:fragment="empty" th:remove="tag">
         <div ifs:utext="${question.getDescription()}" th:remove="tag" />
-        <div th:unless="${readonly}" th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
+        <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" th:unless="${readonly}"   />
     </div>
 
 </html>

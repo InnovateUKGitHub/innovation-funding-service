@@ -5,11 +5,11 @@
     </head>
 
     <body th:with="context='assessment'">
-        <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-        <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
             <div class="hgroup">
@@ -141,7 +141,7 @@
                     </fieldset>
                 </div>
 
-                <div th:include="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search'" th:remove="tag"></div>
+                <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${form}, legend='Address search'" />
 
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
                     <label class="form-label" th:for="phoneNumber">
@@ -218,10 +218,10 @@
                 <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>
             </form>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag"></div>
-        <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

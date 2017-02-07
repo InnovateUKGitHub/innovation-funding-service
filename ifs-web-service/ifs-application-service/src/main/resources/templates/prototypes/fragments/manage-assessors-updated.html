@@ -1008,8 +1008,7 @@
 
             <th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
 
-                <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${param.name[0]},org=${param.org[0]},position=${param.position[0]},applications=${#numbers.formatInteger(param.applications[0],0)} + 1,busType=${param.busType[0]},type=remove"
-                    th:remove="tag" />
+                <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${param.name[0]},org=${param.org[0]},position=${param.position[0]},applications=${#numbers.formatInteger(param.applications[0],0)} + 1,busType=${param.busType[0]},type=remove"                      />
             </th:block>
 
         </div>
@@ -1085,20 +1084,15 @@
                 <li id="assessor-type" class="width-third"><a href="#">Number of applications</a></li>
             </ul>
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=0,busType=Academic,type=assign"
-                th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=0,busType=Academic,type=assign"                 th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}"  />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,busType=Industry,type=assign"
-                th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,busType=Industry,type=assign"                 th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}"  />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Martin Trollope'},org=${'London School of Economics'},position=${'Reader, Healthcare outcome measurement'},applications=3,busType=Academic,type=assign"
-                th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '3'}" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Martin Trollope'},org=${'London School of Economics'},position=${'Reader, Healthcare outcome measurement'},applications=3,busType=Academic,type=assign"                 th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '3'}"  />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},applications=5,busType=Academic,type=assign"
-                th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '4'}" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},applications=5,busType=Academic,type=assign"                 th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '4'}"  />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},applications=5,busType=Academic,type=assign"
-                th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '5'}" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},applications=5,busType=Academic,type=assign"                 th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '5'}"  />
 
 
         </div>
@@ -1120,8 +1114,7 @@
 
             <th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
 
-                <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=${param.row[0]},name=${param.name[0]},number=${param.number[0]},application=${param.application[0]},assessors=${#numbers.formatInteger(param.assessors[0],0)} + 1,org=${param.org[0]},type=remove"
-                    th:remove="tag" />
+                <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=${param.row[0]},name=${param.name[0]},number=${param.number[0]},application=${param.application[0]},assessors=${#numbers.formatInteger(param.assessors[0],0)} + 1,org=${param.org[0]},type=remove"                      />
 
             </th:block>
         </div>
@@ -1160,11 +1153,9 @@
                 <li id="assessor-area" class="width-quarter">Number of assigned applications</li>
             </ul>
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},assessors=0,button=${'Assign'},type=assign,name=${param.name[0]}"
-                th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},assessors=0,button=${'Assign'},type=assign,name=${param.name[0]}"                 th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}"  />
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},assessors=1,button=${'Assign'},type=assign,name=${param.name[0]}"
-                th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},assessors=1,button=${'Assign'},type=assign,name=${param.name[0]}"                 th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}"  />
 
         </div>
 

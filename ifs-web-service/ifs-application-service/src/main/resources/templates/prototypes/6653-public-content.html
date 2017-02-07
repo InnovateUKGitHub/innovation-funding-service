@@ -15,8 +15,8 @@
 <main id="content">
 	<th:block th:insert="fragments/layout :: main-content-start"  />
 
-	<div th:if="${param.section == null}" th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')})" th:remove="tag" />
-	<div th:unless="${param.section == null}" th:include="prototypes/fragments/applicant-view :: prototype-subheader('Public content', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready' : '?')})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')})" th:if="${param.section == null}"   />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('Public content', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready' : '?')})" th:unless="${param.section == null}"   />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 

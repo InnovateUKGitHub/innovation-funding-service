@@ -14,8 +14,7 @@
 
     <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post">
         <div class="page-title">
-            <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"
-                 th:remove="tag"/>
+            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"                   />
             <h1 class="heading-xlarge">Other documents</h1>
         </div>
         <hr/>

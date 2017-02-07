@@ -14,8 +14,7 @@
 
 
         <div class="page-title">
-                <div th:include="fragments/elements :: project-title (projectId=${project.application}, projectName=${project.name})"
-                 th:remove="tag"/>
+                <th:block th:insert="fragments/elements :: project-title (projectId=${project.application}, projectName=${project.name})"                   />
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 

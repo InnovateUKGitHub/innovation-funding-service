@@ -5,13 +5,13 @@
 </head>
 <body th:with="context='applicant'" class="app-invite-display">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
-<div th:if="${userIsLead}" th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:if="${userIsLead}" th:include="fragments/modals :: modal-submit-remove-collaborator" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-overlay" th:if="${userIsLead}"  />
+<th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" th:if="${userIsLead}"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}"  />
 
     <div class="page-title">
@@ -66,10 +66,10 @@
     </div>
 
     <p><a th:href="'/application/'+${currentApplication.getId()}+'/contributors/invite'" class="button">Invite new contributors</a></p>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"></div>
-<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
