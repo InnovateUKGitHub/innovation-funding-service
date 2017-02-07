@@ -365,12 +365,6 @@ public class CompetitionManagementApplicationController extends BaseController {
         return "redirect:/competition/" + competitionId + "/application/" + applicationId;
     }
 
-    private String redirectToApplicationOverview(Long competitionId, Long applicationId, Map<String, String> queryParams) {
-        String baseUrl = redirectToApplicationOverview(competitionId, applicationId);
-
-        return "redirect:/competition/" + competitionId + "/application/" + applicationId;
-    }
-
     private String validateApplicationAndCompetitionIds(Long applicationId, Long competitionId, Function<ApplicationResource, String> success) {
         ApplicationResource application = applicationService.getById(applicationId);
         if (application.getCompetition().equals(competitionId)) {
