@@ -17,7 +17,7 @@
 
             <h1 class="heading-xlarge">
                 <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
-                Application progress
+                <span th:text="${model.inAssessment ? 'Application progress' : 'Assign to application'}" th:remove="tag">Application progress</span>
             </h1>
 
             <h2 class="heading-medium" th:text="|${#numbers.formatInteger(model.applicationId,8)}: ${model.applicationName}|">
@@ -43,7 +43,7 @@
                 <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}">Review application</a>
             </div>
 
-            <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
+            <h2 class="heading-medium" th:text="(${model.inAssessment} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
             <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
                 <table class="assessors-assigned">
@@ -54,10 +54,10 @@
                             <th scope="col">Innovation area</th>
                             <th class="aligncentre" scope="col">Total applications</th>
                             <th class="aligncentre" scope="col">Assigned</th>
-                            <th class="aligncentre" scope="col">Notified</th>
-                            <th class="aligncentre" scope="col">Accepted</th>
-                            <th class="aligncentre" scope="col">Started</th>
-                            <th class="aligncentre" scope="col">Submitted</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Notified</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Accepted</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Started</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Submitted</th>
                             <th scope="col"><span class="visuallyhidden">Actions</span></th>
                         </tr>
                     </thead>
@@ -68,19 +68,19 @@
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.notified} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.notified} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.accepted} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.started} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.started} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.submitted} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
@@ -100,7 +100,7 @@
 
             <p th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
 
-
+            <th:block th:if="${model.inAssessment}">
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
             <div class="table-overflow" th:unless="${#lists.isEmpty(model.rejected)}">
@@ -158,6 +158,7 @@
 
             <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
 
+            </th:block>
             <h2 class="heading-medium">Available assessors</h2>
 
             <!--/* TODO INFUND-7055

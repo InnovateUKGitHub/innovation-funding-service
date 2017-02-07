@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResou
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Test;
@@ -28,6 +29,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TITLE;
 import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TOTAL_APPLICATIONS;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -67,6 +69,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                true,
                 "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
@@ -109,6 +112,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                true,
                 "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
@@ -264,6 +268,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withCompetitionName("Connected digital additive manufacturing")
                 .withLeadOrganisation("Liquid Dynamics")
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO Systems"))
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
     }
 
