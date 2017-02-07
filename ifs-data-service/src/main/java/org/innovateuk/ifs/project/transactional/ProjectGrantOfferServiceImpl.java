@@ -125,9 +125,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
-
             FileEntry fileEntry = project.getSignedGrantOfferLetter();
-
             return getFileAndContentsResult(fileEntry);
         });
     }
@@ -152,9 +150,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
-
             FileEntry fileEntry = project.getAdditionalContractFile();
-
             return getFileAndContentsResult(fileEntry);
         });
     }
