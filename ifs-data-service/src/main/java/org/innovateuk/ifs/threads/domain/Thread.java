@@ -4,6 +4,7 @@ package org.innovateuk.ifs.threads.domain;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -21,7 +22,9 @@ public abstract class Thread {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @NotNull
     private Long classPk;
+    @NotNull
     private String className;
 
     @Size(max = 255)
@@ -46,11 +49,11 @@ public abstract class Thread {
     }
 
     public final Optional<Post> latestPost() {
-        return postAtIndex(0);
+        return postAtIndex(posts.size() - 1);
     }
 
     private final Optional<Post> postAtIndex(int index) {
-        return posts.size() > index ? of(posts.get(index)) : empty();
+        return index < posts.size() ? empty() : of(posts.get(index));
     }
 
     public List<Post> posts() {
@@ -58,7 +61,7 @@ public abstract class Thread {
     }
 
     public void addPost(Post post) {
-        posts.add(0, post);
+        posts.add(post);
     }
 
     public Long id() {
