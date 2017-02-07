@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
-import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
@@ -34,14 +33,14 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
     public String saveAndUpload(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                 @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
         return saveAndFileAction(competitionId, model, form, validationHandler,
-                (publicContentResource) -> publicContentService.uploadFile(competitionId, getType(), form.getContentGroups()));
+                () -> publicContentService.uploadFile(competitionId, getType(), form.getContentGroups()));
     }
 
     @RequestMapping(value = "/{competitionId}/edit", params = "removeFile" ,method = RequestMethod.POST)
     public String saveAndRemove(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                 @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
         return saveAndFileAction(competitionId, model, form, validationHandler,
-                (publicContentResource) -> publicContentService.removeFile(form));
+                () -> publicContentService.removeFile(form));
     }
 
     @RequestMapping(value = "/{competitionId}/edit/{contentGroupId}", method = RequestMethod.GET)
@@ -53,7 +52,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    protected String saveAndFileAction(Long competitionId, Model model, F form, ValidationHandler validationHandler, Function<PublicContentResource, FailingOrSucceedingResult<?, ?>> action) {
+    protected String saveAndFileAction(Long competitionId, Model model, F form, ValidationHandler validationHandler, Supplier<ServiceResult<Void>> action) {
         PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
 
         Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
@@ -61,7 +60,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         Supplier<String> successView = () -> getPage(publicContentService.getCompetitionById(competitionId), model, Optional.empty(), false);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> formSaver().save(form, publicContent).andOnSuccessReturn(() -> action.apply(publicContent)));
+                () -> formSaver().save(form, publicContent).andOnSuccess(action));
 
     }
 
