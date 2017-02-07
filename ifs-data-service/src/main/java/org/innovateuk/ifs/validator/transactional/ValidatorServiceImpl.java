@@ -6,6 +6,7 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
@@ -34,6 +35,9 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
     @Autowired
     private FinanceRowService financeRowService;
+
+    @Autowired
+    private ProjectFinanceRowService projectFinanceRowService;
 
     @Autowired
     private ValidationUtil validationUtil;
@@ -76,5 +80,10 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
     @Override
     public FinanceRowHandler getCostHandler(FinanceRowItem costItem) {
         return financeRowService.getCostHandler(costItem.getId());
+    }
+
+    @Override
+    public FinanceRowHandler getProjectCostHandler(FinanceRowItem costItem) {
+        return projectFinanceRowService.getCostHandler(costItem.getId());
     }
 }
