@@ -7,9 +7,22 @@ public enum FundingType {
     GRANT("Grant"),
     PROCUREMENT("Procurement");
 
-    private String text;
+    private String displayName;
 
-    FundingType(String text) {
-        this.text = text;
+    FundingType(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
+
+    public static FundingType fromDisplayName(String displayName) {
+        for(FundingType type: FundingType.values()) {
+            if(type.getDisplayName().equals(displayName)) {
+                return type;
+            }
+        }
+        return null;
     }
 }

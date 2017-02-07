@@ -33,14 +33,9 @@ public class OrganisationPermissionRules {
     @Autowired
     private ProjectUserRepository projectUserRepository;
 
-    @PermissionRule(value = "READ", description = "Comp Admins can see all Organisations")
-    public boolean compAdminsCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(value = "READ", description = "Project Finance Users can see all Organisations")
-    public boolean projectFinanceUserCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
-        return isProjectFinanceUser(user);
+    @PermissionRule(value = "READ", description = "Internal Users can see all Organisations")
+    public boolean internalUsersCanSeeAllOrganisations(OrganisationResource organisation, UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(value = "READ", description = "System Registration User can see all Organisations, in order to view particular Organisations during registration and invite")

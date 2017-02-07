@@ -45,11 +45,11 @@ public interface CompetitionService {
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can change the competition state to Assessment Closed")
     ServiceResult<Void> closeAssessment(Long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'competition_executive')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")
     ServiceResult<Void> notifyAssessors(Long competitionId);
 }

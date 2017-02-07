@@ -1,10 +1,10 @@
-package org.innovateuk.ifs.publiccontent.formsaver;
+package org.innovateuk.ifs.publiccontent.formsaver.section;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.form.SearchInformationForm;
-import org.innovateuk.ifs.publiccontent.saver.SearchInformationFormSaver;
+import org.innovateuk.ifs.publiccontent.form.section.SearchInformationForm;
+import org.innovateuk.ifs.publiccontent.saver.section.SearchInformationFormSaver;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +23,6 @@ import static org.mockito.Mockito.verify;
 @RunWith(MockitoJUnitRunner.class)
 public class SearchInformationFormSaverTest {
 
-    private static final Long COMPETITION_ID = 1L;
     private static final String FUNDING_RANGE = "FUNDING_RANGE";
     private static final String ELIGIBILITY_SUMMARY = "SUMMARY";
     private static final String SHORT_DESCRIPTION = "SHORT_DESCRIPTION";

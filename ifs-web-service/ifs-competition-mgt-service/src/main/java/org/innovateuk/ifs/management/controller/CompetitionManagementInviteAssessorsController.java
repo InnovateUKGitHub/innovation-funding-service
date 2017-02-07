@@ -34,7 +34,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/assessors")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementInviteAssessorsController {
 
     private static final String FORM_ATTR_NAME = "form";

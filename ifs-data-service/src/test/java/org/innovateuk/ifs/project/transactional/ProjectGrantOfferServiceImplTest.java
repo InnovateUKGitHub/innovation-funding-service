@@ -21,6 +21,7 @@ import org.innovateuk.ifs.project.gol.YearlyGOLProfileTable;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -50,6 +51,7 @@ import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
@@ -344,10 +346,26 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     @Test
     public void testUpdateSignedGrantOfferLetterFileEntry() {
         when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.TRUE);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         assertUpdateFile(
                 project::getSignedGrantOfferLetter,
                 (fileToUpdate, inputStreamSupplier) ->
                         service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier));
+    }
+
+    @Test
+    public void testUpdateSignedGrantOfferLetterFileEntryProjectLive() {
+
+        FileEntryResource fileToUpdate = newFileEntryResource().build();
+        Supplier<InputStream> inputStreamSupplier = () -> null;
+
+        when(projectWorkflowHandlerMock.getState(any())).thenReturn(ProjectState.LIVE);
+        when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.FALSE);
+
+        ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+
     }
 
     @Test
@@ -356,6 +374,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         FileEntryResource fileToUpdate = newFileEntryResource().build();
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
+        when(projectWorkflowHandlerMock.getState(any())).thenReturn(ProjectState.SETUP);
         when(golWorkflowHandlerMock.isSent(any())).thenReturn(Boolean.FALSE);
 
         ServiceResult<Void> result = service.updateSignedGrantOfferLetterFile(123L, fileToUpdate, inputStreamSupplier);
@@ -363,6 +382,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         assertEquals(result.getErrors().get(0).getErrorKey(), CommonFailureKeys.GRANT_OFFER_LETTER_MUST_BE_SENT_BEFORE_UPLOADING_SIGNED_COPY.toString());
 
     }
+
 
     @Test
     public void testSubmitGrantOfferLetterFailureNoSignedGolFile() {
@@ -416,6 +436,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
         when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
         when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
 
         ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
@@ -428,6 +449,28 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
     }
 
     @Test
+    public void testRemoveGrantOfferLetterFileEntryProjectLive() {
+
+        UserResource internalUserResource = newUserResource().build();
+        User internalUser = newUser().withId(internalUserResource.getId()).build();
+        setLoggedInUser(internalUserResource);
+
+        FileEntry existingGOLFile = newFileEntry().build();
+        project.setGrantOfferLetter(existingGOLFile);
+
+        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(true);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+        when(fileServiceMock.deleteFile(existingGOLFile.getId())).thenReturn(serviceSuccess(existingGOLFile));
+
+        ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+    }
+
+
+    @Test
     public void testRemoveGrantOfferLetterFileEntryButWorkflowRejected() {
 
         UserResource internalUserResource = newUserResource().build();
@@ -438,6 +481,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         project.setGrantOfferLetter(existingGOLFile);
 
         when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
         when(golWorkflowHandlerMock.removeGrantOfferLetter(project, internalUser)).thenReturn(false);
 
         ServiceResult<Void> result = service.removeGrantOfferLetterFileEntry(123L);
@@ -449,6 +493,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(golWorkflowHandlerMock).removeGrantOfferLetter(project, internalUser);
         verify(fileServiceMock, never()).deleteFile(existingGOLFile.getId());
     }
+
     private final Organisation organisation(OrganisationTypeEnum type, String name) {
         return newOrganisation()
                 .withOrganisationType(type)

@@ -188,6 +188,13 @@ public abstract class BaseRestServiceUnitTest<ServiceType extends BaseRestServic
         return response;
     }
 
+    protected ResponseEntity<Void> setupFileUploadWithRestResultExpectations(String nonBaseUrl, String requestBody, String mediaType, long filesizeBytes, HttpStatus responseCode) {
+        ResponseEntity<Void> response = new ResponseEntity<>(responseCode);
+        when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCallWithFileUpload(requestBody, mediaType, filesizeBytes), Void.class)).thenReturn(response);
+        return response;
+    }
+
+
     protected <T> ResponseEntity<T> setupPostWithRestResultAnonymousExpectations(String nonBaseUrl, Class<T> responseType, Object requestBody, T responseBody, HttpStatus responseCode) {
         ResponseEntity<T> response = new ResponseEntity<>(responseBody, responseCode);
         when(mockRestTemplate.exchange(dataServicesUrl + nonBaseUrl, POST, httpEntityForRestCallAnonymous(requestBody), responseType)).thenReturn(response);
