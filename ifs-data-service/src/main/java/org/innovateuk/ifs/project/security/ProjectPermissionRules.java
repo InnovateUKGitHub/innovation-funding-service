@@ -110,7 +110,7 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
-            description = "Internal user can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
+            description = "Internal users can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
     public boolean internalUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
         return isInternal(user);
     }
