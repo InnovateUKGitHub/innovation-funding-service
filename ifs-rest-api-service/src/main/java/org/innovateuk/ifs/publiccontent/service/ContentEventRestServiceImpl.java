@@ -13,7 +13,7 @@ import static java.lang.String.format;
  * Implementation for public content rest calls.
  */
 @Service
-public class PublicContentEventRestServiceImpl extends BaseRestService implements PublicContentEventRestService {
+public class ContentEventRestServiceImpl extends BaseRestService implements ContentEventRestService {
 
     private static final String PUBLIC_CONTENT_EVENT_REST_URL = "/public-content/events";
 

@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * Service for operations around the usage and processing of public content.
  */
 @Service
-public class PublicContentEventServiceImpl extends BaseTransactionalService implements PublicContentEventService {
+public class ContentEventServiceImpl extends BaseTransactionalService implements ContentEventService {
 
     @Autowired
     private ContentEventRepository contentEventRepository;

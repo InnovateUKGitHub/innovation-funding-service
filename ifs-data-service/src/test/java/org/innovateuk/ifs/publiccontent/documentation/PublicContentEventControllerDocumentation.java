@@ -2,8 +2,8 @@ package org.innovateuk.ifs.publiccontent.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
-import org.innovateuk.ifs.publiccontent.controller.PublicContentEventController;
-import org.innovateuk.ifs.publiccontent.transactional.PublicContentEventService;
+import org.innovateuk.ifs.publiccontent.controller.ContentEventController;
+import org.innovateuk.ifs.publiccontent.transactional.ContentEventService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -26,14 +26,14 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PublicContentEventControllerDocumentation extends BaseControllerMockMVCTest<PublicContentEventController> {
+public class PublicContentEventControllerDocumentation extends BaseControllerMockMVCTest<ContentEventController> {
     @Mock
-    private PublicContentEventService publicContentEventService;
+    private ContentEventService contentEventService;
     private RestDocumentationResultHandler document;
 
     @Override
-    protected PublicContentEventController supplyControllerUnderTest() {
-        return new PublicContentEventController();
+    protected ContentEventController supplyControllerUnderTest() {
+        return new ContentEventController();
     }
 
     @Before
@@ -46,7 +46,7 @@ public class PublicContentEventControllerDocumentation extends BaseControllerMoc
     public void saveEvent() throws Exception {
         PublicContentEventResource resource = publicContentEventResourceBuilder.build();
 
-        when(publicContentEventService.saveEvent(resource)).thenReturn(serviceSuccess());
+        when(contentEventService.saveEvent(resource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/public-content/events/save-event")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
@@ -61,7 +61,7 @@ public class PublicContentEventControllerDocumentation extends BaseControllerMoc
     public void resetAndSaveEvents() throws Exception {
         List<PublicContentEventResource> resources = publicContentEventResourceBuilder.build(2);
 
-        when(publicContentEventService.resetAndSaveEvents(1L, resources)).thenReturn(serviceSuccess());
+        when(contentEventService.resetAndSaveEvents(1L, resources)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/public-content/events/reset-and-save-events?id=1")
                 .contentType(MediaType.APPLICATION_JSON_UTF8)

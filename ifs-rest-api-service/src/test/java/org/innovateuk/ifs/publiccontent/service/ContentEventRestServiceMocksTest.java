@@ -12,13 +12,13 @@ import java.util.List;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentEventResourceBuilder.newPublicContentEventResource;
 import static org.junit.Assert.assertTrue;
 
-public class PublicContentEventRestServiceMocksTest extends BaseRestServiceUnitTest<PublicContentEventRestServiceImpl> {
+public class ContentEventRestServiceMocksTest extends BaseRestServiceUnitTest<ContentEventRestServiceImpl> {
 
     private static final String PUBLIC_CONTENT_EVENT_REST_URL = "/public-content/events";
 
     @Override
-    protected PublicContentEventRestServiceImpl registerRestServiceUnderTest() {
-        PublicContentEventRestServiceImpl publicContentEventRestService = new PublicContentEventRestServiceImpl();
+    protected ContentEventRestServiceImpl registerRestServiceUnderTest() {
+        ContentEventRestServiceImpl publicContentEventRestService = new ContentEventRestServiceImpl();
         return publicContentEventRestService;
     }
 

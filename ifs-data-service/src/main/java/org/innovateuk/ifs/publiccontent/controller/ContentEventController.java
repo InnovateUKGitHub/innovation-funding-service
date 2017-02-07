@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
-import org.innovateuk.ifs.publiccontent.transactional.PublicContentEventService;
+import org.innovateuk.ifs.publiccontent.transactional.ContentEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,19 +13,19 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/public-content/events/")
-public class PublicContentEventController {
+public class ContentEventController {
 
     @Autowired
-    private PublicContentEventService publicContentEventService;
+    private ContentEventService contentEventService;
 
     @RequestMapping(value = "save-event", method = RequestMethod.POST)
     public RestResult<Void> saveEvent(@RequestBody final PublicContentEventResource event) {
-        return publicContentEventService.saveEvent(event).toPostResponse();
+        return contentEventService.saveEvent(event).toPostResponse();
     }
 
     @RequestMapping(value = "reset-and-save-events", method = RequestMethod.POST)
     public RestResult<Void> resetAndSaveEvent(@RequestParam("id") final Long id,
                                               @RequestBody final List<PublicContentEventResource> events) {
-        return publicContentEventService.resetAndSaveEvents(id, events).toPostResponse();
+        return contentEventService.resetAndSaveEvents(id, events).toPostResponse();
     }
 }

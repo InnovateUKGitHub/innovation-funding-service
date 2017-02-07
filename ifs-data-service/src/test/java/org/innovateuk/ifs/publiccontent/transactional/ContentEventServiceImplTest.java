@@ -24,7 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
 
-public class PublicContentEventServiceImplTest extends BaseServiceUnitTest<PublicContentEventServiceImpl> {
+public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEventServiceImpl> {
 
     @Mock
     private ContentEventRepository contentEventRepository;
@@ -33,8 +33,8 @@ public class PublicContentEventServiceImplTest extends BaseServiceUnitTest<Publi
     private ContentEventMapper contentEventMapper;
 
     @Override
-    protected PublicContentEventServiceImpl supplyServiceUnderTest() {
-        return new PublicContentEventServiceImpl();
+    protected ContentEventServiceImpl supplyServiceUnderTest() {
+        return new ContentEventServiceImpl();
     }
 
     @Test

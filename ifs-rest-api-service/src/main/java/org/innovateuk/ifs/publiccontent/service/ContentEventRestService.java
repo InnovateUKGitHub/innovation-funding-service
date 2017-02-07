@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Rest service for public content event.
  */
-public interface PublicContentEventRestService {
+public interface ContentEventRestService {
 
     RestResult<Void> saveEvent(PublicContentEventResource event);
 

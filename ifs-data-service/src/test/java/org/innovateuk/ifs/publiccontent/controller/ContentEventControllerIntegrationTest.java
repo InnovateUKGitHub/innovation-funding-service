@@ -25,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Controller integration test for public content events
  */
-public class PublicContentEventControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentEventController> {
+public class ContentEventControllerIntegrationTest extends BaseControllerIntegrationTest<ContentEventController> {
     @Autowired
     private PublicContentRepository publicContentRepository;
 
@@ -40,7 +40,7 @@ public class PublicContentEventControllerIntegrationTest extends BaseControllerI
 
     @Override
     @Autowired
-    protected void setControllerUnderTest(PublicContentEventController controller) {
+    protected void setControllerUnderTest(ContentEventController controller) {
         this.controller = controller;
     }
 

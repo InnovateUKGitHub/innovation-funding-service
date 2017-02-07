@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Interface for public content actions.
  */
-public interface PublicContentEventService {
+public interface ContentEventService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "SAVE_EVENT",
