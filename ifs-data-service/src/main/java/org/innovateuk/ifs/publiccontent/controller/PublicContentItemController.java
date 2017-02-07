@@ -27,7 +27,6 @@ public class PublicContentItemController {
         return publicContentItemService.findFilteredItems(innovationAreaId, searchString, pageNumber, pageSize).toGetResponse();
     }
 
-
     @RequestMapping(value = "by-competition-id/{id}", method = RequestMethod.GET)
     public RestResult<PublicContentItemResource> byCompetitionId(@PathVariable("id") final Long competitionId) {
         return publicContentItemService.byCompetitionId(competitionId).toGetResponse();

@@ -103,7 +103,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         when(publicContentRepository.findByCompetitionIdInAndIdIn(asList(COMPETITION_ID, COMPETITION_ID, COMPETITION_ID), getSetWithPublicContentIds(), new PageRequest(1, 40)))
                 .thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of(SEARCH_STRING), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of(SEARCH_STRING), Optional.of(1), 40);
 
         assertTrue(result.isSuccess());
 
@@ -120,7 +120,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByCompetitionIdInAndIdIn(Collections.emptyList(), Collections.emptySet(), new PageRequest(1, 40))).thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of(SEARCH_STRING), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of(SEARCH_STRING), Optional.of(1), 40);
         assertTrue(result.isSuccess());
 
         testResultEmpty(result);
@@ -134,7 +134,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findAll(new PageRequest(1, 40))).thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.empty(), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.empty(), Optional.of(1), 40);
         assertTrue(result.isSuccess());
 
         testResult(result);
@@ -149,7 +149,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByCompetitionIdIn(asList(COMPETITION_ID, COMPETITION_ID, COMPETITION_ID), new PageRequest(1, 40))).thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.empty(), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.empty(), Optional.of(1), 40);
         assertTrue(result.isSuccess());
 
         testResult(result);
@@ -163,7 +163,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByCompetitionIdIn(Collections.emptyList(), new PageRequest(1, 40))).thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID_NOT_FOUND), Optional.empty(), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID_NOT_FOUND), Optional.empty(), Optional.of(1), 40);
         assertTrue(result.isSuccess());
 
         testResultEmpty(result);
@@ -178,7 +178,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByIdIn(getSetWithPublicContentIds(), new PageRequest(1, 40))).thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of(SEARCH_STRING), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of(SEARCH_STRING), Optional.of(1), 40);
         assertTrue(result.isSuccess());
 
         testResult(result);
@@ -195,7 +195,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByIdIn(getSetWithPublicContentIds(), new PageRequest(1, 40))).thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of(SEARCH_STRING_TOO_LONG), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of(SEARCH_STRING_TOO_LONG), Optional.of(1), 40);
         assertTrue(result.isSuccess());
 
         testResult(result);
@@ -211,7 +211,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
         when(publicContentRepository.findByIdIn(Collections.emptySet(), new PageRequest(1, 40))).thenReturn(expected);
 
-        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of("NothingWillBeFound"), Optional.of(1), Optional.of(40));
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of("NothingWillBeFound"), Optional.of(1),40);
         assertTrue(result.isSuccess());
 
         testResultEmpty(result);
