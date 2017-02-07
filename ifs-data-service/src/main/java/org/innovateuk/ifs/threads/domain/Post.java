@@ -18,13 +18,13 @@ public class Post {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "author_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "author_id", referencedColumnName = "id")
     private User author;
 
     @NotNull
     private String body;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "post_attachment",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))
