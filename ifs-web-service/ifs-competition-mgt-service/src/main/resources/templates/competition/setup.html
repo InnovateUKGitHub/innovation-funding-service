@@ -5,11 +5,11 @@
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
     <div th:if="${currentSection.toString() == 'HOME'}" th:include="fragments/layout :: header-sub" th:with="linkTitle='All competitions',linkClass='link-back',linkUrl=@{/dashboard},currentApplication=${currentApplication}" th:remove="tag" />
     <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}/(competitionId=${competition.id})}" th:remove="tag" />
@@ -26,11 +26,11 @@
 
     <div th:if="${currentSection.toString() != 'HOME'}" th:include="fragments/competition-setup :: setup-home" th:remove="tag" />
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

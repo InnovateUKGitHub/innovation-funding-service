@@ -7,18 +7,18 @@
 <body class="comp-dashboard">
 
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',user='Vicky Brown'" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',user='Vicky Brown'"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')})"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Assessment'}, ${null})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Assessment'}, ${null})"  />
 
     <th:block th:if="${param.status != null and param.status[0] == 'edit'}">
 		<form>
@@ -83,11 +83,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

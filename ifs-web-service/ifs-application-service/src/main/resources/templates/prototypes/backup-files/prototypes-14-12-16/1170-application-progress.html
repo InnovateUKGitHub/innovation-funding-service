@@ -6,18 +6,18 @@
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})"  />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application status'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application status'})"  />
 
 	<ul class="application-progress-list">
 		<li class="complete"><span>
@@ -77,10 +77,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

@@ -5,12 +5,12 @@
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
 
 
@@ -99,11 +99,11 @@
 
     </div>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

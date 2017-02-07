@@ -5,11 +5,11 @@
 </head>
 <body th:with="context='applicant'" class="app-terms-and-conditions">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
     <header class="page-header group no-pad">
         <h1 class="heading-xlarge">Terms and Conditions of the Offer</h1>
@@ -263,11 +263,11 @@ then the Lead Participant must inform Innovate UK through the assigned MO prompt
         </div>
 
     </div>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

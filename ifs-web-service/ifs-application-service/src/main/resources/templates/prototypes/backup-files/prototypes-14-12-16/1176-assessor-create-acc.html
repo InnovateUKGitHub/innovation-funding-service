@@ -6,17 +6,17 @@
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})"  th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
     <th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
-		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" th:remove="tag" />
+		<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your profile')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})"  />
 	</th:block>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -55,7 +55,7 @@
 				<input class="form-control" id="last-name" name="last-name" type="text" th:value="${(param.edit == null ? '':'Bloggs')}"/>
 			</div>
 
-			<div th:include="prototypes/fragments/diversity :: diversity-questions" th:remove="tag" />
+			<th:block th:insert="prototypes/fragments/diversity :: diversity-questions"  />
 
 			<div class="form-group" th:unless="${param.edit != null}">
 				<label class="form-label" for="postcode-check">
@@ -193,11 +193,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 <script type="text/javascript">
 
 	jQuery('#postcode-lookup').on('click',function(e){

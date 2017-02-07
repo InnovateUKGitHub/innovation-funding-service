@@ -5,11 +5,11 @@
     </head>
 
     <body class="app-overview">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:with="hideDashboardLink='true'" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: body-start"  />
+        <th:block th:insert="fragments/layout :: global-header" th:with="hideDashboardLink='true'"  />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start"  />
 
             <div class="page-title">
                 <h1 class="heading-xlarge">Sign in successful</h1>
@@ -45,10 +45,10 @@
                 <button type="submit" class="button" id="continue">Continue</button>
             </form>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end"  />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer"  />
+        <th:block th:insert="fragments/layout :: body-end"  />
     </body>
 </html>

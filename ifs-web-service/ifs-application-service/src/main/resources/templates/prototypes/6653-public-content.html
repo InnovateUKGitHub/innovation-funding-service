@@ -7,13 +7,13 @@
 
 <body class="comp-setup">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: main-content-start"  />
 
 	<div th:if="${param.section == null}" th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')})" th:remove="tag" />
 	<div th:unless="${param.section == null}" th:include="prototypes/fragments/applicant-view :: prototype-subheader('Public content', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready' : '?')})" th:remove="tag" />
@@ -24,11 +24,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 <!--<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>-->
 <!--<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>-->
 <script type="text/javascript">

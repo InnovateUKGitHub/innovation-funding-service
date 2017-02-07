@@ -5,11 +5,11 @@
 </head>
 
     <body th:with="context='assessment'" class="assessment-submit-confirm">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: body-start"  />
+        <th:block th:insert="fragments/layout :: global-header"  />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start"  />
             <div th:include="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})})" th:remove="tag"></div>
 
             <div class="page-title">
@@ -27,7 +27,7 @@
             </form>
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer"  />
+        <th:block th:insert="fragments/layout :: body-end"  />
     </body>
 </html>

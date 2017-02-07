@@ -6,18 +6,18 @@
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
 
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start"  />
 
-  <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-  <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Finances'})" th:remove="tag" />
+  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Finances'})"  />
 
   <h2 class="heading-medium no-margin-bottom">Finances</h2>
   <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
@@ -190,7 +190,7 @@
 
 
 
-	<!-- <div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" /> -->
+	<!-- <th:block th:insert="prototypes/fragments/finance-questions :: finance-other-funding"  /> -->
 
 	<!-- <div class="alignright-button extra-margin">
 		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
@@ -221,11 +221,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 <script type="text/javascript">
 

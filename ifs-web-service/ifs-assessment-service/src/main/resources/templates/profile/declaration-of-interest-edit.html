@@ -10,7 +10,7 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}"  />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your declaration of interest</h1>

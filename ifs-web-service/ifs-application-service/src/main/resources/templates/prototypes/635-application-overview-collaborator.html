@@ -6,22 +6,22 @@
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/layout :: prototype-sub-header-no-link" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header-no-link"  />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application overview'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Application overview'})"  />
 
 	<div class="grid-row">
 		 <div class="column-half">
-           <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
+           <th:block th:insert="prototypes/fragments/layout :: prototype-application-progress"  />
         </div>
         <div class="column-half">
             <ul class="list list-bullet">
@@ -48,7 +48,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#2">Project summary</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead"  />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -63,7 +63,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="#4">Scope</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead"  />
 				</div>
 			</li>
 		</ul>
@@ -75,7 +75,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question1-collaborator">1. Business opportunity</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead"  />
 				</div>
 			</li>
 			<li class="section-status assigned-to-me">
@@ -83,7 +83,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question2-collaborator">2. Potential market</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -91,7 +91,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question3-collaborator">3. Project exploitation</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead"  />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -106,7 +106,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question5-collaborator">5. Technical approach</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -114,7 +114,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question6-collaborator">6. Innovation</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead"  />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -136,7 +136,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question9-collaborator">9. Funding</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -144,7 +144,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/635-application-question10-collaborator">10. Adding value</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-lead"  />
 				</div>
 			</li>
 		</ul>
@@ -156,7 +156,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/631-finances-assigned-to-you-collaborator">Your  finances</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/layout :: prototype-question-collaborator-assigned-to-me"  />
 				</div>
 			</li>
 			<li>
@@ -179,10 +179,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

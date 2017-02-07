@@ -5,12 +5,12 @@
 </head>
 <body th:with="context='applicant'" class="assessment-review">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition details',linkClass='link-back',linkUrl=@{../details},currentApplication=${currentApplication}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition details',linkClass='link-back',linkUrl=@{../details},currentApplication=${currentApplication}"  />
 
     <div class="page-title">
       <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
@@ -62,14 +62,14 @@
   	</div>
 
   	<div class="extra-margin">
-		<div th:include="competition/fragments :: sign-in-to-apply-button" th:remove="tag" />
+		<th:block th:insert="competition/fragments :: sign-in-to-apply-button"  />
   	</div>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

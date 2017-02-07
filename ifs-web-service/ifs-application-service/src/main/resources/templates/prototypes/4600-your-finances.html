@@ -8,18 +8,18 @@
 
 <body class="app-overview">
 
-    <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-    <div th:include="fragments/layout :: body-start" th:remove="tag" />
-    <div th:include="fragments/layout :: global-header" th:remove="tag" />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+    <th:block th:insert="fragments/layout :: body-start"  />
+    <th:block th:insert="fragments/layout :: global-header"  />
 
     <main id="content">
 
-        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: main-content-start"  />
 
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
+        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})"  />
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your project costs'})" th:remove="tag" />
+        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your project costs'})"  />
 
         <h2 class="heading-medium extra-margin">Provide the project costs for 'Empire Ltd'</h2>
 
@@ -64,7 +64,7 @@
             </div>
         </div>
 
-        <!-- <div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" /> -->
+        <!-- <th:block th:insert="prototypes/fragments/finance-questions :: finance-other-funding"  /> -->
         <form class="extra-margin-bottom">
           <div class="form-group" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
             <fieldset>
@@ -105,11 +105,11 @@
 
         <!-- END OFHARDCODED PROTOTYPE HTML -->
 
-        <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: main-content-end"  />
     </main>
 
-    <div th:include="fragments/layout :: footer" th:remove="tag" />
-    <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: footer"  />
+    <th:block th:insert="fragments/layout :: body-end"  />
     <script type="text/javascript">
 
       jQuery("input#org-eligible").on('click',function(e){

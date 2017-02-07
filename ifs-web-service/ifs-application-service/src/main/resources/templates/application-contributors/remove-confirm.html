@@ -10,7 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{id}/contributors(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application team',linkClass='link-back',linkUrl=@{/application/{id}/contributors(id=${currentApplication.getId()})},currentApplication=${currentApplication}"  />
 
     <div class="page-title">
         <h1 class="heading-xlarge">Removing collaborator</h1>

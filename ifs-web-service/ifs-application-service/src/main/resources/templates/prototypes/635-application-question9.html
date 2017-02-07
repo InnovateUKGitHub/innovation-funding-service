@@ -6,17 +6,17 @@
 </head>
 <body class="app-form">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Funding'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Funding'})"  />
 
 <form method="post" class="form-serialize-js">
 	<div class="form-group extra-margin" id="0">
@@ -111,10 +111,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

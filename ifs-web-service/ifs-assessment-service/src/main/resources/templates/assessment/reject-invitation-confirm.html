@@ -5,25 +5,25 @@
     </head>
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
-        <div th:include="fragments/layout :: body-start" th:remove="tag"/>
-        <div th:include="fragments/layout :: global-header" th:remove="tag"/>
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
-            <div th:include="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{assessmentId}(assessmentId=${model.assessmentId})})" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{assessmentId}(assessmentId=${model.assessmentId})})"  />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" th:remove="tag" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})"  />
                 <h1 class="heading-xlarge">Confirm rejection</h1>
             </div>
 
             <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK.</p>
-            <div th:include="fragments/assessment :: assessment-reject-application-form (assessmentId=${model.assessmentId})" th:remove="tag" />
+            <th:block th:insert="fragments/assessment :: assessment-reject-application-form (assessmentId=${model.assessmentId})"  />
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag"/>
-        <div th:include="fragments/layout :: body-end" th:remove="tag"/>
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

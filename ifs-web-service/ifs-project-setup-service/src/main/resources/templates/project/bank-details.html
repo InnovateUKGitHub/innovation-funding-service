@@ -4,17 +4,17 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details'" />
 </head>
 <body th:with="context='project'" class="bank-detail">
-  <div th:include="fragments/layout :: body-start" th:remove="tag" />
-  <div th:include="fragments/layout :: global-header" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: body-start"  />
+  <th:block th:insert="fragments/layout :: global-header"  />
 
-  <div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+  <th:block th:insert="fragments/modals :: modal-overlay"  />
 
 <main id="content">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start"  />
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}"  th:remove="tag"></div>
 
   <div class="page-title">
-      <div th:include="fragments/elements :: project-title (projectId=${applicationId}, projectName=${project.name})" th:remove="tag" />
+      <th:block th:insert="fragments/elements :: project-title (projectId=${applicationId}, projectName=${project.name})"  />
       <h1 class="heading-xlarge">Bank account</h1>
   </div>
   <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
@@ -84,11 +84,11 @@
               <span class="visuallyhidden">Billing address</span>
             </legend>
             <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
-            <div th:include="project/bank-address-fragment :: select-address" th:with="form=${form}" th:remove="tag"/>
+            <th:block th:insert="project/bank-address-fragment :: select-address" th:with="form=${form}" />
         </fieldset>
       </div>
 
-      <div th:include="fragments/modals :: modal-bank-details" th:remove="tag" />
+      <th:block th:insert="fragments/modals :: modal-bank-details"  />
       <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
 
 
@@ -123,10 +123,10 @@
 
 	</form>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

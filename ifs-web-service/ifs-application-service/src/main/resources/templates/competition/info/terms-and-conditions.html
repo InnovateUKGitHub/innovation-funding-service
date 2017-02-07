@@ -5,11 +5,11 @@
 </head>
 <body th:with="context='applicant'" class="grant-terms-conditions">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
     <div class="page-title">
         <h1 class="heading-large">Terms and Conditions of an Innovate UK Grant Award</h1>
@@ -235,11 +235,11 @@
     </li>
 </ol>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

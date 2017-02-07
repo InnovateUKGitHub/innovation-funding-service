@@ -6,17 +6,17 @@
 </head>
 <body class="app-summary">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${(param.status != null ? '/prototypes/2113-dashboard?status=' + param.status[0]:'/prototypes/2113-dashboard')})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${(param.status != null ? '/prototypes/2113-dashboard?status=' + param.status[0]:'/prototypes/2113-dashboard')})"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${(param.status != null ? param.status[0] : 'noStatus')}, ${'Application overview'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${(param.status != null ? param.status[0] : 'noStatus')}, ${'Application overview'})"  />
 
 	<div th:if="${param.status == null or param.status[0] == 'successful' or param.status[0] == 'successfulFeedback'}" th:remove="tag">
 
@@ -48,15 +48,15 @@
 
 	</div>
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-readonly-application" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-readonly-application"  />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 <script type="text/javascript">
 

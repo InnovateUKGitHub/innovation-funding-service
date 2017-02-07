@@ -6,14 +6,14 @@
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}"/>
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})"  th:unless="${param.user != null and param.user[0] == 'assessor'}"/>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -41,12 +41,12 @@
 	<div class="grid-row">
 		<section class="column-half">
 
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/643-create-acc-business-lead'})" th:remove="tag" />
+			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/643-create-acc-business-lead'})"  />
 
 		</section>
 		<section class="column-half">
 
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/650-create-application?status'})" th:remove="tag" th:unless="${param.user != null and param.user[0] == 'assessor'}" />
+			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/650-create-application?status'})"  th:unless="${param.user != null and param.user[0] == 'assessor'}" />
 
             <th:block th:if="${param.user != null and param.user[0] == 'assessor'}" th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})" />
 
@@ -55,10 +55,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

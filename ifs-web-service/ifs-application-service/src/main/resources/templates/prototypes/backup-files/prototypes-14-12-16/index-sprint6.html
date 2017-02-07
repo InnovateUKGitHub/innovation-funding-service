@@ -7,8 +7,8 @@
 </head>
 <body class="app-dashboard">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
 
 <header role="banner" id="global-header" class="">
   <div class="header-wrapper">
@@ -20,13 +20,13 @@
 </header>
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint6'"  th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint6'"   />
 
 
 	<section class="grid-row">
@@ -163,11 +163,11 @@
 
 
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
-<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-end"  />
+<th:block th:insert="prototypes/fragments/layout :: prototype-js"  />
 
 </body>
 </html>

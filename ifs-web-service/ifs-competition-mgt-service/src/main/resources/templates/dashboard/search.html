@@ -5,15 +5,15 @@
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-overview">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
 
-        <div th:include="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})" th:remove="tag" />
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${searchQuery})"  />
 
         <p><span th:text="${results.totalElements}" class="heading-xlarge"></span> <strong>competitions</strong> with the term <strong th:text="${param.searchQuery[0]}">QUERY</strong> - <a th:href="@{'/dashboard/live'}">Clear filters</a></p>
 
@@ -155,14 +155,14 @@
             </div>
         </section>
 
-        <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
+        <th:block th:insert="fragments/competition-management :: applications-pagination(results=${results})"  />
 
     </form>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

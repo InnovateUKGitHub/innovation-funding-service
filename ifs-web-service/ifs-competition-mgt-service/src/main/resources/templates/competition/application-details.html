@@ -5,13 +5,13 @@
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}"  />
 
     <div class="page-title">
         <p class="subtitle" th:text="${competitionName}"></p>
@@ -81,11 +81,11 @@
         </div>
     </th:block>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

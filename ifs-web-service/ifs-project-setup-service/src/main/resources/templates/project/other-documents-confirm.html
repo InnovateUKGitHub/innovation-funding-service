@@ -4,11 +4,11 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit other documents'" />
 </head>
 <body th:with="context='project'">
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub"
          th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner/documents/(projectId=${model.projectId})}"
          th:remove="tag"/>
@@ -22,11 +22,11 @@
     <form th:action="@{/project/{projectId}/partner/documents/submit(projectId=${model.projectId})}" th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}" method="post">
         <button class="button large" name="submit-other-documents">Submit</button>
     </form>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

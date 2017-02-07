@@ -292,7 +292,7 @@
             <!--<option selected="selected">-&#45;&#45;</option>-->
             <!--</option>-->
 
-            <!--<div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options"  />-->
             <!--</select>-->
             <!--</div>-->
             <!--</div>-->
@@ -371,17 +371,17 @@
             <!--&lt;!&ndash; <li id="assessor-org" class="width-third alignright"><a href="#" class="button button-secondary">Invite page</a></li> &ndash;&gt;-->
             <!--</ul>-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'},position=${'Test position'}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'},position=${'Test position'}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'},org=${'Plymouth University'}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'},org=${'Plymouth University'}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'},org=${'London School of Economics'}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'},org=${'London School of Economics'}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=4,name=${'Bill Limp'},type=Industry,doi=Yes,area=${'Architectures and operating systems'},org=${'ABC Ltd'}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=4,name=${'Bill Limp'},type=Industry,doi=Yes,area=${'Architectures and operating systems'},org=${'ABC Ltd'}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=5,name=${'Dave Smith'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Flash Ltd'}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-find" th:with="row=5,name=${'Dave Smith'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Flash Ltd'}"  />-->
 
-            <div th:include="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=false,sortByType=2" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Assessors',filterType=false,sortByType=2"  />
 
             <div class="table-overflow">
                 <table>
@@ -450,7 +450,7 @@
             </div>
             <!--</div>-->
 
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  />
 
 
         </th:block>
@@ -587,26 +587,26 @@
             <!--</ul>-->
 
             <!--<th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">-->
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=0,name=${param.name[0]},email=${param.email[0]},innovationArea=${param.innovationArea[0]},org=null,position=null,status=null" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=0,name=${param.name[0]},email=${param.email[0]},innovationArea=${param.innovationArea[0]},org=null,position=null,status=null"  />-->
             <!--</th:block>-->
 
             <!--<div id="prototype-assessor-addable-rows">-->
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=6,name=${'Hannah Carlisle'},email=${'hannah@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=6,name=${'Hannah Carlisle'},email=${'hannah@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=7,name=${'Robin Nash'},email=${'robin@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=7,name=${'Robin Nash'},email=${'robin@email.com'},innovationArea=${'Advanced Therapies'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${null}"  />-->
             <!--</div>-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},email=${'dave@email.com'},innovationArea=${'Earth Observation'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},email=${'dave@email.com'},innovationArea=${'Earth Observation'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},email=${'chris@email.com'},innovationArea=${'Internet of things'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},email=${'chris@email.com'},innovationArea=${'Internet of things'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},email=${'martin@email.com'},innovationArea=${'Internet of things'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${null}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},email=${'martin@email.com'},innovationArea=${'Internet of things'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${null}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},email=${'chantel@email.com'},innovationArea=${'Internet of things'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${null}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},email=${'chantel@email.com'},innovationArea=${'Internet of things'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${null}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},email=${'richard@email.com'},innovationArea=${'Internet of things'},org=${'Reading University'},position=${'Lecturer of physics'},status=${null}" th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},email=${'richard@email.com'},innovationArea=${'Internet of things'},org=${'Reading University'},position=${'Lecturer of physics'},status=${null}"  />-->
 
-            <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  th:remove="tag" />-->
+            <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"   />-->
 
             <!--</div>-->
             <div class="grid-row sorting">
@@ -698,7 +698,7 @@
             <div class="alignright-button extra-margin extra-margin-bottom">
                 <a href="#" class="button">Review and send group invite</a>
             </div>
-            <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  />
         </th:block>
 
         <th:block th:if="${param.tab != null and param.tab[0] == 'overview'}">
@@ -857,11 +857,11 @@
 
     <!--</ul>-->
 
-    <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Invite accepted'},details=null" th:remove="tag" />-->
+    <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Invite accepted'},details=null"  />-->
 
-    <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Martin Trollope'},busType=${'Academic'},area=${'Information and commincations technology (ICT)'},contract=no,status=${'Invite declined'},details=${'Invite declined as person is too busy'}" th:remove="tag" />-->
+    <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Martin Trollope'},busType=${'Academic'},area=${'Information and commincations technology (ICT)'},contract=no,status=${'Invite declined'},details=${'Invite declined as person is too busy'}"  />-->
 
-    <!--<div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Chantel Secrete'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Awaiting response'},details=${'Invite sent: 22 June 2016'}" th:remove="tag" />-->
+    <!--<th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Chantel Secrete'},busType=${'Business'},area=${'Information and commincations technology (ICT)'},contract=yes,status=${'Awaiting response'},details=${'Invite sent: 22 June 2016'}"  />-->
 
     <div class="table-overflow">
         <table>
@@ -906,7 +906,7 @@
             </tbody>
         </table>
     </div>
-    <div th:include="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination" th:remove="tag" />
+    <th:block th:insert="prototypes/fragments/manage-assessors-updated :: prototype-assessor-pagination"  />
 
     <!--</div>-->
 
@@ -1032,7 +1032,7 @@
                                 <option selected="selected">---</option>
                             </option>
 
-                            <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
+                            <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options"  />
                         </select>
                 </div>
                 <div class="column-half" th:unless="${site == 'rc'}">

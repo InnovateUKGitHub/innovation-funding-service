@@ -92,7 +92,7 @@
         </select>
     </div>
 
-    <div th:include="prototypes/fragments/project-setup :: prototype-manual-address" th:remove="tag" />
+    <th:block th:insert="prototypes/fragments/project-setup :: prototype-manual-address"  />
 
 </div>
 
@@ -198,7 +198,7 @@
 
         <p class="form-hint">This is the billing address connected to this bank account. This is not the address of the bank.</p>
 
-        <div th:include="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'" th:remove="tag" th:unless="${user == 'internal'}"/>
+        <th:block th:insert="prototypes/fragments/project-setup :: prototype-select-address" th:with="address='bankDetails'"  th:unless="${user == 'internal'}"/>
 
     </fieldset>
 </div>

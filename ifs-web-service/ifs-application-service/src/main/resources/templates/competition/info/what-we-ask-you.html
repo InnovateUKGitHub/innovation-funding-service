@@ -5,12 +5,12 @@
 </head>
 <body th:with="context='applicant'" class="assessment-review">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition eligibility',linkClass='link-back',linkUrl=@{eligibility},currentApplication=${currentApplication}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition eligibility',linkClass='link-back',linkUrl=@{eligibility},currentApplication=${currentApplication}"  />
 
     <div class="page-title">
       <h1 class="heading-xlarge no-margin" th:text="${currentCompetition.name}" />
@@ -161,10 +161,10 @@
 <p><strong>Project cost breakdown:</strong> Each category is summarised and available to view by all project partner organisations in the finances overview section.  Detailed finances are confidential and only accessible to the partner organisation and Innovate UK.</p>
 
 
-<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

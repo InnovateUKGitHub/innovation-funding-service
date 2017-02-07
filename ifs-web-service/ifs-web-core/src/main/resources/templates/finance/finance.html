@@ -692,7 +692,7 @@
 	                    <span>Item description</span>
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
 	                  </label>
-	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)"  />
 	            </div>
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-existing]}')} ? 'error' : ''">
 	                <fieldset class="inline">
@@ -899,7 +899,7 @@
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
 	                </label>
 
-	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)"  />
 	            </div>
 
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
@@ -1102,7 +1102,7 @@
 	                    <span class="visuallyhidden">Description and justification of the cost</span>
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
 	                </label>
-	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)"  />
 	            </td>
 	            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''"  >
 	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-cost'}">

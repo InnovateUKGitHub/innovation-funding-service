@@ -4,15 +4,15 @@
     <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" />
 </head>
 <body th:with="context='project'" class="project-detail gol">
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"  />
         <h1 class="heading-xlarge">Grant offer letter</h1>
     </div>
 
@@ -91,8 +91,8 @@
                 <button th:if="${model.isGrantOfferLetterSent() and model.isShowDisabledSubmitButton()}" disabled="disabled" class="button">Send signed offer letter</button>
             </th:block>
 
-            <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-            <div th:include="fragments/modals :: modal-confirm-grant-offer-letter" th:remove="tag"/>
+            <th:block th:insert="fragments/modals :: modal-overlay" />
+            <th:block th:insert="fragments/modals :: modal-confirm-grant-offer-letter" />
 
         </th:block>
 
@@ -115,10 +115,10 @@
 
 
     </form>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>
