@@ -1,28 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile'" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
 </head>
 <body th:with="context='project'" class="project spend-profile">
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-confirm-spend-profile-submit" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/modals :: modal-confirm-spend-profile-submit" />
+<th:block th:insert="fragments/modals :: modal-overlay"  />
 
 <main id="content" class="no-grid">
     <div class="grid-container">
-        <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
-        <div th:unless="${model.projectManager}" th:include="fragments/layout :: header-sub"
-             th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"
-             th:remove="tag"></div>
-        <div th:if="${model.projectManager}" th:include="fragments/layout :: header-sub"
-             th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}"
-             th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: main-content-start" />
+        <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub"
+             th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
+        <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub"
+             th:with="linkTitle='Spend profile overview',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
         <div class="page-title">
-            <div
-                th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"
-                th:remove="tag"/>
+            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
@@ -344,14 +340,14 @@
                 </form>
             </th:block>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end"  />
         </div>
 
     </th:block>
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

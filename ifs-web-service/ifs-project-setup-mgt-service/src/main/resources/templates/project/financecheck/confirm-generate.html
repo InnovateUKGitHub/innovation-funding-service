@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
 </head>
 <body th:with="context='project-management'" class="competition-management finance-checks-confirm">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
   <div class="grid-row">
       <div class="column-two-thirds">
           <div class="page-title">
-              <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+              <th:block th:insert="fragments/competition-management :: competition-id(competition=${model.competitionSummary})"  />
               <h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
           </div>
       </div>
@@ -27,16 +27,16 @@
 
     <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.projectId})}">
       <h2 class="heading-medium no-margin">Generate spend profile</h2>
-  		<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
+  		<p>This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
   		<p>Partners will be notified that they can now create their spend profile.</p>
 			<button class="button large extra-margin">Generate spend profile</button>
     </form>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Thank you'" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Thank you'" />
     </head>
 
     <body th:with="context='assessment'" class="app-dashboard">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: body-start"  />
+        <th:block th:insert="fragments/layout :: global-header"  />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start"  />
 
             <div class="hgroup">
                 <h1 class="heading-large">Thank you</h1>
@@ -21,10 +21,10 @@
 
             <p>If you have any questions, please contact the Innovate UK team at <a href="mailto:competitions@innovateuk.com">competitions@innovateuk.com</a></p>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end"  />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer"  />
+        <th:block th:insert="fragments/layout :: body-end"  />
     </body>
 </html>

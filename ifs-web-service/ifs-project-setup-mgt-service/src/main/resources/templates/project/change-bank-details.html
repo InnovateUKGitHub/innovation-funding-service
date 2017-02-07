@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<div th:include="fragments/layout :: head" th:with="pageTitle='Review bank details'" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review bank details'" />
 </head>
 <body th:with="context='project-management'" class="project-management review-bank-details">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag" />
+<th:block th:insert="fragments/modals :: modal-overlay"  />
 
 <main id="content">
-	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Review bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${model.organisationId})}" th:remove="tag"/>
+	<th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Review bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
     <div class="grid-row">
 		<div class="column-two-thirds">
@@ -161,18 +161,18 @@
 				<a th:href="@{/project/{id}/organisation/{orgId}/review-bank-details(id=${model.projectId}, orgId=${model.organisationId})}">Cancel bank account changes</a>
 			</div>
 
-			<div th:include="fragments/modals :: modal-partner-change-bank-details" th:remove="tag" />
+			<th:block th:insert="fragments/modals :: modal-partner-change-bank-details"  />
 			<div class="column-half alignright">
 				<button class="no-margin-right button" data-js-modal="modal-partner-change-bank-details">Update bank account details</button>
 			</div>
 		</div>
 	</form>
 
-	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

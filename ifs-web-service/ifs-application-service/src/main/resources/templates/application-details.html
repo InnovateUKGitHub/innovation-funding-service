@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application overview'"  th:remove="tag"></div>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application overview'"  />
 </head>
 <body th:with="context='applicant'" class="app-details">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-<div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  th:remove="tag"></div>
 
 
-    <div th:include="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" th:remove="tag" />
-  	<div th:include="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" th:remove="tag"/>
+    <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})"  />
+  	<th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
 
     <div class="page-title">
-        <div th:include="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" th:remove="tag" />
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})"  />
         <h1 class="heading-xlarge">Application overview</h1>
     </div>
 
@@ -103,11 +103,11 @@
     </div>
 
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"></div>
-<div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

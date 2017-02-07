@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<h1 class="heading-large">Create your account</h1>
-	
+
 	<div class="panel">
 		<p>The profile that you are creating will be linked to the following organisation <br />
 		<strong>Nomensa</strong></p>
 	</div>
-	
+
 	<h2 class="heading-medium">Your details</h2>
 
 	<form>
@@ -55,7 +55,7 @@
 			<div class="form-group">
 				<label class="form-label" for="phone-number">
 					<span class="form-label-bold">Phone number</span>
-					<span class="form-hint">We may use this to contact you about the application</span> 
+					<span class="form-hint">We may use this to contact you about the application</span>
 				</label>
 				<input class="form-control" id="phone-number" name="phone-number" type="text" />
 			</div>
@@ -84,10 +84,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

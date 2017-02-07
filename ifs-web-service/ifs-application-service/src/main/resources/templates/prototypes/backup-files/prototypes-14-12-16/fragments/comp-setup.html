@@ -701,7 +701,7 @@
         </fieldset>
 
         <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=essential, sectionId=1" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=essential, sectionId=1"  />
         </div>
 
     </form>
@@ -865,7 +865,7 @@
         </fieldset>
 
         <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=funding, sectionId=2" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=funding, sectionId=2"  />
         </div>
 
     </form>
@@ -941,7 +941,7 @@
 
         <div class="grid-row ">
             <div class="column-half">
-                 <div th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}" th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
+                 <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}"   />
             </div>
             <div class="column-half alignright">
                 <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
@@ -949,7 +949,7 @@
         </div>
 
         <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3"  />
         </div>
 
     </form>
@@ -1145,19 +1145,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, rowNo=1, type=readOnly" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders panel'}, rowNo=11" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" th:remove="tag"/>
-                    <div th:include="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" th:remove="tag"/>
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Open date'}, rowNo=1, type=readOnly" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Briefing event'}, rowNo=2" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Submission date'}, rowNo=3" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Allocate assessors'}, rowNo=4" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor briefing'}, rowNo=5" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor accepts'}, rowNo=6" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessor deadline'}, rowNo=7" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Line draw'}, rowNo=8" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Assessment panel'}, rowNo=9" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Panel date'}, rowNo=10" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Funders panel'}, rowNo=11" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Notifications'}, rowNo=12" />
+                    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-milestones-row" th:with="milestoneTitle=${'Release feedback'}, rowNo=13" />
                 </tbody>
             </table>
 
@@ -1197,7 +1197,7 @@
 
 
         <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4"  />
         </div>
 
     </form>
@@ -1256,7 +1256,7 @@
     <form>
 
         <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=assessors, sectionId=5" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=assessors, sectionId=5"  />
         </div>
 
     </form>
@@ -1305,30 +1305,30 @@
             <li><h2 class="heading-medium">Public description</h2></li>
             <li><h2 class="heading-medium">Scope</h2></li>
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Business opportunity'}, question=${'What is the business opportunity that your project addresses?'}, questionNo=1" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Potential market'}, question=${'What is the size of the potential market for your project?'}, questionNo=2" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Potential market'}, question=${'What is the size of the potential market for your project?'}, questionNo=2" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project exploitation'}, question=${'How will you exploit and market your project?'}, questionNo=3" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project exploitation'}, question=${'How will you exploit and market your project?'}, questionNo=3" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Economic benefit'}, question=${'What economic, social and environmental benefits do you expect your project to deliver and when?'}, questionNo=4" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Economic benefit'}, question=${'What economic, social and environmental benefits do you expect your project to deliver and when?'}, questionNo=4" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Technical approach'}, question=${'Required'}, questionNo=5" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Technical approach'}, question=${'Required'}, questionNo=5" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Innovation'}, question=${'Required'}, questionNo=6" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Innovation'}, question=${'Required'}, questionNo=6" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Risks'}, question=${'Required'}, questionNo=7" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Risks'}, question=${'Required'}, questionNo=7" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project team'}, question=${'Required'}, questionNo=8" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Project team'}, question=${'Required'}, questionNo=8" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Funding'}, question=${'Required'}, questionNo=9" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Funding'}, question=${'Required'}, questionNo=9" />
 
-            <div th:include="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" th:remove="tag"/>
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-application-question" th:with="questionTitle=${'Adding value'}, question=${'Required'}, questionNo=10" />
 
         </ul>
 
          <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6"  />
         </div>
 
     </form>
@@ -1366,7 +1366,7 @@
     <form>
 
         <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=finance, sectionId=7" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=finance, sectionId=7"  />
         </div>
 
     </form>
@@ -1400,7 +1400,7 @@
     <form>
 
         <div class="extra-margin">
-            <div th:include="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=description, sectionId=8" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=description, sectionId=8"  />
         </div>
 
     </form>

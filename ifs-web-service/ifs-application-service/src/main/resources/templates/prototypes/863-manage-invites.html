@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 	<div th:if="${param.filterResponse != null}" th:remove="tag">
 		<div th:if="${param.filterResponse[0] == 'Accepted'}" th:remove="tag">
@@ -52,21 +52,21 @@
 <body class="comp-assessors">
 
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition overview'}, ${'/prototypes/997-comp-applications-dashboard-open'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition overview'}, ${'/prototypes/997-comp-applications-dashboard-open'})"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Manage invites'})" th:remove="tag" />
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-summary" th:remove="tag" />
-	
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Manage invites'})"  />
+
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-summary"  />
+
 
 	<h2 class="heading-large">Invite list</h2>
 
@@ -81,14 +81,14 @@
 			<p><span class="heading-medium">6</span> invited</p>
 		</div>
 	</div>
-	
+
 	<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
 
 	<h2 class="heading-large" id="current-assessors">Current responses</h2>
-	
+
 	<div class="search-filters extra-margin">
-		
-		<form formaction="/prototypes/863-manage-invites" method="GET"> 
+
+		<form formaction="/prototypes/863-manage-invites" method="GET">
 
 			<h2 class="heading-medium no-margin">Filter invites</h2>
 
@@ -113,7 +113,7 @@
 				</div>
 
 			</div>
-			
+
 		</form>
 
 	</div>
@@ -121,7 +121,7 @@
 	<section id="assessor-accepted">
 
 		<h2 class="heading-medium">Accepted (2)</h2>
-		
+
 		<div class="table-overflow">
 			<table>
 				<thead>
@@ -177,9 +177,9 @@
 
 	<section id="assessor-awaiting">
 		<h2 class="heading-medium">Awaiting response (5)</h2>
-		
+
 		<h3 class="heading-small">Current assessors (3)</h3>
-		
+
 		<div class="table-overflow">
 			<table>
 				<thead>
@@ -231,20 +231,20 @@
 
 	</section>
 
-	
+
 	<p class="alignright-button extra-margin">
-		
+
 		<a href="/prototypes/863-invite-assessors" class="button large view-invite-list">Invite more assessors</a>
 
 	</p>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>

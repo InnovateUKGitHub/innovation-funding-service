@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
 <body class="app-dashboard">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
 
 <header role="banner" id="global-header" class="">
   <div class="header-wrapper">
@@ -20,11 +20,11 @@
 </header>
 
 <main id="content">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint21'"  th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint21'"   />
 
 	<h1 class="heading-large">Sprint 21</h1>
 
@@ -64,11 +64,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
-<div th:include="prototypes/fragments/layout :: prototype-js" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-end"  />
+<th:block th:insert="prototypes/fragments/layout :: prototype-js"  />
 
 </body>
 </html>

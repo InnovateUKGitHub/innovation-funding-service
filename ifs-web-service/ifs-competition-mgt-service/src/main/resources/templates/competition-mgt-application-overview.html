@@ -1,37 +1,37 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
 </head>
 <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main>
     <div id="content" class="full-width">
-      <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+      <th:block th:insert="fragments/layout :: main-content-start" />
       <div class="grid-row">
           <div class="column-two-thirds">
                 <div class="page-title">
-                    <p class="subtitle"><div th:text="${#numbers.formatInteger(currentCompetition.id,8)}" th:remove="tag" /> : Innovate UK</p>
+                    <p class="subtitle"><th:block th:text="${#numbers.formatInteger(currentCompetition.id,8)}" /> : Innovate UK</p>
                     <h1 class="heading-large" th:text="${currentCompetition.name}" />
                 </div>
           </div>
           <div class="column-third alignright extra-margin">
-            <div th:include="fragments/competition-management :: competition-status(competition=${currentCompetition})" th:remove="tag" />
+            <th:block th:insert="fragments/competition-management :: competition-status(competition=${currentCompetition})"  />
           </div>
       </div>
 
-      <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${currentCompetition.competitionStatus.name()},competitionId=${currentCompetition.id})" th:remove="tag" />
+      <th:block th:insert="fragments/competition-management :: competition-mgt-menu(competitionStatus=${currentCompetition.competitionStatus.name()},competitionId=${currentCompetition.id})"  />
   </div>
   <div class="grid-container constrain-width">
     <div class="page-title">
-        <div th:include="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" th:remove="tag"/>
+        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
         <h1 class="heading-xlarge no-margin">Application Overview</h1>
     </div>
     <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" class="form-serialize-js section-overview">
-        <div th:include="fragments/application :: application-summary (assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})})" th:remove="tag"/>
+        <th:block th:insert="fragments/application :: application-summary (assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})})" />
         <div class="extra-margin">
             <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${currentCompetition.id},appId=${currentApplication.id})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>
         </div>
@@ -46,11 +46,11 @@
             </div>
         </div>
     </form>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-end" />
   </div>
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

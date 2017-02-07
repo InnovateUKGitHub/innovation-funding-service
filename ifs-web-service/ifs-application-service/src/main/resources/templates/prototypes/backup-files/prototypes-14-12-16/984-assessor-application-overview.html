@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to competition dashboard'}, ${'/prototypes/871-assessor-comp-dashboard?status=accept'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to competition dashboard'}, ${'/prototypes/871-assessor-comp-dashboard?status=accept'})"  />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A new innovative solution'}, ${'Assessment overview'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A new innovative solution'}, ${'Assessment overview'})"  />
 
 	<form action="#" method="post" class="application-overview">
 
@@ -74,7 +74,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question1">1. Business opportunity</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3"  />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -82,7 +82,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question2">2. Potential market</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=7" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=7"  />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -90,7 +90,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question3">3. Project exploitation</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3"  />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -98,7 +98,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question4">4. Economic benefit</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=3"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -106,7 +106,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question5">5. Technical approach</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -114,7 +114,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question6">6. Innovation</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score"  />
 				</div>
 			</li>
 			<li class="section-status marked-as-complete">
@@ -122,7 +122,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question7">7. Risks</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=5" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score" th:with="score=5"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -130,7 +130,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question8">8. Project team</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -138,7 +138,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question9">9. Funding</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -146,7 +146,7 @@
 					<div class="column-two-thirds">
 						<h3 class="heading-small"><a href="/prototypes/984-assessor-question10">10. Adding value</a></h3>
 					</div>
-					<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-score" th:remove="tag" />
+					<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-score"  />
 				</div>
 			</li>
 			<li class="section-status">
@@ -190,16 +190,16 @@
 		</div>
 	</details>
 
-	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'"  />
 
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

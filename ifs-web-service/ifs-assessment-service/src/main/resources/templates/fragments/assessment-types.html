@@ -7,7 +7,7 @@
     <div class="form-group extra-margin">
         <label class="form-label" for="research-category">
             <span class="form-label-bold">Please select the research category for this project</span>
-            <div th:include="question-type/form-elements :: form-validation-messages (id=${field.id})" th:remove="tag" />
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"  />
         </label>
         <select class="form-control" id="research-category" th:field="*{formInput[__${field.id}__]}">
             <option value="">Please select...</option>
@@ -25,7 +25,7 @@
     <div class="form-group">
         <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
             <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
-            <div th:include="question-type/form-elements :: form-validation-messages (id=${field.id})" th:remove="tag" />
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"  />
         </label>
 
         <details th:unless="${#strings.isEmpty(field.guidanceTitle)}">
@@ -50,7 +50,7 @@
                       th:attr="data-max_words=${field.wordCount},data-maxwordslength=${field.wordCount},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+field.wordCount+'.'},data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
                       th:id="'form-textarea-'+${field.id}"></textarea>
             <div class="textarea-footer" th:with="content=*{formInput[__${field.id}__]}">
-                <div th:include="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})" th:remove="tag" />
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})"  />
             </div>
         </div>
     </div>
@@ -61,10 +61,17 @@
 <div th:fragment="assessor_score (field)">
     <div class="form-group">
         <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
-        <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
+        <select class="form-control width-medium"
+                aria-describedby="info"
+                id="assessor-question-score"
+                th:field="*{formInput[__${field.id}__]}">
             <option value="">Set score</option>
             <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,model.maximumScore)}" />
-        </select> / <span th:text="${model.maximumScore}" th:remove="tag" />
+        </select>
+        / <span id="aria-desc-assessor-question-score">
+            <span class="visually-hidden">out of</span>
+            <th:block th:text="${model.maximumScore}">10</th:block>
+        </span>
     </div>
 </div>
 

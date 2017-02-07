@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-sub-header"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -23,7 +23,7 @@
 		<p>This is the financial overview of all partners in this collaboration. Each partner should submit their organisations finances in "your finances" section. All partners will see this level of detail.</p>
 	</div>
 
-	<h2 class="heading-medium">Funding rules for this competition</h2> 
+	<h2 class="heading-medium">Funding rules for this competition</h2>
 	<p>We will fund projects between &pound;200,000 and &pound;1 million. We may consider projects with costs outside of this range. We expect projects to last between 12 and 24 months.</p>
 
 	<p>Business partners can claim funding at the following rates:</p>
@@ -119,13 +119,13 @@
 	                    <th scope="col">&nbsp;</th>
 	                    <th scope="col" class="numeric">Total</th>
 	                    <th scope="col" class="numeric">
-	                       Labour  
+	                       Labour
 	                    </th>
 	                    <th scope="col" class="numeric">
-	                        Overheads 
+	                        Overheads
 	                    </th>
 	                    <th scope="col" class="numeric">
-	                        Materials 
+	                        Materials
 	                    </th>
 	                    <th scope="col" class="numeric width-small">Capital usage</th>
 	                    <th scope="col" class="numeric width-small">Subcontracting cost</th>
@@ -200,13 +200,13 @@
 
 	<h2 class="heading-medium">Academic partner breakdown</h2>
 	<p>Academic partners submit their project costs through the Je-S system. For a full brealkdown of their project costs, please see the below documents.</p>
-	
+
 	<h3 class="heading-medium">University of Bristol</h3>
 	<div class="upload-section">
 		<h3 class="heading-small no-margin">Download Je-S form:</h3>
 		<div class="uploaded-file"><a href="#">jes-1601603.pdf</a> (161.96kb)</div>
 	</div>
-	
+
 	<h3 class="heading-medium">University of Bath</h3>
 	<div class="upload-section">
 		<h3 class="heading-small no-margin">Download Je-S form:</h3>
@@ -227,10 +227,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

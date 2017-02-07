@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor overview'"  />
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-overview">
-        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-        <div th:include="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})" th:remove="tag" />
-        <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-        <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+        <th:block th:insert="fragments/modals :: modal-overlay" />
+        <th:block th:insert="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})"  />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" th:remove="tag"></div>
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" th:remove="tag" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})"  />
                 <h1 class="heading-xlarge">Assessment overview</h1>
             </div>
 
@@ -72,10 +72,10 @@
                 </details>
             </div>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag"></div>
-        <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

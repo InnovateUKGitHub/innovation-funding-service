@@ -1,6 +1,6 @@
 /* SG
 # IFS/Collapsible
-The collapsible element will show a normal header when there is no javascript, when there is a javascript it will be toggleable 
+The collapsible element will show a normal header when there is no javascript, when there is a javascript it will be toggleable
 
 ```
 <div class="collapsible">
@@ -98,8 +98,10 @@ The collapsible element will show a normal header when there is no javascript, w
 	}
 	> h2 [data-mirror],
 	> h3 [data-mirror]{
-			float:right;
-			font-weight:normal;
+		float:right;
+	}
+	.collapsible-content {
+		padding-bottom: 3em;
 	}
 
 	.section-score {

@@ -14,6 +14,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -39,6 +40,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
  */
 @Controller
 @RequestMapping("/profile/declaration")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileDeclarationController {
 
     @Autowired

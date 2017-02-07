@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Return to competition details'}, ${'/prototypes/650-comp-details'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Return to competition details'}, ${'/prototypes/650-comp-details'})"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -24,10 +24,10 @@
 	<h2 class="heading-large no-margin-top">Competition eligibility</h2>
 
 	<p>For this competition:</p>
-	
+
 	<div class="grid-row">
 		<div class="column-two-thirds">
-			
+
 		<ul class="list list-bullet">
 			<li>
 				<h3 class="bold-small">You must be the lead applicant to create a new application</h3>
@@ -65,17 +65,17 @@
 			<p>Details of the questions in our application process and what's expected of you - so you can understand the process without beginning an application</p>
 		</div>
 	</div>
-	
+
 	<div class="extra-margin">
 		<a href="/prototypes/643-signup-create-acc" class="button button-large">Begin application</a>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

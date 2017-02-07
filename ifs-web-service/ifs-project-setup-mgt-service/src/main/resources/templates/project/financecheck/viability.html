@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Viability'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Viability'" />
 </head>
 <body th:with="context='project-management'">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}"  />
 
     <h1 class="heading-xlarge">
         <th:block th:text="${model.organisationName}" />
@@ -38,7 +38,7 @@
       <thead>
         <tr>
           <th scope="col">Total costs</th>
-          <th scope="col" class="numeric">% grant</th>
+          <th scope="col" class="numeric">% Grant</th>
           <th scope="col" class="numeric">Total project cost</th>
           <th scope="col" class="numeric">Grant applied for</th>
           <th scope="col" class="numeric">Other public sector funding</th>
@@ -108,9 +108,9 @@
       <a th:if="${model.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
     </form>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

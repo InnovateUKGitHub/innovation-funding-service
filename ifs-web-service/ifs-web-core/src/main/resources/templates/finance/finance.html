@@ -692,7 +692,7 @@
 	                    <span>Item description</span>
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
 	                  </label>
-	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)"  />
 	            </div>
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-existing]}')} ? 'error' : ''">
 	                <fieldset class="inline">
@@ -705,9 +705,8 @@
 	                               value="New"
 	                               required="required"
 	                               th:checked="${cost.existing == 'New'}"
-	                               th:disabled="${complete == 'complete'}">
-	                        New
-	                        </input>
+	                               th:disabled="${complete == 'complete'}" />
+                            New
 	                    </label>
 	                    <label class="block-label selection-button-radio selection-button-radio">
 	                        <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_1'}"
@@ -716,9 +715,8 @@
 	                               value="Existing"
 	                               required="required"
 	                               th:checked="${cost.existing == 'Existing'}"
-	                               th:disabled="${complete == 'complete'}">
-	                        Existing
-	                        </input>
+	                               th:disabled="${complete == 'complete'}" />
+                            Existing
 	                    </label>
 	                </fieldset>
 	            </div>
@@ -901,7 +899,7 @@
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
 	                </label>
 
-	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)"  />
 	            </div>
 
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
@@ -1104,7 +1102,7 @@
 	                    <span class="visuallyhidden">Description and justification of the cost</span>
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
 	                </label>
-	                <div th:include="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)" th:remove="tag" />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)"  />
 	            </td>
 	            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''"  >
 	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-cost'}">
@@ -1204,7 +1202,7 @@
                         </tbody>
                     </table>
                     <p class="alignright" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-                    <div th:include="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" th:remove="tag"/>
+                    <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
                     </p>
                 </div>
                 <div class="form-group alignright inline">

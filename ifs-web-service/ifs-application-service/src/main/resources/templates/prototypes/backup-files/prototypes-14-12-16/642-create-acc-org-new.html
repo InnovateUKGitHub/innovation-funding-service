@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-org-selected-from-companies-house'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-org-selected-from-companies-house'})"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<h1 class="heading-large">Create your account</h1>
 
 	<!-- <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p> -->
-	
+
 	<div class="panel">
 		<p>The profile that you are creating will be linked to the following organisation <br />
 		<strong>Nomensa</strong></p>
 	</div>
 
-	<!--<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'/prototypes/635-application-overview-collaborator'})" th:remove="tag" /> -->
+	<!--<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'/prototypes/635-application-overview-collaborator'})"  /> -->
 	<h2 class="heading-medium">Your details</h2>
 	<form>
 		<fieldset>
@@ -56,7 +56,7 @@
 				<input class="form-control" id="last-name" name="last-name" type="text" />
 			</div>
 
-			<div th:include="prototypes/fragments/diversity :: diversity-questions" th:remove="tag" />
+			<th:block th:insert="prototypes/fragments/diversity :: diversity-questions"  />
 
 			<div class="form-group">
 				<label class="form-label" for="phone-number">
@@ -93,10 +93,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

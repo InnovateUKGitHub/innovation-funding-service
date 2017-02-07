@@ -1,9 +1,7 @@
 IFS.competitionManagement.repeater = (function () {
   'use strict'
-  var s
   return {
     init: function () {
-      s = this.settings
       jQuery(document).on('click', '[data-add-row]', function () {
         IFS.competitionManagement.repeater.handleAddRow(this)
       })
@@ -29,10 +27,10 @@ IFS.competitionManagement.repeater = (function () {
       return false
     },
     // remove row
-    handleRemoveRow : function (el) {
+    handleRemoveRow: function (el) {
       var inst = jQuery(el)
       var type = inst.attr('data-remove-row')
-      switch(type){
+      switch (type) {
         case 'cofunder':
           jQuery('[name="removeFunder"]').val(inst.val())
           IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
@@ -55,7 +53,7 @@ IFS.competitionManagement.repeater = (function () {
           break
       }
     },
-    addInnovationAreaRow : function () {
+    addInnovationAreaRow: function () {
       var rows = jQuery('.form-group[id^="innovation-row"]')
 
       var count = rows.length
@@ -78,7 +76,7 @@ IFS.competitionManagement.repeater = (function () {
       // hide new row label for styling
       newRow.find('.form-label').children().addClass('visuallyhidden')
       // change name attributes and empty values
-      newRow.find('[name]').prop('name', 'innovationAreaCategoryIds[' + count + ']').val("")
+      newRow.find('[name]').prop('name', 'innovationAreaCategoryIds[' + count + ']').val('')
       // add remove button
       newRow.append('<button data-remove-row="innovationArea" value="' + count + '" class="buttonlink" type="button">Remove</button>')
 
@@ -89,12 +87,12 @@ IFS.competitionManagement.repeater = (function () {
       var count = 0
       var idCount = 0
 
-      if (jQuery('.funder-row').length){
-        count = parseInt(jQuery('.funder-row').length, 10) //name attribute has to be 0,1,2,3
+      if (jQuery('.funder-row').length) {
+        count = parseInt(jQuery('.funder-row').length, 10) // name attribute has to be 0,1,2,3
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10) + 1
       }
-      //todo: Brent, make this a clone of the first existing row like innovationAreas
+      // todo: Brent, make this a clone of the first existing row like innovationAreas
       var html = '<div class="grid-row funder-row" id="funder-row-' + idCount + '">' +
                     '<div class="column-half">' +
                       '<div class="form-group">' +
@@ -122,7 +120,7 @@ IFS.competitionManagement.repeater = (function () {
         idCount = parseInt(jQuery('tr[id^=guidance-]').last().attr('id').split('guidance-')[1], 10) + 1
       }
       var html = '<tr id="guidance-' + idCount + '">'
-      //todo: Brent, make this a clone of the first existing row like innovationAreas
+      // todo: Brent, make this a clone of the first existing row like innovationAreas
       if (isAssessed) {
         html += '<td class="form-group">' +
                 '<label class="form-label" for="guidancerow-' + idCount + '-scorefrom"><span class="visuallyhidden">Score from</span></label>' +

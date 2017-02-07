@@ -4,11 +4,11 @@ import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.workflow.actions.FundingDecisionAction;
 import org.innovateuk.ifs.assessment.workflow.actions.RejectAction;
-import org.innovateuk.ifs.assessment.workflow.actions.WithdrawAction;
 import org.innovateuk.ifs.assessment.workflow.actions.WithdrawCreatedAction;
 import org.innovateuk.ifs.assessment.workflow.guards.AssessmentCompleteGuard;
+import org.innovateuk.ifs.assessment.workflow.guards.AssessmentFundingDecisionOutcomeGuard;
+import org.innovateuk.ifs.assessment.workflow.guards.AssessmentRejectOutcomeGuard;
 import org.innovateuk.ifs.assessment.workflow.guards.CompetitionInAssessmentGuard;
-import org.innovateuk.ifs.assessment.workflow.guards.ProcessOutcomeGuard;
 import org.innovateuk.ifs.workflow.WorkflowStateMachineListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -20,9 +20,9 @@ import org.springframework.statemachine.config.builders.StateMachineTransitionCo
 
 import java.util.LinkedHashSet;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.*;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
-import static java.util.Arrays.asList;
 
 /**
  * Describes the workflow for assessment. This is from accepting a competition to submitting the application.
@@ -39,13 +39,13 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     private WithdrawCreatedAction withdrawCreatedAction;
 
     @Autowired
-    private WithdrawAction withdrawAction;
-
-    @Autowired
     private FundingDecisionAction fundingDecisionAction;
 
     @Autowired
-    private ProcessOutcomeGuard processOutcomeExistsGuard;
+    private AssessmentFundingDecisionOutcomeGuard assessmentFundingDecisionOutcomeGuard;
+
+    @Autowired
+    private AssessmentRejectOutcomeGuard assessmentRejectOutcomeGuard;
 
     @Autowired
     private AssessmentCompleteGuard assessmentCompleteGuard;
@@ -70,104 +70,94 @@ public class AssessmentWorkflow extends StateMachineConfigurerAdapter<Assessment
     public void configure(StateMachineTransitionConfigurer<AssessmentStates, AssessmentOutcomes> transitions) throws Exception {
         transitions
                 .withInternal()
-                    .source(CREATED)
-                    .event(WITHDRAW)
-                    .action(withdrawCreatedAction)
-                    .and()
+                .source(CREATED)
+                .event(WITHDRAW)
+                .action(withdrawCreatedAction)
+                .and()
                 .withExternal()
-                    .source(CREATED).target(PENDING)
-                    .event(NOTIFY)
-                    .and()
+                .source(CREATED).target(PENDING)
+                .event(NOTIFY)
+                .and()
                 .withExternal()
-                    .source(PENDING).target(REJECTED)
-                    .event(REJECT)
-                    .action(rejectAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(PENDING).target(REJECTED)
+                .event(REJECT)
+                .action(rejectAction)
+                .guard(assessmentRejectOutcomeGuard)
+                .and()
                 .withExternal()
-                    .source(PENDING).target(WITHDRAWN)
-                    .event(WITHDRAW)
-                    .action(withdrawAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(PENDING).target(WITHDRAWN)
+                .event(WITHDRAW)
+                .and()
                 .withExternal()
-                    .source(PENDING).target(ACCEPTED)
-                    .event(ACCEPT)
-                    .and()
+                .source(PENDING).target(ACCEPTED)
+                .event(ACCEPT)
+                .and()
                 .withExternal()
-                    .source(ACCEPTED).target(REJECTED)
-                    .event(REJECT)
-                    .action(rejectAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(ACCEPTED).target(REJECTED)
+                .event(REJECT)
+                .action(rejectAction)
+                .guard(assessmentRejectOutcomeGuard)
+                .and()
                 .withExternal()
-                    .source(ACCEPTED).target(WITHDRAWN)
-                    .event(WITHDRAW)
-                    .action(withdrawAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(ACCEPTED).target(WITHDRAWN)
+                .event(WITHDRAW)
+                .and()
                 .withExternal()
-                    .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
-                    .event(FEEDBACK)
-                    .and()
+                .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FEEDBACK)
+                .and()
                 .withExternal()
-                    .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
-                    .event(FUNDING_DECISION)
-                    .action(fundingDecisionAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(ACCEPTED).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FUNDING_DECISION)
+                .action(fundingDecisionAction)
+                .guard(assessmentFundingDecisionOutcomeGuard)
+                .and()
                 .withExternal()
-                    .source(OPEN).target(REJECTED)
-                    .event(REJECT)
-                    .action(rejectAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(OPEN).target(REJECTED)
+                .event(REJECT)
+                .action(rejectAction)
+                .guard(assessmentRejectOutcomeGuard)
+                .and()
                 .withExternal()
-                    .source(OPEN).target(WITHDRAWN)
-                    .event(WITHDRAW)
-                    .action(withdrawAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(OPEN).target(WITHDRAWN)
+                .event(WITHDRAW)
+                .and()
                 .withExternal()
-                    .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
-                    .event(FEEDBACK)
-                    .and()
+                .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FEEDBACK)
+                .and()
                 .withExternal()
-                    .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
-                    .event(FUNDING_DECISION)
-                    .action(fundingDecisionAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(OPEN).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FUNDING_DECISION)
+                .action(fundingDecisionAction)
+                .and()
                 .withExternal()
-                    .source(READY_TO_SUBMIT).target(REJECTED)
-                    .event(REJECT)
-                    .action(rejectAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(READY_TO_SUBMIT).target(REJECTED)
+                .event(REJECT)
+                .action(rejectAction)
+                .guard(assessmentRejectOutcomeGuard)
+                .and()
                 .withExternal()
-                    .source(READY_TO_SUBMIT).target(WITHDRAWN)
-                    .event(WITHDRAW)
-                    .action(withdrawAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(READY_TO_SUBMIT).target(WITHDRAWN)
+                .event(WITHDRAW)
+                .and()
                 .withExternal()
-                    .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
-                    .event(FEEDBACK)
-                    .and()
+                .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FEEDBACK)
+                .and()
                 .withExternal()
-                    .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
-                    .event(FUNDING_DECISION)
-                    .action(fundingDecisionAction)
-                    .guard(processOutcomeExistsGuard)
-                    .and()
+                .source(READY_TO_SUBMIT).target(DECIDE_IF_READY_TO_SUBMIT)
+                .event(FUNDING_DECISION)
+                .action(fundingDecisionAction)
+                .and()
                 .withChoice()
-                    .source(DECIDE_IF_READY_TO_SUBMIT)
-                    .first(READY_TO_SUBMIT, assessmentCompleteGuard)
-                    .last(OPEN)
-                    .and()
+                .source(DECIDE_IF_READY_TO_SUBMIT)
+                .first(READY_TO_SUBMIT, assessmentCompleteGuard)
+                .last(OPEN)
+                .and()
                 .withExternal()
-                    .source(READY_TO_SUBMIT).target(SUBMITTED)
-                    .event(SUBMIT)
-                    .guard(competitionInAssessmentGuard);
+                .source(READY_TO_SUBMIT).target(SUBMITTED)
+                .event(SUBMIT)
+                .guard(competitionInAssessmentGuard);
     }
 }

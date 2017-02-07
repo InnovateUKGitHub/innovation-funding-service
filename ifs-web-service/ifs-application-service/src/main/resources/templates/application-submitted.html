@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Thank you for submitting your application'"  th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Thank you for submitting your application'"   />
 </head>
 <body th:with="context='applicant'" class="app-submitted">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication}"  />
 
         <h1 class="heading-xlarge"  >Application submitted</h1>
         <h2 class="heading-large" th:text="${currentApplication.getName()}"></h2>
@@ -31,10 +31,10 @@
 
         <p><a class="button" tabindex="0" role="button" th:href="${userDashboardLink}">Return to dashboard</a></p>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>

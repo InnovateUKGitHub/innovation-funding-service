@@ -8,10 +8,10 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.user.mapper.ProcessRoleMapper;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.workflow.mapper.ProcessOutcomeMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.mapstruct.NullValueMappingStrategy;
 
 /**
  * Maps between domain and resource DTO for {@link org.innovateuk.ifs.assessment.domain.Assessment}.
@@ -19,12 +19,14 @@ import org.mapstruct.Mappings;
 @Mapper(
         config = GlobalMapperConfig.class,
         uses = {
-                ProcessOutcomeMapper.class,
                 ProcessRoleMapper.class,
                 ApplicationMapper.class,
                 UserMapper.class,
-                CompetitionMapper.class
-        }
+                CompetitionMapper.class,
+                AssessmentFundingDecisionOutcomeMapper.class,
+                AssessmentRejectOutcomeMapper.class
+        },
+        nullValueMappingStrategy = NullValueMappingStrategy.RETURN_NULL
 )
 public abstract class AssessmentMapper extends BaseMapper<Assessment, AssessmentResource, Long> {
 
@@ -35,7 +37,7 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(source = "target", target = "application"),
             @Mapping(source = "target.name", target = "applicationName"),
             @Mapping(source = "target.competition", target = "competition"),
-            @Mapping(source = "activityState", target = "assessmentState"),
+            @Mapping(source = "activityState", target = "assessmentState")
     })
     @Override
     public abstract AssessmentResource mapToResource(Assessment domain);
@@ -45,7 +47,8 @@ public abstract class AssessmentMapper extends BaseMapper<Assessment, Assessment
             @Mapping(target = "participant", source = "processRole"),
             @Mapping(target = "target", source = "application"),
             @Mapping(target = "activityState", source = "assessmentState", ignore = true),
-            @Mapping(target = "responses", ignore = true)
+            @Mapping(target = "responses", ignore = true),
+            @Mapping(target = "processOutcomes", ignore = true)
     })
     @Override
     public abstract Assessment mapToDomain(AssessmentResource resource);

@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management finance-checks-overview">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-accept-profile" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-reject-profile" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/modals :: modal-accept-profile" />
+<th:block th:insert="fragments/modals :: modal-reject-profile" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start"  />
+<th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start"  />
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
 
     <div class="grid-row">
         <div class="column-two-thirds">
             <div class="page-title">
-                <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+                <th:block th:insert="fragments/competition-management :: competition-id(competition=${model.competitionSummary})"  />
                 <h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
             </div>
         </div>
@@ -48,7 +48,7 @@
     </th:block>
 
     <th:block th:unless="${model.empty}">
-        <p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
+        <p>This overview details the spend profile for each partner for the project, it also enables the download of the spend profile so it can be shared with the Monitoring officer.</p>
         <p>You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
         <h2 class="heading-medium">Innovation Lead</h2>
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
@@ -82,11 +82,11 @@
         </div>
     </th:block>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 
 </body>
 </html>
