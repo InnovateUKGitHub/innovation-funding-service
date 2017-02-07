@@ -32,65 +32,36 @@ public class CompetitionPermissionRulesTest extends BasePermissionRulesTest<Comp
     }
 
     @Test
-    public void testCompAdminCanViewCompetitionInSetup(){
-        //Comp admin can see competition in setup
-        assertTrue(rules.compAdminUserCanViewAllCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build(),
-                UserResourceBuilder.newUserResource().withRolesGlobal(
-                        Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build()));
-    }
-
-    @Test
-    public void testProjectFinanceUserCanViewCompetitionInSetup(){
-        //Comp admin can see competition in setup
-        assertTrue(rules.projectFinanceUserCanViewAllCompetitions(newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build(),
-                UserResourceBuilder.newUserResource().withRolesGlobal(
-                        Lists.newArrayList(RoleResourceBuilder.newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build()));
-    }
-
-    @Test
-    public void testProjectFinanceUserCanViewAllCompetitions() {
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user == projectFinanceUser()) {
-                assertTrue(rules.projectFinanceUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+    public void testInternalUserCanViewCompetitionInSetup(){
+	    allGlobalRoleUsers.forEach(user -> {
+	        if (allInternalUsers.contains(user)) {
+	            assertTrue(rules.internalUserCanViewAllCompetitions(newCompetitionResource().build(), user));
             } else {
-                assertFalse(rules.projectFinanceUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+	            assertFalse(rules.internalUserCanViewAllCompetitions(newCompetitionResource().build(), user));
             }
         });
     }
 
     @Test
-    public void testCompAdminCanViewAllCompetitions() {
+    public void testInternalUserCanViewAllCompetitions() {
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user == compAdminUser()) {
-                assertTrue(rules.compAdminUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUserCanViewAllCompetitions(newCompetitionResource().build(), user));
             } else {
-                assertFalse(rules.compAdminUserCanViewAllCompetitions(newCompetitionResource().build(), user));
+                assertFalse(rules.internalUserCanViewAllCompetitions(newCompetitionResource().build(), user));
             }
         });
     }
 
     @Test
-    public void testProjectFinanceUserCanViewAllCompetitionSearchResults() {
+    public void testInternalUserCanViewAllCompetitionSearchResults() {
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user == projectFinanceUser()) {
-                assertTrue(rules.projectFinanceUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
             } else {
-                assertFalse(rules.projectFinanceUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
-            }
-        });
-    }
-
-    @Test
-    public void testCompAdminCanViewAllCompetitionSearchResults() {
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user == compAdminUser()) {
-                assertTrue(rules.compAdminUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
-            } else {
-                assertFalse(rules.compAdminUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
+                assertFalse(rules.internalUserCanViewAllCompetitionSearchResults(newCompetitionSearchResultItem().build(), user));
             }
         });
     }

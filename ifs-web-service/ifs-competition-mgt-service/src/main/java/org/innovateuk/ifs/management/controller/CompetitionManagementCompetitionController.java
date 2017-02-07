@@ -20,7 +20,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
  */
 @Controller
 @RequestMapping("/competition")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementCompetitionController {
 
     @Autowired
