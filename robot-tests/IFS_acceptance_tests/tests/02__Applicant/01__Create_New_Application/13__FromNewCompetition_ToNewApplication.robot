@@ -130,7 +130,7 @@ As next step the Applicant cannot see the turnover field
 
 Organisation server side validation when no
     [Documentation]  INFUND-6393
-    [Tags]
+    [Tags]  HappyPath
     # TODO Pending due to INFDUND-8033
     [Setup]  log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to his finances page  ${applicationTitle}
@@ -141,8 +141,7 @@ Organisation server side validation when no
 Organisation client side validation when no
     [Documentation]  INFUND-6393
     [Tags]
-    Given the user clicks the button/link      jQuery=label:contains("Medium")  # TODO This selector will chenge with INFUND-8071
-    And the user clicks the button/link        jQuery=label:contains("Medium")  # Click it twice
+    Given the user selects medium organisation size
     When the user enters text to a text field  jQuery=label:contains("Turnover") + input  -33
     And the user moves focus to the element    jQuery=label:contains("Full time employees") + input
     Then the user should see the element       jQuery=span:contains("Turnover") ~ .error-message:contains("This field should be 0 or higher.")
@@ -157,6 +156,7 @@ Mark Organisation as complete when no
     [Documentation]  INFUND-6393
     [Tags]  HappyPath
     Given the user enters text to a text field  jQuery=label:contains("employees") + input  42
+    And the user selects medium organisation size
     When the user clicks the button/link        jQuery=button:contains("Mark as complete")
     Then the user should see the element        jQuery=img.complete[alt*="Your organisation"]
     When the user clicks the button/link        link=Your organisation
@@ -165,19 +165,27 @@ Mark Organisation as complete when no
     Then the user should see the element        jQuery=button:contains("Edit your organisation")
     And the user clicks the button/link         jQuery=a:contains("Return to finances")
 
+Organisation server side validation when yes
+    [Documentation]  INFUND-6393
+    [Tags]
+    [Setup]  the user navigates to his finances page  ${compWITHGrowth}
+    # TODO Update when INFDUND-8033 is done
+    Given the user clicks the button/link  link=Your organisation
+    When the user clicks the button/link   jQuery=button:contains("Mark as complete")
+    Then the user should see the element   jQuery=.error-summary-list:contains("Enter your organisation size.")
+
 Organisation client side validation when yes
     [Documentation]  INFUND-6395
     [Tags]
-    [Setup]  the user navigates to his finances page  ${compWITHGrowth}
-    Given the user clicks the button/link      link=Your organisation
     When the user enters text to a text field  css=input[name$="month"]  42
     And the user enters text to a text field   css=input[name$="year"]  ${nextyear}
     Then the user should see the element       jQuery=.error-message:contains("Please enter a valid date.")
-    When the user moves focus to the element   jQuery=td:contains("Annual Turnover") + td input
-    Then the user should see the element       jQuery=.error-message:contains("Please enter a past date.")
     When the user enters text to a text field  css=input[name$="month"]  12
-    Then the user should not see the element   jQuery=.error-message:contains("Please enter a valid date.")
+    Then the user should see the element       jQuery=.error-message:contains("Please enter a past date.")
+    And the user should not see the element    jQuery=.error-message:contains("Please enter a valid date.")
     When the user enters text to a text field  css=input[name$="year"]  2016
+    And the user enters value to field         Annual Turnover  ${EMPTY}
+    And the user moves focus to the element    jQuery=button:contains("Mark as complete")
     Then the user should not see the element   jQuery=.error-message:contains("Please enter a past date.")
     And the user should see an error message in the field  Annual Turnover  This field cannot be left blank.
     When the user enters value to field        Annual Turnover  8.5
@@ -190,18 +198,15 @@ Organisation client side validation when yes
     When the user enters value to field        Research and development spend  6666666666666666666666666666666666666666666
     And the user moves focus to the element    jQuery=label:contains("employees") + input
     Then the user should see an error message in the field  Research and development spend  This field should be 2147483647 or lower.
+    # TODO This error message will be different after INFUND-8080
     And the user enters value to field         Research and development spend  2147483647
     When the user enters text to a text field  jQuery=label:contains("employees") + input  22.4
     Then the user should see an error message in the field  employees  This field can only accept whole numbers.
+    And the user should not see the element    jQuery=span:contains("Research and development spend") + *:contains("This field should be 2147483647 or lower.")
     When the user enters text to a text field  jQuery=label:contains("employees") + input  1
-    Then the user should see the element       jQuery=span:contains("employees") + .error-message
+    Then the user should not see the element   jQuery=span:contains("employees") + .error-message
 
-Organisation server side validation when yes
-    [Documentation]  INFUND-6393
-    [Tags]
-    # TODO Pending due to INFDUND-8033
-
-Mark Organisation as complete
+Mark Organisation as complete when yes
     [Documentation]  INFUND-6393
     [Tags]  HappyPath  Failing
 
@@ -278,3 +283,7 @@ the user enters value to field
 the user should see an error message in the field
     [Arguments]  ${field}  ${errmsg}
     the user should see the element  jQuery=span:contains("${field}") + *:contains("${errmsg}")
+
+the user selects medium organisation size
+    the user clicks the button/link      jQuery=label:contains("Medium")  # TODO This selector will chenge with INFUND-8071
+    the user clicks the button/link      jQuery=label:contains("Medium")  # Click it twice
