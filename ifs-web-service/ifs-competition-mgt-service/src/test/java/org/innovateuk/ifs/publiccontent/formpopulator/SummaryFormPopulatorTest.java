@@ -2,14 +2,19 @@ package org.innovateuk.ifs.publiccontent.formpopulator;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.publiccontent.form.SummaryForm;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.publiccontent.form.section.SummaryForm;
+import org.innovateuk.ifs.publiccontent.formpopulator.section.SummaryFormPopulator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.util.Collections;
+
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.junit.Assert.assertThat;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,6 +33,7 @@ public class SummaryFormPopulatorTest {
                 .withSummary(DESCRIPTION)
                 .withFundingType(FUNDING_TYPE)
                 .withProjectSize(PROJECT_SIZE)
+                .withContentSections(newPublicContentSectionResource().withType(PublicContentSectionType.SUMMARY).withContentGroups(Collections.emptyList()).build(1))
                 .build();
 
         SummaryForm form = target.populate(resource);
@@ -41,6 +47,7 @@ public class SummaryFormPopulatorTest {
     @Test
     public void testPopulateWithNullResourceValues() {
         PublicContentResource resource = newPublicContentResource()
+                .withContentSections(newPublicContentSectionResource().withType(PublicContentSectionType.SUMMARY).withContentGroups(Collections.emptyList()).build(1))
                 .build();
 
         SummaryForm form = target.populate(resource);
