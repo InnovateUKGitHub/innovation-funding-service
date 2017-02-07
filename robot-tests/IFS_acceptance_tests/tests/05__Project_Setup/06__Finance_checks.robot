@@ -34,11 +34,22 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4820 As a project finance team member I want a page containing summary information for each project so that I can manage the Finance Checks section for each project in Project Setup
 ...
 ...               INFUND-7718 Content: Breadcrumb content for main project page to projects in setup is incorrect
+...
+...               INFUND-4832 As a project finance team member I want to view details of the requested funding for each partner organisation so I can review their eligibility for funding
+...
+...               INFUND-4834 As a project finance team member I want to be able to amend the details stored in Finance Checks for a partner organisation so that I can ensure the detailed finances are appropriate for the project to meet funding eligibility requirements
+...
+...               INFUND-4833 As a project finance team member I want to be able to view partner finance details supplied in the application form so that I can review or edit them if appropriate
+...
+...               INFUND-4839 As a project finance team member I want to be able to confirm the partner organisation is eligible for funding so that no further eligibility checks need to be carried out
+...
+...               INFUND-4823 As a project finance team member I want to be able to view the RAG rating for the viability and eligibility of each partner organisation if available so that I can be appraised of the effort level that may be expected to carry out the finance checks.
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
 Resource          ../../resources/defaultResources.robot
 Resource          PS_Variables.robot
+Resource          ../02__Applicant/FinanceSection_Commons.robot
 
 *** Variables ***
 ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}
@@ -93,32 +104,6 @@ Finance checks client-side validations
     And The user should not see the text in the page    Please enter a labour cost
 
 
-Approve Eligibility: Lead partner organisation
-    [Documentation]    INFUND-5193, INFUND-6149
-    [Tags]    HappyPath
-    Given the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
-    When the user fills in project costs
-    And the user selects the checkbox    costs-reviewed
-    Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
-    Then the user sees the text in the element    css=a.eligibility-0    Approved
-
-
-Approve Eligibility: Collaborator partner organisation
-    [Documentation]    INFUND-5193
-    [Tags]    HappyPath
-    When the user clicks the button/link    css=a.eligibility-1
-    When the user fills in project costs
-    And the user selects the checkbox    costs-reviewed
-    Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
-    And the user clicks the button/link    jQuery=.approve-eligibility-modal .button:contains("Approve eligible costs")
-    And the user should see the text in the page    The partner finance eligibility has been approved
-    And The user clicks the button/link    link=Finance checks
-    Then the user sees the text in the element    css=a.eligibility-1    Approved
-
-
 Approve Eligibility and verify Viability and RAG: Academic partner organisation
     [Documentation]    INFUND-5193, INFUND-7026, INFUND-7095
     [Tags]    HappyPath
@@ -162,13 +147,13 @@ Viability checks are populated in the table
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(2)    N/A
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(3)    N/A
 
-
 Project finance user can see the viability check page for the lead partner
     [Documentation]    INFUND-4831, INFUND-4830, INFUND-4825
     [Tags]
     when the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Review")    # clicking the review button for the lead partner
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
     And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
+
 
 Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825
@@ -186,6 +171,7 @@ Checking the approve viability checkbox enables RAG selection but not confirm vi
     When the user selects the checkbox    project-viable
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Confirm viability")
+
 
 RAG choices update on the finance checks page
     [Documentation]    INFUND-4822, INFUND-4856
@@ -215,6 +201,7 @@ Clicking cancel on the viability modal
     And the user should see the checkbox    confirmViabilityChecked
     And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
 
+
 Confirming viability should show credit report info on a readonly page
     [Documentation]    INFUND-4829, INFUND-4830
     [Tags]
@@ -232,7 +219,6 @@ Confirming viability should update on the finance checks page
     [Tags]
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2) a:contains("Approved")
-
 
 Project finance user can see the viability checks for the industrial partner
     [Documentation]    INFUND-4831, INFUND-4830
@@ -289,20 +275,311 @@ Confirming viability should show credit report info on a readonly page for partn
     And the user should see the text in the page    A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
     And the user should see that the checkbox is disabled    creditReportConfirmed
 
-
-
 Confirming viability should update on the finance checks page for partner
     [Documentation]    INFUND-4831, INFUND-4822
     [Tags]
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Approved")
 
+Eligibility checks are populated in the table
+    [Documentation]    INFUND-4823
+    [Tags]    Pending
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4)    Review
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(5)    Not set
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4)    Review
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(5)    Not set
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(4)    Review
+    And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(3) td:nth-child(5)    Not set
+
+Project finance user can see the Eligibility check page for the lead partner
+    [Documentation]    INFUND-4823
+    [Tags]
+    ${current_location} =    Get Location
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # clicking the review button for the lead partner
+    And the user navigates to the page  ${current_location}/Eligibility   # to delete this when the new eligibility page is switched to
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}
+
+Project finance user can see the lead partner's information about eligibility
+    [Documentation]    INFUND-4832
+    [Tags]
+    # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    36 months
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    30%
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 60,502
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £ 2,468
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    £ 138,704
+
+Project finance user can amend labour details in eligibility
+    [Documentation]    INFUND-4834
+    [Tags]
+    Given the user should see the element           jQuery=form section:nth-of-type(1) button:contains("Labour")
+    Then the user should see the element            jQuery=form section:nth-of-type(1) button span:contains("2%")
+    When the user clicks the button/link             jQuery=form section:nth-of-type(1) button:contains("Labour")
+    And the user clicks the button/link            jQuery=form section:nth-of-type(1) a:contains("Edit")
+    Then the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    When the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
+    And the user enters text to a text field       css=[name^="labour-labourDaysYearly"]    230
+    And the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    test
+    And the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    120000
+    And the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    100
+    Then the user should see the element           jQuery=form section:nth-of-type(1) button span:contains("21%")
+    And the user should see the element            jQuery=form section:nth-of-type(1) input[data-calculation-rawvalue^='53734']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(1) button:contains("Add another role")
+    And the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(13) td:nth-of-type(1) input    test
+    And the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(13) td:nth-of-type(2) input    14500
+    And the user enters text to a text field       css=.labour-costs-table tr:nth-of-type(13) td:nth-of-type(4) input    100
+    Then the user should see the element            jQuery=form section:nth-of-type(1) input[data-calculation-rawvalue^='60039']
+    When the user clicks the button/link            css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(5) button
+    Then the user should see the element           jQuery=form section:nth-of-type(1) button span:contains("23%")
+    And the user should see the element            jQuery=form section:nth-of-type(1) input[data-calculation-rawvalue^='59778']
+    When the user clicks the button/link           jQuery=form section:nth-of-type(1) button[name=save-eligibility]
+    Then the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 272,545
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 81,763
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 188,313
+    And the user should see the element           jQuery=form section:nth-of-type(1) a:contains("Edit")
+    And the user should not see the element        jQuery=form section:nth-of-type(1) button[name=save-eligibility]
+
+Project finance user can amend materials details in eligibility
+    [Documentation]    INFUND-4834
+    [Tags]
+    Given the user should see the element           jQuery=form section:nth-of-type(3) button:contains("Materials")
+    Then the user should see the element            jQuery=form section:nth-of-type(3) button span:contains("37%")
+    When the user clicks the button/link            jQuery=form section:nth-of-type(3) button:contains("Materials")
+    Then  the user should see the element           jQuery=form section:nth-of-type(3) input[data-calculation-rawvalue^='100200']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(3) a:contains("Edit")
+    Then the user should see the element            css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    And the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
+    And the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
+    And the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    When the user should see the element            jQuery=form section:nth-of-type(3) button span:contains("25%")
+    And the user should see the element             jQuery=form section:nth-of-type(3) input[data-calculation-rawvalue^='51100']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(3) button[name=add_cost]
+    Then the user should see the element            css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    And the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10
+    And the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(3) input    100
+    And the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(1) input    test
+    When the user should see the element            jQuery=form section:nth-of-type(3) button span:contains("25%")
+    And the user should see the element             jQuery=form section:nth-of-type(3) input[data-calculation-rawvalue^='52100']
+    When the user clicks the button/link            css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(5) button
+    Then the user should see the element           jQuery=form section:nth-of-type(3) button span:contains("1%")
+    And the user should see the element            jQuery=form section:nth-of-type(3) input[data-calculation-rawvalue^='2000']
+    When the user clicks the button/link           jQuery=form section:nth-of-type(3) button[name=save-eligibility]
+    Then the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 174,345
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 52,303
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 119,573
+    And the user should see the element           jQuery=form section:nth-of-type(1) a:contains("Edit")
+    And the user should not see the element       jQuery=form section:nth-of-type(3) button[name=save-eligibility]
+
+Project finance user can amend capital usage details in eligibility
+    [Documentation]    INFUND-4834
+    [Tags]
+    Given the user should see the element           jQuery=form section:nth-of-type(4) button:contains("Capital usage")
+    Then the user should see the element            jQuery=form section:nth-of-type(4) button span:contains("0%")
+    When the user clicks the button/link            jQuery=form section:nth-of-type(4) button:contains("Capital usage")
+    Then  the user should see the element           jQuery=form section:nth-of-type(4) input[value*='552']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(4) a:contains("Edit")
+    And the user should see the element            css=form section:nth-of-type(4) #capital_usage div:nth-child(1) div:nth-of-type(1) textarea
+    And the user enters text to a text field        css=form section:nth-of-type(4) #capital_usage div:nth-child(1) div:nth-of-type(1) textarea   Test
+    And the user enters text to a text field        css=form section:nth-of-type(4) #capital_usage div:nth-child(1) div:nth-of-type(4)   10600
+    And the user enters text to a text field        css=form section:nth-of-type(4) #capital_usage div:nth-child(1) div:nth-of-type(5)   500
+    Then the user should see the element            jQuery=form section:nth-of-type(4) button span:contains("0%")
+    And  the user should see the element           jQuery=form section:nth-of-type(4) input[data-calculation-rawvalue*='5326']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(4) button[name=add_cost]
+    And the user enters text to a text field        css=form section:nth-of-type(4) #capital_usage div:nth-child(4) div:nth-of-type(1) textarea   Test
+    And the user enters text to a text field        css=form section:nth-of-type(4) #capital_usage div:nth-child(4) div:nth-of-type(4)   10600
+    And the user enters text to a text field        css=form section:nth-of-type(4) #capital_usage div:nth-child(4) div:nth-of-type(5)   500
+    Then the user should see the element            jQuery=form section:nth-of-type(4) button span:contains("6%")
+    And the user should see the element             jQuery=form section:nth-of-type(4) input[data-calculation-rawvalue^='10376']
+    When the user clicks the button/link            css=form section:nth-of-type(4) #capital_usage div:nth-child(2) button
+    Then the user should see the element            jQuery=form section:nth-of-type(4) button span:contains("6%")
+    And the user should see the element             jQuery=form section:nth-of-type(4) input[data-calculation-rawvalue^='10100']
+    When the user clicks the button/link           jQuery=form section:nth-of-type(4) button[name=save-eligibility]
+    Then the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 183,893
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 55,168
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 126,257
+    And the user should see the element           jQuery=form section:nth-of-type(4) a:contains("Edit")
+    And the user should not see the element       jQuery=form section:nth-of-type(4) button[name=save-eligibility]
+
+
+Project finance user can amend subcontracting usage details in eligibility
+    [Documentation]    INFUND-4834
+    [Tags]
+    Given the user should see the element           jQuery=form section:nth-of-type(5) button:contains("Subcontracting costs")
+    Then the user should see the element            jQuery=form section:nth-of-type(5) button span:contains("49%")
+    When the user clicks the button/link            jQuery=form section:nth-of-type(5) button:contains("Subcontracting costs")
+    Then  the user should see the element           jQuery=form section:nth-of-type(5) input[value*='90,000']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(5) a:contains("Edit")
+    And the user should see the element            css=form section:nth-of-type(5) #subcontracting div:nth-child(1) div:nth-of-type(1) textarea
+    And the user enters text to a text field        css=form section:nth-of-type(5) #subcontracting div:nth-child(1) div:nth-of-type(1) textarea   Test
+    And the user enters text to a text field        css=form section:nth-of-type(5) #subcontracting div:nth-child(1) div:nth-of-type(4)   10600
+    Then the user should see the element            jQuery=form section:nth-of-type(5) button span:contains("63%")
+    And  the user should see the element           jQuery=form section:nth-of-type(5) input[data-calculation-rawvalue*='135000']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(5) button[name=add_cost]
+    And the user enters text to a text field        css=form section:nth-of-type(5) #subcontracting div:nth-child(3) div:nth-of-type(1) textarea   Test
+    And the user enters text to a text field        css=form section:nth-of-type(5) #subcontracting div:nth-child(3) div:nth-of-type(4)   9400
+    Then the user should see the element            jQuery=form section:nth-of-type(5) button span:contains("65%")
+    And the user should see the element             jQuery=form section:nth-of-type(5) input[data-calculation-rawvalue^='144400']
+    When the user clicks the button/link            css=form section:nth-of-type(5) #subcontracting div:nth-child(2) button
+    Then the user should see the element            jQuery=form section:nth-of-type(5) button span:contains("56%")
+    And the user should see the element             jQuery=form section:nth-of-type(5) input[data-calculation-rawvalue^='99400']
+    When the user clicks the button/link           jQuery=form section:nth-of-type(5) button[name=save-eligibility]
+    Then the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 193,773
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 58,132
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 133,173
+    And the user should see the element           jQuery=form section:nth-of-type(5) a:contains("Edit")
+    And the user should not see the element       jQuery=form section:nth-of-type(5) button[name=save-eligibility]
+
+Project finance user can amend travel details in eligibility
+    [Documentation]    INFUND-4834
+    [Tags]
+    Given the user should see the element           jQuery=form section:nth-of-type(6) button:contains("Travel and subsistence")
+    Then the user should see the element            jQuery=form section:nth-of-type(6) button span:contains("3%")
+    When the user clicks the button/link            jQuery=form section:nth-of-type(6) button:contains("Travel and subsistence")
+    Then  the user should see the element           jQuery=form section:nth-of-type(6) input[value*='5,970']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(6) a:contains("Edit")
+    Then the user should see the element            css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
+    And the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    10
+    And the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    100
+    And the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test
+    Then the user should see the element            jQuery=form section:nth-of-type(6) button span:contains("2%")
+    And  the user should see the element           jQuery=form section:nth-of-type(6) input[data-calculation-rawvalue^=='3985']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(6) button[name=add_cost]
+    Then the user should see the element            css=#travel-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
+    And the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10
+    And the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(3) td:nth-of-type(3) input    100
+    And the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(3) td:nth-of-type(1) input    test
+    Then the user should see the element            jQuery=form section:nth-of-type(6) button span:contains("3%")
+    And  the user should see the element           jQuery=form section:nth-of-type(6) input[data-calculation-rawvalue^=='4985']
+    When the user clicks the button/link            css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(5) button
+    Then the user should see the element            jQuery=form section:nth-of-type(6) button span:contains("1%")
+    And  the user should see the element           jQuery=form section:nth-of-type(6) input[data-calculation-rawvalue^=='2000']
+    When the user clicks the button/link           jQuery=form section:nth-of-type(6) button[name=save-eligibility]
+    Then the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 179,923
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 53,977
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 123,478
+    And the user should see the element           jQuery=form section:nth-of-type(6) a:contains("Edit")
+    And the user should not see the element       jQuery=form section:nth-of-type(6) button[name=save-eligibility]
+
+Project finance user can amend other costs details in eligibility
+    [Documentation]    INFUND-4834
+    [Tags]
+    Given the user should see the element           jQuery=form section:nth-of-type(7) button:contains("Other Costs")
+    Then the user should see the element            jQuery=form section:nth-of-type(7) button span:contains("1%")
+    When the user clicks the button/link            jQuery=form section:nth-of-type(7) button:contains("Other Costs")
+    Then  the user should see the element           jQuery=form section:nth-of-type(7) input[value*='1,100']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(7) a:contains("Edit")
+    And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(1) td:nth-child(2) textarea  some other costs
+    Then the user should see the element            jQuery=form section:nth-of-type(7) button span:contains("3%")
+    And  the user should see the element           jQuery=form section:nth-of-type(7) input[data-calculation-rawvalue^=='5550']
+    When the user clicks the button/link            jQuery=form section:nth-of-type(7) button[name=add_cost]
+    And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(1) td:nth-child(2) textarea  some other costs
+    And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(1) td:nth-child(2) input  5750
+    Then the user should see the element            jQuery=form section:nth-of-type(7) button span:contains("6%")
+    And  the user should see the element           jQuery=form section:nth-of-type(7) input[data-calculation-rawvalue^=='10750']
+    When the user should see the element           css=#other-costs-table tr:nth-of-type(2) td:nth-of-type(3) button
+    When the user clicks the button/link           jQuery=form section:nth-of-type(7) button[name=save-eligibility]
+    Then the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 184,373
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 55,312
+    And the user should see the element           jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 126,593
+    And the user should see the element           jQuery=form section:nth-of-type(7) a:contains("Edit")
+    And the user should not see the element       jQuery=form section:nth-of-type(7) button[name=save-eligibility]
+
+
+Checking the approve eligibility checkbox enables RAG selection but not Approve eligibility button
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the user selects the checkbox    project-eligible
+    Then the user should see the element    id=rag-rating
+    And the user should not see the element    jQuery=.button.disabled:contains("Approve eligible costs")
+
+RAG choices update on the finance checks page for eligibility
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the rag rating updates on the finance check page for lead    Green
+    And the rag rating updates on the finance check page for lead    Amber
+    And the rag rating updates on the finance check page for lead    Red
+    When the user selects the option from the drop-down menu    --    id=rag-rating
+    Then the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
+    [Teardown]    the user selects the option from the drop-down menu    Green    id=rag-rating
+
+Clicking cancel on the eligibility modal
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
+    Then the user should see the element    id=rag-rating
+    And the user should see the checkbox    project-eligible
+    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
+
+Confirming eligibility should show info on a readonly page
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should not see the element    id=rag-rating
+    And the user should not see the checkbox    project-eligible
+
+Confirming eligibility should update on the finance checks page
+    [Documentation]    INFUND-4823
+    [Tags]  Pending
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
+
+Project finance user can see the eligibility checks for the industrial partner
+    [Documentation]    INFUND-4823
+    [Tags]
+    When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
+    Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    And the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}
+
+Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the user selects the checkbox    project-eligible
+    Then the user should see the element    id=rag-rating
+    And the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
+
+RAG choices update on the finance checks page for eligibility for partner
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the rag rating updates on the finance check page for lead    Green
+    And the rag rating updates on the finance check page for lead    Amber
+    And the rag rating updates on the finance check page for lead    Red
+    When the user selects the option from the drop-down menu    --    id=rag-rating
+    Then the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
+    [Teardown]    the user selects the option from the drop-down menu    Green    id=rag-rating
+
+Clicking cancel on the eligibility modal for partner
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
+    Then the user should see the element    id=rag-rating
+    And the user should see the checkbox    project-eligible
+    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")
+
+Confirming eligibility should show info on a readonly page for partner
+    [Documentation]    INFUND-4839
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
+    And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
+    Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should not see the element    id=rag-rating
+    And the user should not see the checkbox    project-eligible
+
+Confirming eligibility should update on the finance checks page
+    [Documentation]    INFUND-4823
+    [Tags]  Pending
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
+
 Generate spend profile button enabled after viability checks are completed
     [Documentation]    INFUND-7076
     [Tags]
     When the user should not see the element    xpath=//*[@class='button generate-spend-profile-main-button' and @disabled='disabled']
-
-
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
