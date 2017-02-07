@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -59,12 +58,10 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     public static Integer MAX_ALLOWED_KEYWORDS = 10;
 
-    public static Integer DEFAULT_PAGE_SIZE = 20;
-
     private static Log LOG = LogFactory.getLog(PublicContentItemServiceImpl.class);
 
     @Override
-    public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+    public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
         Optional<List<Long>> competitionIds = getInnovationAreaId(innovationAreaId);
         Optional<Set<Long>> publicContentIds = getSearchString(searchString);
 
@@ -77,7 +74,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         return ServiceResult.serviceSuccess(mapPageToPageItemResource(publicContentPage));
     }
 
-    private Page<PublicContent> getPublicContentPage(Optional<List<Long>> competitionIds, Optional<Set<Long>> publicContentIds, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+    private Page<PublicContent> getPublicContentPage(Optional<List<Long>> competitionIds, Optional<Set<Long>> publicContentIds, Optional<Integer> pageNumber, Integer pageSize) {
         Page<PublicContent> publicContentPage;
 
         if(competitionIds.isPresent() && publicContentIds.isPresent()) {
@@ -129,7 +126,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
                 for (String keyword: separateSearchStringToList(UriUtils.decode(s, "UTF8"))) {
                     i++;
 
-                    keywords.addAll(keywordRepository.findByKeywordLike("%"+ keyword + "%"));
+                    keywords.addAll(keywordRepository.findByKeywordLike("%" + keyword + "%"));
 
                     if(i >= MAX_ALLOWED_KEYWORDS) {
                         break;
@@ -145,19 +142,24 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         return searchString.isPresent() ? Optional.of(publicContentIds) : Optional.empty();
     }
 
-    private Pageable getPageable(Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+    private Pageable getPageable(Optional<Integer> pageNumber, Integer pageSize) {
         Integer pageNumberUsing = 0;
-        Integer pageSizeUsing = DEFAULT_PAGE_SIZE;
 
-
-        if(pageSize.isPresent()) {
-            pageSizeUsing = pageSize.get();
-        }
         if(pageNumber.isPresent()) {
             pageNumberUsing = pageNumber.get();
         }
 
-        return new PageRequest(pageNumberUsing, pageSizeUsing);
+        return new PageRequest(pageNumberUsing, pageSize);
+    }
+
+    private PublicContentItemResource mapPublicContentToPublicContentItemResource(PublicContent publicContent, Competition competition) {
+        PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
+        publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
+        publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
+        publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
+        publicContentItemResource.setCompetitionTitle(competition.getName());
+
+        return publicContentItemResource;
     }
 
     private PublicContentItemPageResource mapPageToPageItemResource(Page<PublicContent> publicContentList) {
@@ -169,13 +171,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             Competition competition = competitionRepository.findById(publicContent.getCompetitionId());
 
             if(CompetitionStatus.OPEN.equals(competition.getCompetitionStatus()) && null != publicContent.getPublishDate()) {
-                PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
-                publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
-                publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
-                publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
-                publicContentItemResource.setCompetitionTitle(competition.getName());
-
-                publicContentItemResources.add(publicContentItemResource);
+                publicContentItemResources.add(mapPublicContentToPublicContentItemResource(publicContent, competition));
             }
         });
 

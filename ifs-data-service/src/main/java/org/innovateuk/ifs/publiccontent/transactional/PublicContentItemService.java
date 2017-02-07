@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface PublicContentItemService {
 
     @NotSecured("Visible on for everyone even not logged in users")
-    ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize);
+    ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize);
 
     @NotSecured("Visible on for everyone even not logged in users")
     ServiceResult<PublicContentItemResource> byCompetitionId(Long id);
