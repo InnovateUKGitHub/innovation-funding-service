@@ -1,8 +1,11 @@
-package org.innovateuk.ifs.publiccontent.formpopulator;
+package org.innovateuk.ifs.publiccontent.formpopulator.section;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.publiccontent.form.SummaryForm;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.publiccontent.form.section.SummaryForm;
+import org.innovateuk.ifs.publiccontent.formpopulator.AbstractContentGroupFormPopulator;
+import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
 import org.springframework.stereotype.Service;
 
 import static java.util.Optional.ofNullable;
@@ -12,7 +15,7 @@ import static java.util.Optional.ofNullable;
  */
 
 @Service
-public class SummaryFormPopulator extends AbstractPublicContentFormPopulator<SummaryForm> implements PublicContentFormPopulator<SummaryForm> {
+public class SummaryFormPopulator extends AbstractContentGroupFormPopulator<SummaryForm> implements PublicContentFormPopulator<SummaryForm> {
 
     @Override
     protected SummaryForm createInitial() {
@@ -28,5 +31,11 @@ public class SummaryFormPopulator extends AbstractPublicContentFormPopulator<Sum
                         form.setFundingType(type.getDisplayName()));
 
         form.setProjectSize(publicContentResource.getProjectSize());
+        super.populateSection(form, publicContentResource);
+    }
+
+    @Override
+    protected PublicContentSectionType getType() {
+        return PublicContentSectionType.SUMMARY;
     }
 }

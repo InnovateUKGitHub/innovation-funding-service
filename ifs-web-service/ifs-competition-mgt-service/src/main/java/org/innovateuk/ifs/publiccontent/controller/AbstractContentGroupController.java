@@ -61,7 +61,7 @@ public abstract class AbstractContentGroupController<M extends AbstractPublicCon
         Supplier<String> successView = () -> getPage(publicContentService.getCompetitionById(competitionId), model, Optional.empty(), false);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> formSaver().save(form, publicContent).andOnSuccess(() -> action.apply(publicContent)));
+                () -> formSaver().save(form, publicContent).andOnSuccessReturn(() -> action.apply(publicContent)));
 
     }
 

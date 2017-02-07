@@ -1,13 +1,15 @@
-package org.innovateuk.ifs.publiccontent.controller;
+package org.innovateuk.ifs.publiccontent.controller.section;
 
-import org.innovateuk.ifs.publiccontent.form.SummaryForm;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.publiccontent.controller.AbstractContentGroupController;
+import org.innovateuk.ifs.publiccontent.form.section.SummaryForm;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
-import org.innovateuk.ifs.publiccontent.formpopulator.SummaryFormPopulator;
+import org.innovateuk.ifs.publiccontent.formpopulator.section.SummaryFormPopulator;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
-import org.innovateuk.ifs.publiccontent.modelpopulator.SummaryViewModelPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.section.SummaryViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
-import org.innovateuk.ifs.publiccontent.saver.SummaryFormSaver;
-import org.innovateuk.ifs.publiccontent.viewmodel.SummaryViewModel;
+import org.innovateuk.ifs.publiccontent.saver.section.SummaryFormSaver;
+import org.innovateuk.ifs.publiccontent.viewmodel.section.SummaryViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -20,7 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/competition/setup/public-content/summary")
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-public class PublicContentSummarySectionController extends AbstractPublicContentSectionController<SummaryViewModel, SummaryForm> {
+public class PublicContentSummarySectionController extends AbstractContentGroupController<SummaryViewModel, SummaryForm> {
 
     @Autowired
     private SummaryFormPopulator summaryFormPopulator;
@@ -46,4 +48,8 @@ public class PublicContentSummarySectionController extends AbstractPublicContent
         return summaryFormSaver;
     }
 
+    @Override
+    protected PublicContentSectionType getType() {
+        return PublicContentSectionType.SUMMARY;
+    }
 }
