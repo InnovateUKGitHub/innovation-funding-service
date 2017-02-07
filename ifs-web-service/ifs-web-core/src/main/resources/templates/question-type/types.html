@@ -36,7 +36,7 @@
         <th:block th:if="${readonly}">
             <span th:if="${question.getName()}" th:text="${question.name}" />
         </th:block>
-        <th:block th:unless="${readonly}"
+        <th:block th:unless="${readonly}">
           <span th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
           <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})"   />
         </th:block>
@@ -272,7 +272,7 @@
                         <div th:unless="${(currentUser.getId() != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or
                                                  (questionAssignee?.assignee==null and !userIsLeadApplicant)}" th:remove="tag">
                             <p>
-                                <div th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" th:remove="tag"/>
+                                <th:block th:if="${readonly}" th:insert="question-type/form-elements :: form-edit-question-button" />
                                 <th:block th:insert="question-type/form-elements :: form-mark-as-complete-buttons" />
                             </p>
                         </div>
@@ -297,9 +297,9 @@
                           <div class="column-half">
                               <h3 class="heading-small">Project timescales</h3>
                               <p>Project start date:<br/>
-                                <div th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" th:remove="tag" />
+                                <th:block th:if="${currentApplication.getStartDate() != null}" th:text="${#temporals.format(currentApplication.getStartDate(), 'd MMMM yyyy')}" />
                               </p>
-                              <p>Duration:<br/><div th:remove="tag" th:text="${currentApplication.getDurationInMonths()}" /> months</p>
+                              <p>Duration:<br/><th:block th:text="${currentApplication.getDurationInMonths()}" /> months</p>
                           </div>
                         </div>
                     </div>

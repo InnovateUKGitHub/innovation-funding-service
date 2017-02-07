@@ -50,6 +50,12 @@ public class Thymeleaf3ValidHtmlEnforcerPostProcessorHandler extends AbstractTem
     public void handleText(IText text) {
 
         if (trimEmptyText) {
+
+            if (text.getText().equals(" ")) {
+                super.handleText(text);
+                return;
+            }
+
             String trimmed = text.getText().trim();
 
             if (!trimmed.isEmpty()) {
@@ -58,7 +64,7 @@ public class Thymeleaf3ValidHtmlEnforcerPostProcessorHandler extends AbstractTem
                     trimmed = trimmed + " ";
                 }
 
-                if (text.getText().startsWith(" ")) {
+                if (text.getText().startsWith(" ") || text.getText().startsWith("\n ")) {
                     trimmed = " " + trimmed;
                 }
 

@@ -39,8 +39,8 @@ Competition dashboard ready to Open competition
     Given the user navigates to the page    ${CA_UpcomingComp}
     When The user clicks the button/link    link=${READY_TO_OPEN_COMPETITION_NAME}
     Then the user should see the element    jQuery=span:contains("00000006: Photonics for health")
-    And the user should see the element    jQuery=h1:contains(" Ready to open")
-    And the user should see the element    jQuery=h1:contains(" Ready to open")
+    And the user should see the element    jQuery=h1:contains("Ready to open")
+    And the user should see the element    jQuery=h1:contains("Ready to open")
     And the user should see the element    jQuery=dt:contains("Competition type") ~ dd:contains("Programme")
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")

@@ -1202,7 +1202,7 @@
                         </tbody>
                     </table>
                     <p class="alignright" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-                    <div th:include="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" th:remove="tag"/>
+                    <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
                     </p>
                 </div>
                 <div class="form-group alignright inline">
