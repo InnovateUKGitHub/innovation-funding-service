@@ -23,7 +23,7 @@ IFS.competitionManagement.repeater = (function () {
           IFS.competitionManagement.repeater.addInnovationAreaRow()
           break
         case 'contentGroup':
-          IFS.competitionManagement.repeater.addContentGroup()
+          IFS.competitionManagement.repeater.addContentGroup(el)
           break
       }
       jQuery('body').trigger('updateSerializedFormState')
@@ -89,21 +89,28 @@ IFS.competitionManagement.repeater = (function () {
       rows.last().after(newRow)
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
     },
-    addContentGroup: function () {
-      var count = parseInt(jQuery('[id^=contentGroup-row-]').length, 10) // name attribute has to be 0,1,2,3
-      // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
-      var idCount = parseInt(jQuery('[id^=contentGroup-row-]').last().prop('id').split('contentGroup-row-')[1], 10) + 1
-      var headerRequiredErrorMessage = jQuery('[name="contentGroups[0].heading"]').attr('data-required-errormessage')
-      var contentRequiredErrorMessage = jQuery('[name="contentGroups[0].content"]').attr('data-required-errormessage')
+    addContentGroup: function (buttonEl) {
+      var rows = jQuery('[id^=contentGroup-row-]')
+      var count = 0
+      var idCount = 0
+
+      if (rows.length) {
+        count = parseInt(rows.length, 10) // name attribute has to be 0,1,2,3
+        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(rows.last().prop('id').split('contentGroup-row-')[1], 10) + 1
+      }
+      var headerRequiredErrorMessage = 'Please enter a heading.'
+      var contentRequiredErrorMessage = 'Please enter content.'
+
       var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
                     '<div class="form-group">' +
                       '<label class="form-label-bold" for="heading-' + idCount + '">Heading</label>' +
                       '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
                     '</div>' +
-                    '<div class="form-group"><div class="textarea-wrapped">' +
+                    '<div class="form-group textarea-wrapped">' +
                       '<label class="form-label-bold" for="content-' + idCount + '">Content</label>' +
                           '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
-                      '</div></div>' +
+                      '</div>' +
                     '<div class="form-group upload-section">' +
                         '<input type="file" id="file-upload-' + idCount + '" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
                         '<label for="file-upload-' + idCount + '" class="button-secondary extra-margin">+ Upload</label>' +
@@ -112,7 +119,11 @@ IFS.competitionManagement.repeater = (function () {
                     '</div>' +
                     '<button type="button" class="buttonlink no-margin" data-remove-row="contentGroup">Remove section</button>' +
                   '</div>'
-      jQuery('[id^=contentGroup-row-]').last().after(html)
+      if (rows.length) {
+        rows.last().after(html)
+      } else {
+        jQuery(buttonEl).parent().before(html)
+      }
 
       var editor = IFS.core.editor.prepareEditorHTML('#content-' + idCount)
       // make a copy of the global wysiwyg-editor settings object and add the html link functionality
