@@ -1,7 +1,10 @@
 package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.threads.security.QueryPermissionRules;
+import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
@@ -11,11 +14,17 @@ import org.junit.Test;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.*;
+import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.mockito.Mockito.when;
 
 public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermissionRules> {
     private QueryResource queryResource;
@@ -48,10 +57,12 @@ public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermi
     }
 
     @Test
-    public void testThatOnlyTheCorrectFinanceContactCanAddPostsToAQuery() throws Exception {
-        queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), LocalDateTime.now()));
-        //mock getting the project finance organisation with the projectFinanceUser
-        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, projectFinanceUser));
+    public void testThatOnlyTheCorrectFinanceContactCanReplyToAQuery() throws Exception {
+        QueryResource queryWithPost = queryWithAPost();
+        when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
+                .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
+        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithPost, projectFinanceUser));
+        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithPost, financeContactUser));
     }
 
     @Test
@@ -63,8 +74,21 @@ public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermi
     @Test
     public void testThatOnlyInternalUsersOrFinanceContactCanViewTheirQueries() {
         assertTrue(rules.onlyInternalUsersOrFinanceContactCanViewTheirQueries(queryResource, projectFinanceUser));
-        //mock getting the project finance organisation with the projectFinanceUser
+        when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
+                .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
         assertTrue(rules.onlyInternalUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser));
+    }
+
+    private QueryResource queryWithAPost() {
+        queryResource.posts.add(new PostResource(1L, projectFinanceUser, "The body", new ArrayList<>(), LocalDateTime.now()));
+        return queryResource;
+    }
+
+
+    private final ProjectFinance mockedProjectFinanceWithUserAsFinanceContact(UserResource user) {
+        Organisation organisation = new Organisation();
+        organisation.addUser(newUser().withRoles(newRole().withType(FINANCE_CONTACT).build(1)).withId(financeContactUser.getId()).build());
+        return newProjectFinance().withOrganisation(organisation).build();
     }
 
 }
