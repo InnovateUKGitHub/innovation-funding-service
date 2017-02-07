@@ -24,13 +24,13 @@ public interface AssessmentService {
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
     ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(
             value = "READ_BY_STATE_AND_COMPETITION",
             description = "Comp admins and execs can see assessments in a particular state per competition")
     ServiceResult<List<AssessmentResource>> findByStateAndCompetition(AssessmentStates state, long competitionId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(
             value = "COUNT_BY_STATE_AND_COMPETITION",
             description = "Comp admins and execs can see a count of assessments in a particular state per competition")
@@ -45,14 +45,14 @@ public interface AssessmentService {
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> rejectInvitation(long assessmentId, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "WITHDRAW_ASSESSOR", description = "Comp Admins can withdraw an application from an assessor")
     ServiceResult<Void> withdrawAssessment(long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'UPDATE')")
     ServiceResult<Void> acceptInvitation(long assessmentId);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(
             value = "NOTIFY_ASSESSORS",
             description = "Comp admins and execs can notify all assessors of their assignments for a competition")
@@ -62,6 +62,6 @@ public interface AssessmentService {
     ServiceResult<Void> submitAssessments(@P("assessmentSubmissions") AssessmentSubmissionsResource assessmentSubmissionsResource);
 
     @SecuredBySpring(value = "CREATE", description = "Comp Admins can assign an Assessor to an Application")
-    @PreAuthorize("hasAnyAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource);
 }

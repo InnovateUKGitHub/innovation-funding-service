@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.management.controller.CompetitionManagementAppl
  */
 @Controller
 @RequestMapping("assessment/competition/{competitionId}")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class ApplicationAssessmentManagementController {
 
     @Autowired

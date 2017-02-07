@@ -93,4 +93,24 @@ public class PublicContentControllerDocumentation extends BaseControllerMockMVCT
 
     }
 
+    @Test
+    public void markSectionAsComplete() throws Exception {
+        PublicContentResource resource = publicContentResourceBuilder.build();
+
+        when(publicContentService.markSectionAsComplete(resource, PublicContentSectionType.DATES)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/public-content/mark-section-as-complete/{section}/{id}", PublicContentSectionType.DATES.name(), resource.getId(), "json")
+                .contentType(MediaType.APPLICATION_JSON_UTF8)
+                .content(objectMapper.writeValueAsString(resource)))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("id").description("The id of the public content to update"),
+                                parameterWithName("section").description("The section of the public content to update")
+                        ),
+                        requestFields(publicContentResourceFields)
+                ));
+
+    }
+
 }
