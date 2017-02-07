@@ -11,10 +11,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 public interface ApplicationSummarisationService {
 
 	@SecuredBySpring(value = "TODO", description = "TODO")
-	@PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<BigDecimal> getTotalProjectCost(Application application);
 
 	@SecuredBySpring(value = "TODO", description = "TODO")
-	@PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<BigDecimal> getFundingSought(Application application);
 }
