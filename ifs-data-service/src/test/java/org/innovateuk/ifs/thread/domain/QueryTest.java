@@ -2,6 +2,8 @@ package org.innovateuk.ifs.thread.domain;
 
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.junit.Assert;
 import org.junit.Before;
@@ -13,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Optional.of;
+import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 
 public class QueryTest {
 
@@ -63,4 +67,21 @@ public class QueryTest {
         Assert.assertEquals(query.latestPost(), of(p2));
     }
 
+    @Test
+    public void testIsAwaitingResponsePositive() {
+        addPostWithUserHavingRole(UserRoleType.PROJECT_FINANCE);
+        Assert.assertTrue(query.isAwaitingResponse());
+    }
+
+    @Test
+    public void testIsAwaitingResponseNegative() {
+        addPostWithUserHavingRole(UserRoleType.FINANCE_CONTACT);
+        Assert.assertFalse(query.isAwaitingResponse());
+    }
+
+    private void addPostWithUserHavingRole(UserRoleType role) {
+        final User user = newUser().withRoles(newRole().withType(role).build(1)).build();
+        final Post p1 = new Post(33L, user, null, null, null);
+        query.addPost(p1);
+    }
 }
