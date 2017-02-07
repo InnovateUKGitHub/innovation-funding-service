@@ -30,6 +30,11 @@ public class PostAttachmentsController {
     @Autowired
     private DownloadService downloadService;
 
+    @RequestMapping(value = "/{fileId}", method = GET, produces = "application/json")
+    public RestResult<FileEntryResource> find(@PathVariable("fileId") Long fileId) {
+        return fileEntryService.findOne(fileId).toGetResponse();
+    }
+
     @RequestMapping(value = "/upload", method = POST, produces = "application/json")
     public RestResult<FileEntryResource> uploadFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
@@ -47,7 +52,7 @@ public class PostAttachmentsController {
         return fileEntryService.removeFile(fileId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/{fileId}", method = GET, produces = "application/json")
+    @RequestMapping(value = "/download/{fileId}", method = GET, produces = "application/json")
     public @ResponseBody ResponseEntity<Object> downloadFile(@PathVariable("fileId") Long fileId) throws IOException {
         return handleFileDownload(() -> fileEntryService.findOne(fileId)
                 .andOnSuccess(f -> downloadService.getFileAndContents(f)));

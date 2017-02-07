@@ -7,6 +7,7 @@ import org.springframework.core.io.ByteArrayResource;
 import java.util.Optional;
 
 public interface PostAttachmentRestService {
+    RestResult<FileEntryResource> find(Long fileId);
 
     RestResult<FileEntryResource> upload(String contentType, long contentLength,
                                              String originalFilename, byte[] bytes);
