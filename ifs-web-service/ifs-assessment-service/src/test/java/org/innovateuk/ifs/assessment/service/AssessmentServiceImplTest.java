@@ -130,9 +130,8 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         when(assessmentRestService.acceptInvitation(assessmentId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> response = service.acceptInvitation(assessmentId);
+        service.acceptInvitation(assessmentId);
 
-        assertTrue(response.isSuccess());
         verify(assessmentRestService, only()).acceptInvitation(assessmentId);
     }
 
