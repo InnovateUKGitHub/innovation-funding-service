@@ -7,6 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @PermissionRules
@@ -16,13 +17,9 @@ public class PartnerOrganisationPermissionRules extends BasePermissionRules {
         return isPartner(partnerOrganisation.getProject(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Comp admins can see partner organisations for any project")
-    public boolean compAdminsCanViewProjects(PartnerOrganisationResource partnerOrganisation, UserResource user) {
-        return isCompAdmin(user);
+    @PermissionRule(value = "READ", description = "Internal users can see partner organisations for any project")
+    public boolean internalUsersCanViewProjects(PartnerOrganisationResource partnerOrganisation, UserResource user) {
+        return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Project finance users can see partner organisations for any project")
-    public boolean projectFinanceUsersCanViewProjects(PartnerOrganisationResource partnerOrganisation, UserResource user){
-        return isProjectFinanceUser(user);
-    }
 }
