@@ -10,6 +10,7 @@ Resource          ../../FinanceSection_Commons.robot
 
 *** Test Cases ***
 
+
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
@@ -20,10 +21,11 @@ Applicant has options to enter funding level and details of any other funding
     And the user should see the element    css=[name*=other_funding-fundingAmount]
     And the user should see the radio button in the page    other_funding-otherPublicFunding-
 
+
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
     [Tags]    HappyPath    Pending
-    # Pending due to INFUND-8091
+    # TODO Pending due to INFUND-8091
     When the user should see the text in the page    50% max funding level allowed for an organisation of your size    # note that this text will change
 
 
@@ -53,7 +55,6 @@ Other funding validations
     And the user should not see an error in the page
     And the user selects the checkbox    termsAgreed
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-
 
 
 If funding is complete. application details has a warning message
