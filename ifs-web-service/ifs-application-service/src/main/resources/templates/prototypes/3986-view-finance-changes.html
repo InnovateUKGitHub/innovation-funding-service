@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -20,7 +20,7 @@
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Changes to finances'})" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/finance-review-questions :: finance-question-changes" th:with="status=partnerView" th:remove="tag" />
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -32,7 +32,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -30,7 +30,7 @@
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
 		<h2 class="heading-medium">Profile spend</h2>
 		<p>All spend profiles have been submitted to Innovate UK and the Monitoring Officer assigned to this application. You may view the submitted spend profiles.</p>
-		
+
 		<a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
 
 	</div>
@@ -95,7 +95,7 @@
 
 	</div>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -107,7 +107,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

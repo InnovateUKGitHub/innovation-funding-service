@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" th:remove="tag" />
-	
+
 	<p>Please supply the following details for your project and the team. We need these to set up your project.</p>
 
 	<h2 class="heading-medium">Project details</h2>
@@ -49,7 +49,7 @@
 				</td>
 			</tr>
 			<tr>
-				<td>					
+				<td>
 					<a href="/prototypes/1575-project-address" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Project address</a>
 					<span th:unless="${param.user == null or param.user[0] != 'nonLead'}">Project address</span>
 				</td>
@@ -72,14 +72,14 @@
 					<span id="project-manager-status">&nbsp;</span>
 				</td>
 			</tr>
-			
+
 		</tbody>
 	</table>
 
 	<div class="extra-margin">
 
 		<a href="#" class="button button-large" data-js-modal="modal-project-details" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Submit all project details</a>
-		
+
 
 		<div class="modal-project-details" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 	        <button class="js-close close" aria-label="Close Popup">X</button>
@@ -92,7 +92,7 @@
 				<hr />
 
             	<div class="alignright-button">
-					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+					<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
             		<a href="/prototypes/1588-project-status?stage=level2" class="button">Submit</a>
             	</div>
 
@@ -175,7 +175,7 @@
 	</table>
 
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -191,7 +191,7 @@
 
 		function $_GET(param) {
 	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
+	        window.location.href.replace( location.hash, '' ).replace(
 	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 	            function( m, key, value ) { // callback
 	                vars[key] = value !== undefined ? value : '';
@@ -199,7 +199,7 @@
 	        );
 
 	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
+	            return vars[param] ? vars[param] : null;
 	        }
 	        return vars;
 	    }
@@ -302,13 +302,13 @@
 		var financesHeadcountPartner = decodeURIComponent(localStorage.getItem('financesHeadcountPartner'));
 
 		*/
-		
+
 
 		if(startDate == null){
 			jQuery('#start-date').text('-');
 			jQuery('#start-date-status').text('No');
 			jQuery('#start-date-status').addClass('no');
-			jQuery('#start-date-status').removeClass('yes');	
+			jQuery('#start-date-status').removeClass('yes');
 		}else{
 			jQuery('#start-date').text(startDate);
 			jQuery('#start-date-status').text('Yes');
@@ -334,14 +334,14 @@
 			jQuery('#project-manager').text('-');
 			jQuery('#project-manager-status').text('No');
 			jQuery('#project-manager-status').addClass('no');
-			jQuery('#project-manager-status').removeClass('yes');	
+			jQuery('#project-manager-status').removeClass('yes');
 		}else{
 			jQuery('#project-manager').text(pmName.replace(/\+/g,' '));
 
 			if(pmNamePending == null){
 				jQuery('#project-manager-status').text('Yes');
 				jQuery('#project-manager-status').addClass('yes');
-				jQuery('#project-manager-status').removeClass('no');	
+				jQuery('#project-manager-status').removeClass('no');
 
 			}else{
 				jQuery('#project-manager').text(pmNamePending.replace(/\+/g,' '));
@@ -397,7 +397,7 @@
 		}else if(financesPartnerName != null & userType == 'nonLead'){
 
 			jQuery('#finance-partner-contact').text(financesPartnerName.replace(/\+/g,' '));
-			
+
 			//jQuery('#finance-partner-turnover').text(financesTurnoverNonLead);
 			//jQuery('#finance-turnover').text(financesTurnoverLead);
 			//jQuery('#finance-partner-headcount').text(financesHeadcountPartner);
@@ -417,13 +417,13 @@
 		}
 
 
-		jQuery('#add-finance-contact').on('click',function(e){ 
+		jQuery('#add-finance-contact').on('click',function(e){
 			e.preventDefault();
 			jQuery('#finance-contact-table').show();
 
 		});
 
-		jQuery('#invite-finance-contact').on('click',function(e){ 
+		jQuery('#invite-finance-contact').on('click',function(e){
 			e.preventDefault();
 
 			var financeContact = jQuery('#name-finance-contact1').val();
@@ -431,30 +431,30 @@
 			jQuery('#finance-name').text(financeContact + ' (Pending)')
 			jQuery("#finances-name-invite").attr('checked', 'checked');
 			jQuery('#finance-contact-table').hide();
-			jQuery('#invited-finance-contact').show(); 
+			jQuery('#invited-finance-contact').show();
 
 		});
 
 
 
-		jQuery('#add-pm').on('click',function(e){ 
+		jQuery('#add-pm').on('click',function(e){
 			e.preventDefault();
 			jQuery('#pm-table').show();
 
 		});
 
-		jQuery('#invite-pm').on('click',function(e){ 
+		jQuery('#invite-pm').on('click',function(e){
 			e.preventDefault();
 			jQuery('#pm-table').hide();
 		});
 
 
-		jQuery('#postcode-lookup').on('click',function(e){ 
+		jQuery('#postcode-lookup').on('click',function(e){
 			e.preventDefault();
 			jQuery("#select-address-block").show();
 		});
 
-		jQuery('#select-address').on('change',function(e){ 
+		jQuery('#select-address').on('change',function(e){
 			e.preventDefault();
 			jQuery("#address-details").show();
 			jQuery("#street").val("4 Station Road");
@@ -464,7 +464,7 @@
 
 		});
 
-		jQuery('#enter-address-manually').on('click',function(e){ 
+		jQuery('#enter-address-manually').on('click',function(e){
 			e.preventDefault();
 			jQuery("#address-details").show();
 			jQuery("#select-address-block").hide();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -21,7 +21,7 @@
 
 	<p>Additional information is needed before your project can begin. This table will help you to keep track of what tasks have been completed and what is outstanding.</p>
 
-	
+
 	<div class="table-overflow">
 		<table id="table-project-status">
 			<thead>
@@ -74,7 +74,7 @@
 		</table>
 	</div>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -86,7 +86,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

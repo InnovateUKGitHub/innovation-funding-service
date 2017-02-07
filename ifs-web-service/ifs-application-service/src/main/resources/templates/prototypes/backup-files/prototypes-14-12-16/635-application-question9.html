@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-form">
@@ -20,15 +20,15 @@
 
 <form method="post" class="form-serialize-js">
 	<div class="form-group extra-margin" id="0">
-		
+
 		<label class="form-label form-label-bold" for="1">9. What will your project cost?
 			<span class="form-hint">Tell us the total costs of the project and how much funding you need from Innovate UK. Please provide details of your expected project costs along with any supporting information. Please justify any large expenditure in your project.</span>
 		</label>
-		
+
 		<div class="validation-messages">
-			
+
 		</div>
-		
+
 		<details role="group">
 		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
 		<span class="summary">What should I include in the project cost section?</span>
@@ -63,7 +63,7 @@
 			</div>
 		</div>
 		<div class="textarea-footer">
-			
+
 			<div class="assign-container">
 				<small><span>Last updated: </span>
 					<span>
@@ -73,8 +73,8 @@
 					<span>you</span>
 				</small>
 			</div>
-		
-			
+
+
 			<span class="count-label">
 				<small>
 					<span class="count-message">Words remaining:</span>
@@ -85,7 +85,7 @@
 			<div class="extra-margin">
 				<button type="submit" name="mark_as_complete" class="button-secondary" formaction="#" value="1">Edit</button>
 			</div>
-			
+
 		</div>
 
 	</div>

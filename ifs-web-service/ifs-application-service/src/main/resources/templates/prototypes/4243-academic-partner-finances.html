@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Finances'})" th:remove="tag" />
-	
+
 	<h2 class="heading-medium">Je-S Form Overview</h2>
 
 	<p>These finances where initially submitted at the application stage. from the details in the J-eS form.</p>
@@ -29,7 +29,7 @@
 	</div>
 
 	<div th:include="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=internal, type=partnerView" th:remove="tag" />
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -41,7 +41,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

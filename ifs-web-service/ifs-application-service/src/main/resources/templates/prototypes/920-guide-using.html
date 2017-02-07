@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -22,7 +22,7 @@
     </div>
 
 	<h2 class="heading-large no-margin-top">Before you apply</h2>
-	
+
 	<p>This innovation funding service is an online service run by Innovate UK. It provides the process and online support to apply for funding offered through Innovate UK competitions. As the lead organisation you will be seeking funding for your project.</p>
 
 	<hr />
@@ -51,7 +51,7 @@
 
 
 	<h3 class="heading-medium">Contributors and collaborators</h3>
-	
+
 	<p>You may invite contributors from your organisation to help you complete your application.</p>
 
 	<p>You may collaborate with partner organisations to deliver the project. You will need to invite collaborators as representatives of your partners to complete the application. Collaborators are responsible for entering their own project costs and contributions into the application. As the lead organisation you will be able to see a summary of your partners’ costs but will not see the detailed breakdown.</p>

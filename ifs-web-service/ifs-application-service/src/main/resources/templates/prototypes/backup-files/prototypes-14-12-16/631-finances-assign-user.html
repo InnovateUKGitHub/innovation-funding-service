@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -28,13 +28,13 @@
             <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
         </div>
     </div>
-	
+
 	<h2 class="heading-medium">Assign a member of your team responsible for submitting for your organisation</h2>
 
 	<form action="/prototypes/631-finances-assigned-to-you">
 		<fieldset>
 			<legend class="visuallyhidden">Assign a member of your team responsible for submitting for your organisation</legend>
-			
+
 			<div class="form-block">
 				<label class="block-label" for="radio-1">
 					<input id="radio-1" type="radio" name="radio-group" value="Charles Barron" />
@@ -51,7 +51,7 @@
 			</div>
 
 		</fieldset>
-			
+
 		<button class="button button-large extra-margin" name="create-account" type="submit">Assign</button>
 	</form>
 

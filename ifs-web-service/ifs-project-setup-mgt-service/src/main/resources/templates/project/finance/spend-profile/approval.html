@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management finance-checks-overview">
 <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>

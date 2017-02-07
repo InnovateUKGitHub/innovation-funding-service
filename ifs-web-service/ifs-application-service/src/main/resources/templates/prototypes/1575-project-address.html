@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -18,11 +18,11 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project address'})" th:remove="tag" />
-	
+
 	<form action="#">
 
 		<fieldset>
-			
+
 			<h2 class="heading-medium">Project location</h2>
 
 			<legend class="visuallyhidden">Project location</legend>
@@ -39,7 +39,7 @@
 
 	</form>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -83,7 +83,7 @@
 		}
 
 
-		jQuery('input#address-use-org').on('click',function(e){ 
+		jQuery('input#address-use-org').on('click',function(e){
 			//e.preventDefault();
 			if ( jQuery(this).is(':checked') ) {
 				jQuery("#selected-address").show();
@@ -94,7 +94,7 @@
 			}
 		});
 
-		jQuery('input#address-use-operating').on('click',function(e){ 
+		jQuery('input#address-use-operating').on('click',function(e){
 			//e.preventDefault();
 			if ( jQuery(this).is(':checked') ) {
 				jQuery("#selected-address").show();
@@ -106,7 +106,7 @@
 		});
 
 
-		jQuery('input#address-add-project').on('click',function(e){ 
+		jQuery('input#address-add-project').on('click',function(e){
 			//e.preventDefault();
 			if ( jQuery(this).is(':checked') ) {
 				jQuery("#postcode-block").show();
@@ -117,12 +117,12 @@
 		});
 
 
-		jQuery('#postcode-lookup').on('click',function(e){ 
+		jQuery('#postcode-lookup').on('click',function(e){
 			e.preventDefault();
 			jQuery("#select-address-block").show();
 		});
 
-		jQuery('#select-address').on('change',function(e){ 
+		jQuery('#select-address').on('change',function(e){
 			e.preventDefault();
 			jQuery("#address-details").show();
 			jQuery(".street").val("4 Station Road");
@@ -132,7 +132,7 @@
 
 		});
 
-		jQuery('#enter-address-manually').on('click',function(e){ 
+		jQuery('#enter-address-manually').on('click',function(e){
 			e.preventDefault();
 			jQuery("#address-details").show();
 			jQuery("#select-address-block").hide();

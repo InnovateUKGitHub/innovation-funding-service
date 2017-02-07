@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-details">
@@ -22,9 +22,9 @@
 
 	<form action="#" method="post">
 		<div class="form-group">
-			
+
 			<h2 class="heading-medium">2. What is the size of the potential market for your project?</h2>
-			
+
 			<p>The issue affects the entire field, the market value of which is significant, and accounts for a percentage of its annual overhead. A tool to reduce that amount by a significant proportion would be taken up by the entire industry.</p>
 
 			<p>At this time no other solutions are available or near market giving us the leading edge on market share.</p>

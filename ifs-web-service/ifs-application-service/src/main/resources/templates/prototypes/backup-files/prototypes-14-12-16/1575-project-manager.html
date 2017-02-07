@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -18,7 +18,7 @@
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project Manager'})" th:remove="tag" />
-	
+
 	<form>
 
 		<fieldset>
@@ -28,20 +28,20 @@
 			<legend class="visuallyhidden">Project Manager</legend>
 
 			<p class="form-hint">Who will be the Project Manager for your project?</p>
-				
+
 			<p>As lead partner you must choose a Project Manager for the duration of your project. We need this information now so that your Monitoring Officer can contact the Project Manager.</p>
-		
+
 			<div class="form-group extra-margin">
 				<label for="pm-name-1" class="block-label">
 					<input id="pm-name-1" type="radio" name="pm-name-group" value="John Smith" checked="checked" />
 					John Smith
 				</label>
-				
+
 				<label for="pm-name-2" class="block-label">
 					<input id="pm-name-2" type="radio" name="pm-name-group" value="Ann Jones" />
 					Ann Jones
 				</label>
-				
+
 				<label for="pm-name-invite" class="block-label" id="invited-pm" style="display: none">
 					<input id="pm-name-invite" type="radio" name="pm-name-group" value="" />
 					<span id="pm-name">Ann Jones (pending)</span>
@@ -103,7 +103,7 @@
 
 	</form>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -127,7 +127,7 @@
 			}
 		});
 
-		jQuery('#invite-pm').on('click',function(e){ 
+		jQuery('#invite-pm').on('click',function(e){
 			e.preventDefault();
 
 			var pmContact = jQuery('#name-pm1').val();

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -24,7 +24,7 @@
 		<div class="success-alert extra-margin-bottom">
 			<p><strong>Your project has been assigned a Monitoring Officer</strong></p>
 		</div>
-		
+
 		<p>No action needs to be taken by your team. The Monitoring Officer will make contact shortly. If you have any questions about this appointment please contact Innovate UK.</p>
 
 		<ul class="boxed">
@@ -42,9 +42,9 @@
 	</div>
 
 	<h3 class="heading-medium">Role of Monitoring Officer</h3>
-	
+
 	<p>The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.</p>
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -56,7 +56,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

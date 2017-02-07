@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -34,13 +34,13 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application allocation'}, ${'/prototypes/1381-application-allocation'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${(param.title != null ? param.title[0] : 'Example application')})" th:remove="tag" />
 
 	<div id="sticky-zone">
 
 		<section class="info-area">
-		
+
 			<div class="boxed">
 				<h2 class="heading-medium no-margin">Challenge area</h2>
 				<h3 class="heading-small no-margin">Innovation area</h3>
@@ -60,7 +60,7 @@
 		                <p>Duration <br /><span class="heading-medium">5 months</span></p>
 		            </div>
 		        </div>
-		   		
+
 		   		<hr />
 
 		   		<h2 class="heading-medium no-margin">Partners</h2>
@@ -77,27 +77,27 @@
 
 	    <section class="data-area">
 	    	<h2 class="heading-large" id="current-assessors">Assigned <span class="assigned-count">(0)</span></h2>
-	    	
+
 	    	<div th:include="prototypes/fragments/comp-admin :: prototype-assessor-assigned-table" th:remove="tag" />
-	    	
+
 	    	<p class="extra-margin" id="no-assessors">No assessors are currently assigned to this application</p>
-	    			
+
 	    			<div class="alignright-button extra-margin" style="display: none" id="added-assessors">
 	    				<a href="/prototypes/1381-application-allocation?sendAssignments" class="button button=large">Continue</a>
 	    			</div>
-	    	
+
 	    	<hr />
-	    	
+
 	    			<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-	    	
+
 	    			<h2 class="heading-large" id="current-assessors">Assign assessors</h2>
-	    			
+
 	    			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors'}" th:remove="tag" />
-	    			
+
 	    			<div th:include="prototypes/fragments/comp-admin :: prototype-assessor-list-table" th:remove="tag" />
-	    			
+
 	    			<div th:if="${param.filterStatus == null}" th:remove="tag">
-	    	
+
 	    				<ul class="pagination">
 	    				    <li class="next">
 	    				        <a href="#" rel="next" title="Navigate to next part">
@@ -106,7 +106,7 @@
 	    				        </a>
 	    				    </li>
 	    				</ul>
-	    	
+
 	    			</div>
 	    </section>
 

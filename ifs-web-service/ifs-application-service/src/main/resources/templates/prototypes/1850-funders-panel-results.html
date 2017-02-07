@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -34,11 +34,11 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competitions dashboard'}, ${'#'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Funders panel'})" th:remove="tag" />
 
 	<div id="sticky-zone">
-	
+
 		<section class="info-area">
 
 			<div class="boxed">
@@ -78,7 +78,7 @@
 		</section>
 
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-		
+
 		<section class="data-area">
 
 			<h2 class="heading-large" id="current-assessors">Comments from the funders panel</h2>
@@ -119,7 +119,7 @@
 		                    <td>PWC</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -130,7 +130,7 @@
 		                    <td>MaxDigital</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -141,7 +141,7 @@
 		                    <td>BBC</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -152,7 +152,7 @@
 		                    <td>BBC</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -163,7 +163,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -174,7 +174,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -185,14 +185,14 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
 
 		              </tbody>
 		             </table>
-					
+
 
 					<h2 class="heading-large" id="current-assessors">Applications not being funding (7)</h2>
 
@@ -216,7 +216,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">50000</td>  
+							<td class="alignright">50000</td>
 		                    <td class="alignright">7</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -227,7 +227,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">54000</td>  
+							<td class="alignright">54000</td>
 		                    <td class="alignright">19</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -238,7 +238,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">34000</td>  
+							<td class="alignright">34000</td>
 		                    <td class="alignright">19</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -249,7 +249,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">15000</td>  
+							<td class="alignright">15000</td>
 		                    <td class="alignright">19</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -260,7 +260,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">-</td>  
+							<td class="alignright">-</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -271,7 +271,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">-</td>  
+							<td class="alignright">-</td>
 		                    <td class="alignright">12</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -282,7 +282,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">-</td>  
+							<td class="alignright">-</td>
 		                    <td class="alignright">10</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -293,7 +293,7 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">-</td>  
+							<td class="alignright">-</td>
 		                    <td class="alignright">8</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
@@ -304,14 +304,14 @@
 		                    <td>Kingfisher</td>
 		                    <td class="alignright">4</td>
 		                    <td>Digital services</td>
-							<td class="alignright">-</td>  
+							<td class="alignright">-</td>
 		                    <td class="alignright">6</td>
 		                    <td class="alignright">yes</td>
 		                </tr>
 		            </tbody>
 		        </table>
 		    </div>
-			
+
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
 
 				<ul class="pagination">
@@ -324,7 +324,7 @@
 				</ul>
 
 			</div>
-		
+
 		</section>
 
 	</div>
@@ -347,7 +347,7 @@
 		//First check the existing selected options and calculate remaining funding
 
 
-		jQuery('#edit-comments').on('click',function(e){ 
+		jQuery('#edit-comments').on('click',function(e){
 
 			e.preventDefault();
 
@@ -356,7 +356,7 @@
 
 		});
 
-		jQuery('#save-comments').on('click',function(e){ 
+		jQuery('#save-comments').on('click',function(e){
 
 			e.preventDefault();
 

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -18,11 +18,11 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Finance checks'}, ${'/prototypes/1199-project-finances'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'University of Cardiff'}, ${'Eligibility'})" th:with="partner=nonLead" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
+
 	<hr />
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
@@ -72,7 +72,7 @@
 	    	<a href="/prototypes/3990-finance-notes" class="button button-secondary">Notes</a>
 	    </div>
 
-	    
+
 
 	<th:block th:unless="${param.status != null and param.status[0] == 'approved'}">
 
@@ -114,9 +114,9 @@
 					<hr />
 
 		        	<div class="alignright-button">
-						
+
 						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
-						
+
 						<input type="hidden" id="action" name="action" th:value="${(param.status != null and param.status[0] == 'grantChanged' ? 'grantChanged' : '')}" />
 						<input type="hidden" id="status" name="status" value="approved" />
 
@@ -134,7 +134,7 @@
 		<a href="/prototypes/1199-project-finances" class="button button-secondary">Save and return to finance checks</a>
 	</div>
 
-	
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -158,7 +158,7 @@
 	});
 
 
-	jQuery('input#costs-reviewed').on('click',function(e){ 
+	jQuery('input#costs-reviewed').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#add-rag-rating").removeClass('hidden');
 		}else{

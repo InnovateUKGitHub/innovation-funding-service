@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -30,7 +30,7 @@
 			<!-- <p class="form-hint">Closing date: 01 Mar 2016</p> -->
 		</div>
     </div>
-	
+
 	<h2 class="heading-large">Summary</h2>
 
 	 <div class="grid-row">

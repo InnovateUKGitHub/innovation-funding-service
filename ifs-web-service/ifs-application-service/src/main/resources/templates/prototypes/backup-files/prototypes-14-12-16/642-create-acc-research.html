@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -25,7 +25,7 @@
 
 	<h2 class="heading-medium" th:text="${'Research organisation'}" th:unless="${param.org != null}">Research organisation</h2>
 
-	<form>	
+	<form>
 		<div id="manual-research-input" class="extra-margin">
 			<fieldset>
 				<legend class="visuallyhidden">Organisation details</legend>
@@ -98,7 +98,7 @@
 
 			<button class="button button-large extra-margin" name="select-org-size" type="submit" formaction="/prototypes/642-create-acc-org-new">Continue</button>
 		</div>
-		
+
 	</form>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
@@ -109,7 +109,7 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
-	jQuery('#org-name').on('keydown',function(e){ 
+	jQuery('#org-name').on('keydown',function(e){
 		if (this.value.length>0){
 			jQuery("#results").show();
 			jQuery("#manual-research-input").hide();
@@ -119,20 +119,20 @@
 
 	});
 
-	jQuery('#manual-company-trigger').on('click',function(e){ 
+	jQuery('#manual-company-trigger').on('click',function(e){
 		e.preventDefault();
 		jQuery("#manual-research-input").show();
 		jQuery("#results").hide();
 
 	});
 
-	jQuery('#postcode-lookup').on('click',function(e){ 
+	jQuery('#postcode-lookup').on('click',function(e){
 		e.preventDefault();
 		jQuery("#select-address-block").show();
 
 	});
 
-	jQuery('#select-address').on('change',function(e){ 
+	jQuery('#select-address').on('change',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#street").val("King William House");
@@ -142,7 +142,7 @@
 
 	});
 
-	jQuery('#enter-address-manually').on('click',function(e){ 
+	jQuery('#enter-address-manually').on('click',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#select-address-block").hide();

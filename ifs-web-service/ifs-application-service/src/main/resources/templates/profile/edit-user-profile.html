@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Your details'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" />
 </head>
 <body th:with="context='applicant'" class="user-profile-edit">
 

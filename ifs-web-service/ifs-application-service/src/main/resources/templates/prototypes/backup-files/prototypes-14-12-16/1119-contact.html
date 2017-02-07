@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-details">
@@ -16,7 +16,7 @@
 	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'#'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <h1 class="heading-xlarge no-margin">Contact us</h1>
     </div>
@@ -24,7 +24,7 @@
     <div class="grid-row">
         <div class="column-half">
             <h2 class="heading-small">Customer support service</h2>
-            
+
             <p>Innovate UK <br />
             North Star House <br />
             North Star Avenue <br />

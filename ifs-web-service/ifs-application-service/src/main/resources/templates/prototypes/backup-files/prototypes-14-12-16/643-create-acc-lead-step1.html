@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -19,7 +19,7 @@
 	<h1 class="heading-large">Create your account</h1>
 
 	<p class="form-hint icon-info-small-blue">Before creating your account you need to enter the details for the organisation that you will be working for if the application is successful</p>
-		
+
 	<h2 class="heading-medium">Please select your organisation type</h2>
 
 	<form>
@@ -39,7 +39,7 @@
 					Academic
 				</label>
 			</div>
-			
+
 		</fieldset>
 		<button class="button button-large extra-margin" name="select-company-type" type="submit" formaction="/prototypes/643-create-acc-business-lead">Select company type</button>
 	</form>

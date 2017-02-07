@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -19,7 +19,7 @@
 	<div class="message-alert">
         <h2 class="heading-small">Applications to Innovate UK competitions must be lead by a UK based business</h2>
         <p>
-        If you are a member of an academic or research organisation your application into this competition needs to be created by the lead business of your consortium. 
+        If you are a member of an academic or research organisation your application into this competition needs to be created by the lead business of your consortium.
         </p>
         <p>The lead business can then invite collaborators to join the application (these can include reasearch and academic institutions)</p>
     </div>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -444,8 +444,8 @@
 						<hr />
 
 		            	<div class="alignright-button">
-							
-							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 		            		<a href="/prototypes/1592-spend?status=Submitted&#38;user=nonLead" class="button">Send</a>
 		            	</div>
@@ -489,8 +489,8 @@
 						<hr />
 
 		            	<div class="alignright-button">
-							
-							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+							<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
 		            		<a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/1592-spend?spend=high&#38;user=nonLead' : '/prototypes/1592-spend?spend=high')}" class="button">Save</a>
 		            	</div>
@@ -551,7 +551,7 @@
 					<hr />
 
 	            	<div class="alignright-button">
-						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+						<a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 	            		<a href="/prototypes/1588-project-status?stage=level4" class="button">Submit</a>
 	            	</div>
 

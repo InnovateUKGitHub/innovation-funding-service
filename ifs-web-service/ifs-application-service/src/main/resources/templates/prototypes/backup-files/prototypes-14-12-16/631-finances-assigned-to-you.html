@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     <style> .message-alert {
         background: #e4eff6;
@@ -15,7 +15,7 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 <main id="content">
-	
+
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
@@ -33,14 +33,14 @@
 		We recommend assigning completion of your finances to one member of your team</p>
 
 	<div class="collapsible section-overview">
-        
+
        	<h2>Labour
 	        <span data-mirror="#section-total-1">&pound; 126,207</span>
        	</h2>
 
-		
+
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-labour" th:remove="tag" />
-		
+
 
 
     	<h2>Administration support costs
@@ -55,24 +55,24 @@
        	</h2>
 
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-materials" th:remove="tag" />
-    	
+
     	<h2>Capital usage
 	        <span data-mirror="#section-total-4">&pound; 0</span>
        	</h2>
 
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-capital" th:remove="tag" />
-    	
+
 
     	<h2>Subcontracting costs
 	        <span data-mirror="#section-total-5">&pound; 150,000</span>
        	</h2>
 
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-subcontracting" th:remove="tag" />
-    
+
     	<h2>Travel &amp; subsistence
 	        <span data-mirror="#section-total-6">&pound; 0</span>
        	</h2>
-		
+
 		<div th:include="prototypes/fragments/finance-questions :: finance-question-travel" th:remove="tag" />
 
 
@@ -129,9 +129,9 @@
 			<input class="form-control width-small" type="text" id="other-funding" name="other-funding" value="" /> %
 		</div>
 	</fieldset>
-		
+
 	<div th:include="prototypes/fragments/finance-questions :: finance-other-funding" th:remove="tag" />
-	
+
 	<div class="alignright-button extra-margin">
 		<button type="submit" name="mark_as_complete" class="button" formaction="#" value="1">Mark as complete
 		</button>
@@ -157,8 +157,8 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
-	
-	jQuery('input#funding-yes').on('click',function(e){ 
+
+	jQuery('input#funding-yes').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#finance-other-funding").show();
@@ -167,7 +167,7 @@
 		}
 	});
 
-	jQuery('input#funding-no').on('click',function(e){ 
+	jQuery('input#funding-no').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#finance-other-funding").hide();
@@ -176,7 +176,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-1').on('click',function(e){ 
+	jQuery('input#admin-support-radio-1').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").show();
 			jQuery("#admin-support-2").hide();
@@ -185,7 +185,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-2').on('click',function(e){ 
+	jQuery('input#admin-support-radio-2').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").show();
@@ -194,7 +194,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-3').on('click',function(e){ 
+	jQuery('input#admin-support-radio-3').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").hide();
@@ -203,7 +203,7 @@
 		}
 	});
 
-	jQuery('input#admin-support-radio-4').on('click',function(e){ 
+	jQuery('input#admin-support-radio-4').on('click',function(e){
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#admin-support-1").hide();
 			jQuery("#admin-support-2").hide();

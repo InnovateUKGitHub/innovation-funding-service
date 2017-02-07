@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Your Profile'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your Profile'" />
 </head>
 <body th:with="context='applicant'" class="user-profile">
 
@@ -28,7 +28,7 @@
     <div th:text="${model.town}" />
     <div th:text="${model.county}" />
     <div th:text="${model.postcode}" />
-    
+
     <h3 class="heading-small">Your name</h3>
     <p>
         <span th:text="${model.name}" th:remove="tag" />

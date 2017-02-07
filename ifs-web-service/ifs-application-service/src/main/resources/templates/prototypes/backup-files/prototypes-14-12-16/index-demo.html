@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -28,7 +28,7 @@
 
 	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='demo'"  th:remove="tag" />
 
-	
+
 	<section class="grid-row">
 		<div class="row">
 			<h1 class="heading-large">Demo</h1>
@@ -40,7 +40,7 @@
 						<a href="/competition/1/details">Applicant entry point</a>
 					</li>
 					<li>
-						<a href="/prototypes/635-application-overview">Application overview</a> 
+						<a href="/prototypes/635-application-overview">Application overview</a>
 					</li>
 					<li><a href="/prototypes/545-application-feedback">Application feedback</a></li>
 				</ul>
@@ -80,7 +80,7 @@
 			</section>
 
 			<section>
-				
+
 				<h2 class="heading-medium">Project setup</h2>
 
 				<ul class="list list-bullet">

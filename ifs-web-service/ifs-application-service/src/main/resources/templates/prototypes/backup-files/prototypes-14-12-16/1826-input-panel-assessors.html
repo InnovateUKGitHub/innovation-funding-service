@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -34,13 +34,13 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessments closed'}, ${'/prototypes/1827-assessment-closed'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, 'Panel assessors')" th:remove="tag" />
 
 	<div id="sticky-zone">
 
 		<section class="info-area">
-		
+
 			<div class="boxed">
 
 		        <p>Explanation of Assessors panelAenean euismod bibendum laoreet. Proin gravida dolor sit amet lacus accumsan et viverra justo commodo. Proin sodales pulvinar tempor. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nam fermentum, nulla luctus pharetra vulputate, felis tellus mollis orci, sed rhoncus sapien nunc eget odio.</p>
@@ -50,14 +50,14 @@
 		</section>
 
 	    <section class="data-area">
-	    	   	
+
 	    			<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-	    	
+
 	    			<h2 class="heading-large" id="current-assessors">Select assessors who attend panel</h2>
 
 					<div class="grid-row highlight-panel">
 						<div class="column-half">
-							<p class="no-margin"><span class="heading-large" id="assessor-count">0</span> <strong>assessors selected</strong></p>	
+							<p class="no-margin"><span class="heading-large" id="assessor-count">0</span> <strong>assessors selected</strong></p>
 						</div>
 						<div class="column-half alignright-button">
 							<a href="/prototypes/1825-panel-findings" class="button large disabled" id="confirm-assessors">Confirm &#38; input assessor scores</a>
@@ -67,7 +67,7 @@
 					<!-- <div class="modal-confirmation-panel-assessors" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 				        <button class="js-close close" aria-label="Close Popup">X</button>
 				        <div>
-							
+
 							<h2 class="heading-medium no-margin">Confirm application funding</h2>
 
 							<form>
@@ -78,7 +78,7 @@
 							</form>
 
 							<hr />
-				            
+
 				            <div class="grid-row extra-margin">
 				            	<div class="column-half">
 				            		<a href="/prototypes/1385-application-allocation-confirm">Cancel</a>
@@ -90,13 +90,13 @@
 
 				        </div>
 				    </div> -->
-	    			
+
 	    			<div th:include="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors invited'}, type='asessor-panel'" th:remove="tag" />
-	    			
+
 	    			<div th:include="prototypes/fragments/comp-admin :: prototype-assessor-panel-table" th:remove="tag" />
-	    			
+
 	    			<div th:if="${param.filterStatus == null}" th:remove="tag">
-	    	
+
 	    				<ul class="pagination">
 	    				    <li class="next">
 	    				        <a href="#" rel="next" title="Navigate to next part">
@@ -105,7 +105,7 @@
 	    				        </a>
 	    				    </li>
 	    				</ul>
-	    	
+
 	    			</div>
 	    </section>
 
@@ -124,7 +124,7 @@
 	// <![CDATA[
 		var panelCount = 0;
 
-		jQuery('.attend-panel').on('click',function(e){ 
+		jQuery('.attend-panel').on('click',function(e){
 			if(jQuery(this).prop('checked')){
 				panelCount ++;
 			}else{

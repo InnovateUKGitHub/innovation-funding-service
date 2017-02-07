@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Academic finances'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Academic finances'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     <style> .message-alert {
         background: #e4eff6;
@@ -30,7 +30,7 @@
     <h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
 
 	<p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team.</p>
-	
+
 
 	<div th:include="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=partner" th:remove="tag" />
 

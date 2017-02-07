@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -18,20 +18,20 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Eligibility'}, ${'/prototypes/1581-project-eligibility?status=approved'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Changes to finances'})" th:remove="tag" />
 
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
-	
+
 	<hr />
-	
+
 	<div th:include="prototypes/fragments/finance-review-questions :: finance-question-changes" th:with="status=partnerView" th:remove="tag" />
 
 	<div class="extra-margin">
 		<a href="/prototypes/1581-project-eligibility?status=approved" class="button button-secondary">Return to eligibility</a>
 	</div>
 
-	
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 

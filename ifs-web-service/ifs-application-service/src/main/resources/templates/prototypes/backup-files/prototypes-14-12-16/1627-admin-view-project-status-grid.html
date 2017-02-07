@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
-	
+
 
 
 	<div th:if="${param.filterInnovationArea != null}" th:remove="tag">
@@ -40,7 +40,7 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/1345-comp-dashboard-MVP'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'4891061: Innovate UK'}, ${'Technology inspired'}, ${'Projects in setup'})" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" />
@@ -48,9 +48,9 @@
 	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
 
 	<div class="constrain-width">
-		
+
 		<!-- <p class="form-hint">Add assessors to the invite list by selecting '<strong>Add</strong>' from the list of <strong>current assessors</strong> in the section below</p> -->
-		
+
 		<!-- <div class="info-area">
 			<section class="boxed">
 				<h3 class="heading-medium no-margin-top">Project setup stages</h3>
@@ -94,7 +94,7 @@
 							<th rowspan="5" scope="row"><a href="/prototypes/1968-admin-readonly-application?closed&#38;status=setup">194731</a></th>
 							<td><a href="#">Company A</a></td>
 							<td class="status ok"><a href="/prototypes/2850-internal-project-details"><span class="visuallyhidden">OK</span></a></td>
-							
+
 							<div th:if="${param.stage == null or param.stage != null and param.stage[0]  &lt; '1'}" th:remove="tag">
 								<td id="assignMo" class="status action"><a href="/prototypes/1576-assign-mo" title="Assign monitoring officer"><span class="visuallyhidden">Action</span></a></td>
 							</div>
@@ -112,24 +112,24 @@
 							</div>
 
 							<td class="status action"><a href="/prototypes/1199-project-finances" title="Finance checks"><span class="visuallyhidden">Action</span></a></td>
-				
+
 							<td class="status with-partner">-</td>
-							
+
 							<div th:if="${param.stage == null or param.stage[0] &lt; '5'}" th:remove="tag">
 								<td class="status action"><a href="/prototypes/2682-moderate-docs" title="View other documents"><span class="visuallyhidden">Action</span></a></td>
 							</div>
 
 							<th:block th:if="${param.stage != null and param.stage[0] >= '5'}">
-								
+
 								<td class="status ok" th:unless="${param.reject != null and param.reject[0] == 'docs'}"><a href="/prototypes/2682-moderate-docs?status=accepted" title="View other documents"><span class="visuallyhidden">OK</span></a></td>
-								
+
 								<th:block th:if="${param.reject != null and param.reject[0] == 'docs'}">
 									<td class="status rejected"><a href="/prototypes/2682-moderate-docs?status=reject" title="View other documents"><span class="visuallyhidden">Rejected</span></a></td>
 								</th:block>
-								
+
 							</th:block>
-							
-							
+
+
 							<td class="status with-partner">-</td>
 							<td class="status with-partner">-</td>
 						</tr>
@@ -203,10 +203,10 @@
 				</table>
 			</div>
 
-			
+
 
 			<div th:if="${param.filterStatus == null}" th:remove="tag">
-			
+
 				<!-- <ul class="pagination">
 				    <li class="next">
 				        <a href="#" rel="next" title="Navigate to next part">
@@ -215,7 +215,7 @@
 				        </a>
 				    </li>
 				</ul> -->
-			
+
 			</div>
 		</div>
 
@@ -237,7 +237,7 @@
 
 		function $_GET(param) {
 	        var vars = {};
-	        window.location.href.replace( location.hash, '' ).replace( 
+	        window.location.href.replace( location.hash, '' ).replace(
 	            /[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
 	            function( m, key, value ) { // callback
 	                vars[key] = value !== undefined ? value : '';
@@ -245,7 +245,7 @@
 	        );
 
 	        if ( param ) {
-	            return vars[param] ? vars[param] : null;    
+	            return vars[param] ? vars[param] : null;
 	        }
 	        return vars;
 	    }

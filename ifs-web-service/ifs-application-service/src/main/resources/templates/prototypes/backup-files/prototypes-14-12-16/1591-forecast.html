@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -242,7 +242,7 @@
 					<td class="total">12,000</td>
 					<td>3,000</td>
 					<td>3,000</td>
-					<td>3,000</td> 
+					<td>3,000</td>
 					<td>3,000</td>
 					<td class="total">12,000</td>
 					<td class="total granted">24,000</td>
@@ -314,9 +314,9 @@
 	</div>
 
 	<div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-		
+
 		<div class="extra-margin alignright">
-			
+
 			<a href="/prototypes/1591-forecast?status=edit&#38;view=full#table-forecast" th:unless="${param.view != null or param.status[0] == 'full'}">View maximised forecast table</a>
 
 			<a href="/prototypes/1591-forecast?status=edit#table-forecast" th:unless="${param.view == null and param.status[0] != 'full'}">View minimised forecast table</a>
@@ -333,7 +333,7 @@
 
 	</div>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -345,7 +345,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>

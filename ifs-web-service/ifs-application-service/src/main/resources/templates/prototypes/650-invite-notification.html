@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -17,7 +17,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="extra-margin" style="padding-top: 30px">
-		
+
 		<p>From: <a href="#">john.smith@worth.sytems</a><br />
 			To: Me </p>
 
@@ -26,10 +26,10 @@
 		<p>You have been invited to join a collaborative application for the competition 'Technology Inspired'.</p>
 		<p>Lead organisation: <strong>Worth Systems</strong><br />
 		Lead applicant: <strong>John Smith</strong></p>
-		 
+
 		<p>The lead applicant has invited you to join this application on behalf of the following organisation:
 		Nomensa</p>
-		 
+
 		<p>If this is not the correct organisation <a href="#">email the application lead</a></p>
 
 		<div th:if="${param.org == null}" th:remove="tag">
@@ -39,13 +39,13 @@
 			<div th:if="${param.org != null}" th:remove="tag">
 			 	<a href="/prototypes/642-signup-create-acc?org" class="button">Accept invitation</a>
 			</div>
-		
+
 	</div>
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    
+
 </main>
 
 

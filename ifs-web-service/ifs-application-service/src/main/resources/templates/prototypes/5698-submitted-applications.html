@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Allocate applications'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Allocate applications'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -18,7 +18,7 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/3115-comp-dashboard'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<p class="subtitle">Technology inspired, (12345A)</p>
 	<h1 class="heading-xlarge no-margin-top">Submitted applications</h1>
 

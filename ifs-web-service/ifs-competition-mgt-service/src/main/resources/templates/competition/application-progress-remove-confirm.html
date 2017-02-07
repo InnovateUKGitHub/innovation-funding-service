@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm remove'" th:remove="tag"/>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm remove'" />
     </head>
 
     <body th:with="context='assessment'" class="remove-assigned-assessor-confirm">

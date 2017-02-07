@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-summary">
@@ -59,8 +59,8 @@
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 
 <script type="text/javascript">
-	
-	jQuery('input#agree-terms').on('click',function(e){ 
+
+	jQuery('input#agree-terms').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#confirm-submit").removeClass('disabled');

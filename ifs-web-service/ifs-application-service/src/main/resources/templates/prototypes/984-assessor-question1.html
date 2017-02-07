@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-details">
@@ -22,9 +22,9 @@
 
 	<form action="#" method="post">
 		<div class="form-group">
-			
+
 			<h2 class="heading-medium">1. What is the business opportunity that your project addresses?</h2>
-			
+
 			<p>Within the Industry one issue has caused progress in the field to be stifled. Up until now any advancement has been made by working around this anomaly. </p>
 			<p>We propose to tackle the situation head on and develop a tool that will circumvent the problem entirely allowing development to advance.</p>
 

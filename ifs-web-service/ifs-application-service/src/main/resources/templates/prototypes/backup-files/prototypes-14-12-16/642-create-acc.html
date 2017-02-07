@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -17,7 +17,7 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<h1 class="heading-large">Create your account</h1>
-	
+
 	<div class="panel">
 		<p>The profile that you are creating will be linked to the following organisation <br />
 		<strong>Nomensa</strong></p>
@@ -26,7 +26,7 @@
 		<p>Business</p>
 
 	</div>
-	
+
 	<h2 class="heading-medium">Your details</h2>
 
 	<form>

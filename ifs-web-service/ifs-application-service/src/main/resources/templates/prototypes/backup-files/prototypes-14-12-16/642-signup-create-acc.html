@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -27,7 +27,7 @@
 		    <div th:include="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/642-confirmed-org'})" th:remove="tag" />
 		</section>
 		<section class="column-half">
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/642-confirm-org'})" th:remove="tag" /> 
+			<div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/642-confirm-org'})" th:remove="tag" />
 		</section>
 	</div>
 

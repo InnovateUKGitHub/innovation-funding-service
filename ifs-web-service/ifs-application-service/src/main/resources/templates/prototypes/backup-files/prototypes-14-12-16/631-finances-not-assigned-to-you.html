@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -37,7 +37,7 @@
 	<p class="form-info extra-margin">You can use this section to detail the project costs for your organisation only. Only your organisation can see this level of detail</p>
 
 	<div class="collapsible section-overview">
-        
+
        	<h2>Labour
 			<span style="" data-subsection-id="1" class="section-status place-in-header">
 	            <span data-binding-output="subsection-total-91">£ 126,207</span>

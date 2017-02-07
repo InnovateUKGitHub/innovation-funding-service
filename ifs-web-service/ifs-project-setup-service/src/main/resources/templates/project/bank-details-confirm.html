@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" />
 </head>
 <body th:with="context='project'" class="bank-detail-confirm">
   <div th:include="fragments/layout :: body-start" th:remove="tag" />

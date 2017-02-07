@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -43,11 +43,11 @@
 		<div class="column-half">
 			<ul class="application-progress-list">
 				<li class="successful">
-					
+
 					<span>
 						<h2 class="heading-medium">If your application is successful</h2>
 						<p>If you are successful with this application you will need to provide a series of documents before the project can begin, including</p>
-						
+
 						<ul class="list list-bullet">
 							<li>a collaboration agreement</li>
 							<li>financial forecasts</li>
@@ -72,7 +72,7 @@
 					</span>
 				</li>
 			</ul>
-		</div>	
+		</div>
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->

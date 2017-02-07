@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
@@ -16,7 +16,7 @@
 	    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor profile'}, ${'/prototypes/1568-assessor-profile'})" th:remove="tag" />
 
 		<!-- HARDCODED PROTOTYPE HTML -->
-		
+
 		<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Declaration of interest'})" th:remove="tag" />
 
 		<div id="sticky-zone">
@@ -34,12 +34,12 @@
 					</dl>
 				</div>
 			</section>
-			
+
 		    <section class="data-area">
-		    	
+
 		    	<h2 class="heading-large">Affiliations</h2>
 
-		    	
+
 		    	<div class="grid-row">
 		    		<div class="column-half">
 
@@ -92,12 +92,12 @@
 		    		</div>
 
 		    	</div>
-		    
+
 		    	<hr />
-				
+
 				<h2 class="heading-large">Close family member affiliations</h2>
 
-		    	<div class="grid-row">	
+		    	<div class="grid-row">
 
 					<div class="column-half">
 						<h3 class="heading-medium no-margin-top">Close family member appointments, directorships and consultancies</h3>
@@ -129,12 +129,12 @@
 		    			<h3 class="heading-medium no-margin-top">Close family member other pecuniary interests</h3>
 						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptate perspiciatis enim error sed laborum magni, itaque id, quibusdam fuga maxime debitis reiciendis qui amet dolores inventore aspernatur deserunt cumque nemo!</p>
 					</div>
-		
+
 		    	</div>
 
-		    	
 
-	    	
+
+
 		    </section>
 		</div>
 
@@ -150,12 +150,12 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	jQuery('#update-details-button').on('click',function(e){ 
+	jQuery('#update-details-button').on('click',function(e){
         e.preventDefault();
         jQuery('#update-details').show();
     });
 
-    jQuery('#update-details-cancel').on('click',function(e){ 
+    jQuery('#update-details-cancel').on('click',function(e){
         e.preventDefault();
         jQuery('#update-details').hide();
     });

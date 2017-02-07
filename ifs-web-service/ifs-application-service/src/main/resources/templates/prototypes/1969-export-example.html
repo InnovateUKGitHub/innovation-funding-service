@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
@@ -17,15 +17,15 @@
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<div class="extra-margin" style="padding: 100px 0; text-align: center">
-		
+
 		<p>The exported application data will appear as .csv file here</p>
-		
+
 	</div>
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    
+
 </main>
 
 

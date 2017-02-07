@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-details">
@@ -22,9 +22,9 @@
 
 	<form action="#" method="post">
 		<div class="form-group">
-			
+
 			<h2 class="heading-medium">3. How will you exploit and market your project?</h2>
-			
+
 			<p>The planned end result of the project would be a fully implementable tool that could be rolled out to the industry. Once a fully tested prototype can be demonstrated we can start to take orders and travel to international Industry leaders the exhibit the value of the tool.</p>
 
 		</div>

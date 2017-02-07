@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -28,17 +28,17 @@
 
 	<div th:include="prototypes/fragments/layout :: prototype-sprint-nav" th:with="sprint='sprint13'"  th:remove="tag" />
 
-	
+
 	<section class="grid-row">
 		<div class="row">
 			<h1 class="heading-large">Sprint 13</h1>
 
 			<section>
-				
+
 				<h2 class="heading-medium">Internal user - project set up</h2>
 
 				<ul class="list list-bullet">
-					
+
 					<li>
 						<h3 class="heading-small">INFUND-4262</h3>
 						<p>Iterations of finance sections following testing with finance team</p>
@@ -66,7 +66,7 @@
 					<li>
 						<h3 class="heading-small">INFUND-4242</h3>
 						<p>Confirm sole trader approach</p>
-						
+
 						<ul class="list list-bullet">
 							<li>
 								<a href="/prototypes/2650-review-bank-details?status=noCompHouse">INFUND-4378</a> Internal Bank details view - panel informing of Business type
@@ -136,9 +136,9 @@
 			</section>
 
 			<section>
-				
+
 				<h2 class="heading-medium">Partner - project set up</h2>
-				
+
 				<ul class="list list-bullet">
 					<li>
 						<h3 class="heading-small">INFUND-4262</h3>
@@ -156,7 +156,7 @@
 					<li>
 						<h3 class="heading-small">INFUND-4242</h3>
 						<p>Confirm sole trader approach</p>
-						
+
 						<ul class="list list-bullet">
 							<li>
 								<a href="/prototypes/1588-project-status?status=noCompHouse">INFUND-4376</a> Update Bank Details 2536 to support Business types that do not have to register with companies house
@@ -184,7 +184,7 @@
 								<a href="/prototypes/1594-gol-partner-view">INFUND-4413</a> As a lead partner I need to provide a signed Grant Offer Letter so that our project can begin
 							</li>
 							<li>
-								<a href="/prototypes/1594-gol-partner-view?user=nonLead">INFUND-4414</a> Create a view for the applicant after the GOL has been sent 
+								<a href="/prototypes/1594-gol-partner-view?user=nonLead">INFUND-4414</a> Create a view for the applicant after the GOL has been sent
 							</li>
 							<li>
 								<a href="/prototypes/1594-gol-partner-view?user=nonLead&#38;status=GOLSent">INFUND-4415</a> Create a view for all partners after the signed GOL has been sent to Innovate UK
@@ -209,7 +209,7 @@
 			</section>
 
 			<section>
-				
+
 				<h2 class="heading-medium">Academic partner - project set up</h2>
 
 				<ul class="list list-bullet">

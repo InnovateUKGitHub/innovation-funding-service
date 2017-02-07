@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Prototype index page'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Prototype index page'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -31,7 +31,7 @@
 	<h1 class="heading-large">Sprint 16</h1>
 
 		<section>
-			
+
 			<h2 class="heading-medium">Internal user - Assessor invites and assessor management</h2>
 
 			<ul class="list list-bullet">
@@ -138,7 +138,7 @@
 				</li>
 			</ul>
 		</section>
-			
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

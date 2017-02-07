@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Competitions dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competitions dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -18,7 +18,7 @@
     <!--<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition'}, ${'/prototypes/3115-comp-dashboard'})" th:remove="tag" />-->
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<h1 class="heading-xlarge">Competitions dashboard</h1>
 
 	<h2 class="heading-medium">Open</h2>

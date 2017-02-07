@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
@@ -26,7 +26,7 @@
 		<li th:class="${(param.tab != null and param.tab[0] == 'assign' ? 'selected' : 'not-selected' )}"><a th:href="@{'?tab=assign'}"><strong>Assign</strong></a></li>
 	</ul>
 
-	
+
 	<div th:include="prototypes/fragments/manage-assessors :: prototype-assessor-main-content" th:remove="tag" />
 
 
@@ -50,7 +50,7 @@
             this.form.submit();
         });*/
 
-		jQuery('#includeAll').on('click',function(e){ 
+		jQuery('#includeAll').on('click',function(e){
 			//e.preventDefault();
 
 			if ( jQuery(this).is(':checked')) {
@@ -71,13 +71,13 @@
 				jQuery('#invite-group').addClass('button-secondary');
 				jQuery('.include-in-group').Attr('checked', '');
 
-				
+
 			}
-			
+
 		});
 
 
-		jQuery('.add-to-invite').on('click',function(e){ 
+		jQuery('.add-to-invite').on('click',function(e){
 			e.preventDefault();
 
 			if(jQuery(this).hasClass('added')){

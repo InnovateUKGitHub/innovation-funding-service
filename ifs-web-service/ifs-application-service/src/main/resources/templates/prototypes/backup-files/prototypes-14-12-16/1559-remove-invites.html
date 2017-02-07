@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="comp-assessors full-width">
@@ -17,7 +17,7 @@
     <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'#'})" th:remove="tag" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	
+
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, ${'Unaccepted invites'})" th:remove="tag" />
 
 
@@ -25,7 +25,7 @@
 	<div id="sticky-zone">
 
 		<section class="info-area">
-			
+
 			<div class="boxed">
 				<div class="grid-row">
 					<div class="column-half">
@@ -36,7 +36,7 @@
 						<p><span class="heading-medium">25</span><br />
 							Assessors available
 						</p>
-					</div>	
+					</div>
 
 					<div class="column-half">
 						<p><span class="heading-medium">25th January 2016</span><br />
@@ -45,10 +45,10 @@
 
 						<p><span class="heading-medium">30th January 2016</span><br />
 							Asessor deadline
-						</p> 
+						</p>
 					</div>
 				</div>
-				
+
 			</div>
 
 			<div class="grid-row extra-margin">
@@ -75,13 +75,13 @@
 			</div>
 
 		</section>
-		
+
 		<section class="data-area">
 
-			
+
 
 			<h3 class="heading-small"><span class="heading-large">9</span> Assessors</h3>
-				
+
 			<div class="table-overflow">
 				<table>
 					<thead>
@@ -154,7 +154,7 @@
 			                <td>9</td>
 							<td class="alignright"><input type="checkbox" aria-labelledby="user-name" value="James Wattana"/></td>
 						</tr>
-						
+
 					</tbody>
 				</table>
 			</div>
@@ -166,7 +166,7 @@
 			<div class="modal-remove-selected" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		        <button class="js-close close" aria-label="Close Popup">X</button>
 		        <div>
-					
+
 					<h2 class="heading-medium no-margin">Send assignments</h2>
 
 					<p>Are you sure that you wish to remove all applications from these assessors?</p>
@@ -174,7 +174,7 @@
 					<p>They will be informed of these changes</p>
 
 					<hr />
-		            
+
 		            <div class="grid-row extra-margin">
 		            	<div class="column-half">
 		            		<a href="#">Cancel</a>
@@ -186,18 +186,18 @@
 
 		        </div>
 		    </div>
-			
-			
+
+
 		</section>
 
 
 
 	</div>
-	
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" /> 
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />

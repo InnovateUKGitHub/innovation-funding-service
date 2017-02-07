@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 <head>
-    <div th:include="fragments/layout :: head" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head"  />
 </head>
 <body>
-    <div th:include="fragments/layout :: body-start" th:remove="tag" />	
+    <div th:include="fragments/layout :: body-start" th:remove="tag" />
     <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 	<main id="content">
