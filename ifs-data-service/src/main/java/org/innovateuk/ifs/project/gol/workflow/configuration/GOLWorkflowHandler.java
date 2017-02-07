@@ -50,8 +50,8 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return fireEvent(projectCreatedEvent(project, originalLeadApplicantProjectUser), GOLState.PENDING);
     }
 
-    public boolean grantOfferLetterSent(Project project, ProjectUser projectUser) {
-        return fireEvent(externalUserEvent(project, projectUser, GOL_SENT), project);
+    public boolean grantOfferLetterSent(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, GOL_SENT), project);
     }
 
     public boolean grantOfferLetterSigned(Project project, ProjectUser projectUser) {
@@ -110,9 +110,9 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return fn.apply(project, projectUser);
     }
 
-    public boolean grantOfferLetterSent(Project project) {
+/*    public boolean grantOfferLetterSent(Project project) {
         return getIfProjectAndUserValid(project, this::grantOfferLetterSent);
-    }
+    }*/
 
     public boolean approve(Project project) {
         return getIfProjectAndUserValid(project, this::grantOfferLetterApproved);

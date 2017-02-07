@@ -1119,13 +1119,26 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         });
     }
 
-    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
+/*    private ServiceResult<Void> sendGrantOfferLetterSuccessOLD(Project project) {
         if (golWorkflowHandler.grantOfferLetterSent(project)) {
             return serviceSuccess();
         } else {
             LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
             return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
         }
+    }*/
+
+    private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
+        });
     }
 
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
