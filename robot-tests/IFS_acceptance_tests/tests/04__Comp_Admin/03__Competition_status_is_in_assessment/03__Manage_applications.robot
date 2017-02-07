@@ -40,6 +40,9 @@ View application progress page
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then The user should see the text in the page    00000015: Rainfall
     And the user should see the text in the page    Everyday Im Juggling Ltd (Lead)
+    And the user should see the text in the page    No assessors have been assigned to this application.
+    And the user should see the text in the page    No assessors have rejected this application.
+    And the user should see the text in the page    No assessors were previously assigned to this application.
 
 Review the application
     [Documentation]    INFUND-7046

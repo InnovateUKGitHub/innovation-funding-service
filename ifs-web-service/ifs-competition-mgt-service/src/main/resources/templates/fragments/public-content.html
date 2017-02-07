@@ -1,8 +1,8 @@
-
+<!-- =================== Public content section - Competition information and search  ============================== -->
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
-        <dl>
+        <dl class="readonly-list">
             <dt>Short description</dt>
             <dd th:text="${form.shortDescription}"></dd>
             <dt>Project funding range</dt>
@@ -150,3 +150,68 @@
         </th:block>
     </th:block>
 </div>
+
+<!-- =================== Public content section - Summary  ========================================================= -->
+<div th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <p>Text entered into this section will appear in the summary tab.</p>
+    <th:block th:if="${model.readOnly}">
+        <dl class="readonly-list">
+            <dt>Competition description</dt>
+            <dd ifs:utext="${form.description}"></dd>
+            <dt>Funding type</dt>
+            <dd th:text="${form.fundingType}"></dd>
+            <dt>Project size</dt>
+            <dd th:text="${form.projectSize}"></dd>
+        </dl>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <fieldset>
+            <div class="form-group">
+                <label class="form-label-bold" for="description">
+                    Competition description
+                </label>
+                <div class="textarea-wrapped">
+                        <textarea
+                            id="description"
+                            class="form-control width-full"
+                            data-editor="html"
+                            maxlength="5000"
+                            th:errorclass="field-error"
+                            rows="4"
+                            th:field="${form.description}"
+                            required="required"
+                            ifs:utext="${form.description}"
+                            th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.description.required}">
+                        </textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label-bold">
+                    Funding type
+                </label>
+
+                <label class="block-label selection-button-radio" th:each="fundingType:${model.fundingTypes}" >
+                    <input type="radio"
+                           name="fundingType"
+                           th:value="${fundingType.displayName}"
+                           required="required"
+                           th:checked="${form.fundingType == fundingType.displayName}"
+                           th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
+                    <span th:text="${fundingType.displayName}" th:remove="tag"/>
+                </label>
+
+            </div>
+            <div class="form-group">
+                <label class="form-label-bold" for="project-size">
+                    Project size
+                </label>
+                <input class="form-control" id="project-size" type="text" th:field="${form.projectSize}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
+            </div>
+        </fieldset>
+    </th:block>
+</div>
+
+

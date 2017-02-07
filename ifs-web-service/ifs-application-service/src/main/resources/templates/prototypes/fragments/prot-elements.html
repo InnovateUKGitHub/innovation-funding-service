@@ -230,7 +230,9 @@
             <li>Competition: Renewable Energy</li>
           </ul>
         </div>
-        <div class="status"><strong class="status-msg msg-progress">In progress</strong></div>
+        <div class="status">
+          <strong class="status-msg msg-progress">In progress</strong>
+        </div>
       </li>
       <li>
         <div class="task">
@@ -257,7 +259,7 @@
   <div class="progress-list">
     <h3 class="heading-medium no-margin-top">Applications in progress</h3>
     <ul>
-      <li>
+      <li class="status-2-col">
         <div class="task">
           <h4 class="heading-small"><a href="#">A new innovative solution to tidal energy</a></h4>
           <ul class="application-details">
@@ -279,7 +281,7 @@
           </div>
         </div>
       </li>
-      <li>
+      <li class="status-2-col">
         <div class="task">
           <h4 class="heading-small"><a href="#">A new innovative solution</a></h4>
           <ul class="application-details">
@@ -298,7 +300,7 @@
           </div>
         </div>
       </li>
-      <li>
+      <li class="status-2-col">
         <div class="task">
           <h4 class="heading-small"><a href="#">Magic material</a></h4>
           <ul class="application-details">
@@ -311,7 +313,7 @@
             Awaiting assessment
           </div>
           <div class="status-msg msg-progress">
-            15% complete
+            Application submitted
           </div>
         </div>
       </li>
@@ -353,7 +355,70 @@
   <div class="progress-list">
     <h3 class="heading-medium">Invitations to assess (1)</h3>
     <ul>
+      <li class="status-2-col">
+        <div class="task task-half-width">
+          <h4 class="heading-small"><a href="#">Technology inspired</a></h4>
+          You have been asked to assess this competition. Please respond.
+        </div>
+
+        <div class="assessment-period">
+          <h4 class="heading-small no-margin">Assessment period</h4>
+          <dl class="standard-definition-list reduced-width">
+            <dt>Begins</dt>
+            <dd>15 November 2017</dd>
+
+            <dt>Ends</dt>
+            <dd>25 December 2017</dd>
+          </dl>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="progress-list">
+    <h3 class="heading-medium">Competitions for assessment (2)</h3>
+    <ul>
       <li>
+        <div class="task task-half-width">
+          <h4 class="heading-small"><a href="#">Technology inspired</a></h4>
+          <div class="action-required">
+            <strong>2 applications to be assessed</strong>
+          </div>
+        </div>
+        <div class="status">
+          <div class="status-msg msg-deadline-today">
+            <strong class="bold-medium">4:32</strong><br>
+              hours:minutes left<br>
+              Deadline today
+          </div>
+        </div>
+      </li>
+      <li>
+        <div class="task task-half-width">
+          <h4 class="heading-small"><a href="#">Technology inspired</a></h4>
+          <div class="action-required">
+            <strong>1 application awaiting acceptance &nbsp;|&nbsp; 2 applications to be assessed</strong>
+          </div>
+        </div>
+        <div class="status">
+          <div class="status-msg msg-deadline">
+            <strong class="bold-medium">23</strong><br>
+              days left<br>
+              Deadline 28 January
+          </div>
+        </div>
+
+      </li>
+    </ul>
+  </div>
+
+  <hr />
+
+  <h2 class="heading-large">Technology inspired</h2>
+  <div class="progress-list">
+    <h3 class="heading-medium">Invitations to assess (1)</h3>
+    <ul>
+      <li class="status-2-col">
         <div class="task task-half-width">
           <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
           <strong>Empire Gas Ltd</strong>
@@ -374,7 +439,7 @@
     <div class="progress-list">
       <h3 class="heading-medium">Applications for assessment (4)</h3>
       <ul>
-        <li>
+        <li class="status-2-col">
           <div class="task task-half-width">
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
@@ -385,14 +450,14 @@
             </strong>
           </div>
         </li>
-        <li class="positive">
+        <li class="status-2-col positive">
           <div class="task task-half-width">
             <div class="label-holder">
               <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
-                <input id="assessment-submit-checkbox" type="checkbox" value="" checked="checked" />
+                <input id="assessment-submit-checkbox" type="checkbox" value="" checked="checked" aria-labelledby="application-1" />
               </label>
             </div>
-            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <h4 class="heading-small"><a href="#" id="application-1">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
           <div class="status">
@@ -404,14 +469,14 @@
             <div class="status-msg msg-progress"><strong>Assessed</strong></div>
           </div>
         </li>
-        <li class="negative">
+        <li class="status-2-col negative">
           <div class="task task-half-width">
             <div class="label-holder">
               <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox-2">
-                <input id="assessment-submit-checkbox-2" type="checkbox" value="" />
+                <input id="assessment-submit-checkbox-2" type="checkbox" value="" aria-labelledby="application-2" />
               </label>
             </div>
-            <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
+            <h4 class="heading-small"><a href="#" id="application-2">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
           <div class="status">
@@ -424,7 +489,7 @@
           </div>
         </li>
         <li>
-          <div class="task task-half-width">
+          <div class="task">
             <h4 class="heading-small"><a href="#">Using natural gas to heat homes</a></h4>
             <strong>Empire Gas Ltd</strong>
           </div>
