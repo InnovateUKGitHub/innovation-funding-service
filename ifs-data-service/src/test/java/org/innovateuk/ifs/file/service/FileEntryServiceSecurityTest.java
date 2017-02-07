@@ -60,6 +60,13 @@ public class FileEntryServiceSecurityTest extends BaseServiceSecurityTest<FileEn
         public ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(@P("applicationFinanceResourceId") Long applicationFinanceId) {
             return null;
         }
+
+        @Override
+        public ServiceResult<FileEntryResource> saveFile(@P("file") FileEntryResource file) {
+            return ServiceResult.serviceSuccess(file);
+        }
+
+
     }
 }
 

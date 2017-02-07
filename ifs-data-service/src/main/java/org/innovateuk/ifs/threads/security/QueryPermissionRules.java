@@ -29,7 +29,7 @@ public class QueryPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(value = "VIEW", description = "Only Internal of Project Finance Users can view Queries")
-    public boolean onlyInternalUsersOfFinanceContactCanViewTheirQueries(final QueryResource query, final UserResource user) {
+    public boolean onlyInternalUsersOrFinanceContactCanViewTheirQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
     }
 
