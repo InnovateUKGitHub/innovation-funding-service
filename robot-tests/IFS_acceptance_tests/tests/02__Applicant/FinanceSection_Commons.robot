@@ -10,14 +10,14 @@ the user should see all the Your-Finances Sections
     the user should see the element  jQuery=h3:contains("Your funding")
     the user should see the element  jQuery=h2:contains("Finance summary")
 
-the user navigates to his finances page
+the user navigates to Your-finances page
     [Arguments]  ${Application}
     the user navigates to the page  ${DASHBOARD_URL}
     the user clicks the button/link  link=${Application}
     the user clicks the button/link  link=Your finances
 
 Applicant navigates to the finances of the Robot application
-    the user navigates to his finances page  Robot test application
+    the user navigates to Your-finances page  Robot test application
 
 log in and create new application if there is not one already with complete application details
     log in and create new application if there is not one already
@@ -62,11 +62,11 @@ the user completes the application details
      the user clicks the button/link       jQuery=label[for="resubmission-no"]
      the user clicks the button/link       jQuery=label[for="resubmission-no"]
      # those Radio buttons need to be clicked twice.
-     Clear Element Text                    id=application_details-startdate_day
+     #Clear Element Text                    id=application_details-startdate_day
      The user enters text to a text field  id=application_details-startdate_day  18
-     Clear Element Text                    id=application_details-startdate_year
+     #Clear Element Text                    id=application_details-startdate_year
      The user enters text to a text field  id=application_details-startdate_year  2018
-     Clear Element Text                    id=application_details-startdate_month
+     #Clear Element Text                    id=application_details-startdate_month
      The user enters text to a text field  id=application_details-startdate_month  11
      The user enters text to a text field  id=application_details-duration  20
      the user clicks the button/link       jQuery=button:contains("Mark as complete")
@@ -89,10 +89,11 @@ the applicant completes the application details
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
 
 the user marks the finances as complete
-    Applicant navigates to the finances of the Robot application
+    [Arguments]  ${Application}
+    #the user navigates to his finances page
     the user fills in the project costs
-    the user fills in the organisation information
-    the user checks Your Funding section
+    the user fills in the organisation information  ${Application}
+    the user checks Your Funding section     ${Application}
     the user should see all finance subsections complete
     the user clicks the button/link  link=Application Overview
     the user should see the element  jQuery=img.complete[alt*="finances"]
@@ -184,6 +185,8 @@ the user removes prev costs if there are any
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=table[id="other-costs-table"] tr:contains("Remove")
 
 the user fills in the organisation information
+    [Arguments]  ${Application}
+    the user navigates to Your-finances page  ${Application}
     the user clicks the button/link    link=Your organisation
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=button:contains("Edit your organisation")
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit your organisation")
@@ -191,18 +194,20 @@ the user fills in the organisation information
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
 
 the user checks Your Funding section
+    [Arguments]  ${Application}
     ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
-    Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area
-    Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information    Robot test application
+    Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
+    Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information      ${Application}
 
 the user selects research area
+    [Arguments]  ${Application}
     When the user clicks the button/link      link = application details
     the user completes the application details
-    And the user fills in the funding information  Robot test application
+    And the user fills in the funding information    ${Application}
 
 the user fills in the funding information
     [Arguments]  ${Application}
-    the user navigates to his finances page  ${Application}
+    the user navigates to Your-finances page   ${Application}
     the user clicks the button/link       link=Your funding
     the user enters text to a text field  css=#cost-financegrantclaim  60
     click element                         jQuery=label:contains("No")

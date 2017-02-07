@@ -43,7 +43,6 @@ Calculations for the first collaborator
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    #Commented below lines as its failing and not sure what it is referrring to in new finance pages
     #And the applicant enters a bigger funding amount
     #Then the contribution to project and funding sought should be 0 and not a negative number
 
@@ -80,7 +79,8 @@ Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]
     [Setup]
-    When the user marks the finances as complete
+    When the user navigates to Your-finances page    Robot test application
+    And the user marks the finances as complete     Robot test application
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     And the user clicks the button/link    link=Finances overview
     Then Green check should be visible
@@ -107,7 +107,6 @@ Alert shows If the academic research participation is too high
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
     [Tags]
-    #TODO Pending due to INFUND-6390 will update ticket onces finances update is merged.
     [Setup]    Log in as a different user   &{lead_applicant_credentials}
     When Lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
