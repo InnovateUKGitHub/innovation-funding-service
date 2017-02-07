@@ -23,7 +23,7 @@ public class PublicContentItemController {
     public RestResult<PublicContentItemPageResource> findFilteredItems(@RequestParam(value = "innovationAreaId", required = false) Optional<Long> innovationAreaId,
                                                                        @RequestParam(value = "searchString", required = false) Optional<String> searchString,
                                                                        @RequestParam(value = "pageNumber", required = false) Optional<Integer> pageNumber,
-                                                                       @RequestParam(value = "pageSize", required = false) Optional<Integer> pageSize) {
+                                                                       @RequestParam(value = "pageSize") Integer pageSize) {
         return publicContentItemService.findFilteredItems(innovationAreaId, searchString, pageNumber, pageSize).toGetResponse();
     }
 
