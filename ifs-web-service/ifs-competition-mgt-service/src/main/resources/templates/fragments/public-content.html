@@ -82,7 +82,7 @@
                 <legend class="form-label form-label-bold">Date</legend>
                 <div class="date-group">
                     <div class="day">
-                        <label class="form-label" th:for="form.dates[__${iteration.index}__].day">Day</label>
+                        <label class="form-label" th:for="dates[__${iteration.index}__].day">Day</label>
                         <input class="form-control width-extra-small"
                                placeholder="DD"
                                type="number"
@@ -93,7 +93,7 @@
                                th:attr="data-required-errormessage=#{validation.publiccontent.datesform.day.required}">
                     </div>
                     <div class="month">
-                        <label class="form-label" th:for="form.dates[__${iteration.index}__].month">Month</label>
+                        <label class="form-label" th:for="dates[__${iteration.index}__].month">Month</label>
                         <input class="form-control width-extra-small"
                                placeholder="MM"
                                type="number"
@@ -104,7 +104,7 @@
                                th:attr="data-required-errormessage=#{validation.publiccontent.datesform.month.required}">
                     </div>
                     <div class="year">
-                        <label class="form-label" th:for="form.dates[__${iteration.index}__].year">Year</label>
+                        <label class="form-label" th:for="dates[__${iteration.index}__].year">Year</label>
                         <input class="form-control width-extra-small"
                                placeholder="YYYY"
                                type="number"
@@ -115,14 +115,18 @@
                     </div>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="form-label-bold" th:for="form.dates[__${iteration.index}__].content">
-                    Content
+            <div th:class="${#fields.hasErrors('dates[__${iteration.index}__].content')}? 'form-group error':'form-group'">
+                <label class="form-label" th:for="form.dates[__${iteration.index}__].content">
+                    <span class="form-label-bold">Content</span>
+                    <span th:if="${#fields.hasErrors('dates[__${iteration.index}__].content')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('dates[__${iteration.index}__].content')}" th:text="${err}" />
+                    </span>
                 </label>
-                <textarea cols="30" rows="5" class="width-full"
-                            th:field="${form.dates[__${iteration.index}__].content}"
-                            required="required"
-                            th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
+                <textarea cols="30" rows="5"
+                          th:class="${#fields.hasErrors('dates[__${iteration.index}__].content') ? 'width-full field-error' : 'width-full'}"
+                          th:field="${form.dates[__${iteration.index}__].content}"
+                          required="required"
+                          th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
                 </textarea>
             </div>
             <div class="form-group">

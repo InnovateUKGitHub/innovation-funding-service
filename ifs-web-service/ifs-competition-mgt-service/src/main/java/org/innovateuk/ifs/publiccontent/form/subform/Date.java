@@ -12,18 +12,18 @@ public class Date {
     private Long id;
 
     @Range(min = 1, max = 31)
-    @NotNull(message = "validation.publiccontent.datesform.day.required")
+    @NotNull(message = "{validation.publiccontent.datesform.day.required}")
     private Integer day;
 
     @Range(min = 1, max = 12)
-    @NotNull(message = "validation.publiccontent.datesform.month.required")
+    @NotNull(message = "{validation.publiccontent.datesform.month.required}")
     private Integer month;
 
     @Range(min = 0, max = Integer.MAX_VALUE)
-    @NotNull(message = "validation.publiccontent.datesform.year.required")
+    @NotNull(message = "{validation.publiccontent.datesform.year.required}")
     private Integer year;
 
-    @NotEmpty(message = "validation.publiccontent.datesform.content.required")
+    @NotEmpty(message = "{validation.publiccontent.datesform.content.required}")
     private String content;
 
     public Long getId() {
