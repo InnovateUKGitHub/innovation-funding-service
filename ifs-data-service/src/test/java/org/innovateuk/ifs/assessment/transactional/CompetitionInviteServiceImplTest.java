@@ -1058,7 +1058,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
                 .withStatus(SENT, SENT, SENT)
-                .withSentOn(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
                 .buildArray(3, CompetitionInvite.class);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()
