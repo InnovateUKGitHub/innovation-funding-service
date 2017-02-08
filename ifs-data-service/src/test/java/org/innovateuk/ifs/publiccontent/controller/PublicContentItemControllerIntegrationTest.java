@@ -69,12 +69,12 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Test
     @Rollback
-    public void testFindFilteredItems() throws Exception {
+    public void findFilteredItems_findByKeywords() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(17L), Optional.of("key wor"), Optional.of(0), 20);
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.of("key wor"), Optional.of(0), 20);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -82,7 +82,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         assertEquals(1, publicContentItemResourcesOne.size());
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
 
-        RestResult<PublicContentItemPageResource> resultTwo = controller.findFilteredItems(Optional.of(17L), Optional.empty(), Optional.of(0),20);
+        RestResult<PublicContentItemPageResource> resultTwo = controller.findFilteredItems(Optional.of(5L), Optional.empty(), Optional.of(0),20);
 
         assertTrue(resultTwo.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesTwo = resultTwo.getSuccessObject().getContent();
@@ -122,7 +122,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     public void findFilteredItems_findAllPublicContent() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
 
-
         flushAndClearSession();
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
@@ -130,7 +129,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
 
-        assertEquals(1, publicContentItemResourcesOne.size());
+        assertEquals(1, resultOne.getSuccessObject().getTotalElements());
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
     }
 
@@ -143,6 +142,23 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         flushAndClearSession();
 
         RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.empty(), Optional.empty(), 10);
+
+        assertTrue(resultOne.isSuccess());
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+
+        assertEquals(1, publicContentItemResourcesOne.size());
+        assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_findByKeywordsAndInnovationAreaId() throws Exception {
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
+        long innovationAreaId = 1L;
+
+        flushAndClearSession();
+
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.of("Nothing key wor"), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -179,7 +195,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     private void setupKeywords() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
                 .withCompetitionId(1L)
-                .withPublishDate(LocalDateTime.now())
+                .withPublishDate(LocalDateTime.now().minusDays(1))
                 .build());
 
         Keyword keywordOne = newKeyword().withKeyword("keyword").withPublicContent(publicContentResult).build();
@@ -191,7 +207,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
         Competition competition = competitionRepository.findOne(1L);
 
-        CompetitionCategoryLink<InnovationArea> categoryLink = newCompetitionCategoryLink().withCategory(innovationArea).withCompetition(competition).build();
+        CompetitionCategoryLink<InnovationArea> categoryLink = newCompetitionCategoryLink().withCategory(innovationArea.getSector()).withCompetition(competition).build();
 
         competitionCategoryLinkRepository.save(categoryLink);
     }

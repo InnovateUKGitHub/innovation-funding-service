@@ -93,7 +93,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         else if(searchString.isPresent())
         {
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionBySearchString(keywordsFound, getPageable(pageNumber, pageSize));
+            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(keywordsFound, getPageable(pageNumber, pageSize));
         }
         else {
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize));

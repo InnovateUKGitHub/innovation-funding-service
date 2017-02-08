@@ -37,7 +37,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                                 "AND p.id IN :filteredPublicContentIds " +
                                 "AND p.publishDate < CURRENT_TIMESTAMP) " +
             "ORDER BY closed_milestone.date ASC")
-    Page<Competition> findAllPublishedForOpenCompetitionBySearchString(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable);
+    Page<Competition> findAllPublishedForOpenCompetitionByKeywords(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable);
     
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
