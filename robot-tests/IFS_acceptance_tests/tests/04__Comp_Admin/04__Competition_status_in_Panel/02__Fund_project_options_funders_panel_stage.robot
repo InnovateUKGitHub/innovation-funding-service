@@ -64,7 +64,7 @@ Choosing Notify applicants on the dialogue redirects to the Assessor feedback pa
     When the user clicks the button/link    name=publish
     Then the user navigates to the page    ${funders_panel_competition_url}
     #Then the user should be redirected to the correct page    ${funders_panel_competition_url}
-    #TODO update redirect when new page is implemented
+    #TODO update redirect when new page is implemented INFUND 7376
 
 Once applicants are notified, the whole state of the competition changes to Assessor feedback
     [Documentation]    INFUND-2646
