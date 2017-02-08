@@ -35,7 +35,7 @@ Application details: Research category
     Then the user should see the element    jQuery=label:contains(Industrial research)
     And the user should see the element    jQuery=label:contains(Technical feasibilit)
     And the user should see the element    jQuery=label:contains(Experimental development)
-    When the user clicks the button/link    jQuery=label:contains(Experimental development)
+    And the finance summary page should show a warning
 
 Autosave in the form questions
     [Documentation]    INFUND-189
@@ -196,3 +196,8 @@ the question should not be marked as complete on the application overview page
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label
     Run Keyword And Ignore Error Without Screenshots    confirm action
+
+the finance summary page should show a warning
+    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Your finances
+    The user should see the text in the page    You must give your project a research category in
