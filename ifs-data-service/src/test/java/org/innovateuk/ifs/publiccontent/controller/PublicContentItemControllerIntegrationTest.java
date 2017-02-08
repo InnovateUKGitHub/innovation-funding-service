@@ -120,23 +120,29 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void testByCompetitionId() throws Exception {
-        //Save competition, content
+        savePublicContent();
+
         flushAndClearSession();
 
         RestResult<PublicContentItemResource> result = controller.byCompetitionId(COMPETITION_ID);
 
-        //assertTrue(result.isSuccess());
+        assertTrue(result.isSuccess());
 
-        //check result
+        PublicContentItemResource resultObject = result.getSuccessObject();
+        assertEquals(COMPETITION_ID, resultObject.getPublicContentResource().getCompetitionId());
     }
 
-    private void makeSetupOfKeywords() {
+    private PublicContent savePublicContent() {
         PublicContent publicContentOne = newPublicContent()
-                .withCompetitionId(1L)
+                .withCompetitionId(COMPETITION_ID)
                 .withPublishDate(LocalDateTime.now())
                 .build();
 
-        PublicContent publicContentResult = publicContentRepository.save(publicContentOne);
+        return publicContentRepository.save(publicContentOne);
+    }
+
+    private void makeSetupOfKeywords() {
+        PublicContent publicContentResult = savePublicContent();
 
         Keyword keywordOne = newKeyword().withKeyword("keyword").withPublicContent(publicContentResult).build();
         Keyword keywordTwo = newKeyword().withKeyword("word").withPublicContent(publicContentResult).build();

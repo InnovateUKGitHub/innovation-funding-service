@@ -2,6 +2,8 @@ package org.innovateuk.ifs.competition;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
+import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -22,10 +24,21 @@ import javax.servlet.http.HttpServletRequest;
 public class CompetitionController {
     public static final String TEMPLATE_PATH = "competition/";
     @Autowired
-    UserAuthenticationService userAuthenticationService;
+    private UserAuthenticationService userAuthenticationService;
 
     @Autowired
-    CompetitionService competitionService;
+    private CompetitionService competitionService;
+
+    @Autowired
+    private CompetitionOverviewPopulator overviewPopulator;
+
+    @RequestMapping("/{competitionId}/overview")
+    public String competitionOverview(Model model, @PathVariable("competitionId") final Long competitionId,
+                                     HttpServletRequest request) {
+        PublicContentItemResource publicContentItem = competitionService.getPublicContentOfCompetition(competitionId).getSuccessObjectOrThrowException();
+        model.addAttribute("model", overviewPopulator.populateViewModel(publicContentItem));
+        return TEMPLATE_PATH + "overview";
+    }
 
     @RequestMapping("/{competitionId}/details")
     public String competitionDetails(Model model, @PathVariable("competitionId") final Long competitionId,
