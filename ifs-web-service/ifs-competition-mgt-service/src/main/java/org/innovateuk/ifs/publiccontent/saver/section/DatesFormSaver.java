@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.publiccontent.saver;
+package org.innovateuk.ifs.publiccontent.saver.section;
 
 
 import org.innovateuk.ifs.commons.error.Error;
@@ -6,8 +6,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.form.DatesForm;
-import org.innovateuk.ifs.publiccontent.form.subform.Date;
+import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
+import org.innovateuk.ifs.publiccontent.form.section.subform.Date;
+import org.innovateuk.ifs.publiccontent.saver.AbstractPublicContentFormSaver;
+import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
 import org.innovateuk.ifs.publiccontent.service.ContentEventRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> im
     }
 
     @Override
-    public ServiceResult<Void> save(DatesForm form, PublicContentResource publicContentResource) {
+    public ServiceResult<Void> markAsComplete(DatesForm form, PublicContentResource publicContentResource) {
         return contentEventRestService
                 .resetAndSaveEvents(publicContentResource.getId(), mapDateToEventResource(publicContentResource.getId(), form.getDates()))
                 .toServiceResult();

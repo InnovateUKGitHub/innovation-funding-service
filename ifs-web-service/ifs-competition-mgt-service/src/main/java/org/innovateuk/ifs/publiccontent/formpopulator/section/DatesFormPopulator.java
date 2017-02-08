@@ -1,11 +1,13 @@
-package org.innovateuk.ifs.publiccontent.formpopulator;
+package org.innovateuk.ifs.publiccontent.formpopulator.section;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.publiccontent.form.DatesForm;
-import org.innovateuk.ifs.publiccontent.form.subform.Date;
+import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
+import org.innovateuk.ifs.publiccontent.form.section.subform.Date;
+import org.innovateuk.ifs.publiccontent.formpopulator.AbstractPublicContentFormPopulator;
+import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

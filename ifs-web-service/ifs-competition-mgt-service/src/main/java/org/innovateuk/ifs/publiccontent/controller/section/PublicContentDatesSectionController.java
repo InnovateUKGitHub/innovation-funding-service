@@ -1,11 +1,12 @@
-package org.innovateuk.ifs.publiccontent.controller;
+package org.innovateuk.ifs.publiccontent.controller.section;
 
-import org.innovateuk.ifs.publiccontent.form.DatesForm;
-import org.innovateuk.ifs.publiccontent.formpopulator.DatesFormPopulator;
+import org.innovateuk.ifs.publiccontent.controller.AbstractPublicContentSectionController;
+import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
+import org.innovateuk.ifs.publiccontent.formpopulator.section.DatesFormPopulator;
 import org.innovateuk.ifs.publiccontent.formpopulator.PublicContentFormPopulator;
-import org.innovateuk.ifs.publiccontent.modelpopulator.DatesViewModelPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.section.DatesViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
-import org.innovateuk.ifs.publiccontent.saver.DatesFormSaver;
+import org.innovateuk.ifs.publiccontent.saver.section.DatesFormSaver;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
 import org.innovateuk.ifs.publiccontent.viewmodel.DatesViewModel;
 import org.springframework.beans.factory.annotation.Autowired;

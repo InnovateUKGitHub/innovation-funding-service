@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.publiccontent.form;
+package org.innovateuk.ifs.publiccontent.form.section;
 
-import org.innovateuk.ifs.publiccontent.form.subform.Date;
+import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
+import org.innovateuk.ifs.publiccontent.form.section.subform.Date;
 
 import javax.validation.Valid;
 import java.util.List;

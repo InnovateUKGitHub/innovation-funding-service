@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.publiccontent.modelpopulator;
+package org.innovateuk.ifs.publiccontent.modelpopulator.section;
 
 
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -9,6 +9,8 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectio
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.publiccontent.modelpopulator.AbstractPublicContentViewModelPopulator;
+import org.innovateuk.ifs.publiccontent.modelpopulator.PublicContentViewModelPopulator;
 import org.innovateuk.ifs.publiccontent.viewmodel.DatesViewModel;
 import org.innovateuk.ifs.publiccontent.viewmodel.submodel.DateViewModel;
 import org.springframework.beans.factory.annotation.Autowired;

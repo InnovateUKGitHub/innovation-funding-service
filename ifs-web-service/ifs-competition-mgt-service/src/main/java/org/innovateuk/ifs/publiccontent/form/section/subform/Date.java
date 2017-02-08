@@ -1,12 +1,13 @@
-package org.innovateuk.ifs.publiccontent.form.subform;
+package org.innovateuk.ifs.publiccontent.form.section.subform;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.Range;
+import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
 
 import javax.validation.constraints.NotNull;
 
 /**
- * The repeating date that is being used in the {@link org.innovateuk.ifs.publiccontent.form.DatesForm}
+ * The repeating date that is being used in the {@link DatesForm}
  */
 public class Date {
     private Long id;
