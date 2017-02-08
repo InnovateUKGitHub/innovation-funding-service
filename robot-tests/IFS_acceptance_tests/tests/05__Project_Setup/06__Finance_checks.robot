@@ -274,7 +274,7 @@ Project finance user can see the Eligibility check page for the lead partner
     [Documentation]    INFUND-4823
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # clicking the review button for the lead partner
-    And the user navigates to the page   ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # to delete this when the new eligibility page is switched to
+    And the user navigates to the page   ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # to delete this when the new eligibility page is switched to
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Project finance user can see the lead partner's information about eligibility
@@ -322,7 +322,7 @@ Finance checks eligibility validations
     Then the user should see the text in the page    This field cannot be left blank
     When the user clicks the button/link             link=Finance checks
   #  When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # clicking the review button for the lead partner
-    And the user navigates to the page               ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # to delete this when the new eligibility page is switched to
+    And the user navigates to the page               ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # to delete this when the new eligibility page is switched to
 
 
 Project finance user can amend labour details in eligibility
@@ -368,7 +368,6 @@ Project finance user can amend materials details in eligibility
 Project finance user can amend capital usage details in eligibility
     [Documentation]    INFUND-4834
     [Tags]
-    Given the user navigates to the page            ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
     When the user clicks the button/link            jQuery=form section:nth-of-type(4) button:contains("Capital usage")
     Then the user should see the element            jQuery=form section:nth-of-type(4) button span:contains("0%")
     And the user should see the element            jQuery=form section:nth-of-type(4) input[value*='552']
@@ -678,7 +677,7 @@ Confirming eligibility should update on the finance checks page
 Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193, INFUND-6149
     [Tags]    HappyPath
-    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22
     And the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
     When the user fills in project costs
     And the user selects the checkbox    costs-reviewed
