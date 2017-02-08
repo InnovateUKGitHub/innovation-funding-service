@@ -29,7 +29,7 @@ public class CommonThreadController<R> {
         return service.findOne(threadId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{threadId}", method = POST)
+    @RequestMapping(value = "", method = POST)
     public RestResult<Long> create(@RequestBody R query) {
         return service.create(query).toPostCreateResponse();
     }
