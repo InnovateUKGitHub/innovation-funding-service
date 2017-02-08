@@ -9,8 +9,6 @@ Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
 
 *** Test Cases ***
-
-
 Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
@@ -22,24 +20,21 @@ Applicant has options to enter funding level and details of any other funding
     And the user should see the element    css=[name*=other_funding-fundingAmount]
     And the user should see the radio button in the page    other_funding-otherPublicFunding-
 
-
 Applicant can see maximum funding size available to them
     [Documentation]    INFUND-6794
     [Tags]    HappyPath    Pending
     # TODO Pending due to INFUND-8091
     When the user should see the text in the page    50% max funding level allowed for an organisation of your size    # note that this text will change
 
-
 Funding level validations
     [Documentation]    INFUND-6794
     [Tags]
     When the user enters text to a text field    id=cost-financegrantclaim    78
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    Then the user should see the element  jQuery=span.error-message:contains("This field should be 50% or lower.")
+    Then the user should see the element    jQuery=span.error-message:contains("This field should be 50% or lower.")
     When the user enters text to a text field    id=cost-financegrantclaim    46
     Then the user should not see the element    jQuery=span.error-message:contains("This field should be 70% or lower.")
     And the user should not see the element    jQuery=.error-message
-
 
 Other funding validations
     [Documentation]    INFUND-6794
@@ -57,16 +52,14 @@ Other funding validations
     And the user selects the checkbox    termsAgreed
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
 
-
 If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
     [Tags]    HappyPath
-    Given the user navigates to the page  ${DASHBOARD_URL}
-    And the user clicks the button/link   link=Robot test application
-    When the user clicks the button/link       link=Application details
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link=Robot test application
+    When the user clicks the button/link    link=Application details
     And the user clicks the button/link    name=mark_as_incomplete
     Then the user should see the text in the page    Research category determines funding
-
 
 Changing application details sets funding level to incomplete
     [Documentation]    INFUND-6895
@@ -76,7 +69,6 @@ Changing application details sets funding level to incomplete
     And applicant navigates to the finances of the robot application
     Then the user should see the element    css=.list-overview .section:nth-of-type(3) .assigned
 
-
 Funding level has been reset
     [Documentation]    INFUND-6895
     [Tags]    HappyPath
@@ -85,7 +77,6 @@ Funding level has been reset
     And the user should not see the text in the element    css=[name*=other_funding-fundingSource]    Lottery funding
     And the user should not see the text in the element    css=[name*=other_funding-securedDate]    12-2008
     And the user should not see the text in the element    css=[name*=other_funding-fundingAmount]    20000
-
 
 Funding level can be re-entered, and this saves correctly
     [Documentation]    INFUND-6895
@@ -99,4 +90,11 @@ Funding level can be re-entered, and this saves correctly
     Then the user should not see an error in the page
     And the user should see the element    css=.list-overview .section:nth-of-type(3) .complete
 
-
+Application details should show a warning in edit mode
+    [Documentation]    INFUND-6823
+    [Tags]    HappyPath
+    Given The user clicks the button/link    link=Application Overview
+    And the user clicks the button/link    link=Application details
+    When The user clicks the button/link    jQuery=button:contains(Edit)
+    Then the user should see the element    css=.message-alert.extra-margin-bottom
+    [Teardown]    When The user clicks the button/link    jQuery=button:contains(Mark as complete)
