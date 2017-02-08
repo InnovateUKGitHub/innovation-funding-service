@@ -297,7 +297,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
         Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
-        List<ApplicationFinanceResource> applicationFinanceResourceList = newApplicationFinanceResource().build(3);
+        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
         FinanceCheckProcess process = newFinanceCheckProcess().withModifiedDate(new GregorianCalendar()).build();
@@ -312,7 +312,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
-        when(financeRowServiceMock.financeTotals(application.getId())).thenReturn(serviceSuccess(applicationFinanceResourceList));
+        when(projectFinanceRowServiceMock.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
         when(projectServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
         when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(0).getId())).thenReturn(process);
         when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(1).getId())).thenReturn(process);
