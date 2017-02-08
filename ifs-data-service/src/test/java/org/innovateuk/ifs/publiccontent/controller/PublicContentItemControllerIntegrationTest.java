@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
@@ -64,7 +63,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void testFindFilteredItems() throws Exception {
-        Competition competition = competitionRepository.findById(1L);
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
 
         flushAndClearSession();
 
@@ -114,7 +113,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void findFilteredItems_findAllPublicContent() throws Exception {
-        Competition competition = competitionRepository.findById(1L);
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
 
 
         flushAndClearSession();
@@ -131,7 +130,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void findFilteredItems_findByInnovationAreaId() throws Exception {
-        Competition competition = competitionRepository.findById(1L);
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
         long innovationAreaId = 1L;
 
         flushAndClearSession();
@@ -172,7 +171,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     private void setupKeywords() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
-                .withCompetition(newCompetition().withId(1L).build())
+                .withCompetitionId(1L)
                 .withPublishDate(LocalDateTime.now())
                 .build());
 

@@ -229,7 +229,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     }
 
     private void makePublicContentIdsFound() {
-        PublicContent publicContent = newPublicContent().with(publicContent1 -> publicContent1.setId(PUBLIC_CONTENT_ID)).withCompetition(newCompetition().withId(COMPETITION_ID).build()).build();
+        PublicContent publicContent = newPublicContent().with(publicContent1 -> publicContent1.setId(PUBLIC_CONTENT_ID)).withCompetitionId(COMPETITION_ID).build();
 
         when(keywordRepository.findByKeywordLike("%Big%")).thenReturn(newKeyword().withKeyword("Big Data").withPublicContent(publicContent).build(2));
         when(keywordRepository.findByKeywordLike("%data%")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
