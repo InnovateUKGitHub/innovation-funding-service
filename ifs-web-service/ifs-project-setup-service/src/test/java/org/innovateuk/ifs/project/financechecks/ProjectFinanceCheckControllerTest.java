@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.financechecks;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceCheckController;
+import org.innovateuk.ifs.project.financechecks.controller.ProjectFinanceChecksController;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-public class ProjectFinanceCheckControllerTest extends BaseControllerMockMVCTest<ProjectFinanceCheckController> {
+public class ProjectFinanceCheckControllerTest extends BaseControllerMockMVCTest<ProjectFinanceChecksController> {
 
     @Test
     public void testViewFinanceChecksLandingPage() throws Exception {
@@ -87,7 +87,7 @@ public class ProjectFinanceCheckControllerTest extends BaseControllerMockMVCTest
     }
 
         @Override
-    protected ProjectFinanceCheckController supplyControllerUnderTest() {
-        return new ProjectFinanceCheckController();
+    protected ProjectFinanceChecksController supplyControllerUnderTest() {
+        return new ProjectFinanceChecksController();
     }
 }
