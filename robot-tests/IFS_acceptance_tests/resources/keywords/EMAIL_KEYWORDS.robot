@@ -155,7 +155,7 @@ Delete the emails from the default test mailbox
 
 
 delete the emails from the default remote test mailbox
-    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     Delete All Emails
     close mailbox
 
@@ -172,9 +172,9 @@ Delete the emails from both default test mailboxes
 
 
 delete the emails from both default remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
     Delete All Emails
     close mailbox
-    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_two}@gmail.com    password={test_mailbox_two_password}
+    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
     Delete All Emails
     close mailbox
