@@ -119,7 +119,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), Optional.of(10));
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -136,7 +136,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(1L), Optional.empty(), Optional.empty(), Optional.of(10));
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(1L), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -148,7 +148,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void findFilteredItems_openCompetitionsAreFilteredFromResultListAndTotalFound() throws Exception {
-        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), Optional.of(20));
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesFive = result.getSuccessObject().getContent();

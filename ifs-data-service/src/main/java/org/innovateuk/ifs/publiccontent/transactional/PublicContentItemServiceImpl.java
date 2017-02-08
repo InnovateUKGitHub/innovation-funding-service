@@ -68,7 +68,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
-        Page<PublicContent> publicContentPage = getPublicContentPage(innovationAreaId, searchString, pageNumber, pageSize);
+        Page<Competition> publicContentPage = getPublicContentPage(innovationAreaId, searchString, pageNumber, pageSize);
 
 
         if(null == publicContentPage) {
@@ -79,8 +79,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
     }
 
 
-    private Page<PublicContent> getPublicContentPage(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
-        Page<PublicContent> publicContentPage;
+    private Page<Competition> getPublicContentPage(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
+        Page<Competition> publicContentPage;
+
         if(innovationAreaId.isPresent() && searchString.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
@@ -173,13 +174,13 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         return publicContentItemResource;
     }
 
-    private PublicContentItemPageResource mapPageToPageItemResource(Page<PublicContent> publicContentList) {
+    private PublicContentItemPageResource mapPageToPageItemResource(Page<Competition> competitionList) {
         PublicContentItemPageResource publicContentItemPageResource = new PublicContentItemPageResource();
 
         List<PublicContentItemResource> publicContentItemResources = new ArrayList<>();
 
-        publicContentList.getContent().forEach(publicContent -> {
-            Competition competition = competitionRepository.findById(publicContent.getCompetitionId());
+        competitionList.getContent().forEach(competition -> {
+            PublicContent publicContent = publicContentRepository.findByCompetitionId(competition.getId());
 
             PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
             publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
@@ -188,13 +189,13 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             publicContentItemResource.setCompetitionTitle(competition.getName());
 
             publicContentItemResources.add(publicContentItemResource);
-    });
+        });
 
-        publicContentItemPageResource.setTotalElements(publicContentList.getTotalElements());
+        publicContentItemPageResource.setTotalElements(competitionList.getTotalElements());
         publicContentItemPageResource.setContent(publicContentItemResources);
-        publicContentItemPageResource.setTotalPages(publicContentList.getTotalPages());
-        publicContentItemPageResource.setNumber(publicContentList.getNumber());
-        publicContentItemPageResource.setSize(publicContentList.getSize());
+        publicContentItemPageResource.setTotalPages(competitionList.getTotalPages());
+        publicContentItemPageResource.setNumber(competitionList.getNumber());
+        publicContentItemPageResource.setSize(competitionList.getSize());
 
         return publicContentItemPageResource;
     }

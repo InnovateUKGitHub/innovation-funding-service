@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.repository;
 
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,41 +18,49 @@ import java.util.Set;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface PublicContentRepository extends PagingAndSortingRepository<PublicContent, Long> {
-    @Query("SELECT p FROM PublicContent p " +
-                "INNER JOIN p.competition c " +
-                "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
-                "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
-            "WHERE p.competition.id IN :competitionIds " +
-                "AND p.publishDate < :now " +
+    @Query("SELECT c FROM Competition c " +
+            "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
+            "WHERE EXISTS(   SELECT p " +
+                            "FROM PublicContent p " +
+                            "WHERE p.competitionId = c.id " +
+                                "AND p.publishDate < :now) " +
+            "AND c.id IN :competitionIds " +
             "ORDER BY closed_milestone.date ASC")
-    Page<PublicContent> findAllPublishedForOpenCompetitionByInnovationId(@Param(value="competitionIds") List<Long> competitionIds, Pageable pageable, @Param(value="now") LocalDateTime now);
+    Page<Competition> findAllPublishedForOpenCompetitionByInnovationId(@Param(value="competitionIds") List<Long> competitionIds, Pageable pageable, @Param(value="now") LocalDateTime now);
 
-    @Query("SELECT p FROM PublicContent p " +
-                "INNER JOIN p.competition c " +
-                "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
-                "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
-            "WHERE p.id IN :filteredPublicContentIds " +
-                "AND p.publishDate < :now " +
+    @Query("SELECT c FROM Competition c " +
+            "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
+            "WHERE EXISTS(   SELECT p " +
+                            "FROM PublicContent p " +
+                            "WHERE p.competitionId = c.id " +
+                                "AND p.id IN :filteredPublicContentIds " +
+                                "AND p.publishDate < :now) " +
             "ORDER BY closed_milestone.date ASC")
-    Page<PublicContent> findAllPublishedForOpenCompetitionBySearchString(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable, @Param(value="now") LocalDateTime now);
+    Page<Competition> findAllPublishedForOpenCompetitionBySearchString(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable, @Param(value="now") LocalDateTime now);
 
-    @Query("SELECT p FROM PublicContent p " +
-                "INNER JOIN p.competition c " +
-                "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
-                "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
-            "WHERE p.competition.id IN :competitionIds " +
-                "AND p.id IN :filteredPublicContentIds " +
-                "AND p.publishDate < :now " +
-            "ORDER BY closed_milestone.date ASC")
-    Page<PublicContent> findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, @Param(value="competitionIds") List<Long> competitionIds, Pageable pageable, @Param(value="now") LocalDateTime now);
 
-    @Query("SELECT p FROM PublicContent p " +
-                "INNER JOIN p.competition c " +
-                "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
-                "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
-            "WHERE p.publishDate < :now " +
+    @Query("SELECT c FROM Competition c " +
+            "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
+            "WHERE EXISTS(   SELECT p " +
+                            "FROM PublicContent p " +
+                            "WHERE p.competitionId = c.id " +
+                                "AND p.id IN :filteredPublicContentIds " +
+                                "AND p.publishDate < :now) " +
+            "AND c.id IN :competitionIds " +
             "ORDER BY closed_milestone.date ASC")
-    Page<PublicContent> findAllPublishedForOpenCompetition(Pageable pageable, @Param(value="now") LocalDateTime now);
+    Page<Competition> findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, @Param(value="competitionIds") List<Long> competitionIds, Pageable pageable, @Param(value="now") LocalDateTime now);
+    @Query("SELECT c FROM Competition c " +
+            "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
+            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
+            "WHERE EXISTS(   SELECT p " +
+                            "FROM PublicContent p " +
+                            "WHERE p.competitionId = c.id " +
+                                "AND p.publishDate < :now) " +
+            "ORDER BY closed_milestone.date ASC")
+    Page<Competition> findAllPublishedForOpenCompetition(Pageable pageable, @Param(value="now") LocalDateTime now);
 
     PublicContent findByCompetitionId(Long id);
     Page<PublicContent> findByCompetitionIdInAndIdIn(List<Long> competitionIds, Set<Long> publicContentIds, Pageable pageable);

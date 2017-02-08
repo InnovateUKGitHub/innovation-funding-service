@@ -38,6 +38,7 @@
             </div>
             <div class="column-two-thirds">
                 <p class="extra-margin-bottom" th:text="${model.totalResults == 1 ? '1 competition' : model.totalResults+' competitions' }" />
+                <p class="extra-margin-bottom" th:if="${model.totalResults == 0}">No results found.</p>
                 <ul>
                    <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
                        <h2 class="heading-medium no-margin-top extra-margin-bottom">
