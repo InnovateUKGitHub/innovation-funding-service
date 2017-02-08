@@ -1,5 +1,9 @@
 *** Settings ***
-Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question \ INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
+Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question
+...
+...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
+...
+...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant goes to the application details page of the Robot application
 Suite Teardown    TestTeardown User closes the browser
@@ -85,6 +89,8 @@ Application details server side
     [Documentation]    INFUND-2843
     ...
     ...    INFUND-4694
+    ...
+    ...    INFUND-6823
     [Tags]
     Given the user should see the text in the page    Application details
     When the user clicks the button/link    jQuery=label:contains(Yes)
@@ -98,10 +104,13 @@ Application details server side
     And the user should see an error    Please enter a future date.
     And the user should see an error    This field cannot be left blank.
     And the user should see an error    Please enter the previous application number.
+    And the user should see an error    Please select a research category.
     And the user should see an error    Please enter the previous application title.
+    And the user should see an error    Please enter the full title of the project.
     And the user should see the element    css=.error-summary-list
-    [Teardown]   Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
-                     ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
+    [Teardown]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+    ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
+
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
