@@ -55,8 +55,8 @@ public class PublicContent {
         return competitionId;
     }
 
-    public void setCompetitionId(Long competition) {
-        this.competitionId = competition;
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
     }
 
     public LocalDateTime getPublishDate() {

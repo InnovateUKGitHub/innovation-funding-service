@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
@@ -22,6 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
@@ -45,6 +49,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Autowired
     private KeywordRepository keywordRepository;
+
+    @Autowired
+    private InnovationAreaRepository innovationAreaRepository;
 
     @Override
     @Autowired
@@ -135,7 +142,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(1L), Optional.empty(), Optional.empty(), 10);
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -150,9 +157,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
 
         assertTrue(result.isSuccess());
-        List<PublicContentItemResource> publicContentItemResourcesFive = result.getSuccessObject().getContent();
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
 
-        assertEquals(0, publicContentItemResourcesFive.size());
+        assertEquals(1, publicContentItemResourcesFive.getTotalElements());
     }
 
     @Test
@@ -180,5 +187,12 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         Keyword keywordThree = newKeyword().withKeyword("unique").withPublicContent(publicContentResult).build();
 
         keywordRepository.save(asList(keywordOne, keywordTwo, keywordThree));
+
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        Competition competition = competitionRepository.findOne(1L);
+
+        CompetitionCategoryLink<InnovationArea> categoryLink = newCompetitionCategoryLink().withCategory(innovationArea).withCompetition(competition).build();
+
+        competitionCategoryLinkRepository.save(categoryLink);
     }
 }

@@ -21,7 +21,7 @@ public abstract class PublicContentMapper extends BaseMapper<PublicContent, Publ
     public abstract PublicContentResource mapToResource(PublicContent domain);
 
     @Mappings({
-            @Mapping(target = "contentEvents", ignore = true),
+            @Mapping(target = "contentEvents", ignore = true)
     })
     public abstract PublicContent mapToDomain(PublicContentResource domain);
 

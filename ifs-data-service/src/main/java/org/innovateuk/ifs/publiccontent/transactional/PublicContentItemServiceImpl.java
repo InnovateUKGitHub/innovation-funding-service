@@ -28,7 +28,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
-import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -85,19 +84,19 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         if(innovationAreaId.isPresent() && searchString.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize), LocalDateTime.now());
+            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize));
         }
         else if(innovationAreaId.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(competitionsIdsInInnovationArea,getPageable(pageNumber, pageSize), LocalDateTime.now());
+            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(competitionsIdsInInnovationArea,getPageable(pageNumber, pageSize));
         }
         else if(searchString.isPresent())
         {
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionBySearchString(keywordsFound, getPageable(pageNumber, pageSize), LocalDateTime.now());
+            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionBySearchString(keywordsFound, getPageable(pageNumber, pageSize));
         }
         else {
-            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize), LocalDateTime.now());
+            publicContentPage = publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize));
         }
 
         return publicContentPage;
