@@ -141,17 +141,17 @@ Delete the emails from both test mailboxes
 
 delete the emails from both remote test mailboxes
     delete the emails from the default remote test mailbox
-    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}   timeout=3
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}   timeout=1
 
 Delete the emails from the default test mailbox
     run keyword if    ${docker}==1    delete the emails from the local test mailbox
     run keyword if    ${docker}!=1    delete the emails from the default remote test mailbox
 
 delete the emails from the default remote test mailbox
-    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}   timeout=3
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}   timeout=1
 
 delete the emails from the local test mailbox
-    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=ifs-local-dev    port=9876    user=smtp    password=smtp   is_secure=False   timeout=3
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=ifs-local-dev    port=9876    user=smtp    password=smtp   is_secure=False   timeout=1
 
 Delete the emails from both default test mailboxes
     run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
