@@ -11,7 +11,7 @@ import java.util.List;
 public class ProjectFinanceQueriesRestService extends ThreadRestService<QueryResource> {
 
     public ProjectFinanceQueriesRestService() {
-        super("/project/finance/queries", new ParameterizedTypeReference<List<QueryResource>>(){});
+        super("/project/finance/queries", QueryResource.class, new ParameterizedTypeReference<List<QueryResource>>(){});
     }
 
 }

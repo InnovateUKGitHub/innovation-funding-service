@@ -19,7 +19,7 @@ public interface ProjectFinanceQueriesService extends ThreadService<QueryResourc
 
     @Override
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<QueryResource> findOne(Long contextClassPk);
+    ServiceResult<QueryResource> findOne(Long id);
 
     @Override
     @PreAuthorize("hasPermission(#QueryResource, 'CREATE')")
