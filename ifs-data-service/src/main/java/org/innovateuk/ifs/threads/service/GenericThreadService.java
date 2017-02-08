@@ -28,9 +28,8 @@ public class GenericThreadService<E extends Thread, C> implements ThreadService<
     }
 
     @Override
-    public ServiceResult<E> findOne(Long contextClassPk) {
-        return find(repository.findByClassPkAndClassName(contextClassPk, ProjectFinance.class.getName()),
-                notFoundError(contextClass, contextClassPk));
+    public ServiceResult<E> findOne(Long id) {
+        return find(repository.findOne(id), notFoundError(Thread.class));
     }
 
     @Override
