@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Collections;
 import java.util.List;
 
 import static java.lang.Boolean.TRUE;
@@ -157,7 +156,8 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long competitionId = 1L;
 
         loginCompAdmin();
-        RestResult<Long> result = controller.countByStateAndCompetition(CREATED, competitionId);
+        RestResult<Integer> result = controller.countByStateAndCompetition(CREATED, competitionId);
+
         assertTrue(result.isSuccess());
         long count = result.getSuccessObject();
         assertEquals(1L, count);
