@@ -44,7 +44,7 @@ public class AssessmentController {
     }
 
     @RequestMapping(value = "/state/{state}/competition/{competitionId}/count", method = GET)
-    public RestResult<Long> countByStateAndCompetition(
+    public RestResult<Integer> countByStateAndCompetition(
             @PathVariable("state") AssessmentStates state,
             @PathVariable("competitionId") Long competitionId) {
         return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();

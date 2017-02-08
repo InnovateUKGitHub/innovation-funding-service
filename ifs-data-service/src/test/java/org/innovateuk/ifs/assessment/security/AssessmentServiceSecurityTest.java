@@ -60,7 +60,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         assertAccessDenied(
                 () -> classUnderTest.findAssignableById(ID_TO_FIND),
-                () -> verify(assessmentPermissionRules).userCanAssignAssessment(eq(assessmentResource), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules).userCanReadAssessment(eq(assessmentResource), isA(UserResource.class))
         );
     }
 
@@ -188,8 +188,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
-            return serviceSuccess(Integer.toUnsignedLong(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size()));
+        public ServiceResult<Integer> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size());
         }
 
         @Override
