@@ -22,6 +22,9 @@ IFS.competitionManagement.repeater = (function () {
         case 'innovationArea':
           IFS.competitionManagement.repeater.addInnovationAreaRow()
           break
+        case 'contentGroup':
+          IFS.competitionManagement.repeater.addContentGroup(el)
+          break
       }
       jQuery('body').trigger('updateSerializedFormState')
       return false
@@ -34,7 +37,6 @@ IFS.competitionManagement.repeater = (function () {
         case 'cofunder':
           jQuery('[name="removeFunder"]').val(inst.val())
           IFS.core.autoSave.fieldChanged('[name="removeFunder"]')
-
           inst.closest('.funder-row').remove()
           IFS.competitionManagement.repeater.reindexRows('.funder-row')
           jQuery('body').trigger('recalculateAllFinances')
@@ -50,6 +52,10 @@ IFS.competitionManagement.repeater = (function () {
           IFS.competitionManagement.repeater.reindexRows('.form-group[id^="innovation-row"]')
           IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
           IFS.competitionManagement.initialDetails.autosaveInnovationAreaIds()
+          break
+        case 'contentGroup':
+          inst.closest('[id^="contentGroup-row-"]').remove()
+          IFS.competitionManagement.repeater.reindexRows('[id^="contentGroup-row-"]')
           break
       }
     },
@@ -83,6 +89,49 @@ IFS.competitionManagement.repeater = (function () {
       rows.last().after(newRow)
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
     },
+    addContentGroup: function (buttonEl) {
+      var rows = jQuery('[id^=contentGroup-row-]')
+      var count = 0
+      var idCount = 0
+
+      if (rows.length) {
+        count = parseInt(rows.length, 10) // name attribute has to be 0,1,2,3
+        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(rows.last().prop('id').split('contentGroup-row-')[1], 10) + 1
+      }
+      var headerRequiredErrorMessage = 'Please enter a heading.'
+      var contentRequiredErrorMessage = 'Please enter content.'
+
+      var html = '<div class="contentGroup" id="contentGroup-row-' + idCount + '">' +
+                    '<div class="form-group">' +
+                      '<label class="form-label-bold" for="heading-' + idCount + '">Heading</label>' +
+                      '<input class="form-control" id="heading-' + idCount + '" type="text" name="contentGroups[' + count + '].heading" data-required-errormessage="' + headerRequiredErrorMessage + '" required="required" />' +
+                    '</div>' +
+                    '<div class="form-group textarea-wrapped">' +
+                      '<label class="form-label-bold" for="content-' + idCount + '">Content</label>' +
+                          '<textarea id="content-' + idCount + '" cols="30" rows="10" class="width-full form-control" data-editor="html" name="contentGroups[' + count + '].content" data-required-errormessage="' + contentRequiredErrorMessage + '" required="required"></textarea>' +
+                      '</div>' +
+                    '<div class="form-group upload-section">' +
+                        '<input type="file" id="file-upload-' + idCount + '" class="inputfile" name="contentGroups[' + count + '].attachment" />' +
+                        '<label for="file-upload-' + idCount + '" class="button-secondary extra-margin">+ Upload</label>' +
+                        '<button class="button-secondary" type="submit" name="uploadFile" data-for-file-upload="file-upload-' + idCount + '" value="' + count + '">Save</button>' +
+                        '<p class="uploaded-file">No file currently uploaded</p>' +
+                    '</div>' +
+                    '<button type="button" class="buttonlink no-margin" data-remove-row="contentGroup">Remove section</button>' +
+                  '</div>'
+      if (rows.length) {
+        rows.last().after(html)
+      } else {
+        jQuery(buttonEl).parent().before(html)
+      }
+
+      var editor = IFS.core.editor.prepareEditorHTML('#content-' + idCount)
+      // make a copy of the global wysiwyg-editor settings object and add the html link functionality
+      var editorOptions = jQuery.extend(true, {}, IFS.core.editor.settings.editorOptions, {
+        plugins: {'hallolink': {}}
+      })
+      jQuery(editor).hallo(editorOptions)
+    },
     addCoFunder: function () {
       var count = 0
       var idCount = 0
@@ -92,7 +141,6 @@ IFS.competitionManagement.repeater = (function () {
         // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
         idCount = parseInt(jQuery('.funder-row[id^=funder-row-]').last().attr('id').split('funder-row-')[1], 10) + 1
       }
-      // todo: Brent, make this a clone of the first existing row like innovationAreas
       var html = '<div class="grid-row funder-row" id="funder-row-' + idCount + '">' +
                     '<div class="column-half">' +
                       '<div class="form-group">' +
@@ -120,7 +168,6 @@ IFS.competitionManagement.repeater = (function () {
         idCount = parseInt(jQuery('tr[id^=guidance-]').last().attr('id').split('guidance-')[1], 10) + 1
       }
       var html = '<tr id="guidance-' + idCount + '">'
-      // todo: Brent, make this a clone of the first existing row like innovationAreas
       if (isAssessed) {
         html += '<td class="form-group">' +
                 '<label class="form-label" for="guidancerow-' + idCount + '-scorefrom"><span class="visuallyhidden">Score from</span></label>' +
@@ -147,14 +194,14 @@ IFS.competitionManagement.repeater = (function () {
     reindexRows: function (rowSelector) {
       jQuery(rowSelector + ' [name]').each(function () {
         var inst = jQuery(this)
-        var thisIndex = inst.closest(rowSelector).index(rowSelector)
-
-        var oldAttr = inst.attr('name')
-        var oldAttrName = oldAttr.split('[')[0]
-        var oldAttrElement = oldAttr.split(']')[1]
-        inst.attr('name', oldAttrName + '[' + thisIndex + ']' + oldAttrElement)
+        if (inst.prop('name').indexOf('[') !== -1) {
+          var thisIndex = inst.closest(rowSelector).index(rowSelector)
+          var oldAttr = inst.attr('name')
+          var oldAttrName = oldAttr.split('[')[0]
+          var oldAttrElement = oldAttr.split(']')[1]
+          inst.prop('name', oldAttrName + '[' + thisIndex + ']' + oldAttrElement)
+        }
       })
-
       jQuery(rowSelector + ' [data-remove-row]').each(function () {
         var inst = jQuery(this)
         var thisIndex = inst.closest(rowSelector).index(rowSelector)

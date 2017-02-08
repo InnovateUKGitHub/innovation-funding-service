@@ -67,6 +67,8 @@
             <dt>Project size</dt>
             <dd th:text="${form.projectSize}"></dd>
         </dl>
+
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <fieldset>
@@ -75,8 +77,7 @@
                     Competition description
                 </label>
                 <div class="textarea-wrapped">
-                        <textarea
-                            id="description"
+                        <textarea id="description"
                             class="form-control width-full"
                             data-editor="html"
                             maxlength="5000"
@@ -115,6 +116,21 @@
                        th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
             </div>
         </fieldset>
+
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+
+    </th:block>
+</div>
+
+<!-- =================== Public content section - Eligibility  ===================================================== -->
+<div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <p>Text entered into this section will appear within the eligibility tab.</p>
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium no-margin">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
     </th:block>
 </div>
 
@@ -202,4 +218,85 @@
     </th:block>
 </div>
 
+<!-- =================== Public content section - Scope  =========================================================== -->
+<div th:fragment="section-scope(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium no-margin">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+    </th:block>
+</div>
 
+<div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium no-margin">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+    </th:block>
+</div>
+
+<div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+    </th:block>
+</div>
+
+<div th:fragment="content-groups(form, model)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:each="contentGroup,iter: ${form.contentGroups}" th:with="index=${iter.index}">
+        <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
+            <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
+            <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'error':''">
+                <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
+                <input class="form-control" th:id="${'heading-'+index}" type="text" th:field="*{contentGroups[__${index}__].heading}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.heading.required}" />
+            </div>
+            <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'error':''">
+                <label class="form-label-bold" th:for="${'content-'+index}">Content</label>
+                    <textarea th:errorclass="field-error" th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"
+                              required="required"
+                              th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
+            </div>
+            <div class="form-group upload-section">
+                <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].attachment')} ? 'error':''">
+                <th:block th:unless="${model.hasAttachment(contentGroup.id)}">
+                    <input type="file" th:id="${'file-upload-'+index}" class="inputfile" th:field="*{contentGroups[__${index}__].attachment}"/>
+                    <label th:for="${'file-upload-'+index}" class="button-secondary extra-margin">+ Upload</label>
+                    <button class="button-secondary" type="submit" name="uploadFile" th:attr="data-for-file-upload=${'file-upload-'+index}" th:value="${index}">Save</button>
+                    <p class="uploaded-file">No file currently uploaded</p>
+                </th:block>
+                <th:block th:if="${model.hasAttachment(contentGroup.id)}">
+                    <p class="uploaded-file">
+                        <a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
+                           th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a>
+                    </p>
+                    <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
+                </th:block>
+                </div>
+            </div>
+            <button type="button" class="buttonlink" th:if="${index > 0 or model.section.type.allowEmptyContentGroups}" data-remove-row="contentGroup">Remove section</button>
+        </div>
+    </th:block>
+    <div class="alignright">
+        <button class="buttonlink" type="button" data-add-row="contentGroup">+ add new section</button>
+    </div>
+</div>
+
+<div th:fragment="content-groups-read-only(form, model)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:each="contentGroup: ${form.contentGroups}">
+        <h2 class="heading-small no-margin-bottom" th:text="${contentGroup.heading}"></h2>
+        <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
+        <th:block th:if="${model.hasAttachment(contentGroup.id)}">
+            <p><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
+                   th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a></p>
+        </th:block>
+    </th:block>
+</div>

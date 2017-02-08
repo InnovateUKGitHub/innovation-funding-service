@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -32,7 +33,7 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
     }
 
     @Override
-    protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource) {
+    protected void populateSection(DatesViewModel model, PublicContentResource publicContentResource, PublicContentSectionResource section) {
         List<MilestoneResource> milestonesNeeded = milestoneService.getAllMilestonesByCompetitionId(publicContentResource.getCompetitionId()).stream()
                 .filter(milestoneResource -> MilestoneType.RELEASE_FEEDBACK.equals(milestoneResource.getType()) ||
                         MilestoneType.OPEN_DATE.equals(milestoneResource.getType()) ||

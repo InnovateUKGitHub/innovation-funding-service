@@ -3,6 +3,7 @@ package org.innovateuk.ifs.publiccontent.formpopulator;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.DatesForm;
 import org.innovateuk.ifs.publiccontent.form.subform.Date;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,11 @@ public class DatesFormPopulator extends AbstractPublicContentFormPopulator<Dates
         });
 
         form.setDates(dateList);
+    }
+
+    @Override
+    protected PublicContentSectionType getType() {
+        return PublicContentSectionType.DATES;
     }
 
     private Date mapEventToDate(PublicContentEventResource event) {

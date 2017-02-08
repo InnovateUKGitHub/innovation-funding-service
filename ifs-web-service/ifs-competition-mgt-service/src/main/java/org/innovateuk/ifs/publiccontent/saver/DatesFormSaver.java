@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.saver;
 
 
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -25,7 +27,8 @@ public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> im
     private ContentEventRestService contentEventRestService;
 
     @Override
-    protected void populateResource(DatesForm form, PublicContentResource publicContentResource) {
+    protected List<Error> populateResource(DatesForm form, PublicContentResource publicContentResource) {
+        return Collections.emptyList();
     }
 
     @Override

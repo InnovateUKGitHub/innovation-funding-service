@@ -28,4 +28,9 @@ public class PublicContentRestServiceImpl extends BaseRestService implements Pub
     public RestResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
         return postWithRestResult(PUBLIC_CONTENT_REST_URL + "update-section/" + section.name() + "/" + resource.getId(), resource, Void.class);
     }
+
+    @Override
+    public RestResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
+        return postWithRestResult(PUBLIC_CONTENT_REST_URL + "mark-section-as-complete/" + section.name() + "/" + resource.getId(), resource, Void.class);
+    }
 }
