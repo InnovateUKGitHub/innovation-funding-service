@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
@@ -20,7 +21,6 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static java.util.Collections.emptyList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -58,57 +58,29 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testCompAdminsCanViewProjects() {
+    public void testInternalUsersCanViewProjects() {
 
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(compAdminUser())) {
-                assertTrue(rules.compAdminsCanViewProjects(project, user));
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanViewProjects(project, user));
             } else {
-                assertFalse(rules.compAdminsCanViewProjects(project, user));
+                assertFalse(rules.internalUsersCanViewProjects(project, user));
             }
         });
     }
 
     @Test
-    public void testCompAdminsCanAcceptOrRejectDocuments() {
+    public void testInternalUsersCanAcceptOrRejectDocuments() {
 
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(compAdminUser())) {
-                assertTrue(rules.competitionAdminCanAcceptOrRejectOtherDocuments(project, user));
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUserCanAcceptOrRejectOtherDocuments(project, user));
             } else {
-                assertFalse(rules.competitionAdminCanAcceptOrRejectOtherDocuments(project, user));
-            }
-        });
-    }
-
-    @Test
-    public void testProjectFinanceUserCanAcceptOrRejectOtherDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
-                assertTrue(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
-            } else {
-                assertFalse(rules.projectFinanceUserCanAcceptOrRejectOtherDocuments(project, user));
-            }
-        });
-    }
-
-    @Test
-    public void testProjectFinanceUsersCanViewProjects() {
-
-        ProjectResource project = newProjectResource().build();
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
-                assertTrue(rules.projectFinanceUsersCanViewProjects(project, user));
-            } else {
-                assertFalse(rules.projectFinanceUsersCanViewProjects(project, user));
+                assertFalse(rules.internalUserCanAcceptOrRejectOtherDocuments(project, user));
             }
         });
     }
@@ -173,29 +145,15 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testCompAdminsCanViewMonitoringOfficersOnProjects() {
+    public void testInternalUsersCanViewMonitoringOfficersOnProjects() {
 
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(compAdminUser())) {
-                assertTrue(rules.compAdminsCanViewMonitoringOfficersForAnyProject(project, user));
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanViewMonitoringOfficersForAnyProject(project, user));
             } else {
-                assertFalse(rules.compAdminsCanViewMonitoringOfficersForAnyProject(project, user));
-            }
-        });
-    }
-
-    @Test
-    public void testProjectFinanceUsersCanViewMonitoringOfficersOnProjects() {
-
-        ProjectResource project = newProjectResource().build();
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
-                assertTrue(rules.projectFinanceUsersCanViewMonitoringOfficersForAnyProject(project, user));
-            } else {
-                assertFalse(rules.projectFinanceUsersCanViewMonitoringOfficersForAnyProject(project, user));
+                assertFalse(rules.internalUsersCanViewMonitoringOfficersForAnyProject(project, user));
             }
         });
     }
@@ -226,29 +184,15 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testCompAdminsCanEditMonitoringOfficersOnProjects() {
+    public void testInternalUsersCanEditMonitoringOfficersOnProjects() {
 
         ProjectResource project = newProjectResource().build();
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(compAdminUser())) {
-                assertTrue(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanAssignMonitoringOfficersForAnyProject(project, user));
             } else {
-                assertFalse(rules.compAdminsCanAssignMonitoringOfficersForAnyProject(project, user));
-            }
-        });
-    }
-
-    @Test
-    public void testProjectFinanceUsersCanEditMonitoringOfficersOnProjects() {
-
-        ProjectResource project = newProjectResource().build();
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
-                assertTrue(rules.projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, user));
-            } else {
-                assertFalse(rules.projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, user));
+                assertFalse(rules.internalUsersCanAssignMonitoringOfficersForAnyProject(project, user));
             }
         });
     }
@@ -298,49 +242,17 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testCompAdminCanViewOtherDocumentsDetails() {
-
+    public void testInternalUserCanViewOtherDocumentsDetails() {
         ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
 
-        setUpUserAsCompAdmin(project, user);
-
-        assertTrue(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUserCanViewOtherDocumentsDetails(project, user));
+            } else {
+                assertFalse(rules.internalUserCanViewOtherDocumentsDetails(project, user));
+            }
+        });
     }
-
-    @Test
-    public void testNonCompAdminCannotViewOtherDocumentsDetails() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserNotAsCompAdmin(project, user);
-
-        assertFalse(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
-    }
-
-    @Test
-    public void testProjectFinanceUserCanViewOtherDocumentsDetails() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserAsProjectFinanceUser(project, user);
-
-        assertFalse(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
-    }
-
-    @Test
-    public void testNonProjectFinanceUserCannotViewOtherDocumentsDetails() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserNotAsProjectFinanceUser(project, user);
-
-        assertFalse(rules.competitionAdminCanViewOtherDocumentsDetails(project, user));
-    }
-
 
     @Test
     public void testPartnersCanDownloadOtherDocuments() {
@@ -365,47 +277,16 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testCompAdminCanDownloadOtherDocuments() {
-
+    public void testInternalUserCanDownloadOtherDocuments() {
         ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
 
-        setUpUserAsCompAdmin(project, user);
-
-        assertTrue(rules.competitionAdminCanDownloadOtherDocuments(project, user));
-    }
-
-    @Test
-    public void testNonCompAdminCannotDownloadOtherDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserNotAsCompAdmin(project, user);
-
-        assertFalse(rules.competitionAdminCanDownloadOtherDocuments(project, user));
-    }
-
-    @Test
-    public void testProjectFinanceUserCanDownloadOtherDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserAsProjectFinanceUser(project, user);
-
-        assertTrue(rules.projectFinanceUserCanDownloadOtherDocuments(project, user));
-    }
-
-    @Test
-    public void testNonProjectFinanceUserCanDownloadOtherDocuments() {
-
-        ProjectResource project = newProjectResource().build();
-        UserResource user = newUserResource().build();
-
-        setUpUserNotAsProjectFinanceUser(project, user);
-
-        assertFalse(rules.projectFinanceUserCanDownloadOtherDocuments(project, user));
+        allGlobalRoleUsers.forEach(user -> {
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUserCanDownloadOtherDocuments(project, user));
+            } else {
+                assertFalse(rules.internalUserCanDownloadOtherDocuments(project, user));
+            }
+        });
     }
 
     @Test
@@ -442,7 +323,7 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testPartnersCanViewTeamStatus(){
+    public void testPartnersCanViewTeamStatus() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);
@@ -450,38 +331,34 @@ public class ProjectPermissionRulesTest extends BasePermissionRulesTest<ProjectP
     }
 
     @Test
-    public void testNonPartnersCannotViewTeamStatus(){
+    public void testNonPartnersCannotViewTeamStatus() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         setupUserNotAsPartner(project, user);
         assertFalse(rules.partnersCanViewTeamStatus(project, user));
     }
+
     @Test
-    public void testCompAdminsCanViewTeamStatus(){
+    public void testInternalUsersCanViewTeamStatus() {
         ProjectResource project = newProjectResource().build();
-        assertTrue(rules.compAdminsCanViewTeamStatus(project, compAdminUser()));
+        assertTrue(rules.internalUsersCanViewTeamStatus(project, compAdminUser()));
+        assertTrue(rules.internalUsersCanViewTeamStatus(project, projectFinanceUser()));
     }
 
     @Test
-    public void testProjectFinanceUserCanViewTeamStatus(){
-        ProjectResource project = newProjectResource().build();
-        assertTrue(rules.projectFinanceUserCanViewTeamStatus(project, projectFinanceUser()));
-    }
-
-    @Test
-    public void testProjectFinanceUserCanSendGrantOfferLetter(){
+    public void testProjectFinanceUserCanSendGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
         assertTrue(rules.internalUserCanSendGrantOfferLetter(project, projectFinanceUser()));
     }
 
     @Test
-    public void testCompAdminsUserCanSendGrantOfferLetter(){
+    public void testCompAdminsUserCanSendGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
         assertTrue(rules.internalUserCanSendGrantOfferLetter(project, compAdminUser()));
     }
 
     @Test
-    public void testPartnerUserCannotSendGrantOfferLetter(){
+    public void testPartnerUserCannotSendGrantOfferLetter() {
         ProjectResource project = newProjectResource().build();
         UserResource user = newUserResource().build();
         setupUserAsPartner(project, user);

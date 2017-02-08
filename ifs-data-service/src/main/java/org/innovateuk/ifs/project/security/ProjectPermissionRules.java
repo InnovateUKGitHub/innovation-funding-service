@@ -7,8 +7,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 
 @PermissionRules
 @Component
@@ -19,14 +18,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return project != null && isPartner(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Comp admins can see project resources")
-    public boolean compAdminsCanViewProjects(final ProjectResource project, final UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(value = "READ", description = "Project finance users can see project resources")
-    public boolean projectFinanceUsersCanViewProjects(final ProjectResource project, final UserResource user) {
-        return isProjectFinanceUser(user);
+    @PermissionRule(value = "READ", description = "Internal users can see project resources")
+    public boolean internalUsersCanViewProjects(final ProjectResource project, final UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(
@@ -46,16 +40,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_MONITORING_OFFICER",
-            description = "Comp admins can view Monitoring Officers on any Project")
-    public boolean compAdminsCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_MONITORING_OFFICER",
-            description = "Project finance managers can view Monitoring Officers on any Project")
-    public boolean projectFinanceUsersCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isProjectFinanceUser(user);
+            description = "Internal users can view Monitoring Officers on any Project")
+    public boolean internalUsersCanViewMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(
@@ -67,16 +54,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "ASSIGN_MONITORING_OFFICER",
-            description = "Comp admins can assign Monitoring Officers on any Project")
-    public boolean compAdminsCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(
-            value = "ASSIGN_MONITORING_OFFICER",
-            description = "Project finance users can assign Monitoring Officers on any Project")
-    public boolean projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
-        return isProjectFinanceUser(user);
+            description = "Internal users can assign Monitoring Officers on any Project")
+    public boolean internalUsersCanAssignMonitoringOfficersForAnyProject(ProjectResource project, UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(
@@ -95,18 +75,10 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "DOWNLOAD_OTHER_DOCUMENTS",
-            description = "Competition Admin can download Other Documents (Collaboration Agreement, Exploitation Plan)")
-    public boolean competitionAdminCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
-        return isCompAdmin(user);
+            description = "Internal users can download Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean internalUserCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
+        return isInternal(user);
     }
-
-    @PermissionRule(
-            value = "DOWNLOAD_OTHER_DOCUMENTS",
-            description = "Project finance users can download Other Documents (Collaboration Agreement, Exploitation Plan)")
-    public boolean projectFinanceUserCanDownloadOtherDocuments(ProjectResource project, UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
 
     @PermissionRule(
             value = "VIEW_OTHER_DOCUMENTS_DETAILS",
@@ -117,18 +89,10 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_OTHER_DOCUMENTS_DETAILS",
-            description = "Competitions admins can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
-    public boolean competitionAdminCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
-        return isCompAdmin(user);
+            description = "Internal users can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
+    public boolean internalUserCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
+        return isInternal(user);
     }
-
-    @PermissionRule(
-            value = "VIEW_OTHER_DOCUMENTS_DETAILS",
-            description = "Project Finance Users can view Other Documents (Collaboration Agreement, Exploitation Plan) details that their lead partners have uploaded")
-    public boolean projectFinanceUserCanViewOtherDocumentsDetails(ProjectResource project, UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
 
     @PermissionRule(
             value = "DELETE_OTHER_DOCUMENTS",
@@ -146,16 +110,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
-            description = "Competition Admin can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
-    public boolean competitionAdminCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(
-            value = "ACCEPT_REJECT_OTHER_DOCUMENTS",
-            description = "Project finance user can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
-    public boolean projectFinanceUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
-        return isProjectFinanceUser(user);
+            description = "Internal users can accept or reject Other Documents (Collaboration Agreement, Exploitation Plan)")
+    public boolean internalUserCanAcceptOrRejectOtherDocuments(ProjectResource project, UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(
@@ -167,16 +124,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_TEAM_STATUS",
-            description = "Comp admins can see a team's status")
-    public boolean compAdminsCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_TEAM_STATUS",
-            description = "Project finance user can see a team's status")
-    public boolean projectFinanceUserCanViewTeamStatus(ProjectResource project, UserResource user) {
-        return isProjectFinanceUser(user);
+            description = "Internal users can see a team's status")
+    public boolean internalUsersCanViewTeamStatus(ProjectResource project, UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(
@@ -188,37 +138,30 @@ public class ProjectPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
             value = "VIEW_STATUS",
-            description = "Comp admins can see the project status")
-    public boolean compAdminsCanViewStatus(ProjectResource project, UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(
-            value = "VIEW_STATUS",
-            description = "Project finance user can see the project status")
-    public boolean projectFinanceUserCanViewStatus(ProjectResource project, UserResource user) {
-        return isProjectFinanceUser(user);
+            description = "Internal users can see the project status")
+    public boolean internalUsersCanViewStatus(ProjectResource project, UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(
             value = "SEND_GRANT_OFFER_LETTER",
-            description = "Comp admins & project finance can send the Grant Offer Letter notification")
+            description = "Internal users can send the Grant Offer Letter notification")
     public boolean internalUserCanSendGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isCompAdmin(user) || isProjectFinanceUser(user);
+        return isInternal(user);
     }
 
     @PermissionRule(
             value = "APPROVE_SIGNED_GRANT_OFFER_LETTER",
             description = "Internal users can approve the signed Grant Offer Letter")
     public boolean internalUsersCanApproveSignedGrantOfferLetter(ProjectResource project, UserResource user) {
-        return isCompAdmin(user) || isProjectFinanceUser(user);
+        return isInternal(user);
     }
 
     @PermissionRule(
             value = "VIEW_GRANT_OFFER_LETTER_SEND_STATUS",
-            description = "Comp admins & project finance can view the send status of Grant Offer Letter for a project")
+            description = "Internal users can view the send status of Grant Offer Letter for a project")
     public boolean internalUserCanViewSendGrantOfferLetterStatus(ProjectResource project, UserResource user) {
-        return isCompAdmin(user) || isProjectFinanceUser(user);
+        return isInternal(user);
     }
 
     @PermissionRule(
@@ -233,9 +176,9 @@ public class ProjectPermissionRules extends BasePermissionRules {
         return project != null && isPartner(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "Comp admins & project finance can see grant offer approval status")
+    @PermissionRule(value = "VIEW_SIGNED_GRANT_OFFER_LETTER_APPROVED_STATUS", description = "Internal users can see grant offer approval status")
     public boolean internalUsersCanViewGrantOfferApprovedStatus(ProjectResource project, UserResource user) {
-        return isCompAdmin(user) || isProjectFinanceUser(user);
+        return isInternal(user);
     }
 
 }

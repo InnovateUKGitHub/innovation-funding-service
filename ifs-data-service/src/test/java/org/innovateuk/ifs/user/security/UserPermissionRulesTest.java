@@ -50,26 +50,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testCompAdminsCanViewEveryone() {
+    public void testInternalUsersCanViewEveryone() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
-                if (user.equals(compAdminUser())) {
-                    assertTrue(rules.compAdminsCanViewEveryone(otherUser, user));
+                if (allInternalUsers.contains(user)) {
+                    assertTrue(rules.internalUsersCanViewEveryone(otherUser, user));
                 } else {
-                    assertFalse(rules.compAdminsCanViewEveryone(otherUser, user));
-                }
-            });
-        });
-    }
-
-    @Test
-    public void testProjectFinanceUserCanViewEveryone() {
-        allGlobalRoleUsers.forEach(user -> {
-            allGlobalRoleUsers.forEach(otherUser -> {
-                if (user.equals(projectFinanceUser())) {
-                    assertTrue(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
-                } else {
-                    assertFalse(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
+                    assertFalse(rules.internalUsersCanViewEveryone(otherUser, user));
                 }
             });
         });
