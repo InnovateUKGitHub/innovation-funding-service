@@ -10,17 +10,18 @@ import org.junit.Test;
 import java.util.List;
 
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
 public class ApplicationAssessmentSummaryServiceSecurityTest extends BaseServiceSecurityTest<ApplicationAssessmentSummaryService> {
 
     @Test
-    public void testGetAssessorsAllowedIfGlobalCompAdminRole() throws Exception {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessors(1L), COMP_ADMIN);
+    public void testGetAssessorsAllowedIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAssessors(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
-    public void testGetApplicationAssessmentSummaryIfGlobalCompAdminRole() throws Exception {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getApplicationAssessmentSummary(1L), COMP_ADMIN);
+    public void testGetApplicationAssessmentSummaryIfGlobalCompAdminOrProjectFinanceRole() throws Exception {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getApplicationAssessmentSummary(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Override

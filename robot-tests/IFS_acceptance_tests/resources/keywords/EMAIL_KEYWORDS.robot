@@ -20,14 +20,14 @@ the user reads his email from the default mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Documentation]    Please note that we need to keep this keyword as some email addresses are alread in the database, so we cannot over-ride them with our own custom mailboxes during the tests
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    worth.email.test
+    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_one}    ${test_mailbox_one_password}
 
 
 the user reads his email from the second default mailbox
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Documentation]    Please note that we need to keep this keyword as some email addresses are alread in the database, so we cannot over-ride them with our own custom mailboxes during the tests
     run keyword if    ${docker}==1    the user reads his email locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    worth.email.test.two
+    run keyword if    ${docker}!=1    the user reads his email from the default remote mailbox    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_two}    ${test_mailbox_two_password}
 
 
 the user reads his email locally
@@ -48,6 +48,14 @@ the user reads his email remotely
 the user reads his email from the second mailbox remotely
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
+    ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
+    log    ${subject}
+    check pattern in email    ${email_to_test}    ${pattern}
+
+
+the user reads his email from the default remote mailbox
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${custom_mailbox}    ${custom_password}
+    Open Mailbox    server=imap.googlemail.com    user=${custom_mailbox}@gmail.com    password=${custom_password}
     ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     check pattern in email    ${email_to_test}    ${pattern}

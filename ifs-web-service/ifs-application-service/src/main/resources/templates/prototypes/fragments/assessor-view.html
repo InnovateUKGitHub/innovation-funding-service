@@ -684,13 +684,13 @@
     <div class="progress-list">
         <h3 class="heading-medium">Invitations to assess (<span>1</span>)</h3>
         <ul>
-            <li>
+            <li class="status-2-col">
                 <div class="task">
                     <h4 class="heading-small"><a href="/prototypes/865-assessor-comp-invite">Technology inspired</a></h4>
                     <p>You have been asked to assess this competition. Please respond.</p>
                 </div>
                 <div class="assessment-period">
-                    <h4 class="heading-small">Assessment period</h4>
+                    <h4 class="heading-small no-margin">Assessment period</h4>
                     <dl class="standard-definition-list reduced-width">
                         <dt>Begins</dt>
                         <dd>15 November 2017</dd>
@@ -795,39 +795,34 @@
             <li>
                 <div class="task">
                     <h4 class="heading-small"><a href="/prototypes/871-assessor-comp-dashboard">A new innovative solution to energy</a></h4>
+                    <div class="action-required">
+                      <strong>2 applications to be assessed</strong>
+                    </div>
                 </div>
                 <div class="status">
-                    <div class="pie-container">
-                        <div class="pie medium">25%</div>
-                        <div class="pie-overlay">
-                            <span class="day">23</span>
-                            <span>days left</span>
-                        </div>
+                    <div class="status-msg msg-deadline">
+                        <span class="bold-medium">23</span><br />
+                        days left <br />
+                        Deadline 28 January
                     </div>
-                    <span class="deadline">Deadline 28 January</span>
-                </div>
-                <div class="action-required">
-                    <strong>0/2 Assessed</strong>
                 </div>
             </li>
             <li>
                 <div class="task">
                     <h4 class="heading-small"><a href="/prototypes/871-assessor-comp-dashboard">A new innovative solution to electronics</a></h4>
+                    <div class="action-required">
+                      <strong>1 application awaiting acceptance &nbsp;|&nbsp; 2 applications to be assessed</strong>
+                    </div>
                 </div>
                 <div class="status">
-                    <div class="pie-container">
-                        <div class="pie medium">75%</div>
-                        <div class="pie-overlay">
-                            <span class="day">8</span>
-                            <span>days left</span>
-                        </div>
-                    </div>
-                    <span class="deadline">Deadline 28 January</span>
-                </div>
-                <div class="action-required">
-                    <strong>2/4 Assessed</strong>
+                  <div class="status-msg msg-deadline-today">
+                    <strong class="bold-medium">4:32</strong><br>
+                      hours:minutes left<br>
+                      Deadline today
+                  </div>
                 </div>
             </li>
+
         </ul>
     </div>
 </div>
@@ -846,52 +841,45 @@
 <!-- ===================Assessor applications============================== -->
 <div th:fragment="prototype-assessor-application">
     <div class="my-applications">
-        <div class="in-progress">
-            <h2 class="heading-medium">Applications for assessment (<span>3</span>)</h2>
-            <ul class="boxed-list bulk-select">
-                <form id="bulk_assessments_submission" method="GET">
 
-                    <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
+        <form id="bulk_assessments_submission" method="GET">
 
-                        <button class="js-close close" aria-label="Close Popup">X</button>
-                        <h3 class="heading-medium no-margin">Are you sure you want to submit these assessments?</h3>
-                        <p>Once you have submitted them you will no longer be able to edit or view the assessments.</p>
-                        <div>
-                            <input type="hidden" name="status" value="accept" />
-                            <button class="button large" type="submit" name="submit_assessments" formaction="/prototypes/871-assessor-comp-dashboard">Yes I want to submit the assessments</button>
-                            <button class="js-close button buttonlink large">Cancel</button>
-                        </div>
+        <div class="modal-confirm-submit" role="dialog" aria-hidden="true">
+
+            <button class="js-close close" aria-label="Close Popup">X</button>
+            <h3 class="heading-medium no-margin">Are you sure you want to submit these assessments?</h3>
+            <p>Once you have submitted them you will no longer be able to edit or view the assessments.</p>
+            <div>
+                <input type="hidden" name="status" value="accept" />
+                <button class="button large" type="submit" name="submit_assessments" formaction="/prototypes/871-assessor-comp-dashboard">Yes I want to submit the assessments</button>
+                <button class="js-close button buttonlink large">Cancel</button>
+            </div>
+        </div>
+
+        <div class="progress-list">
+          <h2 class="heading-medium">Applications for assessment (<span>3</span>)</h2>
+            <ul>
+                <li class="status-2-col" th:unless="${param.status != null and param.status[0] == 'reject' or param.status != null and param.status[0] == 'accept'}">
+                  <div class="task">
+                    <h3 class="heading-small">
+                        <a href="/prototypes/868-accept-reject-application">Using natural gas to heat homes</a>
+                    </h3>
+                    <strong>Empire Gas Ltd</strong>
+                  </div>
+                  <div class="status" th:unless="${param.status != null and param.status[0] == 'accept'}">
+                    <div class="status-msg msg-deadline-waiting">
+                      Pending
                     </div>
-                    <li th:unless="${param.status != null and param.status[0] == 'reject' or param.status != null and param.status[0] == 'accept'}">
-                        <div class="grid-row">
-                            <div class="column-assessment-details">
-                                <h3 class="heading-medium">
-                                    <a href="/prototypes/868-accept-reject-application">Using natural gas to heat homes</a>
-                                </h3>
-                                <div><p>Empire Ltd</p></div>
-                            </div>
-                            <div class="column-assessment-status navigation-right">
+                    <div class="status-msg msg-progress">
+                      <a href="/prototypes/868-accept-reject-application">accept or reject</a>
+                    </div>
+                  </div>
 
-                                <div class="application-status pending empty" th:unless="${param.status != null and param.status[0] == 'accept'}">
-                                    <p>Pending</p>
-                                    <!--if assessment is pending acceptance-->
-                                    <p class="application-listing_pending">
-                                        <a href="/prototypes/868-accept-reject-application">accept or reject assessment</a>
-                                    </p>
-                                    <!--otherwise shows the overall score -->
+                  <div class="status" th:unless="${param.status == null or param.status[0] != 'accept'}">
+                      <p>Open</p>
+                  </div>
 
-                                </div>
-
-                                <div class="application-status open empty" th:unless="${param.status == null or param.status[0] != 'accept'}">
-                                    <p>Open</p>
-                                </div>
-
-                            </div>
-                        </div>
-                        <label>
-
-                        </label>
-                    </li>
+                </li>
                     <!--<li>-->
                         <!--<div class="grid-row">-->
                             <!--<div class="column-assessment-details">-->
@@ -917,149 +905,108 @@
                         <!--</label>-->
                     <!--</li>-->
                     <li th:if="${param.status != null and param.status[0] == 'accept'}">
-                        <div class="grid-row">
-                            <div class="column-assessment-details">
-                                <h3 class="heading-medium">
-                                    <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
-                                </h3>
-                                <div><p>Empire Ltd</p></div>
-                            </div>
-                            <div class="column-assessment-status navigation-right">
 
-                                <div class="application-status open empty">
-                                    <p>Accepted</p>
-                                </div>
-
-                            </div>
+                        <div class="task">
+                          <h3 class="heading-small">
+                              <a href="/prototypes/984-assessor-application-overview">Using natural gas to heat homes</a>
+                          </h3>
+                          <strong>Empire Gas Ltd</strong>
                         </div>
-                        <label>
+                        <div class="status">
+                            <span class="status-msg msg-status">Accepted</span>
+                        </div>
 
-                        </label>
                     </li>
 
-                    <li>
-                        <div class="grid-row">
-                            <div class="column-assessment-details">
-                                <h3 class="heading-medium">
-                                    <a href="#">Security for the Internet of Things</a>
-                                </h3>
-                                <div><p>Ludlow</p></div>
-                            </div>
-                            <div class="column-assessment-status navigation-right">
-                                <div class="application-status assessed yes">
-                                    <p>Assessed</p>
-                                    <!--if assessment is pending acceptance-->
-
-                                    <!--otherwise shows the overall score -->
-                                    <p class="application-listing_pending"></p>
-                                    <h3 class="score"><span>71.0</span> %</h3>
-                                    <small>Overall score</small>
-                                    <div class="recommend-container">
-                                        <p class="recommend yes"> <span>Recommended</span> </p>
-
-                                    </div>
-                                    <p></p>
-                                </div>
-                            </div>
-                            <label>
-                                <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />
+                    <li class="positive status-2-col">
+                        <div class="task">
+                          <div class="label-holder">
+                            <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
+                              <input id="assessment-submit-checkbox" type="checkbox" value="" aria-labelledby="application-1" />
                             </label>
+                          </div>
+                          <h4 class="heading-small"><a href="#" id="application-1">Using natural gas to heat homes</a></h4>
+                          <strong>Empire Gas Ltd</strong>
                         </div>
-                        <label>
-
-                        </label>
+                        <div class="status">
+                          <div class="status-msg score">
+                            <strong class="percent">72%</strong>
+                              <span>Overall score</span>
+                              <strong>Recommend</strong>
+                          </div>
+                          <div class="status-msg msg-progress">
+                            Assessed
+                          </div>
+                        </div>
                     </li>
 
-                    <li>
-                        <div class="grid-row">
-                            <div class="column-assessment-details">
-                                <h3 class="heading-medium">
-                                    <a href="/prototypes/984-assessor-application-overview">A new innovative solution</a>
-                                </h3>
-                                <div><p>Empire Ltd</p></div>
+                    <li th:classappend="${(param.app != null and param.app[0] == 'ok' ? 'positive status-2-col' : '')}">
+
+                        <div class="task">
+
+                          <th:block th:if="${param.app != null and param.app[0] == 'ok'}">
+                            <div class="label-holder">
+                              <label class="block-label selection-button-checkbox" for="assessment-submit-checkbox">
+                                <input id="assessment-submit-checkbox" type="checkbox" value="" aria-labelledby="application-2" />
+                              </label>
                             </div>
-                            <!--<div class="column-assessment-status navigation-right">-->
-                                <!--<div class="application-status assessed yes">-->
-                                    <!--<p>Assessed</p>-->
-                                    <!--&lt;!&ndash;if assessment is pending acceptance&ndash;&gt;-->
+                          </th:block>
 
-                                    <!--&lt;!&ndash;otherwise shows the overall score &ndash;&gt;-->
-                                    <!--<p class="application-listing_pending"></p>-->
-                                    <!--<h3 class="score"><span>21.0</span> %</h3>-->
-                                    <!--<small>Overall score</small>-->
-                                    <!--<div class="recommend-container">-->
-                                        <!--<p class="recommend yes"> <span>Recommended</span> </p>-->
-
-                                    <!--</div>-->
-                                    <!--<p></p>-->
-                                <!--</div>-->
-                            <!--</div>-->
-
-                            <div class="column-assessment-status navigation-right">
-
-                              <th:block th:unless="${param.app != null}">
-                                <div class="application-status open empty">
-                                    <p>In progress</p>
-                                </div>
-                              </th:block>
-
-                              <th:block th:if="${param.app != null and param.app[0] == 'ok'}">
-                                <div class="application-status assessed yes">
-                                    <p>Assessed</p>
-                                    <!--if assessment is pending acceptance-->
-
-                                    <!--otherwise shows the overall score -->
-                                    <p class="application-listing_pending"></p>
-                                    <h3 class="score"><span>75.0</span> %</h3>
-                                    <small>Overall score</small>
-                                    <div class="recommend-container">
-                                        <p class="recommend yes"> <span>Recommended</span> </p>
-                                    </div>
-                                </div>
-                                <label>
-                                    <input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />
-                                </label>
-                              </th:block>
-
-
-                            </div>
-
+                          <h3 class="heading-small">
+                              <a href="/prototypes/984-assessor-application-overview" id="application-2">A new innovative solution</a>
+                          </h3>
+                          <strong>Empire Gas Ltd</strong>
                         </div>
-                        <!--<label>-->
-                            <!--<input class="assessment-submit-checkbox" type="checkbox" name="submitted[]" value="3" />-->
-                        <!--</label>-->
+
+                        <th:block th:unless="${param.app != null and param.app[0] == 'ok'}">
+                          <div class="status">
+                              <span class="status-msg msg-progress">In progress</span>
+                          </div>
+                        </th:block>
+
+                        <th:block th:if="${param.app != null and param.app[0] == 'ok'}">
+                          <div class="status">
+                            <div class="status-msg score">
+                              <strong class="percent">75%</strong>
+                                <span>Overall score</span>
+                                <strong>Recommend</strong>
+                            </div>
+                            <div class="status-msg msg-progress">
+                              Assessed
+                            </div>
+                          </div>
+                        </th:block>
+
                     </li>
-                    <p class="extra-margin form-hint">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
-                    <div class="alignright">
-                        <input type="hidden" name="competitionId" value="1" />
-                        <button class="button large button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit" disabled="disabled">Submit assessments</button>
-                    </div>
+                    <p class="extra-margin">Once you have completed your assessment of these applications, use the checkboxes to submit assessments individually or as a series. You cannot edit any submitted assessments.</p>
+
+                    <input type="hidden" name="competitionId" value="1" />
+                    <button class="button button-pull-right no-margin" data-js-modal="modal-confirm-submit" name="submit_assessments" id="formSubmitAssessmentButton" type="submit" href="/assessor/confirm-submit" disabled="disabled">Submit assessments</button>
+
                 </form>
             </ul>
         </div>
         <!--all the submitted assessments-->
-        <div class="submitted">
+        <div class="progress-list">
             <h2 class="heading-medium">Submitted assessment (<span>1</span>)</h2>
-            <ul class="boxed-list bulk-select">
-                <li>
-                    <div class="grid-row">
-                        <div class="column-assessment-details">
-                            <h4 class="heading-medium">Mobile Phone Data for Logistics Analytics</h4>
-                            <div><p>Empire Ltd</p></div>
-                        </div>
-                        <div class="column-assessment-status navigation-right">
-                            <div class="application-status submitted yes">
-                                <p>Submitted</p>
-                                <!-- shows the overall score -->
-                                <h3 class="score"><span>72.0</span>%</h3>
-                                <small>Overall score</small>
-                                <div class="recommend-container">
-                                    <p class="recommend yes"> <span>Recommended</span> </p>
-
-                                </div>
-                            </div>
-                        </div>
+            <ul>
+                <li class="positive status-2-col">
+                    <div class="task">
+                      <h4 class="heading-small">Mobile Phone Data for Logistics Analytics</h4>
+                      <strong>Empire Ltd</strong>
                     </div>
+
+                    <div class="status">
+                      <div class="status-msg score">
+                        <strong class="percent">75%</strong>
+                          <span>Overall score</span>
+                          <strong>Recommend</strong>
+                      </div>
+                      <div class="status-msg msg-progress">
+                        Submitted
+                      </div>
+                    </div>
+
                 </li>
             </ul>
         </div>
