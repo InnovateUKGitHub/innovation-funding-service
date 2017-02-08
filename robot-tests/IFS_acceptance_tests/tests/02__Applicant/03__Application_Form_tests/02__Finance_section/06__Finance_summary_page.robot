@@ -43,8 +43,18 @@ Calculations for the first collaborator
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
+
+Contribution to project and funding sought should not be negative number
+    [Documentation]    INFUND-524
+    ...
+    ...    This test case still use the old application after the refactoring
+    [Tags]
+    When the user navigates to your-finances page       Providing sustainable childcare
+    and the user fills in the project costs
+    and the user fills in the organisation information        Providing sustainable childcare
+    and the user checks your funding section for the project       Providing sustainable childcare
     #And the applicant enters a bigger funding amount
-    #Then the contribution to project and funding sought should be 0 and not a negative number
+    Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
@@ -194,3 +204,22 @@ Lead enters a valid research participation value
     then the user selects the checkbox      id=agree-state-aid-page
     the user clicks the button/link        jQuery= button:contains('Mark as complete')
     wait for autosave
+
+the user checks Your Funding section for the project
+    [Arguments]  ${Application}
+    ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
+    Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
+    Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information with bigger amount     ${Application}
+
+
+the user fills in the funding information with bigger amount
+    [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
+    [Arguments]  ${Application}
+    the user navigates to Your-finances page   ${Application}
+    the user clicks the button/link       link=Your funding
+    the user enters text to a text field  css=#cost-financegrantclaim  30
+    click element                         jQuery=label:contains("Yes")
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    8000000
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
+    the user selects the checkbox         agree-terms-page
+    the user clicks the button/link       jQuery=button:contains("Mark as complete")

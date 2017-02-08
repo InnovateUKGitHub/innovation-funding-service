@@ -177,7 +177,7 @@ the user fills in Other Costs
     the user enters text to a text field  jQuery=textarea.form-control[name^=other_costs-description]  some other costs
     the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
     #focus                                 css=#section-total-15./   # commented as this is givng invalid selector exception on Finance Summary suite run .
-    #    textfield should contain              css=#section-total-15  £ 50  #This is commented out because the value in the field differs in full run vs run only the suite.
+    #textfield should contain              css=#section-total-15  £ 50  #This is commented out because the value in the field differs in full run vs run only the suite.
     the user clicks the button/link       jQuery=#form-input-20 button:contains("Other Costs")
 
 the user removes prev costs if there are any
