@@ -45,6 +45,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -345,9 +346,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateCreditReport(PartnerOrganisation partnerOrganisation) {
 
-        return getViabilityState(partnerOrganisation)
-        .andOnSuccess(viabilityState -> {
-                        if (ViabilityState.APPROVED == viabilityState) {
+        return getViabilityProcess(partnerOrganisation)
+        .andOnSuccess(viabilityProcess -> {
+                        if (ViabilityState.APPROVED == viabilityProcess.getActivityState()) {
                             return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
                         } else {
                             return serviceSuccess();
@@ -389,8 +390,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
         Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
-                        getViabilityState(partnerOrganisation)
-                .andOnSuccessReturn(viabilityState -> ViabilityState.REVIEW.equals(viabilityState)).getSuccessObjectOrThrowException());
+                        getViabilityProcess(partnerOrganisation)
+                .andOnSuccessReturn(viabilityProcess -> ViabilityState.REVIEW == viabilityProcess.getActivityState()).getSuccessObjectOrThrowException());
 
         if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
@@ -406,21 +407,31 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
-                .andOnSuccess(partnerOrganisation -> getViabilityState(partnerOrganisation))
-                .andOnSuccess(viabilityState -> getProjectFinance(projectId, organisationId)
-                        .andOnSuccess(projectFinance -> buildViabilityResource(viabilityState, projectFinance))
+                .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation))
+                .andOnSuccess(viabilityProcess -> getProjectFinance(projectId, organisationId)
+                        .andOnSuccess(projectFinance -> buildViabilityResource(viabilityProcess, projectFinance))
                 );
     }
 
-    private ServiceResult<ViabilityState> getViabilityState(PartnerOrganisation partnerOrganisation) {
+/*    private ServiceResult<ViabilityState> getViabilityState(PartnerOrganisation partnerOrganisation) {
 
         return serviceSuccess(viabilityWorkflowHandler.getState(partnerOrganisation));
+    }*/
+
+    private ServiceResult<ViabilityProcess> getViabilityProcess(PartnerOrganisation partnerOrganisation) {
+
+        return serviceSuccess(viabilityWorkflowHandler.getProcess(partnerOrganisation));
     }
 
-    private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityState viabilityState, ProjectFinance projectFinance) {
-        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityState), projectFinance.getViabilityStatus());
-        viabilityResource.setViabilityApprovalDate(projectFinance.getViabilityApprovalDate());
-        setViabilityApprovalUser(viabilityResource, projectFinance.getViabilityApprovalUser());
+    private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
+
+        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getActivityState()), projectFinance.getViabilityStatus());
+
+        if (viabilityProcess.getLastModified() != null) {
+            viabilityResource.setViabilityApprovalDate(LocalDateTime.ofInstant(viabilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+        }
+
+        setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
 
         return serviceSuccess(viabilityResource);
     }
@@ -518,10 +529,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
-                .andOnSuccess(partnerOrganisation -> getViabilityState(partnerOrganisation)
-                        .andOnSuccess(viabilityState -> validateViability(viabilityState, viability, viabilityRagStatus))
+                .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
+                        .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getActivityState(), viability, viabilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> setViabilityApprovalDetails(partnerOrganisation, projectFinance, viability)
+                        .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(partnerOrganisation, viability)
                                 .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
                         )
                 );
@@ -540,13 +551,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> setViabilityApprovalDetails(PartnerOrganisation partnerOrganisation, ProjectFinance projectFinance, Viability viability) {
+    private ServiceResult<Void> triggerViabilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Viability viability) {
 
         if (Viability.APPROVED == viability) {
 
             return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> {
-                projectFinance.setViabilityApprovalUser(currentUser);
-                projectFinance.setViabilityApprovalDate(LocalDate.now());
+                //projectFinance.setViabilityApprovalUser(currentUser);
+                //projectFinance.setViabilityApprovalDate(LocalDate.now());
 
                 viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
             });

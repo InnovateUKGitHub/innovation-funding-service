@@ -31,8 +31,8 @@ public abstract class ProjectFinanceMapper extends BaseMapper<ProjectFinance, Pr
 
     @Mappings({
             @Mapping(target = "viabilityStatus", ignore = true),
-            @Mapping(target = "viabilityApprovalUser", ignore = true),
-            @Mapping(target = "viabilityApprovalDate", ignore = true),
+            //@Mapping(target = "viabilityApprovalUser", ignore = true),
+            //@Mapping(target = "viabilityApprovalDate", ignore = true),
             @Mapping(target = "eligibilityStatus", ignore = true),
             @Mapping(target = "eligibilityApprovalUser", ignore = true),
             @Mapping(target = "eligibilityApprovalDate", ignore = true),
