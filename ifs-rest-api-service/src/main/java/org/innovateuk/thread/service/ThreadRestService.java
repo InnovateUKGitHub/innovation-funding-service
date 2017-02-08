@@ -28,8 +28,8 @@ public abstract class ThreadRestService<T> extends BaseRestService {
 
     }
 
-    public RestResult<Void> create(T thread) {
-        return postWithRestResult(baseURL, thread, Void.class);
+    public RestResult<Long> create(T thread) {
+        return postWithRestResult(baseURL, thread, Long.class);
     }
 
     public RestResult<Void> addPost(PostResource post, Long threadId) {
