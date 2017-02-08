@@ -280,8 +280,8 @@ public class Competition implements ProcessActivity {
         return getMilestoneDate(MilestoneType.RELEASE_FEEDBACK).orElse(null);
     }
 
-    public void setReleaseFeedbackDate(LocalDateTime assessorDeadlineDate) {
-        setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, assessorDeadlineDate);
+    public void setReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+        setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
     }
 
     public LocalDateTime getFundersPanelDate() {
