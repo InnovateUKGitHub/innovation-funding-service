@@ -48,7 +48,7 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]
+    [Tags]          Pending
     When the user navigates to your-finances page       Providing sustainable childcare
     and the user fills in the project costs
     and the user fills in the organisation information        Providing sustainable childcare
