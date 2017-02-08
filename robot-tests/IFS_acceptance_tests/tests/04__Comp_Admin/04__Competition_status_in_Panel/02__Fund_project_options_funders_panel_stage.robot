@@ -23,28 +23,28 @@ Notify applicants should be disabled
 User should be able to Notify applicants when the fund project have chosen
     [Documentation]    INFUND-2601
     [Tags]    HappyPath
-    When the user selects the option from the drop-down menu    Yes    id=fund24
-    And the user selects the option from the drop-down menu    No    id=fund25
+    When the user selects the option from the drop-down menu    Yes    id=fund25
+    And the user selects the option from the drop-down menu    No    id=fund26
     Then the option to notify applicants is enabled
 
 Autosave of the page should work
     [Documentation]    INFUND-2885
     [Tags]
     When the user reloads the page
-    Then the user should see the dropdown option selected    Yes    id=fund24
-    And the user should see the dropdown option selected    No    id=fund25
+    Then the user should see the dropdown option selected    Yes    id=fund25
+    And the user should see the dropdown option selected    No    id=fund26
     And the option to notify applicants is enabled
 
 When a Fund Project option is unselected the Notify button become disabled
     [Documentation]    INFUND-2601
     [Tags]
-    When the user selects the option from the drop-down menu    -    id=fund24
+    When the user selects the option from the drop-down menu    -    id=fund25
     Then the option to notify applicants is disabled
 
 Pushing the notify applicants button brings up a warning dialogue
     [Documentation]    INFUND-2646
     [Tags]    HappyPath
-    [Setup]    The user selects the option from the drop-down menu    Yes    id=fund24
+    [Setup]    The user selects the option from the drop-down menu    Yes    id=fund25
     When the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     Then the user should see the text in the page    ${dialogue_warning_message}
     And the user should see the element    jQuery=button:contains("Cancel")
