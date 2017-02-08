@@ -300,22 +300,22 @@ INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`in
 -- Financial Year End. Get the form input type and then do an insert for every organisation size question.
 SET @financial_year_end_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_YEAR_END');
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
-     SELECT null, @financial_year_end_id, q.competition_id, false, "End of last financial year", "Enter the month and year that your last financial year finished.", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
+     SELECT null, @financial_year_end_id, q.competition_id, false, "End of last financial year", "Enter the date of your last financial year.", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 
 -- Financial Overview rows.
 SET @financial_overview_row_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_OVERVIEW_ROW');
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
-     SELECT null, @financial_overview_row_id, q.competition_id, false, "Annual Turnover", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
+     SELECT null, @financial_overview_row_id, q.competition_id, false, "Annual turnover", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
-     SELECT null, @financial_overview_row_id, q.competition_id, false, "Annual Profit", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
+     SELECT null, @financial_overview_row_id, q.competition_id, false, "Annual profits", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
-     SELECT null, @financial_overview_row_id, q.competition_id, false, "Annual Exports", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
+     SELECT null, @financial_overview_row_id, q.competition_id, false, "Annual export", "", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
@@ -326,7 +326,7 @@ INSERT INTO form_input (word_count, form_input_type_id, competition_id, included
 -- Full time employees at year end
 SET @financial_staff_count_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_STAFF_COUNT');
 INSERT INTO form_input (word_count, form_input_type_id, competition_id, included_in_application_summary, description, guidance_title, guidance_answer, priority, question_id, scope, active)
-     SELECT null, @financial_staff_count_id, q.competition_id, false, "Full time employees", "Number of full time employees at your organisation at the end of the last financial year.", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
+     SELECT null, @financial_staff_count_id, q.competition_id, false, "Full time employees", "How many full-time employees did you have on the project at the close of your last financial year?", "", (SELECT MAX(priority) + 1 FROM form_input AS fi WHERE q.id = fi.question_id), q.id AS `question_id`, "APPLICATION", false
      FROM question AS q
      WHERE q.id = @q_your_organisation;
 
