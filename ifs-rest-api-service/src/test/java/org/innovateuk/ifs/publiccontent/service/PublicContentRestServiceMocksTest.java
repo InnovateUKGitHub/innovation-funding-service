@@ -4,6 +4,7 @@ package org.innovateuk.ifs.publiccontent.service;
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -16,11 +17,31 @@ public class PublicContentRestServiceMocksTest extends BaseRestServiceUnitTest<P
     private static final String PUBLIC_CONTENT_URL = "/public-content";
     private static final Long COMPETITION_ID = 1L;
 
+
     @Override
     protected PublicContentRestServiceImpl registerRestServiceUnderTest() {
         PublicContentRestServiceImpl publicContentRestServiceImpl = new PublicContentRestServiceImpl();
         return publicContentRestServiceImpl;
     }
+
+
+    @Test
+    public void test_updateSection() {
+        PublicContentResource toUpdate = newPublicContentResource().build();
+        PublicContentSectionType type  = PublicContentSectionType.ELIGIBILITY;
+        setupPostWithRestResultExpectations(PUBLIC_CONTENT_URL + "/update-section/" + type.name() + "/" + toUpdate.getId(), toUpdate, HttpStatus.OK);
+        service.updateSection(toUpdate, type).getSuccessObjectOrThrowException();
+    }
+
+
+    @Test
+    public void test_markSectionAsComplete() {
+        PublicContentResource toUpdate = newPublicContentResource().build();
+        PublicContentSectionType type  = PublicContentSectionType.ELIGIBILITY;
+        setupPostWithRestResultExpectations(PUBLIC_CONTENT_URL + "/mark-section-as-complete/" + type.name() + "/" + toUpdate.getId(), toUpdate, HttpStatus.OK);
+        service.markSectionAsComplete(toUpdate, type).getSuccessObjectOrThrowException();
+    }
+
 
     @Test
     public void test_getByCompetitionId() {

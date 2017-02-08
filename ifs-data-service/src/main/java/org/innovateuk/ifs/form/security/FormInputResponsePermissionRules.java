@@ -1,20 +1,20 @@
 package org.innovateuk.ifs.form.security;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
+import org.innovateuk.ifs.commons.security.PermissionRule;
+import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputResponseCommand;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.commons.security.PermissionRule;
-import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +22,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
-import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 @PermissionRules
@@ -65,14 +64,9 @@ public class FormInputResponsePermissionRules {
         return isAssessor;
     }
 
-    @PermissionRule(value = "READ", description = "A comp admin can see form input responses for applications")
-    public boolean compAdminCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(value = "READ", description = "A project finance user can see form input responses for applications")
-    public boolean projectFinanceUserCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
-        return isProjectFinanceUser(user);
+    @PermissionRule(value = "READ", description = "An internal user can see form input responses for applications")
+    public boolean internalUserCanSeeFormInputResponsesForApplications(final FormInputResponseResource response, final UserResource user) {
+        return isInternal(user);
     }
 
     @PermissionRule(value = "SAVE",
@@ -86,7 +80,7 @@ public class FormInputResponsePermissionRules {
 
 
         // There is no question status yet, so only check for roles
-        if(questionStatuses.isEmpty()) {
+        if (questionStatuses.isEmpty()) {
             return isLead || isCollaborator;
         }
 
@@ -107,7 +101,7 @@ public class FormInputResponsePermissionRules {
     private boolean checkIfAssignedToQuestion(List<QuestionStatus> questionStatuses, final UserResource user) {
         boolean isAssigned = questionStatuses.stream()
                 .anyMatch(questionStatus -> questionStatus.getAssignee() == null
-                                || questionStatus.getAssignee().getUser().getId().equals(user.getId()));
+                        || questionStatus.getAssignee().getUser().getId().equals(user.getId()));
 
         return isAssigned;
     }

@@ -12,11 +12,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
  */
 public interface CompetitionSetupFinanceService {
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "SAVE", securedType = CompetitionSetupFinanceResource.class, description = "Comp Admins and project finance users should be able to edit the competition setup details for finance")
     ServiceResult<Void> save(CompetitionSetupFinanceResource competitionSetupFinanceResource);
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "READ", securedType = CompetitionSetupFinanceResource.class, description = "Comp Admins and project finance users should be able to read the competition setup details for finance")
     ServiceResult<CompetitionSetupFinanceResource> getForCompetition(Long competitionId);
 

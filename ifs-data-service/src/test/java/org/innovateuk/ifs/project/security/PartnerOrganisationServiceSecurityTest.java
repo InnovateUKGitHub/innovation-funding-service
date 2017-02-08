@@ -33,8 +33,7 @@ public class PartnerOrganisationServiceSecurityTest extends BaseServiceSecurityT
     public void testGetProjectPartnerOrganisationsIsNotOpenToAll(){
         assertPostFilter(classUnderTest.getProjectPartnerOrganisations(123L).getSuccessObject(), () -> {
             verify(partnerOrganisationPermissionRules, times(3)).partnersOnProjectCanView(isA(PartnerOrganisationResource.class), isA(UserResource.class));
-            verify(partnerOrganisationPermissionRules, times(3)).compAdminsCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
-            verify(partnerOrganisationPermissionRules, times(3)).projectFinanceUsersCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
+            verify(partnerOrganisationPermissionRules, times(3)).internalUsersCanViewProjects(isA(PartnerOrganisationResource.class), isA(UserResource.class));
             verifyNoMoreInteractions(partnerOrganisationPermissionRules);
         });
     }
