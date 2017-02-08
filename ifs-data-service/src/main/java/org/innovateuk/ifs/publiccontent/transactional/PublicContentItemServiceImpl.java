@@ -64,13 +64,12 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     public static Integer MAX_ALLOWED_KEYWORDS = 10;
 
-    public static Integer DEFAULT_PAGE_SIZE = 20;
-
     private static Log LOG = LogFactory.getLog(PublicContentItemServiceImpl.class);
 
     @Override
-    public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+    public ServiceResult<PublicContentItemPageResource> findFilteredItems(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
         Page<PublicContent> publicContentPage = getPublicContentPage(innovationAreaId, searchString, pageNumber, pageSize);
+
 
         if(null == publicContentPage) {
             return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND));
@@ -79,9 +78,10 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         return ServiceResult.serviceSuccess(mapPageToPageItemResource(publicContentPage));
     }
 
-    private Page<PublicContent> getPublicContentPage(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+
+    private Page<PublicContent> getPublicContentPage(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Integer pageSize) {
         Page<PublicContent> publicContentPage;
-        /*if(innovationAreaId.isPresent() && searchString.isPresent()) {
+        if(innovationAreaId.isPresent() && searchString.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize), LocalDateTime.now());
@@ -95,9 +95,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionBySearchString(keywordsFound, getPageable(pageNumber, pageSize), LocalDateTime.now());
         }
-        else {*/
+        else {
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize), LocalDateTime.now());
-        //}
+        }
 
         return publicContentPage;
     }
@@ -137,8 +137,8 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         try {
             for (String keyword: separateSearchStringToList(UriUtils.decode(searchString, "UTF8"))) {
                 i++;
-
                 keywords.addAll(keywordRepository.findByKeywordLike("%"+ keyword + "%"));
+
 
                 if(i >= MAX_ALLOWED_KEYWORDS) {
                     break;
@@ -153,19 +153,24 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         return publicContentIds;
     }
 
-    private Pageable getPageable(Optional<Integer> pageNumber, Optional<Integer> pageSize) {
+    private Pageable getPageable(Optional<Integer> pageNumber, Integer pageSize) {
         Integer pageNumberUsing = 0;
-        Integer pageSizeUsing = DEFAULT_PAGE_SIZE;
 
-
-        if(pageSize.isPresent()) {
-            pageSizeUsing = pageSize.get();
-        }
         if(pageNumber.isPresent()) {
             pageNumberUsing = pageNumber.get();
         }
 
-        return new PageRequest(pageNumberUsing, pageSizeUsing);
+        return new PageRequest(pageNumberUsing, pageSize);
+    }
+
+    private PublicContentItemResource mapPublicContentToPublicContentItemResource(PublicContent publicContent, Competition competition) {
+        PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
+        publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
+        publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
+        publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
+        publicContentItemResource.setCompetitionTitle(competition.getName());
+
+        return publicContentItemResource;
     }
 
     private PublicContentItemPageResource mapPageToPageItemResource(Page<PublicContent> publicContentList) {
@@ -176,20 +181,16 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentList.getContent().forEach(publicContent -> {
             Competition competition = competitionRepository.findById(publicContent.getCompetitionId());
 
-            if(publicContent.getPublishDate() != null) {
-                PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
-                publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
-                publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
-                publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
-                publicContentItemResource.setCompetitionTitle(competition.getName());
+            PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
+            publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
+            publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
+            publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
+            publicContentItemResource.setCompetitionTitle(competition.getName());
 
-                publicContentItemResources.add(publicContentItemResource);
-            }
-        });
+            publicContentItemResources.add(publicContentItemResource);
+    });
 
         publicContentItemPageResource.setTotalElements(publicContentList.getTotalElements());
-        publicContentItemResources.sort((o1, o2) -> o1.getCompetitionCloseDate().compareTo(o2.getCompetitionCloseDate()));
-
         publicContentItemPageResource.setContent(publicContentItemResources);
         publicContentItemPageResource.setTotalPages(publicContentList.getTotalPages());
         publicContentItemPageResource.setNumber(publicContentList.getNumber());
