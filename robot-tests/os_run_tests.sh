@@ -254,47 +254,11 @@ while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
     esac
 done
 
-#startSeleniumGrid
-
-if [[ ${rerunFailed} -eq 0 ]]
-then
-    clearOldReports
-fi
-
 if [[ ${quickTest} -eq 1 ]]
 then
     coloredEcho "=> Using quickTest: TRUE" blue
     runTests
-elif [[ ${testScrub} ]]
-then
-    coloredEcho "=> Using testScrub mode: this will do all the dirty work but omit the tests" blue
-
-    buildAndDeploy
-    resetDB
-    addTestFiles
-else
-    coloredEcho "=> Using quickTest: FALSE" blue
-
-    buildAndDeploy
-    resetDB
-    addTestFiles
-    runTests
 fi
-
-if [[ ${stopGrid} -eq 1 ]]
-then
-    stopSeleniumGrid
-fi
-
-if [[ $(which google-chrome) ]]
-then
-    google-chrome target/${targetDir}/log.html &
-else
-    wd=$(pwd)
-    logs="target/${targetDir}/log.html"
-    #open "file://${wd}/${logs}"
-fi
-
 
 echo "DONE"
 sleep 1000000000000
