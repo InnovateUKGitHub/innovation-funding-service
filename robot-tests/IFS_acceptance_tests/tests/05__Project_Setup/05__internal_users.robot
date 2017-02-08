@@ -76,12 +76,12 @@ Project Finance has a dashboard and can see projects in PS
     Then the user should see the element    link=${PROJECT_SETUP_COMPETITION_NAME}
     When the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=.column-third.alignright.extra-margin h2:contains("Projects in setup")
-    And the user should see the element     jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
-    And the user should see the element     jQuery=tr:nth-child(1) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
-    And the user should see the element     jQuery=tr:nth-child(1) th:contains("3 partners")
-    And the user should see the element     jQuery=tr:nth-child(1) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element     jQuery=tr:nth-child(2) th:contains("Office Chair for Life")
-    And the user should see the element     jQuery=tr:nth-child(3) th:contains("Elbow grease")
+    And the user should see the element     jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    And the user should see the element     jQuery=tr:nth-child(2) th a:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
+    And the user should see the element     jQuery=tr:nth-child(2) th:contains("3 partners")
+    And the user should see the element     jQuery=tr:nth-child(2) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    And the user should see the element     jQuery=tr:nth-child(3) th:contains("Office Chair for Life")
+    And the user should see the element     jQuery=tr:nth-child(1) th:contains("Elbow grease")
     When the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_NUMBER}
     Then the user navigates to the page     ${server}/management/competition/${PROJECT_SETUP_COMPETITION}/application/${PROJECT_SETUP_APPLICATION_1}
     And the user should not see an error in the page
@@ -90,9 +90,9 @@ Project Finance can see the status of projects in PS
     [Documentation]  INFUND-5300, INFUND-7109
     [Tags]
     Given the user navigates to the page    ${internal_project_summary}
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok
-    And the user should not see the element  jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.waiting
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.action
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(1).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(2).status.ok
+    And the user should not see the element  jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(3).status.waiting
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(2) td:nth-of-type(4).status.action
 
 
