@@ -39,9 +39,9 @@ public class PostAttachmentsController {
     public RestResult<FileEntryResource> uploadFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
-            @PathVariable(value = "projectId") long projectId,
             @RequestParam(value = "filename", required = false) String originalFilename,
-            HttpServletRequest request) {
+            HttpServletRequest request)
+    {
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
                 fileEntryService.saveFile(fileAttributes.toFileEntryResource())
         );
