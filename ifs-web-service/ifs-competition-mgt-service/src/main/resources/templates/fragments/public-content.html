@@ -67,7 +67,6 @@
             <dt>Project size</dt>
             <dd th:text="${form.projectSize}"></dd>
         </dl>
-
         <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
@@ -103,7 +102,7 @@
                            required="required"
                            th:checked="${form.fundingType == fundingType.displayName}"
                            th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
-                    <span th:text="${fundingType.displayName}" th:remove="tag"/>
+                    <th:block th:text="${fundingType.displayName}" />
                 </label>
 
             </div>
@@ -140,80 +139,106 @@
         <dl>
             <th:block th:each="event : ${model.sortedEvents}">
                 <dt th:text="${event.dateTimeFormatted}"></dt>
-                <dd th:text="${event.content}"></dd>
+                <dd ifs:utext="${event.content}" class="wysiwyg-styles extra-margin-bottom"></dd>
             </th:block>
         </dl>
     </th:block>
     <th:block th:unless="${model.readOnly}">
-        <hr>
+        <hr />
         <p>Generated automatically from the competition milestones.</p>
         <dl>
             <th:block th:each="event : ${model.sortedEvents}">
                 <dt th:text="${event.dateTimeFormatted}"></dt>
-                <dd th:text="${event.content}"></dd>
+                <dd th:text="${event.content}" class="extra-margin-bottom"></dd>
             </th:block>
         </dl>
-        <hr>
-        <fieldset th:each="formDate, iteration : ${form.dates}">
-            <div class="form-group">
-                <input type="hidden" th:field="${form.dates[__${iteration.index}__].id}">
-                <legend class="form-label form-label-bold">Date</legend>
-                <div class="date-group">
-                    <div class="day">
-                        <label class="form-label" th:for="dates[__${iteration.index}__].day">Day</label>
-                        <input class="form-control width-extra-small"
-                               placeholder="DD"
-                               type="number"
-                               th:field="${form.dates[__${iteration.index}__].day}"
-                               min="1"
-                               max="31"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.publiccontent.datesform.day.required}">
-                    </div>
-                    <div class="month">
-                        <label class="form-label" th:for="dates[__${iteration.index}__].month">Month</label>
-                        <input class="form-control width-extra-small"
-                               placeholder="MM"
-                               type="number"
-                               th:field="${form.dates[__${iteration.index}__].month}"
-                               min="1"
-                               max="12"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.publiccontent.datesform.month.required}">
-                    </div>
-                    <div class="year">
-                        <label class="form-label" th:for="dates[__${iteration.index}__].year">Year</label>
-                        <input class="form-control width-extra-small"
-                               placeholder="YYYY"
-                               type="number"
-                               th:field="${form.dates[__${iteration.index}__].year}"
-                               min="1"
-                               required="required"
-                               th:attr="data-required-errormessage=#{validation.publiccontent.datesform.year.required}">
-                    </div>
+        <th:block th:each="formDate, iteration : ${form.dates}" th:with="index=${iteration.index}">
+            <div class="contentGroup" th:id="${'contentDateGroup-row-'+index}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'error' : ''">
+                    <fieldset>
+                        <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
+                        <legend>
+                            <span class="form-label form-label-bold">Date</span>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].day')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
+                            </th:block>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].month')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].month')}" th:text="${err}" />
+                            </th:block>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].year')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].year')}" th:text="${err}" />
+                            </th:block>
+                        </legend>
+                        <div class="date-group">
+                            <!--/* this is becuase the javascript expects a field that contains the combined dates,
+                                in other situations the  Back-end preferred this above dealing with 3 seperated fields
+                                I've added an disabled attribute to make sure this is not send to the back-end for this instance */-->
+                            <input type="hidden" th:name="${'dates[' + index + '].combined'}" disabled="" />
+                            <div class="day">
+                                <label class="form-label" th:for="${'dates-'+index+'-day'}">Day</label>
+                                <input class="form-control width-extra-small"
+                                       placeholder="DD"
+                                       th:errorclass="field-error"
+                                       type="number"
+                                       th:id="${'dates-'+index+'-day'}"
+                                       th:field="${form.dates[__${index}__].day}"
+                                       min="1"
+                                       max="31"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.day.required}">
+                            </div>
+                            <div class="month">
+                                <label class="form-label" th:for="${'dates-'+index+'-month'}">Month</label>
+                                <input class="form-control width-extra-small"
+                                       placeholder="MM"
+                                       type="number"
+                                       th:errorclass="field-error"
+                                       th:id="${'dates-'+index+'-month'}"
+                                       th:field="${form.dates[__${index}__].month}"
+                                       min="1"
+                                       max="12"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.month.required}" />
+                            </div>
+                            <div class="year">
+                                <label class="form-label" th:for="${'dates-'+index+'-year'}">Year</label>
+                                <input class="form-control width-extra-small"
+                                       placeholder="YYYY"
+                                       type="number"
+                                       th:errorclass="field-error"
+                                       th:id="${'dates-'+index+'-year'}"
+                                       th:field="${form.dates[__${index}__].year}"
+                                       min="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.year.required}" />
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </div>
+                <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'error':''">
+                    <label class="form-label" th:for="${'dates-'+index+'-content'}">
+                        <span class="form-label-bold">Content</span>
+                        <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />
+                        </th:block>
+                    </label>
+                    <textarea cols="30" rows="5"
+                              data-editor="html"
+                              th:id="${'dates-'+index+'-content'}"
+                              th:class="${#fields.hasErrors('dates[__${index}__].content') ? 'width-full field-error' : 'width-full'}"
+                              th:field="${form.dates[__${iteration.index}__].content}"
+                              required="required"
+                              th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <button class="buttonlink" type="button" data-remove-row="dateContentGroup">Remove event</button>
                 </div>
             </div>
-            <div th:class="${#fields.hasErrors('dates[__${iteration.index}__].content')}? 'form-group error':'form-group'">
-                <label class="form-label" th:for="form.dates[__${iteration.index}__].content">
-                    <span class="form-label-bold">Content</span>
-                    <span th:if="${#fields.hasErrors('dates[__${iteration.index}__].content')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('dates[__${iteration.index}__].content')}" th:text="${err}" />
-                    </span>
-                </label>
-                <textarea cols="30" rows="5"
-                          th:class="${#fields.hasErrors('dates[__${iteration.index}__].content') ? 'width-full field-error' : 'width-full'}"
-                          th:field="${form.dates[__${iteration.index}__].content}"
-                          required="required"
-                          th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
-                </textarea>
-            </div>
-            <div class="form-group">
-                <button class="buttonlink" type="button">Remove event</button>
-            </div>
-            <hr>
-        </fieldset>
+        </th:block>
         <div class="alignright">
-            <button class="buttonlink" type="button">+ add new event</button>
+            <button class="buttonlink" type="button"  data-add-row="dateContentGroup">+ add new event</button>
         </div>
     </th:block>
 </div>

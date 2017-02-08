@@ -25,6 +25,10 @@ IFS.competitionManagement.repeater = (function () {
         case 'contentGroup':
           IFS.competitionManagement.repeater.addContentGroup(el)
           break
+        case 'dateContentGroup':
+          IFS.competitionManagement.repeater.addDateContentGroup(el)
+          console.log('2')
+          break
       }
       jQuery('body').trigger('updateSerializedFormState')
       return false
@@ -56,6 +60,10 @@ IFS.competitionManagement.repeater = (function () {
         case 'contentGroup':
           inst.closest('[id^="contentGroup-row-"]').remove()
           IFS.competitionManagement.repeater.reindexRows('[id^="contentGroup-row-"]')
+          break
+        case 'dateContentGroup':
+          inst.closest('[id^="contentDateGroup-row-"]').remove()
+          IFS.competitionManagement.repeater.reindexRows('[id^="contentDateGroup-row-"]')
           break
       }
     },
@@ -90,7 +98,7 @@ IFS.competitionManagement.repeater = (function () {
       IFS.competitionManagement.initialDetails.disableAlreadySelectedOptions()
     },
     addContentGroup: function (buttonEl) {
-      var rows = jQuery('[id^=contentGroup-row-]')
+      var rows = jQuery('[id^="contentGroup-row-"]')
       var count = 0
       var idCount = 0
 
@@ -124,13 +132,53 @@ IFS.competitionManagement.repeater = (function () {
       } else {
         jQuery(buttonEl).parent().before(html)
       }
+      IFS.competitionManagement.repeater.initEditor('#content-' + idCount)
+    },
+    addDateContentGroup: function (buttonEl) {
+      var rows = jQuery('[id^="contentDateGroup-row-"]')
+      var count = 0
+      var idCount = 0
 
-      var editor = IFS.core.editor.prepareEditorHTML('#content-' + idCount)
-      // make a copy of the global wysiwyg-editor settings object and add the html link functionality
-      var editorOptions = jQuery.extend(true, {}, IFS.core.editor.settings.editorOptions, {
-        plugins: {'hallolink': {}}
-      })
-      jQuery(editor).hallo(editorOptions)
+      if (rows.length) {
+        count = parseInt(rows.length, 10) // name attribute has to be 0,1,2,3
+        // id and for attributes have to be unique, gaps in count don't matter however I rather don't reindex all attributes on every remove, so we just higher the highest.
+        idCount = parseInt(rows.last().prop('id').split('contentDateGroup-row-')[1], 10) + 1
+      }
+      var validDateErrorMessage = 'Please enter a valid date.'
+
+      var html = '<div class="contentGroup" id="contentDateGroup-row-' + idCount + '">' +
+                 '<div class="form-group"><fieldset>' +
+                    '<legend><span class="form-label form-label-bold">Date</span></legend>' +
+                    '<div class="date-group">' +
+                        '<input type="hidden" disabled name="dates[' + count + '].combined" />' +
+                        '<div class="day">' +
+                            '<label class="form-label" for="dates-' + idCount + '-day">Day</label>' +
+                            '<input class="form-control width-extra-small" placeholder="DD" type="number" id="dates-' + idCount + '-day" name="dates[' + count + '].day" min="1" max="31" required="required"  data-required-errormessage="' + validDateErrorMessage + '">' +
+                        '</div>' +
+                        '<div class="month">' +
+                            '<label class="form-label" for="dates-' + idCount + '-month">Month</label>' +
+                            '<input class="form-control width-extra-small" placeholder="MM" type="number" id="dates-' + idCount + '-month" name="dates[' + count + '].month" min="1" max="12" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
+                        '</div>' +
+                        '<div class="year">' +
+                            '<label class="form-label" for="dates-' + idCount + '-year">Year</label>' +
+                            '<input class="form-control width-extra-small" placeholder="YYYY" type="number" id="dates-' + idCount + '-year" name="dates[' + count + '].year" min="1" required="required" data-required-errormessage="' + validDateErrorMessage + '" />' +
+                        '</div>' +
+                    '</div>' +
+                '</fieldset></div>' +
+                '<div class="form-group textarea-wrapped">' +
+                    '<label class="form-label" for="dates-' + idCount + '-content">' +
+                        '<span class="form-label-bold">Content</span>' +
+                    '</label>' +
+                    '<textarea cols="30" rows="5" id="dates-' + idCount + '-content" name="dates[' + count + '].content" data-editor="html" class="width-full field-error" required="required" th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}"></textarea>' +
+                '</div>' +
+                '<div class="form-group"><button class="buttonlink" type="button" data-remove-row="dateContentGroup">Remove event</button></div>' +
+            '</div>'
+      if (rows.length) {
+        rows.last().after(html)
+      } else {
+        jQuery(buttonEl).parent().before(html)
+      }
+      IFS.competitionManagement.repeater.initEditor('#dates-' + idCount + '-content')
     },
     addCoFunder: function () {
       var count = 0
@@ -207,6 +255,14 @@ IFS.competitionManagement.repeater = (function () {
         var thisIndex = inst.closest(rowSelector).index(rowSelector)
         inst.val(thisIndex)
       })
+    },
+    initEditor: function (el) {
+      var editor = IFS.core.editor.prepareEditorHTML(el)
+      // make a copy of the global wysiwyg-editor settings object and add the html link functionality
+      var editorOptions = jQuery.extend(true, {}, IFS.core.editor.settings.editorOptions, {
+        plugins: {'hallolink': {}}
+      })
+      jQuery(editor).hallo(editorOptions)
     }
   }
 })()
