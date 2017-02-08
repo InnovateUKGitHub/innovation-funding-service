@@ -8,6 +8,7 @@ import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
@@ -80,7 +81,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     private Page<PublicContent> getPublicContentPage(Optional<Long> innovationAreaId, Optional<String> searchString, Optional<Integer> pageNumber, Optional<Integer> pageSize) {
         Page<PublicContent> publicContentPage;
-        if(innovationAreaId.isPresent() && searchString.isPresent()) {
+        /*if(innovationAreaId.isPresent() && searchString.isPresent()) {
             List<Long> competitionsIdsInInnovationArea = getFilteredCompetitionIds(innovationAreaId);
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(keywordsFound, competitionsIdsInInnovationArea, getPageable(pageNumber, pageSize), LocalDateTime.now());
@@ -94,9 +95,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
             Set<Long> keywordsFound = getFilteredPublicContentIds(searchString.get());
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetitionBySearchString(keywordsFound, getPageable(pageNumber, pageSize), LocalDateTime.now());
         }
-        else {
+        else {*/
             publicContentPage = publicContentRepository.findAllPublishedForOpenCompetition(getPageable(pageNumber, pageSize), LocalDateTime.now());
-        }
+        //}
 
         return publicContentPage;
     }
@@ -173,16 +174,22 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         List<PublicContentItemResource> publicContentItemResources = new ArrayList<>();
 
         publicContentList.getContent().forEach(publicContent -> {
-            PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
-            publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
-            publicContentItemResource.setCompetitionOpenDate(publicContent.getCompetition().getStartDate());
-            publicContentItemResource.setCompetitionCloseDate(publicContent.getCompetition().getEndDate());
-            publicContentItemResource.setCompetitionTitle(publicContent.getCompetition().getName());
+            Competition competition = competitionRepository.findById(publicContent.getCompetitionId());
 
-            publicContentItemResources.add(publicContentItemResource);
+            if(publicContent.getPublishDate() != null) {
+                PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
+                publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
+                publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
+                publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
+                publicContentItemResource.setCompetitionTitle(competition.getName());
+
+                publicContentItemResources.add(publicContentItemResource);
+            }
         });
 
         publicContentItemPageResource.setTotalElements(publicContentList.getTotalElements());
+        publicContentItemResources.sort((o1, o2) -> o1.getCompetitionCloseDate().compareTo(o2.getCompetitionCloseDate()));
+
         publicContentItemPageResource.setContent(publicContentItemResources);
         publicContentItemPageResource.setTotalPages(publicContentList.getTotalPages());
         publicContentItemPageResource.setNumber(publicContentList.getNumber());

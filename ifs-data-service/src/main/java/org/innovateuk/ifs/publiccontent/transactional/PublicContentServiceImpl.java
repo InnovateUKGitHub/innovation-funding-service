@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
@@ -57,11 +56,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
             return serviceFailure(PUBLIC_CONTENT_ALREADY_INITIALISED);
         }
 
-        Competition competition = new Competition();
-        competition.setId(competitionId);
-
         PublicContent publicContent = new PublicContent();
-        publicContent.setCompetition(competition);
+        publicContent.setCompetitionId(competitionId);
         publicContentRepository.save(publicContent);
 
         stream(PublicContentSectionType.values()).forEach(type -> {

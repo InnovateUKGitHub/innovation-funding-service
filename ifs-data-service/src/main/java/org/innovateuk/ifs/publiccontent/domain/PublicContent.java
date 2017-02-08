@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.publiccontent.domain;
 
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 
 import javax.persistence.*;
@@ -17,8 +16,7 @@ public class PublicContent {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne
-    private Competition competition;
+    private Long competitionId;
 
     private LocalDateTime publishDate;
 
@@ -53,12 +51,12 @@ public class PublicContent {
         this.id = id;
     }
 
-    public Competition getCompetition() {
-        return competition;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
-    public void setCompetition(Competition competition) {
-        this.competition = competition;
+    public void setCompetitionId(Long competition) {
+        this.competitionId = competition;
     }
 
     public LocalDateTime getPublishDate() {
