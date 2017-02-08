@@ -9,6 +9,7 @@ import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,7 @@ import static java.lang.String.format;
  */
 @Controller
 @RequestMapping(value = "/{assessmentId}")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessmentAssignmentController extends BaseController {
 
     @Autowired
@@ -51,8 +53,8 @@ public class AssessmentAssignmentController extends BaseController {
 
     @RequestMapping(value = "assignment/accept", method = RequestMethod.POST)
     public String acceptAssignment(@PathVariable("assessmentId") Long assessmentId) {
-        assessmentService.acceptInvitation(assessmentId).getSuccessObjectOrThrowException();
-        AssessmentResource assessment = assessmentService.getById(assessmentId);
+        AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
+        assessmentService.acceptInvitation(assessment.getId());
         return redirectToAssessorCompetitionDashboard(assessment.getCompetition());
     }
 
@@ -65,7 +67,7 @@ public class AssessmentAssignmentController extends BaseController {
         Supplier<String> failureView = () -> doViewRejectAssignmentConfirm(model, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            AssessmentResource assessment = assessmentService.getById(assessmentId);
+            AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
             ServiceResult<Void> updateResult = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).

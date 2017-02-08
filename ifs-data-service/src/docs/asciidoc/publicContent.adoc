@@ -17,7 +17,6 @@ include::{snippets}/public-content/publish-by-competition-id/path-parameters.ado
 
 ==== Response
 include::{snippets}/public-content/publish-by-competition-id/http-response.adoc[]
-include::{snippets}/public-content/publish-by-competition-id/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/public-content/publish-by-competition-id/curl-request.adoc[]

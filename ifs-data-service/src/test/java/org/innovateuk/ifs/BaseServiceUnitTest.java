@@ -135,7 +135,6 @@ public abstract class BaseServiceUnitTest<ServiceType> extends BaseUnitTestMocks
         verify(fileServiceMock).updateFile(fileToUpdate, inputStreamSupplier);
     }
 
-
     protected void setLoggedInUser(UserResource loggedInUser) {
         SecurityContextHolder.getContext().setAuthentication(new UserAuthentication(loggedInUser));
     }

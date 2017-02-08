@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.workflow.configuration;
 
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectProcess;
 import org.innovateuk.ifs.project.domain.ProjectUser;
@@ -47,6 +48,10 @@ public class ProjectWorkflowHandler extends BaseWorkflowEventHandler<ProjectProc
 
     public boolean grantOfferLetterApproved(Project project, ProjectUser projectUser) {
         return fireEvent(mandatoryValueAddedEvent(project, projectUser, ProjectOutcomes.GOL_APPROVED), project);
+    }
+
+    public ProjectState getState(Project project) {
+        return getCurrentProcess(project).getActivityState();
     }
 
     @Override

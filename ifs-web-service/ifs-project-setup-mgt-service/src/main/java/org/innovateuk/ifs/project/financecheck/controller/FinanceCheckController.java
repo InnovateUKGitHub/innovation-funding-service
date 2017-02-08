@@ -88,6 +88,7 @@ public class FinanceCheckController {
     private PartnerOrganisationService partnerOrganisationService;
 
     @RequestMapping(value = "/organisation/{organisationId}", method = GET)
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId,
                        @ModelAttribute(FORM_ATTR_NAME) FinanceCheckForm form,
                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -98,6 +99,7 @@ public class FinanceCheckController {
     }
 
     @RequestMapping(value = "/organisation/{organisationId}", method = POST)
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String update(@PathVariable("projectId") Long projectId,
                          @PathVariable("organisationId") Long organisationId,
                          @ModelAttribute(FORM_ATTR_NAME) @Valid FinanceCheckForm form,
@@ -131,6 +133,7 @@ public class FinanceCheckController {
         );
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @RequestMapping(value = "/organisation/{organisationId}", params = "approve", method = POST)
     public String approveFinanceCheck(@PathVariable Long projectId, @PathVariable Long organisationId, Model model,
                                        @ModelAttribute FinanceCheckForm form,
@@ -147,6 +150,7 @@ public class FinanceCheckController {
         );
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @RequestMapping(value = "/organisation/{organisationId}/jes-file", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable("projectId") final Long projectId,
                                                                            @PathVariable("organisationId") Long organisationId) {

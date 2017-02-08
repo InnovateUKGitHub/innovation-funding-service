@@ -16,6 +16,7 @@ import org.innovateuk.ifs.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -36,6 +37,7 @@ import static org.innovateuk.ifs.invite.service.InviteServiceImpl.ORGANISATION_T
 
 @Controller
 @RequestMapping("/organisation/create/type/")
+@PreAuthorize("permitAll")
 public class OrganisationTypeCreationController {
     private static final Log LOG = LogFactory.getLog(OrganisationTypeCreationController.class);
     Validator validator;

@@ -27,14 +27,14 @@ public abstract class AbstractPublicContentViewModelPopulator<M extends Abstract
                 .filter(section -> getType().equals(section.getType())).findAny();
         if (optionalSectionResource.isPresent()) {
             model.setSection(optionalSectionResource.get());
+            populateSection(model, publicContentResource, optionalSectionResource.get());
         }
         model.setPublished(publicContentResource.getPublishDate() != null);
         model.setReadOnly(readOnly);
-        populateSection(model, publicContentResource);
         return model;
     }
 
     protected abstract M createInitial();
-    protected abstract void populateSection(M model, PublicContentResource publicContentResource);
+    protected abstract void populateSection(M model, PublicContentResource publicContentResource, PublicContentSectionResource section);
     protected abstract PublicContentSectionType getType();
 }
