@@ -30,7 +30,7 @@ public class CommonThreadController<R> {
     }
 
     @RequestMapping(value = "/{threadId}/post", method = POST)
-    public RestResult<Void> addPost(@RequestBody PostResource post, @PathVariable("queryId") Long queryId) {
-        return service.addPost(post, queryId).toPostCreateResponse();
+    public RestResult<Void> addPost(@RequestBody PostResource post, @PathVariable("threadId") Long threadId) {
+        return service.addPost(post, threadId).toPostCreateResponse();
     }
 }
