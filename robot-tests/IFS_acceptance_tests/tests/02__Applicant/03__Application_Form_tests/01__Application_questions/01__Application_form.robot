@@ -10,6 +10,8 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...               INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
 ...
 ...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
+...
+...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -27,6 +29,13 @@ Application details: Previous submission
     And the user should see the text in the page    Previous application title
     When the user clicks the button/link    jQuery=label:contains(No)
     Then The user should not see the element    id=application_details-previousapplicationnumber
+
+Application details: Research category
+    [Documentation]    INFUND-6823
+    Then the user should see the element    jQuery=label:contains(Industrial research)
+    And the user should see the element    jQuery=label:contains(Technical feasibilit)
+    And the user should see the element    jQuery=label:contains(Experimental development)
+    When the user clicks the button/link    jQuery=label:contains(Experimental development)
 
 Autosave in the form questions
     [Documentation]    INFUND-189
