@@ -35,8 +35,6 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    ...
-    ...
     ...    This test case still use the old application after the refactoring
     [Tags]
     [Setup]    Guest user log-in    &{collaborator1_credentials}
@@ -48,12 +46,12 @@ Contribution to project and funding sought should not be negative number
     [Documentation]    INFUND-524
     ...
     ...    This test case still use the old application after the refactoring
-    [Tags]          Pending
-    When the user navigates to your-finances page       Providing sustainable childcare
+    [Tags]
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    When the user navigates to Your-finances page       Providing sustainable childcare
     and the user fills in the project costs
-    and the user fills in the organisation information        Providing sustainable childcare
-    and the user checks your funding section for the project       Providing sustainable childcare
-    #And the applicant enters a bigger funding amount
+    and the user fills in the organisation information       Providing sustainable childcare
+    and the user checks your funding section for the project      Providing sustainable childcare
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
@@ -131,6 +129,12 @@ Alert should not show If research participation is below the maximum level
 
 
 *** Keywords ***
+the user navigates to Your-finances page
+    [Arguments]  ${Application}
+    the user navigates to the page  ${DASHBOARD_URL}
+    the user clicks the button/link  link=${Application}
+    the user clicks the button/link  link=Your finances
+
 the finance Project cost breakdown calculations should be correct
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £385
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £202,169
@@ -170,17 +174,10 @@ the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(5)    Contribution to project
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
 
-the applicant enters a bigger funding amount
-    [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
-    the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
-    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    8000000
-    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
-    Execute Javascript    jQuery('form').attr('data-test','true');
-
 the contribution to project and funding sought should be 0 and not a negative number
-    the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £0
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £0
+    the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(3)    £0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)     £0
 
 Green check should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
@@ -208,9 +205,14 @@ Lead enters a valid research participation value
 the user checks Your Funding section for the project
     [Arguments]  ${Application}
     ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
-    Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area       ${Application}
+    Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area via Your Funding section    ${Application}
     Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information with bigger amount     ${Application}
 
+the user selects research area via Your Funding section
+    [Arguments]  ${Application}
+    When the user clicks the button/link      link = application details
+    the user completes the application details
+    And the user fills in the funding information with bigger amount     ${Application}
 
 the user fills in the funding information with bigger amount
     [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
