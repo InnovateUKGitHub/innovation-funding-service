@@ -21,8 +21,8 @@
     <p ifs:utext="${model.shortDescription}"></p>
 
     <ul class="list">
-        <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE dd MMM yyyy')}"></span></li>
-        <li><strong>Competition closes:</strong> <span th:text="${#temporals.format(model.competitionCloseDate, 'h:mma, EEEE dd MMM yyyy')}"></span></li>
+        <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMM yyyy')}"></span></li>
+        <li><strong>Competition closes:</strong> <span th:text="${#temporals.format(model.competitionCloseDate, 'EEEE d MMM yyyy h:mma')}"></span></li>
     </ul>
 
     <p>
