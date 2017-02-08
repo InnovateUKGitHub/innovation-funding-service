@@ -490,10 +490,7 @@ public class ApplicationFormController {
                 errors.addAll(saveErrors);
             }
 
-            if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
-                    && "University (HEI)".equals(organisationType)) {
-                errors.addAll(setOrganisationFinancesComplete(application.getId(), competition.getId(), processRole.getId()));
-            }
+            setOrganisationFinancesComplete(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
         }
 
         if(isMarkQuestionRequest(params)) {
@@ -532,10 +529,13 @@ public class ApplicationFormController {
         }
     }
 
-    private List<ValidationMessages> setOrganisationFinancesComplete(Long applicationId, Long competitionId, Long processRoleId) {
+    private void setOrganisationFinancesComplete(String organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
 
-        SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
-        return sectionService.markAsComplete(organisationSection.getId(), applicationId, processRoleId);
+        if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
+                && "University (HEI)".equals(organisationType)) {
+            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+            sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
+        }
     }
 
     private List<Error> sortValidationMessages(ValidationMessages errors) {
