@@ -38,10 +38,7 @@ import org.springframework.validation.ObjectError;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
@@ -387,20 +384,26 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testSaveNewResponseAttachment() throws Exception {
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("testFile", "testFile.pdf", "application/pdf", "My content!".getBytes());
+        MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
         FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
 
         when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
         MvcResult result = mockMvc.perform(
-                fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility").
-                        file(uploadedFile).param("uploadAttachment", ""))
+                fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response").
+                        file(uploadedFile).
+                        param("uploadAttachment", ""))
                 .andExpect(cookie().exists("finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L))
                 .andExpect(view().name("project/financecheck/queries"))
                 .andReturn();
 
         List<Long> expectedAttachmentIds = new ArrayList<>();
-        expectedAttachmentIds.add(0L);
+        expectedAttachmentIds.add(1L);
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L));
 
@@ -525,8 +528,9 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .andReturn();
 
         List<? extends ObjectError> errors = (List<? extends ObjectError>) result.getModelAndView().getModel().get("nonFormErrors");
-        assertEquals(1, errors.size());
-        assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(0).getCode());
+        assertEquals(2, errors.size());
+        assertEquals(CommonFailureKeys.GENERAL_FORBIDDEN, errors.get(0).getCode());
+        assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(1).getCode());
     }
 
     @Override
