@@ -43,14 +43,16 @@ public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> im
     private List<PublicContentEventResource> mapDateToEventResource(Long publicContentId, List<Date> dates) {
         List<PublicContentEventResource> publicContentEventResources = new ArrayList<>();
 
-        dates.forEach(date -> {
-            PublicContentEventResource eventResource = new PublicContentEventResource();
-            eventResource.setContent(date.getContent());
-            eventResource.setId(date.getId());
-            eventResource.setDate(LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(), 0, 0));
-            eventResource.setPublicContent(publicContentId);
-            publicContentEventResources.add(eventResource);
-        });
+        if(null != dates) {
+            dates.forEach(date -> {
+                PublicContentEventResource eventResource = new PublicContentEventResource();
+                eventResource.setContent(date.getContent());
+                eventResource.setId(date.getId());
+                eventResource.setDate(LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(), 0, 0));
+                eventResource.setPublicContent(publicContentId);
+                publicContentEventResources.add(eventResource);
+            });
+        }
 
         return publicContentEventResources;
     }
