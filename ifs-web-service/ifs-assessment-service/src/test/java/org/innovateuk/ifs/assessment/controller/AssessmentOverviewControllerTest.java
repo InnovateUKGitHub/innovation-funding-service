@@ -341,7 +341,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -352,9 +352,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
                 .andReturn();
 
-        verify(assessmentService, times(1)).getById(assessmentId);
-        verify(assessmentService, times(1)).rejectInvitation(assessmentId, reason, comment);
-        verifyNoMoreInteractions(assessmentService);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -523,9 +524,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
         when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
         // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
 
@@ -558,7 +558,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getById(assessmentId);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
         inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
