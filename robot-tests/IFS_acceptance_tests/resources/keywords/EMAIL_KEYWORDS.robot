@@ -84,13 +84,13 @@ the user reads his email and clicks the link
 the user reads his email from the default mailbox and clicks the link
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    worth.email.test
+    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_one}    ${test_mailbox_one_password}
 
 
 the user reads his email from the second default mailbox and clicks the link
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    worth.email.test.two
+    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_two}    ${test_mailbox_two_password}
 
 
 the user reads his email and clicks the link locally
@@ -110,8 +110,8 @@ the user reads his email and clicks the link remotely
 
 
 the user reads his email from the default mailbox and clicks the link remotely
-    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}
-    Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=testtest1
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}    ${mailbox_password}
+    Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=${mailbox_password}
     ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     the user reads the email and clicks the link    ${email_to_test}    ${pattern}
