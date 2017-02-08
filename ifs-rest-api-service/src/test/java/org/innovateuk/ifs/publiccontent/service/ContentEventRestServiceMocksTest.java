@@ -33,7 +33,7 @@ public class ContentEventRestServiceMocksTest extends BaseRestServiceUnitTest<Co
     @Test
     public void test_resetAndSaveEvents() {
         List<PublicContentEventResource> events = newPublicContentEventResource().build(1);
-        setupPostWithRestResultExpectations(PUBLIC_CONTENT_EVENT_REST_URL + "/reset-and-save-events?id=1", events, HttpStatus.OK);
+        setupPostWithRestResultExpectations(PUBLIC_CONTENT_EVENT_REST_URL + "/reset-and-save-events/1", events, HttpStatus.OK);
         RestResult<Void> response = service.resetAndSaveEvents(1L, events);
         assertTrue(response.isSuccess());
     }

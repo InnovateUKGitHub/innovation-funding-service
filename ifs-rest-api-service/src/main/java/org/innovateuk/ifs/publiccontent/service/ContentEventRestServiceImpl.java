@@ -7,8 +7,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static java.lang.String.format;
-
 /**
  * Implementation for public content rest calls.
  */
@@ -24,6 +22,6 @@ public class ContentEventRestServiceImpl extends BaseRestService implements Cont
 
     @Override
     public RestResult<Void> resetAndSaveEvents(Long publicContentId, List<PublicContentEventResource> events) {
-        return postWithRestResult(format(PUBLIC_CONTENT_EVENT_REST_URL + "/reset-and-save-events?id=%d", publicContentId), events, Void.class);
+        return postWithRestResult(PUBLIC_CONTENT_EVENT_REST_URL + "/reset-and-save-events/" + publicContentId, events, Void.class);
     }
 }
