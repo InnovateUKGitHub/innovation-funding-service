@@ -9,20 +9,27 @@ import java.util.List;
 
 public abstract class ThreadRestService<T> extends BaseRestService {
     private final String baseURL;
-    private final ParameterizedTypeReference<List<T>> type;
+    private final ParameterizedTypeReference<List<T>> listType;
+    private final Class<T> type;
 
-    public ThreadRestService(String baseURL, ParameterizedTypeReference<List<T>> type) {
+    public ThreadRestService(String baseURL, Class<T> type, ParameterizedTypeReference<List<T>> listType) {
         this.baseURL = baseURL;
         this.type = type;
+        this.listType = listType;
     }
 
-    public RestResult<List<T>> allThreads(final Long projectFinanceId) {
-        return getWithRestResult(baseURL + "/" + projectFinanceId, type);
+    public RestResult<List<T>> findAll(final Long contextClassId) {
+        return getWithRestResult(baseURL + "/all/" + contextClassId, listType);
 
     }
 
-    public RestResult<Long> createThread(T thread) {
-        return postWithRestResult(baseURL, thread, Long.class);
+    public RestResult<T> findOne(final Long id) {
+        return getWithRestResult(baseURL + "/" + id, type);
+
+    }
+
+    public RestResult<Void> create(T thread) {
+        return postWithRestResult(baseURL, thread, Void.class);
     }
 
     public RestResult<Void> addPost(PostResource post, Long threadId) {

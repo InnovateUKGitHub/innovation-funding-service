@@ -16,7 +16,7 @@ public interface ProjectFinanceNotesService extends ThreadService<NoteResource, 
 
     @Override
     @PostFilter("hasPermission(filterObject, 'READ')")
-    ServiceResult<NoteResource> findOne(Long contextClassPk);
+    ServiceResult<NoteResource> findOne(Long id);
 
     @Override
     @PreAuthorize("hasPermission(#noteResource, 'CREATE')")

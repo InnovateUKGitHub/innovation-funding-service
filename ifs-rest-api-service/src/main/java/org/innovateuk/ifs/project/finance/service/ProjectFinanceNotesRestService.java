@@ -6,10 +6,10 @@ import org.springframework.core.ParameterizedTypeReference;
 
 import java.util.List;
 
-public class ProjectFinanceNotesRestServiceImpl extends ThreadRestService<NoteResource> {
+public class ProjectFinanceNotesRestService extends ThreadRestService<NoteResource> {
 
-    public ProjectFinanceNotesRestServiceImpl() {
-        super("/project/finance/notes", new ParameterizedTypeReference<List<NoteResource>>() {
+    public ProjectFinanceNotesRestService() {
+        super("/project/finance/notes", NoteResource.class, new ParameterizedTypeReference<List<NoteResource>>() {
         });
     }
 
