@@ -3,13 +3,11 @@ package org.innovateuk.ifs.user.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.address.domain.Address;
 import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.domain.Affiliation;
-import org.innovateuk.ifs.user.domain.Contract;
-import org.innovateuk.ifs.user.domain.Profile;
-import org.innovateuk.ifs.user.domain.User;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -19,10 +17,16 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.time.ZoneId.systemDefault;
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -33,17 +37,14 @@ import static org.innovateuk.ifs.user.builder.EthnicityBuilder.newEthnicity;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static java.time.ZoneId.systemDefault;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.*;
 
@@ -58,29 +59,45 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void getProfileSkills() {
+        List<InnovationArea> innovationAreas = newInnovationArea()
+                .withId(1L, 2L)
+                .withName("Data", "Cyber Security")
+                .build(2);
+
         User existingUser = newUser().build();
         Profile profile = newProfile()
                 .withAddress(newAddress().build())
                 .withContract(newContract().build())
                 .withBusinessType(ACADEMIC)
                 .withSkillsAreas("Skills")
+                .withInnovationAreas(innovationAreas)
                 .build();
         existingUser.setProfileId(profile.getId());
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
         when(profileRepositoryMock.findOne(existingUser.getProfileId())).thenReturn(profile);
-
-        ProfileSkillsResource expected = newProfileSkillsResource()
-                .withUser(existingUser.getId())
-                .withBusinessType(ACADEMIC)
-                .withSkillsAreas("Skills")
-                .build();
+        when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class))).thenAnswer(invocation -> {
+            InnovationArea innovationArea = invocation.getArgumentAt(0, InnovationArea.class);
+            return newInnovationAreaResource()
+                    .withId(innovationArea.getId())
+                    .withName(innovationArea.getName())
+                    .build();
+        });
 
         ProfileSkillsResource response = service.getProfileSkills(existingUser.getId()).getSuccessObject();
-        assertEquals(expected, response);
+        assertEquals(existingUser.getId(), response.getUser());
+        assertThat(response.getInnovationAreas(), containsInAnyOrder(newInnovationAreaResource()
+                .withId(1L, 2L)
+                .withName("Data", "Cyber Security")
+                .buildArray(2, InnovationAreaResource.class)));
+        assertEquals(ACADEMIC, response.getBusinessType());
+        assertEquals("Skills", response.getSkillsAreas());
 
-        verify(userRepositoryMock).findOne(existingUser.getId());
-        verifyNoMoreInteractions(userRepositoryMock);
+        InOrder inOrder = inOrder(userRepositoryMock, profileRepositoryMock, innovationAreaMapperMock);
+        inOrder.verify(userRepositoryMock).findOne(existingUser.getId());
+        inOrder.verify(profileRepositoryMock).findOne(existingUser.getProfileId());
+        inOrder.verify(innovationAreaMapperMock, times(2)).mapToResource(isA(InnovationArea.class));
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -157,7 +174,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .build();
         when(profileRepositoryMock.save(updatedProfile)).thenReturn(updatedProfile);
 
-        ServiceResult<Void> result = service.updateProfileSkills(existingUser.getId(), newProfileSkillsResource()
+        ServiceResult<Void> result = service.updateProfileSkills(existingUser.getId(), newProfileSkillsEditResource()
                 .withUser(existingUser.getId())
                 .withBusinessType(BUSINESS)
                 .withSkillsAreas("Updated")
@@ -175,7 +192,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     public void updateProfileSkills_userDoesNotExist() {
         Long userId = 1L;
 
-        ServiceResult<Void> result = service.updateProfileSkills(userId, newProfileSkillsResource().build());
+        ServiceResult<Void> result = service.updateProfileSkills(userId, newProfileSkillsEditResource().build());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(notFoundError(User.class, userId)));
 
@@ -201,7 +218,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
         when(profileRepositoryMock.save(any(Profile.class))).thenReturn(newProfile().build(), profile);
 
-        ServiceResult<Void> result = service.updateProfileSkills(existingUser.getId(), newProfileSkillsResource()
+        ServiceResult<Void> result = service.updateProfileSkills(existingUser.getId(), newProfileSkillsEditResource()
                 .withUser(existingUser.getId())
                 .withBusinessType(BUSINESS)
                 .withSkillsAreas("Updated")
@@ -670,7 +687,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withContractSignedDate(LocalDateTime.now())
                 .build();
         User user = newUser()
-                .withAffiliations( asList(newAffiliation().build()) )
+                .withAffiliations(asList(newAffiliation().build()))
                 .withProfileId(profile.getId())
                 .build();
 
@@ -687,7 +704,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                         .withSkillsComplete(true)
                         .withAffliliationsComplete(true)
                         .withContractComplete(true)
-                .build(),
+                        .build(),
                 result.getSuccessObject()
         );
 
@@ -726,7 +743,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
     @Test
     public void getUserProfileStatus_affiliationsComplete() throws Exception {
         User user = newUser()
-                .withAffiliations( asList(newAffiliation().build()) )
+                .withAffiliations(asList(newAffiliation().build()))
                 .build();
 
         when(userRepositoryMock.findOne(user.getId())).thenReturn(user);

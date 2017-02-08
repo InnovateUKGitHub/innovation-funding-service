@@ -2,17 +2,16 @@ package org.innovateuk.ifs.user.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
-import java.util.List;
+import javax.validation.constraints.Size;
 
 /**
- * Profile Skills Data Transfer Object
+ * Profile Skills Data Transfer Object used when updating the skills of a User.
  */
-public class ProfileSkillsResource {
+public class ProfileSkillsEditResource {
 
     private Long user;
-    private List<InnovationAreaResource> innovationAreas;
+    @Size(max = 5000, message = "{validation.field.too.many.characters}")
     private String skillsAreas;
     private BusinessType businessType;
 
@@ -22,14 +21,6 @@ public class ProfileSkillsResource {
 
     public void setUser(Long user) {
         this.user = user;
-    }
-
-    public List<InnovationAreaResource> getInnovationAreas() {
-        return innovationAreas;
-    }
-
-    public void setInnovationAreas(List<InnovationAreaResource> innovationAreas) {
-        this.innovationAreas = innovationAreas;
     }
 
     public String getSkillsAreas() {
@@ -50,19 +41,14 @@ public class ProfileSkillsResource {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
-        ProfileSkillsResource that = (ProfileSkillsResource) o;
+        ProfileSkillsEditResource that = (ProfileSkillsEditResource) o;
 
         return new EqualsBuilder()
                 .append(user, that.user)
-                .append(innovationAreas, that.innovationAreas)
                 .append(skillsAreas, that.skillsAreas)
                 .append(businessType, that.businessType)
                 .isEquals();
@@ -72,7 +58,6 @@ public class ProfileSkillsResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(user)
-                .append(innovationAreas)
                 .append(skillsAreas)
                 .append(businessType)
                 .toHashCode();

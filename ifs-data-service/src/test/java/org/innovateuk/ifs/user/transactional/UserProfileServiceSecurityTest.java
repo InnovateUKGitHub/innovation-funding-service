@@ -13,6 +13,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
@@ -52,12 +53,12 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     @Test
     public void updateProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource().build();
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource().build();
 
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
-        assertAccessDenied(() -> classUnderTest.updateProfileSkills(userId, profileSkillsResource), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProfileSkills(userId, profileSkillsEditResource), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -175,7 +176,7 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
         }
 
         @Override
-        public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileResource) {
+        public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileResource) {
             return null;
         }
 

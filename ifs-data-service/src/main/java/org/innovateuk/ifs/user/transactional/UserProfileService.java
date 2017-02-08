@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.user.transactional;
 
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.*;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.access.prepost.PreFilter;
 
 import java.util.List;
 
@@ -20,7 +18,7 @@ public interface UserProfileService {
     ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE')")
-    ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileResource);
+    ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileResource);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<ProfileContractResource> getProfileContract(Long userId);

@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.transactional;
 
 import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Affiliation;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
@@ -58,35 +60,35 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private EthnicityMapper ethnicityMapper;
 
+    @Autowired
+    private InnovationAreaMapper innovationAreaMapper;
+
     private Clock clock = Clock.systemDefaultZone();
-
-
-    public enum ServiceFailures {
-        UNABLE_TO_UPDATE_USER;
-    }
 
     @Override
     public ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> {
-                    ProfileSkillsResource profileSkills = new ProfileSkillsResource();
-                    profileSkills.setUser(user.getId());
+                    ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
+                    profileSkillsResource.setUser(user.getId());
                     Profile profile = profileRepository.findOne(user.getProfileId());
                     if (profile != null) {
-                        profileSkills.setBusinessType(profile.getBusinessType());
-                        profileSkills.setSkillsAreas(profile.getSkillsAreas());
+                        profileSkillsResource.setInnovationAreas(simpleMap(profile.getInnovationAreas(),
+                                innovationArea -> innovationAreaMapper.mapToResource(innovationArea)));
+                        profileSkillsResource.setBusinessType(profile.getBusinessType());
+                        profileSkillsResource.setSkillsAreas(profile.getSkillsAreas());
                     }
-                    return serviceSuccess(profileSkills);
+                    return serviceSuccess(profileSkillsResource);
                 });
     }
 
     @Override
-    public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileSkills) {
+    public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkills) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> updateUserProfileSkills(user, profileSkills));
     }
 
-    private ServiceResult<Void> updateUserProfileSkills(User user, ProfileSkillsResource profileSkills) {
+    private ServiceResult<Void> updateUserProfileSkills(User user, ProfileSkillsEditResource profileSkills) {
         Profile profile = getOrCreateUserProfile(user);
         profile.setBusinessType(profileSkills.getBusinessType());
         profile.setSkillsAreas(profileSkills.getSkillsAreas());
