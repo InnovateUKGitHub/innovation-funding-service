@@ -2,11 +2,11 @@ Application title,Competition name,Start Date,Duration in months,Lead Applicant,
 A new innovative solution,Connected digital additive manufacturing,2015-11-01,20,steve.smith@empire.com,"jessica.doe@ludlow.co.uk,pete.tom@egg.com",\N,submitted
 A novel solution to an old problem,Connected digital additive manufacturing,2016-03-01,51,steve.smith@empire.com,"jessica.doe@ludlow.co.uk,pete.tom@egg.com,ewan+1@hiveit.co.uk",\N,open
 Elbow grease,New designs for a circular economy,2016-03-01,3,louis.morgan@example.com,"janet.howard@example.com,roy.wheeler@example.com,deborah.moore@example.com,howard.white@example.com,wayne.cooper@example.com",2016-05-26 13:07:42,approved
-Magic material,New designs for a circular economy,2016-03-01,36,steve.smith@empire.com,"worth.email.test+projectsetuppm@gmail.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com",2016-05-26 11:15:55,approved
+Magic material,New designs for a circular economy,2016-03-01,36,steve.smith@empire.com,"worth.email.test+projectsetuppm@gmail.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com,kevin.summers@ludlow.co.uk,casey.evans@egg.com",2016-05-26 11:15:55,approved
 Rainfall,Sustainable living models for the future,2016-04-25,3,todd.thompson@example.com,\N,\N,open
 Office Chair for Life,New designs for a circular economy,\N,3,jerry.mcdonald@example.com,aaron.powell@example.com,2016-05-26 11:20:33,approved
 SISM - Smart Internet Security Monitor,Internet of Things,2020-10-01,3,pamela.green@example.com,\N,\N,created
-Sensing & Control network using the lighting infrastructure,Internet of Things,2020-10-01,3,worth.email.test+fundsuccess@gmail.com,"steve.smith@empire.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com",2016-05-03 17:24:37,submitted
+Sensing & Control network using the lighting infrastructure,Internet of Things,2020-10-01,3,worth.email.test+fundsuccess@gmail.com,"steve.smith@empire.com,jessica.doe@ludlow.co.uk,pete.tom@egg.com,worth.email.test+mario@gmail.com,casey.evans@egg.com,kevin.summers@ludlow.co.uk",2016-05-03 17:24:37,submitted
 Matter - Planning for Web,Internet of Things,2020-10-01,3,worth.email.test.two+fundfailure@gmail.com,\N,2016-05-03 17:27:20,submitted
 Urban Solutions,Sustainable living models for the future,2016-04-25,3,jane.jones@example.com,\N,\N,open
 Cleaning Product packaging,New designs for a circular economy,2016-03-01,3,laura.jackson@example.com,\N,2016-05-26 11:12:25,rejected
@@ -27,22 +27,27 @@ Climate control solution,Integrated delivery programme - low carbon vehicles,202
 Electric Drive,Integrated delivery programme - low carbon vehicles,2020-10-01,3,james.lewis@example.com,\N,2016-05-24 10:23:43,rejected
 Using natural gas to heat homes,Connected digital additive manufacturing,2015-11-01,43,steve.smith@empire.com,jessica.doe@ludlow.co.uk,\N,rejected
 Avion Scalable Platform for Big Data Video Content Analysis,Internet of Things,2020-10-01,3,raymond.freeman@example.com,\N,\N,rejected
-New materials for lighter stock,"Rolling stock future developments",2020-10-01,21,steven.hicks@ntag.example.com,"robert.perez@jetpulse.example.com,bruce.perez@wikivu.example.com,jo.peters@ntag.example.com",2016-05-24 10:23:43,approved
-Grade crossing manufacture and supply,"Rolling stock future developments",2018-03-01,12,diane.scott@eadel.example.com,"ryan.welch@bluezoom.example.com,sara.armstrong@npath.example.com",2016-06-12 12:00:00,approved
-Point control and automated monitoring,"Rolling stock future developments",2017-06-01,36,phillip.ramos@katz.example.com,"kimberly.fowler@meembee.example.com,craig.ortiz@zooveo.example.com",2016-05-10 13:00:00,approved
-High-speed rail and its effects on air quality,"Rolling stock future developments",2018-01-01,48,ralph.young@ooba.example.com,"tina.taylor@wordpedia.example.com,antonio.jenkins@jabbertype.example.com",2016-07-02 14:26:12,approved
-London underground – enhancements to existing stock and logistics,"Rolling stock future developments",2019-04-01,6,amy.ortiz@gabtype.example.com,"karen.ramos@kazio.example.com,juan.campbell@cogilith.example.com",2016-05-01 09:00:24,approved
-Home monitoring using adaptive optics,"Home and industrial efficiency programme",2019-04-01,6,peter.styles@load.example.com,\N,\N,open
-Networking home IOT devices,"Home and industrial efficiency programme",2019-04-01,6,jessica.mason@load.example.com,\N,\N,open
-New algorithms to improve machine efficiency,"Home and industrial efficiency programme",2019-04-01,6,malcom.jones@load.example.com,\N,\N,open
-GPS adaptions for remote drone protocols,"Home and industrial efficiency programme",2019-04-01,6,bethany.timpson@load.example.com,\N,\N,open
-Implementing large scale engineering on the small scale,"Home and industrial efficiency programme",2019-04-01,6,derik.arnold@load.example.com,\N,\N,open
-Removing mechanical storage from server farms,"Home and industrial efficiency programme",2019-04-01,6,sarah.james@load.example.com,\N,\N,open
-Implementing remote debugging on IOT devices,"Home and industrial efficiency programme",2019-04-01,6,richard.williams@load.example.com,\N,\N,open
-Liquid lenses in mobile phone cameras,"Home and industrial efficiency programme",2019-04-01,6,karen.smith@load.example.com,\N,\N,open
-Harness fluid dynamics for improved braking in cars,"Home and industrial efficiency programme",2019-04-01,6,simon.lightfoot@load.example.com,\N,\N,open
-Using static electricity to charge mobile devices,"Home and industrial efficiency programme",2019-04-01,6,mary.evans@load.example.com,\N,\N,open
-Heat exchange mechanisms for releasing heat from refuse,"Home and industrial efficiency programme",2019-04-01,6,mike.ericsson@load.example.com,\N,\N,open
-Shock phase state in non newtonian liquids in the construction of body armour,"Home and industrial efficiency programme",2019-04-01,6,helen.rhodes@load.example.com,\N,\N,open
-Optimising engine output,"Home and industrial efficiency programme",2019-04-01,6,david.wellington@load.example.com,\N,\N,open
-Slowing light in super cooled gases for improved optical information transfer,"Home and industrial efficiency programme",2019-04-01,6,felicity.jefferies@load.example.com,\N,\N,open
+New materials for lighter stock,Rolling stock future developments,2020-10-01,21,steven.hicks@ntag.example.com,"robert.perez@jetpulse.example.com,bruce.perez@wikivu.example.com,jo.peters@ntag.example.com,brittany.gibbs@ntag.example.com,gene.bowman@jetpulse.example.com,mark.cobb@wikivu.example.com",2016-05-24 10:23:43,approved
+Grade crossing manufacture and supply,Rolling stock future developments,2018-03-01,12,diane.scott@eadel.example.com,"ryan.welch@bluezoom.example.com,sara.armstrong@npath.example.com,lewis.poole@eadel.example.com,phil.mcguire@bluezoom.example.com,darren.richards@npath.example.com",2016-06-12 12:00:00,approved
+Point control and automated monitoring,Rolling stock future developments,2017-06-01,36,phillip.ramos@katz.example.com,"kimberly.fowler@meembee.example.com,craig.ortiz@zooveo.example.com,theo.simpson@katz.example.com,holly.pratt@meembee.example.com,matt.hughes@zooveo.example.com,phil.gross@katz.example.com",2016-05-10 13:00:00,approved
+High-speed rail and its effects on air quality,Rolling stock future developments,2018-01-01,48,ralph.young@ooba.example.com,"tina.taylor@wordpedia.example.com,antonio.jenkins@jabbertype.example.com,michelle.bush@ooba.example.com,jeremy.jensen@wordpedia.example.com,myrtle.barton@jabbertype.example.com",2016-07-02 14:26:12,approved
+London underground – enhancements to existing stock and logistics,"Rolling stock future developments",2019-04-01,6,worth.email.test+amy@gmail.com,"worth.email.test+karen@gmail.com,worth.email.test+juan@gmail.com,worth.email.test+ben@gmail.com,worth.email.test+marian@gmail.com,worth.email.test+dustin@gmail.com,worth.email.test+elaine@gmail.com",2016-05-01 09:00:24,approved
+Home monitoring using adaptive optics,Home and industrial efficiency programme,2019-04-01,6,peter.styles@load.example.com,\N,\N,open
+Networking home IOT devices,Home and industrial efficiency programme,2019-04-01,6,jessica.mason@load.example.com,\N,\N,open
+New algorithms to improve machine efficiency,Home and industrial efficiency programme,2019-04-01,6,malcom.jones@load.example.com,\N,\N,open
+GPS adaptions for remote drone protocols,Home and industrial efficiency programme,2019-04-01,6,bethany.timpson@load.example.com,\N,\N,open
+Implementing large scale engineering on the small scale,Home and industrial efficiency programme,2019-04-01,6,derik.arnold@load.example.com,\N,\N,open
+Removing mechanical storage from server farms,Home and industrial efficiency programme,2019-04-01,6,sarah.james@load.example.com,\N,\N,open
+Implementing remote debugging on IOT devices,Home and industrial efficiency programme,2019-04-01,6,richard.williams@load.example.com,\N,\N,open
+Liquid lenses in mobile phone cameras,Home and industrial efficiency programme,2019-04-01,6,karen.smith@load.example.com,\N,\N,open
+Harness fluid dynamics for improved braking in cars,Home and industrial efficiency programme,2019-04-01,6,simon.lightfoot@load.example.com,\N,\N,open
+Using static electricity to charge mobile devices,Home and industrial efficiency programme,2019-04-01,6,mary.evans@load.example.com,\N,\N,open
+Heat exchange mechanisms for releasing heat from refuse,Home and industrial efficiency programme,2019-04-01,6,mike.ericsson@load.example.com,\N,\N,open
+Shock phase state in non newtonian liquids in the construction of body armour,Home and industrial efficiency programme,2019-04-01,6,helen.rhodes@load.example.com,\N,\N,open
+Optimising engine output,Home and industrial efficiency programme,2019-04-01,6,david.wellington@load.example.com,\N,\N,open
+Slowing light in super cooled gases for improved optical information transfer,Home and industrial efficiency programme,2019-04-01,6,felicity.jefferies@load.example.com,\N,\N,open
+Neural networks to optimise freight train routing,Machine learning for transport infrastructure,2019-04-01,6,aaron.robertson@load.example.com,\N,\N,open
+Data mining on traffic light timings,Machine learning for transport infrastructure,2019-04-01,6,betty.youngs@load.example.com,\N,\N,open
+Unsupervised learning of air traffic control,Machine learning for transport infrastructure,2019-04-01,6,russell.jenkins@load.example.com,\N,\N,open
+Supervised learning of freighter ship timetables,Machine learning for transport infrastructure,2019-04-01,6,mark.cox@load.example.com,\N,\N,open
+Passive buildings,Sustainable living models for the future,2019-04-01,6,gary.delaney@load.example.com,\N,\N,open

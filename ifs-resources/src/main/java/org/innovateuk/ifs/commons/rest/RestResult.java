@@ -185,6 +185,10 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
             throw new ApplicationAssessorAssignException(error.getErrorKey(), error.getArguments());
         }
 
+        if (restFailure.has(ASSESSMENT_WITHDRAWN)) {
+            throw new AssessmentWithdrawnException(error.getErrorKey(), error.getArguments());
+        }
+
         throw new RuntimeException();
     }
 

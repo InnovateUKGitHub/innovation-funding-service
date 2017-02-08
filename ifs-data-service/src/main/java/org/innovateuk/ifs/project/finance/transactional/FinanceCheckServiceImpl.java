@@ -6,8 +6,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
@@ -81,9 +80,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
     private ProjectService projectService;
 
     @Autowired
-    private OrganisationFinanceDelegate organisationFinanceDelegate;
-
-    @Autowired
     private ProjectFinanceService projectFinanceService;
 
     @Override
@@ -144,11 +140,11 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         Competition competition = application.getCompetition();
         List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(projectId);
         Optional<SpendProfile> spendProfile = spendProfileRepository.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId());
-        List<ApplicationFinanceResource> applicationFinanceResourceList = financeRowService.financeTotals(application.getId()).getSuccessObject();
+        List<ProjectFinanceResource> projectFinanceResourceList = projectFinanceRowService.financeChecksTotals(projectId).getSuccessObject();
 
-        BigDecimal totalProjectCost = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotal);
-        BigDecimal totalFundingSought = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalFundingSought);
-        BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(applicationFinanceResourceList, ApplicationFinanceResource::getTotalOtherFunding);
+        BigDecimal totalProjectCost = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotal);
+        BigDecimal totalFundingSought = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalFundingSought);
+        BigDecimal totalOtherFunding = calculateTotalForAllOrganisations(projectFinanceResourceList, ProjectFinanceResource::getTotalOtherFunding);
         BigDecimal totalPercentageGrant = calculateGrantPercentage(totalProjectCost, totalFundingSought);
 
         boolean financeChecksAllApproved = getFinanceCheckApprovalStatus(projectId);
@@ -281,8 +277,8 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         });
     }
 
-    private BigDecimal calculateTotalForAllOrganisations(List<ApplicationFinanceResource> applicationFinanceResourceList, Function<ApplicationFinanceResource, BigDecimal> keyExtractor) {
-        return applicationFinanceResourceList.stream().map(keyExtractor).reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
+    private BigDecimal calculateTotalForAllOrganisations(List<ProjectFinanceResource> projectFinanceResourceList, Function<ProjectFinanceResource, BigDecimal> keyExtractor) {
+        return projectFinanceResourceList.stream().map(keyExtractor).reduce(ZERO, BigDecimal::add).setScale(0, HALF_EVEN);
     }
 
     private BigDecimal calculateGrantPercentage(BigDecimal projectTotal, BigDecimal totalFundingSought) {
@@ -335,29 +331,4 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         }
         return serviceSuccess();
     }
-
-
-
-    /*
-    //TODO: INFUND-5508 - totals need to be switched to look at updated FC costs
-    //List<FinanceCheckURIs> financeChecks = financeCheckRepository.findByProjectId(projectId);
-    public BigDecimal getTotal(List<FinanceCheckURIs> financeChecks) {
-        if (financeChecks == null) {
-            return BigDecimal.ZERO;
-        }
-
-        BigDecimal total = financeChecks.stream()
-                .map(fc -> sumOf(fc.getCostGroup()))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        if (total == null) {
-            return BigDecimal.ZERO;
-        }
-
-        return total;
-    }
-
-    private BigDecimal sumOf(CostGroup costGroup){
-        return costGroup.getCosts().stream().map(Cost::getValue).reduce(BigDecimal.ZERO, BigDecimal::add);
-    }*/
 }
