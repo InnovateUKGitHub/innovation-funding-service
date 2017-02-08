@@ -125,7 +125,7 @@ public class FinanceChecksQueriesAddQueryController {
 
             FinanceChecksSectionType section = null;
             for (FinanceChecksSectionType value : FinanceChecksSectionType.values()) {
-                if (value.name().equals(querySection)) {
+                if (value.name().toUpperCase().equals(form.getSection().toUpperCase())) {
                     section = value;
                 }
             }
