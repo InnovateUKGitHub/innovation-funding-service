@@ -15,26 +15,26 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R, Long>, C> implements ThreadService<R, PostResource> {
     private final GenericThreadService<D, C> service;
-    private final M queryMapper;
+    private final M threadMapper;
     private final PostMapper postMapper;
 
-    public MappingThreadService(ThreadRepository<D> threadRepository, M queryMapper, PostMapper postMapper, Class<C> context) {
+    public MappingThreadService(ThreadRepository<D> threadRepository, M threadMapper, PostMapper postMapper, Class<C> context) {
         this.service = new GenericThreadService(threadRepository, context);
-        this.queryMapper = queryMapper;
+        this.threadMapper = threadMapper;
         this.postMapper = postMapper;
     }
 
-    public ServiceResult<List<R>> findAll(Long projectFinanceId) {
-        return service.findAll(projectFinanceId)
-                .andOnSuccessReturn(queries -> simpleMap(queries, queryMapper::mapToResource));
+    public ServiceResult<List<R>> findAll(Long contextClassId) {
+        return service.findAll(contextClassId)
+                .andOnSuccessReturn(queries -> simpleMap(queries, threadMapper::mapToResource));
     }
 
-    public ServiceResult<R> findOne(Long contextClassPk) {
-        return service.findOne(contextClassPk).andOnSuccessReturn(queryMapper::mapToResource);
+    public ServiceResult<R> findOne(Long id) {
+        return service.findOne(id).andOnSuccessReturn(threadMapper::mapToResource);
     }
 
     public ServiceResult<Long> create(R query) {
-        return service.create(queryMapper.mapToDomain(query));
+        return service.create(threadMapper.mapToDomain(query));
     }
 
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {

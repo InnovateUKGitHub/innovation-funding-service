@@ -19,13 +19,18 @@ public class CommonThreadController<R> {
         this.service = service;
     }
 
-    @RequestMapping(value = "/{contextClassId}", method = GET)
-    public RestResult<List<R>> allThreads(@PathVariable("contextClassId") final Long projectFinanceId) {
-        return service.findAll(projectFinanceId).toGetResponse();
+    @RequestMapping(value = "/all/{contextClassId}", method = GET)
+    public RestResult<List<R>> findAll(@PathVariable("contextClassId") final Long contextClassId) {
+        return service.findAll(contextClassId).toGetResponse();
+    }
+
+    @RequestMapping(value = "/{threadId}", method = GET)
+    public RestResult<R> findOne(@PathVariable("threadId") final Long threadId) {
+        return service.findOne(threadId).toGetResponse();
     }
 
     @RequestMapping(value = "", method = POST)
-    public RestResult<Long> createThread(@RequestBody R query) {
+    public RestResult<Long> create(@RequestBody R query) {
         return service.create(query).toPostCreateResponse();
     }
 

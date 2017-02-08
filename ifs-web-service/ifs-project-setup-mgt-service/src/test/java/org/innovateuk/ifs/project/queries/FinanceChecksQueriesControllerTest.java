@@ -266,7 +266,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 
-        verify(financeCheckServiceMock).savePost(savePostArgumentCaptor.capture(), 1L);
+        verify(financeCheckServiceMock).savePost(savePostArgumentCaptor.capture(), eq(1L));
 
         assertEquals("Query text", savePostArgumentCaptor.getAllValues().get(0).body);
         assertEquals(loggedInUser, savePostArgumentCaptor.getAllValues().get(0).author);
@@ -365,8 +365,9 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     public void testSaveNewResponseAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("testFile", "testFile.pdf", "application/pdf", "My content!".getBytes());
+        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
 
-        //when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", ))
+        when(financeCheckServiceMock.uploadFile(eq("application/pdf"), eq(11), eq("testFile.pdf"), any())).thenReturn(ServiceResult.serviceSuccess(fileEntry));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility").
@@ -447,7 +448,13 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testRemoveAttachment() throws Exception {
 
-        List<Long> attachmentIds = new ArrayList<Long>();
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+
+        when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
+
+        List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
@@ -463,7 +470,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         List<Long> expectedAttachmentIds = new ArrayList<>();
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L));
-        // TODO verify file removed
+
+        verify(financeCheckServiceMock).deleteFile(1L);
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query", form.getResponse());
@@ -473,6 +481,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testSaveNewResponseQueryCannotRespondToQuery() throws Exception {
 
+        when(financeCheckServiceMock.savePost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/5/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))

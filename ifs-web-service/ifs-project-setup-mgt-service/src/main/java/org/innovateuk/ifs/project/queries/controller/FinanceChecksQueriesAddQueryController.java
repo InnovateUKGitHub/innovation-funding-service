@@ -125,7 +125,7 @@ public class FinanceChecksQueriesAddQueryController {
 
             FinanceChecksSectionType section = null;
             for (FinanceChecksSectionType value : FinanceChecksSectionType.values()) {
-                if (value.name().equals(querySection)) {
+                if (value.name().toUpperCase().equals(form.getSection().toUpperCase())) {
                     section = value;
                 }
             }
@@ -147,7 +147,7 @@ public class FinanceChecksQueriesAddQueryController {
             List<PostResource> posts = new ArrayList<>();
             posts.add(post);
             QueryResource query = new QueryResource(null, projectFinance.getId(), posts, section, form.getQueryTitle(), true, LocalDateTime.now());
-            financeCheckService.saveQuery(query);
+            ServiceResult<Long> result = financeCheckService.saveQuery(query);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
                         attachments.forEach( id -> financeCheckService.deleteFile(id));

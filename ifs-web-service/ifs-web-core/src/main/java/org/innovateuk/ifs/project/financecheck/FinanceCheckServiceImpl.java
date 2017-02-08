@@ -84,12 +84,12 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Override
     public ServiceResult<Long> saveQuery(QueryResource query) {
-        return queryService.createThread(query).toServiceResult();
+        return queryService.create(query).toServiceResult();
     }
 
     @Override
     public ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId) {
-        return queryService.allThreads(projectFinanceId).toServiceResult();
+        return queryService.findAll(projectFinanceId).toServiceResult();
     }
 
     @Override
