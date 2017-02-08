@@ -15,6 +15,7 @@ Applicant has options to enter funding level and details of any other funding
     [Documentation]    INFUND-6794
     [Tags]    HappyPath
     When the user clicks the button/link    link=Your funding
+    And the user selects the radio button    other_funding-otherPublicFunding-    Yes
     Then the user should see the element    id=cost-financegrantclaim
     And the user should see the element    css=[name*=other_funding-fundingSource]
     And the user should see the element    css=[name*=other_funding-securedDate]
