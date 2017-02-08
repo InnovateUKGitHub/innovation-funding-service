@@ -47,12 +47,14 @@ SET @q_project_summary=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (400,2,@sector_template_id,1,'Project summary','What should I include in the project summary?','<p>We will not score this summary, but it will give the assessors a useful introduction to your project. It should provide a clear overview of the whole project, including:</p> <ul class=\"list-bullet\">         <li>your vision for the project</li><li>key objectives</li><li>main areas of focus</li><li>details of how it is innovative</li></ul>',0,@q_project_summary,'APPLICATION',1);
 SET @main_project_summary=LAST_INSERT_ID();
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_project_summary, @not_empty_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_project_summary, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'Please provide a brief description of your project. If your application is successful, we will publish this description. This question is mandatory but we will not assess this content as part of your application.',1,0,'Public description','Public description',3,NULL,@sector_template_id,@s_project_details,NULL,'GENERAL');
 SET @q_public_description=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (400,2,@sector_template_id,1,'Public description','What should I include in the project public description?','<p>Innovate UK publishes information about projects we have funded. This is in line with government practice on openness and transparency of public-funded activities.</p><p>Describe your project in a way that will be easy for a non-specialist to understand. Don\'t include any information that is confidential, for example, intellectual property or patent details.</p> ',0,@q_public_description,'APPLICATION',1);
 SET @main_public_description=LAST_INSERT_ID();
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES (@main_public_description, @not_empty_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_public_description, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'If your application doesn\'t align with the scope, we will reject it.',1,0,'How does your project align with the scope of this competition?','Scope',4,NULL,@sector_template_id,@s_project_details,NULL,'GENERAL');
 SET @q_scope=LAST_INSERT_ID();
@@ -70,8 +72,8 @@ INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@ho
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@please_select_scope, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@is_the_scope, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_scope, @not_empty_validator);
-
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@how_does_scope, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_scope, @word_count_validator);
 
 -- Application questions
 -- ACTUAL TEMPLATE QUESTIONS
@@ -93,8 +95,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_need_or_challenge, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_need_or_challenge, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_need_or_challenge, @not_empty_validator);
-
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_need_or_challenge, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_need_or_challenge, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'What approach will you take and where will the focus of the innovation be?','Approach and innovation',6,'2',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_approach_and_innovation=LAST_INSERT_ID();
@@ -113,6 +115,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_approach_and_innovation, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_approach_and_innovation, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_approach_and_innovation, @not_empty_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_approach_and_innovation, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_approach_and_innovation, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'Who is in the project team and what are their roles?','Team and resources',7,'3',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_team_and_resources=LAST_INSERT_ID();
@@ -131,7 +135,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_team_and_resources, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_team_and_resources, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_team_and_resources, @not_empty_validator);
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_team_and_resources, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_team_and_resources, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'What does the market you are targeting look like?',' Market awareness',8,'4',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_market_awareness=LAST_INSERT_ID();
@@ -150,8 +155,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_market_awareness, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_market_awareness, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_market_awareness, @not_empty_validator);
-
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_market_awareness, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_market_awareness, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'How are you going to grow your business and increase your productivity into the long term as a result of the project?','Outcomes and route to market',9,'5',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_outcomes=LAST_INSERT_ID();
@@ -170,8 +175,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_outcomes, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_outcomes, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_outcomes, @not_empty_validator);
-
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_outcomes, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_outcomes, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'What impact might this project have outside the project team?','Wider impacts',10,'6',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_wider_impact=LAST_INSERT_ID();
@@ -190,6 +195,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_wider_impact, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_wider_impact, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_wider_impact, @not_empty_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_wider_impact, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_wider_impact, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'How will you manage the project effectively?','Project management',11,'7',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_project_management=LAST_INSERT_ID();
@@ -208,8 +215,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_project_management, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_project_management, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_project_management, @not_empty_validator);
-
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_project_management, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_project_management, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'What are the main risks for this project?','Risks',12,'8',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_risks=LAST_INSERT_ID();
@@ -228,7 +235,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_risks, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_risks, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_risks, @not_empty_validator);
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_risks, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_risks, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,'',1,0,'Describe the impact that an injection of public funding would have on this project.','Additionality',13,'9',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_additionality=LAST_INSERT_ID();
@@ -247,7 +255,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_additionality, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_additionality, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_additionality, @not_empty_validator);
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_additionality, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_additionality, @word_count_validator);
 
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (1,' ',1,0,'How much will the project cost and how does it represent value for money for the team and the taxpayer?','Costs and value for money',14,'10',@sector_template_id,@s_application_questions,10,'GENERAL');
 SET @q_costs_and_value=LAST_INSERT_ID();
@@ -266,7 +275,8 @@ INSERT INTO `guidance_row` (`form_input_id`,`subject`,`justification`,`priority`
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_costs_and_value, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@score_costs_and_value, @not_empty_validator);
 INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_costs_and_value, @not_empty_validator);
-
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@main_costs_and_value, @word_count_validator);
+INSERT INTO `form_input_validator` (form_input_id, form_validator_id) VALUES(@f_costs_and_value, @word_count_validator);
 
 -- No questions for finances section
 -- No questions for your finances section
