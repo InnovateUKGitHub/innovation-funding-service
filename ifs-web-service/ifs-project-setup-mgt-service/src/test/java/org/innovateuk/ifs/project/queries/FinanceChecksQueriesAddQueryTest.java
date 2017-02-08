@@ -4,7 +4,10 @@ import org.apache.commons.lang3.CharEncoding;
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesAddQueryController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesAddQueryViewModel;
@@ -13,8 +16,11 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -23,18 +29,21 @@ import org.springframework.validation.BindingResult;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -45,6 +54,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
 
     private Long projectId = 3L;
     private Long applicantOrganisationId = 22L;
+    private Long projectFinanceId = 45L;
 
     ApplicationResource applicationResource = newApplicationResource().build();
 
@@ -53,6 +63,9 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     OrganisationResource leadOrganisationResource = newOrganisationResource().withName("Org1").withId(applicantOrganisationId).build();
 
     ProjectUserResource projectUser = newProjectUserResource().withOrganisation(applicantOrganisationId).withUserName("User1").withEmail("e@mail.com").withPhoneNumber("0117").withRoleName(UserRoleType.FINANCE_CONTACT).build();
+
+    @Captor
+    ArgumentCaptor<QueryResource> saveQueryArgumentCaptor;
 
     @Before public void setup() {
         super.setUp();
@@ -92,6 +105,10 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testSaveNewQuery() throws Exception {
 
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.saveQuery(any(QueryResource.class))).thenReturn(ServiceResult.serviceSuccess(1L));
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("queryTitle", "Title")
@@ -100,8 +117,17 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 
-        // TODO verify data saved
-        //verify()
+        verify(financeCheckServiceMock).saveQuery(saveQueryArgumentCaptor.capture());
+
+        assertEquals(1, saveQueryArgumentCaptor.getAllValues().get(0).posts.size());
+        assertEquals("Title", saveQueryArgumentCaptor.getAllValues().get(0).title);
+        assertEquals(org.innovateuk.threads.resource.FinanceChecksSectionType.ELIGIBILITY, saveQueryArgumentCaptor.getAllValues().get(0).section);
+        assertEquals(true, saveQueryArgumentCaptor.getAllValues().get(0).awaitingResponse);
+        assertTrue(LocalDateTime.now().compareTo(saveQueryArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
+        assertEquals("Query text", saveQueryArgumentCaptor.getAllValues().get(0).posts.get(0).body);
+        assertEquals(loggedInUser, saveQueryArgumentCaptor.getAllValues().get(0).posts.get(0).author);
+        assertEquals(0, saveQueryArgumentCaptor.getAllValues().get(0).posts.get(0).attachments.size());
+        assertTrue(LocalDateTime.now().compareTo(saveQueryArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
         assertEquals("Title", form.getQueryTitle());
@@ -204,7 +230,11 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testSaveNewQueryAttachment() throws Exception {
 
-        MockMultipartFile uploadedFile = new MockMultipartFile("testFile", "testFile.pdf", "application/pdf", "My content!".getBytes());
+        MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
+        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+
+        when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility").
@@ -213,8 +243,8 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("project/financecheck/new-query"))
                 .andReturn();
 
-        List<Long> expectedAttachmentIds = new ArrayList<Long>();
-        expectedAttachmentIds.add(0L);
+        List<Long> expectedAttachmentIds = new ArrayList<>();
+        expectedAttachmentIds.add(1L);
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_query_attachments_"+projectId+"_"+applicantOrganisationId));
 
@@ -252,7 +282,10 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testViewNewQueryWithAttachments() throws Exception {
 
-        List<Long> attachmentIds = new ArrayList<Long>();
+        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+
+        List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
         String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
         String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
@@ -279,7 +312,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals(255, queryViewModel.getMaxTitleCharacters());
         assertTrue(queryViewModel.isLeadPartnerOrganisation());
         assertEquals(1, queryViewModel.getNewAttachmentLinks().size());
-        assertEquals("file_1", queryViewModel.getNewAttachmentLinks().get(1L));
+        assertEquals("name", queryViewModel.getNewAttachmentLinks().get(1L));
     }
 
     @Test

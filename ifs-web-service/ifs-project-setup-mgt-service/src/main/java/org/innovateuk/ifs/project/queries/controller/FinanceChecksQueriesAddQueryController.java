@@ -148,6 +148,7 @@ public class FinanceChecksQueriesAddQueryController {
             posts.add(post);
             QueryResource query = new QueryResource(null, projectFinance.getId(), posts, section, form.getQueryTitle(), true, LocalDateTime.now());
             ServiceResult<Long> result = financeCheckService.saveQuery(query);
+            validationHandler.addAnyErrors(result);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
                         attachments.forEach( id -> financeCheckService.deleteFile(id));
@@ -275,7 +276,7 @@ public class FinanceChecksQueriesAddQueryController {
         attachmentFileIds.forEach(id -> {
             ServiceResult<FileEntryResource> file = financeCheckService.getFileInfo(id);
             if(file.isSuccess()) {
-                attachmentLinks.put(id, financeCheckService.getFileInfo(id).getSuccessObject().getName());
+                attachmentLinks.put(id, file.getSuccessObject().getName());
             }
         });
 

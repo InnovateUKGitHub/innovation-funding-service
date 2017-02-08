@@ -8,10 +8,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.notesandqueries.resource.thread.ThreadResource;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
-import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
@@ -195,7 +193,6 @@ public class FinanceChecksQueriesController {
                         ValidationMessages errors = new ValidationMessages();
                         ServiceResult<Void> saveResult = financeCheckService.savePost(post, queryId);
                         if (saveResult.isFailure()) {
-                            errors.addErrors(saveResult.getErrors());
                             errors.addError(fieldError("saveError", null, "validation.notesandqueries.query.response.save.failed"));
                             validationHandler.addAnyErrors(errors);
                             attachments.forEach(attachment -> financeCheckService.deleteFile(attachment));
@@ -350,7 +347,6 @@ public class FinanceChecksQueriesController {
                 detail.setId(query.id);
                 detail.setProjectId(projectId);
                 detail.setOrganisationId(organisationId);
-                detail.setPosts(query.posts);
                 queryModel.add(detail);
             }
         }
