@@ -474,11 +474,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 );
     }
 
-/*    private ServiceResult<EligibilityState> getEligibilityState(PartnerOrganisation partnerOrganisation) {
-
-        return serviceSuccess(eligibilityWorkflowHandler.getState(partnerOrganisation));
-    }*/
-
     private ServiceResult<EligibilityProcess> getEligibilityProcess(PartnerOrganisation partnerOrganisation) {
 
         return serviceSuccess(eligibilityWorkflowHandler.getProcess(partnerOrganisation));
@@ -609,13 +604,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         if (Eligibility.APPROVED == eligibility) {
 
-            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> {
-
-                //projectFinance.setEligibilityApprovalUser(currentUser);
-                //projectFinance.setEligibilityApprovalDate(LocalDate.now());
-
-                eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
-            });
+            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
+                    eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser));
         } else {
             return serviceSuccess();
         }
