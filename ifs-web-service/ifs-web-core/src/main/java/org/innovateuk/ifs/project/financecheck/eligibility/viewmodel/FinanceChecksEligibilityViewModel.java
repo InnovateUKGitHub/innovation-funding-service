@@ -25,10 +25,12 @@ public class FinanceChecksEligibilityViewModel {
     private String approverLastName;
     private LocalDate approvalDate;
 
+    private boolean readOnly;
+
     public FinanceChecksEligibilityViewModel(FinanceCheckEligibilityResource eligibilityOverview, String organisationName, String projectName,
                                              String applicationId, boolean leadPartnerOrganisation, Long projectId, Long organisationId,
                                              boolean eligibilityApproved, EligibilityRagStatus eligibilityRagStatus, String approverFirstName,
-                                             String approverLastName, LocalDate approvalDate) {
+                                             String approverLastName, LocalDate approvalDate, boolean readOnly) {
         this.eligibilityOverview = eligibilityOverview;
         this.organisationName = organisationName;
         this.projectName = projectName;
@@ -42,13 +44,11 @@ public class FinanceChecksEligibilityViewModel {
         this.approverFirstName = approverFirstName;
         this.approverLastName = approverLastName;
         this.approvalDate = approvalDate;
+
+        this.readOnly = readOnly;
     }
 
-    public boolean isReadOnly() {
-        return eligibilityApproved;
-    }
-
-    private boolean isApproved() {
+    public boolean isApproved() {
         return eligibilityApproved;
     }
 
@@ -163,5 +163,13 @@ public class FinanceChecksEligibilityViewModel {
 
     public void setOrganisationId(Long organisationId) {
         this.organisationId = organisationId;
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 }

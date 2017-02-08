@@ -7,7 +7,6 @@ import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResourceId;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.math.BigDecimal;
@@ -27,9 +26,7 @@ public interface ApplicationFinanceHandler {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     BigDecimal getResearchParticipationPercentage(@P("applicationId")final Long applicationId);
 
-    // TODO DW - INFUND-4825 - is this permission too broad?
-    @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Internal users can view the Project Finances during the Finance Checks process")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
 
     @PreAuthorize("hasAuthority('project_finance')")
