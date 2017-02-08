@@ -24,7 +24,7 @@ public interface AssessmentService {
 
     ServiceResult<Void> rejectInvitation(Long assessmentId, AssessmentRejectOutcomeValue reason, String comment);
 
-    ServiceResult<Void> acceptInvitation(Long assessmentId);
+    void acceptInvitation(Long assessmentId);
 
     ServiceResult<Void> submitAssessments(List<Long> assessmentIds);
 }
