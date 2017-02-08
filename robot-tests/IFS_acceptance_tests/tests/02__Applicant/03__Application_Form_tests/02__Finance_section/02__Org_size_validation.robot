@@ -129,6 +129,7 @@ Funding section can be completed with under 50%
     [Tags]    HappyPath
     When the user completes the funding section with funding level    45
     Then the user should not see the element    jQuery=.error-message
+    And the user marks the 'your funding' section as incomplete again
 
 
 
@@ -159,3 +160,6 @@ the funding section has been reset including funding level
     And the user should not see the text in the element    css=[name*=other_funding-securedDate]    12-2008
     And the user should not see the text in the element    css=[name*=other_funding-fundingAmount]    20000
 
+the user marks the 'your funding' section as incomplete again
+    the user clicks the button/link    link=Your funding
+    the user clicks the button/link    jQuery=.button:contains("Edit your funding")
