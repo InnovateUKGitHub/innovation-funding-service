@@ -205,4 +205,11 @@ public abstract class CommonErrorControllerAdvice extends BaseErrorControllerAdv
     public ModelAndView applicationAssessorAssignException(HttpServletRequest req, ApplicationAssessorAssignException e) {
         return createErrorModelAndViewWithTitleAndMessage(e, req, e. getArguments(), HttpStatus.BAD_REQUEST, "error.title.application.assessor.assign", e.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN) // 403
+    @ExceptionHandler(value = AssessmentWithdrawnException.class)
+    public ModelAndView assessmentWithdrawnException(HttpServletRequest req, AssessmentWithdrawnException e) {
+        return createErrorModelAndViewWithTitleAndMessage(e, req, e. getArguments(), HttpStatus.FORBIDDEN,
+                "error.title.assessment.withdrawn", e.getMessage());
+    }
 }

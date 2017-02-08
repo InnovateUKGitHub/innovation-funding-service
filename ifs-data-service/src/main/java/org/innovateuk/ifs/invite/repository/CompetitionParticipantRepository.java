@@ -27,5 +27,7 @@ public interface CompetitionParticipantRepository extends CrudRepository<Competi
 
     List<CompetitionParticipant> getByInviteEmail(String email);
 
-    long countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
+    int countByCompetitionIdAndRole(Long competitionId, CompetitionParticipantRole role);
+
+    int countByCompetitionIdAndRoleAndStatus(Long competitionId, CompetitionParticipantRole role, ParticipantStatus status);
 }

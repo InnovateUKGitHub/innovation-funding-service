@@ -93,9 +93,9 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertNotNull(applicationSummaryPageResource);
         List<ApplicationSummaryResource> orderedOnCompletion = applicationSummaryPageResource.getContent();
         assertNotNull(orderedOnCompletion);
-        assertEquals(new Integer(51), orderedOnCompletion.get(0).getCompletedPercentage());
-        assertEquals(new Integer(33), orderedOnCompletion.get(1).getCompletedPercentage());
-        assertEquals(new Integer(0), orderedOnCompletion.get(2).getCompletedPercentage());
+        assertEquals(51, orderedOnCompletion.get(0).getCompletedPercentage());
+        assertEquals(33, orderedOnCompletion.get(1).getCompletedPercentage());
+        assertEquals(0, orderedOnCompletion.get(2).getCompletedPercentage());
     }
 
     @Override
@@ -110,11 +110,11 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
         assertTrue(result.isSuccess());
         CompetitionSummaryResource resource = result.getSuccessObject();
-        assertEquals(6, resource.getTotalNumberOfApplications().intValue());
-        assertEquals(1, resource.getApplicationsStarted().intValue());
-        assertEquals(0, resource.getApplicationsInProgress().intValue());
-        assertEquals(1, resource.getApplicationsNotSubmitted().intValue());
-        assertEquals(5, resource.getApplicationsSubmitted().intValue());
+        assertEquals(6, resource.getTotalNumberOfApplications());
+        assertEquals(1, resource.getApplicationsStarted());
+        assertEquals(0, resource.getApplicationsInProgress());
+        assertEquals(1, resource.getApplicationsNotSubmitted());
+        assertEquals(5, resource.getApplicationsSubmitted());
     }
 
     @Test
@@ -123,11 +123,11 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
         assertTrue(result.isSuccess());
         CompetitionSummaryResource resource = result.getSuccessObject();
-        assertEquals(6, resource.getTotalNumberOfApplications().intValue());
-        assertEquals(1, resource.getApplicationsStarted().intValue());
-        assertEquals(0, resource.getApplicationsInProgress().intValue());
-        assertEquals(1, resource.getApplicationsNotSubmitted().intValue());
-        assertEquals(5, resource.getApplicationsSubmitted().intValue());
+        assertEquals(6, resource.getTotalNumberOfApplications());
+        assertEquals(1, resource.getApplicationsStarted());
+        assertEquals(0, resource.getApplicationsInProgress());
+        assertEquals(1, resource.getApplicationsNotSubmitted());
+        assertEquals(5, resource.getApplicationsSubmitted());
 
         ApplicationResource application = applicationService.findAll().getSuccessObject().get(0);
         applicationService.updateApplicationStatus(application.getId(), ApplicationStatusConstants.SUBMITTED.getId());
@@ -135,11 +135,11 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         result = controller.getCompetitionSummary(COMPETITION_ID);
         assertTrue(result.isSuccess());
         resource = result.getSuccessObject();
-        assertEquals(6, resource.getTotalNumberOfApplications().intValue());
-        assertEquals(0, resource.getApplicationsStarted().intValue());
-        assertEquals(0, resource.getApplicationsInProgress().intValue());
-        assertEquals(0, resource.getApplicationsNotSubmitted().intValue());
-        assertEquals(6, resource.getApplicationsSubmitted().intValue());
+        assertEquals(6, resource.getTotalNumberOfApplications());
+        assertEquals(0, resource.getApplicationsStarted());
+        assertEquals(0, resource.getApplicationsInProgress());
+        assertEquals(0, resource.getApplicationsNotSubmitted());
+        assertEquals(6, resource.getApplicationsSubmitted());
     }
 
 
@@ -152,12 +152,12 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(20, result.getSuccessObject().getSize());
         assertEquals(6, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
-        assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
+        assertEquals(APPLICATION_ID, result.getSuccessObject().getContent().get(0).getId());
         assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
         assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLeadApplicant());
-        assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+        assertEquals(33, result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
 
     @Test
@@ -169,12 +169,12 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(20, result.getSuccessObject().getSize());
         assertEquals(6, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
-        assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
+        assertEquals(APPLICATION_ID, result.getSuccessObject().getContent().get(0).getId());
         assertEquals("Started", result.getSuccessObject().getContent().get(0).getStatus());
         assertEquals("A novel solution to an old problem", result.getSuccessObject().getContent().get(0).getName());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
         assertEquals("Steve Smith", result.getSuccessObject().getContent().get(0).getLeadApplicant());
-        assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+        assertEquals(33, result.getSuccessObject().getContent().get(0).getCompletedPercentage());
     }
 
     @Test
@@ -211,8 +211,8 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
         assertEquals(20, result.getSuccessObject().getSize());
         assertEquals(1, result.getSuccessObject().getTotalElements());
         assertEquals(1, result.getSuccessObject().getTotalPages());
-        assertEquals(Long.valueOf(APPLICATION_ID), result.getSuccessObject().getContent().get(0).getId());
-        assertEquals(Integer.valueOf(33), result.getSuccessObject().getContent().get(0).getCompletedPercentage());
+        assertEquals(APPLICATION_ID, result.getSuccessObject().getContent().get(0).getId());
+        assertEquals(33, result.getSuccessObject().getContent().get(0).getCompletedPercentage());
         assertEquals("Empire Ltd", result.getSuccessObject().getContent().get(0).getLead());
     }
 

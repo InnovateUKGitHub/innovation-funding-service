@@ -18,7 +18,7 @@ public interface AssessmentService {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<AssessmentResource> findById(long id);
 
-    @PostAuthorize("hasPermission(returnObject, 'READ_ASSIGNMENT')")
+    @PostAuthorize("hasPermission(returnObject, 'READ')")
     ServiceResult<AssessmentResource> findAssignableById(long id);
 
     @PostFilter("hasPermission(filterObject, 'READ_DASHBOARD')")
@@ -34,7 +34,7 @@ public interface AssessmentService {
     @SecuredBySpring(
             value = "COUNT_BY_STATE_AND_COMPETITION",
             description = "Comp admins and execs can see a count of assessments in a particular state per competition")
-    ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId);
+    ServiceResult<Integer> countByStateAndCompetition(AssessmentStates state, long competitionId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ_SCORE')")
     ServiceResult<AssessmentTotalScoreResource> getTotalScore(long assessmentId);
