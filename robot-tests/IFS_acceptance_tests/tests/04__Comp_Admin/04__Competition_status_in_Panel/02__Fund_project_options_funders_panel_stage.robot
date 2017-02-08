@@ -4,7 +4,7 @@ Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
-#TODO Needs rewriting as part of new funders panel flow
+#TODO Needs rewriting as part of new funders panel flow INFUND-7376
 
 *** Variables ***
 ${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding

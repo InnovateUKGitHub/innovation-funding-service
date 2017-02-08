@@ -4,7 +4,7 @@ Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
-#TODO once new funding work is done
+#TODO once new funding work is done INFUND-7376
 *** Variables ***
 
 *** Test Cases ***
