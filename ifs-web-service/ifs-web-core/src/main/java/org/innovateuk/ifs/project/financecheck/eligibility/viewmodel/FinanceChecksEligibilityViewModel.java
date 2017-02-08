@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.eligibility.viewmodel;
+package org.innovateuk.ifs.project.financecheck.eligibility.viewmodel;
 
 
 import org.apache.commons.lang3.StringUtils;
