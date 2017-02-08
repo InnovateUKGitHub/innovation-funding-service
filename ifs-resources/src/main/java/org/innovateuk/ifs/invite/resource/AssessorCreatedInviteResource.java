@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * DTO for a created assessor invite that is ready to be sent.
