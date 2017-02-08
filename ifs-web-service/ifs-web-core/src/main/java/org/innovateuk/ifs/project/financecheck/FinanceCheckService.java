@@ -36,7 +36,7 @@ public interface FinanceCheckService {
 
     ServiceResult<FileEntryResource> getFileInfo(Long fileId);
 
-    ServiceResult<Void> saveQuery(QueryResource query);
+    ServiceResult<Long> saveQuery(QueryResource query);
 
     ServiceResult<Void> savePost(PostResource post, long threadId);
 

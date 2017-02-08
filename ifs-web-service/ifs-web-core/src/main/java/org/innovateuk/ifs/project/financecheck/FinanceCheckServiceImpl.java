@@ -83,7 +83,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<Void> saveQuery(QueryResource query) {
+    public ServiceResult<Long> saveQuery(QueryResource query) {
         return queryService.create(query).toServiceResult();
     }
 

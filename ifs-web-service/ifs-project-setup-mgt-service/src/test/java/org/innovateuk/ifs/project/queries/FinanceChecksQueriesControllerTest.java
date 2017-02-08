@@ -365,8 +365,9 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     public void testSaveNewResponseAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("testFile", "testFile.pdf", "application/pdf", "My content!".getBytes());
+        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
 
-        //when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", ))
+        when(financeCheckServiceMock.uploadFile(eq("application/pdf"), eq(11), eq("testFile.pdf"), any())).thenReturn(ServiceResult.serviceSuccess(fileEntry));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility").
@@ -469,7 +470,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         List<Long> expectedAttachmentIds = new ArrayList<>();
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_response_attachments_"+projectId+"_"+applicantOrganisationId+"_"+1L));
-        // TODO verify file removed
+
         verify(financeCheckServiceMock).deleteFile(1L);
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
@@ -480,6 +481,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testSaveNewResponseQueryCannotRespondToQuery() throws Exception {
 
+        when(financeCheckServiceMock.savePost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/5/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
