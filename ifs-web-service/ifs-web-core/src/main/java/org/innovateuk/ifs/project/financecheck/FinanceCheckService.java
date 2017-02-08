@@ -40,5 +40,5 @@ public interface FinanceCheckService {
 
     ServiceResult<Void> savePost(PostResource post, long threadId);
 
-    ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId)
+    ServiceResult<List<QueryResource>> loadQueries(Long projectFinanceId);
 }

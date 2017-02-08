@@ -37,7 +37,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
     @Test
     public void testCancelNewForm() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.cancelNewForm(1L, 2L, "", null, null));
+        assertSecured(() -> classUnderTest.cancelNewForm(1L, 2L, "", null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -47,7 +47,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.cancelNewForm(1L, 2L, "", null, null);
+                classUnderTest.cancelNewForm(1L, 2L, "", null, null, null);
                 Assert.fail("Should not have been able to cancel form without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour
@@ -121,7 +121,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
     @Test
     public void testViewNewQuery() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(PROJECT_FINANCE).build())).build());
-        assertSecured(() -> classUnderTest.viewNewQuery(1L, 2L, "", null, null, null));
+        assertSecured(() -> classUnderTest.viewNewQuery(1L, 2L, "", null, null, null, null));
 
         List<UserRoleType> nonFinanceTeamRoles = asList(UserRoleType.values()).stream().filter(type ->type != PROJECT_FINANCE)
                 .collect(toList());
@@ -131,7 +131,7 @@ public class FinanceChecksQueriesAddQueryControllerSecurityTest extends BaseProj
             setLoggedInUser(
                     newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
-                classUnderTest.viewNewQuery(1L, 2L, "", null, null, null);
+                classUnderTest.viewNewQuery(1L, 2L, "", null, null, null, null);
                 Assert.fail("Should not have been able to show the create query form without the project finance role");
             } catch (AccessDeniedException e) {
                 // expected behaviour

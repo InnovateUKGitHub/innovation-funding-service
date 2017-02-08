@@ -317,54 +317,12 @@ public class FinanceChecksQueriesController {
     }
 
     private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
-        // Dummy test data
-        ThreadResource thread = new ThreadResource();
-        UserResource user1 = new UserResource();
-        user1.setId(18L);
-        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new FileEntryResource(23L, "file1.txt", "txt", 1L)), LocalDateTime.now().plusMinutes(10L));
-        UserResource user2 = new UserResource();
-        user1.setId(55L);
-        PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), LocalDateTime.now().plusMinutes(20L));
-        thread.setCreatedOn(LocalDateTime.now());
-        thread.setAwaitingResponse(false);
-        thread.setOrganisationId(22L);
-        thread.setProjectId(3L);
-        thread.setTitle("Query title");
-        thread.setSectionType(FinanceChecksSectionType.ELIGIBILITY);
-        thread.setId(1L);
-        thread.setPosts(Arrays.asList(firstPost, firstResponse));
-
-        ThreadResource thread2 = new ThreadResource();
-        thread2.setCreatedOn(LocalDateTime.now());
-        thread2.setAwaitingResponse(true);
-        thread2.setOrganisationId(22L);
-        thread2.setProjectId(3L);
-        thread2.setTitle("Query2 title");
-        thread2.setSectionType(FinanceChecksSectionType.ELIGIBILITY);
-        thread2.setId(3L);
-        PostResource firstPost2 = new PostResource(null, user1, "Question2", new ArrayList<>(), LocalDateTime.now().plusMinutes(10L));
-        thread2.setPosts (Arrays.asList(firstPost2));
-
-        ThreadResource thread3 = new ThreadResource();
-        PostResource firstPost1 = new PostResource(null, user1, "Question3", new ArrayList<>(), LocalDateTime.now().plusMinutes(10L));
-        PostResource firstResponse1 = new PostResource(null, user2, "Response3", new ArrayList<>(), LocalDateTime.now());
-        thread3.setCreatedOn(LocalDateTime.now());
-        thread3.setAwaitingResponse(false);
-        thread3.setOrganisationId(22L);
-        thread3.setProjectId(3L);
-        thread3.setTitle("Query title3");
-        thread3.setSectionType(FinanceChecksSectionType.ELIGIBILITY);
-        thread3.setId(5L);
-        thread3.setPosts(Arrays.asList(firstPost1, firstResponse1));
-
-        //List<ThreadResource> queries = Arrays.asList(thread2, thread, thread3);
 
         List<ThreadViewModel> queryModel = new LinkedList<>();
 
         ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
         ServiceResult<List<QueryResource>> queries = financeCheckService.loadQueries(projectFinance.getId());
         if (queries.isSuccess()) {
-
             // order queries by most recent post
             List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
                     flatMap(t -> t.posts.stream()

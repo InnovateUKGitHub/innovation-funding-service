@@ -5,7 +5,13 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 
-import org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType;
+import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.threads.resource.QueryResource;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesController;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
@@ -16,8 +22,11 @@ import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.resource.PostResource;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.mock.web.MockMultipartFile;
@@ -34,6 +43,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -42,6 +52,8 @@ import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newP
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
@@ -56,6 +68,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     private Long applicantFinanceContactUserId = 55L;
     private Long innovateOrganisationId = 11L;
     private Long applicantOrganisationId = 22L;
+    private Long projectFinanceId = 45L;
 
     ApplicationResource applicationResource = newApplicationResource().build();
     ProjectResource projectResource = newProjectResource().withId(projectId).withName("Project1").withApplication(applicationResource).build();
@@ -69,6 +82,25 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     RoleResource financeTeamRole = newRoleResource().withType(PROJECT_FINANCE).build();
     UserResource financeTeamUser = newUserResource().withFirstName("A").withLastName("Z").withId(financeTeamUserId).withRolesGlobal(Arrays.asList(financeTeamRole)).build();
     UserResource projectManagerUser = newUserResource().withFirstName("B").withLastName("Z").withId(applicantFinanceContactUserId).build();
+
+
+    QueryResource thread;
+    UserResource user1;
+    PostResource firstPost;
+    UserResource user2;
+    PostResource firstResponse;
+
+    QueryResource thread2;
+    PostResource firstPost2;
+
+    QueryResource thread3;
+    PostResource firstPost1 ;
+    PostResource firstResponse1;
+
+    List<QueryResource> queries;
+
+    @Captor
+    ArgumentCaptor<PostResource> savePostArgumentCaptor;
 
     @Before
     public void setup() {
@@ -85,9 +117,31 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(applicantOrganisationId)).thenReturn(leadOrganisationResource);
         when(projectService.getLeadOrganisation(projectId)).thenReturn(leadOrganisationResource);
         when(projectService.getProjectUsersForProject(projectId)).thenReturn(Arrays.asList(projectUser));
+
+        UserResource user1 = new UserResource();
+        user1.setId(18L);
+        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new FileEntryResource(23L, "file1.txt", "txt", 1L)), LocalDateTime.now().plusMinutes(10L));
+        UserResource user2 = new UserResource();
+        user2.setId(55L);
+        PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), LocalDateTime.now().plusMinutes(20L));
+        thread = new QueryResource(1L, projectFinanceId, Arrays.asList(firstPost, firstResponse), FinanceChecksSectionType.ELIGIBILITY, "Query title", false, LocalDateTime.now());
+
+        PostResource firstPost2 = new PostResource(null, user1, "Question2", new ArrayList<>(), LocalDateTime.now().plusMinutes(10L));
+        thread2 = new QueryResource(3L, projectFinanceId, Arrays.asList(firstPost2), FinanceChecksSectionType.ELIGIBILITY, "Query2 title", true, LocalDateTime.now());
+
+        PostResource firstPost1 = new PostResource(null, user1, "Question3", new ArrayList<>(), LocalDateTime.now());
+        PostResource firstResponse1 = new PostResource(null, user2, "Response3", new ArrayList<>(), LocalDateTime.now().plusMinutes(10L));
+
+        thread3 = new QueryResource(5L, projectFinanceId, Arrays.asList(firstPost1, firstResponse1), FinanceChecksSectionType.ELIGIBILITY, "Query title3", false, LocalDateTime.now());
+
+        queries = Arrays.asList(thread2, thread, thread3);
     }
     @Test
     public void testGetReadOnlyView() throws Exception {
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility"))
                 .andExpect(view().name("project/financecheck/queries"))
@@ -112,18 +166,18 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(projectId, queryViewModel.getQueries().get(0).getProjectId());
         assertEquals(1L, queryViewModel.getQueries().get(0).getId().longValue());
         assertEquals(2, queryViewModel.getQueries().get(0).getViewModelPosts().size());
-        assertEquals("Question", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getPostBody());
-        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUserId());
+        assertEquals("Question", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).body);
+        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUsername());
-        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getCreatedOn()));
-        assertEquals(1, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().size());
-        assertEquals(23L, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().get(0).getFileEntryId().longValue());
-        assertEquals("file0", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getViewModelAttachments().get(0).getFilename());
-        assertEquals("Response", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getPostBody());
-        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUserId());
+        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).createdOn));
+        assertEquals(1, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.size());
+        assertEquals(23L, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).getId().longValue());
+        assertEquals("file1.txt", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).getName());
+        assertEquals("Response", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).body);
+        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).author.getId());
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUsername());
-        assertTrue(LocalDateTime.now().plusMinutes(20L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getCreatedOn()));
-        assertEquals(0, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getViewModelAttachments().size());
+        assertTrue(LocalDateTime.now().plusMinutes(20L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(1).createdOn));
+        assertEquals(0, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).attachments.size());
         assertEquals("Query2 title", queryViewModel.getQueries().get(1).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(1).getSectionType());
         assertEquals(true, queryViewModel.getQueries().get(1).isAwaitingResponse());
@@ -131,11 +185,11 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(projectId, queryViewModel.getQueries().get(1).getProjectId());
         assertEquals(3L, queryViewModel.getQueries().get(1).getId().longValue());
         assertEquals(1, queryViewModel.getQueries().get(1).getViewModelPosts().size());
-        assertEquals("Question2", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getPostBody());
-        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUserId());
+        assertEquals("Question2", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).body);
+        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getUsername());
-        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getCreatedOn()));
-        assertEquals(0, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).getViewModelAttachments().size());
+        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(1).getViewModelPosts().get(0).createdOn));
+        assertEquals(0, queryViewModel.getQueries().get(1).getViewModelPosts().get(0).attachments.size());
 
         assertEquals("Query title3", queryViewModel.getQueries().get(2).getTitle());
         assertEquals(FinanceChecksSectionType.ELIGIBILITY, queryViewModel.getQueries().get(2).getSectionType());
@@ -144,20 +198,22 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals(projectId, queryViewModel.getQueries().get(2).getProjectId());
         assertEquals(5L, queryViewModel.getQueries().get(2).getId().longValue());
         assertEquals(2, queryViewModel.getQueries().get(2).getViewModelPosts().size());
-        assertEquals("Question3", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getPostBody());
-        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getUserId());
+        assertEquals("Question3", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).body);
+        assertEquals(financeTeamUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).author.getId());
         assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getUsername());
-        assertTrue(LocalDateTime.now().isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getCreatedOn()));
-        assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).getViewModelAttachments().size());
-        assertEquals("Response3", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getPostBody());
-        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUserId());
+        assertTrue(LocalDateTime.now().isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(0).createdOn));
+        assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(0).attachments.size());
+        assertEquals("Response3", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).body);
+        assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).author.getId());
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getUsername());
-        assertTrue(LocalDateTime.now().isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getCreatedOn()));
-        assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).getViewModelAttachments().size());
+        assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(2).getViewModelPosts().get(1).createdOn));
+        assertEquals(0, queryViewModel.getQueries().get(2).getViewModelPosts().get(1).attachments.size());
     }
 
     @Test
     public void testDownloadAttachmentFailsNoContent() throws Exception {
+
+        when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -172,6 +228,10 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void testViewNewResponse() throws Exception {
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility"))
                 .andExpect(view().name("project/financecheck/queries"))
@@ -198,14 +258,20 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testSaveNewResponse() throws Exception {
 
+        when(financeCheckServiceMock.savePost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query text"))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 
-        // TODO verify data saved
-        //verify()
+        verify(financeCheckServiceMock).savePost(savePostArgumentCaptor.capture(), 1L);
+
+        assertEquals("Query text", savePostArgumentCaptor.getAllValues().get(0).body);
+        assertEquals(loggedInUser, savePostArgumentCaptor.getAllValues().get(0).author);
+        assertEquals(0, savePostArgumentCaptor.getAllValues().get(0).attachments.size());
+        assertTrue(LocalDateTime.now().compareTo(savePostArgumentCaptor.getAllValues().get(0).createdOn) >= 0);
 
         FinanceChecksQueriesAddResponseForm form = (FinanceChecksQueriesAddResponseForm) result.getModelAndView().getModel().get("form");
         assertEquals("Query text", form.getResponse());
@@ -214,6 +280,10 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void testSaveNewResponseNoFieldsSet() throws Exception {
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -238,6 +308,10 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     public void testSaveNewResponseFieldsTooLong() throws Exception {
 
         String tooLong = StringUtils.leftPad("a", 4001, 'a');
+
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -264,6 +338,10 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         String tooManyWords = StringUtils.leftPad("a ", 802, "a ");
 
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
+        when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", tooManyWords))
@@ -287,6 +365,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     public void testSaveNewResponseAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("testFile", "testFile.pdf", "application/pdf", "My content!".getBytes());
+
+        //when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", ))
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/1/new-response?query_section=Eligibility").
