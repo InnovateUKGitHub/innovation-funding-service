@@ -4,6 +4,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
@@ -15,6 +16,7 @@ import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSet
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
+import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
@@ -32,6 +34,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 	
 	@Autowired
 	private CompetitionService competitionService;
+
+	@Autowired
+	protected PublicContentService publicContentService;
 
     private Map<CompetitionSetupSection, CompetitionSetupFormPopulator> formPopulators;
     private Map<CompetitionSetupSubsection, CompetitionSetupSubsectionFormPopulator> subsectionFormPopulators;
@@ -256,6 +261,19 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 						+ (competitionResource.getName() != null ? competitionResource.getName() : "Unknown"));
 
 		populateCompetitionStateModelAttributes(model, competitionResource, section);
+
+		PublicContentResource publicContent = getPublicContent(competitionResource);
+		model.addAttribute("publishDate", publicContent.getPublishDate());
+		model.addAttribute("isPublicContentPublished", isPublicContentPublished(publicContent));
+	}
+
+	private PublicContentResource getPublicContent(CompetitionResource competitionResource) {
+		PublicContentResource publicContent = publicContentService.getCompetitionById(competitionResource.getId());
+		return publicContent;
+	}
+
+	private boolean isPublicContentPublished(PublicContentResource publicContent) {
+		return null != publicContent.getPublishDate();
 	}
 
 	private boolean isInitialComplete(CompetitionResource competitionResource) {
