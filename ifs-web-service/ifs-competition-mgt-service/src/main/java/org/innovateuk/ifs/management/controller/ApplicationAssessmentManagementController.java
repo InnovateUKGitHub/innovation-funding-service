@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("assessment/competition/{competitionId}")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class ApplicationAssessmentManagementController {
 
     @Autowired

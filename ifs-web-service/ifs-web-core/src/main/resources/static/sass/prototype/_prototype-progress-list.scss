@@ -24,7 +24,7 @@
     }
 
     .task{
-      @include core-19;
+      @include core-16;
       float: left;
       padding-right: 19px;
       vertical-align: top;
@@ -36,10 +36,10 @@
         margin-bottom: 0.3em;
       }
 
-      span,
+      /*span,
       .application-details {
         @include core-16;
-      }
+      }*/
 
       @include media-down(mobile) {
         float: none;
@@ -71,7 +71,7 @@
       strong {
         @extend  %action-required;
         padding-left: 20px;
-        @include core-19;
+        //@include core-19;
         font-weight: 700;
       }
       /*@include media-down(mobile) {
@@ -85,10 +85,8 @@
       width: 25%;
       vertical-align: middle;
       text-align: center;
-      font-size: 17px;
-      @include media-down(mobile) {
-        font-size: 15px;
-      }
+      @include core-16;
+
       strong, a {
         display: block;
         margin-top: 15px;
@@ -190,10 +188,10 @@
       > span {
         display: block;
         margin-top: 15px;
-        font-size: 17px;
         text-align: center;
+        @include core-16;
+
         @include media-down(mobile) {
-          font-size: 15px;
           margin-top: 0;
         }
       }
