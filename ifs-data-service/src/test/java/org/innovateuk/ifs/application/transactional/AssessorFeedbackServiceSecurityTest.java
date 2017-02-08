@@ -55,7 +55,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         assertAccessDenied(() -> classUnderTest.createAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
-            verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
+            verify(rules).internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
         });
     }
 
@@ -67,7 +67,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         assertAccessDenied(() -> classUnderTest.updateAssessorFeedbackFileEntry(123L, newFileEntryResource().build(), () -> null), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
-            verify(rules).compAdminCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
+            verify(rules).internalUserCanUploadAssessorFeedbackToApplicationInFundersPanelOrAssessorFeedbackState(application, getLoggedInUser());
         });
     }
 
@@ -91,7 +91,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         assertAccessDenied(() -> classUnderTest.getAssessorFeedbackFileEntryContents(123L), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
-            verify(rules).compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
+            verify(rules).internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
             verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
         });
     }
@@ -104,7 +104,7 @@ public class AssessorFeedbackServiceSecurityTest extends BaseServiceSecurityTest
 
         assertAccessDenied(() -> classUnderTest.getAssessorFeedbackFileEntryDetails(123L), () -> {
             verify(lookupStrategy).getApplicationResource(123L);
-            verify(rules).compAdminCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
+            verify(rules).internalUserCanSeeAndDownloadAllAssessorFeedbackAtAnyTime(application, getLoggedInUser());
             verify(rules).applicationTeamCanSeeAndDownloadPublishedAssessorFeedbackForTheirApplications(application, getLoggedInUser());
         });
     }

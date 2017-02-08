@@ -71,6 +71,17 @@
         }
     }
 
+    .section-value {
+        float: right;
+        width: 180px;
+        text-align: right;
+
+        @include media-down(mobile) {
+            float: none;
+            text-align: left;
+        }
+    }
+
     span[data-mirror] {
         width: 180px;
         text-align: right;

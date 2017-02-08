@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.publiccontent.modelpopulator;
+package org.innovateuk.ifs.publiccontent.modelpopulator.section;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.publiccontent.viewmodel.SearchInformationViewModel;
+import org.innovateuk.ifs.publiccontent.viewmodel.section.SearchInformationViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
