@@ -123,6 +123,7 @@ Innovation area on assessor profile for invited user
     When the user clicks the button/link    link=Thomas Fister
     Then the user should see the text in the page    Emerging and enabling technologies
     And the user should see the text in the page    Earth Observation
+    [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
     [Documentation]    INFUND-4631
@@ -141,16 +142,6 @@ Non-registered assessor: Reject invitation
     Then the user should see the text in the page    Thank you for letting us know you are unable to assess applications within this competition.
     And the assessor shouldn't be able to reject the rejected competition
     And the assessor shouldn't be able to accept the rejected competition
-
-Innovation area on assessor profile for invited user
-    [Documentation]    INFUND-7603
-    [Tags]
-    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
-    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=.button:contains("Invite assessors")
-    When the user clicks the button/link    link=Thomas Fister
-    Then the user should see the text in the page    Emerging and enabling technologies
-    And the user should see the text in the page    Earth Observation
 
 *** Keywords ***
 the assessor fills in all fields
