@@ -95,6 +95,19 @@ the user moves focus to the element
     Wait Until Element Is Visible Without Screenshots    ${element}
     focus    ${element}
 
+the user should see the radio button in the page
+    [Arguments]    ${RADIO_BUTTON}
+    the user should see the element    xpath=//*[starts-with(@name,"${RADIO_BUTTON}")]/ancestor::label
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
+
 the user sees that the radio button is selected
     [Arguments]    ${RADIO_BUTTON}    ${SELECTION}
     Wait Until Element Is Visible Without Screenshots    xpath=//*[@name="${RADIO_BUTTON}"][@value="${SELECTION}" or @id="${SELECTION}"]/ancestor::label[contains(@class,"selected")]
@@ -195,6 +208,22 @@ the user selects the index from the drop-down menu
     # Header checking (INFUND-1892)
     Element Should Be Visible    id=global-header
     Page Should Contain    BETA
+
+the user should see the option in the drop-down menu
+    [Arguments]    ${option}    ${drop-down}
+    wait until element is visible without screenshots    ${drop-down}
+    ${drop-down-options}=    get list items    ${drop-down}
+    list should contain value    ${drop-down-options}    ${option}
+    mouse out    ${drop-down}
+    # Error checking
+    Page Should Not Contain    Error
+    Page Should Not Contain    something went wrong
+    Page Should Not Contain    Page or resource not found
+    Page Should Not Contain    You do not have the necessary permissions for your request
+    # Header checking (INFUND-1892)
+    Element Should Be Visible    id=global-header
+    Page Should Contain    BETA
+
 
 the user moves the mouse away from the element
     [Arguments]    ${element}
