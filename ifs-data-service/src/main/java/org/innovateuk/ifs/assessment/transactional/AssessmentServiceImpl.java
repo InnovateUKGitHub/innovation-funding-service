@@ -102,6 +102,16 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
+    public ServiceResult<AssessmentResource> findRejectableById(long id) {
+        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
+            if (WITHDRAWN == found.getActivityState()) {
+                return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
+            }
+            return serviceSuccess(assessmentMapper.mapToResource(found));
+        });
+    }
+
+    @Override
     public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
         return serviceSuccess(simpleMap(assessmentRepository.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId), assessmentMapper::mapToResource));
     }
