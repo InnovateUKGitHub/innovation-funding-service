@@ -53,8 +53,8 @@
                        required="required"
                        th:field="*{queryTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
-                                data-required-errormessage=#{validation.notesandqueries.thread.title.required},
-                                data-maxlength-errormessage=#{validation.notesandqueries.thread.title.length.max(null,${model.maxTitleCharacters})}" />
+                                data-required-errormessage=#{validation.notesandqueries.query.title.required},
+                                data-maxlength-errormessage=#{validation.notesandqueries.query.title.length.max(null,${model.maxTitleCharacters})}" />
             </div>
             <div th:class="${#fields.hasErrors('section')}? 'form-group error':'form-group'">
                 <label for="section" class="form-label-bold">
@@ -66,7 +66,7 @@
                     </th:block>
                 </label>
                 <select name="section" id="section" class="form-control">
-                    <th:block th:each="section_type : ${T(org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType).values()}">
+                    <th:block th:each="section_type : ${T(org.innovateuk.threads.resource.FinanceChecksSectionType).values()}">
                         <th:block th:if="*{section}">
                             <option th:value="${section_type.name()}"
                                     th:selected="${#strings.toLowerCase(section_type.name())} == *{section}"
@@ -105,7 +105,7 @@
                       data-max_words=${model.maxQueryWords},
                       data-maxwordslength=${model.maxQueryWords},
                       data-maxwordslength-errormessage=#{validation.notesandqueries.query.word.length.max(${model.maxQueryWords})},
-                      data-maxlength-errormessage=#{validation.notesandqueries.query.word.character.max(null,${model.maxQueryCharacters})},
+                      data-maxlength-errormessage=#{validation.notesandqueries.query.character.length.max(null,${model.maxQueryCharacters})},
                       data-required-errormessage=#{validation.notesandqueries.query.required}"
                               th:classappend="${#fields.hasErrors('query') ? 'form-control field-error' : 'form-control'}"></textarea>
                     <div class="textarea-footer" th:with="query=*{query}">

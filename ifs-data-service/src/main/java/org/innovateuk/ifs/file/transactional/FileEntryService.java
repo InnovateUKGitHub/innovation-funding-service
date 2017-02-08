@@ -13,4 +13,11 @@ public interface FileEntryService {
 
     @PreAuthorize("hasPermission(#applicationFinanceResourceId, 'org.innovateuk.ifs.finance.resource.ApplicationFinanceResource', 'READ_FILE_ENTRY')")
     ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(@P("applicationFinanceResourceId") Long applicationFinanceId);
+
+
+    ServiceResult<FileEntryResource> saveFile(FileEntryResource newFile);
+    ServiceResult<Void> removeFile(Long fileId);
+
+
+
 }

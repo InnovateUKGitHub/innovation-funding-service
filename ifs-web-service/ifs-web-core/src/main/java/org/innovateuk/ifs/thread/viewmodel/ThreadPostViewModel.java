@@ -1,12 +1,18 @@
 package org.innovateuk.ifs.thread.viewmodel;
 
-import org.innovateuk.ifs.notesandqueries.resource.post.PostResource;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.threads.resource.PostResource;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class ThreadPostViewModel extends PostResource {
     private String username;
-    private List<ThreadPostAttachmentResourceViewModel> viewModelAttachments;
+
+    public ThreadPostViewModel(Long id, UserResource author, String body, List<FileEntryResource> attachments, LocalDateTime createdOn) {
+        super(id, author, body, attachments, createdOn);
+    }
 
     public String getUsername() {
         return username;
@@ -16,11 +22,4 @@ public class ThreadPostViewModel extends PostResource {
         this.username = username;
     }
 
-    public List<ThreadPostAttachmentResourceViewModel> getViewModelAttachments() {
-        return viewModelAttachments;
-    }
-
-    public void setViewModelAttachments(List<ThreadPostAttachmentResourceViewModel> attachments) {
-        this.viewModelAttachments = attachments;
-    }
 }

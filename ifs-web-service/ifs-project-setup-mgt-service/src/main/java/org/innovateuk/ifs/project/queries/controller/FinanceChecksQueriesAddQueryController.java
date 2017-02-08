@@ -7,7 +7,12 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.ifs.project.ProjectService;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddQueryForm;
 import org.innovateuk.ifs.project.resource.ProjectResource;
@@ -17,6 +22,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -32,11 +38,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -58,6 +66,12 @@ public class FinanceChecksQueriesAddQueryController {
     @Autowired
     private CookieUtil cookieUtil;
 
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private FinanceCheckService financeCheckService;
+
     public static final String FINANCE_CHECKS_QUERIES_NEW_QUERY_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query/new-query";
 
     private static final String ATTACHMENT_COOKIE = "finance_checks_queries_new_query_attachments";
@@ -72,14 +86,17 @@ public class FinanceChecksQueriesAddQueryController {
                                @RequestParam(value = "query_section", required = false) final String querySection,
                                Model model,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                               HttpServletRequest request) {
+                               HttpServletRequest request,
+                               HttpServletResponse response) {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        attachments.forEach(id -> financeCheckService.deleteFile(id));
+        saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId);
+
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
         model.addAttribute("model", viewModel);
         FinanceChecksQueriesAddQueryForm form = new FinanceChecksQueriesAddQueryForm();
         model.addAttribute(FORM_ATTR, form);
-        // TODO remove attachments not saved as part of posting
         return "project/financecheck/new-query";
     }
 
@@ -105,10 +122,35 @@ public class FinanceChecksQueriesAddQueryController {
         };
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
+
+            FinanceChecksSectionType section = null;
+            for (FinanceChecksSectionType value : FinanceChecksSectionType.values()) {
+                if (value.name().equals(querySection)) {
+                    section = value;
+                }
+            }
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
+
+            ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+
+            List<FileEntryResource> attachmentResources = new ArrayList<>();
+            List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+            attachments.forEach(attachment -> {
+                ServiceResult<FileEntryResource> fileEntry = financeCheckService.getFileInfo(attachment);
+                if (fileEntry.isSuccess()) {
+                    attachmentResources.add(fileEntry.getSuccessObject());
+                }
+            });
+
+            PostResource post = new PostResource(null, loggedInUser, form.getQuery(), attachmentResources, LocalDateTime.now());
+
+            List<PostResource> posts = new ArrayList<>();
+            posts.add(post);
+            QueryResource query = new QueryResource(null, projectFinance.getId(), posts, section, form.getQueryTitle(), true, LocalDateTime.now());
+            financeCheckService.saveQuery(query);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
-                        // TODO delete attachments
+                        attachments.forEach( id -> financeCheckService.deleteFile(id));
                         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
                         return redirectToQueryPage(projectId, organisationId, querySection);
                     });
@@ -137,9 +179,12 @@ public class FinanceChecksQueriesAddQueryController {
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
-            // TODO store file, get file ID
-            attachments.add(Long.valueOf(attachments.size()));
-            saveAttachmentsToCookie(response, attachments, projectId, organisationId);
+
+            ServiceResult<FileEntryResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            if(result.isSuccess()) {
+                attachments.add(result.getSuccessObject().getId());
+                saveAttachmentsToCookie(response, attachments, projectId, organisationId);
+            }
 
             FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
             model.addAttribute("model", viewModel);
@@ -161,7 +206,15 @@ public class FinanceChecksQueriesAddQueryController {
         Optional<FileEntryResource> fileDetails = Optional.empty();
 
         if (attachments.contains(attachmentId)) {
-            // TODO get file from service
+            ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
+            if (fileContent.isSuccess()) {
+                content = fileContent.getSuccessObject();
+            }
+            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+            if (fileInfo.isSuccess()) {
+                fileDetails = Optional.of(fileInfo.getSuccessObject());
+            }
+
         }
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
@@ -182,9 +235,8 @@ public class FinanceChecksQueriesAddQueryController {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
         if (attachments.contains(attachmentId)) {
             attachments.remove(attachments.indexOf(attachmentId));
+            financeCheckService.deleteFile(attachmentId);
         }
-
-        // TODO remove file
         saveAttachmentsToCookie(response, attachments, projectId, organisationId);
 
         FinanceChecksQueriesAddQueryViewModel viewModel = populateQueriesViewModel(projectId, organisationId, querySection, attachments);
@@ -199,8 +251,11 @@ public class FinanceChecksQueriesAddQueryController {
                                 @PathVariable Long organisationId,
                                 @RequestParam(value = "query_section", required = false) String querySection,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                HttpServletRequest request,
                                 HttpServletResponse response) {
-        // TODO delete attachments
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
+        attachments.forEach(( id -> financeCheckService.deleteFile(id)));
+
         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
 
         return redirectToQueryPage(projectId, organisationId, querySection);
@@ -216,9 +271,13 @@ public class FinanceChecksQueriesAddQueryController {
 
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
-        // TODO lookup attachment details from service
         Map<Long, String> attachmentLinks = new HashMap<>();
-        attachmentFileIds.forEach(id -> attachmentLinks.put(id, "file_"+id));
+        attachmentFileIds.forEach(id -> {
+            ServiceResult<FileEntryResource> file = financeCheckService.getFileInfo(id);
+            if(file.isSuccess()) {
+                attachmentLinks.put(id, financeCheckService.getFileInfo(id).getSuccessObject().getName());
+            }
+        });
 
         return new FinanceChecksQueriesAddQueryViewModel(
                 organisation.getName(),

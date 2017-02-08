@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.notesandqueries.resource.thread;
 
-import org.innovateuk.ifs.notesandqueries.resource.post.PostResource;
+import org.innovateuk.threads.resource.PostResource;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
 
 import java.time.LocalDateTime;
 import java.util.List;

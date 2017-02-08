@@ -7,17 +7,18 @@ import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.notesandqueries.resource.post.PostAttachmentResource;
-import org.innovateuk.ifs.notesandqueries.resource.post.PostResource;
-import org.innovateuk.ifs.notesandqueries.resource.thread.FinanceChecksSectionType;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.notesandqueries.resource.thread.ThreadResource;
+import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesAddResponseForm;
 import org.innovateuk.ifs.project.queries.form.FinanceChecksQueriesFormConstraints;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.project.queries.viewmodel.FinanceChecksQueriesViewModel;
-import org.innovateuk.ifs.thread.viewmodel.ThreadPostAttachmentResourceViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -26,6 +27,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.service.UserService;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
@@ -46,8 +48,10 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
+import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -71,6 +75,12 @@ public class FinanceChecksQueriesController {
 
     @Autowired
     private CookieUtil cookieUtil;
+
+    @Autowired
+    private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private FinanceCheckService financeCheckService;
 
     public static final String FINANCE_CHECKS_QUERIES_BASE_URL = "/project/{projectId}/finance-check/organisation/{organisationId}/query";
 
@@ -102,7 +112,14 @@ public class FinanceChecksQueriesController {
         Optional<ByteArrayResource> content = Optional.empty();
         Optional<FileEntryResource> fileDetails = Optional.empty();
 
-        // TODO get file from service
+        ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
+        if (fileContent.isSuccess()) {
+            content = fileContent.getSuccessObject();
+        }
+        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+        if (fileInfo.isSuccess()) {
+            fileDetails = Optional.of(fileInfo.getSuccessObject());
+        }
 
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
@@ -115,14 +132,17 @@ public class FinanceChecksQueriesController {
                                   @RequestParam(value = "query_section", required = false) String querySection,
                                   Model model,
                                   @ModelAttribute("loggedInUser") UserResource loggedInUser,
-                                  HttpServletRequest request) {
+                                  HttpServletRequest request,
+                                  HttpServletResponse response) {
 
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
+        attachments.forEach(id -> financeCheckService.deleteFile(id));
+        saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId, queryId);
+
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
         model.addAttribute("model", viewModel);
         FinanceChecksQueriesAddResponseForm form = new FinanceChecksQueriesAddResponseForm();
         model.addAttribute(FORM_ATTR, form);
-        // TODO remove attachments not saved as part of posting
         return "project/financecheck/queries";
     }
 
@@ -130,10 +150,10 @@ public class FinanceChecksQueriesController {
     @RequestMapping(value = "/{queryId}/new-response", method = POST)
     public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
-                               @PathVariable Long organisationId,
-                               @PathVariable Long queryId,
+                               @PathVariable final Long organisationId,
+                               @PathVariable final Long queryId,
                                @RequestParam(value = "query_section", required = false) String querySection,
-                               @Valid @ModelAttribute(FORM_ATTR) FinanceChecksQueriesAddResponseForm form,
+                               @Valid @ModelAttribute(FORM_ATTR) final FinanceChecksQueriesAddResponseForm form,
                                @SuppressWarnings("unused") BindingResult bindingResult,
                                ValidationHandler validationHandler,
                                @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -148,13 +168,44 @@ public class FinanceChecksQueriesController {
             return "project/financecheck/queries";
         };
 
+        Supplier<String> saveFailureView = () -> {
+            FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, null, querySection, null);
+            model.addAttribute("model", viewModel);
+            model.addAttribute("nonFormErrors", validationHandler.getAllErrors());
+            model.addAttribute(FORM_ATTR, null);
+            return "project/financecheck/queries";
+        };
+
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             ValidationMessages validationMessages = new ValidationMessages(bindingResult);
+
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
-                        // TODO delete attachments
-                        cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
-                        return redirectToQueryPage(projectId, organisationId, querySection);
+
+                        List<FileEntryResource> attachmentResources = new ArrayList<>();
+                        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
+                        attachments.forEach(attachment -> {
+                            ServiceResult<FileEntryResource> fileEntry = financeCheckService.getFileInfo(attachment);
+                            if (fileEntry.isSuccess()) {
+                                attachmentResources.add(fileEntry.getSuccessObject());
+                            }
+                        });
+                        PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, LocalDateTime.now());
+
+                        ValidationMessages errors = new ValidationMessages();
+                        ServiceResult<Void> saveResult = financeCheckService.savePost(post, queryId);
+                        if (saveResult.isFailure()) {
+                            errors.addErrors(saveResult.getErrors());
+                            errors.addError(fieldError("saveError", null, "validation.notesandqueries.query.response.save.failed"));
+                            validationHandler.addAnyErrors(errors);
+                            attachments.forEach(attachment -> financeCheckService.deleteFile(attachment));
+                            saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId, queryId);
+                        }
+                        return validationHandler.failNowOrSucceedWith( saveFailureView, () -> {
+                            attachments.forEach(attachment -> financeCheckService.deleteFile(attachment));
+                            cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
+                            return redirectToQueryPage(projectId, organisationId, querySection);
+                        });
                     });
         });
     }
@@ -182,10 +233,11 @@ public class FinanceChecksQueriesController {
 
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
-            // TODO store file, get file ID
-            attachments.add(Long.valueOf(attachments.size()));
-            saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
-
+            ServiceResult<FileEntryResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            if(result.isSuccess()) {
+                attachments.add(result.getSuccessObject().getId());
+                saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
+            }
             FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
             model.addAttribute("model", viewModel);
             return ServiceResult.serviceSuccess();
@@ -207,7 +259,14 @@ public class FinanceChecksQueriesController {
         Optional<FileEntryResource> fileDetails = Optional.empty();
 
         if (attachments.contains(attachmentId)) {
-            // TODO get file from service
+            ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
+            if (fileContent.isSuccess()) {
+                content = fileContent.getSuccessObject();
+            }
+            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+            if (fileInfo.isSuccess()) {
+                fileDetails = Optional.of(fileInfo.getSuccessObject());
+            }
         }
         return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
     }
@@ -229,9 +288,8 @@ public class FinanceChecksQueriesController {
         List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
         if (attachments.contains(attachmentId)) {
             attachments.remove(attachments.indexOf(attachmentId));
+            financeCheckService.deleteFile(attachmentId);
         }
-
-        // TODO remove file
         saveAttachmentsToCookie(response, attachments, projectId, organisationId, queryId);
 
         FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
@@ -248,104 +306,53 @@ public class FinanceChecksQueriesController {
                                 @RequestParam(value = "query_section", required = false) String querySection,
                                 Model model,
                                 @ModelAttribute("loggedInUser") UserResource loggedInUser,
+                                HttpServletRequest request,
                                 HttpServletResponse response) {
-        // TODO delete attachments
+        List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId, queryId);
+        attachments.forEach(( id -> financeCheckService.deleteFile(id)));
+
         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
 
         return redirectToQueryPage(projectId, organisationId, querySection);
     }
 
     private List<ThreadViewModel> loadQueryModel(Long projectId, Long organisationId) {
-        // Dummy test data
-        ThreadResource thread = new ThreadResource();
-        PostResource firstPost = new PostResource();
-        PostResource firstResponse = new PostResource();
-        thread.setCreatedOn(LocalDateTime.now());
-        thread.setAwaitingResponse(false);
-        thread.setOrganisationId(22L);
-        thread.setProjectId(3L);
-        thread.setTitle("Query title");
-        thread.setSectionType(FinanceChecksSectionType.ELIGIBILITY);
-        thread.setId(1L);
-        firstPost.setCreatedOn(LocalDateTime.now().plusMinutes(10L));
-        firstPost.setUserId(18L);
-        firstPost.setPostBody("Question");
-        firstResponse.setCreatedOn(LocalDateTime.now().plusMinutes(20L));
-        firstResponse.setUserId(55L);
-        firstResponse.setPostBody("Response");
-        firstResponse.setAttachments(new LinkedList<>());
-        PostAttachmentResource att1 = new PostAttachmentResource();
-        att1.setFileEntryId(23L);
-        firstPost.setAttachments(Arrays.asList(att1));
-        thread.setPosts(Arrays.asList(firstPost, firstResponse));
-
-        ThreadResource thread2 = new ThreadResource();
-        PostResource firstPost2 = new PostResource();
-        thread2.setCreatedOn(LocalDateTime.now());
-        thread2.setAwaitingResponse(true);
-        thread2.setOrganisationId(22L);
-        thread2.setProjectId(3L);
-        thread2.setTitle("Query2 title");
-        thread2.setSectionType(FinanceChecksSectionType.ELIGIBILITY);
-        thread2.setId(3L);
-        firstPost2.setCreatedOn(LocalDateTime.now().plusMinutes(10L));
-        firstPost2.setUserId(18L);
-        firstPost2.setPostBody("Question2");
-        firstPost2.setAttachments(new LinkedList<>());
-        thread2.setPosts (Arrays.asList(firstPost2));
-        List<ThreadResource> queries = Arrays.asList(thread2, thread);
-
-        // TODO read data from service
-
-        // order queries by most recent post
-        List<ThreadResource> sortedQueries = queries.stream().
-                flatMap(t -> t.getPosts().stream()
-                        .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
-                .sorted((e1, e2) -> e2.getValue().getCreatedOn().compareTo(e1.getValue().getCreatedOn()))
-                .map(m -> m.getKey())
-                .distinct()
-                .collect(Collectors.toList());
 
         List<ThreadViewModel> queryModel = new LinkedList<>();
-        Long attachmentIndex = 0L;
-        for (ThreadResource t : sortedQueries) {
-            List<ThreadPostViewModel> posts = new LinkedList<>();
-            for (PostResource p : t.getPosts()) {
-                List<ThreadPostAttachmentResourceViewModel> attachments = new LinkedList<>();
-                for (PostAttachmentResource a : p.getAttachments()) {
-                    ThreadPostAttachmentResourceViewModel attachment = new ThreadPostAttachmentResourceViewModel();
-                    // TODO get file details from service
-                    attachment.setFileEntryId(a.getFileEntryId());
-                    attachment.setPostId(a.getPostId());
-                    attachment.setFilename("file" + attachmentIndex.toString());
-                    attachment.setLocalFileId(attachmentIndex);
-                    attachments.add(attachment);
-                    attachmentIndex++;
-                    //FileEntryResource f;
-                    //f.getName();
+
+        ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
+        ServiceResult<List<QueryResource>> queries = financeCheckService.loadQueries(projectFinance.getId());
+        if (queries.isSuccess()) {
+            // order queries by most recent post
+            List<QueryResource> sortedQueries = queries.getSuccessObject().stream().
+                    flatMap(t -> t.posts.stream()
+                            .map(p -> new AbstractMap.SimpleImmutableEntry<>(t, p)))
+                    .sorted((e1, e2) -> e2.getValue().createdOn.compareTo(e1.getValue().createdOn))
+                    .map(m -> m.getKey())
+                    .distinct()
+                    .collect(Collectors.toList());
+
+            for (QueryResource query : sortedQueries) {
+                List<ThreadPostViewModel> posts = new LinkedList<>();
+                for (PostResource p : query.posts) {
+                    UserResource user = userService.findById(p.author.getId());
+                    OrganisationResource organisation = organisationService.getOrganisationForUser(p.author.getId());
+                    ThreadPostViewModel post = new ThreadPostViewModel(p.id, p.author, p.body, p.attachments, p.createdOn);
+                    post.setUsername(user.getName() + " - " + organisation.getName() + (user.hasRole(UserRoleType.PROJECT_FINANCE) ? " (Finance team)" : ""));
+                    posts.add(post);
                 }
-                UserResource user = userService.findById(p.getUserId());
-                OrganisationResource organisation = organisationService.getOrganisationForUser(p.getUserId());
-                ThreadPostViewModel post = new ThreadPostViewModel();
-                post.setViewModelAttachments(attachments);
-                post.setUsername(user.getName() + " - " + organisation.getName() + (user.hasRole(UserRoleType.PROJECT_FINANCE)?  " (Finance team)" : ""));
-                post.setCreatedOn(p.getCreatedOn());
-                post.setPostBody(p.getPostBody());
-                post.setUserId(p.getUserId());
-                post.setAttachments(p.getAttachments());
-                posts.add(post);
+                ThreadViewModel detail = new ThreadViewModel();
+                detail.setViewModelPosts(posts);
+                detail.setSectionType(query.section);
+                detail.setCreatedOn(query.createdOn);
+                detail.setAwaitingResponse(query.awaitingResponse);
+                detail.setTitle(query.title);
+                detail.setId(query.id);
+                detail.setProjectId(projectId);
+                detail.setOrganisationId(organisationId);
+                detail.setPosts(query.posts);
+                queryModel.add(detail);
             }
-            ThreadViewModel detail = new ThreadViewModel();
-            detail.setViewModelPosts(posts);
-            detail.setSectionType(t.getSectionType());
-            detail.setCreatedOn(t.getCreatedOn());
-            detail.setAwaitingResponse(t.isAwaitingResponse());
-            detail.setTitle(t.getTitle());
-            detail.setId(t.getId());
-            detail.setProjectId(t.getProjectId());
-            detail.setOrganisationId(t.getOrganisationId());
-            detail.setPosts(t.getPosts());
-            queryModel.add(detail);
         }
         return queryModel;
     }
@@ -360,10 +367,14 @@ public class FinanceChecksQueriesController {
 
         Optional<ProjectUserResource> financeContact = getFinanceContact(projectId, organisationId);
 
-        // TODO lookup attachment details from service
         Map<Long, String> attachmentLinks = new HashMap<>();
         if(attachments != null) {
-            attachments.forEach(id -> attachmentLinks.put(id, "file_" + id));
+            attachments.forEach(id -> {
+                ServiceResult<FileEntryResource> file = financeCheckService.getFileInfo(id);
+                if (file.isSuccess()) {
+                    attachmentLinks.put(id, file.getSuccessObject().getName());
+                }
+            });
         }
 
         return new FinanceChecksQueriesViewModel(
@@ -428,4 +439,5 @@ public class FinanceChecksQueriesController {
         }
         return attachments;
     }
+
 }
