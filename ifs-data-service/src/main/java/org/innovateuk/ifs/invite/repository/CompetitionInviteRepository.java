@@ -20,6 +20,6 @@ public interface CompetitionInviteRepository extends CrudRepository<CompetitionI
 
     CompetitionInvite getByHash(String hash);
 
-    long countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
+    int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
 
 }

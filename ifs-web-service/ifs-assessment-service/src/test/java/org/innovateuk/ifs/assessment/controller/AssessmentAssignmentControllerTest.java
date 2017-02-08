@@ -2,7 +2,6 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.assessment.form.AssessmentAssignmentForm;
 import org.innovateuk.ifs.assessment.model.AssessmentAssignmentModelPopulator;
 import org.innovateuk.ifs.assessment.model.RejectAssessmentModelPopulator;
@@ -11,8 +10,6 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.viewmodel.RejectAssessmentViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
-import org.innovateuk.ifs.invite.resource.RejectionReasonResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.*;
@@ -22,10 +19,7 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
-import java.util.List;
-
 import static java.lang.String.format;
-import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
@@ -39,7 +33,6 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResponseResourceBuilder.newFormInputResponseResource;
-import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -62,20 +55,9 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
     @Mock
     private AssessmentService assessmentService;
 
-    private List<RejectionReasonResource> rejectionReasons = newRejectionReasonResource()
-            .withReason("Reason 1", "Reason 2")
-            .build(2);
-
     @Override
     protected AssessmentAssignmentController supplyControllerUnderTest() {
         return new AssessmentAssignmentController();
-    }
-
-    @Override
-    @Before
-    public void setUp() {
-        super.setUp();
-        when(rejectionReasonRestService.findAllActive()).thenReturn(restSuccess(rejectionReasons));
     }
 
     @Test
@@ -99,7 +81,6 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         mockMvc.perform(get("/{assessmentId}/assignment", assessmentId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("assessment/assessment-invitation"));
-
     }
 
     @Test
@@ -107,12 +88,21 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         Long assessmentId = 1L;
         Long competitionId = 2L;
 
-        when(assessmentService.acceptInvitation(assessmentId)).thenReturn(serviceSuccess());
-        when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource().withCompetition(competitionId).build());
+        AssessmentResource assessment = newAssessmentResource()
+                .with(id(assessmentId))
+                .withCompetition(competitionId)
+                .build();
+
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
 
         mockMvc.perform(post("/{assessmentId}/assignment/accept", assessmentId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard/competition/2"));
+
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).acceptInvitation(assessmentId);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -127,7 +117,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
@@ -138,8 +128,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
                 .andReturn();
 
-        verify(assessmentService, times(1)).getById(assessmentId);
-        verify(assessmentService, times(1)).rejectInvitation(assessmentId, reason, comment);
+        verify(assessmentService).getAssignableById(assessmentId);
+        verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
         verifyNoMoreInteractions(assessmentService);
     }
 
@@ -153,14 +143,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
         // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
@@ -170,7 +156,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -193,10 +179,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals(0, bindingResult.getFieldErrorCount());
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(assessmentService, calls(1)).rejectInvitation(assessmentId, reason, comment);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -209,14 +195,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -224,7 +206,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -248,9 +230,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasFieldErrors("rejectReason"));
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -264,14 +245,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -280,7 +257,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -305,9 +282,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -321,14 +297,10 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -337,7 +309,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -362,9 +334,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = Mockito.inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -374,19 +345,16 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         Long assessmentId = 1L;
         Long applicationId = 2L;
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(newAssessmentResource()
+        when(assessmentService.getAssignableById(assessmentId)).thenReturn(newAssessmentResource()
                 .withId(assessmentId)
-                .withApplication(applicationId).build());
-        when(applicationService.getById(applicationId)).thenReturn(application);
+                .withApplication(applicationId)
+                .withApplicationName("application name")
+                .build());
 
         AssessmentAssignmentForm expectedForm = new AssessmentAssignmentForm();
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -396,9 +364,8 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/assessment-reject-confirm"));
 
-        InOrder inOrder = inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService).getById(assessmentId);
-        inOrder.verify(applicationService).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getAssignableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 }

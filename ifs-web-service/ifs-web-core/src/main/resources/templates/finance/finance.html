@@ -47,7 +47,7 @@
                 </legend>
                 <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
 
-                <label class="block-label selection-button-radio" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
+                <label class="block-label selection-button-radio" th:for="'financePosition-organisationSize-'+${size}" th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
                     <input type="radio"  th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:id="'financePosition-organisationSize-'+${size}"
                            th:name="'financePosition-organisationSize'"
@@ -69,7 +69,7 @@
         </label>
         <input class="form-control width-medium"
                th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-               th:id="${formInput.id}"
+               th:id="'formInput-'+${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
                th:value="*{formInput[__${formInput.id}__]}"
                required="required"
@@ -89,7 +89,7 @@
         <input class="form-control width-medium"
                th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                type="number"
-               th:id="${formInput.id}"
+               th:id="'formInput-'+${formInput.id}"
                th:name="'formInput['+${formInput.id}+']'"
                th:min="0"
                th:max="2147483647"

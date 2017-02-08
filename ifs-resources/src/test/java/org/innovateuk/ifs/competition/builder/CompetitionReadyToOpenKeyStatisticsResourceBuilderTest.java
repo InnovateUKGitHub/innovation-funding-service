@@ -13,8 +13,8 @@ public class CompetitionReadyToOpenKeyStatisticsResourceBuilderTest {
     @Test
     public void buildOne() {
 
-        long expectedAssessorsInvited = 1L;
-        long expectedAssessorsAccepted = 2L;
+        int expectedAssessorsInvited = 1;
+        int expectedAssessorsAccepted = 2;
 
         CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource = newCompetitionReadyToOpenKeyStatisticsResource()
                 .withAssessorsInvited(expectedAssessorsInvited)
@@ -27,8 +27,8 @@ public class CompetitionReadyToOpenKeyStatisticsResourceBuilderTest {
 
     @Test
     public void buildMany() {
-        Long[] expectedAssessorsInviteds = {1L, 3L};
-        Long[] expectedAssessorsAccepteds = {2L, 4L};
+        Integer[] expectedAssessorsInviteds = {1, 3};
+        Integer[] expectedAssessorsAccepteds = {2, 4};
 
         List<CompetitionReadyToOpenKeyStatisticsResource> keyStatisticsResources = newCompetitionReadyToOpenKeyStatisticsResource()
                 .withAssessorsInvited(expectedAssessorsInviteds)
