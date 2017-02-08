@@ -45,6 +45,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourc
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -80,26 +81,58 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
-        AssessmentResource found = assessmentService.findById(assessmentId).getSuccessObject();
+        AssessmentResource found = assessmentService.findById(assessmentId).getSuccessObjectOrThrowException();
 
         assertSame(expected, found);
-        verify(assessmentRepositoryMock, only()).findOne(assessmentId);
+
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentMapperMock).mapToResource(assessment);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void findAssignableById() throws Exception {
         Long assessmentId = 1L;
 
-        Assessment assessment = newAssessment().build();
-        AssessmentResource expected = newAssessmentResource().build();
+        Assessment assessment = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING
+                        .getBackingState()))
+                .build();
+        AssessmentResource expected = newAssessmentResource()
+                .build();
 
         when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
         when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
 
-        AssessmentResource found = assessmentService.findAssignableById(assessmentId).getSuccessObject();
+        AssessmentResource found = assessmentService.findAssignableById(assessmentId)
+                .getSuccessObjectOrThrowException();
 
         assertSame(expected, found);
-        verify(assessmentRepositoryMock, only()).findOne(assessmentId);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentMapperMock).mapToResource(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void findAssignableById_withdrawn() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, WITHDRAWN
+                        .getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+
+        ServiceResult<AssessmentResource> serviceResult = assessmentService.findAssignableById(assessmentId);
+
+        assertTrue(serviceResult.isFailure());
+        assertTrue(serviceResult.getFailure().is(forbiddenError(ASSESSMENT_WITHDRAWN, singletonList(assessmentId))));
+
+        verify(assessmentRepositoryMock).findOne(assessmentId);
+        verifyZeroInteractions(assessmentMapperMock);
     }
 
     @Test
