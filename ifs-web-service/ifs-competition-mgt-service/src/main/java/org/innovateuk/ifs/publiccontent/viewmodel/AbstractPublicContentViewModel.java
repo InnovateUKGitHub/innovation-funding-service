@@ -47,6 +47,6 @@ public abstract class AbstractPublicContentViewModel {
         this.published = published;
     }
 
-    public boolean isComplete() { return PublicContentStatus.COMPLETE.equals(section.getType()); }
+    public boolean isComplete() { return PublicContentStatus.COMPLETE.equals(section.getStatus()); }
 
 }

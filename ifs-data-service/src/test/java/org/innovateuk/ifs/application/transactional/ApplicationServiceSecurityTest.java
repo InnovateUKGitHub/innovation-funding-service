@@ -78,7 +78,7 @@ public class ApplicationServiceSecurityTest extends BaseServiceSecurityTest<Appl
                 () -> classUnderTest.getApplicationById(applicationId),
                 () -> {
                     verify(applicationRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class));
-                    verify(applicationRules).compAdminsCanViewApplications(isA(ApplicationResource.class), isA(UserResource.class));
+                    verify(applicationRules).internalUsersCanViewApplications(isA(ApplicationResource.class), isA(UserResource.class));
                 }
         );
     }
