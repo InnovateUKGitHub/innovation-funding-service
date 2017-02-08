@@ -291,7 +291,7 @@ Project finance user can see the lead partner's information about eligibility
 
 Finance checks eligibility validations
     [Documentation]    INFUND-4833
-    [Tags]  Pending  # Error still exists so putting it to
+    [Tags]  Pending  # Error still exists so putting it to pending
     When the user clicks the button/link             jQuery=form section:nth-of-type(1) button:contains("Labour")
     And the user clicks the button/link              jQuery=form section:nth-of-type(1) a:contains("Edit")
     When the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    -230
@@ -343,7 +343,7 @@ Checking the approve eligibility checkbox enables RAG selection but not Approve 
 
 
 RAG choices update on the finance checks page for eligibility
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-4823
     [Tags]  Pending
     When the rag rating updates on the finance check page for lead for eligibility   Green
     And the rag rating updates on the finance check page for lead for eligibility    Amber
@@ -422,7 +422,7 @@ Checking the approve eligibility checkbox enables RAG selection but not confirm 
     And the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
 
 RAG choices update on the finance checks page for eligibility for partner
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-4823
     [Tags]  Pending
     When the rag rating updates on the finance check page for partner for eligibility   Green
     And the rag rating updates on the finance check page for partner for eligibility    Amber
