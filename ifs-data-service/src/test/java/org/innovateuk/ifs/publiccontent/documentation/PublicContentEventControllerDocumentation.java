@@ -23,7 +23,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class PublicContentEventControllerDocumentation extends BaseControllerMockMVCTest<ContentEventController> {
@@ -63,12 +63,12 @@ public class PublicContentEventControllerDocumentation extends BaseControllerMoc
 
         when(contentEventService.resetAndSaveEvents(1L, resources)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/public-content/events/reset-and-save-events?id=1")
+        mockMvc.perform(post("/public-content/events/reset-and-save-events/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON_UTF8)
                 .content(objectMapper.writeValueAsString(resources)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
-                        requestParameters(
+                        pathParameters(
                                 parameterWithName("id").description("The id of the public content that's being reset")
                         ),
                         requestFields(fieldWithPath("[]").description("List of public content events"))
