@@ -35,7 +35,7 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Override
     public CompetitionResource getByIdAnonymous(Long competitionId){
-        return competitionsRestService.viewCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        return competitionsRestService.getCompetitionByIdAnonymous(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override

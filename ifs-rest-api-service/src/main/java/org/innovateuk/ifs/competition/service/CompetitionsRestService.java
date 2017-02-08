@@ -18,7 +18,7 @@ public interface CompetitionsRestService {
     RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);
-    RestResult<CompetitionResource> viewCompetitionById(Long competitionId);
+    RestResult<CompetitionResource> getCompetitionByIdAnonymous(Long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);
     RestResult<CompetitionResource> create();
