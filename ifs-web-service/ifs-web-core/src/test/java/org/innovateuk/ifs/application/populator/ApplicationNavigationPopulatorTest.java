@@ -123,12 +123,9 @@ public class ApplicationNavigationPopulatorTest {
         SectionResource sectionToSkip = SectionResourceBuilder.newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build();
 
         when(questionService.getPreviousQuestionBySection(section.getId())).thenReturn(Optional.of(previousQuestion));
-
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(Optional.of(previousQuestion));
-
         when(questionService.getNextQuestionBySection(section.getId())).thenReturn(Optional.of(nextQuestion));
         when(sectionService.getSectionByQuestionId(anyLong())).thenReturn(previousSection).thenReturn(validPreviousSection).thenReturn(nextSection).thenReturn(validNextSection);
-
         when(questionService.getNextQuestion(anyLong())).thenReturn(Optional.of(nextQuestion));
 
         target.addSectionTypeToSkip(sectionToSkip.getType());
@@ -163,12 +160,9 @@ public class ApplicationNavigationPopulatorTest {
         SectionResource sectionToSkip = SectionResourceBuilder.newSectionResource().withType(SectionType.ORGANISATION_FINANCES).build();
 
         when(questionService.getPreviousQuestionBySection(section.getId())).thenReturn(Optional.of(previousQuestion));
-
         when(questionService.getPreviousQuestion(anyLong())).thenReturn(Optional.of(previousValidQuestion));
-
         when(questionService.getNextQuestionBySection(section.getId())).thenReturn(Optional.of(nextQuestion));
         when(sectionService.getSectionByQuestionId(anyLong())).thenReturn(previousSection).thenReturn(validPreviousSection).thenReturn(nextSection).thenReturn(validNextSection);
-
         when(questionService.getNextQuestion(anyLong())).thenReturn(Optional.of(nextValidQuestion));
 
         target.addSectionTypeToSkip(sectionToSkip.getType());
