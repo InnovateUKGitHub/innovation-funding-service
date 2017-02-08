@@ -291,12 +291,14 @@ SET @q_your_project_costs=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,15,@programme_template_id,1,NULL,'','',0,@q_your_project_costs,'APPLICATION',1);
 
 -- Your organisation question
+SET @staff_count_id = (SELECT id FROM form_input_type WHERE `name` =  'STAFF_COUNT');
+SET @staff_turnover_id = (SELECT id FROM form_input_type WHERE `name` =  'STAFF_TURNOVER');
 INSERT INTO `question` (`assign_enabled`,`description`,`mark_as_completed_enabled`,`multiple_statuses`,`name`,`short_name`,`priority`,`question_number`,`competition_id`,`section_id`,`assessor_maximum_score`,`question_type`) VALUES (0,'To determine the level of funding you are eligible to receive please provide your business size using the <a href=\"http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm\" target=\"_blank\" rel=\"external\">EU Definition</a> for guidance.',1,1,'Organisation size','Business size',18,NULL,@programme_template_id,@s_your_organisation,NULL,'GENERAL');
 SET @q_your_organisation=LAST_INSERT_ID();
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,19,@programme_template_id,1,'Organisation Size',NULL,NULL,0,@q_your_organisation,'APPLICATION',1);
 INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,4,@programme_template_id,1,'Appendix','What should I include in the appendix?','<p>You may include an appendix of additional information to support the technical approach the project will undertake.</p><p>You may include, for example, a Gantt chart or project management structure.</p><p>The appendix should:</p><ul class=\"list-bullet\"><li>be in a portable document format (.pdf)</li><li>be readable with 100% magnification</li><li>contain your application number and project title at the top</li><li>not be any longer than 6 sides of A4. Longer appendices will only have the first 6 pages assessed</li><li>be less than 1mb in size</li></ul>',1,@q_your_organisation,'APPLICATION',0);
-INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,24,@programme_template_id,0,'Turnover (£)','Your turnover from the last financial year.','',1,@q_your_organisation,'APPLICATION',1);
-INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,25,@programme_template_id,0,'Full time employees','Number of full time employees at your organisation.','',2,@q_your_organisation,'APPLICATION',1);
+INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,@staff_turnover_id,@programme_template_id,0,'Turnover (£)','Your turnover from the last financial year.','',1,@q_your_organisation,'APPLICATION',1);
+INSERT INTO `form_input` (`word_count`,`form_input_type_id`,`competition_id`,`included_in_application_summary`,`description`,`guidance_title`,`guidance_answer`,`priority`,`question_id`,`scope`,`active`) VALUES (NULL,@staff_count_id,@programme_template_id,0,'Full time employees','Number of full time employees at your organisation.','',2,@q_your_organisation,'APPLICATION',1);
 
 -- Add a form input under the organisation size question for all competitions and templates. Default is inactive.
 -- Financial Year End. Get the form input type and then do an insert for every organisation size question.
@@ -352,7 +354,7 @@ SET @non_negative_integer_validator_id = (SELECT id FROM form_validator WHERE ti
 INSERT INTO form_input_validator (`form_input_id`, `form_validator_id`)
      SELECT fi.id, @non_negative_integer_validator_id
      FROM form_input AS fi
-    WHERE fi.form_input_type_id IN (@financial_staff_count_id)
+    WHERE fi.form_input_type_id IN (@financial_staff_count_id, @staff_count_id, @staff_turnover_id)
     AND fi.competition_id=@programme_template_id;
 
 SET @financial_year_end_type_id = (SELECT id FROM form_input_type WHERE `name` =  'FINANCIAL_YEAR_END');
