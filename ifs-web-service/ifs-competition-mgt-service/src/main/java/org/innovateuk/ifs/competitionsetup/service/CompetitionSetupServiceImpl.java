@@ -262,14 +262,9 @@ public class CompetitionSetupServiceImpl implements CompetitionSetupService {
 
 		populateCompetitionStateModelAttributes(model, competitionResource, section);
 
-		PublicContentResource publicContent = getPublicContent(competitionResource);
+		PublicContentResource publicContent = publicContentService.getCompetitionById(competitionResource.getId());
 		model.addAttribute("publishDate", publicContent.getPublishDate());
 		model.addAttribute("isPublicContentPublished", isPublicContentPublished(publicContent));
-	}
-
-	private PublicContentResource getPublicContent(CompetitionResource competitionResource) {
-		PublicContentResource publicContent = publicContentService.getCompetitionById(competitionResource.getId());
-		return publicContent;
 	}
 
 	private boolean isPublicContentPublished(PublicContentResource publicContent) {

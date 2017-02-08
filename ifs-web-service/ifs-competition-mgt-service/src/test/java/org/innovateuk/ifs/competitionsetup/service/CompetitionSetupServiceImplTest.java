@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competitionsetup.service;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -9,6 +10,7 @@ import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.service.formpopulator.CompetitionSetupFormPopulator;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSectionModelPopulator;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSectionSaver;
+import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -23,9 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
@@ -38,6 +41,9 @@ public class CompetitionSetupServiceImplTest {
 	@Mock
 	private CompetitionService competitionService;
 
+	@Mock
+	private PublicContentService publicContentService;
+
 	@Test
 	public void testPopulateCompetitionSectionModelAttributesNoMatchingFormPopulator() {
 		Model model = new ExtendedModelMap();
@@ -49,6 +55,9 @@ public class CompetitionSetupServiceImplTest {
 				.build();
 		
 		service.setCompetitionSetupSectionModelPopulators(asList());
+
+		PublicContentResource publicContentResource = newPublicContentResource().build();
+		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
 		
 		CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
 		
@@ -72,6 +81,8 @@ public class CompetitionSetupServiceImplTest {
 		when(matchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.ELIGIBILITY);
 		CompetitionSetupSectionModelPopulator notMatchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
 		when(notMatchingPopulator.sectionToPopulateModel()).thenReturn(CompetitionSetupSection.MILESTONES);
+		PublicContentResource publicContentResource = newPublicContentResource().build();
+		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
 		
 		service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator, notMatchingPopulator));
 
@@ -90,7 +101,7 @@ public class CompetitionSetupServiceImplTest {
 
 	private void verifyCommonModelAttributes(Model model, CompetitionResource competition,
 			CompetitionSetupSection section, List<CompetitionSetupSection> completedSections) {
-		assertEquals(10, model.asMap().size());
+		assertEquals(12, model.asMap().size());
 		assertEquals(Boolean.FALSE, model.asMap().get("isInitialComplete"));
 		assertEquals(Boolean.TRUE, model.asMap().get("editable"));
 		assertEquals(competition, model.asMap().get("competition"));
@@ -242,11 +253,15 @@ public class CompetitionSetupServiceImplTest {
 
 		LocalDateTime yesterday = LocalDateTime.now().minusDays(1);
 		LocalDateTime tomorrow = LocalDateTime.now().plusDays(1);
+		LocalDateTime today = LocalDateTime.now();
 
 		CompetitionSetupSection competitionSetupSection = CompetitionSetupSection.ADDITIONAL_INFO;
 
 		CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
 		when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
+
+		PublicContentResource publicContentResource = newPublicContentResource().withPublishDate(today).build();
+		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
 
 		service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
@@ -261,6 +276,8 @@ public class CompetitionSetupServiceImplTest {
 		assertEquals(true, model.asMap().get("preventEdit"));
 		assertEquals(true, model.asMap().get("isSetupAndLive"));
 		assertEquals(true, model.asMap().get("setupComplete"));
+		assertEquals(true, model.asMap().get("isPublicContentPublished"));
+		assertEquals(today, model.asMap().get("publishDate"));
 	}
 
 	@Test
@@ -275,6 +292,9 @@ public class CompetitionSetupServiceImplTest {
 		CompetitionSetupSectionModelPopulator matchingPopulator = mock(CompetitionSetupSectionModelPopulator.class);
 		when(matchingPopulator.sectionToPopulateModel()).thenReturn(competitionSetupSection);
 
+		PublicContentResource publicContentResource = newPublicContentResource().build();
+		when(publicContentService.getCompetitionById(any(Long.class))).thenReturn(publicContentResource);
+
 		service.setCompetitionSetupSectionModelPopulators(asList(matchingPopulator));
 
 		CompetitionResource competition = newCompetitionResource()
@@ -288,5 +308,7 @@ public class CompetitionSetupServiceImplTest {
 		assertEquals(false, model.asMap().get("preventEdit"));
 		assertEquals(false, model.asMap().get("isSetupAndLive"));
 		assertEquals(false, model.asMap().get("setupComplete"));
+		assertEquals(false, model.asMap().get("isPublicContentPublished"));
+		assertEquals(null, model.asMap().get("publishDate"));
 	}
 }

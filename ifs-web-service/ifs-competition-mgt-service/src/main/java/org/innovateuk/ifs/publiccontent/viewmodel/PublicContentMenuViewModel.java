@@ -13,7 +13,7 @@ import java.util.List;
  * View model for public content menu.
  */
 public class PublicContentMenuViewModel {
-    public static final DateTimeFormatter PUBLISH_DATE_FORMAT = DateTimeFormatter.ofPattern("hh:mma dd MMMM YYYY");
+    public static final DateTimeFormatter PUBLISH_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY h:mma");
 
     private LocalDateTime publishDate;
 
@@ -46,7 +46,7 @@ public class PublicContentMenuViewModel {
     }
 
     public String getPublishDateText() {
-        return publishDate.format(PUBLISH_DATE_FORMAT);
+        return publishDate.format(PUBLISH_DATE_FORMAT).replace("AM", "am").replace("PM","pm");
     }
 
     public boolean hasBeenPublished() {
