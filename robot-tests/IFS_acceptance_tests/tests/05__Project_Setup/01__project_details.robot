@@ -395,15 +395,15 @@ Non lead partner not eligible for funding
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
     And the user clicks the button/link    link=What's the status of each of my partners?
     Then the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
-    And the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
+    And the user should see the element    jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
 
 Other partners can see who needs to provide Bank Details
     [Documentation]    INFUND-7090
     [Tags]
     [Setup]    log in as a different user   &{lead_applicant_credentials}
     Given the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-child(3) td.status.na:nth-child(4)
-    And the user should see the element     jQuery=#table-project-status tr:nth-child(1) td:nth-child(4):contains("-")
+    Then the user should see the element    jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
+    And the user should see the element     jQuery=#table-project-status tr:nth-child(3) td:nth-child(4):contains("-")
 
 Option to invite a finance contact
     [Documentation]    INFUND-3579
