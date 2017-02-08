@@ -2,6 +2,7 @@ package org.innovateuk.ifs.publiccontent.formpopulator;
 
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
 
 /**
@@ -18,4 +19,5 @@ public abstract class AbstractPublicContentFormPopulator<F extends AbstractPubli
 
     protected abstract F createInitial();
     protected abstract void populateSection(F form, PublicContentResource publicContentResource);
+    protected abstract PublicContentSectionType getType();
 }
