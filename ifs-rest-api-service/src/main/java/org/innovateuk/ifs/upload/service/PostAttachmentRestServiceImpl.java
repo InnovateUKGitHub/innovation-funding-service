@@ -30,6 +30,6 @@ public class PostAttachmentRestServiceImpl extends BaseRestService implements Po
 
     @Override
     public RestResult<Optional<ByteArrayResource>> download(Long fileId) {
-        return getWithRestResult(baseURL+"/download/fileId", ByteArrayResource.class).toOptionalIfNotFound();
+        return getWithRestResult(baseURL+"/download/" + fileId, ByteArrayResource.class).toOptionalIfNotFound();
     }
 }
