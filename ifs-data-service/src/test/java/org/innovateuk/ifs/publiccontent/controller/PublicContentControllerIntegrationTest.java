@@ -39,7 +39,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
     @Test
     @Rollback
     public void testGetByCompetitionId() throws Exception {
-        PublicContent publicContent = publicContentRepository.save(PublicContentBuilder.newPublicContent().withCompetitionId(1L).build());
+        PublicContent publicContent = publicContentRepository.save(PublicContentBuilder.newPublicContent().withCompetitionId(COMPETITION_ID).build());
         flushAndClearSession();
 
         RestResult<PublicContentResource> result = controller.getCompetitionById(COMPETITION_ID);
@@ -55,7 +55,7 @@ public class PublicContentControllerIntegrationTest extends BaseControllerIntegr
         LocalDateTime oldPublishDate = LocalDateTime.now().minusYears(1);
         publicContentRepository.save(PublicContentBuilder.newPublicContent()
                 .withPublishDate(oldPublishDate)
-                .withCompetitionId(1L).build());
+                .withCompetitionId(COMPETITION_ID).build());
         flushAndClearSession();
 
         RestResult<Void> result = controller.publishByCompetition(COMPETITION_ID);

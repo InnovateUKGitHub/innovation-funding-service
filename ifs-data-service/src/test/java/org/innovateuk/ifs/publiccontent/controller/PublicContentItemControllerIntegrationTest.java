@@ -63,7 +63,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void testFindFilteredItems() throws Exception {
-        Competition competition = competitionRepository.findById(1L);
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
 
         flushAndClearSession();
 
@@ -113,7 +113,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void findFilteredItems_findAllPublicContent() throws Exception {
-        Competition competition = competitionRepository.findById(1L);
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
 
 
         flushAndClearSession();
@@ -130,7 +130,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void findFilteredItems_findByInnovationAreaId() throws Exception {
-        Competition competition = competitionRepository.findById(1L);
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
         long innovationAreaId = 1L;
 
         flushAndClearSession();
