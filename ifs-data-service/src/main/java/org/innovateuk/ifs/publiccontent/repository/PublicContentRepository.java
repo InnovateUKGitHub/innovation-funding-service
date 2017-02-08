@@ -39,8 +39,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                                 "AND p.publishDate < :now) " +
             "ORDER BY closed_milestone.date ASC")
     Page<Competition> findAllPublishedForOpenCompetitionBySearchString(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, Pageable pageable, @Param(value="now") LocalDateTime now);
-
-
+    
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +
             "INNER JOIN c.milestones open_milestone ON (open_milestone.date < :now AND open_milestone.type='OPEN_DATE') " +
@@ -51,6 +50,7 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
                                 "AND p.publishDate < :now) " +
             "AND c.id IN :competitionIds " +
             "ORDER BY closed_milestone.date ASC")
+
     Page<Competition> findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, @Param(value="competitionIds") List<Long> competitionIds, Pageable pageable, @Param(value="now") LocalDateTime now);
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > :now AND closed_milestone.type='SUBMISSION_DATE') " +

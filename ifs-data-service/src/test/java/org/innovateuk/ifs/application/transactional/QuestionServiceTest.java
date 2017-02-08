@@ -94,7 +94,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 //        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
 //        when(sectionService.getNextSection(any(SectionResource.class))).thenReturn(serviceSuccess(nextSectionResource));
 //        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
-//                question.getCompetitionId().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
+//                question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
 //        when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
 //
 //        // Method under test
@@ -114,10 +114,10 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 //        when(sectionService.getPreviousSection(any(SectionResource.class)))
 //                .thenReturn(serviceSuccess(previousSectionResource));
 //        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
-//                question.getCompetitionId().getId(), previousQuestion.getSection().getId()))
+//                question.getCompetition().getId(), previousQuestion.getSection().getId()))
 //                .thenReturn(previousQuestion);
 //        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
-//                question.getCompetitionId().getId(), question.getSection().getId(), question.getPriority()))
+//                question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
 //                .thenReturn(previousQuestion);
 //        when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
 //

@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.publiccontent.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
@@ -26,8 +25,8 @@ public class PublicContentBuilder extends BaseBuilder<PublicContent, PublicConte
         return new PublicContentBuilder(emptyList()).with(uniqueIds());
     }
 
-    public PublicContentBuilder withCompetition(Competition competition) {
-        return with(publicContent -> setField("competition", competition, publicContent));
+    public PublicContentBuilder withCompetitionId(Long competitionId) {
+        return with(publicContent -> setField("competitionId", competitionId, publicContent));
     }
 
     public PublicContentBuilder withPublishDate(LocalDateTime publishDate) {
