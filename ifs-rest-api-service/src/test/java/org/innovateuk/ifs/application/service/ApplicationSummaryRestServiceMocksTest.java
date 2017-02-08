@@ -26,7 +26,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(123L, null, null, null);
+        RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, null, null, null);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -37,7 +37,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), "id", null, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), "id", null, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -48,7 +48,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), "id", 6, null);
+        RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), "id", 6, null);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -59,7 +59,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), null, 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), null, 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -70,7 +70,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.findByCompetitionId(Long.valueOf(123L), "id", 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), "id", 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -81,7 +81,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), null, 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), null, 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -92,7 +92,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/submitted?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "id", 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), "id", 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -103,7 +103,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/not-submitted?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), null, 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getNonSubmittedApplications(Long.valueOf(123L), null, 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -114,7 +114,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/not-submitted?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getNotSubmittedApplicationSummariesByCompetitionId(Long.valueOf(123L), "id", 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getNonSubmittedApplications(Long.valueOf(123L), "id", 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -125,7 +125,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/feedback-required?page=6&size=20", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(123L), null, 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplications(Long.valueOf(123L), null, 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());
@@ -136,7 +136,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
     	ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
         setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/feedback-required?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
 
-        RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(123L), "id", 6, 20);
+        RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplications(Long.valueOf(123L), "id", 6, 20);
 
         assertTrue(result.isSuccess());
         Assert.assertEquals(responseBody, result.getSuccessObject());

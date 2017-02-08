@@ -5,49 +5,49 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class CompetitionInAssessmentKeyStatisticsResource {
 
-    private long assignmentCount;
-    private long assignmentsWaiting;
-    private long assignmentsAccepted;
-    private long assessmentsStarted;
-    private long assessmentsSubmitted;
+    private int assignmentCount;
+    private int assignmentsWaiting;
+    private int assignmentsAccepted;
+    private int assessmentsStarted;
+    private int assessmentsSubmitted;
 
-    public long getAssignmentCount() {
+    public int getAssignmentCount() {
         return assignmentCount;
     }
 
-    public void setAssignmentCount(long assignmentCount) {
+    public void setAssignmentCount(int assignmentCount) {
         this.assignmentCount = assignmentCount;
     }
 
-    public long getAssignmentsWaiting() {
+    public int getAssignmentsWaiting() {
         return assignmentsWaiting;
     }
 
-    public void setAssignmentsWaiting(long assignmentsWaiting) {
+    public void setAssignmentsWaiting(int assignmentsWaiting) {
         this.assignmentsWaiting = assignmentsWaiting;
     }
 
-    public long getAssignmentsAccepted() {
+    public int getAssignmentsAccepted() {
         return assignmentsAccepted;
     }
 
-    public void setAssignmentsAccepted(long assignmentsAccepted) {
+    public void setAssignmentsAccepted(int assignmentsAccepted) {
         this.assignmentsAccepted = assignmentsAccepted;
     }
 
-    public long getAssessmentsStarted() {
+    public int getAssessmentsStarted() {
         return assessmentsStarted;
     }
 
-    public void setAssessmentsStarted(long assessmentsStarted) {
+    public void setAssessmentsStarted(int assessmentsStarted) {
         this.assessmentsStarted = assessmentsStarted;
     }
 
-    public long getAssessmentsSubmitted() {
+    public int getAssessmentsSubmitted() {
         return assessmentsSubmitted;
     }
 
-    public void setAssessmentsSubmitted(long assessmentsSubmitted) {
+    public void setAssessmentsSubmitted(int assessmentsSubmitted) {
         this.assessmentsSubmitted = assessmentsSubmitted;
     }
 

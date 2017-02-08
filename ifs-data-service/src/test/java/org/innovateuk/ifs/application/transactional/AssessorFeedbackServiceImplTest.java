@@ -230,7 +230,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     @Test
     public void testFeedbackUploadedNotUploaded() {
     	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(5L);
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(5);
     	
     	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
     	
@@ -241,7 +241,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     @Test
     public void testFeedbackUploadedIsUploaded() {
     	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(0L);
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(0);
     	
     	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
     	
