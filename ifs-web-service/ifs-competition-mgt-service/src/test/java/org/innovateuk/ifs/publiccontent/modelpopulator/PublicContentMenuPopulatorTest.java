@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.publiccontent.modelpopulator;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.innovateuk.ifs.publiccontent.viewmodel.PublicContentMenuViewModel;
@@ -54,10 +53,10 @@ public class PublicContentMenuPopulatorTest {
 
         CompetitionResource competition = newCompetitionResource().build();
 
-        when(publicContentService.getCompetitionById(COMPETITION_ID)).thenReturn(ServiceResult.serviceSuccess(publicContent));
+        when(publicContentService.getCompetitionById(COMPETITION_ID)).thenReturn(publicContent);
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
 
-        PublicContentMenuViewModel viewModel = target.populate(COMPETITION_ID).getSuccessObjectOrThrowException();
+        PublicContentMenuViewModel viewModel = target.populate(COMPETITION_ID);
 
         assertThat(viewModel.getSections(), equalTo(sections));
         assertThat(viewModel.getCompetition(), equalTo(competition));

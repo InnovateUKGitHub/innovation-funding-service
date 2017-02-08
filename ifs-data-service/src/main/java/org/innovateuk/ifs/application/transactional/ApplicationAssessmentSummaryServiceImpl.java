@@ -77,6 +77,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                     application.getName(),
                     competition.getId(),
                     competition.getName(),
+                    competition.getCompetitionStatus(),
                     getLeadOrganisationName(application),
                     getPartnerOrganisationNames(application));
         });
