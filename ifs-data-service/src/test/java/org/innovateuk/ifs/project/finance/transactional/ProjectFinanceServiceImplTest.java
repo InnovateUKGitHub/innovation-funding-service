@@ -33,7 +33,6 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -155,12 +154,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 asList(partnerOrganisation1, partnerOrganisation2));
 
-/*        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(
-                ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(
-                ViabilityState.APPROVED);*/
-
-
         ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
         ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
 
@@ -271,11 +264,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 asList(partnerOrganisation1, partnerOrganisation2));
 
-/*        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(
-                ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(
-                ViabilityState.REVIEW);*/
-
         ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
         ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
 
@@ -307,12 +295,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
                 asList(partnerOrganisation1, partnerOrganisation2));
-
-//TODO
-        /*        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation1)).thenReturn(
-                ViabilityState.APPROVED);
-        when(viabilityWorkflowHandlerMock.getState(partnerOrganisation2)).thenReturn(
-                ViabilityState.NOT_APPLICABLE);*/
 
         ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
         ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.NOT_APPLICABLE.getBackingState()));
@@ -806,7 +788,8 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
-        ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, viabilityStateInDB.getBackingState()));
+        ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, viabilityStateInDB.getBackingState()));
         if (viabilityApprovalDate != null) {
             viabilityProcess.setLastModified(DateUtils.toCalendar(DateUtil.asDate(viabilityApprovalDate)));
         }
@@ -815,8 +798,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         projectFinanceInDB.setViabilityStatus(viabilityRagStatusInDB);
-/*        projectFinanceInDB.setViabilityApprovalUser(viabilityApprovalUser);
-        projectFinanceInDB.setViabilityApprovalDate(viabilityApprovalDate);*/
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
     }
@@ -990,16 +971,17 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Long userId = 7L;
         User user = newUser().withId(userId).build();
 
-        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.UNSET, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.UNSET);
 
-        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(Mockito.any(), Mockito.any());
+        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -1008,16 +990,17 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Long userId = 7L;
         User user = newUser().withId(userId).build();
 
-        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER, null, null);
+        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER);
 
-        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(Mockito.any(), Mockito.any());
+        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
     }
 
     @Test
@@ -1026,26 +1009,27 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         Long userId = 7L;
         User user = newUser().withId(userId).build();
 
-        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isSuccess());
 
-        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER, user, LocalDate.now());
+        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER);
 
-        verify(viabilityWorkflowHandlerMock).viabilityApproved(Mockito.any(), Mockito.any());
+        // Ensure the workflow is called with the correct target and participant
+        verify(viabilityWorkflowHandlerMock).viabilityApproved(partnerOrganisationInDB, user);
 
     }
 
-    private ProjectFinance setUpSaveViabilityMocking(User user) {
+    private ProjectFinance setUpSaveViabilityMocking(User user, PartnerOrganisation partnerOrganisationInDB) {
 
-        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
-        /*when(viabilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(ViabilityState.REVIEW);*/
 
-        ViabilityProcess viabilityProcess = new ViabilityProcess(user, partnerOrganisationInDB, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
+        ViabilityProcess viabilityProcess = new ViabilityProcess(user, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
         when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         setLoggedInUser(newUserResource().withId(user.getId()).build());
@@ -1059,12 +1043,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
     }
 
-    private void assertSaveViabilityResults(ProjectFinance projectFinanceInDB, ViabilityRagStatus expectedViabilityRagStatus,
-                                            User expectedApprovalUser, LocalDate expectedApprovalTime) {
+    private void assertSaveViabilityResults(ProjectFinance projectFinanceInDB, ViabilityRagStatus expectedViabilityRagStatus) {
 
         assertEquals(expectedViabilityRagStatus, projectFinanceInDB.getViabilityStatus());
-        //assertEquals(expectedApprovalUser, projectFinanceInDB.getViabilityApprovalUser());
-        //assertEquals(expectedApprovalTime, projectFinanceInDB.getViabilityApprovalDate());
 
         verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
     }
@@ -1196,9 +1177,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
-        //when(viabilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(ViabilityState.REVIEW);
 
-        ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
+        ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
         when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
@@ -1218,9 +1199,9 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
-        //when(viabilityWorkflowHandlerMock.getState(partnerOrganisationInDB)).thenReturn(ViabilityState.APPROVED);
 
-        ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+        ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
         when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, true);

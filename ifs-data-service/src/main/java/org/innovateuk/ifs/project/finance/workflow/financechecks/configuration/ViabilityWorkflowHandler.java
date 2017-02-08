@@ -59,11 +59,6 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ORGANISATION_IS_ACADEMIC), partnerOrganisation);
     }
 
-/*    public ViabilityState getState(PartnerOrganisation partnerOrganisation) {
-        ViabilityProcess process = getCurrentProcess(partnerOrganisation);
-        return process != null? process.getActivityState() : ViabilityState.REVIEW;
-    }*/
-
     public ViabilityProcess getProcess(PartnerOrganisation partnerOrganisation) {
         return getCurrentProcess(partnerOrganisation);
     }

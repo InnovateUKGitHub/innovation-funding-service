@@ -413,11 +413,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
                 );
     }
 
-/*    private ServiceResult<ViabilityState> getViabilityState(PartnerOrganisation partnerOrganisation) {
-
-        return serviceSuccess(viabilityWorkflowHandler.getState(partnerOrganisation));
-    }*/
-
     private ServiceResult<ViabilityProcess> getViabilityProcess(PartnerOrganisation partnerOrganisation) {
 
         return serviceSuccess(viabilityWorkflowHandler.getProcess(partnerOrganisation));
@@ -555,12 +550,8 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         if (Viability.APPROVED == viability) {
 
-            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> {
-                //projectFinance.setViabilityApprovalUser(currentUser);
-                //projectFinance.setViabilityApprovalDate(LocalDate.now());
-
-                viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser);
-            });
+            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
+                    viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser));
         } else {
             return serviceSuccess();
         }
