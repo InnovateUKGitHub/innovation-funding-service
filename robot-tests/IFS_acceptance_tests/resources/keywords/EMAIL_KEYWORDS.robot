@@ -142,11 +142,11 @@ Delete the emails from both test mailboxes
 
 delete the emails from both remote test mailboxes
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    Run Keyword and Ignore Error Without Screenshots    Wait For Email  timeout=10  # necessary because ImapLibrary requires at least one "wait for email" to select target emails before deleting is possible
+    Run Keyword and Ignore Error Without Screenshots    Wait For Email  sender=${sender}  timeout=10  # necessary because ImapLibrary requires at least one "wait for email" to select target emails before deleting is possible
     Delete All Emails
     close mailbox
     Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
-    Run Keyword and Ignore Error Without Screenshots    Wait For Email  timeout=10  # necessary because ImapLibrary requires at least one "wait for email" to select target emails before deleting is possible
+    Run Keyword and Ignore Error Without Screenshots    Wait For Email  sender=${sender}   timeout=10  # necessary because ImapLibrary requires at least one "wait for email" to select target emails before deleting is possible
     Delete All Emails
     close mailbox
 
