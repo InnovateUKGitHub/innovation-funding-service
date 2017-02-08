@@ -131,7 +131,7 @@ As next step the Applicant cannot see the turnover field
 Organisation server side validation when no
     [Documentation]  INFUND-6393
     [Tags]  HappyPath
-    # TODO Pending due to INFDUND-8033
+    # TODO Pending due to INFUND-8033
     [Setup]  log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to his finances page  ${applicationTitle}
     Then the user clicks the button/link  link=Your organisation
@@ -179,7 +179,7 @@ Organisation server side validation when yes
     [Documentation]  INFUND-6393
     [Tags]
     [Setup]  the user navigates to his finances page  ${compWITHGrowth}
-    # TODO Update when INFDUND-8033 is done
+    # TODO Update when INFUND-8033 is done
     Given the user clicks the button/link  link=Your organisation
     When the user clicks the button/link   jQuery=button:contains("Mark as complete")
     Then the user should see the element   jQuery=.error-summary-list:contains("Enter your organisation size.")
