@@ -141,42 +141,19 @@ Delete the emails from both test mailboxes
 
 
 delete the emails from both remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    Run Keyword and Ignore Error Without Screenshots    Wait For Email  sender=${sender}  timeout=10  # necessary because ImapLibrary requires at least one "wait for email" to select target emails before deleting is possible
-    Delete All Emails
-    close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
-    Run Keyword and Ignore Error Without Screenshots    Wait For Email  sender=${sender}   timeout=10  # necessary because ImapLibrary requires at least one "wait for email" to select target emails before deleting is possible
-    Delete All Emails
-    close mailbox
-
+    delete the emails from the default remote test mailbox
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}   timeout=10
 
 Delete the emails from the default test mailbox
     run keyword if    ${docker}==1    delete the emails from the local test mailbox
     run keyword if    ${docker}!=1    delete the emails from the default remote test mailbox
 
-
 delete the emails from the default remote test mailbox
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    Delete All Emails
-    close mailbox
-
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}   timeout=10
 
 delete the emails from the local test mailbox
-    Open Mailbox    server=ifs-local-dev    port=9876    user=smtp    password=smtp    is_secure=False
-    Delete All Emails
-    close mailbox
-
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=ifs-local-dev    port=9876    user=smtp    password=smtp   is_secure=False   timeout=5
 
 Delete the emails from both default test mailboxes
     run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
-    run keyword if    ${docker}!=1    delete the emails from both default remote test mailboxes
-
-
-delete the emails from both default remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    Delete All Emails
-    close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
-    Delete All Emails
-    close mailbox
+    run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
