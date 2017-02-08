@@ -165,6 +165,16 @@ Mark Organisation as complete when no
     Then the user should see the element        jQuery=button:contains("Edit your organisation")
     And the user clicks the button/link         jQuery=a:contains("Return to finances")
 
+Funding subsection opens when Appl details and organisation info are provided
+    [Documentation]  INFUND-6895
+    [Tags]  HappyPath
+    [Setup]  the user navigates to the page  ${dashboard_url}
+    And the user clicks the button/link      link=${applicationTitle}
+    When the user should see the element     jQuery=img.complete[alt*="Application details"]
+    And the user clicks the button/link      link=Your finances
+    And the user should see the element      jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element     jQuery=img.assigned[alt*="Your funding"]
+
 Organisation server side validation when yes
     [Documentation]  INFUND-6393
     [Tags]
@@ -208,11 +218,23 @@ Organisation client side validation when yes
 
 Mark Organisation as complete when yes
     [Documentation]  INFUND-6393
-    [Tags]  HappyPath  Failing
-
-Funding subsection opens when Appl details and organisation info are provided
-    [Documentation]  INFUND-6895
-    [Tags]  Failing
+    [Tags]
+    [Setup]  the user navigates to his finances page  ${compWITHGrowth}
+    Given the user clicks the button/link             link=Your organisation
+    And the user selects medium organisation size
+    Then the user enters text to a text field         css=input[name$="month"]  12
+    And the user enters text to a text field          css=input[name$="year"]  2016
+    Then the user enters value to field               Annual Turnover  65000
+    And the user enters value to field                Annual Profit  2000
+    And the user enters value to field                Annual Exports  3000
+    And the user enters value to field                Research and development spend  15000
+    When the user enters text to a text field         jQuery=label:contains("employees") + input  4
+    # TODO pending due to INFUND-8107
+    #    And the user clicks the button/link               jQuery=a:contains("Return to finances")
+    #    And the user clicks the button/link               link=Your organisation
+    #    Then the user should see the element              jQuery=td:contains("Research and development spend") + td input[value="15000"]
+    When the user clicks the button/link              jQuery=button:contains("Mark as complete")
+    Then the user should see the element              jQuery=img.complete[alt*="Your organisation"]
 
 *** Keywords ***
 Custom Suite Setup
