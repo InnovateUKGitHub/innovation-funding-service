@@ -96,17 +96,17 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
     
     private boolean competitionOpen(ApplicationResource a) {
-    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	CompetitionResource competition = competitionsRestService.viewCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
     	return CompetitionStatus.OPEN.equals(competition.getCompetitionStatus());
     }
     
     private boolean competitionFundingNotYetComplete(ApplicationResource a) {
-    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	CompetitionResource competition = competitionsRestService.viewCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
     	return compStatusIn(competition, CompetitionStatus.OPEN, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
     }
     
     private boolean competitionFundingComplete(ApplicationResource a) {
-    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	CompetitionResource competition = competitionsRestService.viewCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
     	return compStatusIn(competition, CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
 	}
     

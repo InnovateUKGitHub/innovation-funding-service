@@ -61,6 +61,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
+    public RestResult<CompetitionResource> viewCompetitionById(Long competitionId) {
+        return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
+    }
+
+    @Override
     public RestResult<List<CompetitionTypeResource>> getCompetitionTypes() {
         return getWithRestResult(competitionsTypesRestURL + "/findAll", competitionTypeResourceListType());
     }

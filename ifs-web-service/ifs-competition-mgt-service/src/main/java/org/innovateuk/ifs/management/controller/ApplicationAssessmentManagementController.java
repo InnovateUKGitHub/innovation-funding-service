@@ -2,8 +2,8 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationCountSummaryRestService;
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.management.model.ManageApplicationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,14 +27,14 @@ public class ApplicationAssessmentManagementController {
     private ApplicationCountSummaryRestService  applicationCountSummaryRestService;
 
     @Autowired
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionService competitionService;
 
     @Autowired
     private ManageApplicationsModelPopulator manageApplicationsPopulator;
 
     @RequestMapping(method = RequestMethod.GET)
     public String manageApplications(Model model, @PathVariable("competitionId") long competitionId) {
-        CompetitionResource competitionResource = competitionsRestService.getCompetitionById(competitionId).getSuccessObject();
+        CompetitionResource competitionResource = competitionService.getById(competitionId);
         List<ApplicationCountSummaryResource> applicationCounts = applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionId)
                 .getSuccessObjectOrThrowException();
         model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts));
