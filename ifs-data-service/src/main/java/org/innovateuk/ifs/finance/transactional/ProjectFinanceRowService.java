@@ -1,8 +1,10 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.security.access.method.P;
@@ -60,4 +62,7 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
             description = "Project Finance users can view financial overviews of Organisations on Projects")
     ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
+
+    @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
+    FinanceRowHandler getCostHandler(Long costItemId);
 }
