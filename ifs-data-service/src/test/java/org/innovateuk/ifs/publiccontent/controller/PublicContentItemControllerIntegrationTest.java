@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
@@ -172,7 +171,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     private void setupKeywords() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
-                .withCompetition(newCompetition().withId(1L).build())
+                .withCompetitionId(1L)
                 .withPublishDate(LocalDateTime.now())
                 .build());
 
