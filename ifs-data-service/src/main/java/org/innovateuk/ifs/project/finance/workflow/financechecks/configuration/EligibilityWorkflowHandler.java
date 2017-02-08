@@ -61,9 +61,13 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_APPROVED), partnerOrganisation);
     }
 
-    public EligibilityState getState(PartnerOrganisation partnerOrganisation) {
+/*    public EligibilityState getState(PartnerOrganisation partnerOrganisation) {
         EligibilityProcess process = getCurrentProcess(partnerOrganisation);
         return process != null? process.getActivityState() : EligibilityState.REVIEW;
+    }*/
+
+    public EligibilityProcess getProcess(PartnerOrganisation partnerOrganisation) {
+        return getCurrentProcess(partnerOrganisation);
     }
 
     @Override

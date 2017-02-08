@@ -27,9 +27,9 @@ public class ProjectFinance extends Finance {
     @JoinColumn(name="projectId", referencedColumnName="id")
     private Project project;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+/*    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="eligibilityApprovalUserId", referencedColumnName="id")
-    private User eligibilityApprovalUser;
+    private User eligibilityApprovalUser;*/
 
     private boolean creditReportConfirmed = false;
 
@@ -39,7 +39,7 @@ public class ProjectFinance extends Finance {
     @Enumerated(EnumType.STRING)
     private EligibilityRagStatus eligibilityStatus = EligibilityRagStatus.UNSET;
 
-    private LocalDate eligibilityApprovalDate;
+/*    private LocalDate eligibilityApprovalDate;*/
 
     public ProjectFinance() {
     }
@@ -70,13 +70,13 @@ public class ProjectFinance extends Finance {
         this.viabilityStatus = viabilityStatus;
     }
 
-    public User getEligibilityApprovalUser() {
+/*    public User getEligibilityApprovalUser() {
         return eligibilityApprovalUser;
     }
 
     public void setEligibilityApprovalUser(User eligibilityApprovalUser) {
         this.eligibilityApprovalUser = eligibilityApprovalUser;
-    }
+    }*/
 
     public EligibilityRagStatus getEligibilityStatus() {
         return eligibilityStatus;
@@ -85,12 +85,12 @@ public class ProjectFinance extends Finance {
     public void setEligibilityStatus(EligibilityRagStatus eligibilityStatus) {
         this.eligibilityStatus = eligibilityStatus;
     }
-
+/*
     public LocalDate getEligibilityApprovalDate() {
         return eligibilityApprovalDate;
     }
 
     public void setEligibilityApprovalDate(LocalDate eligibilityApprovalDate) {
         this.eligibilityApprovalDate = eligibilityApprovalDate;
-    }
+    }*/
 }

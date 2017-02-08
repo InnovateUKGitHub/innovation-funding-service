@@ -468,21 +468,30 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
-                .andOnSuccess(partnerOrganisation -> getEligibilityState(partnerOrganisation))
-                .andOnSuccess(eligibilityState -> getProjectFinance(projectId, organisationId)
-                        .andOnSuccess(projectFinance -> buildEligibilityResource(eligibilityState, projectFinance))
+                .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation))
+                .andOnSuccess(eligibilityProcess -> getProjectFinance(projectId, organisationId)
+                        .andOnSuccess(projectFinance -> buildEligibilityResource(eligibilityProcess, projectFinance))
                 );
     }
 
-    private ServiceResult<EligibilityState> getEligibilityState(PartnerOrganisation partnerOrganisation) {
+/*    private ServiceResult<EligibilityState> getEligibilityState(PartnerOrganisation partnerOrganisation) {
 
         return serviceSuccess(eligibilityWorkflowHandler.getState(partnerOrganisation));
+    }*/
+
+    private ServiceResult<EligibilityProcess> getEligibilityProcess(PartnerOrganisation partnerOrganisation) {
+
+        return serviceSuccess(eligibilityWorkflowHandler.getProcess(partnerOrganisation));
     }
 
-    private ServiceResult<EligibilityResource> buildEligibilityResource(EligibilityState eligibilityState, ProjectFinance projectFinance) {
-        EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityState), projectFinance.getEligibilityStatus());
-        eligibilityResource.setEligibilityApprovalDate(projectFinance.getEligibilityApprovalDate());
-        setEligibilityApprovalUser(eligibilityResource, projectFinance.getEligibilityApprovalUser());
+    private ServiceResult<EligibilityResource> buildEligibilityResource(EligibilityProcess eligibilityProcess, ProjectFinance projectFinance) {
+        EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getActivityState()), projectFinance.getEligibilityStatus());
+
+        if (eligibilityProcess.getLastModified() != null) {
+            eligibilityResource.setEligibilityApprovalDate(LocalDateTime.ofInstant(eligibilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+        }
+
+        setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
 
         return serviceSuccess(eligibilityResource);
     }
@@ -574,10 +583,10 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         Long organisationId = projectOrganisationCompositeId.getOrganisationId();
 
         return getPartnerOrganisation(projectId, organisationId)
-                .andOnSuccess(partnerOrganisation -> getEligibilityState(partnerOrganisation)
-                        .andOnSuccess(eligibilityState -> validateEligibility(eligibilityState, eligibility, eligibilityRagStatus))
+                .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
+                        .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getActivityState(), eligibility, eligibilityRagStatus))
                         .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
-                        .andOnSuccess(projectFinance -> setEligibilityApprovalDetails(partnerOrganisation, projectFinance, eligibility)
+                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(partnerOrganisation, eligibility)
                                 .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
                         )
                 );
@@ -596,13 +605,14 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> setEligibilityApprovalDetails(PartnerOrganisation partnerOrganisation, ProjectFinance projectFinance, Eligibility eligibility) {
+    private ServiceResult<Void> triggerEligibilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Eligibility eligibility) {
 
         if (Eligibility.APPROVED == eligibility) {
 
             return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser -> {
-                projectFinance.setEligibilityApprovalUser(currentUser);
-                projectFinance.setEligibilityApprovalDate(LocalDate.now());
+
+                //projectFinance.setEligibilityApprovalUser(currentUser);
+                //projectFinance.setEligibilityApprovalDate(LocalDate.now());
 
                 eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser);
             });
