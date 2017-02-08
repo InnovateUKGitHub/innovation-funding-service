@@ -20,6 +20,9 @@ import javax.validation.Valid;
 
 import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
 
+/**
+ * Handles the Competition Management Funding decision views.
+ */
 @Controller
 @RequestMapping("/competition/{competitionId}/funding")
 public class CompetitionManagementFundingController {

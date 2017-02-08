@@ -73,7 +73,7 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
                 .filter(as -> as.getAssessors() < competitionKeyStatisticsResource.getApplicationsPerAssessor())
                 .mapToInt(e -> 1)
                 .sum());
-        competitionKeyStatisticsResource.setAssessorsWithoutApplications((int) competitionParticipantRepository.getByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)
+        competitionKeyStatisticsResource.setAssessorsWithoutApplications(competitionParticipantRepository.getByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ParticipantStatus.ACCEPTED)
                 .stream()
                 .filter(cp -> assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(cp.getId(), of(REJECTED, WITHDRAWN)) == 0)
                 .mapToInt(e -> 1)

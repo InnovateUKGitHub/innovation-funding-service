@@ -7,9 +7,6 @@ import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- *
- */
 public class HttpUtilsTest {
 
     @Test
@@ -40,7 +37,7 @@ public class HttpUtilsTest {
 
 
     @Test
-    public void MMYYYYrequestParameterPresent() {
+    public void requestParameterPresent_MMYYYY() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "12");
         request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "2011");
@@ -48,14 +45,14 @@ public class HttpUtilsTest {
     }
 
     @Test
-    public void MMYYYYrequestParameterMonthMissing() {
+    public void requestParameterPresent_MMYYYY_monthMissing() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("testParameter" + HttpUtils.MM_YYYY_YEAR_APPEND, "2011");
         assertEquals(Optional.of("-2011"), HttpUtils.requestParameterPresent("testParameter", request));
     }
 
     @Test
-    public void MMYYYYrequestParameterYearMissing() {
+    public void requestParameterPresent_MMYYYY_yearMissing() {
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.addParameter("testParameter" + HttpUtils.MM_YYYY_MONTH_APPEND, "12");
         assertEquals(Optional.of("12-"), HttpUtils.requestParameterPresent("testParameter", request));

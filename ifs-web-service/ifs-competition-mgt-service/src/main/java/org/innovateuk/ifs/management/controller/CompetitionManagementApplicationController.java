@@ -48,7 +48,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -65,6 +64,9 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
+/**
+ * Handles the Competition Management Application overview page (and associated actions).
+ */
 @Controller
 @RequestMapping("/competition/{competitionId}/application")
 @PreAuthorize("hasAnyAuthority('applicant', 'project_finance', 'comp_admin')")
