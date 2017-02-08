@@ -29,7 +29,7 @@ public class DownloadService {
     private FileEntryMapper fileEntryMapper;
 
 
-    public final ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
+    public ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
         if (fileEntry == null) {
             return serviceFailure(notFoundError(FileEntry.class));
         }
