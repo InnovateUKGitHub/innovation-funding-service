@@ -142,7 +142,8 @@ Assessor overview information
     [Tags]
     Given The user clicks the button/link    link=Overview
     Then the user should see the element    jQuery=tr:nth-child(2) td:contains(Invite accepted)
-    #And the user should see the element    jQuery=tr:nth-child(6) td:contains(Awaiting response)    # I have disabled this check because the are some dependencies. In order to enable this we should ask for extra testdata
+    And the user should see the element    jQuery=td:contains(Will Smith) ~ td:nth-child(5):contains(Awaiting response)
+    And the user should see the element    jQuery=td:contains(Will Smith) ~ td:nth-child(6):contains(Invite sent:)
     And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(5):contains(Invite declined)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Academic)
     And the user should see the element    jQuery=tr:nth-child(4) td:contains(Yes)
