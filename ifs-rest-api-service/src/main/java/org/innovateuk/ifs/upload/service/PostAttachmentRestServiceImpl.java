@@ -12,7 +12,7 @@ public class PostAttachmentRestServiceImpl extends BaseRestService implements Po
 
     @Override
     public RestResult<FileEntryResource> find(Long fileId) {
-        return getWithRestResult(baseURL+"/fileId", FileEntryResource.class);
+        return getWithRestResult(baseURL+"/" + fileId, FileEntryResource.class);
     }
 
     @Override
