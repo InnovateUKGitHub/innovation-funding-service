@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 
 import java.util.List;
@@ -15,7 +13,7 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 /**
  * Builder for {@link ProfileSkillsResource}s.
  */
-public class ProfileSkillsResourceBuilder extends BaseBuilder<ProfileSkillsResource, ProfileSkillsResourceBuilder> {
+public class ProfileSkillsResourceBuilder extends ProfileSkillsBaseResourceBuilder<ProfileSkillsResource, ProfileSkillsResourceBuilder> {
 
     private ProfileSkillsResourceBuilder(List<BiConsumer<Integer, ProfileSkillsResource>> multiActions) {
         super(multiActions);
@@ -35,20 +33,8 @@ public class ProfileSkillsResourceBuilder extends BaseBuilder<ProfileSkillsResou
         return createDefault(ProfileSkillsResource.class);
     }
 
-    public ProfileSkillsResourceBuilder withUser(Long... users) {
-        return withArray((user, profileSkillsResource) -> setField("user", user, profileSkillsResource), users);
-    }
-
     public ProfileSkillsResourceBuilder withInnovationAreas(List<InnovationAreaResource>... innovationAreaLists) {
         return withArray((innovationAreaList, profileSkillsResource) -> setField("innovationAreas", innovationAreaList,
                 profileSkillsResource), innovationAreaLists);
-    }
-
-    public ProfileSkillsResourceBuilder withSkillsAreas(String... skillsAreas) {
-        return withArray((skillsArea, profileSkillsResource) -> setField("skillsAreas", skillsArea, profileSkillsResource), skillsAreas);
-    }
-
-    public ProfileSkillsResourceBuilder withBusinessType(BusinessType... businessTypes) {
-        return withArray((businessType, profileSkillsResource) -> setField("businessType", businessType, profileSkillsResource), businessTypes);
     }
 }

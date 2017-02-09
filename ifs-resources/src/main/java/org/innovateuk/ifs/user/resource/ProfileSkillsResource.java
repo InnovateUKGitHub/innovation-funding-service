@@ -9,19 +9,11 @@ import java.util.List;
 /**
  * Profile Skills Data Transfer Object
  */
-public class ProfileSkillsResource {
+public class ProfileSkillsResource extends ProfileSkillsBaseResource {
 
-    private Long user;
     private List<InnovationAreaResource> innovationAreas;
-    private String skillsAreas;
-    private BusinessType businessType;
 
-    public Long getUser() {
-        return user;
-    }
-
-    public void setUser(Long user) {
-        this.user = user;
+    public ProfileSkillsResource() {
     }
 
     public List<InnovationAreaResource> getInnovationAreas() {
@@ -30,22 +22,6 @@ public class ProfileSkillsResource {
 
     public void setInnovationAreas(List<InnovationAreaResource> innovationAreas) {
         this.innovationAreas = innovationAreas;
-    }
-
-    public String getSkillsAreas() {
-        return skillsAreas;
-    }
-
-    public void setSkillsAreas(String skillsAreas) {
-        this.skillsAreas = skillsAreas;
-    }
-
-    public BusinessType getBusinessType() {
-        return businessType;
-    }
-
-    public void setBusinessType(BusinessType businessType) {
-        this.businessType = businessType;
     }
 
     @Override
@@ -61,20 +37,16 @@ public class ProfileSkillsResource {
         ProfileSkillsResource that = (ProfileSkillsResource) o;
 
         return new EqualsBuilder()
-                .append(user, that.user)
+                .appendSuper(super.equals(o))
                 .append(innovationAreas, that.innovationAreas)
-                .append(skillsAreas, that.skillsAreas)
-                .append(businessType, that.businessType)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(user)
+                .appendSuper(super.hashCode())
                 .append(innovationAreas)
-                .append(skillsAreas)
-                .append(businessType)
                 .toHashCode();
     }
 }
