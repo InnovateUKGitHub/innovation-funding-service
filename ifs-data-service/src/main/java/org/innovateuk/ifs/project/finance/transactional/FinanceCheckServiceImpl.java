@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.FinanceCheckWorkflowHandler;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
@@ -25,6 +26,7 @@ import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.GraphBuilderContext;
+import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -81,6 +83,9 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private ProjectFinanceQueriesService projectFinanceQueriesService;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -199,12 +204,25 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                     FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
                     FinanceCheckPartnerStatusResource.Eligibility.REVIEW;
 
+            ServiceResult<List<ProjectFinanceResource>> projectFinanceResources = projectFinanceService.getProjectFinances(projectId);
+            boolean anyQueryAwaitingResponse = false;
+
+            if(projectFinanceResources.isSuccess()) {
+                Optional<ProjectFinanceResource> projectFinanceResource = projectFinanceResources.getSuccessObject().stream().filter(pf ->  pf.getOrganisation().longValue() == org.getId()).findFirst();
+                if(projectFinanceResource.isPresent()) {
+                    ServiceResult<List<QueryResource>> queries = projectFinanceQueriesService.findAll(projectFinanceResource.get().getId());
+                    if (queries.isSuccess()) {
+                        anyQueryAwaitingResponse &= queries.getSuccessObject().stream().filter(f -> f.awaitingResponse == true).findFirst().isPresent();
+                    }
+                }
+            }
+
             return new FinanceCheckPartnerStatusResource(
                 org.getOrganisation().getId(),
                 org.getOrganisation().getName(),
                 viability.getLeft(), viability.getRight(),
                 eligibilityStatus,
-                false); //TODO load query summary
+                anyQueryAwaitingResponse);
         });
     }
 
