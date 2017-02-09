@@ -62,7 +62,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Before
     public void setLoggedInUserOnThread() {
-        loginCompAdmin();
+        loginSystemRegistrationUser();
         setupKeywords();
     }
 
