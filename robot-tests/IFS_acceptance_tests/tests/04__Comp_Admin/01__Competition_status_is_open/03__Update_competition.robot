@@ -17,7 +17,7 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...
 ...               INFUND-6695 As a Competitions team member I want to be able to update the number of Assessors required per applicationthroughout the life of the competition
 Suite Setup       Custom suite setup
-Suite Teardown    the user closes the browser
+Suite Teardown    the user moves the competition back again
 Force Tags        CompAdmin    MySQL
 Resource          ../../../resources/defaultResources.robot
 Resource          ../CompAdmin_Commons.robot
@@ -293,3 +293,9 @@ there is a future Notifications date
 
 return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
+
+
+the user moves the competition back again
+    the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user closes the browser

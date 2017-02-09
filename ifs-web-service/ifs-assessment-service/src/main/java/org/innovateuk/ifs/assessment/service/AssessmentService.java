@@ -16,6 +16,8 @@ public interface AssessmentService {
 
     AssessmentResource getAssignableById(Long id);
 
+    AssessmentResource getRejectableById(Long id);
+
     List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId);
 
     AssessmentTotalScoreResource getTotalScore(Long assessmentId);
@@ -24,7 +26,7 @@ public interface AssessmentService {
 
     ServiceResult<Void> rejectInvitation(Long assessmentId, AssessmentRejectOutcomeValue reason, String comment);
 
-    ServiceResult<Void> acceptInvitation(Long assessmentId);
+    void acceptInvitation(Long assessmentId);
 
     ServiceResult<Void> submitAssessments(List<Long> assessmentIds);
 }

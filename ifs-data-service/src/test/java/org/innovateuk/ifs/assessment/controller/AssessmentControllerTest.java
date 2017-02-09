@@ -15,12 +15,14 @@ import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.nCopies;
-import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -48,7 +50,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
         AssessmentResource expected = newAssessmentResource()
                 .build();
 
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
 
         when(assessmentServiceMock.findById(assessmentId)).thenReturn(serviceSuccess(expected));
 
@@ -64,14 +66,60 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     public void findAssignableById() throws Exception {
         AssessmentResource expected = newAssessmentResource().build();
 
-        Long assessmentId = 1L;
+        long assessmentId = 1L;
 
         when(assessmentServiceMock.findAssignableById(assessmentId)).thenReturn(serviceSuccess(expected));
 
         mockMvc.perform(get("/assessment/{id}/assign", assessmentId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(expected)));
+                .andExpect(content().json(toJson(expected)));
+
         verify(assessmentServiceMock, only()).findAssignableById(assessmentId);
+    }
+
+    @Test
+    public void findAssignableById_withdrawn() throws Exception {
+        long assessmentId = 1L;
+
+        Error assessmentWithdrawnError = forbiddenError(ASSESSMENT_WITHDRAWN, singletonList(assessmentId));
+
+        when(assessmentServiceMock.findAssignableById(assessmentId)).thenReturn(serviceFailure(assessmentWithdrawnError));
+
+        mockMvc.perform(get("/assessment/{id}/assign", assessmentId))
+                .andExpect(status().isForbidden())
+                .andExpect(content().json(toJson(new RestErrorResponse(assessmentWithdrawnError))));
+
+        verify(assessmentServiceMock, only()).findAssignableById(assessmentId);
+    }
+
+    @Test
+    public void findRejectableById() throws Exception {
+        AssessmentResource expected = newAssessmentResource().build();
+
+        long assessmentId = 1L;
+
+        when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(assessmentServiceMock, only()).findRejectableById(assessmentId);
+    }
+
+    @Test
+    public void findRejectableById_withdrawn() throws Exception {
+        long assessmentId = 1L;
+
+        Error assessmentWithdrawnError = forbiddenError(ASSESSMENT_WITHDRAWN, singletonList(assessmentId));
+
+        when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceFailure(assessmentWithdrawnError));
+
+        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId))
+                .andExpect(status().isForbidden())
+                .andExpect(content().json(toJson(new RestErrorResponse(assessmentWithdrawnError))));
+
+        verify(assessmentServiceMock, only()).findRejectableById(assessmentId);
     }
 
     @Test
@@ -479,7 +527,7 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .andExpect(status().isCreated())
                 .andExpect(content().json(toJson(expectedAssessmentResource)));
 
-        verify(assessmentServiceMock, only()).createAssessment(assessmentCreateResource);
+        verify(assessmentServiceMock).createAssessment(assessmentCreateResource);
     }
 
     @Test
@@ -492,6 +540,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentCreateResource)))
                 .andExpect(status().isNotAcceptable());
+
+        verifyZeroInteractions(assessmentServiceMock);
     }
 
     @Test
@@ -504,6 +554,8 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
                 .contentType(APPLICATION_JSON)
                 .content(toJson(assessmentCreateResource)))
                 .andExpect(status().isNotAcceptable());
+
+        verifyZeroInteractions(assessmentServiceMock);
     }
 }
 

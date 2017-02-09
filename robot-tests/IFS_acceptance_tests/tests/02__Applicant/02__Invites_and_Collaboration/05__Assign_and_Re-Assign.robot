@@ -266,7 +266,7 @@ the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
     The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
-    Focus    css=.app-submit-btn
+    Focus    link=Sign out
     wait for autosave
     the user reloads the page
 

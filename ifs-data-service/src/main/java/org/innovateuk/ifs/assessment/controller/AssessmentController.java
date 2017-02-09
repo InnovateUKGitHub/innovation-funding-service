@@ -36,6 +36,11 @@ public class AssessmentController {
         return assessmentService.findAssignableById(id).toGetResponse();
     }
 
+    @RequestMapping(value = "/{id}/rejectable", method = GET)
+    public RestResult<AssessmentResource> findRejectableById(@PathVariable("id") long id) {
+        return assessmentService.findRejectableById(id).toGetResponse();
+    }
+
     @RequestMapping(value = "/user/{userId}/competition/{competitionId}", method = GET)
     public RestResult<List<AssessmentResource>> findByUserAndCompetition(
             @PathVariable("userId") long userId,
@@ -44,7 +49,7 @@ public class AssessmentController {
     }
 
     @RequestMapping(value = "/state/{state}/competition/{competitionId}/count", method = GET)
-    public RestResult<Long> countByStateAndCompetition(
+    public RestResult<Integer> countByStateAndCompetition(
             @PathVariable("state") AssessmentStates state,
             @PathVariable("competitionId") Long competitionId) {
         return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
