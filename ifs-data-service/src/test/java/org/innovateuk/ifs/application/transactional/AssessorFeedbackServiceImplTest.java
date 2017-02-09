@@ -230,7 +230,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     @Test
     public void testFeedbackUploadedNotUploaded() {
     	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(5L);
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(5);
     	
     	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
     	
@@ -241,7 +241,7 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     @Test
     public void testFeedbackUploadedIsUploaded() {
     	
-    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(0L);
+    	when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(123L, Arrays.asList(3L, 4L, 2L))).thenReturn(0);
     	
     	ServiceResult<Boolean> result = service.assessorFeedbackUploaded(123L);
     	
@@ -258,8 +258,8 @@ public class AssessorFeedbackServiceImplTest extends BaseServiceUnitTest<Assesso
     	ServiceResult<Void> result = service.submitAssessorFeedback(123L);
     	
     	assertTrue(result.isSuccess());
-    	assertNotNull(competition.getAssessorFeedbackDate());
-    	assertEquals("assessor feedback date is set to the start of the current second", 0, competition.getAssessorFeedbackDate().get(ChronoField.MILLI_OF_SECOND));
+    	assertNotNull(competition.getReleaseFeedbackDate());
+    	assertEquals("release feedback date is set to the start of the current second", 0, competition.getReleaseFeedbackDate().get(ChronoField.MILLI_OF_SECOND));
     }
 
     @Test

@@ -17,4 +17,5 @@ public interface CompetitionCategoryLinkRepository extends CrudRepository<Compet
     List<CompetitionCategoryLink> findByCompetitionId(Long competitionId);
     List<CompetitionCategoryLink> findAllByCompetitionIdAndCategoryType(Long competitionId, CategoryType type);
     CompetitionCategoryLink findByCompetitionIdAndCategoryType(Long competitionId, CategoryType type);
+    List<CompetitionCategoryLink> findByCategoryId(Long categoryId);
 }

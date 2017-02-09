@@ -12,6 +12,8 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
 ...
 ...               INFUND-4895 Securing of services related to Assessor Journey changes
+...
+...               INFUND-7603 Innovation area added to an Assessor's profile from invite
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
@@ -111,6 +113,16 @@ Create assessor account: Accepted competitions should be displayed in dashboard
     Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
+
+Innovation area on assessor profile for invited user
+    [Documentation]    INFUND-7960
+    [Tags]
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=.button:contains("Invite assessors")
+    When the user clicks the button/link    link=Thomas Fister
+    Then the user should see the text in the page    Emerging and enabling technologies
+    And the user should see the text in the page    Earth Observation
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
