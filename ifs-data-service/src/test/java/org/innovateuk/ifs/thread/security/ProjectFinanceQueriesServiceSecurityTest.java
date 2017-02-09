@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.thread.service;
+package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;

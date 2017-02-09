@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.thread.service;
+package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -73,7 +73,6 @@ public class ProjectFinanceNotesServiceSecurityTest extends BaseServiceSecurityT
         setLoggedInUser(null);
         when(noteLookupStrategy.findById(3L)).thenReturn(new NoteResource(3L, null, new ArrayList<PostResource>(),
                 null, null));
-
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
             verify(noteRules).onlyInternalUsersCanAddPosts(isA(NoteResource.class), isNull(UserResource.class));
