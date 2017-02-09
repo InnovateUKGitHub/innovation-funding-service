@@ -158,11 +158,3 @@ The key statistics are calculated
     ${DECLINED_ASSESSORS}=    Get matching xpath count    //*[text()="Invite declined"]
     ${ACCEPTED_COUNT}=    Get text    css=div:nth-child(3) > div > span
     Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${ACCEPTED_COUNT}
-
-Calculations should be correct
-    ${element}=    Get Webelements    ${list_locator}
-    ${length_list}=    Get Length    ${element}
-    log    ${length_list}
-    ${length_summary}=    Get text    ${summary_locator}
-    log    ${length_summary}
-    Should Be Equal As Integers    ${length_summary}    ${length_list}
