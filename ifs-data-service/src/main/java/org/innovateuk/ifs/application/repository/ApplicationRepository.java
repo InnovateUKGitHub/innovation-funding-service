@@ -42,18 +42,18 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	
 	List<Application> findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds);
 
-    Long countByCompetitionId(Long competitionId);
+    int countByCompetitionId(Long competitionId);
 
-    Long countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
+	int countByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
 
-    Long countByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> submittedStatusIds);
+	int countByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> submittedStatusIds);
 
-	Long countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds);
+	int countByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds);
 
-	Long countByCompetitionIdAndApplicationStatusIdNotInAndCompletionGreaterThan(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
+	int countByCompetitionIdAndApplicationStatusIdNotInAndCompletionGreaterThan(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
 
-	Long countByCompetitionIdAndApplicationStatusIdInAndCompletionLessThanEqual(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
+	int countByCompetitionIdAndApplicationStatusIdInAndCompletionLessThanEqual(Long competitionId, Collection<Long> submittedStatusIds, BigDecimal limit);
 
-	Long countByProcessRolesUserIdAndCompetitionId(Long userId, Long competitionId);
+	int countByProcessRolesUserIdAndCompetitionId(Long userId, Long competitionId);
 
 }

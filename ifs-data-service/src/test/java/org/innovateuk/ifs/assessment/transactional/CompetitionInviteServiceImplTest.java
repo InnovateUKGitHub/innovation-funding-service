@@ -1021,10 +1021,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getInviteStatistics() throws Exception {
         long competitionId = 1L;
         CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
-                .withAccepted(1L)
-                .withDeclined(2L)
-                .withInviteList(3L)
-                .withInvited(4L)
+                .withAccepted(1)
+                .withDeclined(2)
+                .withInviteList(3)
+                .withInvited(4)
                 .build();
 
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED,SENT))).thenReturn(expected.getInvited());
@@ -1060,7 +1060,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
                 .withStatus(SENT, SENT, SENT)
-                .withSentOn(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
                 .buildArray(3, CompetitionInvite.class);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()

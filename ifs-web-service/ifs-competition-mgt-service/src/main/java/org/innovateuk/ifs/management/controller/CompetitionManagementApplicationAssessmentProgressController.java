@@ -24,7 +24,7 @@ import static org.innovateuk.ifs.management.controller.CompetitionManagementAsse
  */
 @Controller
 @RequestMapping("/competition/{competitionId}/application/{applicationId}/assessors")
-@PreAuthorize("hasAuthority('comp_admin')")
+@PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementApplicationAssessmentProgressController {
 
     private static final String FORM_ATTR_NAME = "form";

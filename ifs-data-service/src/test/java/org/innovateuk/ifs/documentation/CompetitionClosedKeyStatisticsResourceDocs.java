@@ -18,10 +18,10 @@ public class CompetitionClosedKeyStatisticsResourceDocs {
 
     public static final CompetitionClosedKeyStatisticsResourceBuilder competitionClosedKeyStatisticsResourceBuilder =
             newCompetitionClosedKeyStatisticsResource()
-                    .withAssessorsAccepted(1L)
-                    .withAssessorsInvited(2L)
-                    .withApplicationsPerAssessor(3L)
-                    .withApplicationsRequiringAssessors(4L)
-                    .withAssessorsWithoutApplications(5L)
-                    .withAssignmentCount(6L);
+                    .withAssessorsAccepted(1)
+                    .withAssessorsInvited(2)
+                    .withApplicationsPerAssessor(3)
+                    .withApplicationsRequiringAssessors(4)
+                    .withAssessorsWithoutApplications(5)
+                    .withAssignmentCount(6);
 }

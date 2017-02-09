@@ -23,97 +23,105 @@ import java.util.stream.Collectors;
 @Mapper(config = GlobalMapperConfig.class)
 public abstract class ApplicationSummaryMapper {
 
-	@Autowired
-	private ApplicationService applicationService;
+    @Autowired
+    private ApplicationService applicationService;
 
-	@Autowired
-	private ApplicationSummarisationService applicationSummarisationService;
+    @Autowired
+    private ApplicationSummarisationService applicationSummarisationService;
 
-	@Autowired
-	private OrganisationRepository organisationRepository;
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
-	@Autowired
-	private FundingDecisionMapper fundingDecisionMapper;
+    @Autowired
+    private FundingDecisionMapper fundingDecisionMapper;
 
-	public ApplicationSummaryResource mapToResource(Application source){
+    public ApplicationSummaryResource mapToResource(Application source) {
 
-		ApplicationSummaryResource result = new ApplicationSummaryResource();
+        ApplicationSummaryResource result = new ApplicationSummaryResource();
 
-		ServiceResult<CompletedPercentageResource> percentageResult = applicationService.getProgressPercentageByApplicationId(source.getId());
-		if(percentageResult.isSuccess()){
-			result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage().intValue());
-		}
+        ServiceResult<CompletedPercentageResource> percentageResult = applicationService.getProgressPercentageByApplicationId(source.getId());
+        if (percentageResult.isSuccess()) {
+            result.setCompletedPercentage(percentageResult.getSuccessObject().getCompletedPercentage().intValue());
+        }
 
-		result.setStatus(status(source, result.getCompletedPercentage()));
-		result.setId(source.getId());
+        result.setStatus(status(source, result.getCompletedPercentage()));
+        result.setId(source.getId());
         result.setName(source.getName());
         result.setDuration(source.getDurationInMonths());
 
-        if(source.getLeadApplicant()!=null) {
+        if (source.getLeadApplicant() != null) {
             result.setLeadApplicant(source.getLeadApplicant().getName());
         }
 
-		ProcessRole leadProcessRole = source.getLeadApplicantProcessRole();
-		Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
-        if(leadOrganisation!=null) {
+        ProcessRole leadProcessRole = source.getLeadApplicantProcessRole();
+        Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
+        if (leadOrganisation != null) {
             result.setLead(leadOrganisation.getName());
         }
 
-		if(source.getFundingDecision() != null) {
-			result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
-		}
-		if(ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
-			result.setFundingDecision(FundingDecision.FUNDED);
-		}
+        if (source.getFundingDecision() != null) {
+            result.setFundingDecision(fundingDecisionMapper.mapToResource(source.getFundingDecision()));
+        }
+        if (ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())) {
+            result.setFundingDecision(FundingDecision.FUNDED);
+        }
 
-		BigDecimal grantRequested = getGrantRequested(source);
-		result.setGrantRequested(grantRequested);
+        BigDecimal grantRequested = getGrantRequested(source);
+        result.setGrantRequested(grantRequested);
 
-		int numberOfPartners = source.getProcessRoles().stream().collect(Collectors.groupingBy(ProcessRole::getOrganisationId)).size();
-		result.setNumberOfPartners(numberOfPartners);
+        int numberOfPartners = source.getProcessRoles().stream()
+                .filter(processRole -> processRole.getRole().isCollaborator() && processRole.getOrganisationId() != null)
+                .collect(Collectors.groupingBy(ProcessRole::getOrganisationId))
+                .size();
 
-		BigDecimal totalProjectCost = getTotalProjectCost(source);
-		result.setTotalProjectCost(totalProjectCost);
+        result.setNumberOfPartners(numberOfPartners);
 
-		return result;
-	}
+        BigDecimal totalProjectCost = getTotalProjectCost(source);
+        result.setTotalProjectCost(totalProjectCost);
 
-	private String status(Application source, Integer completedPercentage) {
+        // TODO: Map innovation area once it has been defined for an application - INFUND-7966
 
-		if(ApplicationStatusConstants.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
-				|| ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())
-				|| ApplicationStatusConstants.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
-			return "Submitted";
-		}
+        result.setInnovationArea("");
 
-		if(completedPercentage != null && completedPercentage > 50) {
-			return "In Progress";
-		}
-		return "Started";
-	}
+        return result;
+    }
 
-	private BigDecimal getTotalProjectCost(Application source) {
-		ServiceResult<BigDecimal> totalCostResult = applicationSummarisationService.getTotalProjectCost(source);
-		if(totalCostResult.isFailure()){
-			return BigDecimal.ZERO;
-		}
-		return totalCostResult.getSuccessObject();
-	}
+    private String status(Application source, Integer completedPercentage) {
 
-	private BigDecimal getGrantRequested(Application source) {
-		ServiceResult<BigDecimal> fundingSoughtResult = applicationSummarisationService.getFundingSought(source);
-		if(fundingSoughtResult.isFailure()){
-			return BigDecimal.ZERO;
-		}
-		return fundingSoughtResult.getSuccessObject();
-	}
+        if (ApplicationStatusConstants.SUBMITTED.getId().equals(source.getApplicationStatus().getId())
+                || ApplicationStatusConstants.APPROVED.getId().equals(source.getApplicationStatus().getId())
+                || ApplicationStatusConstants.REJECTED.getId().equals(source.getApplicationStatus().getId())) {
+            return "Submitted";
+        }
 
-	public Iterable<ApplicationSummaryResource> mapToResource(Iterable<Application> source){
-		ArrayList<ApplicationSummaryResource> result = new ArrayList<>();
-		for (Application application : source) {
-			result.add(mapToResource(application));
-		}
-		return result;
-	}
+        if (completedPercentage != null && completedPercentage > 50) {
+            return "In Progress";
+        }
+        return "Started";
+    }
+
+    private BigDecimal getTotalProjectCost(Application source) {
+        ServiceResult<BigDecimal> totalCostResult = applicationSummarisationService.getTotalProjectCost(source);
+        if (totalCostResult.isFailure()) {
+            return BigDecimal.ZERO;
+        }
+        return totalCostResult.getSuccessObject();
+    }
+
+    private BigDecimal getGrantRequested(Application source) {
+        ServiceResult<BigDecimal> fundingSoughtResult = applicationSummarisationService.getFundingSought(source);
+        if (fundingSoughtResult.isFailure()) {
+            return BigDecimal.ZERO;
+        }
+        return fundingSoughtResult.getSuccessObject();
+    }
+
+    public Iterable<ApplicationSummaryResource> mapToResource(Iterable<Application> source) {
+        ArrayList<ApplicationSummaryResource> result = new ArrayList<>();
+        for (Application application : source) {
+            result.add(mapToResource(application));
+        }
+        return result;
+    }
 
 }

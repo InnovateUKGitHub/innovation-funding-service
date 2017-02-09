@@ -5,12 +5,11 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Abstract DTO for fields common to assessor invite resources.
  */
-abstract class AssessorInviteResource {
+public abstract class AssessorInviteResource {
 
     private Long id;
     private String name;
