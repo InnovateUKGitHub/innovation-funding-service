@@ -32,7 +32,7 @@
     </div>
 
     <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
-        <h2 class="heading-medium error-summary-heading">There was a problem saving your response.</h2>
+        <h2 class="heading-medium error-summary-heading">There was a problem saving your comment.</h2>
         Please review
         <ul class="error-summary-list">
             <th:block th:each="err : ${nonFormErrors}">
@@ -49,7 +49,7 @@
         <th:block th:each="(post, iteration : ${note.viewModelPosts})">
             <th:block th:if="${iteration.index == 0}">
                 <p class="heading-small no-margin">
-                    <th:block th:text="${note.username}">Created by user</th:block>
+                    <th:block th:text="${post.username}">Created by user</th:block>
                     <small th:text="${#temporals.format(post.createdOn, 'dd/MM/yyyy HH:mm')}">Date and Time</small>
                 </p>
                 <p th:text="${post.body}"></p>
@@ -72,7 +72,7 @@
                 </div>
             </th:block>
         </th:block>
-        <th:block th:if="${!model.noteId == null}">
+        <th:block th:if="${model.noteId == null}">
             <hr />
             <div class="grid-row extra-margin-top">
                 <div class="column-half"><a id="post-new-comment" th:href="@{{baseUrl}/{noteId}/new-comment(baseUrl=${baseUrl},noteId=${note.id})}" class="button button-secondary">Comment</a><br />
@@ -83,7 +83,7 @@
             <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
                 <fieldset>
                     <legend class="heading-medium">Comment</legend>
-                    <div th:class="${#fields.hasErrors('response')}? 'form-group error':'form-group'">
+                    <div th:class="${#fields.hasErrors('comment')}? 'form-group error':'form-group'">
                         <label for="comment" class="form-label-bold">
                             <span class="heading-small no-margin">Comment</span>
                             <th:block th:if="${#fields.hasErrors('comment')}">
