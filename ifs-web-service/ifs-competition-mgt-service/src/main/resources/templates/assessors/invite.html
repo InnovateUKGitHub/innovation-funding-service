@@ -81,7 +81,7 @@
                 <summary><span class="summary">Add a non-registered assessor to your list</span></summary>
 
                 <div class="panel">
-                    <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})} + ${originQuery}"
+                    <form th:action="@{/competition/{competitionId}/assessors/invite?addNew(competitionId=${model.competitionId})}"
                           method="POST"
                           th:object="${form}"
                           novalidate="novalidate">
@@ -190,7 +190,7 @@
                 </div>
             </details>
 
-            <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})} + ${originQuery}">
+            <form method="POST" th:action="@{/competition/{competitionId}/assessors/invite(competitionId=${model.competitionId})}">
                 <table class="extra-margin">
                     <thead>
                     <tr>
