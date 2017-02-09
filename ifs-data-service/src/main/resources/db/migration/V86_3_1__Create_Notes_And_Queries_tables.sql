@@ -1,20 +1,20 @@
 CREATE TABLE `thread` (
-  `id` BIGINT(20) NOT NULL,
+  `id` BIGINT(20) BIGINT(20) NOT NULL AUTO_INCREMENT,
   `class_pk` BIGINT(20) NOT NULL,
   `class_name` VARCHAR(255) NOT NULL,
   `thread_type` VARCHAR(45) NOT NULL,
   `title` VARCHAR(255) NOT NULL,
-  `created_on` DATETIME NOT NULL,
+  `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `section` VARCHAR(45) NULL,
   PRIMARY KEY (`id`));
 
 
 CREATE TABLE `post` (
-  `id` BIGINT(20) NOT NULL,
+  `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
   `thread_id` BIGINT(20) NOT NULL,
   `author_id` BIGINT(20) NOT NULL,
   `body` TEXT NOT NULL,
-  `created_on` DATETIME NOT NULL,
+  `created_on` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   CONSTRAINT `post_thread_fk` FOREIGN KEY (`thread_id`) REFERENCES `thread` (`id`),
   CONSTRAINT `post_author_fk` FOREIGN KEY (`author_id`) REFERENCES `user` (`id`));
