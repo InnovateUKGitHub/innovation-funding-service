@@ -33,10 +33,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
-public class InviteAssessorProfileModelPopulatorTest {
+public class AssessorProfileModelPopulatorTest {
 
     @InjectMocks
-    private InviteAssessorProfileModelPopulator inviteAssessorProfileModelPopulator;
+    private AssessorProfileModelPopulator assessorProfileModelPopulator;
 
     @Mock
     private CompetitionService competitionService;
@@ -90,7 +90,7 @@ public class InviteAssessorProfileModelPopulatorTest {
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(assessorProfileResource));
 
         InviteAssessorsProfileViewModel viewModel =
-                inviteAssessorProfileModelPopulator.populateModel(assessorId, competitionId);
+                assessorProfileModelPopulator.populateModel(assessorId, competitionId);
 
         InOrder inOrder = inOrder(competitionService, assessorRestService);
         inOrder.verify(competitionService).getById(competitionId);

@@ -33,6 +33,10 @@ public class AssessorInviteOverviewResourceBuilder extends BaseBuilder<AssessorI
         return new AssessorInviteOverviewResourceBuilder(emptyList());
     }
 
+    public AssessorInviteOverviewResourceBuilder withId(Long... value) {
+        return withArraySetFieldByReflection("id", value);
+    }
+
     public AssessorInviteOverviewResourceBuilder withName(String... value) {
         return withArraySetFieldByReflection("name", value);
     }

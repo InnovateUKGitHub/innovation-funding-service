@@ -266,7 +266,8 @@
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.available}">
-                            <td><a th:href="${'/'}" th:text="${assessor.name}">John Barnes</a></td>
+                            <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                                   th:text="${assessor.name}">John Barnes</a></td>
                             <td th:text="${assessor.skillAreas}">skills</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">4</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>

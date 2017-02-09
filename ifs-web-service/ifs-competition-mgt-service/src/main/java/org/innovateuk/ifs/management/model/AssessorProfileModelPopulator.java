@@ -18,10 +18,10 @@ import java.util.*;
 import static java.util.stream.Collectors.groupingBy;
 
 /**
- * Build the model for the Invite assessors Profile view.
+ * Build the model for Assessors' Profile view.
  */
 @Component
-public class InviteAssessorProfileModelPopulator {
+public class AssessorProfileModelPopulator {
 
     @Autowired
     private CompetitionService competitionService;
