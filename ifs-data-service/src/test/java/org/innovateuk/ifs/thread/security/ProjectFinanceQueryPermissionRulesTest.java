@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.threads.security.QueryPermissionRules;
+import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
-public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermissionRules> {
+public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesTest<ProjectFinanceQueryPermissionRules> {
     private QueryResource queryResource;
     private UserResource projectFinanceUser;
     private UserResource financeContactUser;
@@ -50,14 +50,28 @@ public class QueryPermissionRulesTest extends BasePermissionRulesTest<QueryPermi
     }
 
     @Override
-    protected QueryPermissionRules supplyPermissionRulesUnderTest() {
-        return new QueryPermissionRules();
+    protected ProjectFinanceQueryPermissionRules supplyPermissionRulesUnderTest() {
+        return new ProjectFinanceQueryPermissionRules();
     }
 
     @Test
     public void testThatOnlyInternalProjectFinanceUsersCanCreateQueries() throws Exception {
         assertTrue(rules.onlyInternalUsersCanCreateQueries(queryResource, projectFinanceUser));
         assertFalse(rules.onlyInternalUsersCanCreateQueries(queryResource, financeContactUser));
+    }
+
+    @Test
+    public void testThatNewQueryMustContainInitialPost() throws Exception {
+        assertTrue(rules.onlyInternalUsersCanCreateQueries(queryResource, projectFinanceUser));
+        assertFalse(rules.onlyInternalUsersCanCreateQueries(queryWithoutPosts(), financeContactUser));
+    }
+
+    @Test
+    public void testThatNewQueryInitialPostAuthorMustBeTheCurrentUser() throws Exception {
+        assertTrue(rules.onlyInternalUsersCanCreateQueries(queryResource, projectFinanceUser));
+        UserResource anotherProjectFinanceUser = newUserResource().withId(675L)
+                .withRolesGlobal(newRoleResource().withType(PROJECT_FINANCE).build(1)).build();
+        assertFalse(rules.onlyInternalUsersCanCreateQueries(queryResource, anotherProjectFinanceUser));
     }
 
     @Test
