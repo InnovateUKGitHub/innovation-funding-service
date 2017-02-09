@@ -93,6 +93,36 @@ public class AssessmentControllerTest extends BaseControllerMockMVCTest<Assessme
     }
 
     @Test
+    public void findRejectableById() throws Exception {
+        AssessmentResource expected = newAssessmentResource().build();
+
+        long assessmentId = 1L;
+
+        when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceSuccess(expected));
+
+        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expected)));
+
+        verify(assessmentServiceMock, only()).findRejectableById(assessmentId);
+    }
+
+    @Test
+    public void findRejectableById_withdrawn() throws Exception {
+        long assessmentId = 1L;
+
+        Error assessmentWithdrawnError = forbiddenError(ASSESSMENT_WITHDRAWN, singletonList(assessmentId));
+
+        when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceFailure(assessmentWithdrawnError));
+
+        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId))
+                .andExpect(status().isForbidden())
+                .andExpect(content().json(toJson(new RestErrorResponse(assessmentWithdrawnError))));
+
+        verify(assessmentServiceMock, only()).findRejectableById(assessmentId);
+    }
+
+    @Test
     public void findByUserAndCompetition() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource()
                 .build(2);
