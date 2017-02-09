@@ -64,6 +64,11 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
                 .withName("Data", "Cyber Security")
                 .build(2);
 
+        List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource()
+                .withId(1L, 2L)
+                .withName("Data", "Cyber Security")
+                .build(2);
+
         User existingUser = newUser().build();
         Profile profile = newProfile()
                 .withAddress(newAddress().build())
@@ -76,20 +81,13 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
         when(userRepositoryMock.findOne(existingUser.getId())).thenReturn(existingUser);
         when(profileRepositoryMock.findOne(existingUser.getProfileId())).thenReturn(profile);
-        when(innovationAreaMapperMock.mapToResource(isA(InnovationArea.class))).thenAnswer(invocation -> {
-            InnovationArea innovationArea = invocation.getArgumentAt(0, InnovationArea.class);
-            return newInnovationAreaResource()
-                    .withId(innovationArea.getId())
-                    .withName(innovationArea.getName())
-                    .build();
-        });
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(0))).thenReturn(innovationAreaResources.get(0));
+        when(innovationAreaMapperMock.mapToResource(innovationAreas.get(1))).thenReturn(innovationAreaResources.get(1));
 
         ProfileSkillsResource response = service.getProfileSkills(existingUser.getId()).getSuccessObject();
         assertEquals(existingUser.getId(), response.getUser());
-        assertThat(response.getInnovationAreas(), containsInAnyOrder(newInnovationAreaResource()
-                .withId(1L, 2L)
-                .withName("Data", "Cyber Security")
-                .buildArray(2, InnovationAreaResource.class)));
+        assertThat(response.getInnovationAreas(), containsInAnyOrder(innovationAreaResources.toArray(new
+                InnovationAreaResource[innovationAreaResources.size()])));
         assertEquals(ACADEMIC, response.getBusinessType());
         assertEquals("Skills", response.getSkillsAreas());
 
