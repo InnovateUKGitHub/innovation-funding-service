@@ -48,7 +48,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (applicationId == null) {
             return null;
         }
-
         return applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
     }
 
@@ -96,18 +95,21 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
     
     private boolean competitionOpen(ApplicationResource a) {
-    	CompetitionResource competition = competitionsRestService.getCompetitionByIdAnonymous(a.getCompetition()).getSuccessObjectOrThrowException();
-    	return CompetitionStatus.OPEN.equals(competition.getCompetitionStatus());
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return competition != null &&
+                CompetitionStatus.OPEN.equals(competition.getCompetitionStatus());
     }
     
     private boolean competitionFundingNotYetComplete(ApplicationResource a) {
-    	CompetitionResource competition = competitionsRestService.getCompetitionByIdAnonymous(a.getCompetition()).getSuccessObjectOrThrowException();
-    	return compStatusIn(competition, CompetitionStatus.OPEN, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return competition != null &&
+                compStatusIn(competition, CompetitionStatus.OPEN, CompetitionStatus.IN_ASSESSMENT, CompetitionStatus.FUNDERS_PANEL);
     }
     
     private boolean competitionFundingComplete(ApplicationResource a) {
-    	CompetitionResource competition = competitionsRestService.getCompetitionByIdAnonymous(a.getCompetition()).getSuccessObjectOrThrowException();
-    	return compStatusIn(competition, CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
+    	CompetitionResource competition = competitionsRestService.getCompetitionById(a.getCompetition()).getSuccessObjectOrThrowException();
+    	return competition != null &&
+                compStatusIn(competition, CompetitionStatus.ASSESSOR_FEEDBACK, CompetitionStatus.PROJECT_SETUP);
 	}
     
     private boolean appStatusIn(ApplicationResource app, ApplicationStatusConstants... statuses) {

@@ -15,7 +15,7 @@ import java.util.Map;
 public interface CompetitionService {
     CompetitionResource getById(Long id);
 
-    CompetitionResource getByIdAnonymous(Long id);
+    CompetitionResource getPublishedById(Long id);
 
     CompetitionResource create();
 

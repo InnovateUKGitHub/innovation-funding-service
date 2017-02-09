@@ -77,10 +77,10 @@ public class ApplicationServiceImplTest extends BaseServiceUnitTest<ApplicationS
 		        				closedCompetition.getId())
         		.build(6);
 
-        when(competitionsRestService.getCompetitionByIdAnonymous(openCompetition.getId())).thenReturn(restSuccess(openCompetition));
-        when(competitionsRestService.getCompetitionByIdAnonymous(inAssessmentCompetition.getId())).thenReturn(restSuccess(inAssessmentCompetition));
-        when(competitionsRestService.getCompetitionByIdAnonymous(fundersPanelCompetition.getId())).thenReturn(restSuccess(fundersPanelCompetition));
-        when(competitionsRestService.getCompetitionByIdAnonymous(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
+        when(competitionsRestService.getCompetitionById(openCompetition.getId())).thenReturn(restSuccess(openCompetition));
+        when(competitionsRestService.getCompetitionById(inAssessmentCompetition.getId())).thenReturn(restSuccess(inAssessmentCompetition));
+        when(competitionsRestService.getCompetitionById(fundersPanelCompetition.getId())).thenReturn(restSuccess(fundersPanelCompetition));
+        when(competitionsRestService.getCompetitionById(closedCompetition.getId())).thenReturn(restSuccess(closedCompetition));
 
     	when(applicationRestService.getApplicationsByUserId(userId)).thenReturn(restSuccess(applications));
 
