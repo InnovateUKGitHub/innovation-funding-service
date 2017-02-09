@@ -602,12 +602,12 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                                                 LocalDateTime assessmentClosedDate,
                                                 LocalDateTime fundersPanelDate,
                                                 LocalDateTime fundersPanelEndDate,
-                                                LocalDateTime assessorFeedbackDate
+                                                LocalDateTime releaseFeedbackDate
     ) {
         CompetitionResource comp = controller.create().getSuccessObjectOrThrowException();
 
         List<Milestone> milestones = createNewMilestones(comp, startDate, endDate, assessorAcceptsDate,
-                fundersPanelDate, fundersPanelEndDate, assessorFeedbackDate, assessorsNotifiedDate, assessmentClosedDate);
+                fundersPanelDate, fundersPanelEndDate, releaseFeedbackDate, assessorsNotifiedDate, assessmentClosedDate);
 
         milestones.forEach(milestone -> milestoneRepository.save(milestone));
 
@@ -625,7 +625,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private List<Milestone> createNewMilestones(CompetitionResource comp, LocalDateTime startDate,
                                                 LocalDateTime endDate, LocalDateTime assessorAcceptsDate,
                                                 LocalDateTime fundersPanelDate, LocalDateTime fundersPanelEndDate,
-                                                LocalDateTime assessorFeedbackDate, LocalDateTime assessorsNotifiedDate,
+                                                LocalDateTime releaseFeedbackDate, LocalDateTime assessorsNotifiedDate,
                                                 LocalDateTime assessmentClosedDate) {
 
         return EnumSet.allOf(MilestoneType.class).stream().map(milestoneType -> {
@@ -647,8 +647,8 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 case ASSESSMENT_CLOSED:
                     milestoneDate = assessmentClosedDate;
                     break;
-                case ASSESSOR_DEADLINE:
-                    milestoneDate = assessorFeedbackDate;
+                case RELEASE_FEEDBACK:
+                    milestoneDate = releaseFeedbackDate;
                     break;
                 case FUNDERS_PANEL:
                     milestoneDate = fundersPanelDate;

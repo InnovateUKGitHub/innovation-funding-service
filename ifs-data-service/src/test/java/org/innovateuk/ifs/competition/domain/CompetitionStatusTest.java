@@ -181,27 +181,27 @@ public class CompetitionStatusTest {
     }
     
     @Test
-    public void competitionStatusProjectSetupIfAssessorFeedbackDateInPast(){
+    public void competitionStatusProjectSetupIfReleaseFeedbackDateInPast(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
         competition.setFundersPanelDate(past);
         competition.notifyAssessors(past);
         competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(past);
-    	competition.setAssessorFeedbackDate(past);
+    	competition.setReleaseFeedbackDate(past);
 
         assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
     }
     
     @Test
-    public void competitionStatusProjectSetupIfAssessorFeedbackDateMet(){
+    public void competitionStatusProjectSetupIfReleaseFeedbackDateMet(){
     	competition.setStartDate(past);
     	competition.setEndDate(past);
         competition.setFundersPanelDate(past);
         competition.notifyAssessors(past);
         competition.closeAssessment(past);
     	competition.setFundersPanelEndDate(past);
-    	competition.setAssessorFeedbackDate(currentDate);
+    	competition.setReleaseFeedbackDate(currentDate);
 
         assertEquals(CompetitionStatus.PROJECT_SETUP, competition.getCompetitionStatus());
     }
