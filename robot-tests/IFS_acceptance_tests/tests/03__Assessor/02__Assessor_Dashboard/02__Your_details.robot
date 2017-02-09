@@ -37,7 +37,7 @@ Valid Profile Update
 
 *** Keywords ***
 the assessor updates profile details
-    Select From List By Index    id=title    4
+    The user selects the radio button    title    title5
     The user enters text to a text field    id=firstName    Joy
     The user enters text to a text field    id=lastName    Archer
     the user moves focus to the element    id=firstName

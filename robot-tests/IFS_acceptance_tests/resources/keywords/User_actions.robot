@@ -116,7 +116,7 @@ invite a new academic
     the user enters text to a text field    name=organisations[1].organisationName    university of liverpool
     the user enters text to a text field    name=organisations[1].invites[0].personName    Academic User
     the user enters text to a text field    css=li:nth-last-child(2) tr:nth-of-type(1) td:nth-of-type(2) input    ${EMAIL_INVITED}
-    the user clicks the button/link    jQuery=.button:contains("Save Changes")
+    the user clicks the button/link    jQuery=.button:contains("Save changes")
 
 
 the user should see that the element is disabled
