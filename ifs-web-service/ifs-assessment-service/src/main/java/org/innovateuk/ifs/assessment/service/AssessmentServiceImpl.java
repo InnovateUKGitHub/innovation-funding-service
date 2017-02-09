@@ -28,6 +28,11 @@ public class AssessmentServiceImpl implements AssessmentService {
     }
 
     @Override
+    public AssessmentResource getRejectableById(Long id) {
+        return assessmentRestService.getRejectableById(id).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId) {
         return assessmentRestService.getByUserAndCompetition(userId, competitionId).getSuccessObjectOrThrowException();
     }
