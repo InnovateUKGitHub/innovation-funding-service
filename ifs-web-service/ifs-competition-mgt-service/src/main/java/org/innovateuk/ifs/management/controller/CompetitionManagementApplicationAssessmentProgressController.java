@@ -10,12 +10,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
 import static java.lang.String.format;
+import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
+import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
 
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
@@ -37,7 +40,10 @@ public class CompetitionManagementApplicationAssessmentProgressController {
     public String applicationProgress(Model model,
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
-                                      @PathVariable("applicationId") Long applicationId) {
+                                      @PathVariable("applicationId") Long applicationId,
+                                      @RequestParam MultiValueMap<String, String> queryParams) {
+        model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.APPLICATION_PROGRESS, queryParams));
+
         return doProgressView(model, applicationId, form.getSortField());
     }
 

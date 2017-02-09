@@ -47,7 +47,9 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Function;
@@ -79,7 +81,8 @@ public class CompetitionManagementApplicationController extends BaseController {
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
-        FUNDING_APPLICATIONS("/competition/{competitionId}/funding");
+        FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
+        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
 
         private String baseOriginUrl;
 
@@ -176,20 +179,28 @@ public class CompetitionManagementApplicationController extends BaseController {
             OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
-            model.addAttribute("backUrl", buildBackUrl(origin, competitionId, queryParams));
+            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, competitionId, queryParams));
 
             return "competition-mgt-application-overview";
         });
     }
 
-    private String buildBackUrl(String origin, Long competitionId, MultiValueMap<String, String> queryParams) {
-        String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
+    private String buildBackUrl(String origin, Long applicationId, Long competitionId, MultiValueMap<String, String> queryParams) {
+        ApplicationOverviewOrigin applicationOverviewOrigin = ApplicationOverviewOrigin.valueOf(origin);
+        Map<String, Object> pathParams = asMap("competitionId", competitionId);
 
+        switch (applicationOverviewOrigin) {
+            case APPLICATION_PROGRESS:
+                pathParams.put("applicationId", applicationId);
+                break;
+        }
+
+        String baseUrl = applicationOverviewOrigin.getBaseOriginUrl();
         queryParams.remove("origin");
 
         return UriComponentsBuilder.fromPath(baseUrl)
                 .queryParams(queryParams)
-                .buildAndExpand(asMap("competitionId", competitionId))
+                .buildAndExpand(pathParams)
                 .encode()
                 .toUriString();
     }

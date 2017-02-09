@@ -40,9 +40,9 @@
                 </div>
             </div>
             <div class="extra-margin">
-                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}">Review application</a>
+                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})} + ${originQuery}">Review application</a>
             </div>
-
+            <comp> </comp>
             <h2 class="heading-medium" th:text="(${model.inAssessment} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
             <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
