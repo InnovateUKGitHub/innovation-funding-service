@@ -43,7 +43,7 @@
                        type="text"
                        th:class="${#fields.hasErrors('noteTitle') ? 'form-control field-error width-full' : 'form-control width-full'}"
                        required="required"
-                       th:field="*{note Title}"
+                       th:field="*{noteTitle}"
                        th:attr="maxlength=${model.maxTitleCharacters},
                                 data-required-errormessage=#{validation.notesandqueries.note.title.required},
                                 data-maxlength-errormessage=#{validation.notesandqueries.note.title.length.max(null,${model.maxTitleCharacters})}" />
