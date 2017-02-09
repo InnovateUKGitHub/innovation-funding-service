@@ -37,9 +37,17 @@
                 </form>
             </div>
             <div class="column-two-thirds">
-                <p class="extra-margin-bottom" th:text="${model.totalResults == 1 ? '1 competition' : model.totalResults+' competitions' }" />
-                <p class="extra-margin-bottom" th:if="${model.totalResults == 0}">No results found.</p>
-                <ul>
+                <p class="extra-margin-bottom" th:text="${model.totalResults == 1 ? '1 competition found' : model.totalResults+' competitions found' }"></p>
+                <th:block th:if="${model.totalResults == 0}">
+                    <p class="extra-margin-bottom">
+                        <h2 class="heading-large">Please try:</h2>
+                        <ul class="list list-bullet">
+                            <li>searching again using different words</li>
+                            <li>removing your filters</li>
+                        </ul>
+                    </p>
+                </th:block>
+                <ul th:unless="${model.totalResults == 0}">
                    <li th:each="(publicContentItem, iteration : ${model.publicContentItems})">
                        <h2 class="heading-medium no-margin-top extra-margin-bottom">
                            <a th:text="${publicContentItem.competitionTitle}" th:href="@{/competition/{competitionId}/overview(competitionId=${publicContentItem.publicContentResource?.competitionId})}">Competition title</a>

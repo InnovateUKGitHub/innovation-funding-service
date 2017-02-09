@@ -6,5 +6,6 @@ package org.innovateuk.ifs.project.finance.resource;
 public enum Eligibility {
 
     REVIEW,
+    NOT_APPLICABLE,
     APPROVED
 }
