@@ -49,6 +49,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is Sector competition
 ...
 ...               INFUND-6773 As a Competitions team member I want to see Finances form defaulted to Full application finances
+...
+...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -155,6 +157,22 @@ User should have access to all the sections
     And The user should see the element    link=Application
     And The user should see the element    link=Assessors
     And The user should see the element    link=Public content
+    [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to setup overview")
+
+Internal user can navigate to Public Content without having any issues
+    [Documentation]  INFUND-6922
+    [Tags]
+    Given the user clicks the button/link  link=Public content
+    Then the user should not see an error in the page
+    And the user should see the element  jQuery=h1:contains("Public content")
+    And the user should see the element  jQuery=a:contains("Competition information and search")
+    And the user should see the element  jQuery=a:contains("Summary")
+    And the user should see the element  jQuery=a:contains("Eligibility")
+    And the user should see the element  jQuery=a:contains("Scope")
+    And the user should see the element  jQuery=a:contains("Dates")
+    And the user should see the element  jQuery=a:contains("How to apply")
+    And the user should see the element  jQuery=a:contains("Supporting information")
+
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
