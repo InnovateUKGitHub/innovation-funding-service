@@ -9,5 +9,5 @@ import org.springframework.data.repository.CrudRepository;
  * http://docs.spring.io/spring-data/jpa/docs/current/reference/html/#repositories
  */
 public interface ContentEventRepository extends CrudRepository<ContentEvent, Long> {
-
+    Long deleteByPublicContentId(Long publicContentId);
 }
