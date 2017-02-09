@@ -1,12 +1,8 @@
 package org.innovateuk.ifs.thread.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesService;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesServiceImpl;
-import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
 import org.innovateuk.ifs.threads.security.QueryLookupStrategy;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -14,14 +10,10 @@ import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Matchers.isNull;
@@ -45,7 +37,7 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
 
     @Test
     public void test_create() throws Exception {
-        final QueryResource queryResource = new QueryResource(null, null, null, null,null, false, null);
+        final QueryResource queryResource = new QueryResource(null, null, null, null, null, false, null);
         assertAccessDenied(
                 () -> classUnderTest.create(queryResource),
                 () -> {
@@ -89,9 +81,6 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
     }
 
 
-
-
-
     public static class TestProjectFinanceQueriesService implements ProjectFinanceQueriesService {
 
         @Override
@@ -103,14 +92,20 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
         }
 
         @Override
-        public ServiceResult<QueryResource> findOne(Long id) { return ServiceResult.serviceSuccess(new QueryResource(id,
-                null, null, null, null, false, null));}
+        public ServiceResult<QueryResource> findOne(Long id) {
+            return ServiceResult.serviceSuccess(new QueryResource(id,
+                    null, null, null, null, false, null));
+        }
 
         @Override
-        public ServiceResult<Long> create(QueryResource QueryResource) { return  null;}
+        public ServiceResult<Long> create(QueryResource QueryResource) {
+            return null;
+        }
 
         @Override
-        public ServiceResult<Void> addPost(PostResource post, Long queryId) { return null; }
+        public ServiceResult<Void> addPost(PostResource post, Long queryId) {
+            return null;
+        }
     }
 
 

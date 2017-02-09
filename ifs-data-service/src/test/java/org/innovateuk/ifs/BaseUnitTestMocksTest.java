@@ -89,6 +89,9 @@ import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
+import org.innovateuk.ifs.threads.mapper.PostMapper;
+import org.innovateuk.ifs.threads.mapper.QueryMapper;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
@@ -375,6 +378,7 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectFinanceQueriesService projectFinanceQueriesService;
+
     @Mock
     protected ProjectService projectServiceMock;
 
@@ -572,6 +576,17 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectFinanceRowMapper projectFinanceRowMapperMock;
+
+    @Mock
+    protected QueryRepository queryRepositoryMock;
+
+    @Mock
+    protected QueryMapper queryMapper;
+
+    @Mock
+    protected PostMapper postMapper;
+
+
 
     @Before
     public void setupMockInjection() {
