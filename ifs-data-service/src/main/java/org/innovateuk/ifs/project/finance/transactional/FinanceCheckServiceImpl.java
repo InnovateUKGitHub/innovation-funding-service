@@ -208,7 +208,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             boolean anyQueryAwaitingResponse = false;
 
             if(projectFinanceResources.isSuccess()) {
-                Optional<ProjectFinanceResource> projectFinanceResource = projectFinanceResources.getSuccessObject().stream().filter(pf ->  pf.getOrganisation().longValue() == org.getId()).findFirst();
+                Optional<ProjectFinanceResource> projectFinanceResource = projectFinanceResources.getSuccessObject().stream().filter(pf ->  pf.getOrganisation().longValue() == org.getOrganisation().getId()).findFirst();
                 if(projectFinanceResource.isPresent()) {
                     ServiceResult<List<QueryResource>> queries = projectFinanceQueriesService.findAll(projectFinanceResource.get().getId());
                     if (queries.isSuccess()) {
