@@ -106,7 +106,7 @@
 		    	<a th:href="@{'?status=removeApp#removeApp'}" class="button button-secondary">Remove application from assessment</a>
 		    </div>
 
-			<th:block th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
+			<div th:if="${param.status != null and param.status[0] == 'removeApp'}" class="extra-margin-bottom">
 				<form action="/prototypes/5698-draft-email" id="removeApp">
 					<fieldset>
 						<legend class="heading-medium">Remove application from assessment</legend>
@@ -130,7 +130,7 @@
 						</div>
 					</div>
 				</form>
-			</th:block>
+			</div>
 
 		</div>
 

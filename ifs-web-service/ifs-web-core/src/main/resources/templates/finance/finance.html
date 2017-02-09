@@ -61,7 +61,7 @@
     </th:block>
 
     <!-- =========================== Form: Staff Turnover =========================== -->
-    <th:block th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+    <div th:fragment="staff_turnover"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
             <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
@@ -77,10 +77,10 @@
                max="2147483647"
                type="number"
         />
-    </th:block>
+    </div>
 
     <!-- =========================== Form: Staff Count =========================== -->
-    <th:block th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+    <div th:fragment="staff_count"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
             <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
@@ -96,10 +96,10 @@
                th:value="*{formInput[__${formInput.id}__]}"
                th:required="required"
         />
-    </th:block>
+    </div>
 
     <!-- =========================== Form: Financial Year End =========================== -->
-    <th:block th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''">
+    <div th:fragment="financial_year_end"  class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? 'error' : ''">
         <fieldset th:with="value=(*{formInput[__${formInput.id}__]})">
             <legend>
                 <span class="form-label form-label-bold">End of last financial year</span>
@@ -144,10 +144,10 @@
                 </div>
             </div>
         </fieldset>
-    </th:block>
+    </div>
 
     <!-- =========================== Form: Financial Staff Count =========================== -->
-    <th:block th:fragment="financial_staff_count" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
+    <div th:fragment="financial_staff_count" class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
         <label class="form-label form-label-bold" th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
             <span th:text="${formInput.description}"/>
             <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
@@ -163,7 +163,7 @@
                th:value="*{formInput[__${formInput.id}__]}"
                th:required="required"
         />
-    </th:block>
+    </div>
 
     <!-- ===========================Form: your_finance =========================== -->
     <th:block th:fragment="your_finance">
