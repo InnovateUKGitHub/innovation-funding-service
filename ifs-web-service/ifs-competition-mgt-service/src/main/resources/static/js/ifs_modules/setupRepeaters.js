@@ -27,7 +27,6 @@ IFS.competitionManagement.repeater = (function () {
           break
         case 'dateContentGroup':
           IFS.competitionManagement.repeater.addDateContentGroup(el)
-          console.log('2')
           break
       }
       jQuery('body').trigger('updateSerializedFormState')
