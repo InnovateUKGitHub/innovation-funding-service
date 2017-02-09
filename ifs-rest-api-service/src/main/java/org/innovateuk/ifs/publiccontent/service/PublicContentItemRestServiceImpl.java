@@ -3,6 +3,7 @@ package org.innovateuk.ifs.publiccontent.service;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.client.utils.URIBuilder;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
@@ -11,6 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 /**
@@ -31,28 +34,34 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
             LOG.error("searchString can not be encoded");
         }
 
-        String url = PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?";
-        url = addParamToURL(url, "innovationAreaId", String.valueOf(innovationAreaId.orElse(null)));
-        url = addParamToURL(url, "searchString", searchStringEncoded);
-        url = addParamToURL(url, "pageNumber", String.valueOf(pageNumber.orElse(null)));
-        url = addParamToURL(url, "pageSize", String.valueOf(pageSize));
+        String url = PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter";
+        URIBuilder builder = new URIBuilder();
+        builder.setPath(url);
+        innovationAreaId.ifPresent(value -> addParamToURL(builder, "innovationAreaId", String.valueOf(value)));
+        searchString.ifPresent(value -> addParamToURL(builder, "searchString", value));
+        pageNumber.ifPresent(value -> addParamToURL(builder, "pageNumber", String.valueOf(value)));
+        addParamToURL(builder, "pageSize", String.valueOf(pageSize));
 
-        return getWithRestResult( url, PublicContentItemPageResource.class);
+        String uriString = null;
+
+        try {
+            URI uri = builder.build();
+            uriString = uri.toString();
+        } catch (URISyntaxException e) {
+            LOG.error("URI cannot be built");
+        }
+
+        return getWithRestResultAnonymous( uriString, PublicContentItemPageResource.class);
     }
 
     @Override
     public RestResult<PublicContentItemResource> getItemByCompetitionId(Long id) {
-        return getWithRestResult(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + id, PublicContentItemResource.class);
+        return getWithRestResultAnonymous(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + id, PublicContentItemResource.class);
     }
 
-    public String addParamToURL(String url, String paramName, String paramValue) {
-        if(StringUtils.isBlank(paramValue) || paramValue.equals("null")) {
-            return url;
+    public void addParamToURL(URIBuilder builder, String paramName, String paramValue) {
+        if(!(StringUtils.isBlank(paramValue) || paramValue.equals("null"))) {
+            builder.addParameter(paramName, paramValue);
         }
-
-        if(!url.endsWith("?")) {
-            url = url + "&";
-        }
-        return url + paramName + "=" + paramValue;
     }
 }

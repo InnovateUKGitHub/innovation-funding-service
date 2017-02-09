@@ -91,16 +91,15 @@ public class ApplicationStatistics {
         this.assessments = assessments;
     }
 
-    public long getAssessors() {
-
-        return assessments.stream().filter(a -> ASSESSOR_STATES.contains(a.getActivityState())).count();
+    public int getAssessors() {
+        return assessments.stream().filter(a -> ASSESSOR_STATES.contains(a.getActivityState())).mapToInt(e -> 1).sum();
     }
 
-    public long getAccepted() {
-        return assessments.stream().filter(a -> ACCEPTED_STATES.contains(a.getActivityState())).count();
+    public int getAccepted() {
+        return assessments.stream().filter(a -> ACCEPTED_STATES.contains(a.getActivityState())).mapToInt(e -> 1).sum();
     }
 
-    public long getSubmitted() {
-        return assessments.stream().filter(a -> a.isInState(SUBMITTED)).count();
+    public int getSubmitted() {
+        return assessments.stream().filter(a -> a.isInState(SUBMITTED)).mapToInt(e -> 1).sum();
     }
 }

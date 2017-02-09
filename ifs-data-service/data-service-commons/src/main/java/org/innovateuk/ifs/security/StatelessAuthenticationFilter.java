@@ -63,10 +63,6 @@ public class StatelessAuthenticationFilter extends GenericFilterBean {
         /****** For SIL *******/
         antPathRequestMatchers.add(new AntPathRequestMatcher("/silstub/**"));
 
-        /****** For Competition search *******/
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/category/findInnovationAreas"));
-        antPathRequestMatchers.add(new AntPathRequestMatcher("/public-content/items/**"));
-
         /****** For Application creation *******/
         antPathRequestMatchers.add(new AntPathRequestMatcher("/competition/**"));
         antPathRequestMatchers.add(new AntPathRequestMatcher("/application/create/**"));

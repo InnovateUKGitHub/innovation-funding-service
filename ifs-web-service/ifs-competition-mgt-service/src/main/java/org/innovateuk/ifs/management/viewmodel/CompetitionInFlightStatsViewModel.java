@@ -10,12 +10,12 @@ import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisti
  */
 public class CompetitionInFlightStatsViewModel {
 
-    private long statOne;
-    private long statTwo;
-    private Long statThree;
-    private Long statFour;
-    private Long statFive;
-    private Long statSix;
+    private int statOne;
+    private int statTwo;
+    private Integer statThree;
+    private Integer statFour;
+    private Integer statFive;
+    private Integer statSix;
 
     public CompetitionInFlightStatsViewModel() {
 
@@ -52,51 +52,51 @@ public class CompetitionInFlightStatsViewModel {
         this.statFive = keyStatisticsResource.getAssessmentsSubmitted();
     }
 
-    public long getStatOne() {
+    public int getStatOne() {
         return statOne;
     }
 
-    public void setStatOne(long statOne) {
+    public void setStatOne(int statOne) {
         this.statOne = statOne;
     }
 
-    public long getStatTwo() {
+    public int getStatTwo() {
         return statTwo;
     }
 
-    public void setStatTwo(long statTwo) {
+    public void setStatTwo(int statTwo) {
         this.statTwo = statTwo;
     }
 
-    public Long getStatThree() {
+    public Integer getStatThree() {
         return statThree;
     }
 
-    public void setStatThree(Long statThree) {
+    public void setStatThree(Integer statThree) {
         this.statThree = statThree;
     }
 
-    public Long getStatFour() {
+    public Integer getStatFour() {
         return statFour;
     }
 
-    public void setStatFour(Long statFour) {
+    public void setStatFour(Integer statFour) {
         this.statFour = statFour;
     }
 
-    public Long getStatFive() {
+    public Integer getStatFive() {
         return statFive;
     }
 
-    public void setStatFive(Long statFive) {
+    public void setStatFive(Integer statFive) {
         this.statFive = statFive;
     }
 
-    public Long getStatSix() {
+    public Integer getStatSix() {
         return statSix;
     }
 
-    public void setStatSix(Long statSix) {
+    public void setStatSix(Integer statSix) {
         this.statSix = statSix;
     }
 }

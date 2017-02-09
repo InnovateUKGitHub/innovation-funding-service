@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
@@ -47,6 +50,9 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Autowired
     private KeywordRepository keywordRepository;
 
+    @Autowired
+    private InnovationAreaRepository innovationAreaRepository;
+
     @Override
     @Autowired
     protected void setControllerUnderTest(PublicContentItemController controller) {
@@ -57,24 +63,18 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Before
     public void setLoggedInUserOnThread() {
         loginCompAdmin();
+        setupKeywords();
     }
 
 
     @Test
     @Rollback
-    public void testFindFilteredItems() throws Exception {
-        Competition competition = competitionRepository.findById(1L);
-
-        competitionCategoryLinkRepository.save(newCompetitionCategoryLink()
-                .withCategory(categoryRepository.findOne(1L))
-                .withCompetition(competition)
-                .build());
-
-        makeSetupOfKeywords();
+    public void findFilteredItems_findByKeywords() throws Exception {
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(17L), Optional.of("key wor"), Optional.of(0), 20);
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.of("key wor"), Optional.of(0), 20);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -82,7 +82,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         assertEquals(1, publicContentItemResourcesOne.size());
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
 
-        RestResult<PublicContentItemPageResource> resultTwo = controller.findFilteredItems(Optional.of(17L), Optional.empty(), Optional.of(0),20);
+        RestResult<PublicContentItemPageResource> resultTwo = controller.findFilteredItems(Optional.of(5L), Optional.empty(), Optional.of(0),20);
 
         assertTrue(resultTwo.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesTwo = resultTwo.getSuccessObject().getContent();
@@ -119,6 +119,67 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Test
     @Rollback
+    public void findFilteredItems_findAllPublicContent() throws Exception {
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
+
+        flushAndClearSession();
+
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
+
+        assertTrue(resultOne.isSuccess());
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+
+        assertEquals(1, resultOne.getSuccessObject().getTotalElements());
+        assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_findByInnovationAreaId() throws Exception {
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
+        long innovationAreaId = 1L;
+
+        flushAndClearSession();
+
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.empty(), Optional.empty(), 10);
+
+        assertTrue(resultOne.isSuccess());
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+
+        assertEquals(1, publicContentItemResourcesOne.size());
+        assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_findByKeywordsAndInnovationAreaId() throws Exception {
+        Competition competition = competitionRepository.findById(COMPETITION_ID);
+        long innovationAreaId = 1L;
+
+        flushAndClearSession();
+
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.of("Nothing key wor"), Optional.empty(), 10);
+
+        assertTrue(resultOne.isSuccess());
+        List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
+
+        assertEquals(1, publicContentItemResourcesOne.size());
+        assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
+    }
+
+    @Test
+    @Rollback
+    public void findFilteredItems_openCompetitionsAreFilteredFromResultListAndTotalFound() throws Exception {
+        RestResult<PublicContentItemPageResource> result = controller.findFilteredItems(Optional.empty(), Optional.of("Nothing key wor"), Optional.of(0), 20);
+
+        assertTrue(result.isSuccess());
+        PublicContentItemPageResource publicContentItemResourcesFive = result.getSuccessObject();
+
+        assertEquals(1, publicContentItemResourcesFive.getTotalElements());
+    }
+
+    @Test
+    @Rollback
     public void testByCompetitionId() throws Exception {
         savePublicContent();
 
@@ -137,16 +198,26 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
                 .withCompetitionId(COMPETITION_ID)
                 .withPublishDate(LocalDateTime.now())
                 .build();
+		return publicContentRepository.save(publicContentOne);
+	}
 
-        return publicContentRepository.save(publicContentOne);
-    }
-
-    private void makeSetupOfKeywords() {
-        PublicContent publicContentResult = savePublicContent();
+    private void setupKeywords() {
+        PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
+                .withCompetitionId(1L)
+                .withPublishDate(LocalDateTime.now().minusDays(1))
+                .build());
 
         Keyword keywordOne = newKeyword().withKeyword("keyword").withPublicContent(publicContentResult).build();
         Keyword keywordTwo = newKeyword().withKeyword("word").withPublicContent(publicContentResult).build();
+        Keyword keywordThree = newKeyword().withKeyword("unique").withPublicContent(publicContentResult).build();
 
-        keywordRepository.save(asList(keywordOne, keywordTwo));
+        keywordRepository.save(asList(keywordOne, keywordTwo, keywordThree));
+
+        InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
+        Competition competition = competitionRepository.findOne(1L);
+
+        CompetitionCategoryLink<InnovationArea> categoryLink = newCompetitionCategoryLink().withCategory(innovationArea.getSector()).withCompetition(competition).build();
+
+        competitionCategoryLinkRepository.save(categoryLink);
     }
 }

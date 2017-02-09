@@ -31,7 +31,7 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
         expectedResponse.setNumber(32);
         expectedResponse.setTotalElements(23293L);
         expectedResponse.setTotalPages(123);
-        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?innovationAreaId=12&searchString=Search%20my%20competition&pageNumber=32&pageSize=20", PublicContentItemPageResource.class, expectedResponse);
+        setupGetWithRestResultAnonymousExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?innovationAreaId=12&searchString=Search+my+competition&pageNumber=32&pageSize=20", PublicContentItemPageResource.class, expectedResponse);
         PublicContentItemPageResource response = service.getByFilterValues(Optional.of(12L), Optional.of("Search my competition"), Optional.of(32), 20).getSuccessObjectOrThrowException();
         assertThat(response, equalTo(expectedResponse));
     }
@@ -43,8 +43,8 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
         expectedResponse.setNumber(32);
         expectedResponse.setTotalElements(23293L);
         expectedResponse.setTotalPages(123);
-        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?", PublicContentItemPageResource.class, expectedResponse);
-        PublicContentItemPageResource response = service.getByFilterValues(Optional.empty(), Optional.empty(), Optional.empty(), 20).getSuccessObjectOrThrowException();
+        setupGetWithRestResultAnonymousExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter", PublicContentItemPageResource.class, expectedResponse);
+        PublicContentItemPageResource response = service.getByFilterValues(Optional.empty(), Optional.empty(), Optional.empty(), null).getSuccessObjectOrThrowException();
         assertThat(response, equalTo(expectedResponse));
     }
 
@@ -56,7 +56,7 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
         expectedResponse.setNumber(32);
         expectedResponse.setTotalElements(23293L);
         expectedResponse.setTotalPages(123);
-        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?pageNumber=32&pageSize=20", PublicContentItemPageResource.class, expectedResponse);
+        setupGetWithRestResultAnonymousExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "find-by-filter?pageNumber=32&pageSize=20", PublicContentItemPageResource.class, expectedResponse);
         PublicContentItemPageResource response = service.getByFilterValues(Optional.empty(), Optional.empty(), Optional.of(32), 20).getSuccessObjectOrThrowException();
         assertThat(response, equalTo(expectedResponse));
     }
@@ -64,7 +64,7 @@ public class PublicContentItemRestServiceMocksTest extends BaseRestServiceUnitTe
     @Test
     public void test_getByItemsCompetitionId() {
         PublicContentItemResource expectedResponse = new PublicContentItemResource();
-        setupGetWithRestResultExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + COMPETITION_ID, PublicContentItemResource.class, expectedResponse);
+        setupGetWithRestResultAnonymousExpectations(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + COMPETITION_ID, PublicContentItemResource.class, expectedResponse);
         RestResult<PublicContentItemResource> response = service.getItemByCompetitionId(COMPETITION_ID);
         assertTrue(response.isSuccess());
     }
