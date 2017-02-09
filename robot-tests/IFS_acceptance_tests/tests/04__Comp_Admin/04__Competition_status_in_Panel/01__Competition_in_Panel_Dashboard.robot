@@ -13,10 +13,10 @@ In Panel Dashboard
     And The user should see the text in the page    Materials and manufacturing
     And The user should see the text in the page    Earth Observation
     And the user should not see the element    link=View and update competition setup
-    And the user should see the element    jQuery=.button:contains("View panel sheet")
-    And the user should see the element    jQuery=.button:contains("Funding decision")
-    And the user should see the element    jQuery=.button:contains("Invite assessors")
-    And the user should see the element    jQuery=.button:contains("Manage applications")
+    And the user should see the element    jQuery=a:contains("Download panel sheet")
+    And the user should see the element    jQuery=a:contains("Input and review funding decision")
+    And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
+    And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")
 
 Milestones for In Panel Competitions
     Then the user should see that the element is disabled    jQuery=.button:contains("Manage funding notifications")

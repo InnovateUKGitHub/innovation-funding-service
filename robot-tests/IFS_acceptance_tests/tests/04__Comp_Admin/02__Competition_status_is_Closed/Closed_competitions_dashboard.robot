@@ -26,8 +26,8 @@ Competition dashboard
     And The user should see the text in the page    Transport Systems
     And the user should not see the element    link=View and update competition setup
     #The following checks test if the correct buttons are disabled
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("View panel sheet")
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Funding decision")
+    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Download panel sheet")
+    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
 
 Milestones for the closed competitions
     [Documentation]    INFUND-7561
@@ -40,7 +40,7 @@ Invite Assessors
     ...
     ...    INFUND-7362
     [Tags]
-    When the user clicks the button/Link    link=Invite assessors
+    When the user clicks the button/Link    link=Invite assessors to assess the competition
     Then The user should see the element    link=Overview
     And the user should see the element    link=Find
     And the user should see the element    link=Invite
@@ -50,7 +50,7 @@ Manage Applications
     [Documentation]    INFUND-7042
     ...
     ...    INFUND-7362
-    When the user clicks the button/Link    jQuery=.button:contains("Manage applications")
+    When the user clicks the button/Link    jQuery=a:contains("Assessor management - assignment to applications")
     Then The user should see the text in the page    Assign assessors to applications.
     [Teardown]    The user clicks the button/link    link=Manage assessments
 

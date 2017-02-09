@@ -34,7 +34,7 @@ Check the initial key statistics
     [Documentation]    INFUND-6388
     [Tags]
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=.button:contains("Invite assessors")
+    And the user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And the key statistics are calculated
     And the user should see the element    jQuery=.column-quarter:nth-child(1) span:contains(${ks_invited})
     And the user should see the element    jQuery=.column-quarter:nth-child(2) span:contains(${ks_accepted})

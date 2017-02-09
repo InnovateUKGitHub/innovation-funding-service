@@ -18,7 +18,7 @@ Competitions admin should be able to see the list of applications
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=.button:contains("Applications")
+    And the user clicks the button/link    jQuery=a:contains("Applications - All, submitted, non-submitted, ineligable")
     When the user clicks the button/link    link=All applications
     Then the user should see the text in the page    All applications
 

@@ -18,7 +18,7 @@ Competition status should be correct
     ...    INFUND-6602
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=.button:contains("Applications")
+    When The user clicks the button/link    jQuery=a:contains("Applications - All, submitted, non-submitted, ineligable")
     And the user clicks the button/link    link=Submitted applications
     And the user should see the text in the page     Sustainable living models for the future
 
