@@ -126,7 +126,7 @@ As next step the Applicant cannot see the turnover field
     And the user clicks the button/link   link=Your organisation
     Then the user should not see the text in the page  Turnover (£)
     And the user should see the text in the page  Full time employees
-    And the user should see the text in the page  Number of full time employees at your organisation at the end of the last financial year.
+    And the user should see the text in the page  How many full-time employees did you have on the project at the close of your last financial year?
 
 Organisation server side validation when no
     [Documentation]  INFUND-6393
