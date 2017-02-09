@@ -83,7 +83,7 @@ import static org.mockito.Mockito.when;
 /**
  * Generates web test data based upon csvs in /src/test/resources/testdata using data builders
  */
-@Ignore("Manual web test data generation")
+//@Ignore("Manual web test data generation")
 @ActiveProfiles({"integration-test,seeding-db"})
 @DirtiesContext
 public class GenerateTestData extends BaseIntegrationTest {
@@ -375,8 +375,8 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.state).
-                build();
+        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
+                .rejectComment, line.state).build();
     }
 
     private void createCompetitionFunders() {
