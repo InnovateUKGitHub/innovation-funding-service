@@ -15,16 +15,16 @@ import java.util.List;
 public interface UserProfileService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId);
+    ServiceResult<ProfileSkillsResource> getProfileSkills(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE')")
-    ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileResource);
+    ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileResource);
 
     @PostAuthorize("hasPermission(returnObject, 'READ')")
-    ServiceResult<ProfileContractResource> getProfileContract(Long userId);
+    ServiceResult<ProfileContractResource> getProfileContract(long userId);
 
     @PreAuthorize("hasPermission(#userId, 'org.innovateuk.ifs.user.resource.UserResource', 'UPDATE')")
-    ServiceResult<Void> updateProfileContract(Long userId);
+    ServiceResult<Void> updateProfileContract(long userId);
 
     @PreAuthorize("hasPermission(#userBeingUpdated, 'UPDATE')")
     ServiceResult<Void> updateDetails(@P("userBeingUpdated") UserResource userBeingUpdated);

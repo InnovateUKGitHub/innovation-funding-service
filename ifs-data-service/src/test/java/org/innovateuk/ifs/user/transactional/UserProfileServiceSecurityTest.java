@@ -171,22 +171,22 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     public static class TestUserProfileService implements UserProfileService {
 
         @Override
-        public ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId) {
+        public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
             return serviceSuccess(newProfileSkillsResource().build());
         }
 
         @Override
-        public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileResource) {
+        public ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileResource) {
             return null;
         }
 
         @Override
-        public ServiceResult<ProfileContractResource> getProfileContract(Long userId) {
+        public ServiceResult<ProfileContractResource> getProfileContract(long userId) {
             return serviceSuccess(newProfileContractResource().build());
         }
 
         @Override
-        public ServiceResult<Void> updateProfileContract(Long userId) {
+        public ServiceResult<Void> updateProfileContract(long userId) {
             return null;
         }
 

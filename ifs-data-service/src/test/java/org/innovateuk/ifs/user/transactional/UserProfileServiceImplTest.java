@@ -102,7 +102,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void getProfileSkills_userDoesNotExist() throws Exception {
-        Long userIdNotExists = 1L;
+        long userIdNotExists = 1L;
 
         ServiceResult<ProfileSkillsResource> response = service.getProfileSkills(userIdNotExists);
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
@@ -149,7 +149,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void updateProfileSkills() {
-        Long userId = 1L;
+        long userId = 1L;
 
         Profile existingProfile = newProfile()
                 .withAddress(newAddress().build())
@@ -190,7 +190,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void updateProfileSkills_userDoesNotExist() {
-        Long userId = 1L;
+        long userId = 1L;
 
         ServiceResult<Void> result = service.updateProfileSkills(userId, newProfileSkillsEditResource().build());
         assertTrue(result.isFailure());
@@ -202,7 +202,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void updateProfileSkills_userDoesNotHaveProfileYet() throws Exception {
-        Long userId = 1L;
+        long userId = 1L;
 
         Profile profile = newProfile()
                 .withId(23L)
@@ -367,7 +367,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void getProfileContract_userDoesNotExist() throws Exception {
-        Long userIdNotExists = 1L;
+        long userIdNotExists = 1L;
 
         ServiceResult<ProfileContractResource> response = service.getProfileContract(userIdNotExists);
         assertTrue(response.getFailure().is(notFoundError(User.class, userIdNotExists)));
@@ -513,7 +513,7 @@ public class UserProfileServiceImplTest extends BaseServiceUnitTest<UserProfileS
 
     @Test
     public void updateProfileContract_userDoesNotExist() throws Exception {
-        Long userIdNotExists = 1L;
+        long userIdNotExists = 1L;
 
         ServiceResult<Void> result = service.updateProfileContract(userIdNotExists);
         assertTrue(result.isFailure());

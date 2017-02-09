@@ -66,7 +66,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     private Clock clock = Clock.systemDefaultZone();
 
     @Override
-    public ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId) {
+    public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> {
                     ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
@@ -83,7 +83,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkills) {
+    public ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileSkills) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user -> updateUserProfileSkills(user, profileSkills));
     }
@@ -97,7 +97,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<ProfileContractResource> getProfileContract(Long userId) {
+    public ServiceResult<ProfileContractResource> getProfileContract(long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user ->
                         getCurrentContract().andOnSuccess(currentContract -> {
@@ -124,7 +124,7 @@ public class UserProfileServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> updateProfileContract(Long userId) {
+    public ServiceResult<Void> updateProfileContract(long userId) {
         return find(userRepository.findOne(userId), notFoundError(User.class, userId))
                 .andOnSuccess(user ->
                     getCurrentContract().andOnSuccess(currentContract ->
