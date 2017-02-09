@@ -6,6 +6,7 @@ import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.category.service.CategoryRestServiceImpl;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 
 import java.util.List;
 
@@ -35,7 +36,8 @@ public class CategoryRestServiceMocksTest extends BaseRestServiceUnitTest<Catego
         String expectedUrl = categoryRestURL + "/findInnovationAreas";
         List<InnovationAreaResource> returnedCategoryResources = newInnovationAreaResource().build(3);
 
-        setupGetWithRestResultExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources);
+
+        setupGetWithRestResultAnonymousExpectations(expectedUrl, innovationAreaResourceListType(), returnedCategoryResources, HttpStatus.OK);
 
         List<InnovationAreaResource> categoryResources = service.getInnovationAreas().getSuccessObjectOrThrowException();
 

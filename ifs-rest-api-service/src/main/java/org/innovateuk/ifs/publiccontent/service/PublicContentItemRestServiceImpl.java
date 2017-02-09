@@ -51,12 +51,12 @@ public class PublicContentItemRestServiceImpl extends BaseRestService implements
             LOG.error("URI cannot be built");
         }
 
-        return getWithRestResult( uriString, PublicContentItemPageResource.class);
+        return getWithRestResultAnonymous( uriString, PublicContentItemPageResource.class);
     }
 
     @Override
     public RestResult<PublicContentItemResource> getItemByCompetitionId(Long id) {
-        return getWithRestResult(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + id, PublicContentItemResource.class);
+        return getWithRestResultAnonymous(PUBLIC_CONTENT_ITEM_REST_URL + "by-competition-id/" + id, PublicContentItemResource.class);
     }
 
     public void addParamToURL(URIBuilder builder, String paramName, String paramValue) {
