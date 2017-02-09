@@ -66,7 +66,7 @@ The user can select the profile link
     And the user should see the text in the page    Solar energy research
     And the user should see the text in the page    Precision Medicine
     And the user should see the text in the page    Business
-    [Teardown]    The user clicks the button/link    link=Invite assessors
+    [Teardown]    The user clicks the button/link    link=Back
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
@@ -153,8 +153,8 @@ Assessor overview information
 *** Keywords ***
 The key statistics are calculated
     ${ks_invited}=    Get Text    jQuery=.column-quarter:nth-child(1) span
-    ${increment}=   Set Variable      ${1}
-    ${inc_ks_invited} =     Evaluate     ${ks_invited}+${increment}
+    ${increment}=    Set Variable    ${1}
+    ${inc_ks_invited} =    Evaluate    ${ks_invited}+${increment}
     ${ks_accepted}=    Get Text    jQuery=.column-quarter:nth-child(2) span
     ${ks_declined}=    Get Text    jQuery=.column-quarter:nth-child(3) span
     ${ks_assessors}=    Get Text    jQuery=.column-quarter:nth-child(4) span
