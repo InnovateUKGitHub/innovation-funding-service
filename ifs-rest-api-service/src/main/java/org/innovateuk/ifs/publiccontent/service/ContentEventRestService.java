@@ -6,7 +6,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventR
 import java.util.List;
 
 /**
- * Rest service for public content event.
+ * Rest service for public content events.
  */
 public interface ContentEventRestService {
 

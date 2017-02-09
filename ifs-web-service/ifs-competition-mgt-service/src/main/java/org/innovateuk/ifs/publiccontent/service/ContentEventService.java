@@ -7,9 +7,9 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import java.util.List;
 
 /**
- * Service for handling public content evens
+ * Service for handling public content events
  */
-public interface PublicContentEventService {
+public interface ContentEventService {
     ServiceResult<Void> updateEvent(PublicContentEventResource event);
     ServiceResult<Void> resetAndSaveEvents(PublicContentResource resource, List<PublicContentEventResource> events);
 }

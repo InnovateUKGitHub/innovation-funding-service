@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Web service for public content.
+ * Web service for public content events.
  */
 @Service
-public class PublicContentEventServiceImpl implements PublicContentEventService {
+public class ContentEventServiceImpl implements ContentEventService {
 
     @Autowired
     private ContentEventRestService contentEventRestService;

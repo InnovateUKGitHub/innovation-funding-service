@@ -10,7 +10,7 @@ import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
 import org.innovateuk.ifs.publiccontent.form.section.subform.Date;
 import org.innovateuk.ifs.publiccontent.saver.AbstractPublicContentFormSaver;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
-import org.innovateuk.ifs.publiccontent.service.PublicContentEventService;
+import org.innovateuk.ifs.publiccontent.service.ContentEventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ import java.util.List;
 public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> implements PublicContentFormSaver<DatesForm> {
 
     @Autowired
-    private PublicContentEventService publicContentEventService;
+    private ContentEventService contentEventService;
 
     @Override
     protected List<Error> populateResource(DatesForm form, PublicContentResource publicContentResource) {
@@ -35,7 +35,7 @@ public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> im
 
     @Override
     public ServiceResult<Void> markAsComplete(DatesForm form, PublicContentResource publicContentResource) {
-        return publicContentEventService
+        return contentEventService
                 .resetAndSaveEvents(publicContentResource, mapDateToEventResource(publicContentResource.getId(), form.getDates()));
     }
 
