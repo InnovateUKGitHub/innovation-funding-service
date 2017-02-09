@@ -203,8 +203,8 @@ Organisation client side validation when yes
     Then the user should see an error message in the field  Annual turnover  This field can only accept whole numbers.
     # TODO such error messages should also trigger Error summary INFUND-8056
     And the user enters value to field         Annual profit  -5
-    When the user enters value to field        Annual exports  ${empty}
-    Then the user should see an error message in the field  Annual exports  This field cannot be left blank.
+    When the user enters value to field        Annual export  ${empty}
+    Then the user should see an error message in the field  Annual export  This field cannot be left blank.
     When the user enters value to field        Research and development spend  6666666666666666666666666666666666666666666
     And the user moves focus to the element    jQuery=label:contains("employees") + input
     Then the user should see an error message in the field  Research and development spend  This field should be 2147483647 or lower.
@@ -226,7 +226,7 @@ Mark Organisation as complete when yes
     And the user enters text to a text field          css=input[name$="year"]  2016
     Then the user enters value to field               Annual turnover  65000
     And the user enters value to field                Annual profit  2000
-    And the user enters value to field                Annual exports  3000
+    And the user enters value to field                Annual export  3000
     And the user enters value to field                Research and development spend  15000
     When the user enters text to a text field         jQuery=label:contains("employees") + input  4
     # TODO pending due to INFUND-8107
