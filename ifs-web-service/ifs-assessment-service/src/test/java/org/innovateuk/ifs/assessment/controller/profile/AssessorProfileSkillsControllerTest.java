@@ -1,13 +1,12 @@
 package org.innovateuk.ifs.assessment.controller.profile;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.form.profile.AssessorProfileSkillsForm;
 import org.innovateuk.ifs.assessment.model.profile.AssessorProfileSkillsModelPopulator;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileSkillsViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
-import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -17,15 +16,16 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.nCopies;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static java.util.Collections.nCopies;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -54,22 +54,26 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
 
         when(userService.getProfileSkills(user.getId())).thenReturn(newProfileSkillsResource()
                 .withUser(user.getId())
+                .withInnovationAreas(newInnovationAreaResource()
+                        .withName("Data", "Cyber Security")
+                        .build(2))
                 .withBusinessType(businessType)
                 .withSkillsAreas(skillsAreas)
                 .build());
 
-        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(skillsAreas, businessType);
+        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(asList("Data",
+                "Cyber Security"), skillsAreas, businessType);
 
         mockMvc.perform(get("/profile/skills"))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
                 .andExpect(view().name("profile/skills"));
 
-        verify(userService).getProfileSkills(user.getId());
+        verify(userService, only()).getProfileSkills(user.getId());
     }
 
     @Test
-    public void getEditableSkills() throws Exception {
+    public void getSkills() throws Exception {
         BusinessType businessType = BUSINESS;
         String skillsAreas = "skill1 skill2 skill3";
 
@@ -91,7 +95,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(model().attribute("form", expectedForm))
                 .andExpect(view().name("profile/skills-edit"));
 
-        verify(userService).getProfileSkills(user.getId());
+        verify(userService, only()).getProfileSkills(user.getId());
     }
 
     @Test
@@ -108,7 +112,7 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/profile/skills"));
 
-        verify(userService).updateProfileSkills(1L, businessType, skillsAreas);
+        verify(userService, only()).updateProfileSkills(1L, businessType, skillsAreas);
     }
 
     @Test

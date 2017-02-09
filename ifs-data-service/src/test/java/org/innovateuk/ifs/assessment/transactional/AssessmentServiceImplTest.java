@@ -136,6 +136,50 @@ public class AssessmentServiceImplTest extends BaseUnitTestMocksTest {
     }
 
     @Test
+    public void findRejectableById() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, PENDING
+                        .getBackingState()))
+                .build();
+        AssessmentResource expected = newAssessmentResource()
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+        when(assessmentMapperMock.mapToResource(same(assessment))).thenReturn(expected);
+
+        AssessmentResource found = assessmentService.findRejectableById(assessmentId)
+                .getSuccessObjectOrThrowException();
+
+        assertSame(expected, found);
+        InOrder inOrder = inOrder(assessmentRepositoryMock, assessmentMapperMock);
+        inOrder.verify(assessmentRepositoryMock).findOne(assessmentId);
+        inOrder.verify(assessmentMapperMock).mapToResource(assessment);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void findRejectableById_withdrawn() throws Exception {
+        Long assessmentId = 1L;
+
+        Assessment assessment = newAssessment()
+                .withActivityState(new ActivityState(APPLICATION_ASSESSMENT, WITHDRAWN
+                        .getBackingState()))
+                .build();
+
+        when(assessmentRepositoryMock.findOne(assessmentId)).thenReturn(assessment);
+
+        ServiceResult<AssessmentResource> serviceResult = assessmentService.findRejectableById(assessmentId);
+
+        assertTrue(serviceResult.isFailure());
+        assertTrue(serviceResult.getFailure().is(forbiddenError(ASSESSMENT_WITHDRAWN, singletonList(assessmentId))));
+
+        verify(assessmentRepositoryMock).findOne(assessmentId);
+        verifyZeroInteractions(assessmentMapperMock);
+    }
+
+    @Test
     public void findByUserAndCompetition() throws Exception {
         Long userId = 2L;
         Long competitionId = 1L;
