@@ -131,8 +131,8 @@ Invite and accept the invitation
     Input Text    name=organisations[1].organisationName    Academic Test
     Input Text    name=organisations[1].invites[0].personName    Arsene Wenger
     Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+academictest@gmail.com
-    focus    jquery=button:contains("Save Changes")
-    And the user clicks the button/link    jquery=button:contains("Save Changes")
+    focus    jquery=button:contains("Save changes")
+    And the user clicks the button/link    jquery=button:contains("Save changes")
     And the user closes the browser
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
