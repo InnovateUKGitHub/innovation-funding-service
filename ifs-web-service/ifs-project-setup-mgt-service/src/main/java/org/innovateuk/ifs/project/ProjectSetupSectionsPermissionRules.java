@@ -75,7 +75,7 @@ public class ProjectSetupSectionsPermissionRules {
 
     @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
     public boolean internalCanAccessFinanceChecksNotesSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksNotesSection);
     }
 
 
