@@ -58,12 +58,12 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return fireEvent(externalUserEvent(project, projectUser, GOL_SIGNED), project);
     }
 
-    public boolean grantOfferLetterRejected(Project project, ProjectUser projectUser) {
-        return fireEvent(externalUserEvent(project, projectUser, GOL_REJECTED), project);
+    public boolean grantOfferLetterRejected(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, GOL_REJECTED), project);
     }
 
-    public boolean grantOfferLetterApproved(Project project, ProjectUser projectUser) {
-        return fireEvent(externalUserEvent(project, projectUser, GOL_APPROVED), project);
+    public boolean grantOfferLetterApproved(Project project, User internalUser) {
+        return fireEvent(internalUserEvent(project, internalUser, GOL_APPROVED), project);
     }
 
     public boolean isSendAllowed(Project project) {
@@ -100,7 +100,7 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return process != null? process.getActivityState() : GOLState.PENDING;
     }
 
-    boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
+    private boolean getIfProjectAndUserValid(Project project, BiFunction<Project, ProjectUser, Boolean> fn) {
         GOLProcess process = getCurrentProcess(project);
         if(process == null)
             return false;
@@ -114,9 +114,9 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return getIfProjectAndUserValid(project, this::grantOfferLetterSent);
     }*/
 
-    public boolean approve(Project project) {
+/*    public boolean approve(Project project) {
         return getIfProjectAndUserValid(project, this::grantOfferLetterApproved);
-    }
+    }*/
 
     public boolean sign(Project project) {
         return getIfProjectAndUserValid(project, this::grantOfferLetterSigned);
