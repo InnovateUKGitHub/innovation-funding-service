@@ -14,18 +14,18 @@ import java.util.List;
 
 public interface ProjectFinanceQueriesService extends ThreadService<QueryResource, PostResource> {
     @Override
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'PF_READ')")
     ServiceResult<List<QueryResource>> findAll(Long contextClassPk);
 
     @Override
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'PF_READ')")
     ServiceResult<QueryResource> findOne(Long id);
 
     @Override
-    @PreAuthorize("hasPermission(#QueryResource, 'CREATE')")
+    @PreAuthorize("hasPermission(#QueryResource, 'PF_CREATE')")
     ServiceResult<Long> create(QueryResource QueryResource);
 
     @Override
-    @PreAuthorize("hasPermission(#querId, 'org.innovateuk.threads.resource.QueryResource', 'ADD_POST')")
+    @PreAuthorize("hasPermission(#querId, 'org.innovateuk.threads.resource.QueryResource', 'PF_ADD_POST')")
     ServiceResult<Void> addPost(PostResource post, Long queryId);
 }
