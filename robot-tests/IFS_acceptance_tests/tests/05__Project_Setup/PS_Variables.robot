@@ -62,7 +62,7 @@ ${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_NUMBER}: ${PS_SP_APPLICATION
 ${PS_SP_APPLICATION_PROJECT}    8
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_ID}    ${Katz_Id}
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
-${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      phillip.ramos@katz.example.com
+${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      theo.simpson@katz.example.com
 ${PS_SP_APPLICATION_PM_EMAIL}                phillip.ramos@katz.example.com
 ${PS_SP_APPLICATION_PARTNER_EMAIL}           kimberly.fowler@meembee.example.com
 ${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
