@@ -6,7 +6,7 @@
 <body th:with="context='project-management'" class="project-management review-bank-details">
 
 <th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
-<th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
 	<th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/review-all-bank-details(projectId=${model.projectId})}" />

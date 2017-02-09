@@ -7,7 +7,7 @@
     <body class="dashboard-internal full-width">
       <th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
         <th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
-          <th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
+          <th:block th:insert="fragments/layout :: global-header" />
             <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
               <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'All competitions'}, ${(param.status != null ? '/prototypes/3115-comp-dashboard?status=' + param.status[0] :'/prototypes/3115-comp-dashboard')})" th:unless="${param.status != null and param.status[0] == 'ready'}"  />

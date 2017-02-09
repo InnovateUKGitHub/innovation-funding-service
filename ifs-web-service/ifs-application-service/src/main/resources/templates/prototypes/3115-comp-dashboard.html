@@ -9,7 +9,7 @@
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
 <th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
-<th:block th:insert="fragments/layout :: global-header" th:if="${param.userRole == null}"    cache:name="global-header" />
+<th:block th:insert="fragments/layout :: global-header" th:if="${param.userRole == null}"     />
 <th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',userRole='admin',user='James Danek'" th:if="${param.userRole != null and param.userRole[0] == 'admin'}"   />
 
 <main id="content">

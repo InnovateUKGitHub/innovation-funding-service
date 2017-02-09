@@ -6,7 +6,7 @@
 <body th:with="context='applicant'" class="app-invite-display">
 
 <th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
-<th:block th:insert="fragments/layout :: global-header"  cache:name="global-header" />
+<th:block th:insert="fragments/layout :: global-header"  />
 <th:block th:insert="fragments/modals :: modal-overlay" th:if="${userIsLead}"  />
 <th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" th:if="${userIsLead}"  />
 
