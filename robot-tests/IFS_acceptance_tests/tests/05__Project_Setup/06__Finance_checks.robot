@@ -292,7 +292,7 @@ Project finance user can see the lead partner's information about eligibility
 
 Finance checks eligibility validations
     [Documentation]    INFUND-4833
-    [Tags]  Pending  # Error still exists so putting it to pending
+    [Tags]  Pending  # TODO Error INFUND-8129 still exists so putting it to pending
     When the user clicks the button/link             jQuery=form section:nth-of-type(1) button:contains("Labour")
     And the user clicks the button/link              jQuery=form section:nth-of-type(1) a:contains("Edit")
     When the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    -230
