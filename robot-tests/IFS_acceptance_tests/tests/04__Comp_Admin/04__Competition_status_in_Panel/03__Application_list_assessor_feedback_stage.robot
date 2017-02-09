@@ -4,14 +4,14 @@ Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
-
+#TODO once new funding work is done INFUND-7376
 *** Variables ***
 
 *** Test Cases ***
 Status and applications are correct
     [Documentation]    INFUND-2606
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
+    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the text in the page    Matter - Planning for Web
     And the user should see the text in the page    Sensing & Control network using the lighting infrastructure

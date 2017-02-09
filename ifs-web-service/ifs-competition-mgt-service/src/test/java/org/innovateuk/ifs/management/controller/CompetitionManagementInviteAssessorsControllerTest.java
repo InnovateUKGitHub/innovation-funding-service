@@ -108,10 +108,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         inviteStatistics = newCompetitionInviteStatisticsResource()
-                .withAccepted(46L)
-                .withInvited(23L)
-                .withInviteList(10L)
-                .withDeclined(52L)
+                .withAccepted(46)
+                .withInvited(23)
+                .withInviteList(10)
+                .withDeclined(52)
                 .build();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);

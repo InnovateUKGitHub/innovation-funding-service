@@ -107,19 +107,13 @@ public class FormInputResponseFileUploadRulesTest extends BaseUnitTestMocksTest 
     }
 
     @Test
-    public void testCompAdminCanDownloadFilesInResponses() {
-        UserResource user = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1)).build();
+    public void testInternalUserCanDownloadFilesInResponses() {
+        UserResource compAdmin = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.COMP_ADMIN).build(1)).build();
+        UserResource projectFinance = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1)).build();
+
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
 
-        assertTrue(fileUploadRules.compAdminCanDownloadFilesInResponses(fileEntry, user));
+        assertTrue(fileUploadRules.internalUserCanDownloadFilesInResponses(fileEntry, compAdmin));
+        assertTrue(fileUploadRules.internalUserCanDownloadFilesInResponses(fileEntry, projectFinance));
     }
-
-    @Test
-    public void testProjectFinanceUserCanDownloadFilesInResponses() {
-        UserResource user = newUserResource().withRolesGlobal(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build(1)).build();
-        FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource();
-
-        assertTrue(fileUploadRules.projectFinanceUserCanDownloadFilesInResponses(fileEntry, user));
-    }
-
 }

@@ -28,19 +28,19 @@ public class CompetitionInviteStatisticsResourceBuilder extends BaseBuilder<Comp
         return new CompetitionInviteStatisticsResourceBuilder(emptyList());
     }
 
-    public CompetitionInviteStatisticsResourceBuilder withInvited(Long... inviteds) {
+    public CompetitionInviteStatisticsResourceBuilder withInvited(Integer... inviteds) {
         return withArraySetFieldByReflection("invited", inviteds);
     }
 
-    public CompetitionInviteStatisticsResourceBuilder withAccepted(Long... accepteds) {
+    public CompetitionInviteStatisticsResourceBuilder withAccepted(Integer... accepteds) {
         return withArraySetFieldByReflection("accepted", accepteds);
     }
 
-    public CompetitionInviteStatisticsResourceBuilder withDeclined(Long... declineds) {
+    public CompetitionInviteStatisticsResourceBuilder withDeclined(Integer... declineds) {
         return withArraySetFieldByReflection("declined", declineds);
     }
 
-    public CompetitionInviteStatisticsResourceBuilder withInviteList(Long... inviteLists) {
+    public CompetitionInviteStatisticsResourceBuilder withInviteList(Integer... inviteLists) {
         return withArraySetFieldByReflection("inviteList", inviteLists);
     }
 

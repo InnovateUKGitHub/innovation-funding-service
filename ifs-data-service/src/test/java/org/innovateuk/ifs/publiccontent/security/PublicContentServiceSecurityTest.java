@@ -91,5 +91,10 @@ public class PublicContentServiceSecurityTest extends BaseServiceSecurityTest<Pu
         public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
             return null;
         }
+
+        @Override
+        public ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
+            return null;
+        }
     }
 }

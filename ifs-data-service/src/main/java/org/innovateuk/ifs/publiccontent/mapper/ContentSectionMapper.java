@@ -8,20 +8,22 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+
 @Mapper(
     config = GlobalMapperConfig.class,
     uses = {
-            PublicContentMapper.class
+            PublicContentMapper.class,
+            ContentGroupMapper.class
     }
 )
 public abstract class ContentSectionMapper extends BaseMapper<ContentSection, PublicContentSectionResource, Long> {
 
-
     @Override
     public abstract PublicContentSectionResource mapToResource(ContentSection domain);
 
+
     @Mappings({
-            @Mapping(target = "contentGroup", ignore = true)
+            @Mapping(target = "contentGroups", ignore = true)
     })
     public abstract ContentSection mapToDomain(PublicContentSectionResource domain);
 

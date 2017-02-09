@@ -72,6 +72,10 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return withArraySetFieldByReflection("assessorDeadlineDate", assessorDeadlineDates);
     }
 
+    public CompetitionResourceBuilder withReleaseFeedbackDate(LocalDateTime... releaseFeedbackDates) {
+        return withArraySetFieldByReflection("releaseFeedbackDate", releaseFeedbackDates);
+    }
+
     public CompetitionResourceBuilder withFundersPanelDate(LocalDateTime... fundersPanelDates) {
         return withArraySetFieldByReflection("fundersPanelDate", fundersPanelDates);
     }

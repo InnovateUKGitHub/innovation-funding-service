@@ -22,7 +22,7 @@ public interface CompetitionCategoryLinkService {
      * @param competition the Competition that the Category is linked to
      */
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, Competition competition);
     
     /**
@@ -34,6 +34,6 @@ public interface CompetitionCategoryLinkService {
      * @param competition the Competition that the Category is linked to
      */
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> updateCategoryLinks(Set<Long> categoryIds, CategoryType categoryType, Competition competition);
 }

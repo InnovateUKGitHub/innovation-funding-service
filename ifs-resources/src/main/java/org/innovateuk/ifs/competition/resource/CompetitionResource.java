@@ -29,6 +29,7 @@ public class CompetitionResource {
     private LocalDateTime endDate;
     private LocalDateTime assessorAcceptsDate;
     private LocalDateTime assessorDeadlineDate;
+    private LocalDateTime releaseFeedbackDate;
     private LocalDateTime fundersPanelDate;
     private LocalDateTime fundersPanelEndDate;
     private LocalDateTime assessorFeedbackDate;
@@ -186,6 +187,14 @@ public class CompetitionResource {
 
     public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
         this.assessorDeadlineDate = assessorDeadlineDate;
+    }
+
+    public LocalDateTime getReleaseFeedbackDate() {
+        return releaseFeedbackDate;
+    }
+
+    public void setReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+        this.releaseFeedbackDate = releaseFeedbackDate;
     }
 
     public LocalDateTime getFundersPanelDate() {

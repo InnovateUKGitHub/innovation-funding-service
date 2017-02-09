@@ -182,7 +182,7 @@ Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
     Given the user navigates to his finances page    Assign test
-    Then The user should see the element     jQuery=p:contains("You must give your project a research category in application details")
+    Then The user should see the element     jQuery=p:contains("You must select a research category in application details")
 
 Lead selects Research Area
     [Documentation]  INFUND-6823
@@ -190,7 +190,7 @@ Lead selects Research Area
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
     Given the user navigates to his finances page    Assign test
-    Then the user should see the element      jQuery=p:contains("You must give your project a research category in application details")
+    Then the user should see the element      jQuery=p:contains("You must select a research category in application details")
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
@@ -266,7 +266,7 @@ the collaborator edits the 'public description' question
     Clear Element Text    css=#form-input-12 .editor
     Focus    css=#form-input-12 .editor
     The user enters text to a text field    css=#form-input-12 .editor    collaborator's text
-    Focus    css=.app-submit-btn
+    Focus    link=Sign out
     wait for autosave
     the user reloads the page
 

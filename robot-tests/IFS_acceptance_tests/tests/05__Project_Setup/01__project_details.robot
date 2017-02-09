@@ -384,7 +384,7 @@ Non lead partner nominates finance contact
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
-    # and not in Bank Details. Because for this scenario there are testing data for project 3.
+    # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]    HappyPath
@@ -620,7 +620,7 @@ Internal user can see the Project details as submitted
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page     ${internal_project_summary}
-    When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(1) td.status.ok a
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(2) td.status.ok a
     Then the user should see the element     jQuery=#project-details
     And the user can see all project details completed
     When the user should see the element     jQuery=#project-details-finance

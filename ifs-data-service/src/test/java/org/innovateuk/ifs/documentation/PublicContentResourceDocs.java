@@ -9,6 +9,8 @@ import org.springframework.restdocs.payload.FieldDescriptor;
 import java.time.LocalDateTime;
 
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
+import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -28,7 +30,15 @@ public class PublicContentResourceDocs {
             fieldWithPath("contentSections[]").description("The content sections"),
             fieldWithPath("contentSections[].status").description("The status of each section"),
             fieldWithPath("contentSections[].type").description("The type of each section"),
-            fieldWithPath("contentSections[].publicContent").description("The id of the parent public content"),
+            fieldWithPath("contentSections[].contentGroups[]").description("The group of content linked to the section"),
+            fieldWithPath("contentSections[].contentGroups[].heading").description("The heading of the content group"),
+            fieldWithPath("contentSections[].contentGroups[].content").description("The content of the content group"),
+            fieldWithPath("contentEvents[]").description("The content events"),
+            fieldWithPath("contentEvents[].id").description("The id of the events"),
+            fieldWithPath("contentEvents[].date").description("The date of the events"),
+            fieldWithPath("contentEvents[].content").description("The content of the events"),
+            fieldWithPath("contentEvents[].publicContent").description("The id of the parent public content"),
+
     };
 
     public static final PublicContentResourceBuilder publicContentResourceBuilder = newPublicContentResource()
@@ -45,6 +55,17 @@ public class PublicContentResourceDocs {
                     newPublicContentSectionResource()
                             .withStatus(PublicContentStatus.IN_PROGRESS)
                             .withType(PublicContentSectionType.DATES)
-                            .withPublicContent(1L).build(1)
-            );
+                            .withPublicContent(1L)
+                            .withContentGroups(
+                                newContentGroupResource()
+                                    .withHeading("Heading")
+                                    .withContent("Content")
+                                    .withPriority(1)
+                                .build(1)
+                            ).build(1))
+            .withContentEvents(newContentEventResource()
+                    .withId(1L)
+                    .withDate(LocalDateTime.now())
+                    .withPublicContent(2L)
+                    .withContent("Content").build(1));
 }

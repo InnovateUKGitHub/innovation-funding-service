@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.builder;
 
 import static java.util.Collections.emptyList;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.function.BiConsumer;
 
@@ -32,9 +33,48 @@ public class CompetitionSummaryResourceBuilder extends BaseBuilder<CompetitionSu
     public CompetitionSummaryResourceBuilder withId(Long... competitionIds) {
         return withArray((competitionId, competition) -> competition.setCompetitionId(competitionId), competitionIds);
     }
-    
+
+    public CompetitionSummaryResourceBuilder withCompetitionName(String... competitionNames) {
+        return withArraySetFieldByReflection("competitionName", competitionNames);
+    }
+
     public CompetitionSummaryResourceBuilder withCompetitionStatus(CompetitionStatus... competitionStatus) {
         return withArray((competitionState, competition) -> competition.setCompetitionStatus(competitionState), competitionStatus);
     }
 
+    public CompetitionSummaryResourceBuilder withApplicationDeadline(LocalDateTime... applicationDeadlines) {
+        return withArraySetFieldByReflection("applicationDeadline", applicationDeadlines);
+    }
+
+    public CompetitionSummaryResourceBuilder withTotalNumberOfApplications(Integer... totalNumberOfApplications) {
+        return withArraySetFieldByReflection("totalNumberOfApplications", totalNumberOfApplications);
+    }
+
+    public CompetitionSummaryResourceBuilder withApplicationsStarted(Integer... applicationsStarted) {
+        return withArraySetFieldByReflection("applicationsStarted", applicationsStarted);
+    }
+
+    public CompetitionSummaryResourceBuilder withApplicationsInProgress(Integer... applicationsInProgress) {
+        return withArraySetFieldByReflection("applicationsInProgress", applicationsInProgress);
+    }
+
+    public CompetitionSummaryResourceBuilder withApplicationsSubmitted(Integer... applicationsSubmitted) {
+        return withArraySetFieldByReflection("applicationsSubmitted", applicationsSubmitted);
+    }
+
+    public CompetitionSummaryResourceBuilder withApplicationsNotSubmitted(Integer... applicationsNotSubmitted) {
+        return withArraySetFieldByReflection("applicationsNotSubmitted", applicationsNotSubmitted);
+    }
+
+    public CompetitionSummaryResourceBuilder withApplicationsFunded(Integer... applicationsFunded) {
+        return withArraySetFieldByReflection("applicationsFunded", applicationsFunded);
+    }
+
+    public CompetitionSummaryResourceBuilder withIneligibleApplications(Integer... ineligibleApplications) {
+        return withArraySetFieldByReflection("ineligibleApplications", ineligibleApplications);
+    }
+
+    public CompetitionSummaryResourceBuilder withAssesorsInvited(Integer... assessorsInvited) {
+        return withArraySetFieldByReflection("assessorsInvited", assessorsInvited);
+    }
 }
