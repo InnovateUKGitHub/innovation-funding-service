@@ -36,7 +36,7 @@
                        th:if="${isPublicContentPublished}"
                        th:with="publishDay=${#temporals.format(publishDate, 'd MMMM yyyy')},
                              publishTime=${#strings.toLowerCase(#temporals.format(publishDate, ' h:mma'))}"
-                       th:text="'Last published ' + ${publishDay} + ' ' + ${publishTime}">Last published</p>
+                       th:text="${'Last published ' + publishDay + ' ' + publishTime}">Last published</p>
                     <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${sectionName}+'&quot; section is published'" th:alt="'The &quot;'+${sectionName}+'&quot; section is published'"
                          th:if="${isPublicContentPublished and !competition.isSetupAndLive()}" class="section-status" />
                 </div>

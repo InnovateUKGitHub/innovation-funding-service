@@ -6,14 +6,12 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 /**
  * View model for public content menu.
  */
 public class PublicContentMenuViewModel {
-    public static final DateTimeFormatter PUBLISH_DATE_FORMAT = DateTimeFormatter.ofPattern("d MMMM YYYY h:mma");
 
     private LocalDateTime publishDate;
 
@@ -43,10 +41,6 @@ public class PublicContentMenuViewModel {
 
     public void setCompetition(CompetitionResource competition) {
         this.competition = competition;
-    }
-
-    public String getPublishDateText() {
-        return publishDate.format(PUBLISH_DATE_FORMAT).replace("AM", "am").replace("PM","pm");
     }
 
     public boolean hasBeenPublished() {
