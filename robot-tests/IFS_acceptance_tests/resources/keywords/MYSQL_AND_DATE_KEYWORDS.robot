@@ -65,12 +65,34 @@ get today
     ${today} =    Get Current Date    result_format=%-d %B %Y    exclude_millis=true
     [Return]    ${today}
 
+get tomorrow full
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%-d %B %Y  exclude_millis=true
+    # This format is like: 4 February 2017
+    [Return]  ${tomorrow}
+
+get tomorrow full next year
+    ${today} =    get time
+    ${tommorow} =  Add time To Date  ${today}  1 day  result_format=%-d %B  exclude_millis=true
+    ${nextyear} =  get next year
+    ${tomorrow_nextyear} =  Catenate  ${tommorow}  ${nextyear}
+    [Return]  ${tomorrow_nextyear}
+
+get tomorrow day
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%d  exclude_millis=true
+    [Return]  ${tomorrow}
+
+get tomorrow month
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%m  exclude_millis=true
+    [Return]  ${tomorrow}
+
+get tomorrow year
+    ${today}=    get time
+    ${tomorrow} =    Add time To Date  ${today}  1 day  result_format=%Y  exclude_millis=true
+    [Return]  ${tomorrow}
+
 get next year
     ${year} =  get time    year    NOW + 365d
     [Return]  ${year}
-
-Change the open date of the ${READY_TO_OPEN_COMPETITION_NAME} in the database to one day before
-    ${yesterday} =    get yesterday
-    When execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='${yesterday}' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
-    And the user reloads the page
-    Then element should not contain    jQuery=section:nth-child(4)    ${READY_TO_OPEN_COMPETITION_NAME}

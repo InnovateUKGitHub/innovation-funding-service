@@ -14,6 +14,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../CompAdmin_Commons.robot
 
 *** Test Cases ***
 Sections of Live Competitions
@@ -87,14 +88,14 @@ Upcoming competitions calculations
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL    Failing
+    [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
-    Given the user should see the text in the page    Ready to open
-    And The competition is ready to open
-    When Change the open date of the ${READY_TO_OPEN_COMPETITION_NAME} in the database to one day before
-    And the user navigates to the page    ${SERVER}/management/dashboard/live
-    Then the user should see the text in the page    Open
-    And The competition should be open
+    Given the user should see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
+    When Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
+    And the user reloads the page
+    Then the user should not see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
+    When the user navigates to the page     ${CA_Live}
+    Then the user should see the element  jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
 
 Search existing applications
@@ -138,9 +139,3 @@ check calculations on one page
     ${NO_OF_COMP_Page_one}=    Get Matching Xpath Count    //section/div/ul/li
     ${length_summary}=    Get text    css=.heading-xlarge    #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
-
-The competition is ready to open
-    the user should see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-
-The competition should be open
-    the user should see the element  jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')

@@ -46,7 +46,7 @@ public class AssessmentAssignmentModelPopulator {
     private OrganisationRestService organisationRestService;
 
     public AssessmentAssignmentViewModel populateModel(Long assessmentId) {
-        AssessmentResource assessment = getAssignableAssessment(assessmentId);
+        AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
         ApplicationResource application = getApplication(assessment.getApplication());
         CompetitionResource competition = competitionService.getById(application.getCompetition());
         List<ProcessRoleResource> processRoles = processRoleService.findProcessRolesByApplicationId(application.getId());
@@ -54,10 +54,6 @@ public class AssessmentAssignmentModelPopulator {
         SortedSet<OrganisationResource> collaborators = getApplicationOrganisations(processRoles);
         OrganisationResource leadPartner = getApplicationLeadOrganisation(processRoles).orElse(null);
         return new AssessmentAssignmentViewModel(assessmentId, competition.getId(), application, collaborators, leadPartner, projectSummary);
-    }
-
-    private AssessmentResource getAssignableAssessment(final Long assessmentId) {
-        return assessmentService.getAssignableById(assessmentId);
     }
 
     private ApplicationResource getApplication(final Long applicationId) {

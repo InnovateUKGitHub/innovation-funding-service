@@ -16,6 +16,8 @@ public interface AssessmentService {
 
     AssessmentResource getAssignableById(Long id);
 
+    AssessmentResource getRejectableById(Long id);
+
     List<AssessmentResource> getByUserAndCompetition(Long userId, Long competitionId);
 
     AssessmentTotalScoreResource getTotalScore(Long assessmentId);
