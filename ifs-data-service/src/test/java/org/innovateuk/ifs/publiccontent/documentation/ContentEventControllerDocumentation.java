@@ -41,7 +41,7 @@ public class ContentEventControllerDocumentation extends BaseControllerMockMVCTe
         this.document = document("public-content/events/{method-name}",
                 preprocessResponse(prettyPrint()));
     }
-    
+
     @Test
     public void resetAndSaveEvents() throws Exception {
         List<ContentEventResource> resources = contentEventResourceBuilder.build(2);
