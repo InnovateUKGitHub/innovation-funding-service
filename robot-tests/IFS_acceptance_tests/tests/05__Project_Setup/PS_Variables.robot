@@ -19,6 +19,7 @@ ${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}      ${Gabtype_ID}
 ${PS_GOL_APPLICATION_LEAD_ORGANISATION_NAME}    ${Gabtype_NAME}
 ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}        worth.email.test+amy@gmail.com
 ${PS_GOL_APPLICATION_PM_EMAIL}                  worth.email.test+amy@gmail.com
+${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     worth.email.test+marian@gmail.com
 ${PS_GOL_APPLICATION_PARTNER_EMAIL}             worth.email.test+karen@gmail.com
 ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            worth.email.test+juan@gmail.com
 
