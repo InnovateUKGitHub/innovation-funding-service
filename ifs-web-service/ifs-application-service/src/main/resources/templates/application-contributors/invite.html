@@ -53,10 +53,12 @@
                 <!--/* lead org */-->
                 <div th:if="${organisationStats.index == 0}" th:remove="tag">
                   <h3 class="heading-medium">
-                    Lead Organisation "<span th:remove="tag" th:text="${organisationInviteForm.organisationName}"/>"
+                    Lead organisation "<span th:remove="tag" th:text="${organisationInviteForm.organisationName}"/>"
                   </h3>
                     <p th:if="${leadApplicant?.id eq authenticatedUser?.id}">You are the lead partner for both the project and application.
                       Add members of your own organisation to contribute to this application.
+                      We will send them an email inviting them to the organisation.
+
                     </p>
                     <p th:unless="${leadApplicant?.id eq authenticatedUser?.id}">Only the lead applicant can add members of their own organisation.
                     </p>
@@ -188,11 +190,7 @@
                 <p>Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances.</p>
             </li>
         </ul>
-        <p class="extra-margin">
-          We will send emails to each of these partners inviting them to join the application.
-          Once the partner has accepted the invitation you will be able to assign section of the application to them.
-        </p>
-        <button th:text="${param.newApplication != null ? 'Begin application' : 'Save Changes'}" type="submit" name="save_contributors" class="button" />
+        <button th:text="${param.newApplication != null ? 'Begin application' : 'Save changes'}" type="submit" name="save_contributors" class="button" />
     </form>
 
 

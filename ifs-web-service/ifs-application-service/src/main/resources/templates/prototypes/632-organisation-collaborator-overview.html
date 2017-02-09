@@ -14,8 +14,10 @@
 
 
     <main id="content">
-        <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
-        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})"  />
+        <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+        <th:block th:unless="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" />
+        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Your dashboard'}, ${'/prototypes/675-dashboard'})" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
 

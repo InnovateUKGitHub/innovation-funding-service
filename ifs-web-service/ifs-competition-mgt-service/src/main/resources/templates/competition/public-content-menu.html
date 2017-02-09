@@ -48,7 +48,10 @@
             </th:block>
         </ul>
         <div class="extra-margin">
-            <p th:if="${model.hasBeenPublished()}"><small th:text="${'Last published ' + model.publishDateText}"></small></p>
+            <p th:if="${model.hasBeenPublished()}"
+                th:with="publishDay=${#temporals.format(model.publishDate, 'd MMMM yyyy')},
+                         publishTime=${#strings.toLowerCase(#temporals.format(model.publishDate, ' h:mma'))}">
+                <small th:text="${'Last published ' + publishDay + ' ' + publishTime}"></small></p>
             <div class="grid-row">
                 <div class="column-half">
                     <a th:href="@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}" class="button">Return to setup overview</a>

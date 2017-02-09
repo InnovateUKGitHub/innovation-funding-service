@@ -13,7 +13,7 @@
 
 <main id="content">
   <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
-	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header-no-link"  />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:with="linkText=${'Your dashboard'},linkURL=${'/prototypes/675-dashboard'}" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->

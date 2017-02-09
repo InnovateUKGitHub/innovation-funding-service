@@ -16,7 +16,7 @@ public class RejectAssessmentModelPopulator {
     private AssessmentService assessmentService;
 
     public RejectAssessmentViewModel populateModel(Long assessmentId) {
-        AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
+        AssessmentResource assessment = assessmentService.getRejectableById(assessmentId);
 
         return new RejectAssessmentViewModel(assessment.getId(),
                 assessment.getApplication(),

@@ -32,10 +32,9 @@ public class PublicContentResource {
 
     private List<PublicContentSectionResource> contentSections;
 
+    private List<ContentEventResource> contentEvents;
+
     private List<String> keywords;
-
-    //TODO INFUND-6919 events.
-
 
     public Long getId() {
         return id;
@@ -125,6 +124,14 @@ public class PublicContentResource {
         this.keywords = keywords;
     }
 
+    public List<ContentEventResource> getContentEvents() {
+        return contentEvents;
+    }
+
+    public void setContentEvents(List<ContentEventResource> contentEvents) {
+        this.contentEvents = contentEvents;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -144,6 +151,7 @@ public class PublicContentResource {
                 .append(summary, resource.summary)
                 .append(fundingType, resource.fundingType)
                 .append(contentSections, resource.contentSections)
+                .append(contentEvents, resource.contentEvents)
                 .append(keywords, resource.keywords)
                 .isEquals();
     }
