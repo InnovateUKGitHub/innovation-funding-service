@@ -14,6 +14,7 @@ import java.util.Optional;
 
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -45,7 +46,7 @@ public abstract class Thread {
         this.id = id;
         this.classPk = classPk;
         this.className = className;
-        this.posts = new LinkedList<>(posts);
+        this.posts = ofNullable(posts).map(ArrayList::new).orElse(new ArrayList<>());
         this.title = title;
         this.createdOn = createdOn;
     }
