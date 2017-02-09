@@ -15,15 +15,15 @@ import java.util.List;
 public class PublicContentEventServiceImpl implements PublicContentEventService {
 
     @Autowired
-    private PublicContentRestService publicContentRestService;
+    private ContentEventRestService contentEventRestService;
 
     @Override
     public ServiceResult<Void> updateEvent(PublicContentEventResource event) {
-        return null;
+        return contentEventRestService.saveEvent(event).toServiceResult();
     }
 
     @Override
     public ServiceResult<Void> resetAndSaveEvents(PublicContentResource resource, List<PublicContentEventResource> events) {
-        return null;
+        return contentEventRestService.resetAndSaveEvents(resource.getId(), events).toServiceResult();
     }
 }
