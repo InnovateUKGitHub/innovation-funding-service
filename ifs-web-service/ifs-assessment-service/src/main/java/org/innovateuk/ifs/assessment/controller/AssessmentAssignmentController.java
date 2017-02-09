@@ -67,7 +67,7 @@ public class AssessmentAssignmentController extends BaseController {
         Supplier<String> failureView = () -> doViewRejectAssignmentConfirm(model, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-            AssessmentResource assessment = assessmentService.getAssignableById(assessmentId);
+            AssessmentResource assessment = assessmentService.getRejectableById(assessmentId);
             ServiceResult<Void> updateResult = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
