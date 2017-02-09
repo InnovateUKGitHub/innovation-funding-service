@@ -194,17 +194,17 @@ Organisation client side validation when yes
     Then the user should see the element       jQuery=.error-message:contains("Please enter a past date.")
     And the user should not see the element    jQuery=.error-message:contains("Please enter a valid date.")
     When the user enters text to a text field  css=input[name$="year"]  2016
-    And the user enters value to field         Annual Turnover  ${EMPTY}
+    And the user enters value to field         Annual turnover  ${EMPTY}
     And the user moves focus to the element    jQuery=button:contains("Mark as complete")
     Then the user should not see the element   jQuery=.error-message:contains("Please enter a past date.")
     And the user should see an error message in the field  Annual Turnover  This field cannot be left blank.
-    When the user enters value to field        Annual Turnover  8.5
-    And the user moves focus to the element    jQuery=td:contains("Annual Profit") + td input
-    Then the user should see an error message in the field  Annual Turnover  This field can only accept whole numbers.
+    When the user enters value to field        Annual turnover  8.5
+    And the user moves focus to the element    jQuery=td:contains("Annual profit") + td input
+    Then the user should see an error message in the field  Annual turnover  This field can only accept whole numbers.
     # TODO such error messages should also trigger Error summary INFUND-8056
-    And the user enters value to field         Annual Profit  -5
-    When the user enters value to field        Annual Exports  ${empty}
-    Then the user should see an error message in the field  Annual Exports  This field cannot be left blank.
+    And the user enters value to field         Annual profit  -5
+    When the user enters value to field        Annual exports  ${empty}
+    Then the user should see an error message in the field  Annual exports  This field cannot be left blank.
     When the user enters value to field        Research and development spend  6666666666666666666666666666666666666666666
     And the user moves focus to the element    jQuery=label:contains("employees") + input
     Then the user should see an error message in the field  Research and development spend  This field should be 2147483647 or lower.
@@ -224,9 +224,9 @@ Mark Organisation as complete when yes
     And the user selects medium organisation size
     Then the user enters text to a text field         css=input[name$="month"]  12
     And the user enters text to a text field          css=input[name$="year"]  2016
-    Then the user enters value to field               Annual Turnover  65000
-    And the user enters value to field                Annual Profit  2000
-    And the user enters value to field                Annual Exports  3000
+    Then the user enters value to field               Annual turnover  65000
+    And the user enters value to field                Annual trofit  2000
+    And the user enters value to field                Annual exports  3000
     And the user enters value to field                Research and development spend  15000
     When the user enters text to a text field         jQuery=label:contains("employees") + input  4
     # TODO pending due to INFUND-8107
