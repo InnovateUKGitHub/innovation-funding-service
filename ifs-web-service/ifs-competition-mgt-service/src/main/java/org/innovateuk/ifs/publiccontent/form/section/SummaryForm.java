@@ -10,7 +10,7 @@ public class SummaryForm extends AbstractContentGroupForm {
 
     @NotEmpty (message="{validation.publiccontent.summaryform.description.required}")
     private String description;
-    @NotEmpty (message="{validation.publiccontent.summaryform.fundingType.SummaryFormrequired}")
+    @NotEmpty (message="{validation.publiccontent.summaryform.fundingType.required}")
     private String fundingType;
     @NotEmpty (message="{validation.publiccontent.summaryform.projectSize.required}")
     private String projectSize;

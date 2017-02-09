@@ -19,16 +19,17 @@ Competition status should be correct
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Applications")
-    Then the user should see the text in the page    In assessment
-    And the user should not see the text in the page    Competition open
+    And the user clicks the button/link    link=Submitted applications
+    And the user should see the text in the page     Sustainable living models for the future
 
 Columns show of the submitted applications
     [Documentation]    INFUND-2307
     [Tags]    HappyPath
-    Then the user should see the text in the page    Application no
+    Then the user should see the text in the page    Application number
     And the user should see the text in the page    Project title
     And the user should see the text in the page    Lead
-    And the user should see the text in the page    No. of partners
+    And the user should see the text in the page    Innovation area
+    And the user should see the text in the page    Number of partners
     And the user should see the text in the page    Grant requested (£)
     And the user should see the text in the page    Total project cost (£)
     And the user should see the text in the page    Duration (months)
@@ -36,35 +37,32 @@ Columns show of the submitted applications
 Summary of the submitted applications
     [Documentation]    INFUND-2307
     [Tags]    HappyPath
-    Then the calculations should be correct    css=.info-area p:nth-child(2) span
-    And both calculations in the page should show the same    css=.info-area p:nth-child(2) span
-
-Excel download button should be visible
-    [Documentation]    INFUND-2307
-    [Tags]    HappyPath
-    Then the user should see the element    link=Export application data (.xls)
+    Then the calculations should be correct    css=.grid-row li:nth-child(2) span
+    And both calculations in the page should show the same    css=.grid-row li:nth-child(2) span
 
 Sort by Lead
     [Documentation]    INFUND-2307
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
     When the application list is sorted by    Lead
     Then the applications should be sorted by column    3
 
 Sort by Grant requested
     [Documentation]    INFUND-2411
+    [Tags]    Pending
     When the application list is sorted by    Grant requested
     Then the applications should be sorted by column    5
 
 Sort by Total project cost
     [Documentation]    INFUND-2411
+    [Tags]    Pending
     When the application list is sorted by    Total project cost
     Then the applications should be sorted by column    6
 
 Finances are showing in the list
     [Documentation]    INFUND-2411
     [Tags]    HappyPath
-    Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITHOUT_COMMAS}
-    And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}
+    Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
+    And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}
 
 Only applications from this competition should be visible
     [Documentation]    INFUND-2311
@@ -102,7 +100,7 @@ Non submitted applications from this competition should be visible
 
 Excel export
     [Documentation]    INFUND-1987, INFUND-4039
-    [Tags]    HappyPath    Download
+    [Tags]    HappyPath    Download    Pending
     When the admin downloads the excel
     And user opens the excel and checks the content
     [Teardown]    Remove the file from the operating system    submitted_applications.xlsx

@@ -48,7 +48,7 @@ Review the application
     [Documentation]    INFUND-7046
     [Tags]
     When the user clicks the button/link    link=Review application
-    Then the user should see the text in the page    Application Overview
+    Then the user should see the text in the page    Application overview
     [Teardown]    The user goes back to the previous page
 
 View the available assessors
