@@ -14,6 +14,7 @@ import org.innovateuk.thread.service.ThreadRestService;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
@@ -27,6 +28,7 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     private FinanceCheckRestService financeCheckRestService;
 
     @Autowired
+    @Qualifier("projectFinance")
     private PostAttachmentRestService attachmentService;
 
     @Autowired

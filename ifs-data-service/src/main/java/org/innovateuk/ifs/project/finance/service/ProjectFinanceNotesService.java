@@ -11,18 +11,18 @@ import java.util.List;
 
 public interface ProjectFinanceNotesService extends ThreadService<NoteResource, PostResource> {
     @Override
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'PF_READ')")
     ServiceResult<List<NoteResource>> findAll(Long contextClassPk);
 
     @Override
-    @PostFilter("hasPermission(filterObject, 'READ')")
+    @PostFilter("hasPermission(filterObject, 'PF_READ')")
     ServiceResult<NoteResource> findOne(Long id);
 
     @Override
-    @PreAuthorize("hasPermission(#noteResource, 'CREATE')")
+    @PreAuthorize("hasPermission(#noteResource, 'PF_CREATE')")
     ServiceResult<Long> create(NoteResource noteResource);
 
     @Override
-    @PreAuthorize("hasPermission(#noteId, 'org.innovateuk.threads.resource.NoteResource', 'ADD_POST')")
+    @PreAuthorize("hasPermission(#noteId, 'org.innovateuk.threads.resource.NoteResource', 'PF_ADD_POST')")
     ServiceResult<Void> addPost(PostResource post, Long noteId);
 }
