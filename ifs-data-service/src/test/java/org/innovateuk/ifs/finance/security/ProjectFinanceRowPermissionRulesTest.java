@@ -28,16 +28,31 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTest<ProjectFinanceRowService> {
 
     private ProjectFinancePermissionRules projectFinancePermissionRules;
+    private ProjectFinanceLookupStrategy projectFinanceLookupStrategy;
 
     @Before
     public void lookupPermissionRules() {
 
         projectFinancePermissionRules = getMockPermissionRulesBean(ProjectFinancePermissionRules.class);
+        projectFinanceLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ProjectFinanceLookupStrategy.class);
 
+    }
+
+    @Test
+    public void testAddCostWithoutPersisting(){
+        when(projectFinanceLookupStrategy.getProjectFinance(1L)).thenReturn(newProjectFinanceResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.addCostWithoutPersisting(1L, 2L),
+                () -> {
+                    verify(projectFinancePermissionRules).partnersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules).internalUsersCanAddEmptyRowWhenReadingProjectCosts(isA(ProjectFinanceResource.class), isA(UserResource.class));
+                }
+        );
     }
 
     @Test

@@ -42,7 +42,7 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "UPDATE", securedType = FinanceRowItem.class, description = "Project Finance users can update  costs from project finance")
     ServiceResult<FinanceRowItem> updateCost(@P("costId")Long costId, FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasPermission(#projectFinanceId, 'org.innovateuk.ifs.finance.resource.ProjectFinanceResource', 'READ')")
+    @PreAuthorize("hasPermission(#projectFinanceId, 'org.innovateuk.ifs.finance.resource.ProjectFinanceResource', 'ADD_EMPTY_PROJECT_COST')")
     ServiceResult<FinanceRowItem> addCostWithoutPersisting(@P("projectFinanceId") Long projectFinanceId, Long questionId);
 
     @PreAuthorize("hasAuthority('project_finance')")

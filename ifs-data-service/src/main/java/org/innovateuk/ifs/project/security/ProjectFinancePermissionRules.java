@@ -127,6 +127,16 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isInternal(user);
     }
 
+    @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
+    public boolean partnersCanAddEmptyRowWhenReadingProjectCosts(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
+        return isPartner(projectFinanceResource.getProject(), user.getId());
+    }
+
+    @PermissionRule(value = "ADD_EMPTY_PROJECT_COST", description = "The consortium can add a cost to the application finances of their own organisation or if lead applicant")
+    public boolean internalUsersCanAddEmptyRowWhenReadingProjectCosts(final ProjectFinanceResource projectFinanceResource, final UserResource user) {
+        return isInternal(user);
+    }
+
     @PermissionRule(value = "READ", description = "Project partners can see the project finances of their own project")
     public boolean partnersCanSeeTheProjectFinancesForTheirOrganisation(final FinanceCheckEligibilityResource financeCheckEligibilityResource, final UserResource user) {
         return isPartner(financeCheckEligibilityResource.getProjectId(), user.getId());
