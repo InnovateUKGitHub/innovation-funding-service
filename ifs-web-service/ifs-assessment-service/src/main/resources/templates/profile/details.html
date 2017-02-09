@@ -18,9 +18,9 @@
 
             <h3 class="heading-small">Your name</h3>
             <p>
-                <span th:text="${model.title}" th:remove="tag" />
-                <span th:text="${model.firstName}" th:remove="tag" />
-                <span th:text="${model.lastName}" th:remove="tag" />
+                <th:block th:text="${model.title}" />
+                <th:block th:text="${model.firstName}" />
+                <th:block th:text="${model.lastName}" />
             </p>
             <h3 class="heading-small" th:if="${model.gender}">Gender</h3>
             <p th:if="${model.gender}" th:text="${model.gender}? ${model.gender.displayName}" />
@@ -30,16 +30,16 @@
             <p th:if="${model.disability}" th:text="${model.disability}? ${model.disability.displayName}" />
             <h3 class="heading-small" th:if="${model.address}">Address</h3>
             <p th:if="${model.address}">
-                <th:block th:text="${model.address.addressLine1}" th:remove="tag" /><br />
+                <th:block th:text="${model.address.addressLine1}" /><br />
                 <th:block th:unless="${#strings.isEmpty(model.address.addressLine2)}">
-                    <span th:text="${model.address.addressLine2}" th:remove="tag" /><br />
+                    <th:block th:text="${model.address.addressLine2}" /><br />
                 </th:block>
                 <th:block th:unless="${#strings.isEmpty(model.address.addressLine3)}">
-                    <span th:text="${model.address.addressLine3}" th:remove="tag" /><br />
+                    <th:block th:text="${model.address.addressLine3}" /><br />
                 </th:block>
-                <th:block th:text="${model.address.town}" th:remove="tag" /><br />
-                <th:block th:text="${model.address.county}" th:remove="tag" /><br />
-                <th:block th:text="${model.address.postcode}" th:remove="tag" />
+                <th:block th:text="${model.address.town}" /><br />
+                <th:block th:text="${model.address.county}" /><br />
+                <th:block th:text="${model.address.postcode}" />
             </p>
             <h3 class="heading-small" th:if="${model.phoneNumber}">Phone number</h3>
             <p th:if="${model.phoneNumber}" th:text="${model.phoneNumber}" />
