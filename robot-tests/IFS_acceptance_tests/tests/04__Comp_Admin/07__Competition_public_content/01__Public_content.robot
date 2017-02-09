@@ -1,5 +1,8 @@
 *** Settings ***
 Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door" setup pages
+
+...               INFUND-6916 As a Competitions team member I want to create a Public content summary page
+
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -25,6 +28,28 @@ User can view the public content
     And the user should see the element      link=How to apply
     And the user should see the element      link=Supporting information
 
+Summary: Contain the correct options
+        [Documentation]    INFUND-6916
+        [Tags]    HappyPath
+        Given the user clicks the button/link    link=Summary
+        And the user should see the text in the page    Text entered into this section will appear in the summary tab
+        Then the user should see the element    css=.editor
+        and the user should see the element    jQuery=label:contains("Grant")
+        And the user should see the element    jQuery=label:contains("Procurement")
+        And the user should see the text in the page    Project size
+        And the user should see the element    id=project-size
+        And the user should see the element     jQuery=.buttonlink:contains("+ add new section")
+
+Summary: User enters valid values and saves
+    [Documentation]    INFUND-6916
+    [Tags]    HappyPath  Pending
+    Given The user clicks the button/link           link=Summary
+    When the user enters valid data in the summary details
+    and  the user clicks the button/link            jQuery=.button:contains("Save and return")
+    Then the user should see the text in the page   John Doe
+    And the user should see the text in the page    Ian Cooper
+    And the user should see the element             jQuery=.button:contains("Edit")
+
 *** Keywords ***
 
 Custom suite setup
@@ -49,4 +74,8 @@ User creates a new competition
     And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
     When the user clicks the button/link            jQuery=.button:contains("Done")
 
+the user enters valid data in the summary details
+    When the user selects the option from the drop-down menu  Sector  id=competitionTypeId
+    And the user enters text to a text field    id=description    Summary Description
+    And the user enters text to a text field    id=project-size   10
 
