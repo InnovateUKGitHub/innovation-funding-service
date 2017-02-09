@@ -24,7 +24,7 @@
         <li><strong>Competition opens:</strong> <span th:text="${#temporals.format(model.competitionOpenDate, 'EEEE d MMM yyyy')}"></span></li>
 
         <li th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
-                     time=${#strings.toLowerCase(#temporals.format(model.publishDate, ' h:mma'))}">
+                     time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
             <strong>Competition closes:</strong> <span th:text="${date + ' ' + time}"></span></li>
     </ul>
 
