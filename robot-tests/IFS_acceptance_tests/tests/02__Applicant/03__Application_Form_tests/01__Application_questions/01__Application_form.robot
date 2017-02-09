@@ -32,9 +32,9 @@ Application details: Previous submission
 
 Application details: Research category
     [Documentation]    INFUND-6823
-    Then the user should see the element    jQuery=label:contains(Industrial research)
-    And the user should see the element    jQuery=label:contains(Technical feasibilit)
-    And the user should see the element    jQuery=label:contains(Experimental development)
+    Then the user should see the element    jQuery=label:contains("Industrial research")
+    And the user should see the element    jQuery=label:contains("Technical feasibility")
+    And the user should see the element    jQuery=label:contains("Experimental development")
     And the finance summary page should show a warning
 
 Autosave in the form questions
@@ -200,4 +200,4 @@ The applicant navigates to the next section
 the finance summary page should show a warning
     The user clicks the button/link    link=Application Overview
     The user clicks the button/link    link=Your finances
-    The user should see the text in the page    You must give your project a research category in
+    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")

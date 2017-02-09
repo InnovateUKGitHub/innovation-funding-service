@@ -24,6 +24,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-7361 GOL is seen by internal user soon after the external user uploads it
 ...
 ...               INFUND-6048 As the contracts team I can have access to a generated Grant Offer Letter so that I can send it to the partners
+...
+...               INFUND-7170 Approved signed-GOL cannot be seen/downloaded by external users
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -280,7 +282,7 @@ Academic partner can download the annex
     [Tags]  HappyPath    Download
     Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file        ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
-    [Teardown]    remove the file from the operating system    annex.pdf]
+    [Teardown]    remove the file from the operating system    annex.pdf
 
 PM can view the uploaded Annex file
     [Documentation]    INFUND-4851, INFUND-4849
@@ -306,6 +308,15 @@ PM Sends the Grant Offer letter
     And the user should not see an error in the page
     When the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the element    jQuery=li.waiting:nth-child(8)
+
+PM can download the signed grant offer letter
+    [Documentation]    INFUND-7170
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user should see the text in the page   Signed grant offer letter
+    And the user downloads the file        ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/signedGOL.pdf
+    [Teardown]    remove the file from the operating system    signedGOL.pdf
+
 
 PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
@@ -379,12 +390,18 @@ Non lead can see the GOL approved
     Then the user should see the element  jQuery=.grant-offer-download:contains("testing.pdf")
     And the user should see the element   jQuery=.success-alert p:contains("Your signed grant offer letter has been received and accepted by Innovate UK")
 
-Non lead can download the signed GOL
+Non lead can download the GOL
     [Documentation]  INFUND-6377
     [Tags]  Download
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system    testing.pdf
+
+Non lead cannot see the signed GOL
+    [Documentation]    INFUND-7170
+    [Tags]
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user should not see the text in the page   Signed grant offer letter
 
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375

@@ -6,24 +6,27 @@ Documentation     INFUND-1987
 ...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
 ...
 ...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition so that I can see information and further actions for the competition
+...
+...               INFUND-7367 Competition management: Applications dashboard
+...
+...               INFUND-7371 Competition management: View list of submitted applications
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Competition status should be correct
-    [Documentation]    INFUND-2307
-    ...
-    ...    INFUND-6602
+Nagivation to submitted applications
+    [Documentation]    INFUND-7367    INFUND-7371
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Applications")
+    And the user should see the text in the page     Sustainable living models for the future
     And the user clicks the button/link    link=Submitted applications
     And the user should see the text in the page     Sustainable living models for the future
 
 Columns show of the submitted applications
-    [Documentation]    INFUND-2307
+    [Documentation]    INFUND-7371
     [Tags]    HappyPath
     Then the user should see the text in the page    Application number
     And the user should see the text in the page    Project title
@@ -35,7 +38,7 @@ Columns show of the submitted applications
     And the user should see the text in the page    Duration (months)
 
 Summary of the submitted applications
-    [Documentation]    INFUND-2307
+    [Documentation]    INFUND-7371
     [Tags]    HappyPath
     Then the calculations should be correct    css=.grid-row li:nth-child(2) span
     And both calculations in the page should show the same    css=.grid-row li:nth-child(2) span
@@ -59,7 +62,7 @@ Sort by Total project cost
     Then the applications should be sorted by column    6
 
 Finances are showing in the list
-    [Documentation]    INFUND-2411
+    [Documentation]    INFUND-7371
     [Tags]    HappyPath
     Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
     And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}
