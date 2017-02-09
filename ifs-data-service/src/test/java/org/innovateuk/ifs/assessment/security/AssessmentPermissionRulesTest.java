@@ -149,7 +149,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
         EnumSet.complementOf(allowedStates).forEach(state ->
                 assertFalse("the owner of an assessment should not be able to read it in order to respond to" +
-                                " their invitation if the assessment is not pending",
+                                " their invitation if the assessment is not pending, accepted, open, or ready to submit",
                         rules.userCanReadToReject(assessments.get(state), assessorUser)));
     }
 
