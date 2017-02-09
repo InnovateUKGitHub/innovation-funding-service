@@ -1,8 +1,7 @@
 *** Settings ***
 Documentation     INFUND-6794: As an applicant I will be invited to add funding details within the 'Your funding' page of the application
 ...               INFUND-6895: As a lead applicant I will be advised that changing my 'Research category' after completing 'Funding level' will reset the 'Funding level'
-# Please note that the file names will change! This is meant to be 03, I will shift the others forward but wanted to find a good time to do it so as not to give others merge conflicts
-Suite Setup       log in and create a new application if there is not one already with complete application details and completed org size section
+Suite Setup       log in and create a new application if there is not one already with complete application details and completed org size section    # Please note that the file names will change! This is meant to be 03, I will shift the others forward but wanted to find a good time to do it so as not to give others merge conflicts
 Suite Teardown    mark application details incomplete the user closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
@@ -54,11 +53,13 @@ Other funding validations
 
 If funding is complete. application details has a warning message
     [Documentation]    INFUND-6895
+    ...
+    ...    INFUND-6823
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
     When the user clicks the button/link    link=Application details
-    And the user clicks the button/link    name=mark_as_incomplete
+    And the user clicks the button/link    jQuery=button:contains(Edit)
     Then the user should see the text in the page    Research category determines funding
 
 Changing application details sets funding level to incomplete
@@ -89,12 +90,3 @@ Funding level can be re-entered, and this saves correctly
     And the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     Then the user should not see an error in the page
     And the user should see the element    css=.list-overview .section:nth-of-type(3) .complete
-
-Application details should show a warning in edit mode
-    [Documentation]    INFUND-6823
-    [Tags]    HappyPath
-    Given The user clicks the button/link    link=Application Overview
-    And the user clicks the button/link    link=Application details
-    When The user clicks the button/link    jQuery=button:contains(Edit)
-    Then the user should see the element    css=.message-alert.extra-margin-bottom
-    [Teardown]    When The user clicks the button/link    jQuery=button:contains(Mark as complete)
