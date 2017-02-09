@@ -41,22 +41,7 @@ public class ContentEventControllerDocumentation extends BaseControllerMockMVCTe
         this.document = document("public-content/events/{method-name}",
                 preprocessResponse(prettyPrint()));
     }
-
-    @Test
-    public void saveEvent() throws Exception {
-        ContentEventResource resource = contentEventResourceBuilder.build();
-
-        when(contentEventService.saveEvent(resource)).thenReturn(serviceSuccess());
-
-        mockMvc.perform(post("/public-content/events/save-event")
-                .contentType(MediaType.APPLICATION_JSON_UTF8)
-                .content(objectMapper.writeValueAsString(resource)))
-                .andExpect(status().isOk())
-                .andDo(this.document.snippets(
-                    requestFields(contentEventResourceFields)
-                ));
-    }
-
+    
     @Test
     public void resetAndSaveEvents() throws Exception {
         List<ContentEventResource> resources = contentEventResourceBuilder.build(2);

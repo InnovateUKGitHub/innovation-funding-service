@@ -18,11 +18,6 @@ public class ContentEventServiceImpl implements ContentEventService {
     private ContentEventRestService contentEventRestService;
 
     @Override
-    public ServiceResult<Void> updateEvent(ContentEventResource event) {
-        return contentEventRestService.saveEvent(event).toServiceResult();
-    }
-
-    @Override
     public ServiceResult<Void> resetAndSaveEvents(PublicContentResource resource, List<ContentEventResource> events) {
         return contentEventRestService.resetAndSaveEvents(resource.getId(), events).toServiceResult();
     }

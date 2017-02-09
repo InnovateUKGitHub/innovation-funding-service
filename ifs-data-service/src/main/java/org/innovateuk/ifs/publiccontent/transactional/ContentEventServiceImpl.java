@@ -28,12 +28,6 @@ public class ContentEventServiceImpl extends BaseTransactionalService implements
     private ContentEventMapper contentEventMapper;
 
     @Override
-    public ServiceResult<Void> saveEvent(ContentEventResource eventResource) {
-        contentEventRepository.save(contentEventMapper.mapToDomain(eventResource));
-        return serviceSuccess();
-    }
-
-    @Override
     public ServiceResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> eventResources) {
         if(eventResourcesAllHaveIDOrEmpty(publicContentId, eventResources)) {
             contentEventRepository.deleteByPublicContentId(publicContentId);

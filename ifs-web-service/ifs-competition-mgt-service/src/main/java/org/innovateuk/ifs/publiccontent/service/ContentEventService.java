@@ -10,6 +10,5 @@ import java.util.List;
  * Service for handling public content events
  */
 public interface ContentEventService {
-    ServiceResult<Void> updateEvent(ContentEventResource event);
     ServiceResult<Void> resetAndSaveEvents(PublicContentResource resource, List<ContentEventResource> events);
 }

@@ -38,19 +38,6 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
     }
 
     @Test
-    public void testSaveEvent() {
-        ContentEventResource resource = newContentEventResource().withId(1L).withContent("Content").withDate(LocalDateTime.of(2017,1,1,1,1)).build();
-        ContentEvent domain = newContentEvent().withId(1L).withContent("Content").withDate(LocalDateTime.of(2017,1,1,1,1)).build();
-
-        when(contentEventMapper.mapToDomain(resource)).thenReturn(domain);
-
-        ServiceResult<Void> result = service.saveEvent(resource);
-
-        assertTrue(result.isSuccess());
-        verify(contentEventRepository, times(1)).save(domain);
-    }
-
-    @Test
     public void testResetAndSaveEvents() {
         Long publicContentId = 8L;
 
@@ -106,8 +93,6 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
         verify(contentEventRepository, never()).deleteByPublicContentId(publicContentId);
         verify(contentEventRepository, never()).save(domains);
     }
-
-
 
     @Test
     public void testResetAndSaveEventsEmptyEvents() {

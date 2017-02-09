@@ -13,11 +13,6 @@ import java.util.List;
 public interface ContentEventService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "SAVE_EVENT",
-            description = "The Competition Admin, or project finance user can publish the public content for a competition.")
-    ServiceResult<Void> saveEvent(ContentEventResource eventResource);
-
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "RESET_AND_SAVE_EVENTS",
             description = "The Competition Admin, or project finance user can publish the public content for a competition.")
     ServiceResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> eventResource);

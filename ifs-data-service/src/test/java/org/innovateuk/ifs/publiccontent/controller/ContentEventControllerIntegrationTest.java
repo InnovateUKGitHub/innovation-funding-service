@@ -46,25 +46,6 @@ public class ContentEventControllerIntegrationTest extends BaseControllerIntegra
 
     @Test
     @Rollback
-    public void saveEvent() throws Exception {
-        PublicContent publicContent = publicContentRepository.save(newPublicContent()
-                .withPublishDate(LocalDateTime.now())
-                .withCompetitionId(1L)
-                .build());
-
-        ContentEventResource event = newContentEventResource()
-                .withContent("New event")
-                .withPublicContent(publicContent.getId())
-                .withDate(LocalDateTime.now()).build();
-
-        loginCompAdmin();
-        RestResult<Void> result = controller.saveEvent(event);
-
-        assertTrue(result.isSuccess());
-    }
-
-    @Test
-    @Rollback
     public void resetAndSaveEvent() throws Exception {
         PublicContent publicContent = publicContentRepository.save(newPublicContent()
                 .withId(1000L)

@@ -18,11 +18,6 @@ public class ContentEventController {
     @Autowired
     private ContentEventService contentEventService;
 
-    @RequestMapping(value = "save-event", method = RequestMethod.POST)
-    public RestResult<Void> saveEvent(@RequestBody final ContentEventResource event) {
-        return contentEventService.saveEvent(event).toPostResponse();
-    }
-
     @RequestMapping(value = "reset-and-save-events/{id}", method = RequestMethod.POST)
     public RestResult<Void> resetAndSaveEvent(@PathVariable("id") final Long id,
                                               @RequestBody final List<ContentEventResource> events) {

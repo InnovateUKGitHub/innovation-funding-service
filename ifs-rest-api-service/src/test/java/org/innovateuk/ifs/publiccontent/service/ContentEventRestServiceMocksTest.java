@@ -23,14 +23,6 @@ public class ContentEventRestServiceMocksTest extends BaseRestServiceUnitTest<Co
     }
 
     @Test
-    public void test_saveEvent() {
-        ContentEventResource event = newContentEventResource().build();
-        setupPostWithRestResultExpectations(PUBLIC_CONTENT_EVENT_REST_URL + "/save-event", event, HttpStatus.OK);
-        RestResult<Void> response = service.saveEvent(event);
-        assertTrue(response.isSuccess());
-    }
-
-    @Test
     public void test_resetAndSaveEvents() {
         List<ContentEventResource> events = newContentEventResource().build(1);
         setupPostWithRestResultExpectations(PUBLIC_CONTENT_EVENT_REST_URL + "/reset-and-save-events/1", events, HttpStatus.OK);

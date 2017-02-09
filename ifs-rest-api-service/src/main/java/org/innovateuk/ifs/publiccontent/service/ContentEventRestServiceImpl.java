@@ -16,11 +16,6 @@ public class ContentEventRestServiceImpl extends BaseRestService implements Cont
     private static final String PUBLIC_CONTENT_EVENT_REST_URL = "/public-content/events";
 
     @Override
-    public RestResult<Void> saveEvent(ContentEventResource event) {
-        return postWithRestResult(PUBLIC_CONTENT_EVENT_REST_URL + "/save-event", event, Void.class);
-    }
-
-    @Override
     public RestResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> events) {
         return postWithRestResult(PUBLIC_CONTENT_EVENT_REST_URL + "/reset-and-save-events/" + publicContentId, events, Void.class);
     }

@@ -10,7 +10,5 @@ import java.util.List;
  */
 public interface ContentEventRestService {
 
-    RestResult<Void> saveEvent(ContentEventResource event);
-
     RestResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> events);
 }
