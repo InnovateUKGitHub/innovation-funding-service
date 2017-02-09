@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+
+import static java.util.Optional.ofNullable;
 
 public class NoteResource {
     public final Long id;
@@ -19,7 +22,7 @@ public class NoteResource {
                         @JsonProperty("createdOn") LocalDateTime createdOn) {
         this.id = id;
         this.contextClassPk = contextClassPk;
-        this.posts = posts;
+        this.posts = ofNullable(posts).map(ArrayList::new).orElse(new ArrayList<>());
         this.title = title;
         this.createdOn = createdOn;
     }

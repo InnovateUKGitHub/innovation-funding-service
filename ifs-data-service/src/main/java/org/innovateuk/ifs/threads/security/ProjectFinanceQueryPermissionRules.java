@@ -19,7 +19,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 @PermissionRules
 public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     @Autowired
-    protected ProjectFinanceRepository projectFinanceRepository;
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @PermissionRule( value = "PF_CREATE", description = "Only Internal Users can create Queries")
     public boolean onlyInternalUsersCanCreateQueries(final QueryResource query, final UserResource user) {

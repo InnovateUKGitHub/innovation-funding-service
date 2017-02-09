@@ -13,12 +13,16 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 public class ProjectFinanceNotePermissionRules {
 
     @PermissionRule(value = "PF_CREATE", description = "Only Internal Users can create Notes")
-    public boolean onlyInternalUsersCanCreateNotes(final NoteResource query, final UserResource user) {
-        return isProjectFinanceUser(user);
+    public boolean onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
+        return isProjectFinanceUser(user) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
+    }
+
+    private boolean noteHasInitialPostWithAuthorBeingCurrentUser(NoteResource note, UserResource user) {
+        return note.posts.size() == 1 && note.posts.get(0).author.getId().equals(user.getId());
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "Internal users can add posts to a note")
-    public boolean onlyInternalUsersCanAddPosts(final NoteResource query, final UserResource user) {
+    public boolean onlyInternalUsersCanAddPosts(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user);
     }
 
