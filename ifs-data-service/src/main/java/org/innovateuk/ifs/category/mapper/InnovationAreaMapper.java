@@ -15,7 +15,6 @@ import java.util.List;
         uses = { InnovationSectorMapper.class })
 public abstract class InnovationAreaMapper extends BaseMapper<InnovationArea, InnovationAreaResource, Long> {
 
-
     @Override
     public abstract InnovationArea mapToDomain(InnovationAreaResource resource);
 

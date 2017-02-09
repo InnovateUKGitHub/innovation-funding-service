@@ -5,9 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.domain.InnovationSector;
-import org.innovateuk.ifs.category.domain.ResearchCategory;
+import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
@@ -20,6 +18,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
@@ -84,12 +83,14 @@ public class Competition implements ProcessActivity {
     private Integer maxResearchRatio;
     private Integer academicGrantPercentage;
 
-    @Transient
-    private InnovationSector innovationSector;
-    @Transient
-    private Set<InnovationArea> innovationAreas;
-    @Transient
-    private Set<ResearchCategory> researchCategories;
+    @OneToOne(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    private CompetitionInnovationSectorLink innovationSector;
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CompetitionInnovationAreaLink> innovationAreas = new HashSet<>();
+
+    @OneToMany(mappedBy = "competition", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<CompetitionResearchCategoryLink> researchCategories = new HashSet<>();
 
     private String activityCode;
 
@@ -435,28 +436,68 @@ public class Competition implements ProcessActivity {
     }
 
     public InnovationSector getInnovationSector() {
-        return innovationSector;
+        if (innovationSector == null) {
+            return null;
+        }
+
+        return innovationSector.getCategory();
     }
 
     public void setInnovationSector(InnovationSector innovationSector) {
-        this.innovationSector = innovationSector;
+        if (innovationSector == null) {
+            return;
+        }
+
+        this.innovationSector = new CompetitionInnovationSectorLink(this, innovationSector);
     }
 
     public Set<InnovationArea> getInnovationAreas() {
-        return innovationAreas;
+        return innovationAreas.stream()
+                .map(CompetitionInnovationAreaLink::getCategory)
+                .collect(Collectors.toSet());
+    }
+
+    public void addInnovationArea(InnovationArea innovationArea) {
+        if (innovationArea == null) {
+            throw new NullPointerException("innovationArea cannot be null");
+        }
+
+        this.innovationAreas.add(new CompetitionInnovationAreaLink(this, innovationArea));
     }
 
     public void setInnovationAreas(Set<InnovationArea> innovationAreas) {
-        this.innovationAreas = innovationAreas;
+        this.innovationAreas = new HashSet<>();
+
+        if (innovationAreas == null) {
+            return;
+        }
+
+        innovationAreas.forEach(this::addInnovationArea);
     }
 
     public Set<ResearchCategory> getResearchCategories() {
-        return researchCategories;
+        return researchCategories.stream()
+                .map(CompetitionResearchCategoryLink::getCategory)
+                .collect(Collectors.toSet());
+    }
+
+    public void addResearchCategory(ResearchCategory researchCategory) {
+        if (researchCategory == null) {
+            throw new NullPointerException("researchCategory cannot be null");
+        }
+
+        this.researchCategories.add(new CompetitionResearchCategoryLink(this, researchCategory));
     }
 
     public void setResearchCategories(Set<ResearchCategory> researchCategories) {
-        this.researchCategories = researchCategories;
-    }
+        this.researchCategories = new HashSet<>();
+
+        if (researchCategories == null) {
+            return;
+        }
+
+        researchCategories.forEach(this::addResearchCategory);
+	}
 
     public List<Milestone> getMilestones() {
         return milestones;

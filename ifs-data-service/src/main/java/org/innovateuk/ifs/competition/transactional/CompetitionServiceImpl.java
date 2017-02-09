@@ -2,14 +2,16 @@ package org.innovateuk.ifs.competition.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.category.domain.*;
-import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
+import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
 import org.innovateuk.ifs.competition.mapper.CompetitionMapper;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,13 +22,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
-import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -44,9 +41,6 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     private CompetitionRepository competitionRepository;
 
     @Autowired
-    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
-
-    @Autowired
     private CompetitionMapper competitionMapper;
 
     @Autowired
@@ -59,65 +53,31 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
             return serviceFailure(notFoundError(Competition.class, id));
         }
 
-        addCategories(competition);
         return serviceSuccess(competitionMapper.mapToResource(competition));
-    }
-
-    @Override
-    public Competition addCategories(Competition competition) {
-        addInnovationSector(competition);
-        addInnovationAreas(competition);
-        addResearchCategories(competition);
-        return competition;
-    }
-
-    private void addInnovationSector(Competition competition) {
-        InnovationSector category =
-                (InnovationSector) Optional.ofNullable(
-                        competitionCategoryLinkRepository.findByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_SECTOR)
-                ).map(CompetitionCategoryLink::getCategory).orElse(null);
-        competition.setInnovationSector(category);
-    }
-
-    private void addInnovationAreas(Competition competition) {
-        Set<InnovationArea> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), INNOVATION_AREA)
-                .stream()
-                .map(competitionCategoryLink -> (InnovationArea)competitionCategoryLink.getCategory())
-                .collect(Collectors.toSet());
-
-        competition.setInnovationAreas(categories);
-    }
-
-    private void addResearchCategories(Competition competition) {
-        Set<ResearchCategory> categories = competitionCategoryLinkRepository.findAllByCompetitionIdAndCategoryType(competition.getId(), RESEARCH_CATEGORY)
-                .stream()
-                .map(competitionCategoryLink -> (ResearchCategory)competitionCategoryLink.getCategory())
-                .collect(Collectors.toSet());
-        competition.setResearchCategories(categories);
     }
 
     @Override
     public ServiceResult<List<CompetitionResource>> findAll() {
         return serviceSuccess((List) competitionMapper.mapToResource(
-                competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).map(this::addCategories).collect(Collectors.toList())
+                competitionRepository.findAll().stream().filter(comp -> !comp.isTemplate()).collect(Collectors.toList())
         ));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findLiveCompetitions() {
-        List<Competition> competitions = competitionRepository.findLive().stream().map(this::addCategories).collect(Collectors.toList());
+        List<Competition> competitions = competitionRepository.findLive();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        List<Competition> competitions = competitionRepository.findProjectSetup().stream().map(this::addCategories).collect(Collectors.toList());
+        List<Competition> competitions = competitionRepository.findProjectSetup();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
-        List<Competition> competitions = competitionRepository.findUpcoming().stream().map(this::addCategories).collect(Collectors.toList());
+        List<Competition> competitions = competitionRepository.findUpcoming();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
@@ -128,7 +88,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
         Page<Competition> pageResult = competitionRepository.search(searchQueryLike, pageRequest);
 
         CompetitionSearchResult result = new CompetitionSearchResult();
-        List<Competition> competitions = pageResult.getContent().stream().map(this::addCategories).collect(Collectors.toList());
+        List<Competition> competitions = pageResult.getContent();
         result.setContent(simpleMap(competitions, this::searchResultFromCompetition));
         result.setNumber(pageRequest.getPageNumber());
         result.setSize(size);

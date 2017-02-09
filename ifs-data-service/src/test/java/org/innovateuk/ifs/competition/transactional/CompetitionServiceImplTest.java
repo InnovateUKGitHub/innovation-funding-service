@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.transactional;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.category.domain.*;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
@@ -10,24 +9,15 @@ import org.junit.Test;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
-import java.util.Collections;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
-import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
-import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
-import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTOR;
-import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
-import static java.util.Collections.singletonList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -50,38 +40,6 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         CompetitionResource response = service.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
 
         assertEquals(resource, response);
-    }
-
-    @Test
-    public void test_addCategories() throws Exception {
-        Long competitionId = 1L;
-        Competition competition = newCompetition().withId(competitionId).build();
-
-        InnovationSector innovationSector = newInnovationSector().build();
-        Set<ResearchCategory> researchCategories = newResearchCategory().withName("foo", "bar").buildSet(2);
-        Set<InnovationArea> innovationAreas = newInnovationArea().withName("foo", "bar").buildSet(2);
-
-        when(competitionCategoryLinkRepositoryMock.findByCompetitionIdAndCategoryType(competitionId, INNOVATION_SECTOR))
-                .thenReturn(newCompetitionCategoryLink().withCompetition(competition).withCategory(innovationSector).build());
-        when(competitionCategoryLinkRepositoryMock.findAllByCompetitionIdAndCategoryType(competitionId, INNOVATION_AREA))
-                .thenReturn(Arrays.asList(
-                        newCompetitionCategoryLink()
-                                .withCompetition(competition, competition)
-                                .withCategory(innovationAreas.toArray(new Category[2]))
-                                .buildArray(2, CompetitionCategoryLink.class)));
-        when(competitionCategoryLinkRepositoryMock.findAllByCompetitionIdAndCategoryType(competitionId, RESEARCH_CATEGORY))
-                .thenReturn(Arrays.asList(
-                        newCompetitionCategoryLink()
-                                .withCompetition(competition, competition)
-                                .withCategory(researchCategories.toArray(new Category[2]))
-                                .buildArray(2, CompetitionCategoryLink.class)));
-
-        Competition compResp = service.addCategories(competition);
-
-        assertEquals(competition, compResp);
-        assertEquals(competition.getInnovationAreas(), innovationAreas);
-        assertEquals(competition.getInnovationSector(), innovationSector);
-        assertEquals(competition.getResearchCategories(), researchCategories);
     }
 
     @Test
