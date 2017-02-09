@@ -17,28 +17,29 @@ public class ProjectFinanceChecksViewModel {
     private String projectName;
     private List<ThreadViewModel> queries;
     private boolean approved;
-    private Map<Long, String> attachmentLinks;
+    private Map<Long, String> newAttachmentLinks;
     private int maxQueryWords;
     private int maxQueryCharacters;
     private Long queryId;
-    private String querySection;
+    private String baseUrl;
 
     public ProjectFinanceChecksViewModel(ProjectResource project, OrganisationResource organisation,
                                          List<ThreadViewModel> queries, boolean approved,
-                                         Map<Long, String> attachmentLinks,
+                                         Map<Long, String> newAttachmentLinks,
                                          int maxQueryWords,
                                          int maxQueryCharacters,
-                                         Long queryId) {
+                                         Long queryId,
+                                         String baseUrl) {
         this.projectId = project.getId();
         this.organisationId = organisation.getId();
         this.projectName = project.getName();
         this.queries = queries;
         this.approved = approved;
-        this.attachmentLinks = attachmentLinks;
+        this.newAttachmentLinks = newAttachmentLinks;
         this.maxQueryWords = maxQueryWords;
         this.maxQueryCharacters = maxQueryCharacters;
         this.queryId = queryId;
-        this.querySection = querySection;
+        this.baseUrl = baseUrl;
     }
 
     public Long getProjectId() {
@@ -82,12 +83,12 @@ public class ProjectFinanceChecksViewModel {
     }
 
 
-    public Map<Long, String> getAttachmentLinks() {
-        return attachmentLinks;
+    public Map<Long, String> getNewAttachmentLinks() {
+        return newAttachmentLinks;
     }
 
-    public void setAttachmentLinks(Map<Long, String> attachmentLinks) {
-        this.attachmentLinks = attachmentLinks;
+    public void setNewAttachmentLinks(Map<Long, String> attachmentLinks) {
+        this.newAttachmentLinks = attachmentLinks;
     }
 
     public int getMaxQueryWords() {
@@ -114,11 +115,11 @@ public class ProjectFinanceChecksViewModel {
         this.queryId = queryId;
     }
 
-    public String getQuerySection() {
-        return querySection;
+    public String getBaseUrl() {
+        return baseUrl;
     }
 
-    public void setQuerySection(String querySection) {
-        this.querySection = querySection;
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
     }
 }

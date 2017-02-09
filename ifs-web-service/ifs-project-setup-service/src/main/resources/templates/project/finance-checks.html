@@ -8,7 +8,7 @@
 <div th:include="fragments/layout :: global-header" th:remove="tag" />
 
 
-<main id="content">
+<main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
@@ -41,10 +41,19 @@
 
     <p>Any queries we raise will appear here, with the most recent queries first. You can upload files to support your answers if necessary. It is your responsibility to make sure your answers are as accurate as possible.</p>
 
+    <div class="error-summary" th:if="${nonFormErrors != null} and ${not #lists.isEmpty(nonFormErrors)}">
+        <h2 class="heading-medium error-summary-heading">There was a problem saving your response.</h2>
+        Please review
+        <ul class="error-summary-list">
+            <th:block th:each="err : ${nonFormErrors}">
+                <li th:each="errMsg : ${err.codes}" th:text="#{${errMsg}}"></li>
+            </th:block>
+        </ul>
+    </div>
+
     <hr />
 
     <th:block th:each="query : ${model.getQueries()}">
-        <hr />
         <h2 class="heading-medium non-margin-bottom" th:text="${query.title}">Query Thread Title</h2>
         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
             <th:block th:if="${iteration.index == 0}">
@@ -55,7 +64,7 @@
                 <p th:text="${post.body}"></p>
                 <legend th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</legend>
                 <th:block th:each="attachment : ${post.attachments}">
-                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a>
+                    <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
                 </th:block>
             </th:block>
             <th:block th:unless="${iteration.index == 0}">
@@ -67,20 +76,23 @@
                     <p th:text="${post.body}"></p>
                     <h3 th:if="${post.attachments.size() > 0}" class="heading-small">Supporting documentation</h3>
                     <th:block th:each="attachment : ${post.attachments}">
-                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a>
+                        <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachment.id})}" th:text="${attachment.name}">file</a><br />
                     </th:block>
                 </div>
             </th:block>
         </th:block>
         <th:block th:if="${!query.awaitingResponse and model.queryId == null}">
             <hr />
+        </th:block>
+        <th:block th:if="${query.awaitingResponse and model.queryId == null}">
+            <hr />
             <div class="grid-row extra-margin-top">
-                <div class="column-half"><a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl},query_section=${model.querySection},queryId=${query.id})}" class="button button-secondary">Respond</a><br />
+                <div class="column-half"><a id="post-new-response" th:href="@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl},queryId=${query.id})}" class="button button-secondary">Respond</a><br />
                 </div>
             </div>
         </th:block>
-        <th:block th:if="${!query.awaitingResponse and model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
-            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl},query_section=${model.querySection})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
+        <th:block th:if="${query.awaitingResponse and model.queryId != null and query.id == model.queryId}" th:with="baseUrl=@{{baseUrl}/{queryId}/new-response(baseUrl=${baseUrl}, queryId=${model.queryId})}">
+            <form class="extra-margin" th:action="@{{baseUrl}(baseUrl=${baseUrl})}" th:object="${form}" method="post" enctype="multipart/form-data" novalidate="novalidate">
                 <fieldset>
                     <legend class="heading-medium">Respond to query</legend>
                     <div th:class="${#fields.hasErrors('response')}? 'form-group error':'form-group'">
@@ -115,8 +127,8 @@
                     <fieldset>
                         <legend class="heading-small">Supporting documentation</legend>
                         <th:block th:each="attachmentId : ${model.newAttachmentLinks.keySet()}">
-                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},query_section=${model.querySection},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
-                            <button name="removeAttachment" class="button-secondary no-margin" th:value="${attachmentId}">Remove</button><br />
+                            <a th:href="@{{baseUrl}/attachment/{attachmentId}(baseUrl=${baseUrl},attachmentId=${attachmentId})}" th:text="${model.newAttachmentLinks.get(attachmentId)}">filename</a>
+                            <button name="removeAttachment" class="buttonlink" th:value="${attachmentId}">Remove</button><br />
                         </th:block>
                     </fieldset>
                 </th:block>
@@ -140,11 +152,12 @@
                         <button class="button button-large no-margin">Post response</button>
                     </div>
                     <div class="column-half alignright">
-                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl},query_section=${model.querySection})}">Cancel</a>
+                        <a th:href="@{{baseUrl}/cancel(baseUrl=${baseUrl})}">Cancel</a>
                     </div>
                 </div>
             </form>
         </th:block>
+
     </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />

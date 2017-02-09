@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.finance.handler;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
@@ -28,8 +29,10 @@ public interface ApplicationFinanceHandler {
     BigDecimal getResearchParticipationPercentage(@P("applicationId")final Long applicationId);
 
     // TODO DW - INFUND-4825 - is this permission too broad?
-    @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Internal users can view the Project Finances during the Finance Checks process")
+//    @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
+//    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Internal users can view the Project Finances during the Finance Checks process")
+    @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
+
     ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
 
     @PreAuthorize("hasAuthority('project_finance')")
