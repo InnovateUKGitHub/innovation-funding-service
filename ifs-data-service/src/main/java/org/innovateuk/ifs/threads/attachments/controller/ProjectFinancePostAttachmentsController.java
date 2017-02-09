@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.threads.attachments.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
@@ -19,16 +20,6 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/project/finance/attachment")
 public class ProjectFinancePostAttachmentsController extends AttachmentController {
-//
-//    @Autowired
-//    @Qualifier("postAttachmentValidator")
-//    private FileHttpHeadersValidator fileValidator;
-
-//
-//    @Override
-//    protected FileHttpHeadersValidator fileValidator() {
-//        return fileValidator;
-//    }
 
     @Autowired
     public ProjectFinancePostAttachmentsController(FileEntryService fileEntryService, DownloadService downloadService,
@@ -37,13 +28,14 @@ public class ProjectFinancePostAttachmentsController extends AttachmentControlle
     }
 
     @Override
-//    @PostFilter("hasPermission(filterObject, 'PFPOST_READ')")
+
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     public RestResult<FileEntryResource> find(@PathVariable("fileId") Long fileId) {
         return super.find(fileId);
     }
 
     @Override
-//    @PostFilter("hasPermission(filterObject, 'PFPOST_POST')")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     public RestResult<FileEntryResource> uploadFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
@@ -54,17 +46,14 @@ public class ProjectFinancePostAttachmentsController extends AttachmentControlle
     }
 
     @Override
-//    @PostFilter("hasPermission(filterObject, 'PFPOST_DELETE')")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     public RestResult<Void> deleteFile(@PathVariable("fileId") Long fileId) {
         return super.deleteFile(fileId);
     }
 
     @Override
-//    @PreAuthorize("hasPermission(#fileId, 'org.innovateuk.ifs.file.resource.FileEntryResource', 'PFPOST_READ')")
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     public @ResponseBody ResponseEntity<Object> downloadFile(@PathVariable("fileId") Long fileId) throws IOException {
         return super.downloadFile(fileId);
     }
-
-
-
 }
