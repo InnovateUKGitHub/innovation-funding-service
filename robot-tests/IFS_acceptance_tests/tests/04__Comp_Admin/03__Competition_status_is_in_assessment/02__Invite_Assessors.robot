@@ -157,8 +157,8 @@ The key statistics are calculated
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${ACCEPTED_ASSESSORS}
     #Calculation of the declined Assessors
     ${DECLINED_ASSESSORS}=    Get matching xpath count    //*[text()="Invite declined"]
-    ${ACCEPTED_COUNT}=    Get text    css=div:nth-child(3) > div > span
-    Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${ACCEPTED_COUNT}
+    ${DECLINED_COUNT}=    Get text    css=div:nth-child(3) > div > span
+    Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${DECLINED_COUNT}
 
 the calculations of the Assessors on invite list should be correct
     #Calculation of the Assessors on invite list

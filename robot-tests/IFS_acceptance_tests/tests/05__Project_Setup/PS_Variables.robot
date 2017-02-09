@@ -17,10 +17,11 @@ ${PS_GOL_APPLICATION_HEADER}     ${PS_GOL_APPLICATION_NUMBER}: ${PS_GOL_APPLICAT
 ${PS_GOL_APPLICATION_PROJECT}    10
 ${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}      ${Gabtype_ID}
 ${PS_GOL_APPLICATION_LEAD_ORGANISATION_NAME}    ${Gabtype_NAME}
-${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}        worth.email.test+amy@gmail.com
-${PS_GOL_APPLICATION_PM_EMAIL}                  worth.email.test+amy@gmail.com
-${PS_GOL_APPLICATION_PARTNER_EMAIL}             worth.email.test+karen@gmail.com
-${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            worth.email.test+juan@gmail.com
+${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}        ${test_mailbox_one}+amy@gmail.com
+${PS_GOL_APPLICATION_PM_EMAIL}                  ${test_mailbox_one}+amy@gmail.com
+${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     ${test_mailbox_one}+marian@gmail.com
+${PS_GOL_APPLICATION_PARTNER_EMAIL}             ${test_mailbox_one}+karen@gmail.com
+${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.com
 
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
