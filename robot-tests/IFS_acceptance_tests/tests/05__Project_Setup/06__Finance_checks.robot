@@ -260,9 +260,10 @@ Confirming viability should update on the finance checks page for partner
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(2) a:contains("Approved")
 
+
 Eligibility checks are populated in the table
     [Documentation]    INFUND-4823
-    [Tags]    Pending
+    [Tags]    Pending  # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4)    Review
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(5)    Not set
     And the user should see the text in the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4)    Review
@@ -321,7 +322,7 @@ Finance checks eligibility validations
     When the user clicks the button/link             jQuery=form section:nth-of-type(7) button[name=save-eligibility]
     Then the user should see the text in the page    This field cannot be left blank
     When the user clicks the button/link             link=Finance checks
-  #  When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # clicking the review button for the lead partner
+  #  When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # TODO this is to be uncommented once the switch to new eligibility page is done with 4823
     And the user navigates to the page               ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # to delete this when the new eligibility page is switched to
 
 Project finance user can amend all sections of eligibility
@@ -344,7 +345,7 @@ Checking the approve eligibility checkbox enables RAG selection but not Approve 
 
 RAG choices update on the finance checks page for eligibility
     [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]  Pending
+    [Tags]  Pending  # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
     When the rag rating updates on the finance check page for lead for eligibility   Green
     And the rag rating updates on the finance check page for lead for eligibility    Amber
     And the rag rating updates on the finance check page for lead for eligibility   Red
@@ -372,7 +373,7 @@ Confirming eligibility should show info on a readonly page
 
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
-    [Tags]  Pending
+    [Tags]  Pending  # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
@@ -408,7 +409,7 @@ Project finance user can amend all sections of eligibility for partner
 
 Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
-    [Tags]  Pending
+    [Tags]  Pending  # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
     When the user clicks the button/link   link=Finance checks
     And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
@@ -423,7 +424,7 @@ Checking the approve eligibility checkbox enables RAG selection but not confirm 
 
 RAG choices update on the finance checks page for eligibility for partner
     [Documentation]    INFUND-4839, INFUND-4823
-    [Tags]  Pending
+    [Tags]  Pending  # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
     When the rag rating updates on the finance check page for partner for eligibility   Green
     And the rag rating updates on the finance check page for partner for eligibility    Amber
     And the rag rating updates on the finance check page for partner for eligibility    Red
@@ -452,7 +453,7 @@ Confirming eligibility should show info on a readonly page for partner
 
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
-    [Tags]  Pending
+    [Tags]  Pending  # TODO Pending due to INFUND-4823 as story has not yet been merged to dev
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Approved")
 
