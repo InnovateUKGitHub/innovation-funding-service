@@ -35,7 +35,7 @@ include::{snippets}/public-content/events/save-event/curl-request.adoc[]
 === Reset and save all events to one public content
 ==== Request
 include::{snippets}/public-content/events/reset-and-save-events/http-request.adoc[]
-include::{snippets}/public-content/events/reset-and-save-events/request-parameters.adoc[]
+include::{snippets}/public-content/events/reset-and-save-events/path-parameters.adoc[]
 
 ==== Response
 include::{snippets}/public-content/events/reset-and-save-events/http-response.adoc[]
