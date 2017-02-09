@@ -151,7 +151,6 @@ public class FinanceChecksQueriesAddQueryController {
             validationHandler.addAnyErrors(result);
             return validationHandler.addAnyErrors(validationMessages, fieldErrorsToFieldErrors(), asGlobalErrors()).
                     failNowOrSucceedWith(failureView, () -> {
-                        attachments.forEach( id -> financeCheckService.deleteFile(id));
                         cookieUtil.removeCookie(response, getCookieName(projectId, organisationId));
                         return redirectToQueryPage(projectId, organisationId, querySection);
                     });

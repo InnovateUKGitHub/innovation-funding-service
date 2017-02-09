@@ -196,10 +196,9 @@ public class FinanceChecksQueriesController {
                             errors.addError(fieldError("saveError", null, "validation.notesandqueries.query.response.save.failed"));
                             validationHandler.addAnyErrors(errors);
                             attachments.forEach(attachment -> financeCheckService.deleteFile(attachment));
-                            saveAttachmentsToCookie(response, new ArrayList<>(), projectId, organisationId, queryId);
+                            cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
                         }
                         return validationHandler.failNowOrSucceedWith( saveFailureView, () -> {
-                            attachments.forEach(attachment -> financeCheckService.deleteFile(attachment));
                             cookieUtil.removeCookie(response, getCookieName(projectId, organisationId, queryId));
                             return redirectToQueryPage(projectId, organisationId, querySection);
                         });
