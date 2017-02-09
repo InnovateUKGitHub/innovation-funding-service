@@ -257,7 +257,7 @@ the user should see the dates in full format
     the user should see the element  jQuery=td:contains("Briefing event") ~ td:contains("${tomorrow_nextyear}")
 
 the the user should see that the funding depends on the research area
-    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must give your project a research category in application details")
+    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
 
 the user should see his finances empty
     the user should see the element  jQuery=thead:contains("Total project costs") ~ *:contains("£0")
