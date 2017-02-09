@@ -7,7 +7,7 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.InnovationSectorViewModel;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsProfileViewModel;
+import org.innovateuk.ifs.management.viewmodel.AssessorsProfileViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.junit.Before;
 import org.junit.Test;
@@ -89,7 +89,7 @@ public class AssessorProfileModelPopulatorTest {
         when(competitionService.getById(competitionId)).thenReturn(expectedCompetition);
         when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(assessorProfileResource));
 
-        InviteAssessorsProfileViewModel viewModel =
+        AssessorsProfileViewModel viewModel =
                 assessorProfileModelPopulator.populateModel(assessorId, competitionId);
 
         InOrder inOrder = inOrder(competitionService, assessorRestService);

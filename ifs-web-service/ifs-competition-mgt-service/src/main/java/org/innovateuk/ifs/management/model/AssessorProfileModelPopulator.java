@@ -7,7 +7,7 @@ import org.innovateuk.ifs.assessment.service.AssessorRestService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.InnovationSectorViewModel;
-import org.innovateuk.ifs.management.viewmodel.InviteAssessorsProfileViewModel;
+import org.innovateuk.ifs.management.viewmodel.AssessorsProfileViewModel;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,14 +29,14 @@ public class AssessorProfileModelPopulator {
     @Autowired
     private AssessorRestService assessorRestService;
 
-    public InviteAssessorsProfileViewModel populateModel(long assessorId, long competitionId) {
+    public AssessorsProfileViewModel populateModel(long assessorId, long competitionId) {
         CompetitionResource competition = competitionService.getById(competitionId);
         AssessorProfileResource assessorProfile = assessorRestService.getAssessorProfile(assessorId).getSuccessObjectOrThrowException();
 
         UserResource user = assessorProfile.getUser();
         ProfileResource profile = assessorProfile.getProfile();
 
-        return new InviteAssessorsProfileViewModel(
+        return new AssessorsProfileViewModel(
                 competition,
                 user.getFirstName() + " " + user.getLastName(),
                 user.getEmail(),
