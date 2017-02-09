@@ -61,6 +61,10 @@ public class EligibilityWorkflowHandler extends BaseWorkflowEventHandler<Eligibi
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ELIGIBILITY_APPROVED), partnerOrganisation);
     }
 
+    public EligibilityProcess getProcess(PartnerOrganisation partnerOrganisation) {
+        return getCurrentProcess(partnerOrganisation);
+    }
+
     @Override
     protected EligibilityProcess createNewProcess(PartnerOrganisation target, ProjectUser participant) {
         return new EligibilityProcess(participant, target, null);

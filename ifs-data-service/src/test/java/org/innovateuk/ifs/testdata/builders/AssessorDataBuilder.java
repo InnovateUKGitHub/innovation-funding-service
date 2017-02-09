@@ -145,12 +145,12 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
             }
 
             doAs(data.getUser(), () -> {
-                ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
-                profileSkillsResource.setBusinessType(businessType);
-                profileSkillsResource.setSkillsAreas(skillAreas);
-                profileSkillsResource.setUser(data.getUser().getId());
+                ProfileSkillsEditResource profileSkillsEditResource = new ProfileSkillsEditResource();
+                profileSkillsEditResource.setBusinessType(businessType);
+                profileSkillsEditResource.setSkillsAreas(skillAreas);
+                profileSkillsEditResource.setUser(data.getUser().getId());
 
-                userProfileService.updateProfileSkills(data.getUser().getId(), profileSkillsResource);
+                userProfileService.updateProfileSkills(data.getUser().getId(), profileSkillsEditResource);
                 testService.flushAndClearSession();
             });
         });

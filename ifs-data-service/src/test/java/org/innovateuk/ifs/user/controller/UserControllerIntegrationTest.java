@@ -3,6 +3,8 @@ package org.innovateuk.ifs.user.controller;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.address.domain.Address;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.token.domain.Token;
 import org.innovateuk.ifs.token.repository.TokenRepository;
@@ -22,28 +24,29 @@ import org.springframework.beans.factory.annotation.Value;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.lang.Boolean.TRUE;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.USERS_EMAIL_VERIFICATION_TOKEN_EXPIRED;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ContractBuilder.newContract;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
-import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.resource.AffiliationType.*;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
-import static java.lang.Boolean.TRUE;
-import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * Integration tests for {@link UserController}.
- *
+ * <p>
  * Created by dwatson on 02/10/15.
  */
 public class UserControllerIntegrationTest extends BaseControllerIntegrationTest<UserController> {
@@ -60,6 +63,9 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     private ContractRepository contractRepository;
 
     @Autowired
+    private InnovationAreaRepository innovationAreaRepository;
+
+    @Autowired
     private UserRepository userRepository;
 
     @Autowired
@@ -74,7 +80,7 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
     @Test
     public void test_findByEmailAddress() {
         loginSteveSmith();
-        UserResource user= controller.findByEmail("steve.smith@empire.com").getSuccessObject();
+        UserResource user = controller.findByEmail("steve.smith@empire.com").getSuccessObject();
         assertEquals(EMAIL, user.getEmail());
     }
 
@@ -200,16 +206,25 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
 
         User user = userRepository.findOne(getPaulPlum().getId());
         Long userId = user.getId();
-        Profile profile = newProfile()
+
+        InnovationArea innovationArea = innovationAreaRepository.save(newInnovationArea()
+                .with(id(null))
+                .withName("Innovation area")
+                .build());
+
+        Profile profile = profileRepository.save(newProfile()
                 .withBusinessType(BUSINESS)
                 .withSkillsAreas("Skills")
-                .build();
-        profile = profileRepository.save(profile);
+                .withInnovationAreas(singletonList(innovationArea))
+                .build());
+
         user.setProfileId(profile.getId());
         userRepository.save(user);
 
         ProfileSkillsResource response = controller.getProfileSkills(userId).getSuccessObjectOrThrowException();
         assertEquals(userId, response.getUser());
+        assertEquals(1, response.getInnovationAreas().size());
+        assertEquals("Innovation area", response.getInnovationAreas().get(0).getName());
         assertEquals(BUSINESS, response.getBusinessType());
         assertEquals("Skills", response.getSkillsAreas());
     }
@@ -220,12 +235,12 @@ public class UserControllerIntegrationTest extends BaseControllerIntegrationTest
         UserResource userOne = controller.getUserById(1L).getSuccessObject();
         setLoggedInUser(userOne);
 
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
                 .withBusinessType(BUSINESS)
                 .withSkillsAreas("Skills")
                 .build();
 
-        RestResult<Void> restResult = controller.updateProfileSkills(1L, profileSkills);
+        RestResult<Void> restResult = controller.updateProfileSkills(1L, profileSkillsEditResource);
         assertTrue(restResult.isSuccess());
     }
 
