@@ -44,7 +44,6 @@ import static java.time.LocalDateTime.now;
 import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static java.util.Collections.singletonList;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
@@ -342,7 +341,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -353,9 +352,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
                 .andReturn();
 
-        verify(assessmentService, times(1)).getById(assessmentId);
-        verify(assessmentService, times(1)).rejectInvitation(assessmentId, reason, comment);
-        verifyNoMoreInteractions(assessmentService);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
+        inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
+        inOrder.verifyNoMoreInteractions();
     }
 
     @Test
@@ -367,14 +367,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -382,7 +378,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -406,9 +402,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertTrue(bindingResult.hasFieldErrors("rejectReason"));
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
-        InOrder inOrder = inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -422,14 +417,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -438,7 +429,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -463,9 +454,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -479,14 +469,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -495,7 +481,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -520,9 +506,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Maximum word count exceeded. Please reduce your word count to {1}.", bindingResult.getFieldError("rejectComment").getDefaultMessage());
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
-        InOrder inOrder = inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -536,14 +521,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
         // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
@@ -553,7 +534,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         expectedForm.setRejectComment(comment);
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -576,10 +557,10 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getFieldErrorCount());
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
-        InOrder inOrder = inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(assessmentService, calls(1)).rejectInvitation(assessmentId, reason, comment);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
+        inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -591,19 +572,15 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         AssessmentResource assessment = newAssessmentResource()
                 .with(id(assessmentId))
                 .withApplication(applicationId)
+                .withApplicationName("application name")
                 .build();
 
-        ApplicationResource application = newApplicationResource()
-                .withName("application name")
-                .build();
-
-        when(assessmentService.getById(assessmentId)).thenReturn(assessment);
-        when(applicationService.getById(applicationId)).thenReturn(application);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
 
         RejectAssessmentViewModel expectedViewModel = new RejectAssessmentViewModel(assessmentId,
-                application.getId(),
+                applicationId,
                 "application name"
         );
 
@@ -613,9 +590,8 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name("assessment/reject-invitation-confirm"));
 
-        InOrder inOrder = inOrder(assessmentService, applicationService);
-        inOrder.verify(assessmentService, calls(1)).getById(assessmentId);
-        inOrder.verify(applicationService, calls(1)).getById(applicationId);
+        InOrder inOrder = inOrder(assessmentService);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 

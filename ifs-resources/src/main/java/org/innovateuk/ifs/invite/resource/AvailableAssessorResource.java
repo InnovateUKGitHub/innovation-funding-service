@@ -6,7 +6,6 @@ import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * DTO for an assessor that is available to be invited.

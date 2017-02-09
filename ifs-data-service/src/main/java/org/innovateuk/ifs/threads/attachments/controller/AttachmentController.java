@@ -1,12 +1,14 @@
-package org.innovateuk.ifs.threads.attachments;
+package org.innovateuk.ifs.threads.attachments.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.threads.attachments.DownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -16,19 +18,17 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileD
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
 
-@RestController
-@RequestMapping("/attachment")
-public class PostAttachmentsController {
+public class AttachmentController {
 
-    @Autowired
-    @Qualifier("postAttachmentValidator")
+    private FileEntryService fileEntryService;
+    private DownloadService downloadService;
     private FileHttpHeadersValidator fileValidator;
 
-    @Autowired
-    private FileEntryService fileEntryService;
-
-    @Autowired
-    private DownloadService downloadService;
+    public AttachmentController(FileEntryService fileEntryService, DownloadService downloadService, FileHttpHeadersValidator fileValidator) {
+        this.fileEntryService = fileEntryService;
+        this.downloadService = downloadService;
+        this.fileValidator = fileValidator;
+    }
 
     @RequestMapping(value = "/{fileId}", method = GET, produces = "application/json")
     public RestResult<FileEntryResource> find(@PathVariable("fileId") Long fileId) {
@@ -57,5 +57,4 @@ public class PostAttachmentsController {
         return handleFileDownload(() -> fileEntryService.findOne(fileId)
                 .andOnSuccess(f -> downloadService.getFileAndContents(f)));
     }
-
 }

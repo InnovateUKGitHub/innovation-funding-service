@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.threads.attachments;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -28,7 +29,7 @@ public class DownloadService {
     @Autowired
     private FileEntryMapper fileEntryMapper;
 
-
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     public ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
         if (fileEntry == null) {
             return serviceFailure(notFoundError(FileEntry.class));

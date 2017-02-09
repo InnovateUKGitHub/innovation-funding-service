@@ -223,6 +223,8 @@ public class BaseUnitTest {
     @Mock
     public AssessorRestService assessorRestService;
     @Mock
+    public ApplicationSummaryRestService applicationSummaryRestService;
+    @Mock
     public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
 
     @Spy

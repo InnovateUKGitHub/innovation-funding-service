@@ -4,58 +4,58 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class CompetitionOpenKeyStatisticsResource {
-    private long assessorsInvited;
-    private long assessorsAccepted;
-    private long applicationsPerAssessor;
-    private long applicationsStarted;
-    private long applicationsPastHalf;
-    private long applicationsSubmitted;
+    private int assessorsInvited;
+    private int assessorsAccepted;
+    private int applicationsPerAssessor;
+    private int applicationsStarted;
+    private int applicationsPastHalf;
+    private int applicationsSubmitted;
 
-    public long getAssessorsInvited() {
+    public int getAssessorsInvited() {
         return assessorsInvited;
     }
 
-    public void setAssessorsInvited(long assessorsInvited) {
+    public void setAssessorsInvited(int assessorsInvited) {
         this.assessorsInvited = assessorsInvited;
     }
 
-    public long getAssessorsAccepted() {
+    public int getAssessorsAccepted() {
         return assessorsAccepted;
     }
 
-    public void setAssessorsAccepted(long assessorsAccepted) {
+    public void setAssessorsAccepted(int assessorsAccepted) {
         this.assessorsAccepted = assessorsAccepted;
     }
 
-    public long getApplicationsPerAssessor() {
+    public int getApplicationsPerAssessor() {
         return applicationsPerAssessor;
     }
 
-    public void setApplicationsPerAssessor(long applicationsPerAssessor) {
+    public void setApplicationsPerAssessor(int applicationsPerAssessor) {
         this.applicationsPerAssessor = applicationsPerAssessor;
     }
 
-    public long getApplicationsStarted() {
+    public int getApplicationsStarted() {
         return applicationsStarted;
     }
 
-    public void setApplicationsStarted(long applicationsStarted) {
+    public void setApplicationsStarted(int applicationsStarted) {
         this.applicationsStarted = applicationsStarted;
     }
 
-    public long getApplicationsPastHalf() {
+    public int getApplicationsPastHalf() {
         return applicationsPastHalf;
     }
 
-    public void setApplicationsPastHalf(long applicationsPastHalf) {
+    public void setApplicationsPastHalf(int applicationsPastHalf) {
         this.applicationsPastHalf = applicationsPastHalf;
     }
 
-    public long getApplicationsSubmitted() {
+    public int getApplicationsSubmitted() {
         return applicationsSubmitted;
     }
 
-    public void setApplicationsSubmitted(long applicationsSubmitted) {
+    public void setApplicationsSubmitted(int applicationsSubmitted) {
         this.applicationsSubmitted = applicationsSubmitted;
     }
 
