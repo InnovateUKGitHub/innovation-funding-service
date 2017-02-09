@@ -21,6 +21,30 @@ include::{snippets}/public-content/publish-by-competition-id/http-response.adoc[
 ==== Curl Example
 include::{snippets}/public-content/publish-by-competition-id/curl-request.adoc[]
 
+=== Find public content items by search parameters
+==== Request
+include::{snippets}/public-content/items/find-filtered-items/http-request.adoc[]
+include::{snippets}/public-content/items/find-filtered-items/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/public-content/items/find-filtered-items/http-response.adoc[]
+include::{snippets}/public-content/items/find-filtered-items/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/public-content/items/find-filtered-items/curl-request.adoc[]
+
+=== Retrieve public content item by competition id
+==== Request
+include::{snippets}/public-content/items/by-competition-id/http-request.adoc[]
+include::{snippets}/public-content/items/by-competition-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/public-content/items/by-competition-id/http-response.adoc[]
+include::{snippets}/public-content/items/by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/public-content/items/by-competition-id/curl-request.adoc[]
+
 === Reset and save all events to one public content
 ==== Request
 include::{snippets}/public-content/events/reset-and-save-events/http-request.adoc[]
