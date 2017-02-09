@@ -32,7 +32,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         Long compId = 20L;
 
         CompetitionResource competition = newCompetitionResource().with(target -> setField("id", compId, target)).build();
-        when(competitionService.getById(compId)).thenReturn(competition);
+        when(competitionService.getByIdAnonymous(compId)).thenReturn(competition);
 
         mockMvc.perform(get("/competition/{id}/details/", compId))
                 .andExpect(status().isOk())
@@ -50,7 +50,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         Long compId = 20L;
 
         CompetitionResource competition = newCompetitionResource().with(target -> setField("id", compId, target)).build();
-        when(competitionService.getById(compId)).thenReturn(competition);
+        when(competitionService.getByIdAnonymous(compId)).thenReturn(competition);
         when(userAuthenticationService.getAuthentication(any(HttpServletRequest.class))).thenReturn(null);
 
         mockMvc.perform(get("/competition/{id}/details/", compId))
@@ -70,7 +70,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         String templateName = "a string";
 
         CompetitionResource competition = newCompetitionResource().with(target -> setField("id", compId, target)).build();
-        when(competitionService.getById(compId)).thenReturn(competition);
+        when(competitionService.getByIdAnonymous(compId)).thenReturn(competition);
 
         mockMvc.perform(get("/competition/{id}/info/{templateName}", compId, templateName))
                 .andExpect(status().isOk())
