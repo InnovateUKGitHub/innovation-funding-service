@@ -53,8 +53,6 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Internal users can update the finance checks details")
     ServiceResult<ProjectFinanceResource> updateCost(@P("projectFinanceId") Long projectFinanceId, ProjectFinanceResource applicationFinance);
 
-//    @PreAuthorize("hasPermission(#organisationId, 'PROJECT_FINANCE_READ')")
-
 //    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
     ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
