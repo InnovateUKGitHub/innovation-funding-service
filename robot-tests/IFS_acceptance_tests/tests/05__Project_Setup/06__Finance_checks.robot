@@ -58,7 +58,7 @@ ${la_fromage_overview}    ${server}/project-setup/project/${FUNDERS_PANEL_APPLIC
 Project Finance user can see the finance check summary page
     [Documentation]    INFUND-4821, INFUND-5476, INFUND-5507, INFUND-7016, INFUND-4820, INFUND-7718
     [Tags]  HappyPath
-    [Setup]    Log in as a different user        lee.bowman@innovateuk.test    Passw0rd
+    [Setup]    Log in as a different user        &{internal_finance_credentials}
     Given the user navigates to the page          ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then the user should see the element          jQuery=table.table-progress
     And the user should see the element          jQuery=h2:contains("Finance checks")
