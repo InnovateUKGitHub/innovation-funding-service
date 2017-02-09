@@ -12,11 +12,11 @@ public class CompetitionInAssessmentKeyStatisticsResourceBuilderTest {
 
     @Test
     public void buildOne() {
-        long expectedAssignmentCount = 1L;
-        long expectedAssignmentsWaiting = 2L;
-        long expectedAssignmentsAccepted = 3L;
-        long expectedAssessmentsStarted = 4L;
-        long expectedAssessmentsSubmitted = 5L;
+        int expectedAssignmentCount = 1;
+        int expectedAssignmentsWaiting = 2;
+        int expectedAssignmentsAccepted = 3;
+        int expectedAssessmentsStarted = 4;
+        int expectedAssessmentsSubmitted = 5;
 
         CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = newCompetitionInAssessmentKeyStatisticsResource()
                 .withAssignmentCount(expectedAssignmentCount)
@@ -35,11 +35,11 @@ public class CompetitionInAssessmentKeyStatisticsResourceBuilderTest {
 
     @Test
     public void buildMany() {
-        Long[] expectedAssignmentCounts = {1L, 1L};
-        Long[] expectedAssignmentsWaitings = {2L, 1L};
-        Long[] expectedAssignmentsAccepteds = {3L, 1L};
-        Long[] expectedAssessmentsStarteds = {4L, 1L};
-        Long[] expectedAssessmentsSubmitteds = {5L, 1L};
+        Integer[] expectedAssignmentCounts = {1, 1};
+        Integer[] expectedAssignmentsWaitings = {2, 1};
+        Integer[] expectedAssignmentsAccepteds = {3, 1};
+        Integer[] expectedAssessmentsStarteds = {4, 1};
+        Integer[] expectedAssessmentsSubmitteds = {5, 1};
 
         List<CompetitionInAssessmentKeyStatisticsResource> keyStatisticsResources = newCompetitionInAssessmentKeyStatisticsResource()
                 .withAssignmentCount(expectedAssignmentCounts)
@@ -50,11 +50,11 @@ public class CompetitionInAssessmentKeyStatisticsResourceBuilderTest {
                 .build(2);
 
         for (int i = 0; i < keyStatisticsResources.size(); i++) {
-            assertEquals((long) expectedAssignmentCounts[i], keyStatisticsResources.get(i).getAssignmentCount());
-            assertEquals((long) expectedAssignmentsWaitings[i], keyStatisticsResources.get(i).getAssignmentsWaiting());
-            assertEquals((long) expectedAssignmentsAccepteds[i], keyStatisticsResources.get(i).getAssignmentsAccepted());
-            assertEquals((long) expectedAssessmentsStarteds[i], keyStatisticsResources.get(i).getAssessmentsStarted());
-            assertEquals((long) expectedAssessmentsSubmitteds[i], keyStatisticsResources.get(i).getAssessmentsSubmitted());
+            assertEquals((int) expectedAssignmentCounts[i], keyStatisticsResources.get(i).getAssignmentCount());
+            assertEquals((int) expectedAssignmentsWaitings[i], keyStatisticsResources.get(i).getAssignmentsWaiting());
+            assertEquals((int) expectedAssignmentsAccepteds[i], keyStatisticsResources.get(i).getAssignmentsAccepted());
+            assertEquals((int) expectedAssessmentsStarteds[i], keyStatisticsResources.get(i).getAssessmentsStarted());
+            assertEquals((int) expectedAssessmentsSubmitteds[i], keyStatisticsResources.get(i).getAssessmentsSubmitted());
         }
     }
 

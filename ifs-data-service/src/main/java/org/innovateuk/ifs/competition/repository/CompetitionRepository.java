@@ -18,20 +18,20 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
 
     public static final String LIVE_QUERY = "SELECT c FROM Competition c WHERE CURRENT_TIMESTAMP BETWEEN " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' AND m.competition.id = c.id) AND " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' AND m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE CURRENT_TIMESTAMP BETWEEN " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' AND m.competition.id = c.id) AND " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' AND m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c WHERE CURRENT_TIMESTAMP >= " +
-            "(SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' and m.competition.id = c.id) AND " +
+            "(SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
-            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'ASSESSOR_DEADLINE' and m.competition.id = c.id) AND " +
+            "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' and m.competition.id = c.id) AND " +
             "c.setupComplete = TRUE AND c.template = FALSE";
 
     public static final String UPCOMING_QUERY = "SELECT c FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
