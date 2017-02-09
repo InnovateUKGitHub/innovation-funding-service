@@ -59,6 +59,10 @@ public class ViabilityWorkflowHandler extends BaseWorkflowEventHandler<Viability
         return fireEvent(internalUserEvent(partnerOrganisation, internalUser, ORGANISATION_IS_ACADEMIC), partnerOrganisation);
     }
 
+    public ViabilityProcess getProcess(PartnerOrganisation partnerOrganisation) {
+        return getCurrentProcess(partnerOrganisation);
+    }
+
     @Override
     protected ViabilityProcess createNewProcess(PartnerOrganisation target, ProjectUser participant) {
         return new ViabilityProcess(participant, target, null);

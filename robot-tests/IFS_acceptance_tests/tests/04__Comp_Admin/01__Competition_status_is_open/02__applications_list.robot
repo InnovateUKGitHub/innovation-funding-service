@@ -4,6 +4,10 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...               INFUND-2259 As a competitions administrator I want to see summary details of all applications in a competition displayed alongside the list of applications so that I can reference information relating to the status of the competition
 ...
 ...               INFUND-3006 As a Competition Management I want the ability to view the name of the lead on the 'all applications' page so I can better support the Customer Support Service.
+...
+...               INFUND-7367 Competition management: Applications dashboard
+...
+...               INFUND-7369 Competition management: View list of all applications
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -15,7 +19,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
 Competitions admin should be able to see the list of applications
-    [Documentation]    INFUND-2135: listing of applications for an open competition
+    [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=.button:contains("Applications")
@@ -23,7 +27,7 @@ Competitions admin should be able to see the list of applications
     Then the user should see the text in the page    All applications
 
 The correct columns show for the application list table
-    [Documentation]    INFUND-2135: listing of applications for an open competition, INFUND-3063
+    [Documentation]    INFUND-7369   INFUND-3063
     [Tags]    HappyPath
     Then the user should see the text in the page    Application number
     And the user should see the text in the page    Project title
@@ -33,7 +37,7 @@ The correct columns show for the application list table
     And the user should see the text in the page    Percentage complete
 
 The correct number of applications shows in the table header
-    [Documentation]    INFUND-2135: listing of applications for an open competition
+    [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Then the table header matches correctly
 
