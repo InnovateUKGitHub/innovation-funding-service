@@ -13,7 +13,6 @@ In Panel Dashboard
     And The user should see the text in the page    Materials and manufacturing
     And The user should see the text in the page    Earth Observation
     And the user should not see the element    link=View and update competition setup
-    And the user should see the element    jQuery=a:contains("Download panel sheet")
     And the user should see the element    jQuery=a:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")

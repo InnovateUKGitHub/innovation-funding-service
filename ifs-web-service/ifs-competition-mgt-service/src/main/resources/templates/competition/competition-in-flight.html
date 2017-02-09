@@ -178,13 +178,6 @@
                         </li>
                         <li>
                             <a class="disabled" aria-disabled="true"
-                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED'}">Download panel sheet</a>
-                            <a class=""
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED'}"
-                               href="#">Download panel sheet</a>
-                        </li>
-                        <li>
-                            <a class="disabled" aria-disabled="true"
                                th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}">Input and review funding decision</a>
                             <a class=""
                                th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}"
