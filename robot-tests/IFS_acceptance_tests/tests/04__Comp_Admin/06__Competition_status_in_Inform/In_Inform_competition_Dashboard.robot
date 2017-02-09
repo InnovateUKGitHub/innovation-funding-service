@@ -14,7 +14,11 @@ Competition Dashboard
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
     And The user should see the text in the page    Earth Observation
-    And The user should see the element    jQuery=button:contains("Manage funding notifications")
     And The user should see the element    jQuery=.button:contains("Invite assessors")
-    And The user should see the element    jQuery=button:contains("Release feedback")
     And the user should not see the element    link=View and update competition setup
+
+Milestones for the In inform competition
+    Then the user should see that the element is disabled    jQuery=.button:contains("Manage funding notifications")
+    And The user should see the element    jQuery=button:contains("Release feedback")
+    And the user should see the element    css=li:nth-child(13).done    #Verify that 12. Notifications
+    And the user should see the element    css=li:nth-child(14).not-done    #Verify that 13. Release feedback is not done

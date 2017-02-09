@@ -17,9 +17,9 @@ public class CompetitionInAssessmentKeyStatisticsResourceDocs {
 
     public static final CompetitionInAssessmentKeyStatisticsResourceBuilder competitionInAssessmentKeyStatisticsResourceBuilder =
             newCompetitionInAssessmentKeyStatisticsResource()
-                    .withAssignmentCount(1L)
-                    .withAssignmentsWaiting(2L)
-                    .withAssignmentsAccepted(3L)
-                    .withAssessmentsStarted(4L)
-                    .withAssessmentsSubmitted(5L);
+                    .withAssignmentCount(1)
+                    .withAssignmentsWaiting(2)
+                    .withAssignmentsAccepted(3)
+                    .withAssessmentsStarted(4)
+                    .withAssessmentsSubmitted(5);
 }

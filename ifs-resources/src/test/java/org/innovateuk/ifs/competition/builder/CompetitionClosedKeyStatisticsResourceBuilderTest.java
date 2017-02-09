@@ -13,12 +13,12 @@ public class CompetitionClosedKeyStatisticsResourceBuilderTest {
     @Test
     public void buildOne() {
 
-        long expectedAssessorsInvited = 1L;
-        long expectedAssessorsAccepted = 2L;
-        long expectedApplicationsPerAssessor = 3L;
-        long expectedApplicationsRequiringAssessors = 4L;
-        long expectedAssessorsWithoutApplications = 5L;
-        long expectedAssignmentCount = 6L;
+        int expectedAssessorsInvited = 1;
+        int expectedAssessorsAccepted = 2;
+        int expectedApplicationsPerAssessor = 3;
+        int expectedApplicationsRequiringAssessors = 4;
+        int expectedAssessorsWithoutApplications = 5;
+        int expectedAssignmentCount = 6;
 
         CompetitionClosedKeyStatisticsResource keyStatisticsResource = newCompetitionClosedKeyStatisticsResource()
                 .withAssessorsInvited(expectedAssessorsInvited)
@@ -39,12 +39,12 @@ public class CompetitionClosedKeyStatisticsResourceBuilderTest {
 
     @Test
     public void buildMany() {
-        Long[] expectedAssessorsInviteds = {1L, 11L};
-        Long[] expectedAssessorsAccepteds = {2L, 12L};
-        Long[] expectedApplicationsPerAssessors = {3L, 13L};
-        Long[] expectedApplicationsRequiringAssessorss = {4L, 14L};
-        Long[] expectedAssessorsWithoutApplicationss = {5L, 15L};
-        Long[] expectedAssignmentCounts = {6L, 16L};
+        Integer[] expectedAssessorsInviteds = {1, 11};
+        Integer[] expectedAssessorsAccepteds = {2, 12};
+        Integer[] expectedApplicationsPerAssessors = {3, 13};
+        Integer[] expectedApplicationsRequiringAssessorss = {4, 14};
+        Integer[] expectedAssessorsWithoutApplicationss = {5, 15};
+        Integer[] expectedAssignmentCounts = {6, 16};
 
         List<CompetitionClosedKeyStatisticsResource> keyStatisticsResources = newCompetitionClosedKeyStatisticsResource()
                 .withAssessorsInvited(expectedAssessorsInviteds)
@@ -56,12 +56,12 @@ public class CompetitionClosedKeyStatisticsResourceBuilderTest {
                 .build(2);
 
         for (int i = 0; i < keyStatisticsResources.size(); i++) {
-            assertEquals((long) expectedAssessorsInviteds[i], keyStatisticsResources.get(i).getAssessorsInvited());
-            assertEquals((long) expectedAssessorsAccepteds[i], keyStatisticsResources.get(i).getAssessorsAccepted());
-            assertEquals((long) expectedApplicationsPerAssessors[i], keyStatisticsResources.get(i).getApplicationsPerAssessor());
-            assertEquals((long) expectedApplicationsRequiringAssessorss[i], keyStatisticsResources.get(i).getApplicationsRequiringAssessors());
-            assertEquals((long) expectedAssessorsWithoutApplicationss[i], keyStatisticsResources.get(i).getAssessorsWithoutApplications());
-            assertEquals((long) expectedAssignmentCounts[i], keyStatisticsResources.get(i).getAssignmentCount());
+            assertEquals((int) expectedAssessorsInviteds[i], keyStatisticsResources.get(i).getAssessorsInvited());
+            assertEquals((int) expectedAssessorsAccepteds[i], keyStatisticsResources.get(i).getAssessorsAccepted());
+            assertEquals((int) expectedApplicationsPerAssessors[i], keyStatisticsResources.get(i).getApplicationsPerAssessor());
+            assertEquals((int) expectedApplicationsRequiringAssessorss[i], keyStatisticsResources.get(i).getApplicationsRequiringAssessors());
+            assertEquals((int) expectedAssessorsWithoutApplicationss[i], keyStatisticsResources.get(i).getAssessorsWithoutApplications());
+            assertEquals((int) expectedAssignmentCounts[i], keyStatisticsResources.get(i).getAssignmentCount());
         }
 
     }

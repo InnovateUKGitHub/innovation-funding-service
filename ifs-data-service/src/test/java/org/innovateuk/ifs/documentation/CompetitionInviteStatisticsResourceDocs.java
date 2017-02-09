@@ -16,8 +16,8 @@ public class CompetitionInviteStatisticsResourceDocs {
 
     public static final CompetitionInviteStatisticsResourceBuilder competitionInviteStatisticsResourceBuilder =
             newCompetitionInviteStatisticsResource()
-                    .withInviteList(1L)
-                    .withInvited(2L)
-                    .withAccepted(3L)
-                    .withDeclined(4L);
+                    .withInviteList(1)
+                    .withInvited(2)
+                    .withAccepted(3)
+                    .withDeclined(4);
 }

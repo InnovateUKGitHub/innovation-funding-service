@@ -71,4 +71,24 @@ public final class HttpUtils {
     }
 
 
+    /**
+     * Parse a {@link HttpServletRequest} to retrieve the full URL string (with query parameters).
+     *
+     * This can be useful as only the {@link HttpServletRequest#getRequestURL}
+     * and {@link HttpServletRequest#getQueryString} methods are exposed
+     * (which are not always sufficient).
+     *
+     * @param request from a controller method
+     * @return the full URL string
+     */
+    public static String getFullRequestUrl(HttpServletRequest request) {
+        StringBuffer requestURL = request.getRequestURL();
+        String queryString = request.getQueryString();
+
+        if (queryString == null) {
+            return requestURL.toString();
+        } else {
+            return requestURL.append('?').append(queryString).toString();
+        }
+    }
 }
