@@ -44,7 +44,7 @@ Requesting funding button
     [Documentation]    INFUND-7093
     [Tags]
     When the user clicks the button/link                jQuery=button:contains("Requesting funding")
-    And the user should see the element                 jQuery=li:nth-of-type(2) img.assigned
+    Then the user should see the element                 jQuery=li:nth-of-type(2) img.assigned
     And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("Not required")
     And the user should not see the element             jQuery=li:nth-of-type(3) img.complete
     And the user should not see the funding guidance
