@@ -5,7 +5,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 
-import org.innovateuk.ifs.commons.error.CommonErrors;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -528,9 +527,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .andReturn();
 
         List<? extends ObjectError> errors = (List<? extends ObjectError>) result.getModelAndView().getModel().get("nonFormErrors");
-        assertEquals(2, errors.size());
-        assertEquals(CommonFailureKeys.GENERAL_FORBIDDEN, errors.get(0).getCode());
-        assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(1).getCode());
+        assertEquals(1, errors.size());
+        assertEquals("validation.notesandqueries.query.response.save.failed", errors.get(0).getCode());
     }
 
     @Override
