@@ -26,7 +26,7 @@ public class Post {
     @NotNull
     private String body;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany
     @JoinTable(name = "post_attachment",
             joinColumns = @JoinColumn(name = "post_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "file_entry_id", referencedColumnName = "id"))

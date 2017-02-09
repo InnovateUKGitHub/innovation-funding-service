@@ -66,6 +66,7 @@ import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.finance.repository.*;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesService;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
@@ -372,6 +373,8 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     @Mock
     protected AssessorFeedbackService assessorFeedbackServiceMock;
 
+    @Mock
+    protected ProjectFinanceQueriesService projectFinanceQueriesService;
     @Mock
     protected ProjectService projectServiceMock;
 
