@@ -32,7 +32,7 @@ public class PublicContentResource {
 
     private List<PublicContentSectionResource> contentSections;
 
-    private List<PublicContentEventResource> contentEvents;
+    private List<ContentEventResource> contentEvents;
 
     private List<String> keywords;
 
@@ -124,11 +124,11 @@ public class PublicContentResource {
         this.keywords = keywords;
     }
 
-    public List<PublicContentEventResource> getContentEvents() {
+    public List<ContentEventResource> getContentEvents() {
         return contentEvents;
     }
 
-    public void setContentEvents(List<PublicContentEventResource> contentEvents) {
+    public void setContentEvents(List<ContentEventResource> contentEvents) {
         this.contentEvents = contentEvents;
     }
 

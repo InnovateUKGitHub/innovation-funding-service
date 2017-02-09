@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.ContentEventMapper;
@@ -18,7 +18,7 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentEventResourceBuilder.newPublicContentEventResource;
+import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -52,7 +52,7 @@ public class ContentEventControllerIntegrationTest extends BaseControllerIntegra
                 .withCompetitionId(1L)
                 .build());
 
-        PublicContentEventResource event = newPublicContentEventResource()
+        ContentEventResource event = newContentEventResource()
                 .withContent("New event")
                 .withPublicContent(publicContent.getId())
                 .withDate(LocalDateTime.now()).build();
@@ -72,7 +72,7 @@ public class ContentEventControllerIntegrationTest extends BaseControllerIntegra
                 .withCompetitionId(1L)
                 .build());
 
-        PublicContentEventResource event = newPublicContentEventResource()
+        ContentEventResource event = newContentEventResource()
                 .withContent("New event")
                 .withPublicContent(publicContent.getId())
                 .withDate(LocalDateTime.of(2017,2,6,11,20,23)).build();
@@ -84,7 +84,7 @@ public class ContentEventControllerIntegrationTest extends BaseControllerIntegra
 
         assertTrue(result.isSuccess());
 
-        List<PublicContentEventResource> expectedEvents = asList(event);
+        List<ContentEventResource> expectedEvents = asList(event);
         List<ContentEvent> resultEvents = publicContentRepository.findOne(publicContent.getId()).getContentEvents();
         assertEquals(expectedEvents.get(0).getDate(), resultEvents.get(0).getDate());
         assertEquals(expectedEvents.get(0).getContent(), resultEvents.get(0).getContent());

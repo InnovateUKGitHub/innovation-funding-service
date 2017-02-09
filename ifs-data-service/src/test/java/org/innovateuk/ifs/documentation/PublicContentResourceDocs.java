@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentEventResourceBuilder.newPublicContentEventResource;
+import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentSectionResourceBuilder.newPublicContentSectionResource;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
@@ -63,7 +63,7 @@ public class PublicContentResourceDocs {
                                     .withPriority(1)
                                 .build(1)
                             ).build(1))
-            .withContentEvents(newPublicContentEventResource()
+            .withContentEvents(newContentEventResource()
                     .withId(1L)
                     .withDate(LocalDateTime.now())
                     .withPublicContent(2L)

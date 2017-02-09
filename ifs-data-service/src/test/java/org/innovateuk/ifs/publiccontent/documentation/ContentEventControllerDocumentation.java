@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.publiccontent.controller.ContentEventController;
 import org.innovateuk.ifs.publiccontent.transactional.ContentEventService;
 import org.junit.Before;
@@ -13,8 +13,8 @@ import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.PublicContentEventResourceDocs.publicContentEventResourceBuilder;
-import static org.innovateuk.ifs.documentation.PublicContentEventResourceDocs.publicContentEventResourceFields;
+import static org.innovateuk.ifs.documentation.ContentEventResourceDocs.contentEventResourceBuilder;
+import static org.innovateuk.ifs.documentation.ContentEventResourceDocs.contentEventResourceFields;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
@@ -26,7 +26,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PublicContentEventControllerDocumentation extends BaseControllerMockMVCTest<ContentEventController> {
+public class ContentEventControllerDocumentation extends BaseControllerMockMVCTest<ContentEventController> {
     @Mock
     private ContentEventService contentEventService;
     private RestDocumentationResultHandler document;
@@ -44,7 +44,7 @@ public class PublicContentEventControllerDocumentation extends BaseControllerMoc
 
     @Test
     public void saveEvent() throws Exception {
-        PublicContentEventResource resource = publicContentEventResourceBuilder.build();
+        ContentEventResource resource = contentEventResourceBuilder.build();
 
         when(contentEventService.saveEvent(resource)).thenReturn(serviceSuccess());
 
@@ -53,13 +53,13 @@ public class PublicContentEventControllerDocumentation extends BaseControllerMoc
                 .content(objectMapper.writeValueAsString(resource)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
-                    requestFields(publicContentEventResourceFields)
+                    requestFields(contentEventResourceFields)
                 ));
     }
 
     @Test
     public void resetAndSaveEvents() throws Exception {
-        List<PublicContentEventResource> resources = publicContentEventResourceBuilder.build(2);
+        List<ContentEventResource> resources = contentEventResourceBuilder.build(2);
 
         when(contentEventService.resetAndSaveEvents(1L, resources)).thenReturn(serviceSuccess());
 
@@ -72,7 +72,7 @@ public class PublicContentEventControllerDocumentation extends BaseControllerMoc
                                 parameterWithName("id").description("The id of the public content that's being reset")
                         ),
                         requestFields(fieldWithPath("[]").description("List of public content events"))
-                                .andWithPrefix("[].", publicContentEventResourceFields)
+                                .andWithPrefix("[].", contentEventResourceFields)
                 ));
     }
 }

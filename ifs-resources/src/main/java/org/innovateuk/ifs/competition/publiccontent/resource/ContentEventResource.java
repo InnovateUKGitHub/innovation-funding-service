@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 /**
  * The resource for competition public content event.
  */
-public class PublicContentEventResource {
+public class ContentEventResource {
 
     private Long id;
 
@@ -57,7 +57,7 @@ public class PublicContentEventResource {
 
         if (o == null || getClass() != o.getClass()) return false;
 
-        PublicContentEventResource resource = (PublicContentEventResource) o;
+        ContentEventResource resource = (ContentEventResource) o;
 
         return new EqualsBuilder()
                 .append(id, resource.id)

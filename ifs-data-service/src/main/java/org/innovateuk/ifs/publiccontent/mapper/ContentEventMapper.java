@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
 import org.mapstruct.Mapper;
 
@@ -12,12 +12,12 @@ import org.mapstruct.Mapper;
             PublicContentMapper.class
     }
 )
-public abstract class ContentEventMapper extends BaseMapper<ContentEvent, PublicContentEventResource, Long> {
+public abstract class ContentEventMapper extends BaseMapper<ContentEvent, ContentEventResource, Long> {
 
     @Override
-    public abstract PublicContentEventResource mapToResource(ContentEvent domain);
+    public abstract ContentEventResource mapToResource(ContentEvent domain);
 
-    public abstract ContentEvent mapToDomain(PublicContentEventResource resource);
+    public abstract ContentEvent mapToDomain(ContentEventResource resource);
 
     public Long mapContentEventToId(ContentEvent object) {
         if (object == null) {

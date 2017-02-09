@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.publiccontent.domain.ContentEvent;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.ContentEventMapper;
@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PUBLIC_CONTENT_IDS_INCONSISTENT;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventBuilder.newContentEvent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
-import static org.innovateuk.ifs.publiccontent.builder.PublicContentEventResourceBuilder.newPublicContentEventResource;
+import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -39,7 +39,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
 
     @Test
     public void testSaveEvent() {
-        PublicContentEventResource resource = newPublicContentEventResource().withId(1L).withContent("Content").withDate(LocalDateTime.of(2017,1,1,1,1)).build();
+        ContentEventResource resource = newContentEventResource().withId(1L).withContent("Content").withDate(LocalDateTime.of(2017,1,1,1,1)).build();
         ContentEvent domain = newContentEvent().withId(1L).withContent("Content").withDate(LocalDateTime.of(2017,1,1,1,1)).build();
 
         when(contentEventMapper.mapToDomain(resource)).thenReturn(domain);
@@ -54,7 +54,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
     public void testResetAndSaveEvents() {
         Long publicContentId = 8L;
 
-        List<PublicContentEventResource> resources = newPublicContentEventResource()
+        List<ContentEventResource> resources = newContentEventResource()
                 .withId(1L)
                 .withContent("Content")
                 .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
@@ -82,7 +82,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
     public void testResetAndSaveEventsFailure() {
         Long publicContentId = -18L;
 
-        List<PublicContentEventResource> resources = newPublicContentEventResource()
+        List<ContentEventResource> resources = newContentEventResource()
                 .withId(1L)
                 .withContent("Content")
                 .withDate(LocalDateTime.of(2017, 1, 1, 1, 1))
@@ -113,7 +113,7 @@ public class ContentEventServiceImplTest extends BaseServiceUnitTest<ContentEven
     public void testResetAndSaveEventsEmptyEvents() {
         Long publicContentId = 8L;
 
-        List<PublicContentEventResource> resources = Collections.emptyList();
+        List<ContentEventResource> resources = Collections.emptyList();
 
         List<ContentEvent> domains = Collections.emptyList();
 

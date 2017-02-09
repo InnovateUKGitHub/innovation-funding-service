@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.modelpopulator.section;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -57,10 +57,10 @@ public class DatesViewModelPopulator extends AbstractPublicContentViewModelPopul
         model.setPublicContentDates(dates);
     }
 
-    private DateViewModel mapContentEventDateViewModel(PublicContentEventResource publicContentEventResource) {
+    private DateViewModel mapContentEventDateViewModel(ContentEventResource contentEventResource) {
         DateViewModel dateViewModel = new DateViewModel();
-        dateViewModel.setDateTime(publicContentEventResource.getDate());
-        dateViewModel.setContent(publicContentEventResource.getContent());
+        dateViewModel.setDateTime(contentEventResource.getDate());
+        dateViewModel.setContent(contentEventResource.getContent());
 
         return dateViewModel;
     }

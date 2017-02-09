@@ -3,7 +3,7 @@ package org.innovateuk.ifs.publiccontent.saver.section;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
@@ -39,21 +39,21 @@ public class DatesFormSaver extends AbstractPublicContentFormSaver<DatesForm> im
                 .resetAndSaveEvents(publicContentResource, mapDateToEventResource(publicContentResource.getId(), form.getDates()));
     }
 
-    private List<PublicContentEventResource> mapDateToEventResource(Long publicContentId, List<Date> dates) {
-        List<PublicContentEventResource> publicContentEventResources = new ArrayList<>();
+    private List<ContentEventResource> mapDateToEventResource(Long publicContentId, List<Date> dates) {
+        List<ContentEventResource> contentEventResources = new ArrayList<>();
 
         if(null != dates) {
             dates.forEach(date -> {
-                PublicContentEventResource eventResource = new PublicContentEventResource();
+                ContentEventResource eventResource = new ContentEventResource();
                 eventResource.setContent(date.getContent());
                 eventResource.setId(date.getId());
                 eventResource.setDate(LocalDateTime.of(date.getYear(), date.getMonth(), date.getDay(), 0, 0));
                 eventResource.setPublicContent(publicContentId);
-                publicContentEventResources.add(eventResource);
+                contentEventResources.add(eventResource);
             });
         }
 
-        return publicContentEventResources;
+        return contentEventResources;
     }
 
 

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.formpopulator.section;
 
 
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
@@ -38,7 +38,7 @@ public class DatesFormPopulator extends AbstractPublicContentFormPopulator<Dates
         return PublicContentSectionType.DATES;
     }
 
-    private Date mapEventToDate(PublicContentEventResource event) {
+    private Date mapEventToDate(ContentEventResource event) {
         Date date = new Date();
 
         date.setId(event.getId());

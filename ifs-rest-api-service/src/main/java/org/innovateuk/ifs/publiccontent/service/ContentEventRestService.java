@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.publiccontent.service;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  */
 public interface ContentEventRestService {
 
-    RestResult<Void> saveEvent(PublicContentEventResource event);
+    RestResult<Void> saveEvent(ContentEventResource event);
 
-    RestResult<Void> resetAndSaveEvents(Long publicContentId, List<PublicContentEventResource> events);
+    RestResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> events);
 }

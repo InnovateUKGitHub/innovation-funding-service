@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentEventResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.publiccontent.mapper.ContentEventMapper;
 import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -28,13 +28,13 @@ public class ContentEventServiceImpl extends BaseTransactionalService implements
     private ContentEventMapper contentEventMapper;
 
     @Override
-    public ServiceResult<Void> saveEvent(PublicContentEventResource eventResource) {
+    public ServiceResult<Void> saveEvent(ContentEventResource eventResource) {
         contentEventRepository.save(contentEventMapper.mapToDomain(eventResource));
         return serviceSuccess();
     }
 
     @Override
-    public ServiceResult<Void> resetAndSaveEvents(Long publicContentId, List<PublicContentEventResource> eventResources) {
+    public ServiceResult<Void> resetAndSaveEvents(Long publicContentId, List<ContentEventResource> eventResources) {
         if(eventResourcesAllHaveIDOrEmpty(publicContentId, eventResources)) {
             contentEventRepository.deleteByPublicContentId(publicContentId);
             contentEventRepository.save(contentEventMapper.mapToDomain(eventResources));
@@ -44,7 +44,7 @@ public class ContentEventServiceImpl extends BaseTransactionalService implements
         return serviceFailure(new Error(PUBLIC_CONTENT_IDS_INCONSISTENT));
     }
 
-    private Boolean eventResourcesAllHaveIDOrEmpty(Long publicContentId, List<PublicContentEventResource> eventResources) {
+    private Boolean eventResourcesAllHaveIDOrEmpty(Long publicContentId, List<ContentEventResource> eventResources) {
         return eventResources.isEmpty() || eventResources.stream().allMatch(eventResource -> eventResource.getPublicContent().equals(publicContentId));
     }
 }
