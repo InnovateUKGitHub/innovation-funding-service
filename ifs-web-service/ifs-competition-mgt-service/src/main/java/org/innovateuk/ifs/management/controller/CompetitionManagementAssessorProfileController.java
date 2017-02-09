@@ -57,21 +57,20 @@ public class CompetitionManagementAssessorProfileController extends BaseControll
                           @PathVariable("competitionId") long competitionId,
                           @PathVariable("assessorId") long assessorId,
                           @RequestParam(value = "origin", defaultValue = "APPLICATION_PROGRESS") String origin,
+                          @RequestParam(value = "applicationId", required = false) Long applicationId,
                           @RequestParam MultiValueMap<String, String> queryParams) {
 
         model.addAttribute("model", assessorProfileModelPopulator.populateModel(assessorId, competitionId));
-        model.addAttribute("backUrl", buildBackUrl(origin, competitionId, queryParams));
+        model.addAttribute("backUrl", buildBackUrl(origin, competitionId, applicationId, queryParams));
 
         return "assessors/profile";
     }
 
-    private String buildBackUrl(String origin, Long competitionId, MultiValueMap<String, String> queryParams) {
-        String applicationId = "";
+    private String buildBackUrl(String origin, Long competitionId, Long applicationId, MultiValueMap<String, String> queryParams) {
         String baseUrl = AssessorProfileOrigin.valueOf(origin).getBaseOriginUrl();
         queryParams.remove("origin");
 
         if (queryParams.containsKey("applicationId")) {
-            applicationId = queryParams.get("applicationId").get(0);
             queryParams.remove("applicationId");
         }
 
