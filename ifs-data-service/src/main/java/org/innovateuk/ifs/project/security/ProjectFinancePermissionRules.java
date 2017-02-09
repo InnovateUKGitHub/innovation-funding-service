@@ -144,6 +144,6 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
 
     @PermissionRule(value = "READ_ELIGIBILITY", description = "Internal users can see the project finances eligibility of their own project")
     public boolean internalUsersCanSeeTheProjectFinancesForTheirOrganisation(final FinanceCheckEligibilityResource financeCheckEligibilityResource, final UserResource user) {
-        return isPartner(financeCheckEligibilityResource.getProjectId(), user.getId());
+        return isInternal(user);
     }
 }
