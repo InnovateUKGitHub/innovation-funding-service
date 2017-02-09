@@ -16,7 +16,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
 /**
- * Service for operations around the usage and processing of public content.
+ * Service for operations around the usage and processing of public content events.
  */
 @Service
 public class ContentEventServiceImpl extends BaseTransactionalService implements ContentEventService {

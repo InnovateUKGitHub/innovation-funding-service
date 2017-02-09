@@ -15,7 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Controller for setup of public content.
+ * Controller for setup of competition dates and public content events.
  */
 @Controller
 @RequestMapping("/competition/setup/public-content/dates")

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Implementation for public content rest calls.
+ * Implementation for public content events rest calls.
  */
 @Service
 public class ContentEventRestServiceImpl extends BaseRestService implements ContentEventRestService {
