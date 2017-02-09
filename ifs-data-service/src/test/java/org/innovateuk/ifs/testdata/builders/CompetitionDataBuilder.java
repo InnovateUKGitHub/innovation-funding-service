@@ -331,7 +331,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 publicContent.setProjectSize(projectSize);
                 publicContent.setKeywords(keywords);
 
-                stream(PublicContentSectionType.values()).forEach(type -> publicContentService.updateSection(publicContent, type).getSuccessObjectOrThrowException());
+                stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccessObjectOrThrowException());
 
                 publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
             }
