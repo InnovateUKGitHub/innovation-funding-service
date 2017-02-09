@@ -272,13 +272,16 @@ public class ApplicationFormController {
                                  List<SectionResource> allSections) {
         if(SectionType.GENERAL.equals(section.getType())
                 || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
-            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(
+                    form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
-            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(
+                    form, model, application, section, user, bindingResult, allSections, organisationId);
 
             if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
-                applicationNavigationPopulator.addSectionTypeToSkip(SectionType.ORGANISATION_FINANCES);
+                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(section, application.getId(),
+                        Collections.singletonList(SectionType.ORGANISATION_FINANCES)));
             }
 
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
@@ -490,7 +493,7 @@ public class ApplicationFormController {
                 errors.addAll(saveErrors);
             }
 
-            setOrganisationFinancesComplete(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
+            markOrganisationFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
         }
 
         if(isMarkQuestionRequest(params)) {
@@ -529,7 +532,7 @@ public class ApplicationFormController {
         }
     }
 
-    private void setOrganisationFinancesComplete(String organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
+    private void markOrganisationFinancesAsNotRequired(String organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
 
         if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
                 && "University (HEI)".equals(organisationType)) {

@@ -17,6 +17,7 @@ import org.springframework.ui.Model;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,9 +130,7 @@ public class ApplicationNavigationPopulatorTest {
         when(sectionService.getSectionByQuestionId(anyLong())).thenReturn(previousSection).thenReturn(validPreviousSection).thenReturn(nextSection).thenReturn(validNextSection);
         when(questionService.getNextQuestion(anyLong())).thenReturn(Optional.of(nextQuestion));
 
-        target.addSectionTypeToSkip(sectionToSkip.getType());
-
-        NavigationViewModel result = target.addNavigation(section, applicationId);
+        NavigationViewModel result = target.addNavigation(section, applicationId, Collections.singletonList(sectionToSkip.getType()));
 
         assertTrue(result.getPreviousUrl().contains("/section/4"));
         assertEquals("Section 4", result.getPreviousText());
@@ -166,9 +165,7 @@ public class ApplicationNavigationPopulatorTest {
         when(sectionService.getSectionByQuestionId(anyLong())).thenReturn(previousSection).thenReturn(validPreviousSection).thenReturn(nextSection).thenReturn(validNextSection);
         when(questionService.getNextQuestion(anyLong())).thenReturn(Optional.of(nextValidQuestion));
 
-        target.addSectionTypeToSkip(sectionToSkip.getType());
-
-        NavigationViewModel result = target.addNavigation(section, applicationId);
+        NavigationViewModel result = target.addNavigation(section, applicationId, Collections.singletonList(sectionToSkip.getType()));
 
         assertTrue(result.getPreviousUrl().contains("/question/3"));
         assertEquals("Question 3", result.getPreviousText());

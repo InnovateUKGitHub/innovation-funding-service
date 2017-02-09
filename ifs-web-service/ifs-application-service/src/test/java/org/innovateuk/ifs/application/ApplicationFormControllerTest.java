@@ -492,7 +492,7 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
 
 
     @Test
-    public void testAcademicFinanceFundingQuestionSubmitAlsoMarksOrganisationFinanceAsComplete() throws Exception {
+    public void testAcademicFinanceFundingQuestionSubmitAlsoMarksOrganisationFinanceAsNotRequired() throws Exception {
 
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
 
@@ -506,11 +506,13 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection());
 
-        verify(sectionService, times(2)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
+        verify(sectionService, times(1)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
+        verify(sectionService, times(1)).markAsNotRequired(isA(Long.class), isA(Long.class), isA(Long.class));
+
     }
 
     @Test
-    public void testAcademicFinanceProjectCostsQuestionSubmitAlsoMarksOrganisationFinanceAsComplete() throws Exception {
+    public void testAcademicFinanceProjectCostsQuestionSubmitAlsoMarksOrganisationFinanceAsNotRequired() throws Exception {
 
         SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
 
@@ -524,7 +526,8 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                         .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
         ).andExpect(status().is3xxRedirection());
 
-        verify(sectionService, times(2)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
+        verify(sectionService, times(1)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
+        verify(sectionService, times(1)).markAsNotRequired(isA(Long.class), isA(Long.class), isA(Long.class));
     }
 
     @Test
