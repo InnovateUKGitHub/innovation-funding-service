@@ -19,9 +19,9 @@ import java.io.IOException;
 public class ProjectFinancePostAttachmentsController extends AttachmentController {
 
     @Autowired
-    public ProjectFinancePostAttachmentsController(FileService fileService, FileEntryService fileEntryService, DownloadService downloadService,
+    public ProjectFinancePostAttachmentsController(FileService fileService, FileEntryService fileEntryService,
                                                    @Qualifier("postAttachmentValidator") FileHttpHeadersValidator fileValidator) {
-        super(fileService, fileEntryService, downloadService, fileValidator);
+        super(fileService, fileEntryService, fileValidator);
     }
 
     @Override
