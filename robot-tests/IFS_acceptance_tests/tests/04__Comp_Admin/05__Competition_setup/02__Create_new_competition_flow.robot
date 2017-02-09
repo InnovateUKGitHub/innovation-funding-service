@@ -68,10 +68,10 @@ User can create a new competition
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
-    And The user should not see the element    link=Application Questions
-    And The user should not see the element    link=Application Finances
+    And The user should not see the element    link=Application
     And The user should not see the element    link=Assessors
-    And The user should not see the element    link=Description and brief
+    And The user should not see the element    link=Public content
+    And The user should see the element        link=Initial details
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -154,6 +154,7 @@ User should have access to all the sections
     And The user should see the element    link=Milestones
     And The user should see the element    link=Application
     And The user should see the element    link=Assessors
+    And The user should see the element    link=Public content
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
