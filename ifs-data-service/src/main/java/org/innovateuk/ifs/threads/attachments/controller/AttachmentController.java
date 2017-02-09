@@ -4,6 +4,7 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.threads.attachments.DownloadService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -20,11 +21,13 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 public class AttachmentController {
 
+    private FileService fileService;
     private FileEntryService fileEntryService;
     private DownloadService downloadService;
     private FileHttpHeadersValidator fileValidator;
 
-    public AttachmentController(FileEntryService fileEntryService, DownloadService downloadService, FileHttpHeadersValidator fileValidator) {
+    public AttachmentController(FileService fileService, FileEntryService fileEntryService, DownloadService downloadService, FileHttpHeadersValidator fileValidator) {
+        this.fileService = fileService;
         this.fileEntryService = fileEntryService;
         this.downloadService = downloadService;
         this.fileValidator = fileValidator;
@@ -43,8 +46,8 @@ public class AttachmentController {
             HttpServletRequest request)
     {
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                fileEntryService.saveFile(fileAttributes.toFileEntryResource())
-        );
+                        fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                                .andOnSuccess(created -> fileEntryService.findOne(created.getRight().getId())));
     }
 
     @RequestMapping(value = "/{fileId}", method = DELETE, produces = "application/json")

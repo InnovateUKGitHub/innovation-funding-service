@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
+import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.threads.attachments.DownloadService;
 import org.innovateuk.ifs.threads.attachments.controller.AttachmentController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,9 +23,9 @@ import java.io.IOException;
 public class ProjectFinancePostAttachmentsController extends AttachmentController {
 
     @Autowired
-    public ProjectFinancePostAttachmentsController(FileEntryService fileEntryService, DownloadService downloadService,
-                                       @Qualifier("postAttachmentValidator") FileHttpHeadersValidator fileValidator) {
-        super(fileEntryService, downloadService, fileValidator);
+    public ProjectFinancePostAttachmentsController(FileService fileService, FileEntryService fileEntryService, DownloadService downloadService,
+                                                   @Qualifier("postAttachmentValidator") FileHttpHeadersValidator fileValidator) {
+        super(fileService, fileEntryService, downloadService, fileValidator);
     }
 
     @Override
