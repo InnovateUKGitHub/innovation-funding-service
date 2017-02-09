@@ -1,9 +1,10 @@
-package org.innovateuk.ifs.competition;
+package org.innovateuk.ifs.competition.populator;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
 import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;

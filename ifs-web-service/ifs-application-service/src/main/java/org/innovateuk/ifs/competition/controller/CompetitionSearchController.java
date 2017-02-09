@@ -1,5 +1,6 @@
-package org.innovateuk.ifs.competition;
+package org.innovateuk.ifs.competition.controller;
 
+import org.innovateuk.ifs.competition.populator.CompetitionSearchPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
