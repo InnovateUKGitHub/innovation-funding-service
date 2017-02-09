@@ -28,14 +28,6 @@ public class ContentEventServiceImplTest {
     private ContentEventRestService restService;
 
     @Test
-    public void testUpdateEvent() {
-        ContentEventResource resource = newContentEventResource().build();
-        when(restService.saveEvent(resource)).thenReturn(restSuccess());
-
-        target.updateEvent(resource).getSuccessObjectOrThrowException();
-    }
-
-    @Test
     public void testResetAndSaveEvents() {
         Long publicContentId = 4L;
         PublicContentResource publicContent = newPublicContentResource()
