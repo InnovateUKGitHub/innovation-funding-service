@@ -503,6 +503,19 @@ Assessor: Should have a Green Check
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
+Public content: Scope
+     [Documentation]    INFUND-6918
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link  link=Public content
+    And the user clicks the button/link  link=Scope
+    When the user clicks the button/link  jQuery=button:contains("Save and return")
+    Then the user should see a summary error  Please enter a heading.
+    And the user should see a summary error  Please enter content.
+    When the user enters text to a text field    id=heading-0    Scope Heading
+    And the user enters text to a text field      jQuery=div.textarea-wrapped .editor     Scope Content
+    And the user clicks the button/link  jQuery=button:contains("Save and return")
+    Then the user should see the element  jQuery=li:nth-of-type(4) img.complete
+
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
