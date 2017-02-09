@@ -1,11 +1,6 @@
 package org.innovateuk.ifs.finance.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
-import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
-import org.innovateuk.ifs.application.security.FormInputResponseFileUploadLookupStrategies;
-import org.innovateuk.ifs.application.security.FormInputResponseFileUploadRules;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -26,7 +21,6 @@ import java.util.List;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.fail;
-import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
@@ -34,7 +28,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTest<ProjectFinanceRowService> {
 
@@ -47,16 +40,8 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
 
     }
 
-    /**
-     * Note: Although only project finance users should be allowed to see finance data, because its is comp admin
-     * who actually is expected to usually decide on funding of applications (and generate project), it is necessary
-     * to provide service level access to these methods to comp admin user.
-     *
-     * This is inadvertently removed and caused regression issues INFUND-7981 and INFUND-7972
-     */
     @Test
     public void testFinanceChecksDetails(){
-        final long applicationId = 1L;
         assertAccessDenied(
                 () -> classUnderTest.financeChecksDetails(1L, 2L),
                 () -> {
@@ -64,24 +49,6 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
                     verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinancesForTheirOrganisation(isA(ProjectFinanceResource.class), isA(UserResource.class));
                 }
         );
-
-
-
-//        asList(UserRoleType.values()).forEach(role -> {
-//            RoleResource roleResource = newRoleResource().withType(role).build();
-//            UserResource userWithRole = newUserResource().withRolesGlobal(singletonList(roleResource)).build();
-//            setLoggedInUser(userWithRole);
-//            if (PROJECT_FINANCE.equals(role) || UserRoleType.COMP_ADMIN.equals(role)) {
-//                classUnderTest.financeChecksDetails(1L, 2L);
-//            } else {
-//                try{
-//                    classUnderTest.financeChecksDetails(1L, 2L);
-//                    fail("Should have thrown an AccessDeniedException for any non-Finance Team members");
-//                } catch (AccessDeniedException e) {
-//                    // expected behaviour
-//                }
-//            }
-//        });
     }
 
     /**
