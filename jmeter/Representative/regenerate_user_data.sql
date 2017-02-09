@@ -98,4 +98,4 @@ select concat_ws(',', u.email, 'Passw0rd', a.id, c.id, application_details_quest
                            'david.wellington@load.example.com',
                            'felicity.jefferies@load.example.com')
             order by a.id
-            INTO OUTFILE '/var/lib/mysql-files/users-csv.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
+            INTO OUTFILE 'users-csv.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
