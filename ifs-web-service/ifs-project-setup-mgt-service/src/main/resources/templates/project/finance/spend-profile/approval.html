@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" cache:name="Spend-Profile-Summary" />
 </head>
 <body th:with="context='comp-management'" class="competition-management finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 <th:block th:insert="fragments/modals :: modal-accept-profile" />
 <th:block th:insert="fragments/modals :: modal-reject-profile" />
 
-<th:block th:insert="fragments/layout :: body-start"  />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
 
@@ -82,11 +82,11 @@
         </div>
     </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end"  />
+    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"  />
-<th:block th:insert="fragments/layout :: body-end"  />
+<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
+<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
 
 </body>
 </html>

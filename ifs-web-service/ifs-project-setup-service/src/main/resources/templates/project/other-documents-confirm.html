@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit other documents'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit other documents'" cache:name="Submit-other-documents" />
 </head>
 <body th:with="context='project'">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+<th:block th:insert="fragments/layout :: global-header"  cache:name="global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
     <div th:include="fragments/layout :: header-sub"
          th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/project/{projectId}/partner/documents/(projectId=${model.projectId})}"
          th:remove="tag"/>
@@ -21,11 +21,11 @@
     <form th:action="@{/project/{projectId}/partner/documents/submit(projectId=${model.projectId})}" th:if="${model.isShowSubmitDocumentsButton() and  model.submitAllowed and model.submitDate == null}" method="post">
         <button class="button large" name="submit-other-documents">Submit</button>
     </form>
-    <th:block th:insert="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
+<th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
 
 </body>
 </html>

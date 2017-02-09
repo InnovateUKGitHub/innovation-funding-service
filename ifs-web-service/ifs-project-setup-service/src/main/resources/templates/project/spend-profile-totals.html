@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" cache:name="Spend-Profile" />
 </head>
 <body class="spend-profile">
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+<th:block th:insert="fragments/layout :: global-header"  cache:name="global-header" />
 
 
 <main id="content" class="no-grid" th:with="project=${model.project}">
     <div class="grid-container">
-        <th:block th:insert="fragments/layout :: main-content-start" />
+        <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
 
 
         <div class="page-title">
@@ -128,8 +128,8 @@
     </div>
 </main>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
+<th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
 
 </body>
 </html>

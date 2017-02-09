@@ -50,6 +50,8 @@ subprojects {
         compile "com.fasterxml.jackson.datatype:jackson-datatype-jdk8"
         compile 'org.realityforge.gelf4j:gelf4j:1.10'
 
+        compile "ch.mfrey.thymeleaf.extras.cache:thymeleaf-cache-dialect:3.0.0"
+
         // Test Libraries
         testCompile group: 'org.hamcrest', name: 'hamcrest-core'
         testCompile group: 'junit', name: 'junit', version: '4.12'

@@ -172,7 +172,8 @@
     <th:block th:fragment="your_finance_summary">
 
         <div class="form-group" style="overflow:auto;">
-            <table>
+            <table th:with="organisationId=${model.application.userOrganisation.id},
+                            hasOrganisationFinance=${model.financeOverview.hasFinancesForOrganisation(organisationId)}">
                 <thead>
                 <tr>
                     <th scope="col" class="numeric width-small">Total project costs</th>
@@ -184,25 +185,25 @@
                 </thead>
                 <tbody>
                 <tr>
-                <th:block th:if="${hasOrganisationFinance}"
-                     th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}">
-                    <td class="numeric">
-                        <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
-                    </td>
-                    <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
-                    <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
-                </th:block>
-                <th:block th:unless="${model.finance.hasOrganisationFinance}">
-                    <td class="numeric">
-                        <strong>&pound;0</strong>
-                    </td>
-                    <td class="numeric">0%</td>
-                    <td class="numeric">&pound;0</td>
-                    <td class="numeric">&pound;0</td>
-                    <td class="numeric">&pound;0</td>
-                </th:block>
+                    <div th:if="${hasOrganisationFinance}"
+                         th:with="organisationFinance=${model.financeOverview.organisationFinances.get(organisationId)}" th:remove="tag">
+                        <td class="numeric"> 
+                            <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" /> 
+                        </td> 
+                        <td class="numeric" th:text="${organisationFinance.grantClaimPercentage}+'%'"/> 
+                        <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/> 
+                        <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/> 
+                        <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/> 
+                    </div>
+                    <div th:unless="${hasOrganisationFinance}" th:remove="tag">
+                        <td class="numeric">
+                            <strong>&pound;0</strong>
+                        </td>
+                        <td class="numeric">0%</td>
+                        <td class="numeric">&pound;0</td>
+                        <td class="numeric">&pound;0</td>
+                        <td class="numeric">&pound;0</td>
+                    </div>
                 </tr>
                 </tbody>
             </table>

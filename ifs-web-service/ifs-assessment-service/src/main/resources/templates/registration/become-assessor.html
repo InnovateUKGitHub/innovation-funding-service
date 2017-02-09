@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Become an assessor for Innovate UK'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Become an assessor for Innovate UK'" cache:name="Become-an-assessor-for-Innovate-UK" />
     </head>
 
     <body th:with="context='assessment'" class="sign-in">
-        <th:block th:insert="fragments/layout :: body-start" />
-        <th:block th:insert="fragments/layout :: global-header" />
+        <th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: global-header"  cache:name="global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
 
             <div class="hgroup no-margin-top">
                 <h1 class="heading-xlarge">Become an assessor for Innovate UK</h1>
@@ -21,10 +21,10 @@
 
         	<a th:href="@{/registration/{inviteHash}/register(inviteHash=${model.competitionInviteHash})}" class="button button-large">Create account</a>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer" />
-        <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
+        <th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
     </body>
 </html>

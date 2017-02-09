@@ -5,11 +5,11 @@
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-finances-summary">
-        <th:block th:insert="fragments/layout :: body-start" />
-        <th:block th:insert="fragments/layout :: global-header" />
+        <th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: global-header"  cache:name="global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${assessmentId})},daysPercentage=${currentCompetition.assessmentDaysLeftPercentage},daysLeft=${currentCompetition.assessmentDaysLeft})"  />
 
             <div class="page-title">
@@ -76,10 +76,10 @@
             <h2 class="heading-medium extra-margin">Project cost breakdown</h2>
             <th:block th:insert="finance/finance-summary :: financial_summary_table" />
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer" />
-        <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
+        <th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
     </body>
 </html>

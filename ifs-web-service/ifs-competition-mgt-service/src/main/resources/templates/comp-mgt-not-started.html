@@ -5,11 +5,11 @@
 </head>
 <body th:with="context='comp-management'" class="competition-management application-not-started">
 
-	<th:block th:insert="fragments/layout :: body-start"  />
-	<th:block th:insert="fragments/layout :: global-header"  />
+	<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+	<th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
 
 	<main id="content" class="full-width">
-	<th:block th:insert="fragments/layout :: main-content-start" 		 />
+	<th:block th:insert="fragments/layout :: main-content-start" 		  cache:name="main-content-start" />
 
 	<div class="grid-row">
 		<div class="column-two-thirds">
@@ -28,11 +28,11 @@
 		</div>
 	</div>
 
-	<th:block th:insert="fragments/layout :: main-content-end"  />
+	<th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
 	</main>
 
-	<th:block th:insert="fragments/layout :: footer"  />
-	<th:block th:insert="fragments/layout :: body-end"  />
+	<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
+	<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
 
 </body>
 </html>

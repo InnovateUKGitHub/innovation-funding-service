@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept application'" cache:name="Accept-application" />
     </head>
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
         <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})"  />
-        <th:block th:insert="fragments/layout :: body-start" />
-        <th:block th:insert="fragments/layout :: global-header" />
+        <th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: global-header"  cache:name="global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})})"  />
 
             <div class="page-title">
@@ -53,10 +53,10 @@
                 <a class="button button-warning large extra-margin" th:href="@{/{assessmentId}/assignment/reject/confirm(assessmentId=${assessmentId})}" data-js-modal="reject-assessment-modal">Reject</a>
             </form>
 
-            <th:block th:insert="fragments/layout :: main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer" />
-        <th:block th:insert="fragments/layout :: body-end" />
+        <th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
+        <th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
     </body>
 </html>

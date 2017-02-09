@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" cache:name="Application-Dashboard" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"  />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"  />
 
 
@@ -60,10 +60,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"  />
+    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"  />
-<th:block th:insert="fragments/layout :: body-end"  />
+<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
+<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
 </body>
 </html>

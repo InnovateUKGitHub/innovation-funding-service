@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" cache:name="Competition-Management-Dashboard" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-overview">
 
-<th:block th:insert="fragments/layout :: body-start"  />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
 
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
         <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"  />
@@ -46,11 +46,11 @@
         </ul>
     </section>
     <a th:href="@{/competition/create}" class="button button-large extra-margin" th:text="#{ifs.competition.create_competition}">Create Competition</a>
-    <th:block th:insert="fragments/layout :: main-content-end"  />
+    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"  />
-<th:block th:insert="fragments/layout :: body-end"  />
+<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
+<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
 
 </body>
 </html>

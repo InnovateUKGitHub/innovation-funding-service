@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" cache:name="Create-an-application" />
 </head>
 <body th:with="context='applicant'" class="create-application-organisation">
 
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+<th:block th:insert="fragments/layout :: global-header"  cache:name="global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}"  />
     <h1 class="heading-large">Create your account</h1>
 
@@ -39,10 +39,10 @@
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
     </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
+<th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
 </body>
 </html>

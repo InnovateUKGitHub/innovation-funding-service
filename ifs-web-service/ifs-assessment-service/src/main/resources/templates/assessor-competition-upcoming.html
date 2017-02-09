@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Upcoming competition'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Upcoming competition'" cache:name="Upcoming-competition" />
     </head>
 
     <body th:with="context='assessment'" class="app-dashboard">
-        <th:block th:insert="fragments/layout :: body-start"  />
-        <th:block th:insert="fragments/layout :: global-header"  />
+        <th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})"  />
 
             <div class="page-title">
@@ -41,10 +41,10 @@
                 <p>If you have any queries, please contact the competitions team <a href="mailto:competitions@innovateuk.gov.uk">competitions@innovateuk.gov.uk</a>.</p>
             </section>
 
-            <th:block th:insert="fragments/layout :: main-content-end"  />
+            <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"  />
-        <th:block th:insert="fragments/layout :: body-end"  />
+        <th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
+        <th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
     </body>
 </html>

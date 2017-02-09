@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" cache:name="Application-Dashboard" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
@@ -9,12 +9,12 @@
 <body>
 
 <th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"  />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: global-header"   cache:name="global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"  />
+    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
     <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Technology inspired'}, ${'/prototypes/1627-admin-view-project-status-grid?status=setup'})"  />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
@@ -33,11 +33,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"  />
+    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"  />
-<th:block th:insert="fragments/layout :: body-end"  />
+<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
+<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">
