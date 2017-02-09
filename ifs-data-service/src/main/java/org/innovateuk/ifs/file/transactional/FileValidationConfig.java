@@ -53,6 +53,12 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.overheadcalculation.valid.media.types}")
     private List<String> validMediaTypesForOverheadCalculation;
 
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.valid.media.types}")
+    private List<String> validMediaTypesForProjectFinanceThreadsAttachments;
+
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.max.filesize.bytes}")
+    private Long maxFilesizeBytesForProjectFinanceThreadsAttachments;
+
 
     @Bean(name = "formInputResponseFileValidator")
     public FileHttpHeadersValidator getFormInputResponseFileValidator() {
@@ -86,8 +92,7 @@ public class FileValidationConfig {
 
     @Bean(name = "postAttachmentValidator")
     public FileHttpHeadersValidator getPostAttachmentValidator() {
-        //TODO NUNO finish this
-        return createFileValidator(validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter);
+        return createFileValidator(validMediaTypesForProjectFinanceThreadsAttachments, maxFilesizeBytesForProjectFinanceThreadsAttachments);
     }
 
     private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {
