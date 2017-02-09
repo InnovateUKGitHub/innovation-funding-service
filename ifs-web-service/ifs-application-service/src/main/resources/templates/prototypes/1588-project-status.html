@@ -109,9 +109,9 @@
 	    <li th:class="${(param.stage == null or param.stage[0] == 'level1' ? 'read-only' : 'require-action')}" th:unless="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}">
 	      <div class="task">
 	        <h2 class="heading-small">
-            <a href="/prototypes/1578-bank-details" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Bank detailsA</a>
+            <a href="/prototypes/1578-bank-details" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Bank details</a>
             <th:block th:if="${param.stage == null or param.stage[0] == 'level1'}">
-              Bank detailsA
+              Bank details
             </th:block>
           </h2>
 
@@ -128,7 +128,7 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level3' or param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="complete" >
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/1578-bank-details-submitted">Bank detailsB</a></h2>
+	        <h2 class="heading-small"><a href="/prototypes/1578-bank-details-submitted">Bank details</a></h2>
 	        <p class="no-margin">The bank details submitted for your organisation.</p>
 	      </div>
         <div class="status">
@@ -143,7 +143,7 @@
 	        <h2 class="heading-small">
             <a href="/prototypes/3813-finance-check-landing" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Finance checksA</a>
             <th:block th:if="${param.stage == null or param.stage[0] == 'level1'}">
-                Finance checksA
+                Finance checks
             </th:block>
           </h2>
 	        <p class="no-margin">We will review all project costs and contact you if we have any queries.</p>
@@ -157,7 +157,7 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level2'}" class="require-action" >
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/3813-finance-check-landing">Finance checksB</a></h2>
+	        <h2 class="heading-small"><a href="/prototypes/3813-finance-check-landing">Finance checks</a></h2>
 	        <p class="no-margin">We will review all project costs and contact you if we have any queries.</p>
 	      </div>
         <div class="status">
@@ -169,7 +169,7 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="positive">
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/3813-finance-check-landing?status=approved">Finance checksC</a></h2>
+	        <h2 class="heading-small"><a href="/prototypes/3813-finance-check-landing?status=approved">Finance checks</a></h2>
 	        <p class="no-margin">A record of your initial project costs and queries raised.</p>
 	      </div>
         <div class="status">
@@ -184,7 +184,7 @@
 	        <h2 class="heading-small">
             <a th:href="${param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?user=nonLead' : '/prototypes/2472-spend-lead-overview'}" th:unless="${param.stage == null or param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}">Spend profileA</a>
             <th:block th:if="${param.stage == null or param.stage != null and param.stage[0] == 'level1' or param.stage != null and param.stage[0] == 'level2'}">
-              Spend profileA
+              Spend profile
             </th:block>
           </h2>
 	        <p class="no-margin">Once we have approved your financial information, we will produce a spend profile.</p>
@@ -200,7 +200,7 @@
 
 	    <li th:if="${param.stage != null and param.stage[0] == 'level4' or param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="positive" >
 	      <div class="task">
-	        <h2 class="heading-small"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profileB</a></h2>
+	        <h2 class="heading-small"><a href="/prototypes/2472-spend-lead-overview?status=Submitted">Spend profile</a></h2>
 	        <p class="no-margin">The spend profile created for your project.</p>
 	      </div>
         <div class="status">
@@ -216,7 +216,7 @@
 	          <h2 class="heading-small">
               <a th:href="${(param.status != null and param.status[0] == 'docs-reject' ? '/prototypes/1590-document-upload?status=reject' : '/prototypes/1590-document-upload')}" th:unless="${param.stage == null or param.stage[0] == 'level1'}">Other documentsA</a>
               <th:block th:if="${param.stage == null or param.stage[0] == 'level1'}">
-                Other documentsA
+                Other documents
               </th:block>
             </h2>
 	          <p class="no-margin">As Project Manager in the consortium you will need to upload the following documents:</p>
@@ -245,7 +245,7 @@
 	    <li th:if="${param.stage != null and param.stage[0] == 'level5' or param.stage != null and param.stage[0] == 'level6' or param.stage != null and param.stage[0] == 'level7'}" class="positive">
 	      <div class="task">
 	        <div th:unless="${param.user != null}" th:remove="tag">
-	          <h2 class="heading-small"><a href="/prototypes/1590-document-upload?status=submitted">Other documentsB</a></h2>
+	          <h2 class="heading-small"><a href="/prototypes/1590-document-upload?status=submitted">Other documents</a></h2>
 	          <p class="no-margin">Supporting documents uploaded by the Project Manager.</p>
 	        </div>
 

@@ -10,6 +10,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -39,6 +40,13 @@ public class AssessmentPermissionRules extends BasePermissionRules {
     @PermissionRule(value = "READ_SCORE", description = "Assessors can read the score of Assessments except those pending or rejected")
     public boolean userCanReadAssessmentScore(AssessmentResource assessment, UserResource user) {
         Set<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        return isAssessorForAssessment(assessment, user, allowedStates);
+    }
+
+    @PermissionRule(value = "READ_TO_ASSIGN", description = "Assessors can read pending assessments to decide to " +
+            "either to accept or reject")
+    public boolean userCanReadToAssign(AssessmentResource assessment, UserResource user) {
+        Set<AssessmentStates> allowedStates = Collections.singleton(PENDING);
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
