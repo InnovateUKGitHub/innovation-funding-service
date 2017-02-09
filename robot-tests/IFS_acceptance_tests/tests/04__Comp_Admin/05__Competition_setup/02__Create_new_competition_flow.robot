@@ -157,7 +157,6 @@ User should have access to all the sections
     And The user should see the element    link=Application
     And The user should see the element    link=Assessors
     And The user should see the element    link=Public content
-    [Teardown]  the user clicks the button/link  jQuery=a:contains("Return to setup overview")
 
 Internal user can navigate to Public Content without having any issues
     [Documentation]  INFUND-6922
@@ -172,7 +171,7 @@ Internal user can navigate to Public Content without having any issues
     And the user should see the element  jQuery=a:contains("Dates")
     And the user should see the element  jQuery=a:contains("How to apply")
     And the user should see the element  jQuery=a:contains("Supporting information")
-
+    [Teardown]  the user clicks the button/link  link=Return to setup overview
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
