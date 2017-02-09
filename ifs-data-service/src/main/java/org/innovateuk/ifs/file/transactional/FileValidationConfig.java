@@ -59,6 +59,11 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.max.filesize.bytes}")
     private Long maxFilesizeBytesForProjectFinanceThreadsAttachments;
 
+    @Value("${ifs.data.service.file.storage.publiccontentattachment.max.filesize.bytes}")
+    private Long maxFilesizeBytesForPublicContentAttachment;
+
+    @Value("${ifs.data.service.file.storage.publiccontentattachment.valid.media.types}")
+    private List<String> validMediaTypesForPublicContentAttachment;
 
     @Bean(name = "formInputResponseFileValidator")
     public FileHttpHeadersValidator getFormInputResponseFileValidator() {
@@ -93,6 +98,11 @@ public class FileValidationConfig {
     @Bean(name = "postAttachmentValidator")
     public FileHttpHeadersValidator getPostAttachmentValidator() {
         return createFileValidator(validMediaTypesForProjectFinanceThreadsAttachments, maxFilesizeBytesForProjectFinanceThreadsAttachments);
+    }
+
+    @Bean(name = "publicContentAttachmentValidator")
+    public FileHttpHeadersValidator getPublicContentAttachmentValidator() {
+        return createFileValidator(validMediaTypesForPublicContentAttachment, maxFilesizeBytesForPublicContentAttachment);
     }
 
     private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {

@@ -44,6 +44,7 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.mapper.ApplicationFinanceMapper;
 import org.innovateuk.ifs.finance.mapper.ProjectFinanceMapper;
+import org.innovateuk.ifs.finance.mapper.ProjectFinanceRowMapper;
 import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
@@ -568,6 +569,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected LoggedInUserSupplier loggedInUserSupplierMock;
+
+    @Mock
+    protected ProjectFinanceRowMapper projectFinanceRowMapperMock;
 
     @Before
     public void setupMockInjection() {

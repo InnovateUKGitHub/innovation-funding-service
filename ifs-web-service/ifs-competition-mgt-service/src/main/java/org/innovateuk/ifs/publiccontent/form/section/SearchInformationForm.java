@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.publiccontent.form;
+package org.innovateuk.ifs.publiccontent.form.section;
 
 import org.hibernate.validator.constraints.NotEmpty;
+import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
 
 /**
  * Form for the Search page on public content setup.

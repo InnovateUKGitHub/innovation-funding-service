@@ -4,9 +4,11 @@ import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class PostAttachmentRestServiceImpl extends BaseRestService implements PostAttachmentRestService {
     private final static String baseURL = "/attachment";
 

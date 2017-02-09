@@ -34,8 +34,10 @@ import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
+import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -65,6 +67,7 @@ import static java.io.File.separator;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
@@ -120,6 +123,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private FinanceCheckService financeCheckService;
+
+    @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
 
 
     @Override
@@ -343,7 +349,8 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
-        return getProject(projectId).andOnSuccess(project ->
+        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
+        .andOnSuccess(project ->
                 validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
                         getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
                                 fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
@@ -365,8 +372,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private void removeGrantOfferLetterFileFromProject(Project project) {
-        project.setGrantOfferLetter(null);
-    }
+        validateProjectIsInSetup(project).andOnSuccess(() ->
+            project.setGrantOfferLetter(null));
+        }
+
 
     @Override
     public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
@@ -378,7 +387,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
+        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> {
                     if (golWorkflowHandler.isSent(project)) {
                         return fileService.updateFile(fileEntryResource, inputStreamSupplier).
@@ -524,5 +533,13 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
                         ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
+    }
+
+    private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
+        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+            return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
+        }
+
+        return serviceSuccess(project);
     }
 }

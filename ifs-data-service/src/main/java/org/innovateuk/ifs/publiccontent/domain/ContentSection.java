@@ -27,7 +27,7 @@ public class ContentSection {
     private PublicContentStatus status;
 
     @OneToMany(mappedBy="contentSection")
-    private List<ContentGroup> contentGroup;
+    private List<ContentGroup> contentGroups;
 
     public PublicContent getPublicContent() {
         return publicContent;
@@ -53,12 +53,12 @@ public class ContentSection {
         this.status = status;
     }
 
-    public List<ContentGroup> getContentGroup() {
-        return contentGroup;
+    public List<ContentGroup> getContentGroups() {
+        return contentGroups;
     }
 
-    public void setContentGroup(List<ContentGroup> contentGroup) {
-        this.contentGroup = contentGroup;
+    public void setContentGroups(List<ContentGroup> contentGroups) {
+        this.contentGroups = contentGroups;
     }
 
     public Long getId() {
