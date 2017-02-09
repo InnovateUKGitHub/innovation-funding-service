@@ -16,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
- * Saver for public content form which contain content groups.
+ * Saver for the SearchInformationForm form.
  */
 @Service
 public abstract class AbstractContentGroupFormSaver<F extends AbstractContentGroupForm> extends AbstractPublicContentFormSaver<F> {
