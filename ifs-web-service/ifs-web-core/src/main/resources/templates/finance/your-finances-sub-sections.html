@@ -8,7 +8,7 @@
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
                 <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
 
-                <details class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+                <details class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}" th:unless="${model.isAcademicFinance}">
                     <summary><span class="summary">Not requesting funding</span></summary>
                     <div class="panel-indent">
                         <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
@@ -18,7 +18,8 @@
                 </details>
                 <ul class="list-overview extra-margin">
                     <th:block th:each="subSection : ${model.subSections.get(model.currentSection.id)}">
-                        <div th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
+                        <div th:if="${model.isSectionDisplayed(subSection)}"
+                         th:include="finance/your-finances-sub-sections :: finance_sub_section_row" th:remove="tag"/>
                     </th:block>
                 </ul>
             </div>
@@ -29,7 +30,6 @@
 
         </th:block>
     </div>
-
 
     <!-- =========================== Your organisation =========================== -->
     <div th:fragment="your_organisation">
