@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
@@ -211,6 +212,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         FinanceChecksEligibilityForm form = (FinanceChecksEligibilityForm) model.get("eligibilityForm");
         assertTrue(form.isConfirmEligibilityChecked());
         assertEquals(eligibility.getEligibilityRagStatus(), form.getEligibilityRagStatus());
+
+        assertFalse(viewModel.isReadOnly());
     }
 
     @Test
