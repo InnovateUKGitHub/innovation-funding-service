@@ -10,7 +10,7 @@ import java.util.List;
 @Entity
 @DiscriminatorValue("NOTE")
 public class Note extends Thread {
-
+    public Note() {super();}
     public Note(Long id, Long classPk, String className, List<Post> posts, String title, LocalDateTime createdOn) {
         super(id, classPk, className, posts, title, createdOn);
     }
