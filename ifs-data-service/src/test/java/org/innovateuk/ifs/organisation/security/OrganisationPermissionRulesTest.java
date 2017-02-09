@@ -49,23 +49,12 @@ public class OrganisationPermissionRulesTest extends BasePermissionRulesTest<Org
     }
 
     @Test
-    public void testCompAdminsCanViewAnyOrganisation() {
+    public void testInternalUsersCanViewAnyOrganisation() {
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(compAdminUser())) {
-                assertTrue(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), user));
+            if (allInternalUsers.contains(user)) {
+                assertTrue(rules.internalUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             } else {
-                assertFalse(rules.compAdminsCanSeeAllOrganisations(newOrganisationResource().build(), user));
-            }
-        });
-    }
-
-    @Test
-    public void projectFinanceUserCanSeeAllOrganisations(){
-        allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
-                assertTrue(rules.projectFinanceUserCanSeeAllOrganisations(newOrganisationResource().build(), user));
-            } else {
-                assertFalse(rules.projectFinanceUserCanSeeAllOrganisations(newOrganisationResource().build(), user));
+                assertFalse(rules.internalUsersCanSeeAllOrganisations(newOrganisationResource().build(), user));
             }
         });
     }

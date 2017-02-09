@@ -116,10 +116,16 @@ Initial Details - User can remove an innovation area
    When the user clicks the button/link   jQuery=.button:contains("Done")
    Then the user should not see the text in the page  Creative economy
 
+Initial Details - drop down menu is populated with comp admin users
+    [Documentation]    INFUND-6905
+    [Tags]    HappyPath
+    [Setup]    the user clicks the button/link    jQuery=.button:contains("Edit")
+    When the user should see the option in the drop-down menu    John Doe    name=executiveUserId
+    And the user should see the option in the drop-down menu    Robert Johnson    name=executiveUserId
+
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]    HappyPath
-    When the user clicks the button/link      jQuery=.button:contains("Edit")
     And the user enters text to a text field  css=#title  Test competition
     And The element should be disabled        css=#competitionTypeId
     And The element should be disabled        css=#openingDateDay
@@ -131,6 +137,7 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Design
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
+
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002

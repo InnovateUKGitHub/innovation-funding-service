@@ -1,56 +1,61 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
-</head>
-<body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
-<th:block th:insert="fragments/modals :: modal-overlay" />
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+    <head>
+        <div th:include="fragments/layout :: head" th:with="pageTitle='Application Summary'" th:remove="tag"/>
+    </head>
 
-<main>
-    <div id="content" class="full-width">
-      <th:block th:insert="fragments/layout :: main-content-start" />
-      <div class="grid-row">
-          <div class="column-two-thirds">
-                <div class="page-title">
-                    <p class="subtitle"><th:block th:text="${#numbers.formatInteger(currentCompetition.id,8)}" /> : Innovate UK</p>
-                    <h1 class="heading-large" th:text="${currentCompetition.name}" />
-                </div>
-          </div>
-          <div class="column-third alignright extra-margin">
-            <th:block th:insert="fragments/competition-management :: competition-status(competition=${currentCompetition})"  />
-          </div>
-      </div>
+    <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
-      <th:block th:insert="fragments/competition-management :: competition-mgt-menu(competitionStatus=${currentCompetition.competitionStatus.name()},competitionId=${currentCompetition.id})"  />
-  </div>
-  <div class="grid-container constrain-width">
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
-        <h1 class="heading-xlarge no-margin">Application Overview</h1>
-    </div>
-    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" enctype="multipart/form-data" th:object="${form}" class="form-serialize-js section-overview">
-        <th:block th:insert="fragments/application :: application-summary (assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})})" />
-        <div class="extra-margin">
-            <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${currentCompetition.id},appId=${currentApplication.id})}" rel="nofollow" target="_blank"><div class="icon icon-print"></div>Print application</a>
-        </div>
+        <main id="content">
+            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <div th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></div>
 
-        <div th:if="${not #lists.isEmpty(appendices)}" th:remove="tag">
-            <h2 class="heading-medium">Appendices</h2>
-            <div th:each="appendix : ${appendices}" th:remove="tag">
-                <div class="form-group download">
-                    <h3 class="heading-small no-margin" th:text="${appendix.title}">View project management appendix:</h3>
-                    <a th:href="${appendix.getDownloadURL()}" th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">Project-plan.pdf (161.96 KB)</a>
-                </div>
+            <div class="page-title">
+                <h1 class="heading-xlarge">
+                    <span class="heading-secondary"><th:block th:text="${#numbers.formatInteger(currentApplication.id,8)}"/>: <th:block
+                         th:text="${currentApplication.applicationDisplayName}"/></span>
+                    Application overview
+                </h1>
             </div>
-        </div>
-    </form>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-  </div>
-</main>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-</body>
+            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
+                   method="post" enctype="multipart/form-data"
+                   th:object="${form}" class="form-serialize-js section-overview">
+
+                <div th:include="fragments/application :: application-summary (assessorFeedbackDownloadLink=@{/competition/{competitionId}/application/{applicationId}/assessorFeedback(competitionId=${currentApplication.competition},applicationId=${currentApplication.id})})" th:remove="tag" />
+            </form>
+
+            <div class="extra-margin">
+                <a th:href="@{/competition/{compId}/application/{appId}/print(compId=${currentCompetition.id},appId=${currentApplication.id})}"
+                   rel="nofollow"
+                   target="_blank">
+                    <span class="icon icon-print"></span>
+                    Print application
+                </a>
+            </div>
+
+            <th:block th:if="${not #lists.isEmpty(appendices)}">
+                <h2 class="heading-medium">Appendices</h2>
+
+                <div th:each="appendix : ${appendices}" th:remove="tag">
+                    <div class="form-group download">
+                        <h3 class="heading-small no-margin" th:text="${appendix.title}">
+                            View project management appendix:
+                        </h3>
+                        <a th:href="${appendix.getDownloadURL()}"
+                           th:text="${appendix.name + '(' + appendix.getHumanReadableFileSize() + ')'}">
+                            Project-plan.pdf (161.96 KB)
+                        </a>
+                    </div>
+                </div>
+            </th:block>
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
 </html>

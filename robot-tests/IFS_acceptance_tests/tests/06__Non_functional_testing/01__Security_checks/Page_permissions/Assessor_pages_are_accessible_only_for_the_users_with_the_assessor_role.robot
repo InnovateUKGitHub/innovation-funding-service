@@ -53,9 +53,8 @@ Applicant can't access the assessment overview page
 
 Applicant can't access the assessor's dashboard page
     [Documentation]    INFUND-1683
-    [Tags]    Pending
+    [Tags]
     [Setup]
-    # Todo pending due to INFUND-4746
     Then the user navigates to the page and gets a custom error message    ${ASSESSOR_DASHBOARD}    You do not have the necessary permissions for your request
 
 Applicant can't access the assessor's review application page
@@ -101,7 +100,5 @@ Second assessor shouldn't be able to access first assessor's application questio
     When the user navigates to the assessor page    ${Application_question_url_2}
     Then The user should see permissions error message
     [Teardown]    the user closes the browser
-
-
 
 *** Keywords ***

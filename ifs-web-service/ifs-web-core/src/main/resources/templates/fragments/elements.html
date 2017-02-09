@@ -131,7 +131,7 @@
     </div>
 
     <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >
-        <p><span>You have saved your field successfully</span></p>
+        <p><span>Your changes have been saved</span></p>
     </div>
 
     <div th:if="${assignedQuestion}" class="event-alert" >
@@ -214,7 +214,7 @@
             <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
           </p>
           <p th:if="${currentProject}">
-            <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
+            <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
           </p>
     </div>
 	  <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">

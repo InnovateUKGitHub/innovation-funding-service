@@ -103,13 +103,14 @@ public class ApplicationNavigationPopulator {
             model.addAttribute("backTitle", "Your finances");
             model.addAttribute("backURL", "/application/" + appId + "/form/" + SectionType.FINANCE.name());
         } else {
-            model.addAttribute("backTitle", "Application Overview");
             String backURL;
             String referer = request.getHeader(REFERER);
 
             if(referer != null && referer.contains("/application/" + appId + "/summary")){
+                model.addAttribute("backTitle", "Application Summary");
                 backURL = referer;
             } else {
+                model.addAttribute("backTitle", "Application Overview");
                 backURL = "/application/" + appId;
             }
             model.addAttribute("backURL", backURL);

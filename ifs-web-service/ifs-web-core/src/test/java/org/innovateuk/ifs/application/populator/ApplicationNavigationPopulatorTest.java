@@ -68,12 +68,13 @@ public class ApplicationNavigationPopulatorTest {
         when(request.getHeader("referer")).thenReturn("/application/1");
         target.addAppropriateBackURLToModel(applicationId, request, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1"));
+        verify(model).addAttribute(eq("backTitle"), contains("Application Overview"));
 
         when(request.getHeader("referer")).thenReturn("/application/1/summary");
         target.addAppropriateBackURLToModel(applicationId, request, model, null);
         verify(model).addAttribute(eq("backURL"), contains("/application/1/summary"));
+        verify(model).addAttribute(eq("backTitle"), contains("Application Summary"));
 
-        verify(model, times(2)).addAttribute(eq("backTitle"), contains("Application Overview"));
     }
 
     @Test

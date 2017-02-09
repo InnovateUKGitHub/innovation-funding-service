@@ -122,7 +122,7 @@
                                 <span class="heading-large" th:text="${model.keyStatistics.statFour}">4</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications started</small>
-                                    <small th:case="CLOSED">Invitations invited</small>
+                                    <small th:case="CLOSED">Assessors invited</small>
                                     <small th:case="IN_ASSESSMENT">Assessments started</small>
                                     <small th:case="FUNDERS_PANEL">Applications on hold</small>
                                     <small th:case="ASSESSOR_FEEDBACK">Applications on hold</small>

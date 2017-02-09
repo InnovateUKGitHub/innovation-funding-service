@@ -28,23 +28,23 @@ public class CompetitionInAssessmentKeyStatisticsResourceBuilder extends BaseBui
         super(newMultiActions);
     }
 
-    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssignmentCount(Long... assignmentCounts) {
+    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssignmentCount(Integer... assignmentCounts) {
         return withArraySetFieldByReflection("assignmentCount", assignmentCounts);
     }
 
-    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssignmentsWaiting(Long... assignmentsWaitings) {
+    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssignmentsWaiting(Integer... assignmentsWaitings) {
         return withArraySetFieldByReflection("assignmentsWaiting", assignmentsWaitings);
     }
 
-    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssignmentsAccepted(Long... assignmentsAccepteds) {
+    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssignmentsAccepted(Integer... assignmentsAccepteds) {
         return withArraySetFieldByReflection("assignmentsAccepted", assignmentsAccepteds);
     }
 
-    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssessmentsStarted(Long... assessmentsStarteds) {
+    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssessmentsStarted(Integer... assessmentsStarteds) {
         return withArraySetFieldByReflection("assessmentsStarted", assessmentsStarteds);
     }
 
-    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssessmentsSubmitted(Long... assessmentsSubmitteds) {
+    public CompetitionInAssessmentKeyStatisticsResourceBuilder withAssessmentsSubmitted(Integer... assessmentsSubmitteds) {
         return withArraySetFieldByReflection("assessmentsSubmitted", assessmentsSubmitteds);
     }
 
