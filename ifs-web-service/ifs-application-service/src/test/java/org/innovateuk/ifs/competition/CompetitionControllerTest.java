@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.competition.controller.CompetitionController;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;

@@ -219,8 +219,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileSkills) {
-        return putWithRestResult(format("%s/id/%s/updateProfileSkills", userRestURL, userId), profileSkills, Void.class);
+    public RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkillsEditResource) {
+        return putWithRestResult(format("%s/id/%s/updateProfileSkills", userRestURL, userId), profileSkillsEditResource, Void.class);
     }
 
     @Override
