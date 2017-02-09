@@ -10,6 +10,7 @@ import org.innovateuk.ifs.publiccontent.saver.AbstractContentGroupFormSaver;
 import org.innovateuk.ifs.publiccontent.saver.PublicContentFormSaver;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,7 +24,7 @@ public class SummaryFormSaver extends AbstractContentGroupFormSaver<SummaryForm>
         publicContentResource.setSummary(form.getDescription());
         publicContentResource.setFundingType(FundingType.fromDisplayName(form.getFundingType()));
         publicContentResource.setProjectSize(form.getProjectSize());
-        return super.populateResource(form, publicContentResource);
+        return Collections.emptyList();
     }
 
     @Override
