@@ -442,12 +442,77 @@
     </th:block>
     <!-- ===========================Form: overheads =========================== -->
     <th:block th:fragment="overheads(viewmode)" th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},type=${formInput.type.nameLower}">
-        <p ifs:utext="${question.getDescription()}" />
         <th:block th:with="overheadCosts=${costCategory?.costs?.isEmpty()} ? null : ${costCategory?.costs[0]}, overheadRate=${overheadCosts?.rateType==null} ? ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).NONE} : ${T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).valueOf(overheadCosts?.rateType)}" >
 
             <th:block th:if="${viewmode == 'approved'}">
+                <th:block th:switch="${overheadRate.name()}">
+                    <th:block th:case="'NONE'">
+                        No overhead costs
+                        <div aria-hidden="true">£ 0</div>
+                    </th:block>
+                    <th:block th:case="'DEFAULT_PERCENTAGE'">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th scope="col">20% of labour costs</th>
+                                    <th scope="col" class="alignright">
+                                        <span class="visuallyhidden">total overhead costs</span>
+                                    </th>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th scope="row">Total overhead costs</th>
+                                    <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </th:block>
+                    <th:block th:case="'CUSTOM_RATE'">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th scope="row">Custom administration support costs</th>
+                                    <td class="alignright">
+                                        Rate calculated: <th:block th:text="${overheadCosts?.getRate()+'%'}">28%</th:block>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th scope="col">Total administration support cost</th>
+                                    <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </th:block>
+                    <th:block th:case="'TOTAL'">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <th scope="col">Calulated overheads</th>
+                                    <th scope="col"><span class="visuallyhidden">Total calculated overheads</span></th>
+                                </tr>
+                                <tr>
+                                    <td class="form-group download">
+                                        <h3 class="heading-small no-margin">Download the overhead calculation spreadsheet</h3>
+                                        <a th:href="@{${'/application/download/overheadfile/'+overheadCosts?.id}}" th:text="${overheadCosts?.calculationFile?.get()?.name}">Overhead calculation spreadsheet.pdf</a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
+                                    <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </th:block>
+                </th:block>
             </th:block>
             <th:block th:if="${(viewmode == 'readonly') or (viewmode == 'edit')}">
+                <p ifs:utext="${question.getDescription()}" />
+
                 <div class="form-group">
                     <fieldset>
                         <legend class="visuallyhidden">Overhead costs</legend>

@@ -287,6 +287,7 @@ select.form-control{
 // ------- file upload -------- //
 
 .upload-section{
+  @extend %contain-floats;
 	border: 1px solid $border-colour;
 	background: $grey-4;
 	padding: 16px 16px 8px 16px;
