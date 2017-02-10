@@ -10,14 +10,14 @@ Resource          ../../../resources/defaultResources.robot
 Resource          ../CompAdmin_Commons.robot
 
 *** Variables ***
-${upcomming_competitions_dashboard}    ${server}/management/dashboard/upcoming
+${upcoming_competitions_dashboard}    ${server}/management/dashboard/upcoming
 ${public_content_competition_name}     Public content competition
 
 *** Test Cases ***
 User can view the public content
     [Documentation]    INFUND-6914
     [Tags]    HappyPath
-    Given the user navigates to the page     ${upcomming_competitions_dashboard}
+    Given the user navigates to the page     ${upcoming_competitions_dashboard}
     And the user clicks the button/link      link=${public_content_competition_name}
     Given the user clicks the button/link    link=Public content
     Then the user should see the element     link=Competition information and search
@@ -52,81 +52,71 @@ Summary: User enters valid values and saves
     [Documentation]    INFUND-6916
     [Tags]    HappyPath
     When the user enters valid data in the summary details
-    Then the user should be redirected to the correct page
+    Then the user should be redirected to the correct page    ${public_content_overview}
     And the user should see the element      link=Summary
     And the user should see the element      link=Eligibility
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916
     [Tags]    HappyPath
-    Given the user clicks the button/link           link=Summary
-    Then the user should see the text in the page    Text entered into this section will appear in the summary tab
+    [Setup]    the user navigates to the page           ${public_content_overview}
+    When the user clicks the button/link                link=Summary
+    Then the user should see the text in the page       Text entered into this section will appear in the summary tab
     And the user should see the text in the page        Grant
     And the user should see the text in the page        10
     And the user should see the element                 jQuery=.button:contains("Return to public content")
-    And the user should see the element                 jQuery=.button:contains("Edit")
+    And the user should see the element                 jQuery=.button-secondary:contains("Edit")
 
 Eligibility: Add, remove sections and submit
     [Documentation]    INFUND-6917 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
-    And the user clicks the button/link                         link=Eligibility
+    [Setup]    the user navigates to the page    ${public_content_overview}
+    When the user clicks the button/link                         link=Eligibility
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(3) img.complete
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
-    And the user clicks the button/link                         link=Scope
+    [Setup]    the user navigates to the page    foobar
+    When the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
 
 How to apply: Add, remove sections and submit
     [Documentation]    INFUND-6920 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
-    And the user clicks the button/link                         link=How to apply
+    [Setup]    the user navigates to the page    ${public_content_overview}
+    When the user clicks the button/link                         link=How to apply
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(6) img.complete
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
-    And the user clicks the button/link                         link=Supporting information
+    [Setup]    the user navigates to the page    ${public_content_overview}
+    When the user clicks the button/link                         link=Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(7) img.complete
 
 
-
 *** Keywords ***
 
 Custom suite setup
+    Connect to Database  @{database}
     Guest user log-in    &{Comp_admin1_credentials}
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
     User creates a new competition   ${public_content_competition_name}
+    ${competitionId}=  get comp id from comp title  ${public_content_competition_name}
+    ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/    ${competitionId}
+    Set suite variable  ${public_content_overview}
 
 User creates a new competition
     [Arguments]    ${competition_name}
-    Given the user navigates to the page      ${upcomming_competitions_dashboard}
+    Given the user navigates to the page      ${upcoming_competitions_dashboard}
     When the user clicks the button/link    jQuery=.button:contains("Create competition")
-    And The user clicks the button/link           link=Initial details
-    Then the user enters text to a text field                css=#title  ${competition_name}
-    And the user selects the option from the drop-down menu  Sector  id=competitionTypeId
-    And the user selects the option from the drop-down menu   Emerging and enabling technologies  id=innovationSectorCategoryId
-    And the user selects the option from the drop-down menu   Creative economy  id=innovationAreaCategoryId-0
-    And the user enters text to a text field    id=openingDateDay    01
-    And the user enters text to a text field    Id=openingDateMonth    12
-    And the user enters text to a text field    id=openingDateYear  ${nextyear}
-    And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
-    When the user clicks the button/link            jQuery=.button:contains("Done")
+    When the user fills in the CS Initial details      ${competition_name}  01  02  ${nextyear}
 
 the user enters valid data in the summary details
     The user enters text to a text field   css=.editor    Summary Description
