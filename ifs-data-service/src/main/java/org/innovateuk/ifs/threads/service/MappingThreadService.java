@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.threads.service;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
@@ -22,19 +23,23 @@ public abstract class MappingThreadService<D extends Thread, R, M extends BaseMa
         this.postMapper = postMapper;
     }
 
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     public ServiceResult<List<R>> findAll(Long contextClassId) {
         return service.findAll(contextClassId)
                 .andOnSuccessReturn(queries -> simpleMap(queries, threadMapper::mapToResource));
     }
 
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     public ServiceResult<R> findOne(Long id) {
         return service.findOne(id).andOnSuccessReturn(threadMapper::mapToResource);
     }
 
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     public ServiceResult<Long> create(R query) {
         return service.create(threadMapper.mapToDomain(query));
     }
 
+    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return service.addPost(postMapper.mapToDomain(post), threadId);
     }
