@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
-import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -25,7 +23,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static java.util.Arrays.asList;
-import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.junit.Assert.assertEquals;
@@ -40,9 +37,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
     @Autowired
     private CategoryRepository categoryRepository;
-
-    @Autowired
-    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
 
     @Autowired
     private PublicContentRepository publicContentRepository;
@@ -203,9 +197,8 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
 
         InnovationArea innovationArea = innovationAreaRepository.findOne(5L);
         Competition competition = competitionRepository.findOne(1L);
+        competition.setInnovationSector(innovationArea.getSector());
 
-        CompetitionCategoryLink<InnovationArea> categoryLink = newCompetitionCategoryLink().withCategory(innovationArea.getSector()).withCompetition(competition).build();
-
-        competitionCategoryLinkRepository.save(categoryLink);
+        competitionRepository.save(competition);
     }
 }
