@@ -71,7 +71,7 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         assertAccessDenied(
                 () -> classUnderTest.findRejectableById(ID_TO_FIND),
-                () -> verify(assessmentPermissionRules).userCanReadAssessment(eq(assessmentResource), isA
+                () -> verify(assessmentPermissionRules).userCanReadToReject(eq(assessmentResource), isA
                         (UserResource.class))
         );
     }

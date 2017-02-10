@@ -25,8 +25,8 @@ The 'Fund project?' column title is now 'Funded' and isn't editable
     [Tags]
     When the user should see the text in the page    Funded
     And the user should not see the text in the page    Fund project?
-    Then the user should not see the element    id=fund24
-    And the user should not see the element    id=fund25
+    Then the user should not see the element    id=fund27
+    And the user should not see the element    id=fund28
 
 Publish assessor feedback button is now visible
     [Documentation]    INFUND-2606
