@@ -309,5 +309,5 @@ the user should see an error message in the field
     the user should see the element  jQuery=span:contains("${field}") + *:contains("${errmsg}")
 
 the user selects medium organisation size
-    the user clicks the button/link      jQuery=label:contains("Medium")  # TODO This selector will chenge with INFUND-8071
-    the user clicks the button/link      jQuery=label:contains("Medium")  # Click it twice
+    the user clicks the button/link      jQuery=label[for="financePosition-organisationSize-MEDIUM"]
+    the user clicks the button/link      jQuery=label[for="financePosition-organisationSize-MEDIUM"]  # Click it twice
