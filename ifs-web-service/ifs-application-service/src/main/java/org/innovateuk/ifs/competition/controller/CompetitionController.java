@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.competition;
+package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;

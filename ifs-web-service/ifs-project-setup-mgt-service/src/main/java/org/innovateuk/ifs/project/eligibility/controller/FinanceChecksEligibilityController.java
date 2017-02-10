@@ -18,8 +18,8 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
-import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
+import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
@@ -137,7 +137,7 @@ public class FinanceChecksEligibilityController {
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
                 application.getFormattedId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
                 eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate()));
+                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
         model.addAttribute("form", form);

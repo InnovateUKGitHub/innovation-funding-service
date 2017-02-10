@@ -17,10 +17,11 @@ ${PS_GOL_APPLICATION_HEADER}     ${PS_GOL_APPLICATION_NUMBER}: ${PS_GOL_APPLICAT
 ${PS_GOL_APPLICATION_PROJECT}    10
 ${PS_GOL_APPLICATION_LEAD_ORGANISATION_ID}      ${Gabtype_ID}
 ${PS_GOL_APPLICATION_LEAD_ORGANISATION_NAME}    ${Gabtype_NAME}
-${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}        worth.email.test+amy@gmail.com
-${PS_GOL_APPLICATION_PM_EMAIL}                  worth.email.test+amy@gmail.com
-${PS_GOL_APPLICATION_PARTNER_EMAIL}             worth.email.test+karen@gmail.com
-${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            worth.email.test+juan@gmail.com
+${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}        ${test_mailbox_one}+amy@gmail.com
+${PS_GOL_APPLICATION_PM_EMAIL}                  ${test_mailbox_one}+amy@gmail.com
+${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}     ${test_mailbox_one}+marian@gmail.com
+${PS_GOL_APPLICATION_PARTNER_EMAIL}             ${test_mailbox_one}+karen@gmail.com
+${PS_GOL_APPLICATION_ACADEMIC_EMAIL}            ${test_mailbox_one}+juan@gmail.com
 
 #Project: High-speed rail and its effects on air quality
 # MD = Mandatory Documents
@@ -61,7 +62,7 @@ ${PS_SP_APPLICATION_HEADER}     ${PS_SP_APPLICATION_NUMBER}: ${PS_SP_APPLICATION
 ${PS_SP_APPLICATION_PROJECT}    8
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_ID}    ${Katz_Id}
 ${PS_SP_APPLICATION_LEAD_ORGANISATION_NAME}  ${Katz_Name}
-${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      phillip.ramos@katz.example.com
+${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}      theo.simpson@katz.example.com
 ${PS_SP_APPLICATION_PM_EMAIL}                phillip.ramos@katz.example.com
 ${PS_SP_APPLICATION_PARTNER_EMAIL}           kimberly.fowler@meembee.example.com
 ${PS_SP_APPLICATION_ACADEMIC_EMAIL}          craig.ortiz@zooveo.example.com
@@ -128,7 +129,7 @@ ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_ID}    ${EMPIRE_LTD_ID}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}    ${EMPIRE_LTD_NAME}
 ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_COMPANY_NUMBER}    60674010
 ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}    steve.smith@empire.com
-${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    worth.email.test+projectsetuppm@gmail.com
+${PROJECT_SETUP_APPLICATION_1_PM_EMAIL}    ${test_mailbox_one}+projectsetuppm@gmail.com
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}    Ludlow
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_COMPANY_NUMBER}    5353232
 ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}    jessica.doe@ludlow.co.uk

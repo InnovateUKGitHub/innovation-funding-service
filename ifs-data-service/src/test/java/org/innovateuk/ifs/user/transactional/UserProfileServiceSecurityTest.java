@@ -13,6 +13,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
@@ -52,12 +53,12 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     @Test
     public void updateProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource().build();
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource().build();
 
         UserResource user = newUserResource().build();
         when(userLookupStrategies.findById(userId)).thenReturn(user);
 
-        assertAccessDenied(() -> classUnderTest.updateProfileSkills(userId, profileSkillsResource), () -> {
+        assertAccessDenied(() -> classUnderTest.updateProfileSkills(userId, profileSkillsEditResource), () -> {
             verify(rules).usersCanUpdateTheirOwnProfiles(user, getLoggedInUser());
             verifyNoMoreInteractions(rules);
         });
@@ -170,22 +171,22 @@ public class UserProfileServiceSecurityTest extends BaseServiceSecurityTest<User
     public static class TestUserProfileService implements UserProfileService {
 
         @Override
-        public ServiceResult<ProfileSkillsResource> getProfileSkills(Long userId) {
+        public ServiceResult<ProfileSkillsResource> getProfileSkills(long userId) {
             return serviceSuccess(newProfileSkillsResource().build());
         }
 
         @Override
-        public ServiceResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileResource) {
+        public ServiceResult<Void> updateProfileSkills(long userId, ProfileSkillsEditResource profileResource) {
             return null;
         }
 
         @Override
-        public ServiceResult<ProfileContractResource> getProfileContract(Long userId) {
+        public ServiceResult<ProfileContractResource> getProfileContract(long userId) {
             return serviceSuccess(newProfileContractResource().build());
         }
 
         @Override
-        public ServiceResult<Void> updateProfileContract(Long userId) {
+        public ServiceResult<Void> updateProfileContract(long userId) {
             return null;
         }
 
