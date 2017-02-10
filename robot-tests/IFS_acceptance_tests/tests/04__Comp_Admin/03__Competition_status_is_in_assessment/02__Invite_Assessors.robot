@@ -39,7 +39,7 @@ Check the initial key statistics
     And the key statistics are calculated
 
 The User can Add and Remove Assessors
-    [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412
+    [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
     [Tags]
     Given The user clicks the button/link    link=Find
     When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
@@ -48,6 +48,7 @@ The User can Add and Remove Assessors
     And The user should see the text in the page    Will Smith
     And The user should see the element    jQuery=tr:nth-child(1) .yes
     And the user should see the element    jQuery=tr:nth-child(1) td:nth-child(3):contains("Precision Medicine, Advanced Materials, Energy Systems")
+    And the calculations of the Assessors on invite list should be correct
     When The user clicks the button/link    link=Find
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove)
     And The user clicks the button/link    link=Invite
@@ -156,5 +157,11 @@ The key statistics are calculated
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${ACCEPTED_ASSESSORS}
     #Calculation of the declined Assessors
     ${DECLINED_ASSESSORS}=    Get matching xpath count    //*[text()="Invite declined"]
-    ${ACCEPTED_COUNT}=    Get text    css=div:nth-child(3) > div > span
-    Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${ACCEPTED_COUNT}
+    ${DECLINED_COUNT}=    Get text    css=div:nth-child(3) > div > span
+    Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${DECLINED_COUNT}
+
+the calculations of the Assessors on invite list should be correct
+    #Calculation of the Assessors on invite list
+    ${ASSESSORS_ON_LIST}=    Get matching xpath count    //form/table/tbody/tr
+    ${ASSESSORS_COUNT}=    Get text    css=div:nth-child(4) > div > span
+    Should Be Equal As Integers    ${ASSESSORS_ON_LIST}    ${ASSESSORS_COUNT}

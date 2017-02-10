@@ -17,6 +17,7 @@ Project dashboard shows message that the project is live
     Then the user should see the text in the page    The project is live, you can review progress at
 
 
+
 Status indicators should not show
     [Documentation]    INFUND-6376
     [Tags]    Pending
@@ -28,8 +29,7 @@ Status indicators should not show
 
 Project details section is read-only
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7924
+    [Tags]
     When the user clicks the button/link    link=Project details
     Then the user should not see the element    link=Target start date
     And the user should not see the element    link=Project address
