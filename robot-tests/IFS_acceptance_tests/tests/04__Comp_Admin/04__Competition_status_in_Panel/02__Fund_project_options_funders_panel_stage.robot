@@ -4,9 +4,10 @@ Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+#TODO Needs rewriting as part of new funders panel flow INFUND-7376
 
 *** Variables ***
-${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
+${funders_panel_competition_url}    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
 ${dialogue_warning_message}    Are you sure you wish to inform applicants if they have been successful in gaining funding?
 ${email_success_message}    We are pleased to inform you that your application
 ${email_failure_message}    Unfortunately Innovate UK is unable to fund
@@ -61,7 +62,9 @@ Choosing Notify applicants on the dialogue redirects to the Assessor feedback pa
     [Documentation]    INFUND-2646
     [Tags]    HappyPath
     When the user clicks the button/link    name=publish
-    Then the user should be redirected to the correct page    ${funders_panel_competition_url}
+    Then the user navigates to the page    ${funders_panel_competition_url}
+    #Then the user should be redirected to the correct page    ${funders_panel_competition_url}
+    #TODO update redirect when new page is implemented INFUND 7376
 
 Once applicants are notified, the whole state of the competition changes to Assessor feedback
     [Documentation]    INFUND-2646
@@ -71,12 +74,12 @@ Once applicants are notified, the whole state of the competition changes to Asse
 Successful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user reads his email from the default mailbox    worth.email.test+fundsuccess@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    pleased to inform you
+    Then the user reads his email from the default mailbox    ${test_mailbox_one}+fundsuccess@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    pleased to inform you
 
 Unsuccessful applicants are notified of the funding decision
     [Documentation]    INFUND-2603
     [Tags]    Email
-    Then the user reads his email from the second default mailbox    worth.email.test.two+fundfailure@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    unable to fund your application
+    Then the user reads his email from the second default mailbox    ${test_mailbox_two}+fundfailure@gmail.com    Your application into the competition ${FUNDERS_PANEL_COMPETITION_NAME}    unable to fund your application
 
 Successful applicants can see the assessment outcome on the dashboard page
     [Documentation]    INFUND-2604

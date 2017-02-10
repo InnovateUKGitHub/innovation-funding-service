@@ -4,6 +4,10 @@ Documentation     INFUND-2135 As a Competition Administrator I want to be able t
 ...               INFUND-2259 As a competitions administrator I want to see summary details of all applications in a competition displayed alongside the list of applications so that I can reference information relating to the status of the competition
 ...
 ...               INFUND-3006 As a Competition Management I want the ability to view the name of the lead on the 'all applications' page so I can better support the Customer Support Service.
+...
+...               INFUND-7367 Competition management: Applications dashboard
+...
+...               INFUND-7369 Competition management: View list of all applications
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -14,56 +18,65 @@ ${valid_pdf}      testing.pdf
 ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
-Competitions admin should be able to see the list of applications
-    [Documentation]    INFUND-2135: listing of applications for an open competition
+Application Dashboard
+    [Documentation]    INFUND-7367
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=.button:contains("Applications")
-    When the user clicks the button/link    link=All applications
-    Then the user should see the text in the page    Application list
+    When the user clicks the button/link    jQuery=.button:contains("Applications")
+    Then The user should see the element    jQuery=.button:contains(Submitted applications)
+    And The user should see the element    link=All applications
 
-The correct columns show for the application list table
-    [Documentation]    INFUND-2135: listing of applications for an open competition, INFUND-3063
+List of all Applications
+    [Documentation]    INFUND-7369
+    ...
+    ...    INFUND-3063
     [Tags]    HappyPath
-    Then the user should see the text in the page    Application number
+    When the user clicks the button/link    link=All applications
+    Then the user should see the text in the page    All applications
+    And the user should see the text in the page    Application number
     And the user should see the text in the page    Project title
-    And the user should see the text in the page    Lead name
+    And the user should see the text in the page    Innovation area
     And the user should see the text in the page    Lead
     And the user should see the text in the page    Status
     And the user should see the text in the page    Percentage complete
 
 The correct number of applications shows in the table header
-    [Documentation]    INFUND-2135: listing of applications for an open competition
+    [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Then the table header matches correctly
 
 The applications can be sorted by application number
     [Documentation]    INFUND-2135: listing of applications for an open competition
-    [Tags]    HappyPath
+    [Tags]    HappyPath    Pending
+    #TODO UPDATE THIS IN SPRINT 21
     When the application list is sorted by    Application number
     Then the applications should be sorted by column    1
 
 The applications can be sorted by project title
     [Documentation]    INFUND-2135: listing of applications for an open competition
-    [Tags]
+    [Tags]    Pending
+    #TODO UPDATE THIS IN SPRINT 21
     When the application list is sorted by    Project title
     Then the applications should be sorted by column    2
 
 The applications can be sorted by project lead
     [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]
+    [Tags]    Pending
+    #TODO UPDATE THIS IN SPRINT 21
     When the application list is sorted by    Lead
     Then the applications should be sorted by column    4
 
 The applications can be sorted by lead applicant
     [Documentation]    INFUND-3006
-    [Tags]
+    [Tags]    Pending
+    #TODO UPDATE THIS IN SPRINT 21
     When the application list is sorted by    Lead Name
     Then the applications should be sorted by column    3
 
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
-    [Tags]
+    [Tags]    Pending
+    #TODO UPDATE THIS IN SPRINT 21
     When the application list is sorted by    Percentage complete
     Then the applications should be sorted in reverse order by column    6
 
@@ -80,7 +93,7 @@ Calculations of the submitted application
 Calculations for the Number of applications
     [Documentation]    INFUND-2259
     [Tags]    HappyPath
-    Then the calculations should be correct    jQuery=td:contains("00000")    css=.info-area p:nth-child(2) span
+    Then the calculations should be correct    jQuery=td:contains("00000")    css=.column-two-thirds p span:nth-child(1)
     And both calculations in the page should show the same
 
 Comp admin can open the view mode of the application
@@ -91,8 +104,9 @@ Comp admin can open the view mode of the application
     ...    AND    the user uploads the file to the 'technical approach' question    ${valid_pdf}
     Given log in as a different user    &{Comp_admin1_credentials}
     And the user navigates to the page    ${COMP_MANAGEMENT_APPLICATIONS_LIST}
-    Then the user should see the element    id=sort-by
-    And the user selects the option from the drop-down menu    id    id=sort-by
+    #Then the user should see the element    id=sort-by
+    #And the user selects the option from the drop-down menu    id    id=sort-by
+    And the user clicks the button/link    link=All applications
     When the user clicks the button/link    link=${OPEN_COMPETITION_APPLICATION_1_NUMBER}
     Then the user should be redirected to the correct page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     And the user should see the element    link=Print application
@@ -109,8 +123,8 @@ Comp admin should be able to view but not edit the finances for every partner
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
     When the user clicks the button/link    jQuery=button:contains("Finances Summary")
     Then the user should not see the element    link=your finances
-    And the user should see the element     jQuery=h3:contains("Finances Summary")
-    And the user should see the element     jQuery=h2:contains("Funding breakdown")
+    And the user should see the element    jQuery=h3:contains("Finances Summary")
+    And the user should see the element    jQuery=h2:contains("Funding breakdown")
     And the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
     When Log in as a different user    &{collaborator1_credentials}
@@ -122,7 +136,6 @@ Comp admin should be able to view but not edit the finances for every partner
     Then the user should see the correct finances change
 
 *** Keywords ***
-
 the user uploads the file to the 'technical approach' question
     [Arguments]    ${file_name}
     Choose File    name=formInput[14]    ${UPLOAD_FOLDER}/${file_name}
@@ -175,9 +188,8 @@ the applicant edits the Subcontracting costs section
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-country-"]    Romania
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-role"]    Contractor
-    the user selects the checkbox           css=#agree-state-aid-page
-    the user clicks the button/link         jQuery=.button:contains("Mark as complete")
-
+    the user selects the checkbox    css=#agree-state-aid-page
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
 
 the user should see the correct finances change
     Wait Until Element Contains Without Screenshots    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(1)    £${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}
@@ -244,12 +256,12 @@ check calculations on both pages
     Should Be Equal As Integers    ${length_summary}    ${total_length}
 
 both calculations in the page should show the same
-    ${APPLICATIONS_NUMBER_SUMMARY}=    get text    css=.info-area p:nth-child(2) span
+    ${APPLICATIONS_NUMBER_SUMMARY}=    get text    css=.column-two-thirds p span:nth-child(1)
     ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-two-thirds span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
 open application calculations are correct
-    the calculations should be correct    jQuery=td:contains("open")    css=.info-area p:nth-child(3) span
+    the calculations should be correct    jQuery=td:contains("open")    css=.column-two-thirds p span:nth-child(1)
 
 submitted application calculations are correct
     the calculations should be correct    jQuery=td:contains("submitted")    css=.info-area p:nth-child(5) span

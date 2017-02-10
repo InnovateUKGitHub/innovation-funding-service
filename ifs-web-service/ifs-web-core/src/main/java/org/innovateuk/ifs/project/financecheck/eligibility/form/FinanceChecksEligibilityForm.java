@@ -1,4 +1,4 @@
-package org.innovateuk.ifs.project.eligibility.form;
+package org.innovateuk.ifs.project.financecheck.eligibility.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;

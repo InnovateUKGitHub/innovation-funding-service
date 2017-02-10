@@ -75,7 +75,7 @@ Pending partners visible in the Manage contributors page
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage Contributors
+    Then the user should see the text in the page    Manage contributors
     And the status of the people should be correct in the Manage contributors page
     [Teardown]    Logout as user
 
@@ -142,7 +142,7 @@ Lead should not be able to edit Partners
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage Contributors
+    Then the user should see the text in the page    Manage contributors
     And the invited collaborators are not editable
 
 Lead applicant invites a non registered user in the same organisation
@@ -154,10 +154,10 @@ Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage Contributors
+    Then the user should see the text in the page    Manage contributors
     And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add another person")
     When the user adds new collaborator
-    And the user clicks the button/link    jquery=button:contains("Save Changes")
+    And the user clicks the button/link    jquery=button:contains("Save changes")
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application
     [Teardown]    the user closes the browser
@@ -171,7 +171,7 @@ Registered partner should not create new org but should follow the create accoun
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user should see the text in the page    Your organisation
-    And the user should see the text in the page    Business Organisation
+    And the user should see the text in the page    Business organisation
     And the user should see the element    link=email the application lead
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user fills the create account form    Roger    Axe
@@ -184,8 +184,8 @@ the applicant enters valid inputs
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
     The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
     The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
-    focus    jquery=button:contains("Save Changes")
-    The user clicks the button/link    jquery=button:contains("Save Changes")
+    focus    jquery=button:contains("Save changes")
+    The user clicks the button/link    jquery=button:contains("Save changes")
 
 The lead applicant should have the correct status
     the user should see the element    css=#content h2.heading-medium

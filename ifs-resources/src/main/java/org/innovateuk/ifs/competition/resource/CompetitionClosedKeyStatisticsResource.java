@@ -4,58 +4,58 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class CompetitionClosedKeyStatisticsResource {
-    private long assessorsInvited;
-    private long assessorsAccepted;
-    private long applicationsPerAssessor;
-    private long applicationsRequiringAssessors;
-    private long assessorsWithoutApplications;
-    private long assignmentCount;
+    private int assessorsInvited;
+    private int assessorsAccepted;
+    private int applicationsPerAssessor;
+    private int applicationsRequiringAssessors;
+    private int assessorsWithoutApplications;
+    private int assignmentCount;
 
-    public long getAssessorsInvited() {
+    public int getAssessorsInvited() {
         return assessorsInvited;
     }
 
-    public void setAssessorsInvited(long assessorsInvited) {
+    public void setAssessorsInvited(int assessorsInvited) {
         this.assessorsInvited = assessorsInvited;
     }
 
-    public long getAssessorsAccepted() {
+    public int getAssessorsAccepted() {
         return assessorsAccepted;
     }
 
-    public void setAssessorsAccepted(long assessorsAccepted) {
+    public void setAssessorsAccepted(int assessorsAccepted) {
         this.assessorsAccepted = assessorsAccepted;
     }
 
-    public long getApplicationsPerAssessor() {
+    public int getApplicationsPerAssessor() {
         return applicationsPerAssessor;
     }
 
-    public void setApplicationsPerAssessor(long applicationsPerAssessor) {
+    public void setApplicationsPerAssessor(int applicationsPerAssessor) {
         this.applicationsPerAssessor = applicationsPerAssessor;
     }
 
-    public long getApplicationsRequiringAssessors() {
+    public int getApplicationsRequiringAssessors() {
         return applicationsRequiringAssessors;
     }
 
-    public void setApplicationsRequiringAssessors(long applicationsRequiringAssessors) {
+    public void setApplicationsRequiringAssessors(int applicationsRequiringAssessors) {
         this.applicationsRequiringAssessors = applicationsRequiringAssessors;
     }
 
-    public long getAssessorsWithoutApplications() {
+    public int getAssessorsWithoutApplications() {
         return assessorsWithoutApplications;
     }
 
-    public void setAssessorsWithoutApplications(long assessorsWithoutApplications) {
+    public void setAssessorsWithoutApplications(int assessorsWithoutApplications) {
         this.assessorsWithoutApplications = assessorsWithoutApplications;
     }
 
-    public long getAssignmentCount() {
+    public int getAssignmentCount() {
         return assignmentCount;
     }
 
-    public void setAssignmentCount(long assignmentCount) {
+    public void setAssignmentCount(int assignmentCount) {
         this.assignmentCount = assignmentCount;
     }
 

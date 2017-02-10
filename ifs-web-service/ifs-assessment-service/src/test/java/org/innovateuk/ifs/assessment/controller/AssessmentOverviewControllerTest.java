@@ -341,7 +341,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/reject", assessmentId)
@@ -353,7 +353,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andReturn();
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
         inOrder.verifyNoMoreInteractions();
     }
@@ -370,7 +370,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -403,7 +403,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -420,7 +420,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -455,7 +455,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -472,7 +472,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -507,7 +507,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -524,7 +524,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
         // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
@@ -558,9 +558,9 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -575,7 +575,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         AssessmentOverviewForm expectedForm = new AssessmentOverviewForm();
 
@@ -591,7 +591,7 @@ public class AssessmentOverviewControllerTest extends BaseControllerMockMVCTest<
                 .andExpect(view().name("assessment/reject-invitation-confirm"));
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 

@@ -60,7 +60,19 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
 
         assertAccessDenied(
                 () -> classUnderTest.findAssignableById(ID_TO_FIND),
-                () -> verify(assessmentPermissionRules).userCanReadAssessment(eq(assessmentResource), isA(UserResource.class))
+                () -> verify(assessmentPermissionRules).userCanReadToAssign(eq(assessmentResource), isA
+                        (UserResource.class))
+        );
+    }
+
+    @Test
+    public void findRejectableById() {
+        AssessmentResource assessmentResource = newAssessmentResource().with(id(ID_TO_FIND)).build();
+
+        assertAccessDenied(
+                () -> classUnderTest.findRejectableById(ID_TO_FIND),
+                () -> verify(assessmentPermissionRules).userCanReadToReject(eq(assessmentResource), isA
+                        (UserResource.class))
         );
     }
 
@@ -178,6 +190,11 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
+        public ServiceResult<AssessmentResource> findRejectableById(long id) {
+            return serviceSuccess(newAssessmentResource().with(id(ID_TO_FIND)).build());
+        }
+
+        @Override
         public ServiceResult<List<AssessmentResource>> findByUserAndCompetition(long userId, long competitionId) {
             return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS));
         }
@@ -188,8 +205,8 @@ public class AssessmentServiceSecurityTest extends BaseServiceSecurityTest<Asses
         }
 
         @Override
-        public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
-            return serviceSuccess(Integer.toUnsignedLong(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size()));
+        public ServiceResult<Integer> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+            return serviceSuccess(newAssessmentResource().build(ARRAY_SIZE_FOR_POST_FILTER_TESTS).size());
         }
 
         @Override

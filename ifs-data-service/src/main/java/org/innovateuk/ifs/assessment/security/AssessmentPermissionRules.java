@@ -10,6 +10,7 @@ import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -29,16 +30,28 @@ public class AssessmentPermissionRules extends BasePermissionRules {
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
-    @PermissionRule(value = "READ", description = "Assessors can directly read Assessments, except those rejected, " +
-            "submitted, or withdrawn")
+    @PermissionRule(value = "READ", description = "Assessors can directly read Assessments that are accepted, open or ready to submit")
     public boolean userCanReadAssessment(AssessmentResource assessment, UserResource user) {
-        Set<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        Set<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 
     @PermissionRule(value = "READ_SCORE", description = "Assessors can read the score of Assessments except those pending or rejected")
     public boolean userCanReadAssessmentScore(AssessmentResource assessment, UserResource user) {
         Set<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT, SUBMITTED);
+        return isAssessorForAssessment(assessment, user, allowedStates);
+    }
+
+    @PermissionRule(value = "READ_TO_ASSIGN", description = "Assessors can read pending assessments to decide to " +
+            "either to accept or reject")
+    public boolean userCanReadToAssign(AssessmentResource assessment, UserResource user) {
+        Set<AssessmentStates> allowedStates = Collections.singleton(PENDING);
+        return isAssessorForAssessment(assessment, user, allowedStates);
+    }
+
+    @PermissionRule(value = "READ_TO_REJECT", description = "Assessors can reject assessments that are pending, accepted, open or ready to submit")
+    public boolean userCanReadToReject(AssessmentResource assessment, UserResource user) {
+        Set<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
         return isAssessorForAssessment(assessment, user, allowedStates);
     }
 

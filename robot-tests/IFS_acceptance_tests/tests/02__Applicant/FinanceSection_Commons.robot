@@ -33,7 +33,7 @@ Complete the org size section
     the user clicks the button/link    link=Robot test application
     the user clicks the button/link    link=Your finances
     the user clicks the button/link    link=Your organisation
-    the user selects the radio button    financePosition-organisationSize  SMALL
+    the user selects the radio button    financePosition-organisationSize  LARGE
     run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
 
