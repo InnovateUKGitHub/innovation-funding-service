@@ -12,8 +12,8 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.Materials;
-import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
-import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
+import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProje
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.verify;
@@ -211,6 +212,8 @@ public class FinanceChecksEligibilityControllerTest extends BaseControllerMockMV
         FinanceChecksEligibilityForm form = (FinanceChecksEligibilityForm) model.get("eligibilityForm");
         assertTrue(form.isConfirmEligibilityChecked());
         assertEquals(eligibility.getEligibilityRagStatus(), form.getEligibilityRagStatus());
+
+        assertFalse(viewModel.isReadOnly());
     }
 
     @Test
