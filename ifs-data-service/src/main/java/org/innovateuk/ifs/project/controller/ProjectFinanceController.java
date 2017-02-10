@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.project.controller;
 
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
+import org.innovateuk.ifs.project.transactional.ProjectGrantOfferServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -29,6 +33,9 @@ public class ProjectFinanceController {
     @Autowired
     private ProjectFinanceService projectFinanceService;
 
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferService;
+
     @RequestMapping(value = "/{projectId}/spend-profile/generate", method = POST)
     public RestResult<Void> generateSpendProfile(@PathVariable("projectId") final Long projectId) {
         return projectFinanceService.generateSpendProfile(projectId).toPostCreateResponse();
@@ -37,7 +44,9 @@ public class ProjectFinanceController {
     @RequestMapping(value = "/{projectId}/spend-profile/approval/{approvalType}", method = POST)
     public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
                                                         @PathVariable("approvalType") final ApprovalType approvalType) {
-        return projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
+        return projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType).andOnSuccess(() ->
+                projectGrantOfferService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE)))
+                        .toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/spend-profile/approval", method = GET)
