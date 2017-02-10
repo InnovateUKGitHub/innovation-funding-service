@@ -181,10 +181,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Test
     @Rollback
     public void testByCompetitionId() throws Exception {
-        savePublicContent();
-
-        flushAndClearSession();
-
         RestResult<PublicContentItemResource> result = controller.byCompetitionId(COMPETITION_ID);
 
         assertTrue(result.isSuccess());
@@ -192,14 +188,6 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         PublicContentItemResource resultObject = result.getSuccessObject();
         assertEquals(COMPETITION_ID, resultObject.getPublicContentResource().getCompetitionId());
     }
-
-    private PublicContent savePublicContent() {
-        PublicContent publicContentOne = newPublicContent()
-                .withCompetitionId(COMPETITION_ID)
-                .withPublishDate(LocalDateTime.now())
-                .build();
-		return publicContentRepository.save(publicContentOne);
-	}
 
     private void setupKeywords() {
         PublicContent publicContentResult = publicContentRepository.save(newPublicContent()
