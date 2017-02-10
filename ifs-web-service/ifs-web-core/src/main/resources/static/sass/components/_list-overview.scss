@@ -272,8 +272,12 @@ ol.list-counted {
     }
 }
 
-.readonly-list{
-  dd{
-    margin-bottom: 1em;
+dl.readonly-data{
+  dt:first-of-type {
+    margin-top:0;
   }
+  dt {
+    margin-top: 1em;
+  }
+  margin-bottom:1em;
 }

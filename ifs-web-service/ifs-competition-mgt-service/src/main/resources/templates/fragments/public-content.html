@@ -60,7 +60,7 @@
 <div th:fragment="section-summary(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>Text entered into this section will appear in the summary tab.</p>
     <th:block th:if="${model.readOnly}">
-        <dl class="readonly-list">
+        <dl class="readonly-data">
             <dt>Competition description</dt>
             <dd ifs:utext="${form.description}"></dd>
             <dt>Funding type</dt>
