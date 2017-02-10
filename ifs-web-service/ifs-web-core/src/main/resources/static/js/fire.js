@@ -53,7 +53,7 @@ var UTIL = (function () {
         UTIL.fire(classnm)
       })
 
-      //now all the finalize statements first common, then classes
+      // now all the finalize statements first common, then classes
       UTIL.fire('common', 'finalize')
       jQuery.each(document.body.className.split(/\s+/), function (i, classnm) {
         UTIL.fire(classnm, 'finalize')
