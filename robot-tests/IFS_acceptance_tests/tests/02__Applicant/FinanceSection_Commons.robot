@@ -45,7 +45,7 @@ mark application details incomplete the user closes the browser
 Mark application details as complete
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link   link=Robot test application
-    the applicant completes the application details
+    the applicant completes the application details     Application details
 
 Mark application details as incomplete
     Given the user navigates to the page  ${DASHBOARD_URL}
@@ -60,20 +60,9 @@ the Application details are completed
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=img.complete[alt*="Application details"]
     Run Keyword If  '${status}' == 'FAIL'  the applicant completes the application details
 
-the user completes the application details
-     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
-     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
-     the user clicks the button/link       jQuery=label[for="resubmission-no"]
-     the user clicks the button/link       jQuery=label[for="resubmission-no"]
-     # those Radio buttons need to be clicked twice.
-     The user enters text to a text field  id=application_details-startdate_day  18
-     The user enters text to a text field  id=application_details-startdate_year  2018
-     The user enters text to a text field  id=application_details-startdate_month  11
-     The user enters text to a text field  id=application_details-duration  20
-     the user clicks the button/link       jQuery=button:contains("Mark as complete")
-
 the applicant completes the application details
-    the user clicks the button/link       link=Application details
+    [Arguments]   ${Application_details}
+    the user clicks the button/link       link=${Application_details}
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for^="financePosition"]:contains("Experimental development")
     the user clicks the button/link       jQuery=label[for="resubmission-no"]
@@ -197,8 +186,7 @@ the user checks Your Funding section
 
 the user selects research area
     [Arguments]  ${Application}
-    When the user clicks the button/link      link = application details
-    the user completes the application details
+    the applicant completes the application details     application details
     And the user fills in the funding information    ${Application}
 
 the user fills in the funding information

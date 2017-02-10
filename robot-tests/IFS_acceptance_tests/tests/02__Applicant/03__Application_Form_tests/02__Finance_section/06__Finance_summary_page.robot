@@ -210,8 +210,7 @@ the user checks Your Funding section for the project
 
 the user selects research area via Your Funding section
     [Arguments]  ${Application}
-    When the user clicks the button/link      link = application details
-    the user completes the application details
+    the applicant completes the application details     application details
     And the user fills in the funding information with bigger amount     ${Application}
 
 the user fills in the funding information with bigger amount
