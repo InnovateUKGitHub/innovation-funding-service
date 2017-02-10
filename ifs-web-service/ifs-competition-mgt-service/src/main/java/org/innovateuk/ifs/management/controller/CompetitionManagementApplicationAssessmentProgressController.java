@@ -19,6 +19,7 @@ import javax.validation.Valid;
 import static java.lang.String.format;
 import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
 import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
+import static org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.buildOriginQueryString;
 
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
@@ -42,9 +43,9 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId,
                                       @RequestParam MultiValueMap<String, String> queryParams) {
-        model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.APPLICATION_PROGRESS, queryParams));
+        model.addAttribute("applicationOriginQuery", buildOriginQueryString(ApplicationOverviewOrigin.APPLICATION_PROGRESS, queryParams));
 
-        return doProgressView(model, applicationId, form.getSortField());
+        return doProgressView(model, applicationId, form.getSortField(), queryParams);
     }
 
     @RequestMapping(path = "/assign/{assessorId}", method = RequestMethod.POST)
@@ -81,8 +82,10 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort) {
+    private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort, MultiValueMap<String, String> queryParams) {
         model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort));
+        queryParams.add("applicationId", applicationId.toString());
+        model.addAttribute("assessorProfileOriginQuery", buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams));
         return "competition/application-progress";
     }
 }

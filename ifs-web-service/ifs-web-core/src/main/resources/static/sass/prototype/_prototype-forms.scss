@@ -85,6 +85,13 @@ textarea {
   margin-bottom: 1.2em;
 }
 
+/*----- Form elements ----*/
+
+.form-date{
+  overflow: visible;
+  @extend .cf;
+}
+
 /*----- Setting widths of inputs ----*/
 
 input{

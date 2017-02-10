@@ -27,6 +27,10 @@ public class AssessorCreatedInviteResourceBuilder extends AssessorInviteResource
         return new AssessorCreatedInviteResourceBuilder(emptyList());
     }
 
+    public AssessorCreatedInviteResourceBuilder withId(Long... value) {
+        return withArraySetFieldByReflection("id", value);
+    }
+
     public AssessorCreatedInviteResourceBuilder withInviteId(Long... value) {
         return withArraySetFieldByReflection("inviteId", value);
     }
