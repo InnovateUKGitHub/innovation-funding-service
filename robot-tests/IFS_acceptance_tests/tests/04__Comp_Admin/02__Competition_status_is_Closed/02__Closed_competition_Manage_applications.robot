@@ -1,4 +1,5 @@
 *** Settings ***
+Documentation     INFUND-7734 Competition Management: Assign to application dashboard in Closed competition
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
