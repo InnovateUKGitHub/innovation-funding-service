@@ -58,19 +58,19 @@ Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-     When the user navigates to the page   ${YOUR_FINANCES_URL}
-     Then The user should see the text in the page     Your finances
-     And the finance summary table in Your Finances has correct values for lead
-     And the user clicks the button/link       link=Return to application overview
+    When the user navigates to the page   ${YOUR_FINANCES_URL}
+    Then The user should see the text in the page     Your finances
+    And the finance summary table in Your Finances has correct values for lead
+    And the user clicks the button/link       link=Return to application overview
 
 Your Finance includes Finance summary table for collaborator
      [Documentation]    INFUND-6893
      [Tags]
      [Setup]  log in as a different user    &{collaborator2_credentials}
-     When the user navigates to the page   ${YOUR_FINANCES_URL}
-     Then The user should see the text in the page     Your finances
-     And the finance summary table in Your Finances has correct values for collaborator
-     And The user clicks the button/link        link=Return to application overview
+    When the user navigates to the page   ${YOUR_FINANCES_URL}
+    Then The user should see the text in the page     Your finances
+    And the finance summary table in Your Finances has correct values for collaborator
+    And The user clicks the button/link        link=Return to application overview
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
