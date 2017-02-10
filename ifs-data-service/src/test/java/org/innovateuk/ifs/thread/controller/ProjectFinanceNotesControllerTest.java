@@ -2,6 +2,7 @@ package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.project.finance.controller.ProjectFinanceNotesController;
+import org.innovateuk.ifs.project.finance.controller.ProjectFinanceQueriesController;
 import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.junit.Test;
@@ -26,6 +27,12 @@ public class ProjectFinanceNotesControllerTest extends BaseControllerMockMVCTest
     @Override
     protected ProjectFinanceNotesController supplyControllerUnderTest() {
         return new ProjectFinanceNotesController(projectFinanceNotesService);
+    }
+
+    @Override
+    public void setupMockMvc() {
+        controller = new ProjectFinanceNotesController(projectFinanceNotesService);
+        super.setupMockMvc();
     }
 
     @Test

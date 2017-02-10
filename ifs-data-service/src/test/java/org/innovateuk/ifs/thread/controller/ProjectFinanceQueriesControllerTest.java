@@ -1,43 +1,21 @@
 package org.innovateuk.ifs.thread.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.project.finance.controller.ProjectFinanceQueriesController;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesService;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesServiceImpl;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
-import static java.lang.System.out;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.documentation.AlertDocs.alertResourceFields;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -49,6 +27,12 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
         return new ProjectFinanceQueriesController(projectFinanceQueriesService);
     }
 
+    @Override
+    public void setupMockMvc() {
+        controller = new ProjectFinanceQueriesController(projectFinanceQueriesService);
+        super.setupMockMvc();
+    }
+
     @Test
     public void testFindOne() throws Exception {
         final Long queryId = 22L;
@@ -56,8 +40,8 @@ public class ProjectFinanceQueriesControllerTest extends BaseControllerMockMVCTe
         when(projectFinanceQueriesService.findOne(queryId)).thenReturn(serviceSuccess(query));
 
         mockMvc.perform(get("/project/finance/queries/{threadId}", queryId))
-            .andExpect(status().isOk())
-            .andExpect(content().json(toJson(query)));
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(query)));
 
         verify(projectFinanceQueriesService).findOne(22L);
     }
