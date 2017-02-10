@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * View model for the Assessor Profile view.
  */
-public class InviteAssessorsProfileViewModel {
+public class AssessorsProfileViewModel {
 
     private CompetitionResource competition;
     private String name;
@@ -19,7 +19,7 @@ public class InviteAssessorsProfileViewModel {
     private String businessType;
     private String skills;
 
-    public InviteAssessorsProfileViewModel(
+    public AssessorsProfileViewModel(
             CompetitionResource competition,
             String name,
             String email,
