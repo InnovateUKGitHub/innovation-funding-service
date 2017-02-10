@@ -15,13 +15,9 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
@@ -29,12 +25,9 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
-import static org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin.APPLICATION_PROGRESS;
-import static org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin.ASSESSOR_INVITE;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -66,44 +59,6 @@ public class CompetitionManagementAssessorProfileControllerTest extends BaseCont
                 .withInnovationSectorName("Infrastructure systems")
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
-    }
-
-    @Test
-    public void buildOriginQueryString() throws Exception {
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
-                "sort", asList("applicationNumber", "innovationArea")
-        ));
-
-        String result = CompetitionManagementAssessorProfileController.buildOriginQueryString(APPLICATION_PROGRESS, queryParams);
-        String expectedQuery = "?origin=APPLICATION_PROGRESS&sort=applicationNumber&sort=innovationArea";
-
-        assertEquals(expectedQuery, result);
-    }
-
-    @Test
-    public void buildOriginQueryString_encodesReservedChars() throws Exception {
-        // Not exhaustive, but at least these characters should be covered
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
-                "p", asList("&", "=", "%", " ")
-        ));
-
-        String result = CompetitionManagementAssessorProfileController.buildOriginQueryString(APPLICATION_PROGRESS, queryParams);
-        String expectedQuery = "?origin=APPLICATION_PROGRESS&p=%26&p=%3D&p=%25&p=%20";
-
-        assertEquals(expectedQuery, result);
-    }
-
-    @Test
-    public void buildOriginQueryString_originDoesNotAppearTwice() throws Exception {
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
-                "origin", singletonList("ANOTHER_ORIGIN"),
-                "param1", singletonList("abc")
-        ));
-
-        String result = CompetitionManagementAssessorProfileController.buildOriginQueryString(ASSESSOR_INVITE, queryParams);
-        String expectedQuery = "?origin=ASSESSOR_INVITE&param1=abc";
-
-        assertEquals(expectedQuery, result);
     }
 
     @Test

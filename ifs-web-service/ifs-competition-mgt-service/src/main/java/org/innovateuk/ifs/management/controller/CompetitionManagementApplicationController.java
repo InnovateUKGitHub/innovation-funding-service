@@ -135,17 +135,6 @@ public class CompetitionManagementApplicationController extends BaseController {
     @Autowired
     protected ApplicationService applicationService;
 
-    public static String buildOriginQueryString(ApplicationOverviewOrigin origin, MultiValueMap<String, String> queryParams) {
-        queryParams.remove("origin");
-
-        return UriComponentsBuilder.newInstance()
-                .queryParam("origin", origin.toString())
-                .queryParams(queryParams)
-                .build()
-                .encode()
-                .toUriString();
-    }
-
     @RequestMapping(value = "/{applicationId}", method = GET)
     public String displayApplicationOverview(@PathVariable("applicationId") final Long applicationId,
                                              @PathVariable("competitionId") final Long competitionId,
