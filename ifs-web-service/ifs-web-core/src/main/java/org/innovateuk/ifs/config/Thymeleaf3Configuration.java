@@ -11,6 +11,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.env.Environment;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.thymeleaf.TemplateEngine;
@@ -35,6 +36,9 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
     @Autowired
     private ThymeleafProperties properties;
 
+    @Autowired
+    protected Environment env;
+
     private ApplicationContext applicationContext;
 
     @Override
@@ -53,13 +57,19 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
 
     @Bean
     public TemplateEngine templateEngine() {
+
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver());
         engine.setEnableSpringELCompiler(true);
+
         engine.addDialect(new CacheDialect());
         engine.addDialect(new Java8TimeDialect());
         engine.addDialect(new IfSThymeleafDialect());
-        engine.addDialect(new IfsThymeleafPostProcessorDialect());
+
+        if (env.acceptsProfiles("debug")) {
+            engine.addDialect(new IfsThymeleafPostProcessorDialect());
+        }
+
         engine.addDialect(new SpringSecurityDialect());
         return engine;
     }
