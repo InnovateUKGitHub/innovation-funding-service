@@ -520,18 +520,42 @@ Assessor: Should have a Green Check
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
-Public content: Scope
-     [Documentation]    INFUND-6918
+Public content: Eligibility
+     [Documentation]    INFUND-6917 INFUND-7602
      [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link  link=Public content
-    And the user clicks the button/link  link=Scope
-    When the user clicks the button/link  jQuery=button:contains("Save and return")
-    Then the user should see a summary error  Please enter a heading.
-    And the user should see a summary error  Please enter content.
-    When the user enters text to a text field    id=heading-0    Scope Heading
-    And the user enters text to a text field      jQuery=div.textarea-wrapped .editor     Scope Content
-    And the user clicks the button/link  jQuery=button:contains("Save and return")
-    Then the user should see the element  jQuery=li:nth-of-type(4) img.complete
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Eligibility
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(3) img.complete
+
+Public content: Scope
+     [Documentation]    INFUND-6918 INFUND-7602
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Scope
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
+
+Public content: How to apply
+     [Documentation]    INFUND-6920 INFUND-7602
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=How to apply
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(6) img.complete
+
+Public content: Supporting information
+     [Documentation]    INFUND-6921 INFUND-7602
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Supporting information
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(7) img.complete
+
 
 *** Keywords ***
 the user moves focus and waits for autosave
@@ -682,3 +706,19 @@ the user enters multiple innovation areas
     the user selects the option from the drop-down menu    Cyber Security    id=innovationAreaCategoryId-1
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
     the user selects the option from the drop-down menu    Design    id=innovationAreaCategoryId-2
+
+the user can add and remove multiple content groups
+    When the user clicks the button/link        jQuery=button:contains("Save and return")
+    Then the user should see a summary error    Please enter a heading.
+    And the user should see a summary error     Please enter content.
+    When the user enters text to a text field   id=heading-0    Heading 1
+    And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-1    Heading 2
+    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-2    Heading 3
+    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
+    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
+    Then the user should not see the element    id=heading-2
+    And the user should not see the element     jQuery=.editor:eq(2)
