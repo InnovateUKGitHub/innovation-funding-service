@@ -229,6 +229,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         assertAccessDenied(() -> classUnderTest.getEligibility(projectOrganisationCompositeId),
                 () -> {
                     verify(projectFinancePermissionRules).projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectPartnersCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
