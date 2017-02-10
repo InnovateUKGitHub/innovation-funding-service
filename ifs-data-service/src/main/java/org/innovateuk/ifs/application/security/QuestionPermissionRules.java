@@ -12,22 +12,22 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isAnonymous;
 @Component
 @PermissionRules
 public class QuestionPermissionRules {
-    @PermissionRule(value = "READ", description = "logged in users can see all questions")
+    @PermissionRule(value = "READ", description = "Logged in users can see all questions")
     public boolean loggedInUsersCanSeeAllQuestions(QuestionResource questionResource, UserResource user){
         return !isAnonymous(user);
     }
 
-    @PermissionRule(value = "READ", description = "logged in users can see all questions")
+    @PermissionRule(value = "READ", description = "Logged in users can see all questions")
     public boolean loggedInUsersCanSeeAllQuestions(Question question, UserResource user){
         return !isAnonymous(user);
     }
 
-    @PermissionRule(value = "UPDATE", description = "no users can currently update questions")
+    @PermissionRule(value = "UPDATE", description = "No users can currently update questions")
     public boolean noUserCanUpdateAny(QuestionResource questionResource, UserResource user){
         return false;
     }
 
-    @PermissionRule(value = "ASSESS", description = "only questions for the assessors can be assessed")
+    @PermissionRule(value = "ASSESS", description = "Only questions for the assessors can be assessed")
     public boolean onlyAssessableQuestionsCanBeAssessed(QuestionResource questionResource, UserResource user) {
         return !questionResource.getMultipleStatuses();
     }
