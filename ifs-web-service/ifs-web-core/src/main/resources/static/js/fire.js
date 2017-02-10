@@ -47,15 +47,16 @@ var UTIL = (function () {
     },
     loadEvents: function () {
       // hit up common first.
+      var classNames = document.body.className.split(/\s+/)
       UTIL.fire('common')
       // do all the init functions on classes
-      jQuery.each(document.body.className.split(/\s+/), function (i, classnm) {
+      jQuery.each(classNames, function (i, classnm) {
         UTIL.fire(classnm)
       })
 
       // now all the finalize statements first common, then classes
       UTIL.fire('common', 'finalize')
-      jQuery.each(document.body.className.split(/\s+/), function (i, classnm) {
+      jQuery.each(classNames, function (i, classnm) {
         UTIL.fire(classnm, 'finalize')
       })
     }
