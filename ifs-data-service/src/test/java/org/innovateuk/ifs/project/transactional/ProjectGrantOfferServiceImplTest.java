@@ -735,8 +735,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         when(projectRepositoryMock.findOne(123L)).thenReturn(null);
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonErrors.notFoundError(Project.class, 123L)));
+        assertTrue(result.isSuccess());
     }
 
     @Test
