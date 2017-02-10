@@ -17,7 +17,6 @@ import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksVi
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.thread.viewmodel.ThreadPostViewModel;
 import org.innovateuk.ifs.thread.viewmodel.ThreadViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -63,7 +62,6 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
 import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipartFileBytes;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
@@ -257,6 +255,28 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
+    public
+    @ResponseBody
+    ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
+                                                         @PathVariable Long organisationId,
+                                                         @PathVariable Long attachmentId) {
+        Optional<ByteArrayResource> content = Optional.empty();
+        Optional<FileEntryResource> fileDetails = Optional.empty();
+
+        ServiceResult<Optional<ByteArrayResource>> fileContent = financeCheckService.downloadFile(attachmentId);
+        if (fileContent.isSuccess()) {
+            content = fileContent.getSuccessObject();
+        }
+        ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+        if (fileInfo.isSuccess()) {
+            fileDetails = Optional.of(fileInfo.getSuccessObject());
+        }
+
+        return returnFileIfFoundOrThrowNotFoundException(content, fileDetails);
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @RequestMapping(value = "/{queryId}/new-response", params = "removeAttachment", method = POST)
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
@@ -281,7 +301,7 @@ public class ProjectFinanceChecksController {
         ProjectFinanceChecksViewModel viewModel = buildFinanceChecksLandingPage(projectComposite, attachments, queryId);
         model.addAttribute("model", viewModel);
         model.addAttribute("form", form);
-        return "project/finance-check";
+        return "project/finance-checks";
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")

@@ -21,7 +21,7 @@ public class ProjectFinanceCheckControllerSecurityTest extends BaseProjectSetupC
 
         @Test
         public void testPublicMethods() {
-            assertSecured(() -> classUnderTest.viewFinanceChecks(null,123L, 234L, null));
+            assertSecured(() -> classUnderTest.viewFinanceChecks(null,123L, 234L));
         }
 
         @Override
