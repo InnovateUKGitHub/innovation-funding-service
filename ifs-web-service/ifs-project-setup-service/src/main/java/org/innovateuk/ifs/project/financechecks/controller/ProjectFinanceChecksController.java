@@ -54,6 +54,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -137,7 +138,7 @@ public class ProjectFinanceChecksController {
     private CookieUtil cookieUtil;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @RequestMapping(method = GET)
+    @GetMapping
     public String viewFinanceChecks(Model model,
                                     @PathVariable("projectId") final Long projectId,
                                     @PathVariable("organisationId") final Long organisationId) {
@@ -150,7 +151,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @RequestMapping(value = "/{queryId}/new-response", method = GET)
+    @GetMapping(value = "/{queryId}/new-response")
     public String viewNewResponse(@PathVariable Long projectId,
                                   @PathVariable Long organisationId,
                                   @PathVariable Long queryId,
@@ -172,7 +173,7 @@ public class ProjectFinanceChecksController {
 
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @RequestMapping(value = "/{queryId}/new-response", method = POST)
+    @PostMapping(value = "/{queryId}/new-response")
     public String saveResponse(Model model,
                                @PathVariable("projectId") final Long projectId,
                                @PathVariable final Long organisationId,
@@ -235,7 +236,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @RequestMapping(value = "/{queryId}/new-response", method = POST, params = "uploadAttachment")
+    @PostMapping(value = "/{queryId}/new-response", params = "uploadAttachment")
     public String saveNewResponseAttachment(Model model,
                                             @PathVariable("projectId") final Long projectId,
                                             @PathVariable Long organisationId,
@@ -269,7 +270,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @RequestMapping(value = "/{queryId}/new-response/attachment/{attachmentId}", method = GET)
+    @GetMapping(value = "/{queryId}/new-response/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadResponseAttachment(@PathVariable Long projectId,
@@ -296,7 +297,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @RequestMapping(value = "/attachment/{attachmentId}", method = GET)
+    @GetMapping(value = "/attachment/{attachmentId}")
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadAttachment(@PathVariable Long projectId,
@@ -318,7 +319,7 @@ public class ProjectFinanceChecksController {
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @RequestMapping(value = "/{queryId}/new-response", params = "removeAttachment", method = POST)
+    @PostMapping(value = "/{queryId}/new-response", params = "removeAttachment")
     public String removeAttachment(@PathVariable Long projectId,
                                    @PathVariable Long organisationId,
                                    @PathVariable Long queryId,
@@ -345,8 +346,8 @@ public class ProjectFinanceChecksController {
         return "project/finance-checks";
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_QUERIES_SECTION')")
-    @RequestMapping(value="/{queryId}/new-response/cancel", method = GET)
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @GetMapping(value="/{queryId}/new-response/cancel")
     public String cancelNewForm(@PathVariable Long projectId,
                                 @PathVariable Long organisationId,
                                 @PathVariable Long queryId,
@@ -360,6 +361,20 @@ public class ProjectFinanceChecksController {
         return redirectToQueries(projectId, organisationId);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
+    @GetMapping("/eligibility")
+    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request){
+        ProjectResource project = projectService.getById(projectId);
+        ApplicationResource application = applicationService.getById(project.getApplication());
+        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
+        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
+        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
+        CompetitionResource competition = competitionService.getById(application.getCompetition());
+
+        return doViewEligibility(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
+    }
 
     private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
         ProjectResource projectResource = projectService.getById(compositeId.getProjectId());
@@ -477,20 +492,6 @@ public class ProjectFinanceChecksController {
         return attachments;
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @GetMapping("/eligibility")
-    public String viewExternalEligibilityPage(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request){
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-
-        return doViewEligibility(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
-    }
 
     private String doViewEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {
 
