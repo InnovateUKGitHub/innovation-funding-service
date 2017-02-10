@@ -82,7 +82,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
-                .andExpect(model().attribute("originQuery", "?origin=APPLICATION_PROGRESS"))
+                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS"))
                 .andExpect(view().name("competition/application-progress"));
 
         InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService);
@@ -118,7 +118,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&param2=def", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
-                .andExpect(model().attribute("originQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def"))
+                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def"))
                 .andExpect(view().name("competition/application-progress"));
     }
 

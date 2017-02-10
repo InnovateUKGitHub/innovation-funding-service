@@ -10,9 +10,7 @@
 
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
-    <div th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Invite assessors',linkClass='link-back',linkUrl=@{/competition/{competitionId}/assessors/find(competitionId=${model.competition.id})}"
-         th:remove="tag"/>
+    <div th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></div>
 
     <div class="page-title">
         <h1 class="heading-xlarge">
