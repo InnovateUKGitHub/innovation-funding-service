@@ -76,8 +76,8 @@ public class AssessorProfileSkillsController {
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {
-        ProfileSkillsResource profileSkills = userService.getProfileSkills(loggedInUser.getId());
-        form.setAssessorType(profileSkills.getBusinessType());
-        form.setSkillAreas(profileSkills.getSkillsAreas());
+        ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
+        form.setAssessorType(profileSkillsResource.getBusinessType());
+        form.setSkillAreas(profileSkillsResource.getSkillsAreas());
     }
 }

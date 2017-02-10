@@ -15,7 +15,7 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...
 ...               INFUND-6448 As a member of the competitions team, I can remove an assessor from the invite list so...
 ...
-...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so I know if they have accepted, declined or still awaiting repsonse
+...               INFUND-6450 As a member of the competitions team, I can see the status of each assessor invite so I know if they have accepted, declined or still awaiting response
 ...
 ...               INFUND-6389 As a member of the competitions team I can see the innovation sector and innovation area(s) on the Invite assessors dashboard so ...
 ...
@@ -35,16 +35,13 @@ Check the initial key statistics
     [Tags]
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    jQuery=.button:contains("Invite assessors")
+    And the user clicks the button/link    link=Overview
     And the key statistics are calculated
-    And the user should see the element    jQuery=.column-quarter:nth-child(1) span:contains(${ks_invited})
-    And the user should see the element    jQuery=.column-quarter:nth-child(2) span:contains(${ks_accepted})
-    And the user should see the element    jQuery=.column-quarter:nth-child(3) span:contains(${ks_declined})
-    And the user should see the element    jQuery=.column-quarter:nth-child(4) span:contains(${ks_assessors})
 
 The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412
     [Tags]
-    And The user should see the element    link=Overview
+    Given The user clicks the button/link    link=Find
     When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
     And The user clicks the button/link    link=Invite
     Then The user should see the text in the page    will.smith@gmail.com
@@ -84,12 +81,10 @@ Remove users from the list
     When The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Add)
     And The user clicks the button/link    link=Invite
     And The user should see the text in the page    will.smith@gmail.com
-    And the user should see the element    jQuery=.column-quarter:nth-child(4) span:contains(${inc_ks_assessors})
     And The user clicks the button/link    jQuery=tr:nth-child(1) .button:contains(Remove from list)
     Then The user should not see the text in the page    will.smith@gmail.com
     And The user clicks the button/link    link=Find
     And the user should see the element    jQuery=tr:nth-child(1) button:contains(Add)
-    And the user should see the element    jQuery=.column-quarter:nth-child(4) span:contains(${ks_assessors})
     [Teardown]    The user clicks the button/link    link=Find
 
 Invite Individual Assessors
@@ -104,7 +99,6 @@ Invite Individual Assessors
     Then The user should not see the text in the page    Will Smith
     And The user clicks the button/link    link=Find
     And the user should not see the text in the page    Will Smith
-    And the user should see the element    jQuery=.column-quarter:nth-child(1) span:contains(${inc_ks_invited})
 
 Invite non-registered assessors server side validations
     [Documentation]    INFUND-6411
@@ -123,7 +117,7 @@ Invite non-registered users
     [Tags]
     When The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
-    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+OlivierGiroud@gmail.com
+    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    ${test_mailbox_one}+OlivierGiroud@gmail.com
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And the user selects the option from the drop-down menu    Emerging and enabling technologies    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
@@ -131,7 +125,7 @@ Invite non-registered users
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     Then the user should see the element    css=.no
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Olivier Giroud)
-    And The user should see the element    jQuery=tr:nth-child(1) td:contains(worth.email.test+OlivierGiroud@gmail.com)
+    And The user should see the element    jQuery=tr:nth-child(1) td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Data)
     And The user should see the element    jQuery=tr:nth-child(1) button:contains(Remove from list)
 
@@ -152,16 +146,15 @@ Assessor overview information
 
 *** Keywords ***
 The key statistics are calculated
-    ${ks_invited}=    Get Text    jQuery=.column-quarter:nth-child(1) span
-    ${increment}=   Set Variable      ${1}
-    ${inc_ks_invited} =     Evaluate     ${ks_invited}+${increment}
-    ${ks_accepted}=    Get Text    jQuery=.column-quarter:nth-child(2) span
-    ${ks_declined}=    Get Text    jQuery=.column-quarter:nth-child(3) span
-    ${ks_assessors}=    Get Text    jQuery=.column-quarter:nth-child(4) span
-    ${inc_ks_assessors}=    Evaluate    ${ks_assessors}+${increment}
-    Set Suite Variable    ${inc_ks_invited}
-    Set Suite Variable    ${inc_ks_assessors}
-    Set Suite Variable    ${ks_invited}
-    Set Suite Variable    ${ks_accepted}
-    Set Suite Variable    ${ks_declined}
-    Set Suite Variable    ${ks_assessors}
+    #Calculation of the Invited Assessors
+    ${INVITED_ASSESSORS}=    Get matching xpath count    //table/tbody/tr
+    ${INVITED_COUNT}=    Get text    css=div:nth-child(1) > div > span
+    Should Be Equal As Integers    ${INVITED_ASSESSORS}    ${INVITED_COUNT}
+    #Calculation of the Accepted Assessors
+    ${ACCEPTED_ASSESSORS}=    Get matching xpath count    //*[text()="Invite accepted"]
+    ${ACCEPTED_COUNT}=    Get text    css=div:nth-child(2) > div > span
+    Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${ACCEPTED_ASSESSORS}
+    #Calculation of the declined Assessors
+    ${DECLINED_ASSESSORS}=    Get matching xpath count    //*[text()="Invite declined"]
+    ${ACCEPTED_COUNT}=    Get text    css=div:nth-child(3) > div > span
+    Should Be Equal As Integers    ${DECLINED_ASSESSORS}    ${ACCEPTED_COUNT}

@@ -12,7 +12,7 @@ import java.util.function.Consumer;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectFinanceCheckControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectFinanceChecksController> {
+public class ProjectFinanceChecksControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectFinanceChecksController> {
 
         @Override
         protected Class<? extends ProjectFinanceChecksController> getClassUnderTest() {
