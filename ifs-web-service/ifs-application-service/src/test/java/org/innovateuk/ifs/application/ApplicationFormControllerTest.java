@@ -490,6 +490,46 @@ public class ApplicationFormControllerTest extends BaseControllerMockMVCTest<App
                 .andExpect(cookie().exists(CookieFlashMessageFilter.COOKIE_NAME));
     }
 
+
+    @Test
+    public void testAcademicFinanceFundingQuestionSubmitAlsoMarksOrganisationFinanceAsNotRequired() throws Exception {
+
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(organisationService.getOrganisationType(any(), any())).thenReturn("University (HEI)");
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.ORGANISATION_FINANCES)).thenReturn(sectionResourceBuilder.withType(SectionType.ORGANISATION_FINANCES).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+        ).andExpect(status().is3xxRedirection());
+
+        verify(sectionService, times(1)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
+        verify(sectionService, times(1)).markAsNotRequired(isA(Long.class), isA(Long.class), isA(Long.class));
+
+    }
+
+    @Test
+    public void testAcademicFinanceProjectCostsQuestionSubmitAlsoMarksOrganisationFinanceAsNotRequired() throws Exception {
+
+        SectionResourceBuilder sectionResourceBuilder = SectionResourceBuilder.newSectionResource();
+
+        when(organisationService.getOrganisationType(any(), any())).thenReturn("University (HEI)");
+        when(overheadFileSaver.handleOverheadFileRequest(any())).thenReturn(new ValidationMessages());
+        when(sectionService.getById(anyLong())).thenReturn(sectionResourceBuilder.with(id(1L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).build());
+        when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.PROJECT_COST_FINANCES)).thenReturn(sectionResourceBuilder.withType(SectionType.PROJECT_COST_FINANCES).build(1));
+        mockMvc.perform(
+                post("/application/{applicationId}/form/section/{sectionId}", application.getId(), "1")
+                        .param(ApplicationFormController.MARK_SECTION_AS_COMPLETE, String.valueOf("1"))
+                        .param(ApplicationFormController.TERMS_AGREED_KEY, "1")
+        ).andExpect(status().is3xxRedirection());
+
+        verify(sectionService, times(1)).markAsComplete(isA(Long.class), isA(Long.class), isA(Long.class));
+        verify(sectionService, times(1)).markAsNotRequired(isA(Long.class), isA(Long.class), isA(Long.class));
+    }
+
     @Test
     public void testApplicationFormSubmitMarkAsIncomplete() throws Exception {
 

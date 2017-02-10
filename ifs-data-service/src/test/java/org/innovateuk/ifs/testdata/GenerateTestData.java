@@ -375,8 +375,8 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.state).
-                build();
+        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
+                .rejectComment, line.state).build();
     }
 
     private void createCompetitionFunders() {

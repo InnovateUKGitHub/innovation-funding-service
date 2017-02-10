@@ -2,7 +2,6 @@ package org.innovateuk.ifs.finance.domain.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.project.finance.resource.Viability;
 import org.innovateuk.ifs.user.domain.Organisation;
 
 import java.util.List;
@@ -15,10 +14,6 @@ import static org.innovateuk.ifs.BuilderAmendFunctions.uniqueIds;
  * Builder for ProjectFinance entities.
  */
 public class ProjectFinanceBuilder extends BaseBuilder<ProjectFinance, ProjectFinanceBuilder> {
-
-    public ProjectFinanceBuilder withViability(Viability... value) {
-        return withArray((v, finance) -> finance.setViability(v), value);
-    }
 
     public ProjectFinanceBuilder withOrganisation(Organisation... value) {
         return withArray((v, finance) -> finance.setOrganisation(v), value);
