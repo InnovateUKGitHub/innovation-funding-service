@@ -122,8 +122,9 @@ public class ProjectGrantOfferLetterController {
     ResponseEntity<ByteArrayResource> downloadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
         boolean isLeadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
-        if(!isLeadPartner)
+        if(!isLeadPartner) {
             throw new ForbiddenActionException();
+        }
         final Optional<ByteArrayResource> content = projectService.getSignedGrantOfferLetterFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);

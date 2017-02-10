@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.grantofferletter.controller;
 
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.project.grantofferletter.form.ProjectGrantOfferLetterForm;
 import org.innovateuk.ifs.project.grantofferletter.viewmodel.ProjectGrantOfferLetterViewModel;
@@ -104,7 +105,7 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
     }
 
     @Test
-    public void testDownloadSignedGrantOfferLetter() throws Exception {
+    public void testDownloadSignedGrantOfferLetterByLead() throws Exception {
 
         FileEntryResource fileDetails = newFileEntryResource().withName("A name").build();
         ByteArrayResource fileContents = new ByteArrayResource("My content!".getBytes());
@@ -124,6 +125,15 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         assertEquals("My content!", result.getResponse().getContentAsString());
         assertEquals("inline; filename=\"" + fileDetails.getName() + "\"",
                 result.getResponse().getHeader("Content-Disposition"));
+    }
+
+    @Test
+    public void testDownloadSignedGrantOfferLetterByNonLead() throws Exception {
+
+        when(projectService.isUserLeadPartner(123L, 1L)).thenReturn(false);
+
+        mockMvc.perform(get("/project/{projectId}/offer/signed-grant-offer-letter", 123L)).
+                andExpect(status().isForbidden());
     }
 
     @Test
