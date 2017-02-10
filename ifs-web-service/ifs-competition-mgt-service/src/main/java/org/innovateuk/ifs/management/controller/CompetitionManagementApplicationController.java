@@ -136,6 +136,8 @@ public class CompetitionManagementApplicationController extends BaseController {
     protected ApplicationService applicationService;
 
     public static String buildOriginQueryString(ApplicationOverviewOrigin origin, MultiValueMap<String, String> queryParams) {
+        queryParams.remove("origin");
+
         return UriComponentsBuilder.newInstance()
                 .queryParam("origin", origin.toString())
                 .queryParams(queryParams)

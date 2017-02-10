@@ -44,6 +44,8 @@ public class CompetitionManagementAssessorProfileController extends BaseControll
     }
 
     public static String buildOriginQueryString(AssessorProfileOrigin origin, MultiValueMap<String, String> queryParams) {
+        queryParams.remove("origin");
+
         return UriComponentsBuilder.newInstance()
                 .queryParam("origin", origin.toString())
                 .queryParams(queryParams)

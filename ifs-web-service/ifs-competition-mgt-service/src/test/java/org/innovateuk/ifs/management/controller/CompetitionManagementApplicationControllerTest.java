@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
@@ -72,6 +73,19 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
 
         String result = CompetitionManagementApplicationController.buildOriginQueryString(ALL_APPLICATIONS, queryParams);
         String expectedQuery = "?origin=ALL_APPLICATIONS&p=%26&p=%3D&p=%25&p=%20";
+
+        assertEquals(expectedQuery, result);
+    }
+
+    @Test
+    public void buildOriginQueryString_originDoesNotAppearTwice() throws Exception {
+        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
+                "origin", singletonList("ANOTHER_ORIGIN"),
+                "param1", singletonList("abc")
+        ));
+
+        String result = CompetitionManagementApplicationController.buildOriginQueryString(ALL_APPLICATIONS, queryParams);
+        String expectedQuery = "?origin=ALL_APPLICATIONS&param1=abc";
 
         assertEquals(expectedQuery, result);
     }
