@@ -2,10 +2,13 @@ package org.innovateuk.ifs.application.service;
 
 import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -24,6 +27,7 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.singleton;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertTrue;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
 import static org.mockito.Mockito.*;
 
 
@@ -34,6 +38,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
     @Mock
     private CompetitionsRestService competitionsRestService;
+
+    @Mock
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Mock
     private AssessorCountOptionsRestService assessorCountOptionsRestService;
@@ -245,6 +252,18 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         verify(competitionsRestService, only()).notifyAssessors(competitionId);
     }
 
+    @Test
+    public void test_getPublicContentOfCompetition() throws Exception {
+        Long competitionId = 12314L;
+        PublicContentItemResource expected = newPublicContentItemResource().build();
+
+        when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(expected));
+
+        ServiceResult<PublicContentItemResource> result = service.getPublicContentOfCompetition(competitionId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(expected, result.getSuccessObject());
+    }
 
     private CompetitionSearchResultItemBuilder newCompetitionSearchResultItem1() {
         return newCompetitionSearchResultItem()
