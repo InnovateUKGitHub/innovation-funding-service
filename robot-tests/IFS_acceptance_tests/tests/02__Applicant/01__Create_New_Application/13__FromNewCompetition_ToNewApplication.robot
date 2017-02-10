@@ -221,7 +221,7 @@ Organisation client side validation when yes
 Mark Organisation as complete when yes
     [Documentation]  INFUND-6393
     [Tags]
-    [Setup]  the user navigates to Your finances page  ${compWITHGrowth}
+    [Setup]  the user navigates to Your-finances page  ${compWITHGrowth}
     Given the user clicks the button/link             link=Your organisation
     And the user selects medium organisation size
     Then the user enters text to a text field         css=input[name$="month"]  12
