@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,9 @@ public class CompetitionServiceImpl implements CompetitionService {
 
     @Autowired
     private CompetitionsRestService competitionsRestService;
+
+    @Autowired
+    private PublicContentItemRestService publicContentItemRestService;
 
     @Autowired
     private AssessorCountOptionsRestService assessorCountOptionsRestService;
@@ -137,5 +142,10 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public void notifyAssessors(Long competitionId) {
         competitionsRestService.notifyAssessors(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId) {
+        return publicContentItemRestService.getItemByCompetitionId(competitionId).toServiceResult();
     }
 }

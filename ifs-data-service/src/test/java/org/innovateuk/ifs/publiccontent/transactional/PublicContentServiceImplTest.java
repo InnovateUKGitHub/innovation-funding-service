@@ -23,8 +23,10 @@ import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.COMPLETE;
 import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.IN_PROGRESS;
+import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentGroupResourceBuilder.newContentGroupResource;
 import static org.innovateuk.ifs.publiccontent.builder.ContentSectionBuilder.newContentSection;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
@@ -52,6 +54,9 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
 
     @Mock
     private ContentGroupService contentGroupService;
+
+    @Mock
+    private ContentEventService contentEventService;
 
     @Override
     protected PublicContentServiceImpl supplyServiceUnderTest() {
@@ -212,6 +217,24 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
     }
 
     @Test
+    public void testUpdateDatesSection() {
+        PublicContent publicContent = newPublicContent().withContentSections(Collections.emptyList()).build();
+        List<ContentEventResource> events = newContentEventResource().build(1);
+        PublicContentResource publicContentResource = newPublicContentResource()
+                .withContentEvents(events).build();
+        when(publicContentMapper.mapToDomain(publicContentResource)).thenReturn(publicContent);
+        when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
+        when(contentEventService.resetAndSaveEvents(publicContent.getId(), events)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.DATES);
+
+        verify(publicContentRepository).save(publicContent);
+        verify(contentEventService).resetAndSaveEvents(publicContent.getId(), events);
+
+        assertTrue(result.isSuccess());
+    }
+
+    @Test
     public void testUpdateEligibilitySection() {
         testUpdateContentGroupSection(PublicContentSectionType.ELIGIBILITY);
     }
@@ -237,6 +260,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
                 .withContentSections(COMPLETE_SECTIONS).build();
         when(publicContentMapper.mapToDomain(publicContentResource)).thenReturn(publicContent);
         when(publicContentRepository.save(publicContent)).thenReturn(publicContent);
+        when(contentGroupService.saveContentGroups(publicContentResource, publicContent, type)).thenReturn(serviceSuccess());
 
         ServiceResult<Void> result = service.updateSection(publicContentResource, type);
 

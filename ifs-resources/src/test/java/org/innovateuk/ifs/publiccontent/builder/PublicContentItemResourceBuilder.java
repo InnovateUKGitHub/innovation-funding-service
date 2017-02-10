@@ -22,19 +22,19 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
     }
 
     public PublicContentItemResourceBuilder withContentSection(PublicContentResource... publicContentResources) {
-        return withArray((publicContentItem, publicContentResource) -> setField("publicContentResources", publicContentItem, publicContentResource), publicContentResources);
+        return withArray((publicContentItem, publicContentResource) -> setField("publicContentResource", publicContentItem, publicContentResource), publicContentResources);
     }
 
     public PublicContentItemResourceBuilder withCompetitionTitle(String competitionTitle) {
         return with(publicContentItem -> setField("competitionTitle", competitionTitle, publicContentItem));
     }
 
-    public PublicContentItemResourceBuilder withCompetitionOpenDate(LocalDateTime publishDate) {
-        return with(publicContentItem -> setField("competitionOpenDate", publishDate, publicContentItem));
+    public PublicContentItemResourceBuilder withCompetitionOpenDate(LocalDateTime competitionOpenDate) {
+        return with(publicContentItem -> setField("competitionOpenDate", competitionOpenDate, publicContentItem));
     }
 
-    public PublicContentItemResourceBuilder withCompetitionClosedDate(LocalDateTime publishDate) {
-        return with(publicContentItem -> setField("competitionClosedDate", publishDate, publicContentItem));
+    public PublicContentItemResourceBuilder withCompetitionCloseDate(LocalDateTime competitionCloseDate) {
+        return with(publicContentItem -> setField("competitionCloseDate", competitionCloseDate, publicContentItem));
     }
 
     @Override
