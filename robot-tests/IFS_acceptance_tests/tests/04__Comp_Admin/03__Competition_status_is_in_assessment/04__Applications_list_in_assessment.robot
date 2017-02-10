@@ -5,11 +5,13 @@ Documentation     INFUND-1987
 ...
 ...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
 ...
-...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition so that I can see information and further actions for the competition
+...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition so...
 ...
 ...               INFUND-7367 Competition management: Applications dashboard
 ...
 ...               INFUND-7371 Competition management: View list of submitted applications
+...
+...               INFUND-7696 Competition management: View in progress/completed applications
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -42,6 +44,14 @@ Submitted applications Key Statistics
     [Tags]    HappyPath
     Then the calculations should be correct    css=.grid-row li:nth-child(2) span
     And both calculations in the page should show the same    css=.grid-row li:nth-child(2) span
+
+Submitted applications View completed applications
+    [Documentation]    INFUND-7351
+    [Tags]    HappyPath
+    Given the user clicks the button/link    link=00000018
+    And the user should see the text in the page    Application overview
+    When the user clicks the button/link    link=Back
+    Then the user should see the text in the page    Submitted applications
 
 Sort by Lead
     [Documentation]    INFUND-2307
