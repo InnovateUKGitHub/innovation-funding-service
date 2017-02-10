@@ -469,7 +469,7 @@ Approve Eligibility: Lead partner organisation
     [Documentation]    INFUND-5193, INFUND-6149
     [Tags]    HappyPath
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/organisation/22
-    And the user should see the element    xpath=//a[contains(@href,'mailto:worth.email.test+fundsuccess@gmail.com')]
+    And the user should see the element    xpath=//a[contains(@href,'mailto:${test_mailbox_one}+fundsuccess@gmail.com')]
     When the user fills in project costs
     And the user selects the checkbox    costs-reviewed
     Then the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")

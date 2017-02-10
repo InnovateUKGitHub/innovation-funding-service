@@ -118,7 +118,7 @@ Invite non-registered users
     [Tags]
     When The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(1) input    Olivier Giroud
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
-    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    worth.email.test+OlivierGiroud@gmail.com
+    And The user enters text to a text field    css=#invite-table tr:nth-of-type(1) td:nth-of-type(2) input    ${test_mailbox_one}+OlivierGiroud@gmail.com
     And The user should not see the text in the page    Please enter a name.    #check for the client side validation
     And the user selects the option from the drop-down menu    Emerging and enabling technologies    css=.js-progressive-group-select
     And the user selects the option from the drop-down menu    Data    id=grouped-innovation-area
@@ -126,7 +126,7 @@ Invite non-registered users
     And the user clicks the button/link    jQuery=.button:contains("Add assessors to list")
     Then the user should see the element    css=.no
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Olivier Giroud)
-    And The user should see the element    jQuery=tr:nth-child(1) td:contains(worth.email.test+OlivierGiroud@gmail.com)
+    And The user should see the element    jQuery=tr:nth-child(1) td:contains(${test_mailbox_one}+OlivierGiroud@gmail.com)
     And The user should see the element    jQuery=tr:nth-child(1) td:contains(Data)
     And The user should see the element    jQuery=tr:nth-child(1) button:contains(Remove from list)
 
