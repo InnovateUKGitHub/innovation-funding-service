@@ -79,7 +79,8 @@ public class CompetitionManagementApplicationController extends BaseController {
         ALL_APPLICATIONS("/competition/{competitionId}/applications/all"),
         SUBMITTED_APPLICATIONS("/competition/{competitionId}/applications/submitted"),
         MANAGE_APPLICATIONS("/assessment/competition/{competitionId}"),
-        FUNDING_APPLICATIONS("/competition/{competitionId}/funding");
+        FUNDING_APPLICATIONS("/competition/{competitionId}/funding"),
+        APPLICATION_PROGRESS("/competition/{competitionId}/application/{applicationId}/assessors");
 
         private String baseOriginUrl;
 
@@ -176,20 +177,23 @@ public class CompetitionManagementApplicationController extends BaseController {
             OptionalFileDetailsViewModel assessorFeedbackViewModel = getAssessorFeedbackViewModel(application, competition);
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
 
-            model.addAttribute("backUrl", buildBackUrl(origin, competitionId, queryParams));
+            model.addAttribute("backUrl", buildBackUrl(origin, applicationId, competitionId, queryParams));
 
             return "competition-mgt-application-overview";
         });
     }
 
-    private String buildBackUrl(String origin, Long competitionId, MultiValueMap<String, String> queryParams) {
+    private String buildBackUrl(String origin, Long applicationId, Long competitionId, MultiValueMap<String, String> queryParams) {
         String baseUrl = ApplicationOverviewOrigin.valueOf(origin).getBaseOriginUrl();
 
         queryParams.remove("origin");
 
         return UriComponentsBuilder.fromPath(baseUrl)
                 .queryParams(queryParams)
-                .buildAndExpand(asMap("competitionId", competitionId))
+                .buildAndExpand(asMap(
+                        "competitionId", competitionId,
+                        "applicationId", applicationId
+                ))
                 .encode()
                 .toUriString();
     }
