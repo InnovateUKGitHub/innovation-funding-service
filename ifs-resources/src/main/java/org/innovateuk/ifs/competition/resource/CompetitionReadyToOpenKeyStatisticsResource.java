@@ -4,22 +4,22 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 public class CompetitionReadyToOpenKeyStatisticsResource {
-    private long assessorsInvited;
-    private long assessorsAccepted;
+    private int assessorsInvited;
+    private int assessorsAccepted;
 
-    public long getAssessorsInvited() {
+    public int getAssessorsInvited() {
         return assessorsInvited;
     }
 
-    public void setAssessorsInvited(long assessorsInvited) {
+    public void setAssessorsInvited(int assessorsInvited) {
         this.assessorsInvited = assessorsInvited;
     }
 
-    public long getAssessorsAccepted() {
+    public int getAssessorsAccepted() {
         return assessorsAccepted;
     }
 
-    public void setAssessorsAccepted(long assessorsAccepted) {
+    public void setAssessorsAccepted(int assessorsAccepted) {
         this.assessorsAccepted = assessorsAccepted;
     }
 

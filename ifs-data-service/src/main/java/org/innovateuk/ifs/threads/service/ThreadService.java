@@ -9,15 +9,11 @@ import java.util.List;
 
 
 public interface ThreadService<E, P> {
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     ServiceResult<List<E>> findAll(Long contextClassPk);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     ServiceResult<E> findOne(Long contextClassPk);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     ServiceResult<Long> create(E e);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = true)
     ServiceResult<Void> addPost(P post, Long threadId);
 }

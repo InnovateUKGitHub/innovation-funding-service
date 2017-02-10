@@ -4,6 +4,8 @@ import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
 //import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
+import org.innovateuk.ifs.threads.baseservices.GenericThreadService;
+import org.innovateuk.ifs.threads.baseservices.MappingThreadService;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
 import org.springframework.aop.support.AopUtils;

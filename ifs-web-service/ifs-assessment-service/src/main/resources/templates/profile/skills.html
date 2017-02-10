@@ -19,8 +19,8 @@
             <h2 class="heading-medium no-margin-bottom">Innovation areas &nbsp; <small><a th:href="@{/profile/skills/edit}"> Edit your skills</a></small></h2>
 
             <ul class="list list-bullet">
-                <li>Digital sciences</li>
-                <li>Information &amp; communications technology (ICT)</li>
+                <li th:each="innovationArea : ${model.innovationAreas}" th:text="${innovationArea}">Digital
+                    sciences</li>
             </ul>
 
             <h2 class="heading-medium">Skill areas</h2>

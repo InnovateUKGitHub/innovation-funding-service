@@ -73,8 +73,7 @@ public class AssessmentOverviewController {
         Supplier<String> failureView = () -> doViewRejectInvitationConfirm(model, assessmentId);
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
-
-            AssessmentResource assessment = assessmentService.getById(assessmentId);
+            AssessmentResource assessment = assessmentService.getRejectableById(assessmentId);
             ServiceResult<Void> updateResult = assessmentService.rejectInvitation(assessment.getId(), form.getRejectReason(), form.getRejectComment());
 
             return validationHandler.addAnyErrors(updateResult, fieldErrorsToFieldErrors(), asGlobalErrors()).
