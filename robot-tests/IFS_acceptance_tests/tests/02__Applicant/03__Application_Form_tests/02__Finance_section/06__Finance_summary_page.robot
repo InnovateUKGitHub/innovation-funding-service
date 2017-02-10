@@ -12,7 +12,7 @@ Documentation     INFUND-524 As an applicant I want to see the finance summary u
 ...               INFUND-1436 As a lead applicant I want to be able to view the ratio of research participation costs in my consortium so I know my application is within the required range
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    the user closes the browser
-Force Tags        Applicant     Pending
+Force Tags        Applicant
 Default Tags
 Resource          ../../../../resources/defaultResources.robot
 Resource          ../../FinanceSection_Commons.robot
@@ -35,35 +35,42 @@ Calculations for Lead applicant
 
 Calculations for the first collaborator
     [Documentation]    INFUND-524
-    ...
-    ...
     ...    This test case still use the old application after the refactoring
     [Tags]
     [Setup]    Guest user log-in    &{collaborator1_credentials}
     When the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
     Then the finance summary calculations should be correct
     And the finance Project cost breakdown calculations should be correct
-    And the applicant enters a bigger funding amount
+
+Contribution to project and funding sought should not be negative number
+    [Documentation]    INFUND-524
+    ...
+    ...    This test case still use the old application after the refactoring
+    [Tags]
+    [Setup]  log in as a different user    &{lead_applicant_credentials}
+    When the user navigates to Your-finances page       Providing sustainable childcare
+    and the user fills in the project costs
+    and the user fills in the organisation information       Providing sustainable childcare
+    and the user checks your funding section for the project      Providing sustainable childcare
     Then the contribution to project and funding sought should be 0 and not a negative number
 
 Your Finance includes Finance summary table for lead applicant
     [Documentation]    INFUND-6893
     [Tags]    HappyPath
     [Setup]  log in as a different user    &{lead_applicant_credentials}
-     When the user navigates to the page   ${YOUR_FINANCES_URL}
-     Then The user should see the text in the page     Your finances
-     And the finance summary table in Your Finances has correct values for lead
-     And the user clicks the button/link       link=Return to application overview
+    When the user navigates to the page   ${YOUR_FINANCES_URL}
+    Then The user should see the text in the page     Your finances
+    And the finance summary table in Your Finances has correct values for lead
+    And the user clicks the button/link       link=Return to application overview
 
-Your Finance inludes Finance summary table for collaborator
+Your Finance includes Finance summary table for collaborator
      [Documentation]    INFUND-6893
-     [Tags]         Pending
-     #Pending due to INFUND-7688
+     [Tags]
      [Setup]  log in as a different user    &{collaborator2_credentials}
-     When the user navigates to the page   ${YOUR_FINANCES_URL}
-     Then The user should see the text in the page     Your finances
-     And the finance summary table in Your Finances has correct values for collaborator
-     And The user clicks the button/link        link=Return to application ovreview
+    When the user navigates to the page   ${YOUR_FINANCES_URL}
+    Then The user should see the text in the page     Your finances
+    And the finance summary table in Your Finances has correct values for collaborator
+    And The user clicks the button/link        link=Return to application overview
 
 Red warning should show when the finances are incomplete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
@@ -80,7 +87,8 @@ Green check should show when the finances are complete
     [Documentation]    INFUND-927, INFUND-894, INFUND-446
     [Tags]
     [Setup]
-    When the user marks the finances as complete
+    When the user navigates to Your-finances page    Robot test application
+    And the user marks the finances as complete     Robot test application
     Then the user redirects to the page    Please provide Innovate UK with information about your project.    Application overview
     And the user clicks the button/link    link=Finances overview
     Then Green check should be visible
@@ -92,7 +100,8 @@ Alert shows If the academic research participation is too high
     [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
-    When the user enters text to a text field    id=incurred-staff    1000000000
+    And The user clicks the button/link       link=Your project costs
+    When the user enters text to a text field      id=incurred-staff    1000000000
     And Guest user log-in    &{lead_applicant_credentials}
     And the user navigates to the finance overview of the academic
     Then the user should see the text in the page    The participation levels of this project are not within the required range
@@ -105,8 +114,7 @@ Alert shows If the academic research participation is too high
 
 Alert should not show If research participation is below the maximum level
     [Documentation]    INFUND-1436
-    [Tags]  Pending
-    #TODO Pending due to INFUND-6390 will update ticket onces finances update is merged.
+    [Tags]
     [Setup]    Log in as a different user   &{lead_applicant_credentials}
     When Lead enters a valid research participation value
     And the user navigates to the finance overview of the academic
@@ -121,6 +129,12 @@ Alert should not show If research participation is below the maximum level
 
 
 *** Keywords ***
+the user navigates to Your-finances page
+    [Arguments]  ${Application}
+    the user navigates to the page  ${DASHBOARD_URL}
+    the user clicks the button/link  link=${Application}
+    the user clicks the button/link  link=Your finances
+
 the finance Project cost breakdown calculations should be correct
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £385
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £202,169
@@ -160,17 +174,10 @@ the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(5)    Contribution to project
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £0
 
-the applicant enters a bigger funding amount
-    [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
-    the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
-    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    8000000
-    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
-    Execute Javascript    jQuery('form').attr('data-test','true');
-
 the contribution to project and funding sought should be 0 and not a negative number
-    the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SUMMARY}
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(3)    £0
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(5)    £0
+    the user navigates to the page    ${PROVIDING_SUSTAINABLE_CHILDCARE_FINANCE_SECTION}
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(3)    £0
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)     £0
 
 Green check should be visible
     Page Should Contain Image    css=.finance-summary tr:nth-of-type(1) img[src*="/images/field/tick-icon"]
@@ -183,6 +190,7 @@ the red warning should be visible
 
 Lead enters a valid research participation value
     When The user navigates to the academic application finances
+    the user clicks the button/link       link=Your project costs
     the user clicks the button/link    jQuery=button:contains("Labour")
     the user should see the element    name=add_cost
     the user clicks the button/link    jQuery=button:contains('Add another role')
@@ -190,5 +198,29 @@ Lead enters a valid research participation value
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input    1200000000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(4) input    1000
     the user enters text to a text field    css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input    Test
-    Focus    jQuery= button:contains('Save and return')
+    then the user selects the checkbox      id=agree-state-aid-page
+    the user clicks the button/link        jQuery= button:contains('Mark as complete')
     wait for autosave
+
+the user checks Your Funding section for the project
+    [Arguments]  ${Application}
+    ${Research_category_selected}=  Run Keyword And Return Status    Element Should Be Visible   link=Your funding
+    Run Keyword if   '${Research_category_selected}' == 'False'     the user selects research area via Your Funding section    ${Application}
+    Run Keyword if   '${Research_category_selected}' == 'True'      the user fills in the funding information with bigger amount     ${Application}
+
+the user selects research area via Your Funding section
+    [Arguments]  ${Application}
+    the applicant completes the application details     application details
+    And the user fills in the funding information with bigger amount     ${Application}
+
+the user fills in the funding information with bigger amount
+    [Documentation]    Check if the Contribution to project and the Funding sought remain £0 and not minus
+    [Arguments]  ${Application}
+    the user navigates to Your-finances page   ${Application}
+    the user clicks the button/link       link=Your funding
+    the user enters text to a text field  css=#cost-financegrantclaim  30
+    click element                         jQuery=label:contains("Yes")
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(3) input    8000000
+    the user enters text to a text field    css=#other-funding-table tbody tr:nth-of-type(1) td:nth-of-type(1) input    test2
+    the user selects the checkbox         agree-terms-page
+    the user clicks the button/link       jQuery=button:contains("Mark as complete")
