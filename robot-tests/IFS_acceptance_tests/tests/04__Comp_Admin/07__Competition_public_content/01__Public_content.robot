@@ -17,7 +17,7 @@ ${public_content_competition_name}     Public content competition
 User can view the public content
     [Documentation]    INFUND-6914
     [Tags]    HappyPath
-    Given the user navigates to the page      ${upcomming_competitions_dashboard}
+    Given the user navigates to the page     ${upcomming_competitions_dashboard}
     And the user clicks the button/link      link=${public_content_competition_name}
     Given the user clicks the button/link    link=Public content
     Then the user should see the element     link=Competition information and search
@@ -66,6 +66,44 @@ Summary: Contains the correct values when viewed
     And the user should see the element                 jQuery=.button:contains("Return to public content")
     And the user should see the element                 jQuery=.button:contains("Edit")
 
+Eligibility: Add, remove sections and submit
+    [Documentation]    INFUND-6917 INFUND-7602
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Eligibility
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(3) img.complete
+
+Scope: Add, remove sections and submit
+    [Documentation]    INFUND-6918 INFUND-7602
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Scope
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
+
+How to apply: Add, remove sections and submit
+    [Documentation]    INFUND-6920 INFUND-7602
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=How to apply
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(6) img.complete
+
+Supporting information: Add, remove sections and submit
+    [Documentation]    INFUND-6921 INFUND-7602
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Supporting information
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(7) img.complete
+
+
+
 *** Keywords ***
 
 Custom suite setup
@@ -95,5 +133,21 @@ the user enters valid data in the summary details
     the user selects the radio button       fundingType    Grant
     the user enters text to a text field    id=project-size   10
     the user clicks the button/link         jQuery=.button:contains("Save and return")
+
+the user can add and remove multiple content groups
+    When the user clicks the button/link        jQuery=button:contains("Save and return")
+    Then the user should see a summary error    Please enter a heading.
+    And the user should see a summary error     Please enter content.
+    When the user enters text to a text field   id=heading-0    Heading 1
+    And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-1    Heading 2
+    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-2    Heading 3
+    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
+    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
+    Then the user should not see the element    id=heading-2
+    And the user should not see the element     jQuery=.editor:eq(2)
 
 
