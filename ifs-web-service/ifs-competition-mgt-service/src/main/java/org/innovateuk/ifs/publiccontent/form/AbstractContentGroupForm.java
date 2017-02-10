@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.form;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -8,7 +9,7 @@ import java.util.List;
  */
 public abstract class AbstractContentGroupForm extends AbstractPublicContentForm {
     @Valid
-    private List<ContentGroupForm> contentGroups;
+    private List<ContentGroupForm> contentGroups = new ArrayList<>();
 
     private Long removeFile;
 
