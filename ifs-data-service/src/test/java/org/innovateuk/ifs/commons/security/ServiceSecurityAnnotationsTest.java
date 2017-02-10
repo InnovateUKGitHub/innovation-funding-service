@@ -282,7 +282,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         Collection<Object> services = context.getBeansWithAnnotation(Service.class).values();
         for (Iterator<Object> i = services.iterator(); i.hasNext(); ) {
             Object service = i.next();
-            excludedClasses.stream().filter(exclusion -> unwrapProxy(service).getClass().isAssignableFrom(exclusion) ||).forEach(exclusion -> {
+            excludedClasses.stream().filter(exclusion -> unwrapProxy(service).getClass().isAssignableFrom(exclusion)).forEach(exclusion -> {
                 i.remove();
             });
         }
