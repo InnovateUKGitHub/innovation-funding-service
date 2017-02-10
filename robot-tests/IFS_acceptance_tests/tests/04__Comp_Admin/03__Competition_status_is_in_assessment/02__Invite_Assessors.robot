@@ -64,7 +64,7 @@ The user can select the profile link
     And the user should see the text in the page    Solar energy research
     And the user should see the text in the page    Precision Medicine
     And the user should see the text in the page    Business
-    [Teardown]    The user clicks the button/link    link=Invite assessors
+    [Teardown]    The user clicks the button/link    link=Back
 
 Innovation sector and area are correct
     [Documentation]    INFUND-6389
