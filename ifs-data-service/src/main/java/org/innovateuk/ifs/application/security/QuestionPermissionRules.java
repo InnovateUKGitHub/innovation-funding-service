@@ -27,4 +27,8 @@ public class QuestionPermissionRules {
         return false;
     }
 
+    @PermissionRule(value = "ASSESS", description = "only questions for the assessors can be assessed")
+    public boolean onlyAssessableQuestionsCanBeAssessed(QuestionResource questionResource, UserResource user) {
+        return !questionResource.getMultipleStatuses();
+    }
 }
