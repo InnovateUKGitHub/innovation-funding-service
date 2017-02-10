@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.publiccontent.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import javax.persistence.*;
 
 /**
@@ -41,5 +44,33 @@ public class Keyword {
 
     public void setKeyword(String keyword) {
         this.keyword = keyword;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Keyword that = (Keyword) o;
+
+        return new EqualsBuilder()
+                .append(id, that.id)
+                .append(publicContent, that.publicContent)
+                .append(keyword, that.keyword)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder()
+                .append(id)
+                .append(publicContent)
+                .append(keyword)
+                .toHashCode();
     }
 }

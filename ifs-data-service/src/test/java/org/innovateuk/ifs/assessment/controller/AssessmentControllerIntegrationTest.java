@@ -297,7 +297,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long processRole = 17L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.PENDING, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
@@ -313,7 +313,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long assessmentId = 4L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
         assertEquals(PENDING, assessmentResource.getAssessmentState());
 
         loginCompAdmin();

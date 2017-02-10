@@ -11,18 +11,32 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.user.resource.RoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.junit.Before;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static junit.framework.TestCase.fail;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static junit.framework.TestCase.fail;
+import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 
 public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<FinanceCheckService> {
+
+    private ProjectFinancePermissionRules projectFinancePermissionRules;
+
+    @Before
+    public void lookupPermissionRules() {
+
+        projectFinancePermissionRules = getMockPermissionRulesBean(ProjectFinancePermissionRules.class);
+
+    }
 
     @Test
     public void testGetFinanceCheckByProjectAndOrganisation() {
@@ -47,6 +61,17 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     @Test
     public void testGetFinanceCheckSummary(){
         assertRolesCanPerform(() -> classUnderTest.getFinanceCheckSummary(1L), PROJECT_FINANCE);
+    }
+
+    @Test
+    public void getFinanceCheckEligibilityDetails(){
+        assertAccessDenied(
+                () -> classUnderTest.getFinanceCheckEligibilityDetails(1L, 2L),
+                () -> {
+                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinancesForTheirOrganisation(isA(FinanceCheckEligibilityResource.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinancesForTheirOrganisation(isA(FinanceCheckEligibilityResource.class), isA(UserResource.class));
+                }
+        );
     }
 
     private void assertInternalRolesCanPerform(Runnable actionFn) {
@@ -102,7 +127,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return null; }
+        public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return serviceSuccess(newFinanceCheckEligibilityResource().build()); }
     }
 }
 
