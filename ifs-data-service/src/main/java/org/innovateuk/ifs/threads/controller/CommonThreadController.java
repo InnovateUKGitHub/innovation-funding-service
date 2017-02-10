@@ -12,7 +12,7 @@ import java.util.List;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
-public class CommonThreadController<R> {
+public abstract class CommonThreadController<R> {
     private final ThreadService<R, PostResource> service;
 
     public CommonThreadController(ThreadService<R, PostResource> service) {
@@ -30,8 +30,8 @@ public class CommonThreadController<R> {
     }
 
     @RequestMapping(value = "", method = POST)
-    public RestResult<Long> create(@RequestBody R query) {
-        return service.create(query).toPostCreateResponse();
+    public RestResult<Long> create(@RequestBody R thread) {
+        return service.create(thread).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/{threadId}/post", method = POST)
