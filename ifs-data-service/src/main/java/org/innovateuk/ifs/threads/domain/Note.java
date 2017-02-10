@@ -16,6 +16,7 @@ public class Note extends Thread {
     }
 
     public Note(Long id, Long classPk, List<Post> posts, String title, LocalDateTime createdOn) {
-        super(id, classPk, null, posts, title, createdOn);
+        this(id, classPk, null, posts, title, createdOn);
     }
+
 }

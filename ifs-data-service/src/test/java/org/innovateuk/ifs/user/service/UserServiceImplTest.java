@@ -14,13 +14,6 @@ import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.user.transactional.UserServiceImpl;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.badRequestError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.token.resource.TokenType.RESET_PASSWORD;
-import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.Optional.of;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;

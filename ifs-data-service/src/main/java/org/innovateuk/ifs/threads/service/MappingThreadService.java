@@ -6,8 +6,6 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.threads.domain.Thread;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.repository.ThreadRepository;
-import org.innovateuk.ifs.threads.service.GenericThreadService;
-import org.innovateuk.ifs.threads.service.ThreadService;
 import org.innovateuk.threads.resource.PostResource;
 
 import java.util.List;
@@ -24,20 +22,24 @@ public class MappingThreadService<D extends Thread, R, M extends BaseMapper<D, R
         this.threadMapper = threadMapper;
         this.postMapper = postMapper;
     }
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+
+    @NotSecured(value = "A thread permissions requires context", mustBeSecuredByOtherServices = false)
     public ServiceResult<List<R>> findAll(Long contextClassId) {
         return service.findAll(contextClassId)
                 .andOnSuccessReturn(queries -> simpleMap(queries, threadMapper::mapToResource));
     }
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+
+    @NotSecured(value = "A thread permissions requires context", mustBeSecuredByOtherServices = false)
     public ServiceResult<R> findOne(Long id) {
         return service.findOne(id).andOnSuccessReturn(threadMapper::mapToResource);
     }
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+
+    @NotSecured(value = "A thread permissions requires context", mustBeSecuredByOtherServices = false)
     public ServiceResult<Long> create(R query) {
         return service.create(threadMapper.mapToDomain(query));
     }
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+
+    @NotSecured(value = "A thread permissions requires context", mustBeSecuredByOtherServices = false)
     public ServiceResult<Void> addPost(PostResource post, Long threadId) {
         return service.addPost(postMapper.mapToDomain(post), threadId);
     }

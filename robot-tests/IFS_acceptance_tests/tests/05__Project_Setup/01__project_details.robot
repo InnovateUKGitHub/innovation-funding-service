@@ -191,14 +191,23 @@ Lead partner can see the application overview
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
-    Then the user should see the text in the page    Congratulations, your application has been successful
-    And the user should see the text in the page    Application questions
+    Then the user should see the element    jQuery=.success-alert h2:contains("Congratulations, your application has been successful")
+    And the user should see the element     jQuery=h2:contains("Application questions")
     And the user should not see an error in the page
-    [Teardown]    the user goes back to the previous page
+
+Lead partner is able to see finances without an error
+    [Documentation]  INFUND-7634
+    [Tags]
+    Given the user clicks the button/link  jQuery=button:contains("Finances Summary")
+    When the user clicks the button/link   link=Detailed Organisation Finances
+    Then the user should not see an error in the page
+    And the user should see the element    jQuery=h2:contains("Finance summary")
+    Then the user clicks the button/link   link=Application Summary
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
     [Tags]    HappyPath
+    Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Please supply the following details for your project and the team
     And the user should see the element    link=Target start date

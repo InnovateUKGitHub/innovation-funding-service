@@ -16,9 +16,8 @@ public interface FileEntryService {
 
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<FileEntryResource> saveFile(FileEntryResource newFile);
+
     @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
     ServiceResult<Void> removeFile(Long fileId);
-
-
 
 }

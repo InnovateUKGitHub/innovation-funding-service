@@ -31,7 +31,7 @@ public class ProjectFinanceNotePermissionRules {
         return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(value = "PF_VIEW", description = "Only Internal of Project Finance Users can view Notes")
+    @PermissionRule(value = "PF_READ", description = "Only Internal of Project Finance Users can view Notes")
     public boolean onlyInternalUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user);
     }

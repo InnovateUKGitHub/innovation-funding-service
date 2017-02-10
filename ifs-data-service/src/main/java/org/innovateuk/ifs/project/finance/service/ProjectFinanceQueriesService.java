@@ -7,6 +7,7 @@ import org.innovateuk.ifs.threads.service.ThreadService;
 import org.innovateuk.threads.resource.QueryResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PostFilter;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -18,14 +19,14 @@ public interface ProjectFinanceQueriesService extends ThreadService<QueryResourc
     ServiceResult<List<QueryResource>> findAll(Long contextClassPk);
 
     @Override
-    @PostFilter("hasPermission(filterObject, 'PF_READ')")
+    @PostAuthorize("hasPermission(returnObject, 'PF_READ')")
     ServiceResult<QueryResource> findOne(Long id);
 
     @Override
     @PreAuthorize("hasPermission(#QueryResource, 'PF_CREATE')")
-    ServiceResult<Long> create(QueryResource QueryResource);
+    ServiceResult<Long> create(QueryResource queryResource);
 
     @Override
-    @PreAuthorize("hasPermission(#querId, 'org.innovateuk.threads.resource.QueryResource', 'PF_ADD_POST')")
+    @PreAuthorize("hasPermission(#queryId, 'org.innovateuk.threads.resource.QueryResource', 'PF_ADD_POST')")
     ServiceResult<Void> addPost(PostResource post, Long queryId);
 }
