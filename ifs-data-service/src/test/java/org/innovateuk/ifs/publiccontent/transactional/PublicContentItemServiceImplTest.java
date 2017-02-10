@@ -1,0 +1,252 @@
+package org.innovateuk.ifs.publiccontent.transactional;
+
+import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.category.domain.CompetitionCategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.publiccontent.domain.PublicContent;
+import org.innovateuk.ifs.publiccontent.mapper.PublicContentMapper;
+import org.innovateuk.ifs.publiccontent.repository.KeywordRepository;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+
+import java.util.*;
+
+import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
+import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
+import static org.innovateuk.ifs.publiccontent.transactional.PublicContentItemServiceImpl.MAX_ALLOWED_KEYWORDS;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
+public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<PublicContentItemServiceImpl> {
+
+    @Mock
+    private InnovationAreaRepository innovationAreaRepository;
+
+    @Mock
+    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
+
+    @Mock
+    private KeywordRepository keywordRepository;
+
+    @Mock
+    private PublicContentRepository publicContentRepository;
+
+    @Mock
+    private PublicContentMapper publicContentMapper;
+
+    private static final Long COMPETITION_ID = 1L;
+    private static final Long INNOVATION_AREA_ID = 3L;
+    private static final Long PUBLIC_CONTENT_ID = 4L;
+    private static final String SEARCH_STRING_TOO_LONG = "a b c d e f g h i j k l m n o p q r s t u v w x y z";
+
+
+    @Override
+    protected PublicContentItemServiceImpl supplyServiceUnderTest() {
+        return new PublicContentItemServiceImpl();
+    }
+
+    @Test
+    public void findFilteredItems_withNoParameters() {
+        Page<Competition> competitionPage = getCompetitionPage();
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
+        when(publicContentRepository.findAllPublishedForOpenCompetition(new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
+
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.empty(), Optional.empty(), 10);
+
+        assertTrue(result.isSuccess());
+
+        testResult(result);
+
+        verify(publicContentRepository, times(1)).findAllPublishedForOpenCompetition(any());
+        verify(publicContentRepository, times(40)).findByCompetitionId(COMPETITION_ID);
+    }
+
+    @Test
+    public void findFilteredItems_withInnovationAreaOnly() {
+        InnovationArea innovationArea = newInnovationArea().withSector(newInnovationSector().withId(2L).build()).build();
+
+        List<Long> expectedCompetitionIds = new ArrayList<>();
+        expectedCompetitionIds.add(1L);
+        expectedCompetitionIds.add(1L);
+        expectedCompetitionIds.add(1L);
+
+        Page<Competition> competitionPage = getCompetitionPage();
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByInnovationId(expectedCompetitionIds, new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
+
+
+        List<CompetitionCategoryLink> competitionCategories = newCompetitionCategoryLink()
+                .withCompetition(newCompetition()
+                        .withId(COMPETITION_ID).build()).build(3);
+
+        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
+        when(competitionCategoryLinkRepository.findByCategoryId(2L)).thenReturn(competitionCategories);
+
+
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.empty(), Optional.empty(), 10);
+
+        assertTrue(result.isSuccess());
+
+        testResult(result);
+
+        verify(publicContentRepository, times(40)).findByCompetitionId(COMPETITION_ID);
+        verify(publicContentRepository, times(1)).findAllPublishedForOpenCompetitionByInnovationId(any(), any());
+    }
+
+    @Test
+    public void findFilteredItems_withKeywordsOnly() {
+        makePublicContentIdsFound();
+
+        Set<Long> expectedPublicContentIds = new HashSet<Long>();
+        expectedPublicContentIds.add(4L);
+
+        Page<Competition> competitionPage = getCompetitionPage();
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
+
+
+        List<CompetitionCategoryLink> competitionCategories = newCompetitionCategoryLink()
+                .withCompetition(newCompetition()
+                        .withId(COMPETITION_ID).build()).build(3);
+
+        when(competitionCategoryLinkRepository.findByCategoryId(2L)).thenReturn(competitionCategories);
+
+
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of("Big data"), Optional.empty(), 10);
+
+        assertTrue(result.isSuccess());
+
+        testResult(result);
+
+        verify(publicContentRepository, times(40)).findByCompetitionId(COMPETITION_ID);
+        verify(publicContentRepository, times(1)).findAllPublishedForOpenCompetitionByKeywords(any(), any());
+    }
+
+    @Test
+    public void findFilteredItems_withAllParameters() {
+        makePublicContentIdsFound();
+
+        Set<Long> expectedPublicContentIds = new HashSet<Long>();
+        expectedPublicContentIds.add(4L);
+
+        List<Long> expectedCompetitionIds = new ArrayList<>();
+        expectedCompetitionIds.add(1L);
+        expectedCompetitionIds.add(1L);
+        expectedCompetitionIds.add(1L);
+
+        Page<Competition> competitionPage = getCompetitionPage();
+
+        List<CompetitionCategoryLink> competitionCategories = newCompetitionCategoryLink()
+                .withCompetition(newCompetition()
+                        .withId(COMPETITION_ID).build()).build(3);
+
+        InnovationArea innovationArea = newInnovationArea().withSector(newInnovationSector().withId(2L).build()).build();
+
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(expectedPublicContentIds, expectedCompetitionIds, new PageRequest(1, 10))).thenReturn(competitionPage);
+        when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
+        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
+        when(competitionCategoryLinkRepository.findByCategoryId(2L)).thenReturn(competitionCategories);
+
+
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of("Big data"), Optional.of(1), 10);
+
+        assertTrue(result.isSuccess());
+
+        testResult(result);
+
+        verify(publicContentRepository, times(40)).findByCompetitionId(COMPETITION_ID);
+        verify(publicContentRepository, times(1)).findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(any(), any(),any());
+    }
+
+
+    @Test
+    public void findFilteredItems_searchStringTooLong() {
+        makePublicContentIdsFound();
+
+        Set<Long> expectedPublicContentIds = new HashSet<Long>();
+        expectedPublicContentIds.add(4L);
+
+        Page<Competition> competitionPage = getCompetitionPage();
+        when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
+        when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywords(expectedPublicContentIds, new PageRequest(0, 10))).thenReturn(competitionPage);
+        when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
+
+
+        List<CompetitionCategoryLink> competitionCategories = newCompetitionCategoryLink()
+                .withCompetition(newCompetition()
+                        .withId(COMPETITION_ID).build()).build(3);
+
+        when(competitionCategoryLinkRepository.findByCategoryId(2L)).thenReturn(competitionCategories);
+
+
+        ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.empty(), Optional.of(SEARCH_STRING_TOO_LONG), Optional.empty(), 10);
+
+        assertTrue(result.isSuccess());
+
+        testResult(result);
+
+        verify(keywordRepository, times(MAX_ALLOWED_KEYWORDS)).findByKeywordLike(any());
+        verify(publicContentRepository, times(40)).findByCompetitionId(COMPETITION_ID);
+        verify(publicContentRepository, times(1)).findAllPublishedForOpenCompetitionByKeywords(any(), any());
+    }
+
+
+    private void makePublicContentIdsFound() {
+        PublicContent publicContent = newPublicContent().withId(PUBLIC_CONTENT_ID).withCompetitionId(COMPETITION_ID).build();
+
+        when(keywordRepository.findByKeywordLike("%Big%")).thenReturn(newKeyword().withKeyword("Big Data").withPublicContent(publicContent).build(2));
+        when(keywordRepository.findByKeywordLike("%data%")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
+        when(keywordRepository.findByKeywordLike("%a%")).thenReturn(newKeyword().withKeyword("Data").withPublicContent(publicContent).build(1));
+    }
+
+    private Page<Competition> getCompetitionPage() {
+        Page<Competition> expected = mock(Page.class);
+
+        List<Competition> competitions = newCompetition().withId(1L).build(40);
+
+        when(expected.getContent()).thenReturn(competitions);
+        when(expected.getTotalElements()).thenReturn(62L);
+        when(expected.getTotalPages()).thenReturn(2);
+        when(expected.getNumber()).thenReturn(1);
+        when(expected.getSize()).thenReturn(40);
+
+        return expected;
+    }
+
+    private void testResult(ServiceResult<PublicContentItemPageResource> result) {
+        assertEquals(40, result.getSuccessObject().getSize());
+        assertEquals(1, result.getSuccessObject().getNumber());
+        assertEquals(62L, result.getSuccessObject().getTotalElements());
+        assertEquals(2, result.getSuccessObject().getTotalPages());
+
+        assertEquals(40, result.getSuccessObject().getContent().size());
+    }
+
+    private void testResultEmpty(ServiceResult<PublicContentItemPageResource> result) {
+        assertEquals(0, result.getSuccessObject().getSize());
+        assertEquals(0, result.getSuccessObject().getNumber());
+        assertEquals(0L, result.getSuccessObject().getTotalElements());
+        assertEquals(0, result.getSuccessObject().getTotalPages());
+
+        assertEquals(0, result.getSuccessObject().getContent().size());
+    }
+}

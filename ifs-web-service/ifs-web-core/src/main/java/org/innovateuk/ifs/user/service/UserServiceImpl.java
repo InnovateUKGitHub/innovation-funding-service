@@ -121,10 +121,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ServiceResult<Void> updateProfileSkills(Long userId, BusinessType businessType, String skillsAreas) {
-        ProfileSkillsResource profileSkills = new ProfileSkillsResource();
-        profileSkills.setBusinessType(businessType);
-        profileSkills.setSkillsAreas(skillsAreas);
-        return userRestService.updateProfileSkills(userId, profileSkills).toServiceResult();
+        ProfileSkillsEditResource profileSkillsEditResource = new ProfileSkillsEditResource();
+        profileSkillsEditResource.setBusinessType(businessType);
+        profileSkillsEditResource.setSkillsAreas(skillsAreas);
+        return userRestService.updateProfileSkills(userId, profileSkillsEditResource).toServiceResult();
     }
 
     @Override
