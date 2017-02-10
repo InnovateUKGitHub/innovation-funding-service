@@ -19,6 +19,14 @@ public class AssessmentRejectOutcomeResource {
     @WordCount(max = 100, message = "{validation.field.max.word.count}")
     private String rejectComment;
 
+    public AssessmentRejectOutcomeResource() {
+    }
+
+    public AssessmentRejectOutcomeResource(AssessmentRejectOutcomeValue rejectReason, String rejectComment) {
+        this.rejectReason = rejectReason;
+        this.rejectComment = rejectComment;
+    }
+
     public AssessmentRejectOutcomeValue getRejectReason() {
         return rejectReason;
     }
