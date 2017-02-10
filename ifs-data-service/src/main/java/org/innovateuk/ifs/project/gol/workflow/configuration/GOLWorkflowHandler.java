@@ -110,14 +110,6 @@ public class GOLWorkflowHandler extends BaseWorkflowEventHandler<GOLProcess, GOL
         return fn.apply(project, projectUser);
     }
 
-/*    public boolean grantOfferLetterSent(Project project) {
-        return getIfProjectAndUserValid(project, this::grantOfferLetterSent);
-    }*/
-
-/*    public boolean approve(Project project) {
-        return getIfProjectAndUserValid(project, this::grantOfferLetterApproved);
-    }*/
-
     public boolean sign(Project project) {
         return getIfProjectAndUserValid(project, this::grantOfferLetterSigned);
     }

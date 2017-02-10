@@ -38,13 +38,11 @@ import org.innovateuk.ifs.user.builder.UserBuilder;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
-import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 
 import java.io.File;
 import java.io.InputStream;

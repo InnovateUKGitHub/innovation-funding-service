@@ -138,24 +138,6 @@ public class GOLWorkflowHandlerIntegrationTest extends
                 GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
     }
 
-/*    @Test
-    public void testApproveSignedGrantOfferLetterWithoutProjectUser() throws Exception {
-
-        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.approve(project)),
-
-                // current State, destination State and expected Event to be fired
-                GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
-    }*/
-
-/*    @Test
-    public void testSendGrantOfferLetterWithoutProjectUser() throws Exception {
-
-        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.grantOfferLetterSent(project)),
-
-                // current State, destination State and expected Event to be fired
-                GOLState.PENDING, GOLState.SENT, GOLOutcomes.GOL_SENT);
-    }*/
-
     @Test
     public void testSignGrantOfferLetterWithoutProjectUser() throws Exception {
 
