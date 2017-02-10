@@ -12,11 +12,14 @@ public class CompetitionOverviewPopulator {
     public CompetitionOverviewViewModel populateViewModel(PublicContentItemResource publicContentItemResource) {
         CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
-        viewModel.setCompetitionId(publicContentItemResource.getPublicContentResource().getCompetitionId());
         viewModel.setCompetitionOpenDate(publicContentItemResource.getCompetitionOpenDate());
         viewModel.setCompetitionCloseDate(publicContentItemResource.getCompetitionCloseDate());
         viewModel.setCompetitionTitle(publicContentItemResource.getCompetitionTitle());
-        viewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());
+
+        if(null != publicContentItemResource.getPublicContentResource()) {
+            viewModel.setShortDescription(publicContentItemResource.getPublicContentResource().getShortDescription());
+            viewModel.setCompetitionId(publicContentItemResource.getPublicContentResource().getCompetitionId());
+        }
 
         return viewModel;
     }

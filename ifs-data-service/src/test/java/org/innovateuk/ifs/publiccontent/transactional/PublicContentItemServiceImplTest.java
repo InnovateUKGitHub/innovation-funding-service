@@ -261,7 +261,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         verify(publicContentRepository, only()).findByCompetitionId(competitionId);
         verify(competitionRepository, only()).findById(competitionId);
     }
-    
+
     private void makePublicContentIdsFound() {
         PublicContent publicContent = newPublicContent().withId(PUBLIC_CONTENT_ID).withCompetitionId(COMPETITION_ID).build();
 
