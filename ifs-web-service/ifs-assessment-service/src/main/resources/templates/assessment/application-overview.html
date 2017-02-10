@@ -7,11 +7,11 @@
     <body th:with="context='assessment'" class="assessment assessment-overview">
         <th:block th:insert="fragments/modals :: modal-overlay" />
         <th:block th:insert="fragments/assessment :: assessment-reject-assessment-modal (assessmentId=${model.assessmentId})"  />
-        <th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: body-start"   />
         <th:block th:insert="fragments/layout :: global-header"  />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"   />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{competitionId}(competitionId=${model.competitionId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
@@ -72,10 +72,10 @@
                 </details>
             </div>
 
-            <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"   />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
-        <th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
+        <th:block th:insert="fragments/layout :: footer"   />
+        <th:block th:insert="fragments/layout :: body-end"   />
     </body>
 </html>

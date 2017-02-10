@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.config;
 
-import ch.mfrey.thymeleaf.extras.cache.CacheDialect;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
@@ -62,7 +61,7 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
         engine.setTemplateResolver(templateResolver());
         engine.setEnableSpringELCompiler(true);
 
-        engine.addDialect(new CacheDialect());
+//        engine.addDialect(new CacheDialect());
         engine.addDialect(new Java8TimeDialect());
         engine.addDialect(new IfSThymeleafDialect());
 

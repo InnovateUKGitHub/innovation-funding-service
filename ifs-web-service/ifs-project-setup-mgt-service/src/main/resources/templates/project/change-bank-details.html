@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review bank details'" cache:name="Review-bank-details" />
+	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Review bank details'"  />
 </head>
 <body th:with="context='project-management'" class="project-management review-bank-details">
 
-<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"    />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <th:block th:insert="fragments/modals :: modal-overlay"  />
 
 <main id="content">
-	<th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
+	<th:block th:insert="fragments/layout :: main-content-start"    />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Review bank details',linkClass='link-back',linkUrl=@{/project/{projectId}/organisation/{organisationId}/review-bank-details(projectId=${model.projectId},organisationId=${model.organisationId})}" />
 
     <div class="grid-row">
@@ -168,11 +168,11 @@
 		</div>
 	</form>
 
-	<th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+	<th:block th:insert="fragments/layout :: main-content-end"    />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"    />
+<th:block th:insert="fragments/layout :: body-end"    />
 
 </body>
 </html>

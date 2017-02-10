@@ -5,11 +5,11 @@
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-details">
-        <th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: body-start"    />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"    />
             <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})"  />
 
             <div class="page-title">
@@ -21,10 +21,10 @@
 
             <th:block th:insert="fragments/assessment :: assessment-pagination"  />
 
-            <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"    />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-        <th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+        <th:block th:insert="fragments/layout :: footer"    />
+        <th:block th:insert="fragments/layout :: body-end"    />
     </body>
 </html>

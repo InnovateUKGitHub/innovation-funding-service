@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'" cache:name="Your-details" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your details'"  />
 </head>
 <body th:with="context='applicant'" class="user-profile-edit">
 
-<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"    />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"    />
     <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your Profile',linkClass='link-back',linkUrl=@{/profile/view}"  />
 
     <h1 class="heading-large">Your details</h1>
@@ -158,10 +158,10 @@
         </fieldset>
         <button class="button button-large extra-margin" name="create-account" type="submit">Save changes</button>
     </form>
-    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"    />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"    />
+<th:block th:insert="fragments/layout :: body-end"    />
 </body>
 </html>

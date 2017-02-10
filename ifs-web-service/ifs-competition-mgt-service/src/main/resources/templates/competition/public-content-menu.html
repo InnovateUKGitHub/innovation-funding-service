@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content'" cache:name="Public-Content" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content'"  />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
-<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"    />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"    />
     <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" method="post">
         <!-- Link back -->
         <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition setup',linkClass='link-back',linkUrl=@{/competition/setup/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
@@ -63,11 +63,11 @@
         </div>
         <hr />
     </form>
-    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"    />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"    />
+<th:block th:insert="fragments/layout :: body-end"    />
 
 </body>
 </html>

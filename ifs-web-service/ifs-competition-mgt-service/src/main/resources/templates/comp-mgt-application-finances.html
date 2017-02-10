@@ -5,14 +5,14 @@
 </head>
 <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 
-<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"    />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <!-- Application Finances for Competition MGT -->
 <main>
 <div id="content" class="full-width">
-  <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
+  <th:block th:insert="fragments/layout :: main-content-start"   />
   <div class="grid-row">
       <div class="column-two-thirds">
             <div class="page-title">
@@ -60,10 +60,10 @@
                 </div>
             </div>
         </form>
-        <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+        <th:block th:insert="fragments/layout :: main-content-end"    />
       </div>
 </main>
-<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"    />
+<th:block th:insert="fragments/layout :: body-end"    />
 </body>
 </html>

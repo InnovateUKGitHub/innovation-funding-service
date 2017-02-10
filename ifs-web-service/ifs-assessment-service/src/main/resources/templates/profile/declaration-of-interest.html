@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Declaration of interest'" cache:name="Declaration-of-interest" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Declaration of interest'"  />
     </head>
 
     <body th:with="context='assessment'">
-        <th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: body-start"   />
         <th:block th:insert="fragments/layout :: global-header"  />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"   />
 
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
@@ -91,10 +91,10 @@
                 None declared
             </p>
 
-            <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"   />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
-        <th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
+        <th:block th:insert="fragments/layout :: footer"   />
+        <th:block th:insert="fragments/layout :: body-end"   />
     </body>
 </html>

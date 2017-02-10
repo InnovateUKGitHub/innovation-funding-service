@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" cache:name="Application-Dashboard" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
 </head>
 <body th:with="context='comp-management'" class="competition-management funding-decision-confirmation">
 
-<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"    />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" class="full-width">
-    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"    />
 
     <h2 class="heading-medium">Publish assessor feedback</h2>
     <p>Are you sure you wish to inform applicants if they have been successful in gaining funding?</p>
@@ -20,11 +20,11 @@
       <button id="no-js-inform-applicants" type="submit" class="button no-margin">Publish assessor feedback</button>
     </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"    />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"    />
+<th:block th:insert="fragments/layout :: body-end"    />
 
 </body>
 </html>

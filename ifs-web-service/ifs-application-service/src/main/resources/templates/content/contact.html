@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact'" cache:name="Contact" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Contact'"  />
 </head>
 <body th:with="context='applicant'" class="assessment-review">
 
-<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"    />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"    />
 
     <div class="page-title">
         <h1 class="heading-xlarge no-margin" >Contact us</h1>
@@ -42,8 +42,8 @@
     </div>
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"    />
+<th:block th:insert="fragments/layout :: body-end"    />
 
 </body>
 </html>

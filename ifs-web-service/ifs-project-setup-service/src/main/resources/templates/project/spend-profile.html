@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" cache:name="Spend-Profile" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'"  />
 </head>
 <body th:with="context='project'" class="project spend-profile">
-<th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"   />
 <th:block th:insert="fragments/layout :: global-header"  />
 <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-submit" />
 <th:block th:insert="fragments/modals :: modal-overlay"  />
 
 <main id="content" class="no-grid">
     <div class="grid-container">
-        <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
+        <th:block th:insert="fragments/layout :: main-content-start"   />
         <th:block th:unless="${model.projectManager}" th:insert="fragments/layout :: header-sub"
              th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}" />
         <th:block th:if="${model.projectManager}" th:insert="fragments/layout :: header-sub"
@@ -340,14 +340,14 @@
                 </form>
             </th:block>
 
-            <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"    />
         </div>
 
     </th:block>
 </main>
 
-<th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"   />
+<th:block th:insert="fragments/layout :: body-end"   />
 
 </body>
 </html>

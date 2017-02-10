@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm rejection'" cache:name="Confirm-rejection" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm rejection'"  />
     </head>
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
-        <th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+        <th:block th:insert="fragments/layout :: body-start"   />
         <th:block th:insert="fragments/layout :: global-header"  />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
+            <th:block th:insert="fragments/layout :: main-content-start"   />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{assessmentId}(assessmentId=${model.assessmentId})})"  />
 
             <div class="page-title">
@@ -20,10 +20,10 @@
             <p>If you have discovered a conflict of interest or are unable to review this assessment, you can return this application to Innovate UK.</p>
             <th:block th:insert="fragments/assessment :: assessment-reject-application-form (assessmentId=${model.assessmentId})"  />
 
-            <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
+            <th:block th:insert="fragments/layout :: main-content-end"   />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
-        <th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
+        <th:block th:insert="fragments/layout :: footer"   />
+        <th:block th:insert="fragments/layout :: body-end"   />
     </body>
 </html>

@@ -5,11 +5,11 @@
 </head>
 <body th:with="context='applicant'" class="app-form">
 
-<th:block th:insert="fragments/layout :: body-start"  cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"   />
 <th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"  cache:name="main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"   />
     <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${model.application.currentApplication},linkTitle=${backTitle},linkClass='link-back',linkUrl=${backURL}" />
 
     <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${model.application.currentCompetition})" />
@@ -137,9 +137,9 @@
         </form>
         <input type="hidden" id="cacheTest" value="" />
 
-    <th:block th:insert="fragments/layout :: main-content-end"  cache:name="main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"   />
 </main>
-<th:block th:insert="fragments/layout :: footer"  cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"  cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"   />
+<th:block th:insert="fragments/layout :: body-end"   />
 </body>
 </html>

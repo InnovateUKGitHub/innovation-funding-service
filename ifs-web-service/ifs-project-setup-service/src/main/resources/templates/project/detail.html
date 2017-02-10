@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Details'" cache:name="Project-Details" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Details'"  />
 </head>
 <body th:with="context='project'" class="project-detail">
 
 <th:block th:insert="fragments/modals :: modal-overlay"  />
 <th:block th:insert="fragments/modals :: modal-project-details"  />
 
-<th:block th:insert="fragments/layout :: body-start"   cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"    />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   cache:name="main-content-start" />
+    <th:block th:insert="fragments/layout :: main-content-start"    />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.project.getId()})}"  th:remove="tag"></div>
 
     <div class="page-title">
@@ -122,11 +122,11 @@
         </tbody>
     </table>
 
-    <th:block th:insert="fragments/layout :: main-content-end"   cache:name="main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"    />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end"   cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"    />
+<th:block th:insert="fragments/layout :: body-end"    />
 
 </body>
 </html>

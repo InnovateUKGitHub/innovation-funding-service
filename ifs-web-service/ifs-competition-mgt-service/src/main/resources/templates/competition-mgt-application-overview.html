@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" cache:name="Application-Summary" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'"  />
 </head>
 
 <body th:with="context='comp-management'" class="app-summary competition-management" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
-<th:block th:insert="fragments/layout :: body-start" cache:name="body-start" />
+<th:block th:insert="fragments/layout :: body-start"  />
 <th:block th:insert="fragments/layout :: global-header"  />
 
 <main id="content">
-    <th:block th:include="fragments/layout :: main-content-start" cache:name="main-content-start" />
+    <th:block th:include="fragments/layout :: main-content-start"  />
     <th:block th:include="fragments/competition-setup :: comp-setup-header-sub (linkTitle='Back',linkClass='link-back',linkUrl=@{${backUrl}})" th:remove="tag"></th:block>
 
     <div class="page-title">
@@ -52,10 +52,10 @@
         </th:block>
     </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end" cache:name="main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end"  />
 </main>
 
-<th:block th:insert="fragments/layout :: footer" cache:name="footer" />
-<th:block th:insert="fragments/layout :: body-end" cache:name="body-end" />
+<th:block th:insert="fragments/layout :: footer"  />
+<th:block th:insert="fragments/layout :: body-end"  />
 </body>
 </html>
