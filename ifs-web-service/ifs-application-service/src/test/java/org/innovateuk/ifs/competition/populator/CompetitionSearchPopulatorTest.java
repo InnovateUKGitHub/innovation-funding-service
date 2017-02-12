@@ -1,9 +1,8 @@
-package org.innovateuk.ifs.competition;
+package org.innovateuk.ifs.competition.populator;
 
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.innovateuk.ifs.competition.populator.CompetitionSearchPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;

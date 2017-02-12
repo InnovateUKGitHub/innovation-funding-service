@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
@@ -44,6 +45,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     private PublicContentMapper publicContentMapper;
     @Autowired
     private ContentGroupService contentGroupService;
+    @Autowired
+    private ContentEventService contentEventService;
 
     @Override
     public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
@@ -106,38 +109,38 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
-        saveSection(resource, section);
-        return serviceSuccess();
+        return saveSection(resource, section).andOnSuccessReturnVoid();
     }
 
     @Override
     public ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
-        PublicContent publicContent = saveSection(resource, section);
-        markSectionAsComplete(publicContent, section);
-        return serviceSuccess();
+        return saveSection(resource, section)
+                .andOnSuccessReturnVoid(publicContent -> markSectionAsComplete(publicContent, section));
     }
 
-    private PublicContent saveSection(PublicContentResource resource, PublicContentSectionType section) {
+    private ServiceResult<PublicContent> saveSection(PublicContentResource resource, PublicContentSectionType section) {
         PublicContent publicContent = publicContentRepository.save(publicContentMapper.mapToDomain(resource));
 
+        ServiceResult<Void> result;
         switch (section) {
             case SEARCH:
                 saveKeywords(resource.getKeywords(), publicContent);
+                result = serviceSuccess();
                 break;
             case DATES:
-                saveContentEvent();
+                result = saveContentEvent(publicContent, resource.getContentEvents());
                 break;
             default:
-                contentGroupService.saveContentGroups(resource, publicContent, section);
+                result = contentGroupService.saveContentGroups(resource, publicContent, section);
                 break;
         }
 
         //If the public content has already been published then update the publish date.
         if (allSectionsComplete(publicContent) && publicContent.getPublishDate() != null) {
-            publish(publicContent);
+            result = result.andOnSuccess(() -> publish(publicContent));
         }
 
-        return publicContent;
+        return result.andOnSuccessReturn(() -> publicContent);
     }
 
 
@@ -151,7 +154,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
         });
     }
 
-    private void saveContentEvent() {
+    private ServiceResult<Void> saveContentEvent(PublicContent publicContent, List<ContentEventResource> events) {
+        return contentEventService.resetAndSaveEvents(publicContent.getId(), events);
     }
 
     private void markSectionAsComplete(PublicContent publicContent, PublicContentSectionType sectionType) {
