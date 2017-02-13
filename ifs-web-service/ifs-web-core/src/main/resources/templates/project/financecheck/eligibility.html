@@ -129,7 +129,7 @@
             <th:block  th:include="fragments/modals :: modal-confirm-eligibility" />
         </th:block>
         <hr/>
-        <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
+        <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
         <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}">Return to finance checks</a>
     </form>
 
