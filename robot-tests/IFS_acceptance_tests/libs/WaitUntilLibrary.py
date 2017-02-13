@@ -94,6 +94,6 @@ def capture_large_screenshot():
   original_height = s2l.get_window_size()[1]
 
   s2l.set_window_size(1920, page_height)
-  warn("Capturing a screenshot")
+  warn("Capturing a screenshot at URL " + s2l.get_location())
   s2l.capture_page_screenshot()
   s2l.set_window_size(1920, original_height)

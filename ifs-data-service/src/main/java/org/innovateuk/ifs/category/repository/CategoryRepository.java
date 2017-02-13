@@ -13,5 +13,5 @@ import java.util.List;
  */
 public interface CategoryRepository extends CrudRepository<Category, Long> {
 
-    List<Category> findAll(Iterable<Long> cateogryIds);
+    List<Category> findAll(Iterable<Long> categoryIds);
 }
