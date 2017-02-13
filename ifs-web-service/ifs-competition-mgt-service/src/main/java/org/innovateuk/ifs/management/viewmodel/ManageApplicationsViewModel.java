@@ -9,11 +9,16 @@ public class ManageApplicationsViewModel {
     private Long competitionId;
     private String competitionName;
     private List<ManageApplicationsRowViewModel> applications;
+    private boolean inAssessment;
 
-    public ManageApplicationsViewModel(Long competitionId, String competitionName, List<ManageApplicationsRowViewModel> applications) {
+    public ManageApplicationsViewModel(Long competitionId,
+                                       String competitionName,
+                                       List<ManageApplicationsRowViewModel> applications,
+                                       boolean inAssessment) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applications = applications;
+        this.inAssessment = inAssessment;
     }
 
     public Long getCompetitionId() {
@@ -26,5 +31,9 @@ public class ManageApplicationsViewModel {
 
     public List<ManageApplicationsRowViewModel> getApplications() {
         return applications;
+    }
+
+    public boolean getInAssessment() {
+        return inAssessment;
     }
 }

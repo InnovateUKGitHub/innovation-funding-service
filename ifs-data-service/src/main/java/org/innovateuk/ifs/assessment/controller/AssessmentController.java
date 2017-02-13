@@ -36,6 +36,11 @@ public class AssessmentController {
         return assessmentService.findAssignableById(id).toGetResponse();
     }
 
+    @RequestMapping(value = "/{id}/rejectable", method = GET)
+    public RestResult<AssessmentResource> findRejectableById(@PathVariable("id") long id) {
+        return assessmentService.findRejectableById(id).toGetResponse();
+    }
+
     @RequestMapping(value = "/user/{userId}/competition/{competitionId}", method = GET)
     public RestResult<List<AssessmentResource>> findByUserAndCompetition(
             @PathVariable("userId") long userId,
@@ -44,7 +49,7 @@ public class AssessmentController {
     }
 
     @RequestMapping(value = "/state/{state}/competition/{competitionId}/count", method = GET)
-    public RestResult<Long> countByStateAndCompetition(
+    public RestResult<Integer> countByStateAndCompetition(
             @PathVariable("state") AssessmentStates state,
             @PathVariable("competitionId") Long competitionId) {
         return assessmentService.countByStateAndCompetition(state, competitionId).toGetResponse();
@@ -56,13 +61,13 @@ public class AssessmentController {
     }
 
     @RequestMapping(value = "/{id}/recommend", method = PUT)
-    public RestResult<Void> recommend(@PathVariable("id") long id, @RequestBody @Valid AssessmentFundingDecisionResource assessmentFundingDecision) {
+    public RestResult<Void> recommend(@PathVariable("id") long id, @RequestBody @Valid AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return assessmentService.recommend(id, assessmentFundingDecision).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/rejectInvitation", method = PUT)
-    public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid ApplicationRejectionResource applicationRejection) {
-        return assessmentService.rejectInvitation(id, applicationRejection).toPutResponse();
+    public RestResult<Void> rejectInvitation(@PathVariable("id") long id, @RequestBody @Valid AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
+        return assessmentService.rejectInvitation(id, assessmentRejectOutcomeResource).toPutResponse();
     }
 
     @RequestMapping(value = "/{id}/acceptInvitation", method = PUT)

@@ -17,15 +17,16 @@ public interface ApplicationFinanceHandler {
     @PostAuthorize("hasPermission(returnObject, 'READ')")
     ApplicationFinanceResource getApplicationOrganisationFinances(final ApplicationFinanceResourceId applicationFinanceResourceId);
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_DETAILS')")
+    List<ApplicationFinanceResource> getApplicationFinances(final Long applicationId);
+
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_FINANCE_TOTALS')")
     List<ApplicationFinanceResource> getApplicationTotals(@P("applicationId")final Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ_RESEARCH_PARTICIPATION_PERCENTAGE')")
     BigDecimal getResearchParticipationPercentage(@P("applicationId")final Long applicationId);
 
-    // TODO DW - INFUND-4825 - is this permission too broad?
-    @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class, description = "Internal users can view the Project Finances during the Finance Checks process")
+    @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
     ProjectFinanceResource getProjectOrganisationFinances(ProjectFinanceResourceId projectFinanceResourceId);
 
     @PreAuthorize("hasAuthority('project_finance')")

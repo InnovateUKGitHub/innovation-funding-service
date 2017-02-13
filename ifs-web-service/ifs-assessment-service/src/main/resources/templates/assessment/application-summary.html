@@ -23,9 +23,9 @@
                     <tbody>
                         <tr>
                             <th class="width-150" scope="row">Question</th>
-                            <td th:each="question : ${model.questionsForScoreOverview}">
-                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}" />
-                            </td>
+                            <th th:each="question : ${model.questionsForScoreOverview}" scope="col">
+                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}">Q1</a>
+                            </th>
                         </tr>
                         <tr>
                             <th class="width-150" scope="row">Score</th>
@@ -73,7 +73,7 @@
                                 type="radio"
                                 th:field="*{fundingConfirmation}"
                                 required="required"
-                                th:attr="data-required-errormessage=#{validation.assessmentFundingDecision.fundingConfirmation.required}"
+                                th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                 data-conditionally-remove-required="#feedback" />
                                 Yes
                             </label>
@@ -83,7 +83,7 @@
                                 type="radio"
                                 th:field="*{fundingConfirmation}"
                                 required="required"
-                                th:attr="data-required-errormessage=#{validation.assessmentFundingDecision.fundingConfirmation.required}"
+                                th:attr="data-required-errormessage=#{validation.assessmentFundingDecisionOutcome.fundingConfirmation.required}"
                                 data-conditionally-add-required="#feedback, .form-group input" />
                                 No
                             </label>

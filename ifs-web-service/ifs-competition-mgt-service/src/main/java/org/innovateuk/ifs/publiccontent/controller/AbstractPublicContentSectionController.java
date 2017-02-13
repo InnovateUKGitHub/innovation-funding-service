@@ -23,7 +23,7 @@ import java.util.function.Supplier;
 import static org.innovateuk.ifs.competitionsetup.controller.CompetitionSetupController.COMPETITION_ID_KEY;
 
 /**
- * Controller for setup of public content.
+ * Abstract controller for all public content sections.
  */
 public abstract class AbstractPublicContentSectionController<M extends AbstractPublicContentViewModel, F extends AbstractPublicContentForm> {
 
@@ -31,7 +31,7 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     protected static final String FORM_ATTR_NAME = "form";
 
     @Autowired
-    private PublicContentService publicContentService;
+    protected PublicContentService publicContentService;
 
     protected abstract PublicContentViewModelPopulator<M> modelPopulator();
     protected abstract PublicContentFormPopulator<F> formPopulator();
@@ -49,42 +49,37 @@ public abstract class AbstractPublicContentSectionController<M extends AbstractP
     }
 
     @RequestMapping(value = "/{competitionId}/edit", method = RequestMethod.POST)
-    public String save(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
+    public String markAsComplete(Model model, @PathVariable(COMPETITION_ID_KEY) Long competitionId,
                        @Valid @ModelAttribute(FORM_ATTR_NAME) F form, BindingResult bindingResult, ValidationHandler validationHandler) {
-        return save(competitionId, model, form, validationHandler);
+        return markAsComplete(competitionId, model, form, validationHandler);
     }
 
-
     protected String readOnly(Long competitionId, Model model, Optional<F> form) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         return getPage(publicContent, model, form, true);
     }
 
     protected String edit(Long competitionId, Model model, Optional<F> form) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         return getPage(publicContent, model, form, false);
     }
 
-    private String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
+    protected String getPage(PublicContentResource publicContent, Model model, Optional<F> form, boolean readOnly) {
         model.addAttribute("model", modelPopulator().populate(publicContent, readOnly));
         if(form.isPresent()) {
-            model.addAttribute("form", form);
+            model.addAttribute("form", form.get());
         } else {
             model.addAttribute("form", formPopulator().populate(publicContent));
         }
         return TEMPLATE_FOLDER + "public-content-form";
     }
 
-    protected String save(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
-        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+    protected String markAsComplete(Long competitionId, Model model, F form, ValidationHandler validationHandler) {
+        PublicContentResource publicContent = publicContentService.getCompetitionById(competitionId);
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
         Supplier<String> failureView = () -> getPage(publicContent, model, Optional.of(form), false);
 
-        return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().save(form, publicContent));
-
+        return validationHandler.performActionOrBindErrorsToField("", failureView, successView, () -> formSaver().markAsComplete(form, publicContent));
     }
-
-
-
 
 }

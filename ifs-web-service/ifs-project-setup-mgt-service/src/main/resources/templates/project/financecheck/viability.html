@@ -38,7 +38,7 @@
       <thead>
         <tr>
           <th scope="col">Total costs</th>
-          <th scope="col" class="numeric">% grant</th>
+          <th scope="col" class="numeric">% Grant</th>
           <th scope="col" class="numeric">Total project cost</th>
           <th scope="col" class="numeric">Grant applied for</th>
           <th scope="col" class="numeric">Other public sector funding</th>
@@ -81,6 +81,9 @@
         <label class="block-label selection-button-checkbox" for="costs-reviewed">
           <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
         </label>
+      </div>
+      <div class="extra-margin">
+        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button button-secondary">Queries</a>
       </div>
       <th:block th:unless="${model.isReadOnly()}">
           <h2 class="heading-medium">Approve viability</h2>

@@ -40,25 +40,27 @@ View application progress page
     Given the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     Then The user should see the text in the page    00000015: Rainfall
     And the user should see the text in the page    Everyday Im Juggling Ltd (Lead)
+    And the user should see the text in the page    No assessors have been assigned to this application.
+    And the user should see the text in the page    No assessors have rejected this application.
+    And the user should see the text in the page    No assessors were previously assigned to this application.
 
 Review the application
     [Documentation]    INFUND-7046
     [Tags]
     When the user clicks the button/link    link=Review application
-    Then the user should see the text in the page    Application Overview
+    Then the user should see the text in the page    Application overview
     [Teardown]    The user goes back to the previous page
 
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
-    #TODO update these selectors once the tables on this page have unique class names
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
     And the available assessors information is correct
 
 View the assigned list
     [Documentation]    INFUND-7230 INFUND-7038
     [Tags]
-    Given The user should see the element    jQuery=p:contains(There are no assessors assigned to this application.)
+    Given The user should see the element    jQuery=p:contains(No assessors have been assigned to this application.)
     When the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     Then the user should see the text in the page    Assigned (1)
     And the assigned list is correct before notification
@@ -97,6 +99,9 @@ Remove and notify an assessor (Notified)
     And the user clicks the button/link    jQuery=.button:contains("Manage applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
+    And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)
+    And the user should not see the element    jQuery=button:contains("Remove assessor")
+    And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove assessor")
     And the user should see the text in the page    Previously assigned (1)
     And the previously assigned list is correct

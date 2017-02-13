@@ -6,10 +6,8 @@ import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.workflow.ProcessOutcomeService;
-import org.innovateuk.ifs.workflow.resource.ProcessOutcomeResource;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,22 +17,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.validation.Valid;
-import java.util.Optional;
 import java.util.function.Supplier;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.asGlobalErrors;
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.fieldErrorsToFieldErrors;
 
 @Controller
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessmentSummaryController {
 
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
     private AssessmentService assessmentService;
-
-    @Autowired
-    private ProcessOutcomeService processOutcomeService;
 
     @Autowired
     private AssessmentSummaryModelPopulator assessmentSummaryModelPopulator;
@@ -44,10 +40,11 @@ public class AssessmentSummaryController {
                              @ModelAttribute(FORM_ATTR_NAME) AssessmentSummaryForm form,
                              BindingResult bindingResult,
                              @PathVariable("assessmentId") Long assessmentId) {
+        AssessmentResource assessment = assessmentService.getById(assessmentId);
         if (!bindingResult.hasErrors()) {
-            populateFormWithExistingValues(form, assessmentId);
+            populateFormWithExistingValues(form, assessment);
         }
-        model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessmentId));
+        model.addAttribute("model", assessmentSummaryModelPopulator.populateModel(assessment));
         return "assessment/application-summary";
     }
 
@@ -71,16 +68,12 @@ public class AssessmentSummaryController {
         return "redirect:/assessor/dashboard/competition/" + getAssessment(assessmentId).getCompetition();
     }
 
-    private void populateFormWithExistingValues(AssessmentSummaryForm form, Long assessmentId) {
-        getOutcome(assessmentId).ifPresent(outcome -> {
-            form.setFundingConfirmation(Optional.ofNullable(outcome.getOutcome()).map(BooleanUtils::toBoolean).orElse(null));
-            form.setFeedback(outcome.getDescription());
-            form.setComment(outcome.getComment());
+    private void populateFormWithExistingValues(AssessmentSummaryForm form, AssessmentResource assessment) {
+        ofNullable(assessment.getFundingDecision()).ifPresent(fundingDecision -> {
+            form.setFundingConfirmation(fundingDecision.getFundingConfirmation());
+            form.setFeedback(fundingDecision.getFeedback());
+            form.setComment(fundingDecision.getComment());
         });
-    }
-
-    private Optional<ProcessOutcomeResource> getOutcome(Long assessmentId) {
-        return getAssessment(assessmentId).getProcessOutcomes().stream().reduce((id1, id2) -> id2).map(id -> processOutcomeService.getById(id));
     }
 
     private AssessmentResource getAssessment(Long assessmentId) {

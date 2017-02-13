@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.Builder;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
@@ -34,47 +37,59 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return new AssessmentResource();
     }
 
-    public AssessmentResourceBuilder withId(Long... values) {
-        return withArraySetFieldByReflection("id", values);
+    public AssessmentResourceBuilder withId(Long... value) {
+        return withArraySetFieldByReflection("id", value);
     }
 
     public AssessmentResourceBuilder withProcessEvent(ProcessEvent... processEvents) {
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentResourceBuilder withLastModifiedDate(Calendar... values) {
-        return withArraySetFieldByReflection("lastModified", values);
+    public AssessmentResourceBuilder withLastModifiedDate(Calendar... value) {
+        return withArraySetFieldByReflection("lastModified", value);
     }
 
-    public AssessmentResourceBuilder withStartDate(LocalDate... values) {
-        return withArraySetFieldByReflection("startDate", values);
+    public AssessmentResourceBuilder withStartDate(LocalDate... value) {
+        return withArraySetFieldByReflection("startDate", value);
     }
 
-    public AssessmentResourceBuilder withEndDate(LocalDate... values) {
-        return withArraySetFieldByReflection("endDate", values);
+    public AssessmentResourceBuilder withEndDate(LocalDate... value) {
+        return withArraySetFieldByReflection("endDate", value);
     }
 
-    public AssessmentResourceBuilder withProcessOutcome(List<Long>... values) {
-        return withArraySetFieldByReflection("processOutcomes", values);
+    public AssessmentResourceBuilder withFundingDecision(AssessmentFundingDecisionOutcomeResource... value) {
+        return withArraySetFieldByReflection("fundingDecision", value);
     }
 
-    public AssessmentResourceBuilder withProcessRole(Long... values) {
-        return withArraySetFieldByReflection("processRole", values);
+    public AssessmentResourceBuilder withFundingDecision(Builder<AssessmentFundingDecisionOutcomeResource, ?> value) {
+        return withFundingDecision(value.build());
     }
 
-    public AssessmentResourceBuilder withApplication(Long... values) {
-        return withArraySetFieldByReflection("application", values);
+    public AssessmentResourceBuilder withRejection(AssessmentRejectOutcomeResource... value) {
+        return withArraySetFieldByReflection("rejection", value);
+    }
+
+    public AssessmentResourceBuilder withRejection(Builder<AssessmentRejectOutcomeResource, ?> value) {
+        return withRejection(value.build());
+    }
+
+    public AssessmentResourceBuilder withProcessRole(Long... value) {
+        return withArraySetFieldByReflection("processRole", value);
+    }
+
+    public AssessmentResourceBuilder withApplication(Long... value) {
+        return withArraySetFieldByReflection("application", value);
     }
 
     public AssessmentResourceBuilder withApplicationName(String... values) {
         return withArraySetFieldByReflection("applicationName", values);
     }
 
-    public AssessmentResourceBuilder withCompetition(Long... values) {
-        return withArraySetFieldByReflection("competition", values);
+    public AssessmentResourceBuilder withCompetition(Long... value) {
+        return withArraySetFieldByReflection("competition", value);
     }
 
-    public AssessmentResourceBuilder withActivityState(AssessmentStates... values) {
-        return withArraySetFieldByReflection("assessmentState", values);
+    public AssessmentResourceBuilder withActivityState(AssessmentStates... value) {
+        return withArraySetFieldByReflection("assessmentState", value);
     }
 }

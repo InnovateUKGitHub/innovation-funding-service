@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,6 +36,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/project")
+@PreAuthorize("hasAuthority('applicant')")
 public class ProjectSetupStatusController {
 
     public static final String PROJECT_SETUP_COMPLETE_PAGE = "project/setup-complete-status";

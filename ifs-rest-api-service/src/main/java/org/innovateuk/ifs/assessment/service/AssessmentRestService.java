@@ -14,15 +14,17 @@ public interface AssessmentRestService {
 
     RestResult<AssessmentResource> getAssignableById(long id);
 
+    RestResult<AssessmentResource> getRejectableById(long id);
+
     RestResult<List<AssessmentResource>> getByUserAndCompetition(long userId, long competitionId);
 
     RestResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId);
 
     RestResult<AssessmentTotalScoreResource> getTotalScore(long id);
 
-    RestResult<Void> recommend(long id, AssessmentFundingDecisionResource assessmentFundingDecision);
+    RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision);
 
-    RestResult<Void> rejectInvitation(long id, ApplicationRejectionResource applicationRejection);
+    RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource);
 
     RestResult<Void> acceptInvitation(long id);
 

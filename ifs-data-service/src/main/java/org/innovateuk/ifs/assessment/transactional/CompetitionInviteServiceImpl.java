@@ -26,6 +26,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.notifications.resource.SystemNotificationSource;
 import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -60,8 +61,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
@@ -122,6 +122,9 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
 
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
@@ -213,8 +216,30 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
-        return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
-                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreasForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
+        return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite -> {
+            AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
+            assessorCreatedInvite.setName(competitionInvite.getName());
+            assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
+            assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
+            assessorCreatedInvite.setEmail(competitionInvite.getEmail());
+            assessorCreatedInvite.setInviteId(competitionInvite.getId());
+
+            if (competitionInvite.getUser() != null) {
+                assessorCreatedInvite.setId(competitionInvite.getUser().getId());
+            }
+
+            return assessorCreatedInvite;
+        }));
+    }
+
+    @Override
+    public ServiceResult<CompetitionInviteStatisticsResource> getInviteStatistics(long competitionId) {
+        CompetitionInviteStatisticsResource statisticsResource = new CompetitionInviteStatisticsResource();
+        statisticsResource.setInvited(competitionInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT)));
+        statisticsResource.setInviteList(competitionInviteRepository.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED)));
+        statisticsResource.setAccepted(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED));
+        statisticsResource.setDeclined(competitionParticipantRepository.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED));
+        return serviceSuccess(statisticsResource);
     }
 
     @Override
@@ -227,6 +252,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     assessorInviteOverview.setDetails(getDetails(participant));
 
                     if (participant.getUser() != null) {
+                        assessorInviteOverview.setId(participant.getUser().getId());
                         assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
                         Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
@@ -350,21 +376,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     private CompetitionInvite sendInvite(CompetitionInvite invite, EmailContent content) {
-        invite.setSentOn(LocalDateTime.now());
-        invite.setSentBy(getSender());
-        competitionParticipantRepository.save(new CompetitionParticipant(invite.send()));
+        competitionParticipantRepository.save(new CompetitionParticipant(invite.send(loggedInUserSupplier.get(), LocalDateTime.now())));
 
         NotificationTarget recipient = new ExternalUserNotificationTarget(invite.getName(), invite.getEmail());
         Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR, emptyMap());
         notificationSender.sendEmailWithContent(notification, recipient, content);
 
         return invite;
-    }
-
-    private User getSender() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        UserResource user = (UserResource) authentication.getDetails();
-        return userMapper.mapToDomain(user);
     }
 
     @Override

@@ -6,6 +6,8 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-6458 As a member of the competitions team I can select 'Notify Assessors' in a closed assessment so...
 ...
 ...               INFUND-7362 Inflight competition dashboards: Closed dashboard
+...
+...               INFUND-7561 Inflight competition dashboards- View milestones
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -26,6 +28,12 @@ Competition dashboard
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("View panel sheet")
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Funding decision")
+
+Milestones for the closed competitions
+    [Documentation]    INFUND-7561
+    Then the user should see the element    jQuery=button:contains("Notify assessors")
+    And the user should see the element    css=li:nth-child(5).done    #this keyword verifies that the 5.Assessor briefing is done
+    And the user should see the element    css=li:nth-child(7).not-done    #this keyword verifies that the 6.Assessor accepts is not done
 
 Invite Assessors
     [Documentation]    INFUND-6604

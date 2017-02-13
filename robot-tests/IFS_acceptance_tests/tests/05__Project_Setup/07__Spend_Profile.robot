@@ -79,7 +79,7 @@ Project Finance cancels the generation of the Spend Profile
     [Documentation]    INFUND-5194
     [Tags]
     When the user clicks the button/link    jQuery=.generate-spend-profile-main-button
-    Then the user should see the text in the page    This will generate a flat profile spend for all project partners.
+    Then the user should see the text in the page    This will generate a flat spend profile for all project partners.
     When the user clicks the button/link    jQuery=.button:contains("Cancel")
 
 Project Finance generates the Spend Profile
@@ -91,10 +91,11 @@ Project Finance generates the Spend Profile
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
 
+
 Lead partner can view spend profile page
     [Documentation]    INFUND-3970, INFUND-6138, INFUND-5899
     [Tags]    HappyPath
-    [Setup]    Log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
+    [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     When the user clicks the button/link             link=What's the status of each of my partners?
     Then the user should see the text in the page    Project team status
@@ -106,7 +107,8 @@ Lead partner can view spend profile page
     Then the user should not see an error in the page
     And the user should see the text in the page    We have reviewed and confirmed your project costs.
     And the user should see the text in the page    ${Katz_Name} - Spend profile
-    And the user clicks the button/link    link=Spend profile overview
+    # And the user clicks the button/link    link=Spend profile overview    # TODO please enable this line and delete the following one when working on INFUND-8132
+    And the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
     And the user should see the text in the page    This overview shows the spend profile status of each partner in your project.
     [Teardown]    the user goes back to the previous page
 
@@ -147,6 +149,9 @@ Lead Partner can see Spend profile summary
 Lead partner can edit his spend profile with invalid values
     [Documentation]    INFUND-3765, INFUND-6907, INFUND-6801, INFUND-7409
     [Tags]
+    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    And the user navigates to the page            ${external_spendprofile_summary}/review
+    # TODO please delete the above two lines when INFUND-8138 is completed
     When the user clicks the button/link               jQuery=.button:contains("Edit spend profile")
     Then the text box should be editable               css=#row-24-0  # Labour-June17
     When the user enters text to a text field          css=#row-24-0    2899
@@ -616,7 +621,8 @@ Status updates to a cross for the internal user's table
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
     [Tags]
-    Given log in as a different user    ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}    ${short_password}
+    Given log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
+    # TODO please switch out the PM login above with lead partner once INFUND-8136 is completed
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
     When the user clicks the button/link    link=What's the status of each of my partners?

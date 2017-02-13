@@ -31,7 +31,10 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -56,12 +59,11 @@ import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBui
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonBuilder.newRejectionReason;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.AffiliationBuilder.newAffiliation;
@@ -137,6 +139,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
         when(profileRepositoryMock.findOne(user.getProfileId())).thenReturn(profile);
+
+        when(loggedInUserSupplierMock.get()).thenReturn(newUser().build());
 
         ReflectionTestUtils.setField(service, "webBaseUrl", "https://ifs-local-dev");
     }
@@ -921,6 +925,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withId(compliantUser.getId(), nonCompliantUserNoSkills.getId(), nonCompliantUserNoAffiliations.getId(), nonCompliantUserNoContract.getId(), null)
                 .withInviteId(1L, 2L, 3L, 4L, 5L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
                 .withInnovationAreas(innovationAreaList, emptyList(), emptyList(), emptyList(), innovationAreaList)
@@ -967,6 +972,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         List<CompetitionInvite> invites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
+                .withStatus(SENT, SENT, SENT)
                 .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .build(3);
 
@@ -979,6 +985,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(3);
 
         List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
+                .withId(users.get(0).getId(), users.get(1).getId(), users.get(2).getId())
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
                 .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
@@ -1011,6 +1018,31 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     }
 
     @Test
+    public void getInviteStatistics() throws Exception {
+        long competitionId = 1L;
+        CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
+                .withAccepted(1)
+                .withDeclined(2)
+                .withInviteList(3)
+                .withInvited(4)
+                .build();
+
+        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED,SENT))).thenReturn(expected.getInvited());
+        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED))).thenReturn(expected.getInviteList());
+        when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED)).thenReturn(expected.getAccepted());
+        when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED)).thenReturn(expected.getDeclined());
+        CompetitionInviteStatisticsResource actual = service.getInviteStatistics(competitionId).getSuccessObject();
+        assertEquals(expected, actual);
+
+        InOrder inOrder = inOrder(competitionInviteRepositoryMock, competitionParticipantRepositoryMock);
+        inOrder.verify(competitionInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT));
+        inOrder.verify(competitionInviteRepositoryMock).countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED));
+        inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED);
+        inOrder.verify(competitionParticipantRepositoryMock).countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
     public void getInvitationOverview_notExistingUsers() throws Exception {
         long competitionId = 1L;
 
@@ -1027,6 +1059,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
+                .withStatus(SENT, SENT, SENT)
                 .buildArray(3, CompetitionInvite.class);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()

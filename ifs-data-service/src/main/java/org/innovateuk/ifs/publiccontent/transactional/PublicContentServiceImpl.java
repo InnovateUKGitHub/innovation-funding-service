@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.ContentEventResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,15 +41,26 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     private ContentSectionRepository contentSectionRepository;
     @Autowired
     private KeywordRepository keywordRepository;
-
     @Autowired
     private PublicContentMapper publicContentMapper;
+    @Autowired
+    private ContentGroupService contentGroupService;
+    @Autowired
+    private ContentEventService contentEventService;
 
     @Override
     public ServiceResult<PublicContentResource> findByCompetitionId(Long id) {
         return find(publicContentRepository.findByCompetitionId(id), notFoundError(PublicContent.class, id))
-                .andOnSuccessReturn(publicContent -> publicContentMapper.mapToResource(publicContent));
+                .andOnSuccessReturn(publicContent -> sortGroups(publicContentMapper.mapToResource(publicContent)));
     }
+
+    private PublicContentResource sortGroups(PublicContentResource publicContentResource) {
+        publicContentResource.getContentSections()
+                .forEach(contentSectionResource -> Collections.sort(contentSectionResource.getContentGroups(),
+                        (o1, o2) -> o1.getPriority().compareTo(o2.getPriority())));
+        return publicContentResource;
+    }
+
 
     @Override
     public ServiceResult<Void> initialiseByCompetitionId(Long competitionId) {
@@ -96,28 +109,38 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
 
     @Override
     public ServiceResult<Void> updateSection(PublicContentResource resource, PublicContentSectionType section) {
+        return saveSection(resource, section).andOnSuccessReturnVoid();
+    }
+
+    @Override
+    public ServiceResult<Void> markSectionAsComplete(PublicContentResource resource, PublicContentSectionType section) {
+        return saveSection(resource, section)
+                .andOnSuccessReturnVoid(publicContent -> markSectionAsComplete(publicContent, section));
+    }
+
+    private ServiceResult<PublicContent> saveSection(PublicContentResource resource, PublicContentSectionType section) {
         PublicContent publicContent = publicContentRepository.save(publicContentMapper.mapToDomain(resource));
 
+        ServiceResult<Void> result;
         switch (section) {
             case SEARCH:
                 saveKeywords(resource.getKeywords(), publicContent);
+                result = serviceSuccess();
                 break;
             case DATES:
-                saveContentEvent();
+                result = saveContentEvent(publicContent, resource.getContentEvents());
                 break;
             default:
-                saveContentGroup();
+                result = contentGroupService.saveContentGroups(resource, publicContent, section);
                 break;
         }
 
-        markSectionAsComplete(publicContent, section);
-
-        //If the public content has already been published then publish again.
+        //If the public content has already been published then update the publish date.
         if (allSectionsComplete(publicContent) && publicContent.getPublishDate() != null) {
-            publish(publicContent);
+            result = result.andOnSuccess(() -> publish(publicContent));
         }
 
-        return serviceSuccess();
+        return result.andOnSuccessReturn(() -> publicContent);
     }
 
 
@@ -131,11 +154,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
         });
     }
 
-    private void saveContentGroup() {
-
-    }
-
-    private void saveContentEvent() {
+    private ServiceResult<Void> saveContentEvent(PublicContent publicContent, List<ContentEventResource> events) {
+        return contentEventService.resetAndSaveEvents(publicContent.getId(), events);
     }
 
     private void markSectionAsComplete(PublicContent publicContent, PublicContentSectionType sectionType) {

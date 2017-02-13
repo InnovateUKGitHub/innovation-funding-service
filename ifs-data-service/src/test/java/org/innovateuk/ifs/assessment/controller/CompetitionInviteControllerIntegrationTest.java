@@ -32,12 +32,13 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnov
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
-import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
+import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.builder.RejectionReasonResourceBuilder.newRejectionReasonResource;
-import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.*;
@@ -675,5 +676,33 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         RestResult<AssessorInviteToSendResource> serviceResult = controller.sendInvite(createdId, content);
         assertTrue(serviceResult.isSuccess());
+    }
+
+    @Test
+    public void getInviteStatistics() throws Exception {
+        loginCompAdmin();
+        competitionInviteRepository.save(newCompetitionInvite()
+                .with(id(null))
+                .withStatus(CREATED, SENT, OPENED)
+                .withCompetition(competition)
+                .withName("created", "sent", "opened")
+                .withEmail("created@competition.com", "sent@competition.com", "opened@competition.com")
+                .withHash("created", "sent", "opened")
+                .build(3));
+        competitionParticipantRepository.save(newCompetitionParticipant()
+                .with(id(null))
+                .withCompetition(competition)
+                .withRole(ASSESSOR)
+                .withStatus(ACCEPTED, REJECTED, ACCEPTED, REJECTED, REJECTED, ACCEPTED, ACCEPTED)
+                .build(7));
+        CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
+                .withInviteList(1)
+                .withInvited(2)
+                .withDeclined(3)
+                .withAccepted(4)
+                .build();
+
+        CompetitionInviteStatisticsResource statisticsResource = controller.getInviteStatistics(1L).getSuccessObject();
+        assertEquals(expected, statisticsResource);
     }
 }

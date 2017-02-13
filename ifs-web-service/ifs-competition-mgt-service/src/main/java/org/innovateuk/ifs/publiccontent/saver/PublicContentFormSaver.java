@@ -7,5 +7,6 @@ import org.innovateuk.ifs.publiccontent.form.AbstractPublicContentForm;
 
 public interface PublicContentFormSaver<F extends AbstractPublicContentForm> {
 
+    ServiceResult<Void> markAsComplete(F form, PublicContentResource publicContentResource);
     ServiceResult<Void> save(F form, PublicContentResource publicContentResource);
 }

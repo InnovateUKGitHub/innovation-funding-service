@@ -35,6 +35,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
+    public RestResult<AssessmentResource> getRejectableById(long id) {
+        return getWithRestResult(format("%s/%s/rejectable", assessmentRestURL, id), AssessmentResource.class);
+    }
+
+    @Override
     public RestResult<List<AssessmentResource>> getByUserAndCompetition(long userId, long competitionId) {
         return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), ParameterizedTypeReferences.assessmentResourceListType());
     }
@@ -50,13 +55,13 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<Void> recommend(long id, AssessmentFundingDecisionResource assessmentFundingDecision) {
+    public RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return putWithRestResult(format("%s/%s/recommend", assessmentRestURL, id), assessmentFundingDecision, Void.class);
     }
 
     @Override
-    public RestResult<Void> rejectInvitation(long id, ApplicationRejectionResource applicationRejection) {
-        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), applicationRejection, Void.class);
+    public RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
+        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), assessmentRejectOutcomeResource, Void.class);
     }
 
     @Override

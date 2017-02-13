@@ -81,7 +81,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void ownersCanReadAssessmentsNonDashboard() {
-        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        EnumSet<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT);
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment should be able to read that assessment",
@@ -120,22 +120,44 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
-    public void ownersCanOnlyAssignPendingAssessments() {
+    public void ownersCanReadPendingAssessmentsToRespond() {
         EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING);
         allowedStates.forEach(state ->
-                assertTrue("the owner of an assessment should be able to assign the assessment",
-                        rules.userCanAssignAssessment(assessments.get(state), assessorUser)));
+                assertTrue("the owner of a pending assessment should be able to read it in order to respond to their" +
+                                " invitation",
+                        rules.userCanReadToAssign(assessments.get(state), assessorUser)));
 
         EnumSet.complementOf(allowedStates).forEach(state ->
-                assertFalse("the owner of an assessment should not be able to re-assign the assessment",
-                        rules.userCanAssignAssessment(assessments.get(state), assessorUser)));
+                assertFalse("the owner of an assessment should not be able to read it in order to respond to" +
+                                " their invitation if the assessment is not pending",
+                        rules.userCanReadToAssign(assessments.get(state), assessorUser)));
     }
 
     @Test
-    public void otherUsersCanNotAssignPendingAssessments() {
+    public void otherUsersCanNotReadPendingAssessmentsToRespond() {
         EnumSet.allOf(AssessmentStates.class).forEach(state ->
-            assertFalse("other users should not be able to assign the assessment",
-                    rules.userCanAssignAssessment(assessments.get(state), otherUser)));
+            assertFalse("other users should not be able to read assessments in order to respond to invitations",
+                    rules.userCanReadToAssign(assessments.get(state), otherUser)));
+    }
+ @Test
+    public void ownersCanReadAssessmentsToReject() {
+        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        allowedStates.forEach(state ->
+                assertTrue("the owner of a pending assessment should be able to read it in order to respond to their" +
+                                " invitation",
+                        rules.userCanReadToReject(assessments.get(state), assessorUser)));
+
+        EnumSet.complementOf(allowedStates).forEach(state ->
+                assertFalse("the owner of an assessment should not be able to read it in order to respond to" +
+                                " their invitation if the assessment is not pending, accepted, open, or ready to submit",
+                        rules.userCanReadToReject(assessments.get(state), assessorUser)));
+    }
+
+    @Test
+    public void otherUsersCanNotReadAssessmentsToReject() {
+        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+            assertFalse("other users should not be able to read assessments in order to respond to invitations",
+                    rules.userCanReadToReject(assessments.get(state), otherUser)));
     }
 
     @Test

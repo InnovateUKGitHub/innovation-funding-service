@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.AssessmentController;
 import org.innovateuk.ifs.assessment.resource.*;
@@ -8,10 +7,10 @@ import org.junit.Test;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.documentation.ApplicationRejectionDocs.applicationRejectionResourceBuilder;
-import static org.innovateuk.ifs.assessment.documentation.ApplicationRejectionDocs.applicationRejectionResourceFields;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceBuilder;
-import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionDocs.assessmentFundingDecisionResourceFields;
+import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceBuilder;
+import static org.innovateuk.ifs.assessment.documentation.AssessmentFundingDecisionOutcomeDocs.assessmentFundingDecisionOutcomeResourceFields;
+import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceBuilder;
+import static org.innovateuk.ifs.assessment.documentation.AssessmentRejectOutcomeDocs.assessmentRejectOutcomeResourceFields;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessmentDocs.*;
 import static org.innovateuk.ifs.documentation.AssessmentTotalScoreResourceDocs.assessmentTotalScoreResourceBuilder;
@@ -68,6 +67,23 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void findRejectableById() throws Exception {
+        long assessmentId = 1L;
+        AssessmentResource assessmentResource = assessmentResourceBuilder.build();
+
+        when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
+
+        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the assessment that is being requested")
+                        ),
+                        responseFields(assessmentFields)
+                ));
+    }
+
+    @Test
     public void findByUserAndCompetition() throws Exception {
         long userId = 1L;
         long competitionId = 2L;
@@ -108,38 +124,39 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     @Test
     public void recommend() throws Exception {
         Long assessmentId = 1L;
-        AssessmentFundingDecisionResource assessmentFundingDecision = assessmentFundingDecisionResourceBuilder.build();
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
+                assessmentFundingDecisionOutcomeResourceBuilder.build();
 
-        when(assessmentServiceMock.recommend(assessmentId, assessmentFundingDecision)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/recommend", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(assessmentFundingDecision)))
+                .content(objectMapper.writeValueAsString(assessmentFundingDecisionOutcomeResource)))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("Id of the assessment for which to recommend")
                         ),
-                        requestFields(assessmentFundingDecisionResourceFields)
+                        requestFields(assessmentFundingDecisionOutcomeResourceFields)
                 ));
     }
 
     @Test
     public void reject() throws Exception {
         Long assessmentId = 1L;
-        ApplicationRejectionResource applicationRejection = applicationRejectionResourceBuilder.build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = assessmentRejectOutcomeResourceBuilder.build();
 
-        when(assessmentServiceMock.rejectInvitation(assessmentId, applicationRejection)).thenReturn(serviceSuccess());
+        when(assessmentServiceMock.rejectInvitation(assessmentId, assessmentRejectOutcomeResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/assessment/{id}/rejectInvitation", assessmentId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(applicationRejection)))
+                .content(objectMapper.writeValueAsString(assessmentRejectOutcomeResource)))
                 .andExpect(status().isOk())
                 .andDo(document("assessment/{method-name}",
                         pathParameters(
                                 parameterWithName("id").description("id of the assessment for which to reject")
                         ),
-                        requestFields(applicationRejectionResourceFields)
+                        requestFields(assessmentRejectOutcomeResourceFields)
                 ));
     }
 

@@ -734,8 +734,8 @@
         <collectionProp name="AuthManager.auth_list">
           <elementProp name="" elementType="Authorization">
             <stringProp name="Authorization.url"></stringProp>
-            <stringProp name="Authorization.username">ifs</stringProp>
-            <stringProp name="Authorization.password">Fund1ng</stringProp>
+            <stringProp name="Authorization.username"></stringProp>
+            <stringProp name="Authorization.password"></stringProp>
             <stringProp name="Authorization.domain"></stringProp>
             <stringProp name="Authorization.realm"></stringProp>
           </elementProp>

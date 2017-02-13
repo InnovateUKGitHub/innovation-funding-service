@@ -24,9 +24,8 @@
     }
 
     .task{
-      @include core-19;
+      @include core-16;
       float: left;
-      width: 58%;
       padding-right: 19px;
       vertical-align: top;
       flex: 1 0 auto;
@@ -37,15 +36,19 @@
         margin-bottom: 0.3em;
       }
 
-      span,
+      /*span,
       .application-details {
         @include core-16;
+      }*/
+
+      @include media-down(tablet) {
+        margin-bottom: 15px;
       }
 
       @include media-down(mobile) {
         float: none;
         width: 90%;
-        margin-bottom: 15px;
+        //margin-bottom: 15px;
         //font-size: 15px;
       }
       .label-holder {
@@ -63,15 +66,17 @@
         }
       }
     }
+
     .action-required {
       /*float: left;
       width: 75%;*/
       margin-top: 10px;
       vertical-align: top;
+
       strong {
         @extend  %action-required;
         padding-left: 20px;
-        @include core-19;
+        //@include core-19;
         font-weight: 700;
       }
       /*@include media-down(mobile) {
@@ -85,10 +90,8 @@
       width: 25%;
       vertical-align: middle;
       text-align: center;
-      font-size: 17px;
-      @include media-down(mobile) {
-        font-size: 15px;
-      }
+      @include core-16;
+
       strong, a {
         display: block;
         margin-top: 15px;
@@ -105,18 +108,12 @@
 
     .status {
       float: right;
-      width: 39%;
       vertical-align: middle;
       text-align: center;
       display: flex;
-      flex: 1 0 300px;
       justify-content: flex-end;
       align-items: center;
       margin: 0;
-
-      @include media-down(mobile) {
-        flex: 1 0 auto;
-      }
 
       .status-msg {
         @include core-14;
@@ -124,10 +121,8 @@
         text-align: center;
         font-weight: bold;
         box-sizing: border-box;
-        width: 50%;
         float: left;
         padding: 0 0.5em;
-        border-right: 1px dashed $border-colour;
         margin: 0;
 
         &.msg-deadline{
@@ -139,6 +134,7 @@
 
           &-waiting{
             color: $secondary-text-colour;
+            padding: 1em 0;
           }
 
         }
@@ -146,7 +142,6 @@
         &.msg-progress{
           @include core-16;
           color: $text-colour;
-          border: none;
           font-weight: bold;
           float: right;
         }
@@ -156,29 +151,32 @@
         @extend .deadline;
         color: $secondary-text-colour;
       }
+
       .score {
         .percent {
-          font-size: 35px;
+          @include bold-36;
           display: block;
           text-align: center;
         }
         > span {
           display: block;
           text-align: center;
-          font-size: 15px;
+          @include core-16;
           color: $secondary-text-colour;
-          @include media-down(mobile) {
+          /*@include media-down(mobile) {
             font-size: 13px;
             margin-top: 0;
-          }
+          }*/
         }
         strong {
           display: block;
           text-align: center;
-          font-size: 17px;
+          @include core-16;
+          font-weight: bold;
+          /*font-size: 17px;
           @include media-down(mobile) {
             font-size: 15px;
-          }
+          }*/
         }
       }
       > strong, a {
@@ -195,10 +193,10 @@
       > span {
         display: block;
         margin-top: 15px;
-        font-size: 17px;
         text-align: center;
+        @include core-16;
+
         @include media-down(mobile) {
-          font-size: 15px;
           margin-top: 0;
         }
       }
@@ -211,14 +209,11 @@
     }
     .assessment-period {
       float: right;
-      width: 24%;
-      h4, dl {
-        font-size: 17px;
-        @include media-down(mobile) {
-          font-size: 15px;
-        }
+      width: 20%;
+      flex: 1 0 120px;
+      dl {
+        @include core-14;
       }
-
     }
     .status-complete {
       @extend %icon-tick;
@@ -243,6 +238,11 @@
       .score .percent {
         color: $text-colour
       }
+      .status{
+        .msg-progress{
+          color: $green;
+        }
+      }
     }
     &.negative {
       .score > strong {
@@ -251,9 +251,56 @@
       .score .percent {
         color: $text-colour
       }
+      .status{
+        .msg-progress{
+          color: $red;
+        }
+      }
     }
+
+    /*-------- SETTING WIDTHS OF TASK AND STATUS -------------*/
+
+    .task{
+      width: 78%;
+    }
+
+    .status{
+      width: 19%;
+      flex: 1 0 150px;
+
+      .status-msg{
+        width: 100%;
+      }
+
+      @include media-down(mobile) {
+        flex: 1 0 auto;
+      }
+
+    }
+
+    &.status-2-col{
+      .task{
+        width: 58%;
+      }
+      .status{
+        width: 39%;
+        flex: 1 1 300px;
+
+        .status-msg{
+          width: 50%;
+
+          &:first-child{
+            border-right: 1px dashed $border-colour;
+          }
+        }
+      }
+    }
+
   }
 }
+
+
+
 .project-setup-progress-list {
   @extend  .progress-list;
   background-color: $white;
@@ -261,9 +308,25 @@
   padding: 0;
   > ul > li {
     position: relative;
+    &.require-action{
+      background: url(../images/icons/icon-pencil.png) 0.5em 1em no-repeat;
+      background-size: 14px;
+
+      @include media-down(tablet) {
+        background: none;
+      }
+    }
     &.read-only {
       background-color: $highlight-colour;
       color: $secondary-text-colour;
+
+      .status{
+        .msg-progress{
+          color: $secondary-text-colour;
+          font-weight: normal;
+        }
+      }
+
     }
     .task {
       overflow: hidden;

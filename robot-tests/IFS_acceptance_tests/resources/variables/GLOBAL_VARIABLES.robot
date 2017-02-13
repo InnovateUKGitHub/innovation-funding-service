@@ -19,6 +19,7 @@ ${DEFAULT_ACADEMIC_OTHER_FUNDING_WITH_COMMAS}    0
 ${DEFAULT_ACADEMIC_CONTRIBUTION_TO_PROJECT}    0
 ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}    100%
 ${DEFAULT_ACADEMIC_FUNDING_SOUGHT_WITH_COMMAS}    ${DEFAULT_ACADEMIC_COSTS_WITH_COMMAS}
+${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}   100,837
 ${DEFAULT_TOTAL_PROJECT_COST_WITHOUT_COMMAS}    100836.81
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS_PLUS_2000}    102,837
 ${DEFAULT_SUBCONTRACTING_COSTS_WITH_COMMAS_PLUS_2000}    47,000
@@ -45,12 +46,12 @@ ${FUNDERS_PANEL_COMPETITION}    5
 ${FUNDERS_PANEL_COMPETITION_NAME}    Internet of Things
 ${NOT_EDITABLE_COMPETITION}     8
 ${NOT_EDITABLE_COMPETITION_NAME}     New designs for a circular economy
-${FUNDERS_PANEL_APPLICATION_1}    24
-${FUNDERS_PANEL_APPLICATION_1_NUMBER}    00000024
+${FUNDERS_PANEL_APPLICATION_1}    28
+${FUNDERS_PANEL_APPLICATION_1_NUMBER}    00000028
 ${FUNDERS_PANEL_APPLICATION_1_TITLE}    Sensing & Control network using the lighting infrastructure
 ${FUNDERS_PANEL_APPLICATION_1_HEADER}    ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
-${FUNDERS_PANEL_APPLICATION_2}    25
-${FUNDERS_PANEL_APPLICATION_2_NUMBER}    00000025
+${FUNDERS_PANEL_APPLICATION_2}    29
+${FUNDERS_PANEL_APPLICATION_2_NUMBER}    00000029
 ${FUNDERS_PANEL_APPLICATION_2_TITLE}    Matter - Planning for Web
 ${FUNDERS_PANEL_APPLICATION_2_HEADER}    ${FUNDERS_PANEL_APPLICATION_2_NUMBER}: ${FUNDERS_PANEL_APPLICATION_2_TITLE}
 ${FUNDERS_PANEL_APPLICATION_1_PROJECT}    11
@@ -166,38 +167,16 @@ ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    99
-${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    90
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}    56
-${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    89
-${IN_ASSESSMENT_COMPETITION_PROJECT_DETAILS_SECTION}    225
-${IN_ASSESSMENT_COMPETITION_APPLICATION_QUESTIONS_SECTION}    226
-${IN_ASSESSMENT_COMPETITION_FINANCES_SECTION}    227
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    123
+${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}    125
+${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}    117
 ${Assessment_overview_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}
-${Assessment_summary_complete_9}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/summary
-${Application_question_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/375
-${Application_question_168}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/376
-${Application_question_169}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/377
-${Application_question_170}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/378
-${Application_question_171}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/379
-${Application_question_172}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/380
-${Application_question_173}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/381
-${Application_question_174}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/382
-${Application_question_175}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/383
-${Application_question_176}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/question/384
-${Finance_summar_9_url}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/finances
-${Assessor_competition_dashboard}    ${server}/assessment/assessor/dashboard
 ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/competition/${IN_ASSESSMENT_COMPETITION}
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
-${Assessment_summary_Pending_12}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_1}/summary
 ${Assessment_summary_open_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}/summary
 ${assessment_declaration_url}    ${server}/assessment/profile/declaration
-${assessment_declaration_edit_url}    ${server}/assessment/profile/declaration/edit
 ${assessment_skills_url}    ${server}/assessment/profile/skills
-${assessment_skills_edit_url}   ${server}/assessment/profile/skills/edit
-${Assessment_overview_10}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_5_ASSESSMENT_2}
-${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/375
-${Application_management_dashboard}    ${server}/management/assessment/competition/4
+${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 
 # Database variables
 ${database_name}    ifs

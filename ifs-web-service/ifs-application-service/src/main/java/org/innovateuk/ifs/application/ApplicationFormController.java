@@ -10,6 +10,8 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.view.FundingLevelResetHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.*;
 import org.innovateuk.ifs.application.resource.*;
@@ -39,6 +41,7 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -49,6 +52,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -90,6 +94,7 @@ import static org.springframework.util.StringUtils.hasText;
  */
 @Controller
 @RequestMapping(ApplicationFormController.APPLICATION_BASE_URL+"{applicationId}/form")
+@PreAuthorize("hasAuthority('applicant')")
 public class ApplicationFormController {
 
     private static final Log LOG = LogFactory.getLog(ApplicationFormController.class);
@@ -188,6 +193,9 @@ public class ApplicationFormController {
     @Autowired
     private OverheadFileSaver overheadFileSaver;
 
+    @Autowired
+    private FundingLevelResetHandler fundingLevelResetHandler;
+
     @InitBinder
     protected void initBinder(WebDataBinder dataBinder, WebRequest webRequest) {
         dataBinder.registerCustomEditor(String.class, new StringMultipartFileEditor());
@@ -264,10 +272,18 @@ public class ApplicationFormController {
                                  List<SectionResource> allSections) {
         if(SectionType.GENERAL.equals(section.getType())
                 || SectionType.OVERVIEW_FINANCES.equals(section.getType())) {
-            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+            OpenSectionViewModel viewModel = (OpenSectionViewModel) openSectionModel.populateModel(
+                    form, model, application, section, user, bindingResult, allSections, organisationId);
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         } else {
-            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(form, model, application, section, user, bindingResult, allSections, organisationId);
+            OpenFinanceSectionViewModel viewModel = (OpenFinanceSectionViewModel) openFinanceSectionModel.populateModel(
+                    form, model, application, section, user, bindingResult, allSections, organisationId);
+
+            if (viewModel.getFinanceViewModel() instanceof AcademicFinanceViewModel) {
+                viewModel.setNavigationViewModel(applicationNavigationPopulator.addNavigation(section, application.getId(),
+                        Collections.singletonList(SectionType.ORGANISATION_FINANCES)));
+            }
+
             model.addAttribute(MODEL_ATTRIBUTE_MODEL, viewModel);
         }
         applicationNavigationPopulator.addAppropriateBackURLToModel(application.getId(), request, model, section);
@@ -472,9 +488,12 @@ public class ApplicationFormController {
         if(!isMarkSectionAsIncompleteRequest(params) ) {
             String organisationType = organisationService.getOrganisationType(user.getId(), application.getId());
             ValidationMessages saveErrors = financeHandler.getFinanceFormHandler(organisationType).update(request, user.getId(), application.getId(), competition.getId());
+
             if(!overheadFileSaver.isOverheadFileRequest(request)) {
                 errors.addAll(saveErrors);
             }
+
+            markOrganisationFinancesAsNotRequired(organisationType, selectedSection, application.getId(), competition.getId(), processRole.getId());
         }
 
         if(isMarkQuestionRequest(params)) {
@@ -495,7 +514,9 @@ public class ApplicationFormController {
     private void setRequestingFunding(String requestingFunding, Long userId, Long applicationId, Long competitionId, Long processRoleId, ValidationMessages errors) {
         ApplicationFinanceResource finance = financeService.getApplicationFinanceDetails(userId, applicationId);
         QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-        finance.getGrantClaim().setGrantClaimPercentage(0);
+        if (finance.getGrantClaim() != null ){
+            finance.getGrantClaim().setGrantClaimPercentage(0);
+        }
         errors.addAll(financeRowService.add(finance.getId(), financeQuestion.getId(), finance.getGrantClaim()));
 
         if (!errors.hasErrors()) {
@@ -508,6 +529,15 @@ public class ApplicationFormController {
                 sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
                 sectionService.markAsNotRequired(fundingSection.getId(), applicationId, processRoleId);
             }
+        }
+    }
+
+    private void markOrganisationFinancesAsNotRequired(String organisationType, SectionResource selectedSection, Long applicationId, Long competitionId, Long processRoleId) {
+
+        if (selectedSection != null && (SectionType.FUNDING_FINANCES.equals(selectedSection.getType()) || SectionType.PROJECT_COST_FINANCES.equals(selectedSection.getType()))
+                && "University (HEI)".equals(organisationType)) {
+            SectionResource organisationSection = sectionService.getSectionsForCompetitionByType(competitionId, SectionType.ORGANISATION_FINANCES).get(0);
+            sectionService.markAsNotRequired(organisationSection.getId(), applicationId, processRoleId);
         }
     }
 
@@ -977,7 +1007,12 @@ public class ApplicationFormController {
         String organisationType = organisationService.getOrganisationType(userId, applicationId);
 
         if (fieldName.startsWith("application.")) {
-        	// this does not need id
+
+            if (fieldName.equals("application.researchCategoryId")) {
+                fundingLevelResetHandler.resetFundingLevelAndMarkAsIncompleteForAllCollaborators(competitionId, applicationId);
+            }
+
+            // this does not need id
         	List<String> errors = this.saveApplicationDetails(applicationId, fieldName, value);
         	return new StoreFieldResult(errors);
         } else if (inputIdentifier.startsWith("financePosition-") || fieldName.startsWith("financePosition-")) {

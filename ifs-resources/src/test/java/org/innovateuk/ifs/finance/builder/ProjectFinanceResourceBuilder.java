@@ -17,6 +17,10 @@ public class ProjectFinanceResourceBuilder extends BaseFinanceResourceBuilder<Pr
         return withArray((id, finance) -> finance.setProject(id), projectId);
     }
 
+    public ProjectFinanceResourceBuilder withId(Long... projectFinanceId) {
+        return withArray((id, finance) -> finance.setId(id), projectFinanceId);
+    }
+
     private ProjectFinanceResourceBuilder(List<BiConsumer<Integer, ProjectFinanceResource>> newMultiActions) {
         super(newMultiActions);
     }

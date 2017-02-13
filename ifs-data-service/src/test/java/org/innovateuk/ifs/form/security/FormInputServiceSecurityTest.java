@@ -36,7 +36,7 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         classUnderTest.findResponsesByApplication(applicationId);
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).compAdminCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).internalUserCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
     }
 
@@ -47,7 +47,7 @@ public class FormInputServiceSecurityTest extends BaseServiceSecurityTest<FormIn
         classUnderTest.findResponsesByFormInputIdAndApplicationId(applicationId, formInputResponseId);
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForApplicationWhenSharedBetweenOrganisations(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).assessorCanSeeTheInputResponsesInApplicationsForOrganisationsTheyAssess(isA(FormInputResponseResource.class), isA(UserResource.class));
-        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).compAdminCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
+        verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).internalUserCanSeeFormInputResponsesForApplications(isA(FormInputResponseResource.class), isA(UserResource.class));
         verify(formInputResponsePermissionRules, times(TestFormInputService.ARRAY_SIZE_FOR_POST_FILTER_TESTS)).consortiumCanSeeTheInputResponsesForTheirOrganisationAndApplication(isA(FormInputResponseResource.class), isA(UserResource.class));
     }
 

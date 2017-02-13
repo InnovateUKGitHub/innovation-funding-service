@@ -9,11 +9,12 @@ import org.mockito.Mock;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentTotalScoreResourceBuilder.newAssessmentTotalScoreResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
@@ -59,6 +60,16 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
     }
 
     @Test
+    public void getRejectableById() throws Exception {
+        AssessmentResource expected = newAssessmentResource().build();
+        Long assessmentId = 1L;
+        when(assessmentRestService.getRejectableById(assessmentId)).thenReturn(restSuccess(expected));
+
+        assertSame(expected, service.getRejectableById(assessmentId));
+        verify(assessmentRestService, only()).getRejectableById(assessmentId);
+    }
+
+    @Test
     public void getByUserAndCompetition() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource().build(2);
 
@@ -89,37 +100,38 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
         String feedback = "feedback for decision";
         String comment = "comment for decision";
 
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource()
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
+                newAssessmentFundingDecisionOutcomeResource()
                 .withFundingConfirmation(TRUE)
                 .withFeedback(feedback)
                 .withComment(comment)
                 .build();
 
-        when(assessmentRestService.recommend(assessmentId, assessmentFundingDecision)).thenReturn(restSuccess());
+        when(assessmentRestService.recommend(assessmentId, assessmentFundingDecisionOutcomeResource)).thenReturn(restSuccess());
 
         ServiceResult<Void> response = service.recommend(assessmentId, TRUE, feedback, comment);
 
         assertTrue(response.isSuccess());
-        verify(assessmentRestService, only()).recommend(assessmentId, assessmentFundingDecision);
+        verify(assessmentRestService, only()).recommend(assessmentId, assessmentFundingDecisionOutcomeResource);
     }
 
     @Test
     public void rejectInvitation() throws Exception {
         Long assessmentId = 1L;
-        String reason = "reason for rejection";
+        AssessmentRejectOutcomeValue reason = CONFLICT_OF_INTEREST;
         String comment = "comment for rejection";
 
-        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource()
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource()
                 .withRejectReason(reason)
                 .withRejectComment(comment)
                 .build();
 
-        when(assessmentRestService.rejectInvitation(assessmentId, applicationRejection)).thenReturn(restSuccess());
+        when(assessmentRestService.rejectInvitation(assessmentId, assessmentRejectOutcomeResource)).thenReturn(restSuccess());
 
         ServiceResult<Void> response = service.rejectInvitation(assessmentId, reason, comment);
 
         assertTrue(response.isSuccess());
-        verify(assessmentRestService, only()).rejectInvitation(assessmentId, applicationRejection);
+        verify(assessmentRestService, only()).rejectInvitation(assessmentId, assessmentRejectOutcomeResource);
     }
 
     @Test
@@ -128,9 +140,8 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         when(assessmentRestService.acceptInvitation(assessmentId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> response = service.acceptInvitation(assessmentId);
+        service.acceptInvitation(assessmentId);
 
-        assertTrue(response.isSuccess());
         verify(assessmentRestService, only()).acceptInvitation(assessmentId);
     }
 
