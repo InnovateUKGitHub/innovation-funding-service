@@ -43,14 +43,14 @@
 
 
         <th:block
-            th:if="${model.markedAsComplete and form == null and !model.submitted and !model.projectManager}">
+            th:if="${model.markedAsComplete and !model.submitted and !model.leadPartner and form==null}">
             <div class="success-alert extra-margin-bottom">
                 <p>Your spend profile has been sent to the lead partner. It will be reviewed and sent to us.
                 </p>
             </div>
         </th:block>
         <th:block
-            th:if="${model.markedAsComplete and !model.submitted and model.projectManager and model.userPartOfThisOrganisation}">
+            th:if="${model.markedAsComplete and !model.submitted and model.leadPartner and form == null and model.userPartOfThisOrganisation}">
             <div class="success-alert extra-margin-bottom">
                 <p>Your spend profile is marked as complete. You can still edit this page. When all partners have completed their spend profiles you can send them to us.</p>
             </div>
