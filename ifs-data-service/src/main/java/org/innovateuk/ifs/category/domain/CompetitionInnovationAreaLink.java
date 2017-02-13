@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
-@DiscriminatorValue("org.innovateuk.ifs.user.domain.Competition#innovationArea")
+@DiscriminatorValue("org.innovateuk.ifs.competition.domain.Competition#innovationArea")
 public class CompetitionInnovationAreaLink extends CategoryLink<Competition, InnovationArea> {
 
     @ManyToOne(optional = false)

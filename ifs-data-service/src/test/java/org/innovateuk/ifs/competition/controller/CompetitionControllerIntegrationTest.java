@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
@@ -26,7 +25,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Sets.newHashSet;
-import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -178,7 +177,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void updateCompetition() throws Exception {
+    public void saveCompetition() throws Exception {
         checkCompetitionCount(2);
 
         // Create new competition
@@ -198,7 +197,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void updateCompetitionCategories() throws Exception {
+    public void saveCompetition_categories() throws Exception {
         checkCompetitionCount(2);
 
         // Create new competition
@@ -208,10 +207,10 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         // Update competition
         competition.setName(COMPETITION_NAME_UPDATED);
-        Long sectorId = INNOVATION_SECTOR_ID;
-        Set<Long> areaIds = Collections.singleton(INNOVATION_AREA_ID);
-        competition.setInnovationSector(sectorId);
-        competition.setInnovationAreas(areaIds);
+        competition.setInnovationSector(INNOVATION_SECTOR_ID);
+        competition.setInnovationAreas(singleton(INNOVATION_AREA_ID));
+        competition.setResearchCategories(singleton(RESEARCH_CATEGORY_ID_ONE));
+
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
 
@@ -222,7 +221,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     }
 
     @Test
-    public void updateCompetitionCategories_multipleInnovationAreas() throws Exception {
+    public void saveCompetition_multipleInnovationAreas() throws Exception {
         checkCompetitionCount(2);
 
         // Create new competition
@@ -232,13 +231,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
 
         // Update competition
         competition.setName(COMPETITION_NAME_UPDATED);
-        Long sectorId = INNOVATION_SECTOR_ID;
-        Set<Long> areaIds = new HashSet<>(asList(
-                INNOVATION_AREA_ID,
-                INNOVATION_AREA_ID_TWO,
-                INNOVATION_AREA_ID_THREE));
-        competition.setInnovationSector(sectorId);
-        competition.setInnovationAreas(areaIds);
+        competition.setInnovationSector(INNOVATION_SECTOR_ID);
+        competition.setInnovationAreas(newHashSet(INNOVATION_AREA_ID, INNOVATION_AREA_ID_TWO, INNOVATION_AREA_ID_THREE));
+
         RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
         assertTrue("Assert save is success", saveResult.isSuccess());
 
@@ -250,75 +245,6 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertEquals(3, savedCompetition.getInnovationAreas().size());
         assertThat(savedCompetition.getInnovationAreaNames(), hasItems(INNOVATION_AREA_NAME, INNOVATION_AREA_NAME_TWO, INNOVATION_AREA_NAME_THREE));
         assertEquals(3, savedCompetition.getInnovationAreaNames().size());
-    }
-
-    @Test
-    public void closeAssessment() throws Exception {
-        RestResult<Void> closeResult = controller.closeAssessment(COMPETITION_ID);
-        assertTrue("Assert close assessment is success", closeResult.isSuccess());
-        RestResult<CompetitionResource> getResult = controller.getCompetitionById(COMPETITION_ID);
-        assertTrue("Assert get is success", getResult.isSuccess());
-        CompetitionResource retrievedCompetition = getResult.getSuccessObject();
-        retrievedCompetition.getCompetitionStatus();
-    }
-
-
-    @Test
-    public void updateCompetitionCoFunders() throws Exception {
-        checkCompetitionCount(2);
-
-        // Create new competition
-        CompetitionResource competition = createNewCompetition();
-
-        checkCompetitionCount(3);
-
-        // Update competition
-        competition.setName(COMPETITION_NAME_UPDATED);
-        Long sectorId = INNOVATION_SECTOR_ID;
-        Set<Long> areaIds = new HashSet<>(singletonList(INNOVATION_AREA_ID));
-        competition.setInnovationSector(sectorId);
-        competition.setInnovationAreas(areaIds);
-
-        //With one co-funder
-        competition.setFunders(CompetitionCoFundersResourceFixture.getNewTestCoFundersResouces(1, competition.getId()));
-        RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
-        assertTrue("Assert save is success", saveResult.isSuccess());
-        checkCompetitionCount(3);
-        CompetitionResource savedCompetition = saveResult.getSuccessObject();
-        assertEquals(1, savedCompetition.getFunders().size());
-
-        // Now re-insert with 2 co-funders
-        competition.setFunders(CompetitionCoFundersResourceFixture.getNewTestCoFundersResouces(2, competition.getId()));
-        saveResult = controller.saveCompetition(competition, competition.getId());
-        assertTrue("Assert save is success", saveResult.isSuccess());
-        savedCompetition = saveResult.getSuccessObject();
-        // we should expect in total two co-funders.
-        assertEquals(2, savedCompetition.getFunders().size());
-    }
-
-    @Test
-    public void saveCompetition_categories() throws Exception {
-        checkCompetitionCount(2);
-        // Create new competition
-        CompetitionResource competition = createNewCompetition();
-        checkCompetitionCount(3);
-
-        // Update competition
-        competition.setName(COMPETITION_NAME_UPDATED);
-        competition.setInnovationSector(INNOVATION_SECTOR_ID);
-        competition.setInnovationAreas(newHashSet(INNOVATION_AREA_ID));
-        competition.setResearchCategories(newHashSet(RESEARCH_CATEGORY_ID_ONE));
-
-        RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
-        assertTrue("Assert save is success", saveResult.isSuccess());
-
-        CompetitionResource savedCompetition = saveResult.getSuccessObjectOrThrowException();
-
-        assertEquals(INNOVATION_SECTOR_ID, (long) savedCompetition.getInnovationSector());
-        assertEquals(1, savedCompetition.getInnovationAreas().size());
-        assertTrue("innovationAreas contains " + INNOVATION_AREA_ID, savedCompetition.getInnovationAreas().contains(INNOVATION_AREA_ID));
-        assertTrue("innovationAreaNames contains " + INNOVATION_AREA_NAME, savedCompetition.getInnovationAreaNames().contains(INNOVATION_AREA_NAME));
-        assertTrue("researchCategories contains " + RESEARCH_CATEGORY_ID_ONE, savedCompetition.getResearchCategories().contains(RESEARCH_CATEGORY_ID_ONE));
     }
 
     @Test
@@ -372,6 +298,50 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
                 .getSuccessObjectOrThrowException();
 
         assertEquals(0, secondCompetitionSaved.getResearchCategories().size());
+    }
+
+    @Test
+    public void closeAssessment() throws Exception {
+        RestResult<Void> closeResult = controller.closeAssessment(COMPETITION_ID);
+        assertTrue("Assert close assessment is success", closeResult.isSuccess());
+        RestResult<CompetitionResource> getResult = controller.getCompetitionById(COMPETITION_ID);
+        assertTrue("Assert get is success", getResult.isSuccess());
+        CompetitionResource retrievedCompetition = getResult.getSuccessObject();
+        retrievedCompetition.getCompetitionStatus();
+    }
+
+
+    @Test
+    public void updateCompetitionCoFunders() throws Exception {
+        checkCompetitionCount(2);
+
+        // Create new competition
+        CompetitionResource competition = createNewCompetition();
+
+        checkCompetitionCount(3);
+
+        // Update competition
+        competition.setName(COMPETITION_NAME_UPDATED);
+        Long sectorId = INNOVATION_SECTOR_ID;
+        Set<Long> areaIds = new HashSet<>(singletonList(INNOVATION_AREA_ID));
+        competition.setInnovationSector(sectorId);
+        competition.setInnovationAreas(areaIds);
+
+        //With one co-funder
+        competition.setFunders(CompetitionCoFundersResourceFixture.getNewTestCoFundersResouces(1, competition.getId()));
+        RestResult<CompetitionResource> saveResult = controller.saveCompetition(competition, competition.getId());
+        assertTrue("Assert save is success", saveResult.isSuccess());
+        checkCompetitionCount(3);
+        CompetitionResource savedCompetition = saveResult.getSuccessObject();
+        assertEquals(1, savedCompetition.getFunders().size());
+
+        // Now re-insert with 2 co-funders
+        competition.setFunders(CompetitionCoFundersResourceFixture.getNewTestCoFundersResouces(2, competition.getId()));
+        saveResult = controller.saveCompetition(competition, competition.getId());
+        assertTrue("Assert save is success", saveResult.isSuccess());
+        savedCompetition = saveResult.getSuccessObject();
+        // we should expect in total two co-funders.
+        assertEquals(2, savedCompetition.getFunders().size());
     }
 
     @Test
@@ -712,8 +682,9 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
     private void checkUpdatedCompetitionCategories(CompetitionResource savedCompetition) {
         assertEquals(COMPETITION_NAME_UPDATED, savedCompetition.getName());
 
-        assertEquals(INNOVATION_SECTOR_ID, (long) savedCompetition.getInnovationSector());
-        assertEquals(INNOVATION_SECTOR_NAME, savedCompetition.getInnovationSectorName());
+        assertThat(savedCompetition.getInnovationSector(), is(INNOVATION_SECTOR_ID));
+        assertThat(savedCompetition.getInnovationSectorName(), is(INNOVATION_SECTOR_NAME));
+        assertThat(savedCompetition.getResearchCategories(), hasItem(RESEARCH_CATEGORY_ID_ONE));
 
         assertThat(savedCompetition.getInnovationAreas(), hasItem(INNOVATION_AREA_ID));
         assertEquals(1, savedCompetition.getInnovationAreas().size());
@@ -732,5 +703,7 @@ public class CompetitionControllerIntegrationTest extends BaseControllerIntegrat
         assertThat(competition.getName(), isEmptyOrNullString());
         assertThat(competition.getCompetitionStatus(), is(CompetitionStatus.COMPETITION_SETUP));
         assertThat(competition.isUseResubmissionQuestion(), is(true));
+        assertThat(competition.getInnovationSector(), is(INNOVATION_SECTOR_ID));
+        assertThat(competition.getResearchCategories(), hasItem(RESEARCH_CATEGORY_ID_ONE));
     }
 }
