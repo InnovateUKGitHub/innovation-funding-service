@@ -14,7 +14,7 @@ public class CompetitionReadyToOpenKeyStatisticsResourceDocs {
 
     public static final CompetitionReadyToOpenKeyStatisticsResourceBuilder competitionReadyToOpenKeyStatisticsResourceBuilder =
             newCompetitionReadyToOpenKeyStatisticsResource()
-                    .withAssessorsAccepted(1L)
-                    .withAssessorsInvited(2L);
+                    .withAssessorsAccepted(1)
+                    .withAssessorsInvited(2);
 
 }

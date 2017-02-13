@@ -234,9 +234,10 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> updateFinanceContact(Long projectId, Long organisationId, Long financeContactUserId) {
         return getProject(projectId).
-                andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
-                        andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
-                                andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
+                andOnSuccess(this::validateProjectIsInSetup).
+                    andOnSuccess(project -> validateProjectOrganisationFinanceContact(project, organisationId, financeContactUserId).
+                            andOnSuccess(projectUser -> createFinanceContactProjectUser(projectUser.getUser(), project, projectUser.getOrganisation()).
+                                    andOnSuccessReturnVoid(financeContact -> addFinanceContactToProject(project, financeContact))));
     }
 
     @Override
@@ -404,13 +405,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> updateCollaborationAgreementFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
+                andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkCollaborationAgreementFileToProject(project, fileDetails)));
     }
 
     @Override
     public ServiceResult<Void> deleteCollaborationAgreementFile(Long projectId) {
-        return getProject(projectId).andOnSuccess(project ->
+        return getProject(projectId).
+                andOnSuccess(this::validateProjectIsInSetup).
+                andOnSuccess(project ->
                 getCollaborationAgreement(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeCollaborationAgreementFileFromProject(project))));
@@ -455,13 +459,15 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     @Override
     public ServiceResult<Void> updateExploitationPlanFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
         return getProject(projectId).
+                andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> fileService.updateFile(fileEntryResource, inputStreamSupplier).
                         andOnSuccessReturnVoid(fileDetails -> linkExploitationPlanFileToProject(project, fileDetails)));
     }
 
     @Override
     public ServiceResult<Void> deleteExploitationPlanFile(Long projectId) {
-        return getProject(projectId).andOnSuccess(project ->
+        return getProject(projectId).
+        andOnSuccess(this::validateProjectIsInSetup).andOnSuccess(project ->
                 getExploitationPlan(project).andOnSuccess(fileEntry ->
                         fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
                                 removeExploitationPlanFileFromProject(project))));
@@ -532,7 +538,8 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void removeCollaborationAgreementFileFromProject(Project project) {
-        project.setCollaborationAgreement(null);
+        validateProjectIsInSetup(project).
+        andOnSuccess(() -> project.setCollaborationAgreement(null));
     }
 
     private ServiceResult<FileEntry> getExploitationPlan(Project project) {
@@ -555,7 +562,9 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private void removeExploitationPlanFileFromProject(Project project) {
-        project.setExploitationPlan(null);
+
+        validateProjectIsInSetup(project).
+                andOnSuccess(() -> project.setExploitationPlan(null));
     }
 
     private NotificationTarget createPartnerNotificationTargets(final ProjectUser user) {
@@ -854,6 +863,14 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return serviceSuccess();
     }
 
+    private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
+        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+            return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
+        }
+
+        return serviceSuccess(project);
+    }
+
     private ServiceResult<Project> validateIfProjectAlreadySubmitted(final Project project) {
 
         if (projectDetailsWorkflowHandler.isSubmitted(project)) {
@@ -1120,12 +1137,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
-        if (golWorkflowHandler.grantOfferLetterSent(project)) {
-            return serviceSuccess();
-        } else {
-            LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-        }
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
+        });
     }
 
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
@@ -1168,19 +1189,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).andOnSuccess( project -> {
             if(golWorkflowHandler.isReadyToApprove(project)) {
                 if(ApprovalType.APPROVED == approvalType) {
-                    if(!golWorkflowHandler.approve(project)) {
-                        LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                    }
-                    if(!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-                        LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
-                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                    }
-                    notifyProjectIsLive(projectId);
-                    return serviceSuccess();
+                    return approveGOL(project)
+                        .andOnSuccess(() -> {
+
+                            if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
+                                LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
+                                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                            }
+                            notifyProjectIsLive(projectId);
+                            return serviceSuccess();
+                        }
+                    );
                 }
             }
             return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
+        });
+    }
+
+    private ServiceResult<Void> approveGOL(Project project) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterApproved(project, user)) {
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
         });
     }
 

@@ -8,40 +8,40 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class CompetitionInviteStatisticsResource {
 
-    private long invited;
-    private long accepted;
-    private long declined;
-    private long inviteList;
+    private int invited;
+    private int accepted;
+    private int declined;
+    private int inviteList;
 
-    public long getInvited() {
+    public int getInvited() {
         return invited;
     }
 
-    public void setInvited(long invited) {
+    public void setInvited(int invited) {
         this.invited = invited;
     }
 
-    public long getAccepted() {
+    public int getAccepted() {
         return accepted;
     }
 
-    public void setAccepted(long accepted) {
+    public void setAccepted(int accepted) {
         this.accepted = accepted;
     }
 
-    public long getDeclined() {
+    public int getDeclined() {
         return declined;
     }
 
-    public void setDeclined(long declined) {
+    public void setDeclined(int declined) {
         this.declined = declined;
     }
 
-    public long getInviteList() {
+    public int getInviteList() {
         return inviteList;
     }
 
-    public void setInviteList(long inviteList) {
+    public void setInviteList(int inviteList) {
         this.inviteList = inviteList;
     }
 

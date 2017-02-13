@@ -38,6 +38,7 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
@@ -92,7 +93,22 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     @Override
     public ServiceResult<AssessmentResource> findAssignableById(long id) {
-        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccessReturn(assessmentMapper::mapToResource);
+        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
+            if (WITHDRAWN == found.getActivityState()) {
+                return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
+            }
+            return serviceSuccess(assessmentMapper.mapToResource(found));
+        });
+    }
+
+    @Override
+    public ServiceResult<AssessmentResource> findRejectableById(long id) {
+        return find(assessmentRepository.findOne(id), notFoundError(Assessment.class, id)).andOnSuccess(found -> {
+            if (WITHDRAWN == found.getActivityState()) {
+                return serviceFailure(new Error(ASSESSMENT_WITHDRAWN, id));
+            }
+            return serviceSuccess(assessmentMapper.mapToResource(found));
+        });
     }
 
     @Override
@@ -107,7 +123,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     }
 
     @Override
-    public ServiceResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+    public ServiceResult<Integer> countByStateAndCompetition(AssessmentStates state, long competitionId) {
         return serviceSuccess(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(state.getBackingState(), competitionId));
     }
 
@@ -120,7 +136,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<Void> recommend(long assessmentId, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.fundingDecision(found, assessmentFundingDecisionOutcomeMapper.mapToDomain(assessmentFundingDecision))) {
-                return serviceFailure(new Error(ASSESSMENT_RECOMMENDATION_FAILED));
+                return serviceFailure(ASSESSMENT_RECOMMENDATION_FAILED);
             }
             return serviceSuccess();
         });
@@ -144,7 +160,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<Void> attemptNotifyAssessorTransition(Assessment assessment) {
         if (!assessmentWorkflowHandler.notify(assessment)) {
-            return serviceFailure(new Error(ASSESSMENT_NOTIFY_FAILED));
+            return serviceFailure(ASSESSMENT_NOTIFY_FAILED);
         }
 
         return serviceSuccess();
@@ -177,7 +193,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
                 .andOnSuccess(found -> {
                     if (!assessmentWorkflowHandler.rejectInvitation(found,
                             assessmentRejectOutcomeMapper.mapToDomain(assessmentRejectOutcomeResource))) {
-                        return serviceFailure(new Error(ASSESSMENT_REJECTION_FAILED));
+                        return serviceFailure(ASSESSMENT_REJECTION_FAILED);
                     }
                     return serviceSuccess();
                 });
@@ -187,7 +203,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<Void> withdrawAssessment(long assessmentId) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.withdraw(found)) {
-                return serviceFailure(new Error(ASSESSMENT_WITHDRAW_FAILED));
+                return serviceFailure(ASSESSMENT_WITHDRAW_FAILED);
             }
             return serviceSuccess();
         });
@@ -197,7 +213,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
     public ServiceResult<Void> acceptInvitation(long assessmentId) {
         return find(assessmentRepository.findOne(assessmentId), notFoundError(AssessmentRepository.class, assessmentId)).andOnSuccess(found -> {
             if (!assessmentWorkflowHandler.acceptInvitation(found)) {
-                return serviceFailure(new Error(ASSESSMENT_ACCEPT_FAILED));
+                return serviceFailure(ASSESSMENT_ACCEPT_FAILED);
             }
             return serviceSuccess();
         });
@@ -263,7 +279,7 @@ public class AssessmentServiceImpl extends BaseTransactionalService implements A
 
     private ServiceResult<Application> checkApplicationAssignable(User assessor, Application application) {
         boolean noAssessmentOrWithdrawn = assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(assessor.getId(), application.getId())
-                .map(assessment -> assessment.getActivityState().equals(AssessmentStates.WITHDRAWN))
+                .map(assessment -> assessment.getActivityState().equals(WITHDRAWN))
                 .orElse(true);
 
         if (noAssessmentOrWithdrawn) {

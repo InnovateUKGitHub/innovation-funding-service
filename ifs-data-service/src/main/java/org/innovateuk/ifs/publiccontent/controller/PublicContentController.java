@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
  * Controller for all public content actions.
  */
 @RestController
-@RequestMapping("/public-content")
+@RequestMapping("/public-content/")
 public class PublicContentController {
 
     @Autowired
@@ -32,5 +32,12 @@ public class PublicContentController {
                                           @PathVariable("section") final PublicContentSectionType section,
                                           @RequestBody final PublicContentResource resource) {
         return publicContentService.updateSection(resource, section).toPostResponse();
+    }
+
+    @RequestMapping(value = "mark-section-as-complete/{section}/{id}", method = RequestMethod.POST)
+    public RestResult<Void> markSectionAsComplete(@PathVariable("id") final Long id,
+                                          @PathVariable("section") final PublicContentSectionType section,
+                                          @RequestBody final PublicContentResource resource) {
+        return publicContentService.markSectionAsComplete(resource, section).toPostResponse();
     }
 }

@@ -87,7 +87,7 @@ public interface ApplicationService {
     ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
 
     @SecuredBySpring(value = "TODO", description = "TODO")
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")

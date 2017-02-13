@@ -67,6 +67,23 @@ public class AssessmentControllerDocumentation extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void findRejectableById() throws Exception {
+        long assessmentId = 1L;
+        AssessmentResource assessmentResource = assessmentResourceBuilder.build();
+
+        when(assessmentServiceMock.findRejectableById(assessmentId)).thenReturn(serviceSuccess(assessmentResource));
+
+        mockMvc.perform(get("/assessment/{id}/rejectable", assessmentId))
+                .andExpect(status().isOk())
+                .andDo(document("assessment/{method-name}",
+                        pathParameters(
+                                parameterWithName("id").description("Id of the assessment that is being requested")
+                        ),
+                        responseFields(assessmentFields)
+                ));
+    }
+
+    @Test
     public void findByUserAndCompetition() throws Exception {
         long userId = 1L;
         long competitionId = 2L;

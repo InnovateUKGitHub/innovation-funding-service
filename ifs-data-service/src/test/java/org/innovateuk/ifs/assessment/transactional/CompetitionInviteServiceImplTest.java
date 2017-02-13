@@ -925,6 +925,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withId(compliantUser.getId(), nonCompliantUserNoSkills.getId(), nonCompliantUserNoAffiliations.getId(), nonCompliantUserNoContract.getId(), null)
                 .withInviteId(1L, 2L, 3L, 4L, 5L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
                 .withInnovationAreas(innovationAreaList, emptyList(), emptyList(), emptyList(), innovationAreaList)
@@ -984,6 +985,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(3);
 
         List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
+                .withId(users.get(0).getId(), users.get(1).getId(), users.get(2).getId())
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
                 .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
@@ -1019,10 +1021,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getInviteStatistics() throws Exception {
         long competitionId = 1L;
         CompetitionInviteStatisticsResource expected = newCompetitionInviteStatisticsResource()
-                .withAccepted(1L)
-                .withDeclined(2L)
-                .withInviteList(3L)
-                .withInvited(4L)
+                .withAccepted(1)
+                .withDeclined(2)
+                .withInviteList(3)
+                .withInvited(4)
                 .build();
 
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED,SENT))).thenReturn(expected.getInvited());
@@ -1058,7 +1060,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withSentOn(sentOn[0], sentOn[1], sentOn[2])
                 .withInnovationArea(innovationAreas.get(0), innovationAreas.get(1), innovationAreas.get(2))
                 .withStatus(SENT, SENT, SENT)
-                .withSentOn(LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now())
                 .buildArray(3, CompetitionInvite.class);
 
         List<CompetitionParticipant> competitionParticipants = newCompetitionParticipant()

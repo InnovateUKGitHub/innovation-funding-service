@@ -28,27 +28,27 @@ public class CompetitionClosedKeyStatisticsResourceBuilder extends BaseBuilder<C
         super(newMultiActions);
     }
 
-    public CompetitionClosedKeyStatisticsResourceBuilder withAssessorsInvited(Long... assessorsInviteds) {
+    public CompetitionClosedKeyStatisticsResourceBuilder withAssessorsInvited(Integer... assessorsInviteds) {
         return withArraySetFieldByReflection("assessorsInvited", assessorsInviteds);
     }
 
-    public CompetitionClosedKeyStatisticsResourceBuilder withAssessorsAccepted(Long... assessorsAccepteds) {
+    public CompetitionClosedKeyStatisticsResourceBuilder withAssessorsAccepted(Integer... assessorsAccepteds) {
         return withArraySetFieldByReflection("assessorsAccepted", assessorsAccepteds);
     }
 
-    public CompetitionClosedKeyStatisticsResourceBuilder withApplicationsPerAssessor(Long... applicationsPerAssessors) {
+    public CompetitionClosedKeyStatisticsResourceBuilder withApplicationsPerAssessor(Integer... applicationsPerAssessors) {
         return withArraySetFieldByReflection("applicationsPerAssessor", applicationsPerAssessors);
     }
 
-    public CompetitionClosedKeyStatisticsResourceBuilder withApplicationsRequiringAssessors(Long... applicationsRequiringAssessorss) {
+    public CompetitionClosedKeyStatisticsResourceBuilder withApplicationsRequiringAssessors(Integer... applicationsRequiringAssessorss) {
         return withArraySetFieldByReflection("applicationsRequiringAssessors", applicationsRequiringAssessorss);
     }
 
-    public CompetitionClosedKeyStatisticsResourceBuilder withAssessorsWithoutApplications(Long... assessorsWithoutApplicationss) {
+    public CompetitionClosedKeyStatisticsResourceBuilder withAssessorsWithoutApplications(Integer... assessorsWithoutApplicationss) {
         return withArraySetFieldByReflection("assessorsWithoutApplications", assessorsWithoutApplicationss);
     }
 
-    public CompetitionClosedKeyStatisticsResourceBuilder withAssignmentCount(Long... assignmentCounts) {
+    public CompetitionClosedKeyStatisticsResourceBuilder withAssignmentCount(Integer... assignmentCounts) {
         return withArraySetFieldByReflection("assignmentCount", assignmentCounts);
     }
 

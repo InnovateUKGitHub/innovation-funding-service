@@ -60,6 +60,16 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
     }
 
     @Test
+    public void getRejectableById() throws Exception {
+        AssessmentResource expected = newAssessmentResource().build();
+        Long assessmentId = 1L;
+        when(assessmentRestService.getRejectableById(assessmentId)).thenReturn(restSuccess(expected));
+
+        assertSame(expected, service.getRejectableById(assessmentId));
+        verify(assessmentRestService, only()).getRejectableById(assessmentId);
+    }
+
+    @Test
     public void getByUserAndCompetition() throws Exception {
         List<AssessmentResource> expected = newAssessmentResource().build(2);
 
@@ -130,9 +140,8 @@ public class AssessmentServiceImplTest extends BaseServiceUnitTest<AssessmentSer
 
         when(assessmentRestService.acceptInvitation(assessmentId)).thenReturn(restSuccess());
 
-        ServiceResult<Void> response = service.acceptInvitation(assessmentId);
+        service.acceptInvitation(assessmentId);
 
-        assertTrue(response.isSuccess());
         verify(assessmentRestService, only()).acceptInvitation(assessmentId);
     }
 

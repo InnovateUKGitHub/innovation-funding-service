@@ -14,7 +14,8 @@ import org.springframework.test.annotation.Rollback;
 import java.time.LocalDateTime;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 public class PublicContentControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentController> {
     private static final Long COMPETITION_ID = 1L;

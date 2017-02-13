@@ -10,7 +10,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.model.InviteAssessorProfileModelPopulator;
+import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -84,7 +84,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Spy
     @InjectMocks
-    private InviteAssessorProfileModelPopulator inviteAssessorProfileModelPopulator;
+    private AssessorProfileModelPopulator assessorProfileModelPopulator;
 
     private CompetitionResource competition;
 
@@ -108,10 +108,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         inviteStatistics = newCompetitionInviteStatisticsResource()
-                .withAccepted(46L)
-                .withInvited(23L)
-                .withInviteList(10L)
-                .withDeclined(52L)
+                .withAccepted(46)
+                .withInvited(23)
+                .withInviteList(10)
+                .withDeclined(52)
                 .build();
 
         when(competitionService.getById(competition.getId())).thenReturn(competition);
@@ -478,62 +478,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         inOrder.verify(competitionInviteRestService).getCreatedInvites(competition.getId());
         inOrder.verify(categoryServiceMock).getInnovationSectors();
         inOrder.verifyNoMoreInteractions();
-    }
-
-    @Test
-    public void profile() throws Exception {
-        Long assessorId = 1L;
-
-        AddressResource expectedAddress = newAddressResource()
-                .withAddressLine1("1 Testing Lane")
-                .withTown("Testville")
-                .withCounty("South Testshire")
-                .withPostcode("TES TEST")
-                .build();
-
-        List<InnovationAreaResource> expectedInnovationAreas = newInnovationAreaResource()
-                .withSector(1L, 2L, 1L)
-                .withSectorName("sector 1", "sector 2", "sector 1")
-                .withName("innovation area 1", "innovation area 2", "innovation area 3")
-                .build(3);
-
-        AssessorProfileResource expectedProfile = newAssessorProfileResource()
-                .withUser(
-                        newUserResource()
-                                .withFirstName("Test")
-                                .withLastName("Tester")
-                                .withEmail("test@test.com")
-                                .withPhoneNumber("012345")
-                                .build()
-                )
-                .withProfile(
-                        newProfileResource()
-                                .withSkillsAreas("A Skill")
-                                .withBusinessType(ACADEMIC)
-                                .withInnovationAreas(expectedInnovationAreas)
-                                .withAddress(expectedAddress)
-                                .build()
-                )
-                .build();
-
-        when(assessorRestService.getAssessorProfile(assessorId)).thenReturn(restSuccess(expectedProfile));
-
-        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/profile/{assessorId}", competition.getId(), assessorId))
-                .andExpect(status().isOk())
-                .andExpect(model().attributeExists("model"))
-                .andReturn();
-
-        InviteAssessorsProfileViewModel model = (InviteAssessorsProfileViewModel) result.getModelAndView().getModel().get("model");
-
-        assertEquals("Test Tester", model.getName());
-        assertEquals("012345", model.getPhone());
-        assertEquals("A Skill", model.getSkills());
-        assertEquals(ACADEMIC.getDisplayName(), model.getBusinessType());
-        assertEquals("test@test.com", model.getEmail());
-        assertEquals(2, model.getInnovationSectors().size());
-        assertEquals(expectedAddress, model.getAddress());
-
-        verify(assessorRestService, only()).getAssessorProfile(assessorId);
     }
 
     private List<AvailableAssessorResource> setUpAvailableAssessorResources() {

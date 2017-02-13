@@ -67,6 +67,7 @@
             <dt>Project size</dt>
             <dd th:text="${form.projectSize}"></dd>
         </dl>
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <fieldset>
@@ -75,8 +76,7 @@
                     Competition description
                 </label>
                 <div class="textarea-wrapped">
-                        <textarea
-                            id="description"
+                        <textarea id="description"
                             class="form-control width-full"
                             data-editor="html"
                             maxlength="5000"
@@ -102,7 +102,7 @@
                            required="required"
                            th:checked="${form.fundingType == fundingType.displayName}"
                            th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.fundingType.required}" />
-                    <span th:text="${fundingType.displayName}" th:remove="tag"/>
+                    <th:block th:text="${fundingType.displayName}" />
                 </label>
 
             </div>
@@ -115,7 +115,213 @@
                        th:attr="data-required-errormessage=#{validation.publiccontent.summaryform.projectSize.required}" />
             </div>
         </fieldset>
+
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+
     </th:block>
 </div>
 
+<!-- =================== Public content section - Eligibility  ===================================================== -->
+<div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <p>Text entered into this section will appear within the eligibility tab.</p>
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium no-margin">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+    </th:block>
+</div>
 
+<!-- =================== Public content section - Dates  =========================================================== -->
+<div th:fragment="section-dates(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.readOnly}" class="readonly-data">
+        <dl>
+            <th:block th:each="event : ${model.sortedEvents}">
+                <dt th:text="${event.dateTimeFormatted}"></dt>
+                <dd ifs:utext="${event.content}" class="wysiwyg-styles extra-margin-bottom"></dd>
+            </th:block>
+        </dl>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <hr />
+        <p>Generated automatically from the competition milestones.</p>
+        <dl>
+            <th:block th:each="event : ${model.sortedEvents}">
+                <dt th:text="${event.dateTimeFormatted}"></dt>
+                <dd th:text="${event.content}" class="extra-margin-bottom"></dd>
+            </th:block>
+        </dl>
+        <th:block th:each="formDate, iteration : ${form.dates}" th:with="index=${iteration.index}">
+            <div class="contentGroup" th:id="${'contentDateGroup-row-'+index}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('dates[__${index}__].day') || #fields.hasErrors('dates[__${index}__].month') || #fields.hasErrors('dates[__${index}__].year')} ? 'error' : ''">
+                    <fieldset>
+                        <input type="hidden" th:id="${'dates'+index+'-id'}" th:field="${form.dates[__${index}__].id}">
+                        <legend>
+                            <span class="form-label form-label-bold">Date</span>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].day')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].day')}" th:text="${err}" />
+                            </th:block>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].month')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].month')}" th:text="${err}" />
+                            </th:block>
+                            <th:block th:if="${#fields.hasErrors('dates[__${index}__].year')}">
+                                  <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].year')}" th:text="${err}" />
+                            </th:block>
+                        </legend>
+                        <div class="date-group">
+                            <!--/* this is becuase the javascript expects a field that contains the combined dates,
+                                in other situations the  Back-end preferred this above dealing with 3 seperated fields
+                                I've added an disabled attribute to make sure this is not send to the back-end for this instance */-->
+                            <input type="hidden" th:name="${'dates[' + index + '].combined'}" disabled="" />
+                            <div class="day">
+                                <label class="form-label" th:for="${'dates-'+index+'-day'}">Day</label>
+                                <input class="form-control width-extra-small"
+                                       placeholder="DD"
+                                       th:errorclass="field-error"
+                                       type="number"
+                                       th:id="${'dates-'+index+'-day'}"
+                                       th:field="${form.dates[__${index}__].day}"
+                                       min="1"
+                                       max="31"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.day.required}">
+                            </div>
+                            <div class="month">
+                                <label class="form-label" th:for="${'dates-'+index+'-month'}">Month</label>
+                                <input class="form-control width-extra-small"
+                                       placeholder="MM"
+                                       type="number"
+                                       th:errorclass="field-error"
+                                       th:id="${'dates-'+index+'-month'}"
+                                       th:field="${form.dates[__${index}__].month}"
+                                       min="1"
+                                       max="12"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.month.required}" />
+                            </div>
+                            <div class="year">
+                                <label class="form-label" th:for="${'dates-'+index+'-year'}">Year</label>
+                                <input class="form-control width-extra-small"
+                                       placeholder="YYYY"
+                                       type="number"
+                                       th:errorclass="field-error"
+                                       th:id="${'dates-'+index+'-year'}"
+                                       th:field="${form.dates[__${index}__].year}"
+                                       min="1"
+                                       required="required"
+                                       th:attr="data-required-errormessage=#{validation.publiccontent.datesform.year.required}" />
+                            </div>
+                        </div>
+                    </fieldset>
+
+                </div>
+                <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('dates[__${index}__].content')}? 'error':''">
+                    <label class="form-label" th:for="${'dates-'+index+'-content'}">
+                        <span class="form-label-bold">Content</span>
+                        <th:block th:if="${#fields.hasErrors('dates[__${index}__].content')}">
+                              <span class="error-message"  th:each="err : ${#fields.errors('dates[__${index}__].content')}" th:text="${err}" />
+                        </th:block>
+                    </label>
+                    <textarea cols="30" rows="5"
+                              data-editor="html"
+                              th:id="${'dates-'+index+'-content'}"
+                              th:class="${#fields.hasErrors('dates[__${index}__].content') ? 'width-full field-error' : 'width-full'}"
+                              th:field="${form.dates[__${iteration.index}__].content}"
+                              required="required"
+                              th:attr="data-required-errormessage=#{validation.publiccontent.datesform.content.required}">
+                    </textarea>
+                </div>
+                <div class="form-group">
+                    <button class="buttonlink" type="button" data-remove-row="dateContentGroup">Remove event</button>
+                </div>
+            </div>
+        </th:block>
+        <div class="alignright">
+            <button class="buttonlink" type="button"  data-add-row="dateContentGroup">+ add new event</button>
+        </div>
+    </th:block>
+</div>
+
+<!-- =================== Public content section - Scope  =========================================================== -->
+<div th:fragment="section-scope(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium no-margin">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+    </th:block>
+</div>
+
+<div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium no-margin">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+    </th:block>
+</div>
+
+<div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:if="${model.readOnly}">
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+    </th:block>
+    <th:block th:unless="${model.readOnly}">
+        <h2 class="heading-medium">Content</h2>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+    </th:block>
+</div>
+
+<div th:fragment="content-groups(form, model)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:each="contentGroup,iter: ${form.contentGroups}" th:with="index=${iter.index}">
+        <div class="contentGroup" th:id="${'contentGroup-row-'+index}">
+            <input type="hidden" th:field="*{contentGroups[__${index}__].id}" />
+            <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].heading')}? 'error':''">
+                <label class="form-label-bold" th:for="${'heading-'+index}">Heading</label>
+                <input class="form-control" th:id="${'heading-'+index}" type="text" th:field="*{contentGroups[__${index}__].heading}"
+                       required="required"
+                       th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.heading.required}" />
+            </div>
+            <div class="form-group textarea-wrapped" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].content')}? 'error':''">
+                <label class="form-label-bold" th:for="${'content-'+index}">Content</label>
+                    <textarea th:errorclass="field-error" th:id="${'content-'+index}" cols="30" rows="10" class="width-full form-control" data-editor="html" th:field="*{contentGroups[__${index}__].content}"
+                              required="required"
+                              th:attr="data-required-errormessage=#{validation.publiccontent.contentgroup.content.required}"></textarea>
+            </div>
+            <div class="form-group upload-section">
+                <div class="form-group" th:classappend="${#fields.hasErrors('contentGroups[__${index}__].attachment')} ? 'error':''">
+                <th:block th:unless="${model.hasAttachment(contentGroup.id)}">
+                    <input type="file" th:id="${'file-upload-'+index}" class="inputfile" th:field="*{contentGroups[__${index}__].attachment}"/>
+                    <label th:for="${'file-upload-'+index}" class="button-secondary extra-margin">+ Upload</label>
+                    <button class="button-secondary" type="submit" name="uploadFile" th:attr="data-for-file-upload=${'file-upload-'+index}" th:value="${index}">Save</button>
+                    <p class="uploaded-file">No file currently uploaded</p>
+                </th:block>
+                <th:block th:if="${model.hasAttachment(contentGroup.id)}">
+                    <p class="uploaded-file">
+                        <a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
+                           th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a>
+                    </p>
+                    <button class="button-secondary" type="submit" name="removeFile" th:value="${contentGroup.id}">remove</button>
+                </th:block>
+                </div>
+            </div>
+            <button type="button" class="buttonlink" th:if="${index > 0 or model.section.type.allowEmptyContentGroups}" data-remove-row="contentGroup">Remove section</button>
+        </div>
+    </th:block>
+    <div class="alignright">
+        <button class="buttonlink" type="button" data-add-row="contentGroup">+ add new section</button>
+    </div>
+</div>
+
+<div th:fragment="content-groups-read-only(form, model)" xmlns:th="http://www.w3.org/1999/html">
+    <th:block th:each="contentGroup: ${form.contentGroups}">
+        <h2 class="heading-small no-margin-bottom" th:text="${contentGroup.heading}"></h2>
+        <div class="wysiwyg-styles" ifs:utext="${contentGroup.content}"></div>
+        <th:block th:if="${model.hasAttachment(contentGroup.id)}">
+            <p><a th:href="@{/competition/setup/public-content/{sectionPath}/{compId}/edit/{groupId}(sectionPath=${model.section.type.path},compId=${model.competition.id},groupId=${contentGroup.id})}"
+                   th:text="${model.fileName(contentGroup.id)}">Filename.pdf</a></p>
+        </th:block>
+    </th:block>
+</div>
