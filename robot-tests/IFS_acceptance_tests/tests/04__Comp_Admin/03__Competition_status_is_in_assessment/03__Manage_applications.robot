@@ -32,7 +32,7 @@ Application number navigates to Overview
     Then The user should see the text in the page    00000021: Intelligent water system
     And the user should see the text in the page    University of Bath
     And the user should see the text in the page    Cardiff University
-    [Teardown]    The user goes back to the previous page
+    [Teardown]    the user clicks the button/link    link=Back
 
 View application progress page
     [Documentation]    INFUND-7042, INFUND-7046

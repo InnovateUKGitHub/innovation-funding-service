@@ -45,14 +45,6 @@ Invite Assessors
     And the user should see the element    link=Invite
     [Teardown]    The user clicks the button/link    link=Competition
 
-Manage Applications
-    [Documentation]    INFUND-7042
-    ...
-    ...    INFUND-7362
-    When the user clicks the button/Link    jQuery=a:contains("Assessor management - assignment to applications")
-    Then The user should see the text in the page    Assign assessors to applications.
-    [Teardown]    The user clicks the button/link    link=Competition
-
 Notify Assessors
     [Documentation]    INFUND-6458
     ...

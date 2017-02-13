@@ -28,10 +28,13 @@ import org.mockito.Mockito;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.calls;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -59,12 +62,13 @@ public class FundingLevelResetHandlerTest {
     private FinanceService financeService;
 
     @Test
-    public void tetsResetFundingAndMarkAsIncomplete() {
+    public void tetsResetFundingAndMarkAsIncomplete() throws ExecutionException, InterruptedException {
 
         Long applicationId = 1L;
         Long competitionId = 3L;
         Long userId = 2L;
 
+        Future<List<ProcessRoleResource>> future = mock(Future.class);
         ApplicationFinanceResource applicationFinanceResource = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
                 .withApplication(applicationId).withGrantClaimPercentage(20).build();
         UserResource user = UserResourceBuilder.newUserResource().withId(userId).build();
@@ -72,7 +76,8 @@ public class FundingLevelResetHandlerTest {
         List<SectionResource> sectionResources = SectionResourceBuilder.newSectionResource().build(1);
         QuestionResource questionResource = QuestionResourceBuilder.newQuestionResource().build();
 
-        when(processRoleService.getByApplicationId(1L)).thenReturn(processRoles);
+        when(future.get()).thenReturn(processRoles);
+        when(processRoleService.findAssignableProcessRoles(1L)).thenReturn(future);
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)).thenReturn(sectionResources);
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(RestResult.restSuccess(questionResource));
 
@@ -87,12 +92,13 @@ public class FundingLevelResetHandlerTest {
     }
 
     @Test
-    public void resetFundingLevelAndMarkAsIncompleteForAllCollaborators() {
+    public void resetFundingLevelAndMarkAsIncompleteForAllCollaborators() throws ExecutionException, InterruptedException {
 
         Long applicationId = 1L;
         Long competitionId = 3L;
         Long userId = 2L;
 
+        Future<List<ProcessRoleResource>> future = mock(Future.class);
         UserResource user = UserResourceBuilder.newUserResource().withId(userId).build();
         List<ProcessRoleResource> processRoles = ProcessRoleResourceBuilder.newProcessRoleResource().withApplication(applicationId).withUser(user).build(2);
         List<SectionResource> sectionResources = SectionResourceBuilder.newSectionResource().build(1);
@@ -100,7 +106,8 @@ public class FundingLevelResetHandlerTest {
         List<ApplicationFinanceResource> applicationFinanceResources = ApplicationFinanceResourceBuilder.newApplicationFinanceResource()
         .withApplication(applicationId).withGrantClaimPercentage(20).build(3);
 
-        when(processRoleService.getByApplicationId(1L)).thenReturn(processRoles);
+        when(future.get()).thenReturn(processRoles);
+        when(processRoleService.findAssignableProcessRoles(1L)).thenReturn(future);
         when(sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)).thenReturn(sectionResources);
         when(questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE)).thenReturn(RestResult.restSuccess(questionResource));
         when(financeService.getApplicationFinanceDetails(applicationId)).thenReturn(applicationFinanceResources);
