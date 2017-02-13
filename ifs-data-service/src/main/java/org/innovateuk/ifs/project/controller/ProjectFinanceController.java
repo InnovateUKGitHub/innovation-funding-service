@@ -44,9 +44,7 @@ public class ProjectFinanceController {
     @RequestMapping(value = "/{projectId}/spend-profile/approval/{approvalType}", method = POST)
     public RestResult<Void> approveOrRejectSpendProfile(@PathVariable("projectId") final Long projectId,
                                                         @PathVariable("approvalType") final ApprovalType approvalType) {
-        return projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType).andOnSuccess(() ->
-                projectGrantOfferService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE)))
-                        .toPostResponse();
+        return projectFinanceService.approveOrRejectSpendProfile(projectId, approvalType).toPostResponse();
     }
 
     @RequestMapping(value = "/{projectId}/spend-profile/approval", method = GET)

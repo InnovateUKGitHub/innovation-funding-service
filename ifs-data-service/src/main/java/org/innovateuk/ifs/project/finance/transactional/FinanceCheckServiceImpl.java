@@ -212,7 +212,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 if(projectFinanceResource.isPresent()) {
                     ServiceResult<List<QueryResource>> queries = projectFinanceQueriesService.findAll(projectFinanceResource.get().getId());
                     if (queries.isSuccess()) {
-                        anyQueryAwaitingResponse |= queries.getSuccessObject().stream().anyMatch(f -> f.awaitingResponse == true);
+                        anyQueryAwaitingResponse |= queries.getSuccessObject().stream().anyMatch(f -> f.awaitingResponse);
                     }
                 }
             }
