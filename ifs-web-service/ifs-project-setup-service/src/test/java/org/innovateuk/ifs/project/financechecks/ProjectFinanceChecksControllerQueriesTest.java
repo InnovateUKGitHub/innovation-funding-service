@@ -347,7 +347,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
     @Test
     public void testSaveNewResponse() throws Exception {
 
-        when(financeCheckServiceMock.savePost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
+        when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/project/123/partner-organisation/234/finance-checks/1/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -355,7 +355,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
                 .andExpect(redirectedUrlPattern("/project/123/partner-organisation/234/finance-checks/**"))
                 .andReturn();
 
-        verify(financeCheckServiceMock).savePost(savePostArgumentCaptor.capture(), eq(1L));
+        verify(financeCheckServiceMock).saveQueryPost(savePostArgumentCaptor.capture(), eq(1L));
 
         assertEquals("Query text", savePostArgumentCaptor.getAllValues().get(0).body);
         assertEquals(loggedInUser, savePostArgumentCaptor.getAllValues().get(0).author);
@@ -642,7 +642,7 @@ public class ProjectFinanceChecksControllerQueriesTest extends BaseControllerMoc
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        when(financeCheckServiceMock.savePost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         MvcResult result = mockMvc.perform(post("/project/123/partner-organisation/234/finance-checks/5/new-response")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
