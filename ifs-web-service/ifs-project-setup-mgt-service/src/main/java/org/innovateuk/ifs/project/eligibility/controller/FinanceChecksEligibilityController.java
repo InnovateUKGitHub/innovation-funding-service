@@ -231,6 +231,9 @@ public class FinanceChecksEligibilityController {
         return errors;
     }
 
+    /**
+     * INFUND-2921, INFUND-4834 - This can be removed once capital usage existing or new field is handled correctly.
+     */
     private void removeCapitalUsageExistingErrors(ValidationMessages errors){
         if(errors != null && errors.hasErrors()) {
             List<Error> filtered = errors.getErrors().stream().filter(e -> !e.getFieldName().contains("-existing")).collect(toList());
