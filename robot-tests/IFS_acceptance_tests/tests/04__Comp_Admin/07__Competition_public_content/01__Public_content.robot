@@ -81,6 +81,17 @@ Scope: Add, remove sections and submit
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
 
+Dates: Add, remove dates and submit
+    [Documentation]    INFUND-6919
+    When the user clicks the button/link                         link=Dates
+    Then the user should see the text in the page                1 February ${nextyear}
+    And the user should see the text in the page                 Competition opens
+    And the user should see the text in the page                 Submission deadline, competition closed.
+    And the user should see the text in the page                 Applicants notified
+    And the user can add and remove multiple event groups
+    And the user should see the element                         jQuery=li:nth-of-type(5) img.complete
+
+
 How to apply: Add, remove sections and submit
     [Documentation]    INFUND-6920 INFUND-7602
     And the user clicks the button/link                         link=How to apply
@@ -135,5 +146,31 @@ the user can add and remove multiple content groups
     And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
     Then the user should not see the element    id=heading-2
     And the user should not see the element     jQuery=.editor:eq(2)
+
+the user can add and remove multiple event groups
+    When the user clicks the button/link        jQuery=button:contains("+ add new event")
+    And the user clicks the button/link         jQuery=button:contains("Save and return")
+    Then the user should see a summary error    Please enter a valid date.
+    And the user should see a summary error     Please enter valid content.
+    When the user enters text to a text field   id=dates-0-day      12
+    And the user enters text to a text field    id=dates-0-month    12
+    And the user enters text to a text field    id=dates-0-year     ${nextyear}
+    And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    And the user clicks the button/link         jQuery=button:contains("+ add new event")
+    And the user enters text to a text field    id=dates-1-day      20
+    And the user enters text to a text field    id=dates-1-month    12
+    And the user enters text to a text field    id=dates-1-year     ${nextyear}
+    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
+    And the user clicks the button/link         jQuery=button:contains("+ add new event")
+    And the user enters text to a text field    id=dates-2-day      30
+    And the user enters text to a text field    id=dates-2-month    12
+    And the user enters text to a text field    id=dates-2-year     ${nextyear}
+    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
+    And the user clicks the button/link         jQuery=button:contains("Remove event"):eq(1)
+    Then the user should not see the element    id=dates-2-day
+    And the user should not see the element     id=dates-2-month
+    And the user should not see the element     id=dates-2-year
+    And the user should not see the element     jQuery=.editor:eq(2)
+    And the user clicks the button/link         jQuery=button:contains("Save and return")
 
 
