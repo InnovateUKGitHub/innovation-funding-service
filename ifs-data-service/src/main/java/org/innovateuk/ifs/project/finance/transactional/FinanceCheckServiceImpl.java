@@ -219,7 +219,7 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
                 org.getOrganisation().getId(),
                 org.getOrganisation().getName(),
                 viability.getLeft(), viability.getRight(),
-                eligibility.getLeft(), eligibility.getRight());
+                eligibility.getLeft(), eligibility.getRight(),
                 anyQueryAwaitingResponse);
         });
     }
