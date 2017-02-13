@@ -84,13 +84,13 @@ the user reads his email and clicks the link
 the user reads his email from the default mailbox and clicks the link
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    worth.email.test
+    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_one}    ${test_mailbox_one_password}
 
 
 the user reads his email from the second default mailbox and clicks the link
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     run keyword if    ${docker}==1    the user reads his email and clicks the link locally    ${recipient}    ${subject}    ${pattern}
-    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    worth.email.test.two
+    run keyword if    ${docker}!=1    the user reads his email from the default mailbox and clicks the link remotely    ${recipient}    ${subject}    ${pattern}    ${test_mailbox_two}    ${test_mailbox_two_password}
 
 
 the user reads his email and clicks the link locally
@@ -110,8 +110,8 @@ the user reads his email and clicks the link remotely
 
 
 the user reads his email from the default mailbox and clicks the link remotely
-    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}
-    Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=testtest1
+    [Arguments]    ${recipient}    ${subject}    ${pattern}    ${mailbox}    ${mailbox_password}
+    Open Mailbox    server=imap.googlemail.com    user=${mailbox}@gmail.com    password=${mailbox_password}
     ${email_to_test} =  wait for email  sender=${sender}    recipient=${recipient}    subject=${subject}    timeout=200
     log    ${subject}
     the user reads the email and clicks the link    ${email_to_test}    ${pattern}
@@ -139,42 +139,20 @@ Delete the emails from both test mailboxes
     run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
     run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
 
-
 delete the emails from both remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}
-    Delete All Emails
-    close mailbox
-    Open Mailbox    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}
-    Delete All Emails
-    close mailbox
-
+    delete the emails from the default remote test mailbox
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_two}@gmail.com    password=${test_mailbox_two_password}   timeout=1
 
 Delete the emails from the default test mailbox
     run keyword if    ${docker}==1    delete the emails from the local test mailbox
     run keyword if    ${docker}!=1    delete the emails from the default remote test mailbox
 
-
 delete the emails from the default remote test mailbox
-    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
-    Delete All Emails
-    close mailbox
-
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap.googlemail.com    user=${test_mailbox_one}@gmail.com    password=${test_mailbox_one_password}   timeout=1
 
 delete the emails from the local test mailbox
-    Open Mailbox    server=imap    port=143    user=smtp    password=smtp    is_secure=False
-    Delete All Emails
-    close mailbox
-
+    Run Keyword and Ignore Error Without Screenshots   Remove All Emails    server=imap   port=143    user=smtp    password=smtp   is_secure=False   timeout=1so
 
 Delete the emails from both default test mailboxes
     run keyword if    ${docker}==1    delete the emails from the local test mailbox    # Note that all emails come through to the same local mailbox, so we only need to delete from one mailbox here
-    run keyword if    ${docker}!=1    delete the emails from both default remote test mailboxes
-
-
-delete the emails from both default remote test mailboxes
-    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_one}@gmail.com    password={test_mailbox_one_password}
-    Delete All Emails
-    close mailbox
-    Open Mailbox    server=imap.googlemail.com    user={test_mailbox_two}@gmail.com    password={test_mailbox_two_password}
-    Delete All Emails
-    close mailbox
+    run keyword if    ${docker}!=1    delete the emails from both remote test mailboxes
