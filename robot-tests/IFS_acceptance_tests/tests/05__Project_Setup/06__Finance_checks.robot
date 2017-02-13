@@ -46,6 +46,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4823 As a project finance team member I want to be able to view the RAG rating for the viability and eligibility of each partner organisation if available so that I can be appraised of the effort level that may be expected to carry out the finance checks.
 ...
 ...               INFUND-7573 Partner view - main page - Finance Checks
+...
+...               INFUND-5508 As a member of Project Finance I want to see the Finance Checks Overview table updating with approved funding amounts so that I can confirm any amended figures before generating the Spend Profile
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -459,6 +461,14 @@ Confirming eligibility should show info on a readonly page for partner
     And the user should not see the checkbox    project-eligible
     And the user clicks the button/link    link=Finance checks
 
+Project finance user can see updated finance overview after lead changes to eligibility
+    [Documentation]    INFUND-5508
+    [Tags]
+    When the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 322,786
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 92,593
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
+
 Confirming eligibility should update on the finance checks page
     [Documentation]    INFUND-4823
     [Tags]  Pending
@@ -480,6 +490,12 @@ Approve Eligibility: Lead partner organisation
     And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=a.eligibility-0    Approved
 
+Project finance user can see updated finance overview after partner changes to eligibility
+    [Documentation]    INFUND-5508
+    [Tags]
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 505,174
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 146,075
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
