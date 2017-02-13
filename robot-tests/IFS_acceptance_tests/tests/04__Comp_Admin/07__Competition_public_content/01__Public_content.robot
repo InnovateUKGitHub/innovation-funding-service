@@ -73,27 +73,24 @@ Summary: User enters valid values and saves
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916
-    Given the user navigates to the page           ${public_content_overview}
     When the user clicks the button/link                link=Summary
     Then the user should see the text in the page       Text entered into this section will appear in the summary tab
     And the user should see the text in the page        Grant
     And the user should see the text in the page        10
     And the user should see the element                 jQuery=.button:contains("Return to public content")
     And the user should see the element                 jQuery=.button-secondary:contains("Edit")
+    Then the user clicks the button/link                link=Public content
 
 Summary: Add, remove sections and submit
     [Documentation]    INFUND-6916
-    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                    link=Summary
     And the user clicks the button/link                 jQuery=.button-secondary:contains("Edit")
-    And the user clicks the button/link         jQuery=button:contains("+ add new section")
     Then the user can add and remove multiple content groups for summary
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(2) img.complete
 
 Eligibility: Add, remove sections and submit
     [Documentation]    INFUND-6917 INFUND-7602
-    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Eligibility
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -101,7 +98,6 @@ Eligibility: Add, remove sections and submit
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918 INFUND-7602
-    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -119,7 +115,6 @@ Dates: Add, remove dates and submit
 
 How to apply: Add, remove sections and submit
     [Documentation]    INFUND-6920 INFUND-7602
-    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=How to apply
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -127,7 +122,6 @@ How to apply: Add, remove sections and submit
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
-    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -185,8 +179,8 @@ the user can add and remove multiple content groups
     And the user should not see the element     jQuery=.editor:eq(2)
 
 the user can add and remove multiple content groups for summary
-    When the user clicks the button/link         jQuery=button:contains("+ add new section")
-    And the user clicks the button/link        jQuery=button:contains("Save and return")
+    When the user clicks the button/link        jQuery=button:contains("+ add new section")
+    And the user clicks the button/link         jQuery=button:contains("Save and return")
     Then the user should see a summary error    Please enter a heading.
     And the user should see a summary error     Please enter content.
     When the user enters text to a text field   id=heading-0    Heading 1
@@ -197,7 +191,7 @@ the user can add and remove multiple content groups for summary
     And the user clicks the button/link         jQuery=button:contains("+ add new section")
     And the user enters text to a text field    id=heading-2    Heading 3
     And the user enters text to a text field    jQuery=.editor:eq(3)     Content 3
-    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
+    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(2)
     Then the user should not see the element    id=heading-2
     And the user should not see the element     jQuery=.editor:eq(3)
 
