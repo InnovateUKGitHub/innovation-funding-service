@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.resource.fixtures;
 
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class CompetitionCoFundersResourceFixture {
             CompetitionFunderResource coFunder1 = new CompetitionFunderResource();
             coFunder1.setId(Long.valueOf(i));
             coFunder1.setFunder("coFunder-"+i);
-            coFunder1.setFunderBudget(new BigDecimal(1));
+            coFunder1.setFunderBudget(BigInteger.valueOf(1L));
             coFunder1.setCoFunder(true);
             coFunder1.setCompetitionId(competitionId != null ? competitionId : Long.valueOf(i));
             returnList.add(coFunder1);
@@ -30,7 +30,7 @@ public class CompetitionCoFundersResourceFixture {
         for (int i = 0; i < count; i++) {
             CompetitionFunderResource coFunder1 = new CompetitionFunderResource();
             coFunder1.setFunder("coFunder-"+i);
-            coFunder1.setFunderBudget(new BigDecimal(1));
+            coFunder1.setFunderBudget(BigInteger.valueOf(1L));
             coFunder1.setCoFunder(true);
             coFunder1.setCompetitionId(competitionId != null ? competitionId : Long.valueOf(i));
             returnList.add(coFunder1);

@@ -2,7 +2,7 @@ package org.innovateuk.ifs.util.fixtures;
 
 import org.innovateuk.ifs.competition.domain.CompetitionFunder;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,7 +17,7 @@ public class CompetitionCoFundersFixture {
             CompetitionFunder coFunder = new CompetitionFunder();
             coFunder.setId(Long.valueOf(i));
             coFunder.setFunder("coFunder-"+i);
-            coFunder.setFunderBudget(new BigDecimal(1));
+            coFunder.setFunderBudget(BigInteger.valueOf(1));
             coFunder.setCoFunder(true);
             returnList.add(coFunder);
         }

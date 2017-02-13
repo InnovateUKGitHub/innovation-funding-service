@@ -185,7 +185,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
         List<Error> incorrectCosts = new ArrayList<>();
-        incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST));
+        incorrectCosts.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, asList("Labour", 1), HttpStatus.BAD_REQUEST));
 
         when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
@@ -219,8 +219,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         verify(projectService).getById(projectId);
         verify(projectFinanceService, times(2)).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
-        verify(projectService, times(2)).getProjectUsersForProject(projectResource.getId());
-
+        verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
     }
 
     @Test
@@ -437,7 +436,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
 
         when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
         List<Error> incorrectCosts = new ArrayList<>();
-        incorrectCosts.add(new Error(SPEND_PROFILE_CONTAINS_FRACTIONS_IN_COST_FOR_SPECIFIED_CATEGORY_AND_MONTH, asList("Labour", 1), HttpStatus.BAD_REQUEST));
+        incorrectCosts.add(new Error(SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY, asList("Labour", 1), HttpStatus.BAD_REQUEST));
 
         when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceFailure(incorrectCosts));
 
@@ -471,7 +470,7 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
         verify(projectService).getById(projectId);
         verify(projectFinanceService).getSpendProfileTable(projectId, organisationId);
         verify(organisationService).getOrganisationById(organisationId);
-        verify(projectService, times(2)).getProjectUsersForProject(projectResource.getId());
+        verify(projectService, times(1)).getProjectUsersForProject(projectResource.getId());
 
     }
 

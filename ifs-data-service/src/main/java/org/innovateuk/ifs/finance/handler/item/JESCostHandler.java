@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.handler.item;
 
 import org.innovateuk.ifs.finance.domain.ApplicationFinanceRow;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.domain.ProjectFinanceRow;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCost;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.validator.AcademicValidator;
@@ -33,7 +34,26 @@ public class JESCostHandler extends FinanceRowHandler {
     }
 
     @Override
+    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
+        ProjectFinanceRow cost = null;
+        if (costItem instanceof AcademicCost) {
+            AcademicCost academicCostItem = (AcademicCost) costItem;
+            cost = new ProjectFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(), null, null, academicCostItem.getTotal(), null, null);
+        }
+        return cost;
+    }
+
+    @Override
     public FinanceRowItem toCostItem(ApplicationFinanceRow cost) {
+        return buildRowItem(cost);
+    }
+
+    @Override
+    public FinanceRowItem toCostItem(ProjectFinanceRow cost) {
+        return buildRowItem(cost);
+    }
+
+    private FinanceRowItem buildRowItem(FinanceRow cost){
         return new AcademicCost(cost.getId(), cost.getName(), cost.getCost(), cost.getItem());
     }
 }

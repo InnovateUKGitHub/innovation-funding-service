@@ -68,8 +68,13 @@
 </div>
 
 <!-- =========================== Element: Application Title =========================== -->
-<div th:fragment="application-title (app) ">
-    <p class="subtitle" th:text="${#numbers.formatInteger(app.id,8)} + ': ' + ${app.getApplicationDisplayName()} "/>
+<div th:fragment="application-title (applicationId, applicationName) ">
+    <p class="subtitle" th:text="${#numbers.formatInteger(applicationId,8)} + ': ' + ${applicationName} "/>
+</div>
+
+<!-- =========================== Element: Competition Title =========================== -->
+<div th:fragment="competition-title (competition) ">
+    <p class="subtitle" th:text="${#numbers.formatInteger(competition.id,8)} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
 </div>
 
 <!-- =========================== Element: Project Title =========================== -->
@@ -126,7 +131,7 @@
     </div>
 
     <div th:if="${applicationSaved}" th:unless="${assignedQuestion}" class="event-alert" >
-        <p><span>You have saved your field successfully</span></p>
+        <p><span>Your changes have been saved</span></p>
     </div>
 
     <div th:if="${assignedQuestion}" class="event-alert" >
@@ -209,7 +214,7 @@
             <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" th:remove="tag" />
           </p>
           <p th:if="${currentProject}">
-            <a th:href="@{/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
+            <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
           </p>
     </div>
 	  <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">

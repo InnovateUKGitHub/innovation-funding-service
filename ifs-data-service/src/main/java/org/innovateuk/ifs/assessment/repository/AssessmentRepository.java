@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -34,11 +35,13 @@ public interface AssessmentRepository extends ProcessRepository<Assessment>, Pag
 
     long countByParticipantUserIdAndActivityStateStateNotIn(Long userId, Set<State> states);
 
-    long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long applicationId, Set<State> states);
+    long countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(Long userId, Long competitionId, Set<State> states);
 
-    List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+    List<Assessment> findByActivityStateStateAndTargetCompetitionId(State state, long competitionId);
 
-    long countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+    int countByActivityStateStateAndTargetCompetitionId(State state, Long competitionId);
+
+    int countByActivityStateStateInAndTargetCompetitionId(Collection<State> state, Long competitionId);
 
     @Query(value = "SELECT CASE WHEN COUNT(fi.id) = 0" +
             "  THEN 'TRUE'" +

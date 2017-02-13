@@ -21,6 +21,16 @@ include::{snippets}/assessment/find-assignable-by-id/response-fields.adoc[]
 ==== Curl Example
 include::{snippets}/assessment/find-assignable-by-id/curl-request.adoc[]
 
+=== Find a rejectable assessment by Id ===
+include::{snippets}/assessment/find-rejectable-by-id/http-request.adoc[]
+include::{snippets}/assessment/find-rejectable-by-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/assessment/find-rejectable-by-id/http-response.adoc[]
+include::{snippets}/assessment/find-rejectable-by-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/assessment/find-rejectable-by-id/curl-request.adoc[]
 
 === Find assessments by User and Competition ===
 ==== Request
@@ -91,17 +101,6 @@ include::{snippets}/assessment/submit-assessments/http-response.adoc[]
 
 ==== Curl Example
 include::{snippets}/assessment/submit-assessments/curl-request.adoc[]
-
-=== Notify an assessor for an assessment
-==== Request
-include::{snippets}/assessment/notify-assessor/http-request.adoc[]
-include::{snippets}/assessment/notify-assessor/path-parameters.adoc[]
-
-==== Response
-include::{snippets}/assessment/notify-assessor/http-response.adoc[]
-
-==== Curl Example
-include::{snippets}/assessment/notify-assessor/curl-request.adoc[]
 
 === Withdraw an assessment
 ==== Request

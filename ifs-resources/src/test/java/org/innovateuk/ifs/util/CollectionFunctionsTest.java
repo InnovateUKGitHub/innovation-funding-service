@@ -1,25 +1,70 @@
 package org.innovateuk.ifs.util;
 
 import org.apache.commons.lang3.tuple.Pair;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.*;
 import java.util.Map.Entry;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.containsAll;
-import static org.innovateuk.ifs.util.CollectionFunctions.toSortedMap;
-import static org.innovateuk.ifs.util.CollectionFunctions.unique;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.function.Function.identity;
 import static org.apache.commons.lang3.tuple.Pair.of;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.*;
 
 /**
  *
  */
 public class CollectionFunctionsTest {
+
+
+    @Test
+    public void test_simpleGroupBy(){
+        Map<String, String> map = new HashMap<>();
+        map.put("formInput[1].MMYYYY.year", "2001");
+        map.put("formInput[1].MMYYYY.month", "11");
+        map.put("formInput[2].MMYYYY.year", "1968");
+        map.put("formInput[2].MMYYYY.month", "2");
+        map.put("formInput[3].MMYYYY.year", "2001");
+        map.put("formInput[3].MMYYYY.month", "11");
+
+        // Method under test.
+        Map<String, Map<String, String>> simpleGroupBy = simpleGroupBy(map, key -> key.replace(".MMYYYY.month", "").replace(".MMYYYY.year", ""));
+        assertEquals(3, simpleGroupBy.size());
+        // formInput[1]
+        assertNotNull(simpleGroupBy.get("formInput[1]"));
+        assertEquals("2001", simpleGroupBy.get("formInput[1]").get("formInput[1].MMYYYY.year"));
+        assertEquals("11", simpleGroupBy.get("formInput[1]").get("formInput[1].MMYYYY.month"));
+
+        // formInput[2]
+        assertNotNull(simpleGroupBy.get("formInput[2]"));
+        assertEquals("1968", simpleGroupBy.get("formInput[2]").get("formInput[2].MMYYYY.year"));
+        assertEquals("2", simpleGroupBy.get("formInput[2]").get("formInput[2].MMYYYY.month"));
+
+        // formInput[3]
+        assertNotNull(simpleGroupBy.get("formInput[3]"));
+        assertEquals("2001", simpleGroupBy.get("formInput[3]").get("formInput[3].MMYYYY.year"));
+        assertEquals("11", simpleGroupBy.get("formInput[3]").get("formInput[3].MMYYYY.month"));
+    }
+
+    @Test
+    public void test_simpleGroupByNull(){
+        Map<String, String> map = new HashMap<>();
+        map.put("formInput[1].MMYYYY.year", null);
+        map.put("formInput[1].MMYYYY.month", null);
+
+        // Method under test.
+        Map<String, Map<String, String>> simpleGroupBy = simpleGroupBy(map, key -> key.replace(".MMYYYY.month", "").replace(".MMYYYY.year", ""));
+        assertEquals(1, simpleGroupBy.size());
+        // formInput[1]
+        assertNotNull(simpleGroupBy.get("formInput[1]"));
+        assertNull(simpleGroupBy.get("formInput[1]").get("formInput[1].MMYYYY.year"));
+        assertNull(simpleGroupBy.get("formInput[1]").get("formInput[1].MMYYYY.month"));
+    }
+
 
     @Test
     public void test_flattenLists() {
@@ -310,7 +355,7 @@ public class CollectionFunctionsTest {
 
     @Test
     public void test_simpleFilter_nullList() {
-        assertEquals(asList(), CollectionFunctions.simpleFilter(null, i -> false));
+        assertEquals(asList(), CollectionFunctions.simpleFilter((Collection<?>)null, i -> false));
     }
 
     @Test

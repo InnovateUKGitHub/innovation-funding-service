@@ -152,7 +152,11 @@
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.assessors}">
-                            <td><span th:text="${assessor.name}">John Barnes</span></td>
+                            <td>
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}"
+                                   th:text="${assessor.name}">John Barnes
+                                </a>
+                            </td>
                             <td th:text="${assessor.businessType}? ${assessor.businessType.displayName}">Industry</td>
                             <td th:text="${assessor.innovationAreas}">Electronics, sensors &amp; photonics, Materials</td>
                             <td>
@@ -165,7 +169,7 @@
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">
-                            <td colspan="5">There were no available assessors found.</td>
+                            <td colspan="5">No available assessors found.</td>
                         </tr>
                     </tbody>
                 </table>

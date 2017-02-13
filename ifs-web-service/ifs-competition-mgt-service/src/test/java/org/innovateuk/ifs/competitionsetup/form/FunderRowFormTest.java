@@ -3,10 +3,10 @@ package org.innovateuk.ifs.competitionsetup.form;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 import org.junit.Test;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 
 import static org.innovateuk.ifs.competition.builder.CompetitionFunderResourceBuilder.newCompetitionFunderResource;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class FunderRowFormTest {
 
@@ -14,7 +14,7 @@ public class FunderRowFormTest {
     public void testGetAppendixFileDescription() throws Exception {
         Boolean coFunder = Boolean.FALSE;
         String funder = "Funder";
-        BigDecimal funderBudget = BigDecimal.valueOf(123.45678);
+        BigInteger funderBudget = BigInteger.valueOf(12345678);
 
         CompetitionFunderResource funderResource = newCompetitionFunderResource()
                 .withCoFunder(coFunder)

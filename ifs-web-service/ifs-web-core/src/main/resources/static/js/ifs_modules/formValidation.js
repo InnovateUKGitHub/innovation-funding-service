@@ -4,15 +4,15 @@ IFS.core.formValidation = (function () {
   return {
     settings: {
       number: {
-        fields: '[type="number"]:not([data-date])',
+        fields: '[type="number"]:not([data-date],[readonly])',
         messageInvalid: 'This field can only accept whole numbers.'
       },
       min: {
-        fields: '[min]:not([data-date])',
+        fields: '[min]:not([data-date],[readonly])',
         messageInvalid: 'This field should be %min% or higher.'
       },
       max: {
-        fields: '[max]:not([data-date])',
+        fields: '[max]:not([data-date],[readonly])',
         messageInvalid: 'This field should be %max% or lower.'
       },
       passwordEqual: {
@@ -36,19 +36,19 @@ IFS.core.formValidation = (function () {
         }
       },
       email: {
-        fields: '[type="email"]',
+        fields: '[type="email"]:not([readonly])',
         messageInvalid: 'Please enter a valid email address.'
       },
       required: {
-        fields: '[required]:not([data-date])',
+        fields: '[required]:not([data-date],[readonly])',
         messageInvalid: 'This field cannot be left blank.'
       },
       minlength: {
-        fields: '[minlength]',
+        fields: '[minlength]:not([readonly])',
         messageInvalid: 'This field should contain at least %minlength% characters.'
       },
       maxlength: {
-        fields: '[maxlength]',
+        fields: '[maxlength]:not([readonly])',
         messageInvalid: 'This field cannot contain more than %maxlength% characters.'
       },
       minwordslength: {
@@ -63,15 +63,16 @@ IFS.core.formValidation = (function () {
         fields: '.date-group input',
         messageInvalid: {
           invalid: 'Please enter a valid date.',
-          future: 'Please enter a future date.'
+          future: 'Please enter a future date.',
+          past: 'Please enter a past date.'
         }
       },
       pattern: {
-        fields: '[pattern]:not([minlength])', // minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
+        fields: '[pattern]:not([minlength],[readonly])', // minlength is also using pattern as fallback, but in that case we want to show minlength message and not pattern.
         messageInvalid: 'Please correct this field.'
       },
       tel: {
-        fields: '[type="tel"]',
+        fields: '[type="tel"]:not([readonly])',
         messageInvalid: 'Please enter a valid phone number.'
       },
       typeTimeout: 1500,
@@ -108,6 +109,10 @@ IFS.core.formValidation = (function () {
       jQuery('body').on('change ifsValidate', s.date.fields, function () { IFS.core.formValidation.checkDate(jQuery(this), true) })
       jQuery('body').on('change ifsValidate', s.pattern.fields, function () { IFS.core.formValidation.checkPattern(jQuery(this), true) })
 
+      jQuery('body').on('change', '[data-set-section-valid]', function () {
+        var section = jQuery(this).attr('data-set-section-valid')
+        IFS.core.formValidation.setSectionValid(section)
+      })
       // set data attribute on date fields
       // which has the combined value of the dates
       // and also makes sure that other vaidation doesn't get triggered
@@ -442,6 +447,9 @@ IFS.core.formValidation = (function () {
             if (dateGroup.is('[data-future-date]')) {
               valid = IFS.core.formValidation.checkFutureDate(dateGroup, date, showMessage)
             }
+            if (dateGroup.is('[data-past-date]')) {
+              valid = IFS.core.formValidation.checkPastDate(dateGroup, date, showMessage)
+            }
           }
         } else {
           if (enabled) {
@@ -483,6 +491,18 @@ IFS.core.formValidation = (function () {
         return true
       } else {
         if (showMessage) { IFS.core.formValidation.setInvalid(allFields, futureErrorMessage) }
+        return false
+      }
+    },
+    checkPastDate: function (dateGroup, date, showMessage) {
+      var pastErrorMessage = IFS.core.formValidation.getErrorMessage(dateGroup, 'date-past')
+      var allFields = dateGroup.find('.day input, .month input, .year input')
+      var pastDate = new Date()
+      if (pastDate.setHours(0, 0, 0, 0) >= date.setHours(0, 0, 0, 0)) {
+        if (showMessage) { IFS.core.formValidation.setValid(allFields, pastErrorMessage) }
+        return true
+      } else {
+        if (showMessage) { IFS.core.formValidation.setInvalid(allFields, pastErrorMessage) }
         return false
       }
     },
@@ -596,6 +616,26 @@ IFS.core.formValidation = (function () {
         jQuery('.error-summary:not([data-ignore-errors])').attr('aria-hidden', 'true')
       }
       jQuery(window).trigger('updateWysiwygPosition')
+    },
+    setSectionValid: function (section) {
+      section = jQuery(section)
+      section.removeClass('error')
+      var inputs = section.find('.field-error')
+
+      //  remove error messages from section + error summary
+      section.find('.error-message').each(function () {
+        var errorMessage = jQuery(this)
+        var content = errorMessage.text()
+        jQuery('.error-summary-list li:contains(' + content + ')').first().remove()
+        errorMessage.remove()
+      })
+
+      jQuery.each(inputs, function () {
+        jQuery(this).removeClass('field-error').val('')
+        if (s.html5validationMode) {
+          this.setCustomValidity('')
+        }
+      })
     },
     getIdentifier: function (el) {
       if (el.is('[data-date]')) {

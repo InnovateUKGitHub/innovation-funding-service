@@ -167,7 +167,7 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
         <h2 class="heading-medium no-margin">Generate spend profile</h2>
-        <p>This will generate a flat profile spend for all project partners. This assumes that finance checks have
+        <p>This will generate a flat spend profile for all project partners. This assumes that finance checks have
             been completed for all partners and this section will be locked.</p>
         <p>Partners will be notified that they can now create their spend profile.</p>
         <hr/>
@@ -180,7 +180,6 @@
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- save partner documents -->
@@ -289,7 +288,7 @@
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
 
         <h2 class="heading-medium no-margin">Removing collaborator</h2>
-        <p>Are you sure you wish to remove this collaborator form this application.</p>
+        <p>Are you sure you wish to remove this collaborator from this application?</p>
         <p>This step cannot be undone.</p>
         <hr/>
         <div class="grid-row extra-margin">
@@ -321,14 +320,14 @@
     </div>
 </div>
 
-<!-- Confirm submit of all spend profiles. -->
+<!-- Confirm send of all spend profiles. -->
 <div th:fragment="modal-confirm-spend-profile-totals (projectId)">
     <div class="modal-confirm-spend-profile-totals" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
-        <h2 class="heading-medium no-margin">Submit project spend profile</h2>
-        <p>The project spend profile will be submitted to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
+        <h2 class="heading-medium no-margin">Send project spend profile</h2>
+        <p>The project spend profile will be sent to both Innovate UK and the Monitoring Officer assigned to this project. This will be used for reference and the base for progress.</p>
         <div>
-            <input type="submit" tabindex="0" class="button large" value="Submit"/>
+            <input type="submit" tabindex="0" class="button large" value="Send"/>
             <button type="button" tabindex="1" class="js-close button buttonlink large">Cancel</button>
         </div>
     </div>
@@ -338,13 +337,13 @@
 <th:block th:fragment="modal-confirm-spend-profile-submit">
     <div class="modal-confirm-spend-profile-submit" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag"/>
-        <h2 class="heading-medium no-margin">Send to lead partner</h2>
+        <h2 class="heading-medium no-margin">Submit to lead partner</h2>
         <p>Are you sure you want to submit your spend profile to the lead partner?</p>
         <hr />
         <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
             <div class="alignright-button">
                     <button type="button" class="js-close button buttonlink large">Cancel</button>
-                    <button class="button large" type="submit">Send to lead partner</button>
+                    <button class="button large" type="submit">Submit to lead partner</button>
             </div>
         </form>
     </div>
@@ -401,7 +400,7 @@
                     <button type="button" class="js-close buttonlink large">Cancel</button>
                 </div>
                 <div class="column-half alignright-button">
-                    <button class="button large" type="submit">Send to project team</button>
+                    <button class="button large" type="submit">Publish to project team</button>
                 </div>
             </form>
         </div>

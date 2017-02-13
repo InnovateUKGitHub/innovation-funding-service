@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Send to lead partner'" th:remove="tag"/>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Submit to lead partner'" th:remove="tag"/>
 </head>
 <body th:with="context='project'">
 <div th:include="fragments/layout :: body-start" th:remove="tag"/>
@@ -14,10 +14,10 @@
          th:remove="tag"/>
 
     <form th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/complete(projectId=${model.projectId},organisationId=${model.organisationId})}" method="POST" >
-        <h2 class="heading-medium no-margin">Send to lead partner</h2>
+        <h2 class="heading-medium no-margin">Submit to lead partner</h2>
         <p>Are you sure you want to submit your spend profile to the lead partner?</p>
         <hr />
-        <input type="submit" class="button large" value="Send"/>
+        <input type="submit" class="button large" value="Submit"/>
     </form>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>

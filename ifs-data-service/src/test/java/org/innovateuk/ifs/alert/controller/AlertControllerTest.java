@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.alert.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.junit.Before;
@@ -10,27 +8,23 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.isEmptyString;
 import static org.innovateuk.ifs.alert.builder.AlertResourceBuilder.newAlertResource;
 import static org.innovateuk.ifs.alert.resource.AlertType.MAINTENANCE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AlertDocs.alertResourceFields;
-import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.isEmptyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class AlertControllerTest extends BaseControllerMockMVCTest<AlertController> {
-
-    private ObjectMapper objectMapper = setupObjectMapper();
 
     @Before
     public void setUp() throws Exception {
@@ -163,10 +157,5 @@ public class AlertControllerTest extends BaseControllerMockMVCTest<AlertControll
                                 parameterWithName("type").description("Type of the alerts to be deleted")
                         ))
                 );
-    }
-
-    private ObjectMapper setupObjectMapper() {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.registerModule(new JavaTimeModule());
     }
 }

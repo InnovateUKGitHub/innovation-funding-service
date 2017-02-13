@@ -49,6 +49,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is Sector competition
 ...
 ...               INFUND-6773 As a Competitions team member I want to see Finances form defaulted to Full application finances
+...
+...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -68,10 +70,10 @@ User can create a new competition
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
-    And The user should not see the element    link=Application Questions
-    And The user should not see the element    link=Application Finances
+    And The user should not see the element    link=Application
     And The user should not see the element    link=Assessors
-    And The user should not see the element    link=Description and brief
+    And The user should not see the element    link=Public content
+    And The user should see the element        link=Initial details
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -89,7 +91,7 @@ Initial details - User enters valid values and marks as done
     And The user enters valid data in the initial details
     And the user moves focus and waits for autosave
     When the user clicks the button/link            jQuery=.button:contains("Done")
-    Then the user should see the text in the page   Toby Reader
+    Then the user should see the text in the page   John Doe
     And the user should see the text in the page    1/12/${nextyear}
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Competition title
@@ -116,10 +118,16 @@ Initial Details - User can remove an innovation area
    When the user clicks the button/link   jQuery=.button:contains("Done")
    Then the user should not see the text in the page  Creative economy
 
+Initial Details - drop down menu is populated with comp admin users
+    [Documentation]    INFUND-6905
+    [Tags]    HappyPath
+    [Setup]    the user clicks the button/link    jQuery=.button:contains("Edit")
+    When the user should see the option in the drop-down menu    John Doe    name=executiveUserId
+    And the user should see the option in the drop-down menu    Robert Johnson    name=executiveUserId
+
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]    HappyPath
-    When the user clicks the button/link      jQuery=.button:contains("Edit")
     And the user enters text to a text field  css=#title  Test competition
     And The element should be disabled        css=#competitionTypeId
     And The element should be disabled        css=#openingDateDay
@@ -131,6 +139,7 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Design
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
+
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
@@ -147,6 +156,22 @@ User should have access to all the sections
     And The user should see the element    link=Milestones
     And The user should see the element    link=Application
     And The user should see the element    link=Assessors
+    And The user should see the element    link=Public content
+
+Internal user can navigate to Public Content without having any issues
+    [Documentation]  INFUND-6922
+    [Tags]
+    Given the user clicks the button/link  link=Public content
+    Then the user should not see an error in the page
+    And the user should see the element  jQuery=h1:contains("Public content")
+    And the user should see the element  jQuery=a:contains("Competition information and search")
+    And the user should see the element  jQuery=a:contains("Summary")
+    And the user should see the element  jQuery=a:contains("Eligibility")
+    And the user should see the element  jQuery=a:contains("Scope")
+    And the user should see the element  jQuery=a:contains("Dates")
+    And the user should see the element  jQuery=a:contains("How to apply")
+    And the user should see the element  jQuery=a:contains("Supporting information")
+    [Teardown]  the user clicks the button/link  link=Return to setup overview
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
@@ -267,7 +292,8 @@ Milestones: Page should contain the correct fields
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
     When the user clicks the button/link    link=Milestones
-    Then The user should see the text in the page    1. Open date
+    Then the user should see the text in the page  Make sure that dates are in order of milestones, for example the briefing date cannot come after the submission date.
+    When The user should see the text in the page   1. Open date
     And the user should see the text in the page    2. Briefing event
     And the user should see the text in the page    3. Submission date
     And the user should see the text in the page    4. Allocate assessors
@@ -302,36 +328,37 @@ Application - Application process Page
     [Setup]    go to    ${COMP_MANAGEMENT_COMP_SETUP}
     When The user clicks the button/link    link=Application
     Then The user should see the text in the page  Sector competition questions
-    And the user should see the element    link=Business opportunity
-    And the user should see the element    link=Potential market
-    And the user should see the element    link=Project exploitation
-    And the user should see the element    link=Economic benefit
-    And the user should see the element    link=Technical approach
+    And the user should see the element    link=Need or challenge
+    And the user should see the element    link=Approach and innovation
+    And the user should see the element    link=Team and resources
+    And the user should see the element    link=Market awareness
+    And the user should see the element    link=Outcomes and route to market
+    And the user should see the element    link=Wider impacts
+    And the user should see the element    link=Project management
     And the user should see the element    link=Risks
-    And the user should see the element    link=Project team
-    And the user should see the element    link=Funding
-    And the user should see the element    link=Adding value
+    And the user should see the element    link=Additionality
+    And the user should see the element    link=Costs and value for money
     And the user should see the element    link=Application details
     And the user should see the element    link=Project summary
     And the user should see the element    link=Public description
     And the user should see the element    link=Scope
     And the user should see the element    link=Finances
 
-Application: Business opportunity
+Application: Need or challenge
     [Documentation]    INFUND-5632 INFUND-5685 INFUND-5630 INFUND-6283
-    When the user clicks the button/link    link=Business opportunity
-    Then the user should see the element    jQuery=h1:contains("Business opportunity")
+    When the user clicks the button/link    link=Need or challenge
+    Then the user should see the element    jQuery=h1:contains("Need or challenge")
     When the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user edits the assessed question information
     And The user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=Business opportunity
+    And the user clicks the button/link    link=Need or challenge
     And the user sees the correct assessed question information
     And the user clicks the button/link    jQuery=a:contains("Edit this question")
     And the user selects the radio button    question.writtenFeedback    0
     And the user selects the radio button    question.scored    0
     And the user should not be able to edit the assessed question feedback
     And the user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=Business opportunity
+    And the user clicks the button/link    link=Need or challenge
     Then the user should not see the assessed question feedback
     [Teardown]    The user clicks the button/link    link=Application
 
@@ -493,6 +520,19 @@ Assessor: Should have a Green Check
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
+Public content: Scope
+     [Documentation]    INFUND-6918
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link  link=Public content
+    And the user clicks the button/link  link=Scope
+    When the user clicks the button/link  jQuery=button:contains("Save and return")
+    Then the user should see a summary error  Please enter a heading.
+    And the user should see a summary error  Please enter content.
+    When the user enters text to a text field    id=heading-0    Scope Heading
+    And the user enters text to a text field      jQuery=div.textarea-wrapped .editor     Scope Content
+    And the user clicks the button/link  jQuery=button:contains("Save and return")
+    Then the user should see the element  jQuery=li:nth-of-type(4) img.complete
+
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
@@ -502,7 +542,7 @@ the total should be correct
     [Arguments]    ${Total}
     mouse out    css=input
     Focus    jQuery=Button:contains("Done")
-    Wait Until Element Contains    css=.no-margin    ${Total}
+    Wait Until Element Contains Without Screenshots    css=.no-margin    ${Total}
 
 the user fills the milestones with valid data
     The user enters text to a text field    name=milestoneEntries[OPEN_DATE].day    10
@@ -583,7 +623,7 @@ The user enters valid data in the initial details
     And the user enters text to a text field    Id=openingDateMonth    12
     And the user enters text to a text field    id=openingDateYear  ${nextyear}
     And the user selects the option from the drop-down menu    Ian Cooper    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    Toby Reader    id=executiveUserId
+    And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
 
 The competition should show in the correct section
     [Arguments]    ${SECTION}    ${COMP_NAME}

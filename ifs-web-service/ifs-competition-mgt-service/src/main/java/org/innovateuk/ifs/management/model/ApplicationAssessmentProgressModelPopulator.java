@@ -18,6 +18,7 @@ import static java.util.stream.Collectors.partitioningBy;
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.defaultString;
 import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -51,6 +52,8 @@ public class ApplicationAssessmentProgressModelPopulator {
                 applicationAssessmentSummary.getName(),
                 applicationAssessmentSummary.getCompetitionId(),
                 applicationAssessmentSummary.getCompetitionName(),
+                IN_ASSESSMENT == applicationAssessmentSummary.getCompetitionStatus(),
+                applicationAssessmentSummary.getLeadOrganisation(),
                 applicationAssessmentSummary.getPartnerOrganisations(),
                 getAssignedAssessors(notAvailableAssessors),
                 getRejectedAssessors(notAvailableAssessors),

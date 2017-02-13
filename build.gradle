@@ -1,5 +1,5 @@
 allprojects {
-    group 'worth'
+    group 'innovateuk'
     version '1.0-SNAPSHOT'
 
     apply plugin: 'idea'
@@ -10,11 +10,15 @@ allprojects {
     targetCompatibility = 1.8
 }
 
+build.enabled = false
+jar.enabled=false
+
 subprojects {
     apply plugin: 'org.springframework.boot'
     apply plugin: 'io.spring.dependency-management'
     apply plugin: 'jacoco'
     apply plugin: 'org.owasp.dependencycheck'
+    findMainClass.enabled = false
 
     jacocoTestReport {
         afterEvaluate {
@@ -61,6 +65,12 @@ subprojects {
 
     jar {
         manifest.attributes provider: 'gradle'
+    }
+
+    test {
+        beforeTest { desc ->
+            println "Executing test ${desc.className}.${desc.name}"
+        }
     }
 }
 
@@ -127,4 +137,16 @@ task happyRobotTests(type:Exec) {
 
 task wrapper(type: Wrapper) {
     gradleVersion = '2.9'
+}
+
+import org.apache.tools.ant.filters.*
+
+task robotTestsFilter (type: Copy) {
+    from 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    into 'robot-tests/IFS_acceptance_tests/resources/variables/'
+    include 'EMAIL_VARIABLES_TEMPLATE.robot'
+    rename 'EMAIL_VARIABLES_TEMPLATE.robot', 'EMAIL_VARIABLES_SENSITIVE.robot'
+    filter(ReplaceTokens, tokens: [test_mailbox_one_password : project.properties['ifs.robot.mailbox.one.password'], test_mailbox_two_password : project.properties['ifs.robot.mailbox.two.password']])
+
+
 }

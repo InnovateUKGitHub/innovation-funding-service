@@ -34,11 +34,14 @@ import org.innovateuk.ifs.project.mapper.ProjectMapper;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
+import org.innovateuk.ifs.project.resource.ProjectState;
 import org.innovateuk.ifs.project.resource.SpendProfileTableResource;
 import org.innovateuk.ifs.project.util.SpendProfileTableCalculator;
+import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -55,19 +58,23 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.toCollection;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 import static java.io.File.separator;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_BE_REMOVED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_ALREADY_COMPLETE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapValue;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
-public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService{
+public class ProjectGrantOfferServiceImpl extends BaseTransactionalService implements ProjectGrantOfferService {
 
     static final String GOL_TEMPLATES_PATH = "common" + separator + "grantoffer" + separator + "grant_offer_letter.html";
 
@@ -78,10 +85,14 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     public static final Long DEFAULT_GOL_SIZE = 1L;
 
     private static final Log LOG = LogFactory.getLog(ProjectGrantOfferServiceImpl.class);
+
     public static final String GRANT_OFFER_LETTER_DATE_FORMAT = "d MMMM yyyy";
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
     @Autowired
     private FileService fileService;
@@ -113,6 +124,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Autowired
     private FinanceCheckService financeCheckService;
 
+    @Autowired
+    private ProjectWorkflowHandler projectWorkflowHandler;
+
 
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
@@ -127,9 +141,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<FileAndContents> getGrantOfferLetterFileAndContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
-
             FileEntry fileEntry = project.getGrantOfferLetter();
-
             return getFileAndContentsResult(fileEntry);
         });
     }
@@ -219,17 +231,16 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 andOnSuccess(project -> fileTemplateRenderer.renderTemplate(getTemplatePath(), getTemplateData(project)).
                         andOnSuccess(htmlFile -> convertHtmlToPdf(() -> new ByteArrayInputStream(StringUtils.getBytesUtf8(htmlFile)),
                                 fileEntryResource).
-                                andOnSuccess(inputStreamSupplier ->  fileService.createFile(fileEntryResource, inputStreamSupplier).
+                                andOnSuccess(inputStreamSupplier -> fileService.createFile(fileEntryResource, inputStreamSupplier).
                                         andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
     @Override
     public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
         return projectFinanceService.getSpendProfileStatusByProjectId(projectId).andOnSuccess(approval -> {
-            if(approval == ApprovalType.APPROVED) {
+            if (approval == ApprovalType.APPROVED) {
                 return getProject(projectId).andOnSuccess(project -> {
                     if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
-
                         FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
                         return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
                                 .andOnSuccess(() -> serviceSuccess()).
@@ -244,13 +255,23 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         });
     }
 
+    private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
+        final List<String> organisations = organisationNames.stream()
+                .filter(po -> !po.equals(leadOrganisation.getName()))
+                .sorted().collect(toList());
+        organisations.add(0, leadOrganisation.getName());
+        return organisations;
+    }
+
     private Map<String, Object> getTemplateData(Project project) {
         ProcessRole leadProcessRole = project.getApplication().getLeadApplicantProcessRole();
         Organisation leadOrganisation = organisationRepository.findOne(leadProcessRole.getOrganisationId());
-
-        Map<String, Object> templateReplacements = new HashMap<>();
-        List<String> addresses = getAddresses(project);
-
+        final Map<String, Object> templateReplacements = new HashMap<>();
+        final List<String> addresses = getAddresses(project);
+        List<String> organisationNames = new LinkedList<>();
+        YearlyGOLProfileTable yearlyGolProfileTable = getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(project, leadOrganisation, organisationNames);
+        final List<String> organisations = organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(organisationNames, leadOrganisation);
+        templateReplacements.put("SortedOrganisations", organisations);
         templateReplacements.put("LeadContact", project.getApplication().getLeadApplicant().getName());
         templateReplacements.put("LeadOrgName", leadOrganisation.getName());
         templateReplacements.put("Address1", addresses.size() == 0 ? "" : addresses.get(0));
@@ -265,17 +286,17 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 project.getTargetStartDate().format(DateTimeFormatter.ofPattern(GRANT_OFFER_LETTER_DATE_FORMAT)) : "");
         templateReplacements.put("ProjectLength", project.getDurationInMonths());
         templateReplacements.put("ApplicationNumber", project.getApplication().getId());
-        templateReplacements.put("TableData", getYearlyGOLProfileTable(project));
+        templateReplacements.put("TableData", yearlyGolProfileTable);
         return templateReplacements;
     }
 
     private List<String> getAddresses(Project project) {
         List<String> addressLines = new ArrayList<>();
-        if (project.getAddress() != null ) {
+        if (project.getAddress() != null) {
             Address address = project.getAddress();
-            addressLines.add(address.getAddressLine1() != null ? address.getAddressLine1() : "" );
-            addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "" );
-            addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : "" ));
+            addressLines.add(address.getAddressLine1() != null ? address.getAddressLine1() : "");
+            addressLines.add(address.getAddressLine2() != null ? address.getAddressLine2() : "");
+            addressLines.add((address.getAddressLine3() != null ? address.getAddressLine3() : ""));
             addressLines.add(address.getTown() != null ? address.getTown() : "");
             addressLines.add(address.getPostcode() != null ? address.getPostcode() : "");
         }
@@ -283,16 +304,15 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
 
-
     private ServiceResult<Supplier<InputStream>> convertHtmlToPdf(Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource) {
         ServiceResult<Supplier<InputStream>> pdfSupplier = null;
         try {
             pdfSupplier = createPDF("", inputStreamSupplier, fileEntryResource);
         } catch (IOException e) {
-            LOG.error("An IO Exception occured" +e);
+            LOG.error("An IO Exception occured" + e);
             return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
         } catch (DocumentException e) {
-            LOG.error("A Document Exception occured" +e);
+            LOG.error("A Document Exception occured" + e);
             return serviceFailure(new Error(GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
         }
         return pdfSupplier;
@@ -301,7 +321,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private static ServiceResult<Supplier<InputStream>> createPDF(String url, Supplier<InputStream> inputStreamSupplier, FileEntryResource fileEntryResource)
             throws IOException, DocumentException {
 
-        try(ByteArrayOutputStream os = new ByteArrayOutputStream()) {
+        try (ByteArrayOutputStream os = new ByteArrayOutputStream()) {
 
             ITextRenderer renderer = new ITextRenderer();
             Document doc = XMLResource.load(new InputSource(inputStreamSupplier.get())).getDocument();
@@ -333,11 +353,12 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
-        return getProject(projectId).andOnSuccess(project ->
-               validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
-               getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-               fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-               removeGrantOfferLetterFileFromProject(project)))));
+        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
+        .andOnSuccess(project ->
+                validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
+                        getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+                                fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                        removeGrantOfferLetterFileFromProject(project)))));
     }
 
     private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
@@ -355,8 +376,10 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private void removeGrantOfferLetterFileFromProject(Project project) {
-        project.setGrantOfferLetter(null);
-    }
+        validateProjectIsInSetup(project).andOnSuccess(() ->
+            project.setGrantOfferLetter(null));
+        }
+
 
     @Override
     public ServiceResult<FileEntryResource> createAdditionalContractFileEntry(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
@@ -368,9 +391,9 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<Void> updateSignedGrantOfferLetterFile(Long projectId, FileEntryResource fileEntryResource, Supplier<InputStream> inputStreamSupplier) {
-        return getProject(projectId).
+        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup).
                 andOnSuccess(project -> {
-                    if(golWorkflowHandler.isSent(project)) {
+                    if (golWorkflowHandler.isSent(project)) {
                         return fileService.updateFile(fileEntryResource, inputStreamSupplier).
                                 andOnSuccessReturnVoid(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, true));
                     } else {
@@ -385,7 +408,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             if (project.getSignedGrantOfferLetter() == null) {
                 return serviceFailure(CommonFailureKeys.SIGNED_GRANT_OFFER_LETTER_MUST_BE_UPLOADED_BEFORE_SUBMIT);
             }
-            if(!golWorkflowHandler.sign(project)) {
+            if (!golWorkflowHandler.sign(project)) {
                 return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_CANNOT_SET_SIGNED_STATE);
             }
             project.setOfferSubmittedDate(LocalDateTime.now());
@@ -407,7 +430,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         return GOL_TEMPLATES_PATH;
     }
 
-    private YearlyGOLProfileTable getYearlyGOLProfileTable(Project project) {
+    private YearlyGOLProfileTable getYearlyGOLProfileTableExcludingNonAcademicUnfundedNonLeadPartners(Project project, Organisation leadOrganisation, List<String> includedOrganisationNames) {
         Map<String, Integer> organisationAndGrantPercentageMap = new HashMap<>();
         Map<String, List<String>> organisationYearsMap = new LinkedHashMap<>();
         Map<String, List<BigDecimal>> organisationEligibleCostTotal = new HashMap<>();
@@ -431,12 +454,13 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         Map<String, BigDecimal> yearlyGrantAllocationTotal = spendProfileTableCalculator.createYearlyGrantAllocationTotal(projectMapper.mapToResource(project),
                 monthlyCostsPerOrganisationMap, months, financeCheckSummary.getTotalPercentageGrant());
 
-        List<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
+        Set<Organisation> organisationsExcludedFromGrantOfferLetter = project.getOrganisations().stream().filter(organisation ->
                 !organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
-                        && organisationAndGrantPercentageMap.get(organisation.getName()).equals(Integer.valueOf(0))
+                        && !organisation.getName().equals(leadOrganisation.getName())
+                        && organisationAndGrantPercentageMap.get(organisation.getName()).equals(0)
                         && organisationGrantAllocationTotal.get(organisation.getName()).stream().reduce(BigDecimal.ZERO, BigDecimal::add).compareTo(BigDecimal.ZERO) == 0)
-                .collect(Collectors.toList());
-        organisationsExcludedFromGrantOfferLetter.forEach( excludedOrganisation -> {
+                .collect(toCollection(HashSet::new));
+        organisationsExcludedFromGrantOfferLetter.forEach(excludedOrganisation -> {
             organisationAndGrantPercentageMap.remove(excludedOrganisation.getName());
             organisationYearsMap.remove(excludedOrganisation.getName());
             organisationEligibleCostTotal.remove(excludedOrganisation.getName());
@@ -444,6 +468,13 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             yearEligibleCostTotal.remove(excludedOrganisation.getName());
             yearlyGrantAllocationTotal.remove(excludedOrganisation.getName());
         });
+
+        includedOrganisationNames.clear();
+        List<Organisation> includedOrganisations = project.getOrganisations().stream().filter(organisation ->
+                !organisationsExcludedFromGrantOfferLetter.contains(organisation))
+                .collect(toList());
+
+        includedOrganisations.forEach(includedOrg -> includedOrganisationNames.add(includedOrg.getName()));
 
         return new YearlyGOLProfileTable(organisationAndGrantPercentageMap, organisationYearsMap,
                 organisationEligibleCostTotal, organisationGrantAllocationTotal,
@@ -460,7 +491,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     private Map<String, SpendProfileTableResource> getSpendProfileTableResourcePerOrganisation(Project project,
                                                                                                List<Organisation> organisations) {
         return organisations.stream()
-                .collect(Collectors.toMap(Organisation::getName, organisation -> {
+                .collect(toMap(Organisation::getName, organisation -> {
                     ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(project.getId(), organisation.getId());
                     if (projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).isSuccess()) {
                         return projectFinanceService.getSpendProfileTable(projectOrganisationCompositeId).getSuccessObject();
@@ -494,7 +525,6 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
             organisationGrantAllocationTotal.put(organisation.getName(), grantAllocationPerYear);
             organisationYearsMap.put(organisation.getName(), projectYears);
         });
-
     }
 
     private Organisation getOrganisationFrom(String name, Project project) {
@@ -507,4 +537,13 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                 organisationFinanceDelegate.isUsingJesFinances(organisation.getOrganisationType().getName())
                         ? 100 : applicationFinanceResource.getGrantClaimPercentage());
         return serviceSuccess();
-    }}
+    }
+
+    private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
+        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+            return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
+        }
+
+        return serviceSuccess(project);
+    }
+}

@@ -14,7 +14,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
 
     <div class="grid-row">
         <div class="column-two-thirds">
@@ -48,7 +48,7 @@
     </th:block>
 
     <th:block th:unless="${model.empty}">
-        <p>This overview details the profile spend for each partner for the project, it also enables the download of the Spend profile so it can be shared with the Monitoring officer.</p>
+        <p>This overview details the spend profile for each partner for the project, it also enables the download of the spend profile so it can be shared with the Monitoring officer.</p>
         <p>You can download the spend profile of each project partner here so that you can share it with the Monitoring Officer.</p>
         <h2 class="heading-medium">Innovation Lead</h2>
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >

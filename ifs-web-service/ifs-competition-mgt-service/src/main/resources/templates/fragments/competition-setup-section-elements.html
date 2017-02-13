@@ -20,7 +20,7 @@
                 <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.guidanceTitle)}" th:text="${question.guidanceTitle}"></dd>
                 <dt class="column-third">Guidance</dt>
                 <dd class="column-two-thirds" th:if="${#strings.isEmpty(question.guidance)}">None</dd>
-                <dd class="column-two-thirds" th:unless="${#strings.isEmpty(question.guidance)}" ifs:utext="${question.guidance}"></dd>
+                <dd class="column-two-thirds wysiwyg-styles" th:unless="${#strings.isEmpty(question.guidance)}" ifs:utext="${question.guidance}"></dd>
                 <dt class="column-third">Max word count</dt>
                 <dd class="column-two-thirds" th:text="${question.maxWords}"></dd>
                 <th:block th:if="${question.appendix != null}">
@@ -391,7 +391,7 @@
                                                        th:errorclass="field-error"
                                                        th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                        th:field="${competitionSetupForm.guidanceRows[__${iteration.index}__].justification}"
-                                                       maxlength="255"
+                                                       maxlength="5000"
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"
                                                        rows="3" />
@@ -444,7 +444,7 @@
                                                        th:errorclass="field-error"
                                                        th:id="${'guidanceRow-'+iteration.index+'-justification'}"
                                                        th:field="${competitionSetupForm.question.guidanceRows[__${iteration.index}__].justification}"
-                                                       maxlength="255"
+                                                       maxlength="5000"
                                                        th:attr="data-required-errormessage=#{validation.applicationquestionform.justification.required},
                                                                 data-maxlength-errormessage=#{validation.applicationquestionform.justification.maxlength}"/>
                                             </td>

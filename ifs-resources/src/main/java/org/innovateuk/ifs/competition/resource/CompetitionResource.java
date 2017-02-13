@@ -29,6 +29,7 @@ public class CompetitionResource {
     private LocalDateTime endDate;
     private LocalDateTime assessorAcceptsDate;
     private LocalDateTime assessorDeadlineDate;
+    private LocalDateTime releaseFeedbackDate;
     private LocalDateTime fundersPanelDate;
     private LocalDateTime fundersPanelEndDate;
     private LocalDateTime assessorFeedbackDate;
@@ -43,6 +44,7 @@ public class CompetitionResource {
     private Long competitionType;
     private String competitionTypeName;
     private Long executive;
+    private String executiveName;
     private Long leadTechnologist;
     private String leadTechnologistName;
     private Long innovationSector;
@@ -187,6 +189,14 @@ public class CompetitionResource {
         this.assessorDeadlineDate = assessorDeadlineDate;
     }
 
+    public LocalDateTime getReleaseFeedbackDate() {
+        return releaseFeedbackDate;
+    }
+
+    public void setReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+        this.releaseFeedbackDate = releaseFeedbackDate;
+    }
+
     public LocalDateTime getFundersPanelDate() {
         return fundersPanelDate;
     }
@@ -286,6 +296,14 @@ public class CompetitionResource {
 
     public void setExecutive(Long executive) {
         this.executive = executive;
+    }
+
+    public String getExecutiveName() {
+        return executiveName;
+    }
+
+    public void setExecutiveName(String executiveName) {
+        this.executiveName = executiveName;
     }
 
     public Long getLeadTechnologist() {

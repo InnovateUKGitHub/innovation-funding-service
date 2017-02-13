@@ -3,9 +3,9 @@ package org.innovateuk.ifs.application.populator;
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
 import org.innovateuk.ifs.application.builder.QuestionResourceBuilder;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.application.finance.view.ApplicationFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
-import org.innovateuk.ifs.application.finance.view.FinanceOverviewModelManager;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -23,6 +23,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
+import org.innovateuk.ifs.user.service.UserRestService;
 import org.innovateuk.ifs.user.service.UserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -37,6 +38,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static org.hamcrest.Matchers.equalTo;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -59,7 +61,7 @@ public class ApplicationModelPopulatorTest {
     protected SectionService sectionService;
 
     @Mock
-    protected FinanceOverviewModelManager financeOverviewModelManager;
+    protected ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;;
 
     @Mock
     protected OrganisationService organisationService;
@@ -69,6 +71,9 @@ public class ApplicationModelPopulatorTest {
 
     @Mock
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
+
+    @Mock
+    protected UserRestService userRestService;
 
     @Test
     public void testAddApplicationAndSections() {
@@ -134,6 +139,8 @@ public class ApplicationModelPopulatorTest {
         Long competitionId = 1L;
         Long applicationId = 2L;
         Long userId = 3L;
+        Long organisationId = 3L;
+
         UserResource user = UserResourceBuilder.newUserResource()
                 .withId(userId).build();
         Model model = mock(Model.class);
@@ -148,16 +155,17 @@ public class ApplicationModelPopulatorTest {
         when(organisationService.getOrganisationType(user.getId(), applicationId)).thenReturn(organisationType);
         when(financeHandler.getFinanceModelManager(organisationType)).thenReturn(financeModelManager);
 
-        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competitionId, applicationId, user, model, form);
+        ProcessRoleResource processRole  = ProcessRoleResourceBuilder.newProcessRoleResource().withOrganisation().withUser(user).build();
+        when(userRestService.findProcessRole(user.getId(), applicationId)).thenReturn(restSuccess(processRole));
+
+        applicationModelPopulator.addOrganisationAndUserFinanceDetails(competitionId, applicationId, user, model, form, organisationId);
 
         //verify model attributes
         verify(model).addAttribute("currentUser", user);
         verifyNoMoreInteractions(model);
 
         //Verify model calls
-        verify(financeOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
-        verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form);
-
-
+        verify(applicationFinanceOverviewModelManager).addFinanceDetails(model, competitionId, applicationId);
+        verify(financeModelManager).addOrganisationFinanceDetails(model, applicationId, costsQuestions, user.getId(), form, organisationId);
     }
 }

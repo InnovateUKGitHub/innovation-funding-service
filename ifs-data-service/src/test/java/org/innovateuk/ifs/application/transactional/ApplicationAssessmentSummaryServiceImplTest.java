@@ -8,6 +8,7 @@ import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -29,13 +30,16 @@ import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummar
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeBuilder.newAssessmentRejectOutcome;
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
-import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeBuilder.newProcessOutcome;
-import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.REJECT;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.CLOSED;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -44,6 +48,7 @@ import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapArray;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
@@ -91,7 +96,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         .withId(1L, 2L, 3L)
                         .withFirstName("John", "Dave", "Richard")
                         .withLastName("Barnes", "Smith", "Turner")
-                        .withProfile(profiles)
+                        .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
                         .buildArray(3, User.class))
                 .withStatus(ACCEPTED)
                 .withCompetition(competition)
@@ -108,11 +113,10 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 3L,
                 Optional.of(newAssessment()
                         .withActivityState(buildActivityStateWithState(REJECTED))
-                        .withProcessOutcome(newProcessOutcome()
-                                .withOutcomeType(REJECT.getType())
-                                .withDescription("Conflict of interest")
-                                .withComment("Member of board of directors")
-                                .build(1))
+                        .withRejection(newAssessmentRejectOutcome()
+                                .withRejectReason(CONFLICT_OF_INTEREST)
+                                .withRejectComment("Member of board of directors")
+                                .build())
                         .build()));
 
         Map<Long, Long> totalApplicationCountsForParticipants = setUpScoresForParticipants(competitionParticipants);
@@ -153,7 +157,7 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                         submittedCountsForParticipants.get(2L),
                         submittedCountsForParticipants.get(3L))
                 .withSkillAreas("Solar Power, Genetics, Recycling", "Human computer interaction, Wearables, IoT", "Electronic/photonic components")
-                .withRejectReason(null, null, "Conflict of interest")
+                .withRejectReason(null, null, CONFLICT_OF_INTEREST)
                 .withRejectComment(null, null, "Member of board of directors")
                 .build(3);
 
@@ -225,10 +229,11 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName("Progressive machines")
                 .withCompetition(newCompetition()
                         .withName("Connected digital additive manufacturing")
+                        .withCompetitionStatus(CLOSED)
                         .build())
                 .withProcessRoles(newProcessRole()
                         .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
-                        .withOrganisation(organisations)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
                         .buildArray(4, ProcessRole.class))
                 .build();
 
@@ -237,6 +242,8 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
                 .withName(application.getName())
                 .withCompetitionId(application.getCompetition().getId())
                 .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("Liquid Dynamics")
+                .withCompetitionStatus(CLOSED)
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
                 .build();
 
@@ -250,6 +257,95 @@ public class ApplicationAssessmentSummaryServiceImplTest extends BaseServiceUnit
 
         InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
         inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getApplicationAssessmentSummary_noLeadOrganisation() throws Exception {
+        Organisation[] organisations = newOrganisation()
+                .withName("Acme Ltd.", "IO systems", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
+        Application application = newApplication()
+                .withName("Progressive machines")
+                .withCompetition(newCompetition()
+                        .withName("Connected digital additive manufacturing")
+                        .withCompetitionStatus(CLOSED)
+                        .build())
+                .withProcessRoles(newProcessRole()
+                        .withRole(COLLABORATOR, COLLABORATOR, COLLABORATOR, COMP_ADMIN)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
+                        .buildArray(4, ProcessRole.class))
+                .build();
+
+        ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
+                .withId(application.getId())
+                .withName(application.getName())
+                .withCompetitionId(application.getCompetition().getId())
+                .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("")
+                .withCompetitionStatus(CLOSED)
+                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems", "Liquid Dynamics"))
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, found);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void getApplicationAssessmentSummary_partnersSortedAlphabetically() throws Exception {
+        Organisation[] organisations = newOrganisation()
+                .withName("IO systems", "Acme Ltd.", "Liquid Dynamics", "Piezo Electrics")
+                .buildArray(4, Organisation.class);
+
+        Application application = newApplication()
+                .withName("Progressive machines")
+                .withCompetition(newCompetition()
+                        .withName("Connected digital additive manufacturing")
+                        .withCompetitionStatus(FUNDERS_PANEL)
+                        .build())
+                .withProcessRoles(newProcessRole()
+                        .withRole(COLLABORATOR, COLLABORATOR, LEADAPPLICANT, COMP_ADMIN)
+                        .withOrganisationId(simpleMapArray(organisations, Organisation::getId, Long.class))
+                        .buildArray(4, ProcessRole.class))
+                .build();
+
+        ApplicationAssessmentSummaryResource expected = newApplicationAssessmentSummaryResource()
+                .withId(application.getId())
+                .withName(application.getName())
+                .withCompetitionId(application.getCompetition().getId())
+                .withCompetitionName(application.getCompetition().getName())
+                .withLeadOrganisation("Liquid Dynamics")
+                .withCompetitionStatus(FUNDERS_PANEL)
+                .withPartnerOrganisations(asList("Acme Ltd.", "IO systems"))
+                .build();
+
+        when(applicationRepositoryMock.findOne(application.getId())).thenReturn(application);
+        Stream.of(organisations)
+                .forEach(organisation -> when(organisationRepositoryMock.findOne(organisation.getId())).thenReturn(organisation));
+
+        ApplicationAssessmentSummaryResource found = service.getApplicationAssessmentSummary(application.getId()).getSuccessObjectOrThrowException();
+
+        assertEquals(expected, found);
+
+        InOrder inOrder = inOrder(applicationRepositoryMock, organisationRepositoryMock);
+        inOrder.verify(applicationRepositoryMock).findOne(application.getId());
+        inOrder.verify(organisationRepositoryMock).findOne(organisations[2].getId());
         inOrder.verify(organisationRepositoryMock).findOne(organisations[0].getId());
         inOrder.verify(organisationRepositoryMock).findOne(organisations[1].getId());
         inOrder.verifyNoMoreInteractions();

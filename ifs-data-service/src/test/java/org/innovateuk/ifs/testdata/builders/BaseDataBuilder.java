@@ -11,8 +11,10 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.application.transactional.SectionService;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
+import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
@@ -42,6 +44,10 @@ import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
+import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -84,6 +90,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected InnovationSectorRepository innovationSectorRepository;
     protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
+    protected PublicContentService publicContentService;
+    protected PublicContentRepository publicContentRepository;
+    protected ContentGroupRepository contentGroupRepository;
+    protected ContentEventRepository contentEventRepository;
     protected OrganisationService organisationService;
     protected UserRepository userRepository;
     protected ProfileRepository profileRepository;
@@ -117,6 +127,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected CompetitionInviteService competitionInviteService;
     protected TestService testService;
     protected AssessmentRepository assessmentRepository;
+    protected AssessmentService assessmentService;
+    protected AssessmentWorkflowHandler assessmentWorkflowHandler;
     protected ProcessRoleRepository processRoleRepository;
     protected ActivityStateRepository activityStateRepository;
     protected SectionRepository sectionRepository;
@@ -170,6 +182,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.competitionInviteService = serviceLocator.getBean(CompetitionInviteService.class);
         this.testService = serviceLocator.getBean(TestService.class);
         this.assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
+        this.assessmentService = serviceLocator.getBean(AssessmentService.class);
+        this.assessmentWorkflowHandler = serviceLocator.getBean(AssessmentWorkflowHandler.class);
         this.processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
         this.activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
         this.sectionRepository = serviceLocator.getBean(SectionRepository.class);
@@ -189,6 +203,10 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.userProfileService = serviceLocator.getBean(UserProfileService.class);
         this.baseUserService = serviceLocator.getBean(BaseUserService.class);
         this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
+        this.publicContentService = serviceLocator.getBean(PublicContentService.class);
+        this.publicContentRepository = serviceLocator.getBean(PublicContentRepository.class);
+        this.contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
+        this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
 
     }
 

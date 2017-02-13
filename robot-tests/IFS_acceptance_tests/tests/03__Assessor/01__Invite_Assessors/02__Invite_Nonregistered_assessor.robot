@@ -12,14 +12,16 @@ Documentation     INFUND-228: As an Assessor I can see competitions that I have 
 ...               INFUND-5165 As an assessor attempting to accept/reject an invalid invitation to assess in a competition, I will receive a notification that I cannot reject the competition as soon as I attempt to reject it.
 ...
 ...               INFUND-4895 Securing of services related to Assessor Journey changes
+...
+...               INFUND-7603 Innovation area added to an Assessor's profile from invite
 Suite Setup       The guest user opens the browser
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
-${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:worth.email.test+david.peters@gmail.com
-${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:worth.email.test+thomas.fister@gmail.com
+${Invitation_nonregistered_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
+${Invitation_nonregistered_assessor3}    ${server}/assessment/invite/competition/9c2cc102-b934-4f54-9be8-6b864cdfc6e2 #invitation for assessor:${test_mailbox_one}+thomas.fister@gmail.com
 
 *** Test Cases ***
 Non-registered assessor: Accept invitation
@@ -39,7 +41,7 @@ User can navigate back to Become an Assessor page
     [Tags]
     When the user clicks the button/link    jQuery=.button:contains("Create account")
     Then the user should see the text in the page    Create assessor account
-    And the user should see the text in the page    worth.email.test+thomas.fister@gmail.com
+    And the user should see the text in the page    ${test_mailbox_one}+thomas.fister@gmail.com
     And the user clicks the button/link    Link=Back
     And the user should see the text in the page    Become an assessor for Innovate UK
 
@@ -48,7 +50,8 @@ Create assessor account: server-side validations
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=.button:contains("Create account")
     When the user clicks the button/link    jQuery=button:contains("Continue")
-    Then the user should see an error    Please enter a first name.
+    Then the user should see an error    Please select a title.
+    And the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please select a gender.
     And the user should see an error    Please select an ethnicity.
@@ -65,6 +68,8 @@ Create assessor account: server-side validations
 Create assessor account: client-side validations
     [Documentation]    INFUND-1478
     [Tags]    HappyPath
+    When the user selects the radio button    title    title2
+    Then the user should not see the validation error in the create assessor form    Please select a title.
     When The user enters text to a text field    id=firstName    Thomas
     Then the user should not see the validation error in the create assessor form    Please enter a first name.
     When The user enters text to a text field    id=lastName    Fister
@@ -102,12 +107,22 @@ Create assessor account: Postcode lookup and save
 Create assessor account: Accepted competitions should be displayed in dashboard
     [Documentation]    INFUND-4919
     [Tags]
-    When The user enters text to a text field    id=username    worth.email.test+thomas.fister@gmail.com
+    When The user enters text to a text field    id=username    ${test_mailbox_one}+thomas.fister@gmail.com
     And The user enters text to a text field    id=password    Passw0rd123
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     And The user should see the text in the page    ${IN_ASSESSMENT_COMPETITION_NAME}
+
+Innovation area on assessor profile for invited user
+    [Documentation]    INFUND-7960
+    [Tags]
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=.button:contains("Invite assessors")
+    When the user clicks the button/link    link=Thomas Fister
+    Then the user should see the text in the page    Emerging and enabling technologies
+    And the user should see the text in the page    Earth Observation
     [Teardown]    Logout as user
 
 Non-registered assessor: Reject invitation
@@ -136,10 +151,10 @@ the assessor fills in all fields
 
 the user should not see the validation error in the create assessor form
     [Arguments]    ${ERROR_TEXT}
-    run keyword and ignore error    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
     Focus    jQuery=button:contains("Continue")
     Wait for autosave
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Wait Until Element Does Not Contain    css=.error-message    ${ERROR_TEXT}
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Wait Until Element Does Not Contain Without Screenshots    css=.error-message    ${ERROR_TEXT}
     Run Keyword If    '${status}' == 'FAIL'    Page Should not Contain    ${ERROR_TEXT}
 
 the assessor shouldn't be able to reject the rejected competition

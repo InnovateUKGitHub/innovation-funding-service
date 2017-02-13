@@ -24,7 +24,7 @@ public static final FieldDescriptor[] categoryResourceFields = {
     public static final InnovationAreaResourceBuilder innovationAreaResourceBuilder = newInnovationAreaResource()
             .withId(2L ,3L)
             .withName("Innovation area name")
-            .withParent(1L);
+            .withSector(1L);
 
     public static final InnovationSectorResourceBuilder innovationSectorResourceBuilder = newInnovationSectorResource()
             .withId(2L ,3L)

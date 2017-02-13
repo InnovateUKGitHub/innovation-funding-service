@@ -1,6 +1,5 @@
 version: '2'
 services:
-
   application-service:
     hostname: application-service
     links:
@@ -8,6 +7,8 @@ services:
     ports:
       - "8081:8080"
       - "9001:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   assessment-service:
     hostname: assessment-service
@@ -16,7 +17,8 @@ services:
     ports:
       - "8082:8080"
       - "9002:8000"
-
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
   competition-mgt-service:
     hostname: competition-mgt-service
     links:
@@ -24,6 +26,8 @@ services:
     ports:
       - "8083:8080"
       - "9003:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   project-setup-mgt-service:
     hostname: project-setup-mgt-service
@@ -32,6 +36,8 @@ services:
     ports:
       - "8084:8080"
       - "9004:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   project-setup-service:
     hostname: project-setup-service
@@ -40,9 +46,11 @@ services:
     ports:
       - "8085:8080"
       - "9005:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
-  data:
-    hostname: data
+  data-service:
+    hostname: data-service
     links:
       - admin
       - smtp
@@ -52,6 +60,8 @@ services:
     ports:
       - "8086:8080"
       - "9006:8000"
+    environment:
+      - JAVA_OPTS=-Xmx150m -Xdebug -Xrunjdwp:server=y,transport=dt_socket,address=8000,suspend=n
 
   smtp:
     image: camptocamp/smtp-sink

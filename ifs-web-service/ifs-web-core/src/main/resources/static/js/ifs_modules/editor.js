@@ -8,9 +8,16 @@ IFS.core.editor = (function () {
   return {
     settings: {
       editorTextarea: 'textarea[data-editor]',
-      htmlOptions: {
-        format: false,
-        allowedTags: ['p', 'em', 'strong', 'ol', 'ul', 'li', 'br', 'b', 'div']
+      editorOptions: {
+        plugins: {
+          'halloformat': {},
+          'hallolists': {},
+          'hallocleanhtml': {
+            format: false,
+            allowedTags: ['p', 'em', 'strong', 'ol', 'ul', 'li', 'br', 'b', 'div', 'a']
+          }
+        },
+        toolbar: 'halloToolbarFixed'
       }
     },
     init: function () {
@@ -33,55 +40,58 @@ IFS.core.editor = (function () {
       var editorType = el.attr('data-editor')
       if (editorType !== '') {
         var labelledby = ''
-        if (jQuery('[for="' + el.attr('id') + '"]').length) {
-          labelledby = jQuery('[for="' + el.attr('id') + '"]').attr('id')
+        if (jQuery('[for="' + el.prop('id') + '"]').length) {
+          labelledby = 'labelledby="' + el.prop('id') + '"'
         }
 
         if (el.attr('readonly')) {
           // don't add the editor but do render the html on page load
           el.before('<div class="readonly"></div>')
         } else {
-          el.before('<div data-editor="' + editorType + '" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" labelledby="' + labelledby + '" role="textbox"></div>')
+          el.before('<div data-editor="' + editorType + '" class="editor" spellcheck="true" aria-multiline="true" tabindex="0" ' + labelledby + ' role="textbox"></div>')
         }
-
         el.attr('aria-hidden', 'true')
+
+        var editorDiv = el.prev()
         switch (editorType) {
           case 'md':
             IFS.core.editor.textareaMarkdownToHtml(el, el.prev())
             break
           case 'html':
-            var html = jQuery.htmlClean(el.val(), s.htmlOptions)
-            el.prev().html(html)
+            var html = jQuery.htmlClean(el.val(), s.editorOptions.plugins.hallocleanhtml)
+            editorDiv.html(html)
             break
         }
+        return editorDiv
       }
     },
     initEditors: function () {
-      jQuery('[role="textbox"][data-editor]').hallo({
+      // adding the link functionality when the editor is in html mode
+      var htmlEditorOptions = jQuery.extend(true, {}, s.editorOptions, {
         plugins: {
-          'halloformat': {},
-          'hallolists': {},
-          'hallocleanhtml': s.htmlOptions
-        },
-        toolbar: 'halloToolbarFixed'
+          'hallolink': {}
+        }
       })
 
-      jQuery('[role="textbox"][data-editor="md"]').on('hallomodified', function (event, data) {
+      jQuery('[role="textbox"][data-editor="html"]').hallo(htmlEditorOptions)
+      jQuery('[role="textbox"][data-editor="md"]').hallo(s.editorOptions)
+
+      jQuery(document).on('hallomodified', '[role="textbox"][data-editor="md"]', function (event, data) {
         var source = jQuery(this).next()
         IFS.core.editor.editorHtmlToMarkdown(data.content, source)
         jQuery(source).trigger('keyup')
       })
 
-      jQuery('[role="textbox"][data-editor="html"]').on('hallomodified', function (event, data) {
+      jQuery(document).on('hallomodified', '[role="textbox"][data-editor="html"]', function (event, data) {
         var textarea = jQuery(this).next()
-        var html = jQuery.htmlClean(data.content, s.htmlOptions)
+        var html = jQuery.htmlClean(data.content, s.editorOptions.plugins.hallocleanhtml)
         if (html.replace(/<[^>]+>/ig, '').length === 0) {
           html = ''
         }
         jQuery(textarea).get(0).value = html
         jQuery(textarea).trigger('keyup')
       })
-      jQuery('[role="textbox"][data-editor]').on('blur', function () {
+      jQuery(document).on('blur', '[role="textbox"][data-editor]', function () {
         var textarea = jQuery(this).next()
         jQuery(textarea).trigger('change')
       })
@@ -103,7 +113,7 @@ IFS.core.editor = (function () {
     },
     htmlToMarkdown: function (content) {
       var html = jQuery.trim(content.replace(/(\r\n|\n|\r)/gm, ''))
-      html = jQuery.htmlClean(html, s.htmlOptions)
+      html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
 
       return md(html)
     },
@@ -114,7 +124,7 @@ IFS.core.editor = (function () {
       } else {
         html = converter.makeHtml(content)
       }
-      html = jQuery.htmlClean(html, s.htmlOptions)
+      html = jQuery.htmlClean(html, s.editorOptions.plugins.hallocleanhtml)
       return html
     }
   }

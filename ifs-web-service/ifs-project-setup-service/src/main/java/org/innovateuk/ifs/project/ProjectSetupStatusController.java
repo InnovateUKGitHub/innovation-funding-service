@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -35,8 +36,11 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
  */
 @Controller
 @RequestMapping("/project")
+@PreAuthorize("hasAuthority('applicant')")
 public class ProjectSetupStatusController {
 
+    public static final String PROJECT_SETUP_COMPLETE_PAGE = "project/setup-complete-status";
+    public static final String PROJECT_SETUP_PAGE = "project/setup-status";
     @Autowired
     private ProjectService projectService;
 
@@ -57,10 +61,10 @@ public class ProjectSetupStatusController {
             ":" + request.getServerPort() +
             "/applicant/dashboard";
 
-
-        model.addAttribute("model", getProjectSetupStatusViewModel(projectId, loggedInUser));
+        ProjectSetupStatusViewModel projectSetupStatusViewModel = getProjectSetupStatusViewModel(projectId, loggedInUser);
+        model.addAttribute("model", projectSetupStatusViewModel);
         model.addAttribute("url", dashboardUrl);
-        return "project/setup-status";
+        return PROJECT_SETUP_PAGE;
     }
 
     private ProjectSetupStatusViewModel getProjectSetupStatusViewModel(Long projectId, UserResource loggedInUser) {
@@ -122,7 +126,7 @@ public class ProjectSetupStatusController {
         SectionStatus otherDocumentsStatus = sectionStatus.otherDocumentsSectionStatus(project, leadPartner);
         SectionStatus grantOfferStatus = sectionStatus.grantOfferLetterSectionStatus(grantOfferLetterState, leadPartner);
 
-        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation.getId(), leadPartner,
+        return new ProjectSetupStatusViewModel(project, competition, monitoringOfficer, organisation, leadPartner,
                 companiesHouseAccess, projectDetailsAccess, monitoringOfficerAccess, bankDetailsAccess, financeChecksAccess, spendProfileAccess, otherDocumentsAccess, grantOfferAccess,
                 projectDetailsStatus, monitoringOfficerStatus, bankDetailsStatus, financeChecksStatus, spendProfileStatus, otherDocumentsStatus, grantOfferStatus);
     }

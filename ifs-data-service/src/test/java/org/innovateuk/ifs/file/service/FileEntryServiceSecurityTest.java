@@ -40,7 +40,7 @@ public class FileEntryServiceSecurityTest extends BaseServiceSecurityTest<FileEn
                 () -> classUnderTest.getFileEntryByApplicationFinanceId(applicationFinanceId),
                 () -> {
                     verify(applicationFinanceRules).consortiumMemberCanGetFileEntryResourceByFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
-                    verify(applicationFinanceRules).compAdminCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
+                    verify(applicationFinanceRules).internalUserCanGetFileEntryResourceForFinanceIdOfACollaborator(isA(ApplicationFinanceResource.class), isA(UserResource.class));
                 });
     }
 

@@ -10,6 +10,8 @@ Documentation     INFUND-184: As an applicant and on the over view of the applic
 ...               INFUND-183: As a an applicant and I am in the application form, I can see the character count that I have left, so I comply to the rules of the question
 ...
 ...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
+...
+...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 Suite Setup       log in and create new application if there is not one already
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -27,6 +29,13 @@ Application details: Previous submission
     And the user should see the text in the page    Previous application title
     When the user clicks the button/link    jQuery=label:contains(No)
     Then The user should not see the element    id=application_details-previousapplicationnumber
+
+Application details: Research category
+    [Documentation]    INFUND-6823
+    Then the user should see the element    jQuery=label:contains("Industrial research")
+    And the user should see the element    jQuery=label:contains("Technical feasibility")
+    And the user should see the element    jQuery=label:contains("Experimental development")
+    And the finance summary page should show a warning
 
 Autosave in the form questions
     [Documentation]    INFUND-189
@@ -122,7 +131,7 @@ Review and submit button
 
 *** Keywords ***
 the text should be visible
-    wait until element contains    css=#form-input-11 .editor    I am a robot
+    Wait Until Element Contains Without Screenshots    css=#form-input-11 .editor    I am a robot
 
 The user clicks the section link and is redirected to the correct section
     [Arguments]    ${link}    ${url}
@@ -134,14 +143,14 @@ the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Wait Until Element Contains    css=#form-input-11 .count-down    400
+    Wait Until Element Contains Without Screenshots    css=#form-input-11 .count-down    400
     Focus    css=#form-input-11 .editor
     The user enters text to a text field    css=#form-input-11 .editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris test @.
     Focus    css=.app-submit-btn
     wait for autosave
 
 the word count should be correct for the Project summary
-    wait until element contains    css=#form-input-11 .count-down    369
+    Wait Until Element Contains Without Screenshots    css=#form-input-11 .count-down    369
 
 the Applicant edits the Project description question (300 words)
     Clear Element Text    css=#form-input-11 .editor
@@ -173,17 +182,22 @@ the question should be marked as complete on the application overview page
     The user should see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 the text box should be editable
-    Wait Until Element Is Enabled    css=#form-input-11 textarea
+    Wait Until Element Is Enabled Without Screenshots    css=#form-input-11 textarea
 
 the button state should change to 'Mark as complete'
     the user should see the element    jQuery=button:contains("Mark as complete")
 
 the question should not be marked as complete on the application overview page
     The user clicks the button/link    link=Application Overview
-    Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
     the user should see the element    jQuery=#section-1 .section:nth-child(2)
     the user should not see the element    jQuery=#section-1 .section:nth-child(2) img[src*="/images/field/field-done-right"]
 
 The applicant navigates to the next section
     The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
+
+the finance summary page should show a warning
+    The user clicks the button/link    link=Application Overview
+    The user clicks the button/link    link=Your finances
+    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")

@@ -70,7 +70,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
                 () -> classUnderTest.getProjectById(projectId),
                 () -> {
                     verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
-                    verify(projectPermissionRules, times(1)).compAdminsCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1)).internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
                 }
         );
     }
@@ -189,8 +189,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.getProjectUsers(123L), () -> {
             verify(projectPermissionRules).partnersOnProjectCanView(project, getLoggedInUser());
-            verify(projectPermissionRules).compAdminsCanViewProjects(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUsersCanViewProjects(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUsersCanViewProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -202,8 +201,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.getMonitoringOfficer(123L), () -> {
-            verify(projectPermissionRules).compAdminsCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUsersCanViewMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewMonitoringOfficersOnTheirProjects(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -216,8 +214,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.saveMonitoringOfficer(123L, newMonitoringOfficerResource().build()), () -> {
-            verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -230,8 +227,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.notifyStakeholdersOfMonitoringOfficerChange(newMonitoringOfficerResource().withProject(123L).build()),
                 () -> {
-                    verify(projectPermissionRules).compAdminsCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
-                    verify(projectPermissionRules).projectFinanceUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
+                    verify(projectPermissionRules).internalUsersCanAssignMonitoringOfficersForAnyProject(project, getLoggedInUser());
                     verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -258,8 +254,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.getCollaborationAgreementFileEntryDetails(123L), () -> {
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
-            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -272,8 +267,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.getCollaborationAgreementFileContents(123L), () -> {
-            verify(projectPermissionRules).competitionAdminCanDownloadOtherDocuments(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUserCanDownloadOtherDocuments(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanDownloadOtherDocuments(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -314,8 +308,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.getExploitationPlanFileEntryDetails(123L), () -> {
-            verify(projectPermissionRules).competitionAdminCanViewOtherDocumentsDetails(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanViewOtherDocumentsDetails(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -329,8 +322,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.getExploitationPlanFileContents(123L), () -> {
-            verify(projectPermissionRules).competitionAdminCanDownloadOtherDocuments(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUserCanDownloadOtherDocuments(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanDownloadOtherDocuments(project, getLoggedInUser());
             verify(projectPermissionRules).partnersCanDownloadOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
@@ -357,8 +349,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
 
         assertAccessDenied(() -> classUnderTest.acceptOrRejectOtherDocuments(123L, true), () -> {
-            verify(projectPermissionRules).competitionAdminCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUserCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUserCanAcceptOrRejectOtherDocuments(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -406,8 +397,7 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
 
         assertAccessDenied(() -> classUnderTest.getProjectTeamStatus(123L, Optional.empty()), () -> {
             verify(projectPermissionRules).partnersCanViewTeamStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).compAdminsCanViewTeamStatus(project, getLoggedInUser());
-            verify(projectPermissionRules).projectFinanceUserCanViewTeamStatus(project, getLoggedInUser());
+            verify(projectPermissionRules).internalUsersCanViewTeamStatus(project, getLoggedInUser());
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
@@ -480,6 +470,22 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
             verifyNoMoreInteractions(projectPermissionRules);
         });
     }
+
+    @Test
+    public void testGetProjectManager(){
+        ProjectResource project = newProjectResource().build();
+
+        when(projectLookupStrategy.getProjectResource(123L)).thenReturn(project);
+        assertAccessDenied(
+                () -> classUnderTest.getProjectById(123L),
+                () -> {
+                    verify(projectPermissionRules, times(1)).partnersOnProjectCanView(isA(ProjectResource.class), isA(UserResource.class));
+                    verify(projectPermissionRules, times(1)).internalUsersCanViewProjects(isA(ProjectResource.class), isA(UserResource.class));
+                    verifyNoMoreInteractions(projectPermissionRules);
+                }
+        );
+    }
+
 
     @Override
     protected Class<TestProjectService> getClassUnderTest() {
@@ -677,6 +683,11 @@ public class ProjectServiceSecurityTest extends BaseServiceSecurityTest<ProjectS
         @Override
         public ServiceResult<GOLState> getGrantOfferLetterWorkflowState(Long projectId) {
             return null;
+        }
+
+        @Override
+        public ServiceResult<ProjectUserResource> getProjectManager(Long projectId) {
+            return serviceSuccess(newProjectUserResource().withProject(projectId).withRoleName("project-manager").build());
         }
 
     }

@@ -2,10 +2,11 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
-import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
 
 import java.time.LocalDate;
@@ -13,9 +14,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder> {
 
@@ -57,10 +58,6 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
         return withArray((endDate, object) -> setField("endDate", endDate, object), endDates);
     }
 
-    public AssessmentBuilder withProcessOutcome(List<ProcessOutcome>... processOutcomes) {
-        return withArray((processOutcome, object) -> setField("processOutcomes", processOutcome, object), processOutcomes);
-    }
-
     public AssessmentBuilder withParticipant(ProcessRole... processRoles) {
         return withArray((processRole, object) -> setField("participant", processRole, object), processRoles);
     }
@@ -71,5 +68,13 @@ public class AssessmentBuilder extends BaseBuilder<Assessment, AssessmentBuilder
 
     public AssessmentBuilder withActivityState(ActivityState... activityState) {
         return withArray((state, object) -> object.setActivityState(state), activityState);
+    }
+
+    public AssessmentBuilder withFundingDecision(AssessmentFundingDecisionOutcome... fundingDecision) {
+        return withArraySetFieldByReflection("fundingDecision", fundingDecision);
+    }
+
+    public AssessmentBuilder withRejection(AssessmentRejectOutcome... rejection) {
+        return withArraySetFieldByReflection("rejection", rejection);
     }
 }

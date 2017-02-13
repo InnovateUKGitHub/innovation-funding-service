@@ -1,63 +1,45 @@
 version: '2'
 services:
   shib:
-    build:
-      context: setup-files/scripts/docker/shibboleth
-      dockerfile: Dockerfile
+    image: innovateuk/shibboleth:1.0-SNAPSHOT
     cap_add:
       - SYS_PTRACE
     ports:
       - "443:443"
       - "389:389"
-    links:
-      - application-service
-      - assessment-service
-      - competition-mgt-service
-      - project-setup-mgt-service
-      - project-setup-service
     networks:
       ifs:
         aliases:
           - iuk-auth-localdev
 
   application-service:
-    image: worth/application-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    image: innovateuk/application-service:1.0-SNAPSHOT
     networks:
       - ifs
     
 
   assessment-service:
-    image: worth/assessment-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    image: innovateuk/assessment-service:1.0-SNAPSHOT
     networks:
       - ifs
 
   competition-mgt-service:
-    image: worth/competition-management-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    image: innovateuk/competition-management-service:1.0-SNAPSHOT
     networks:
       - ifs
 
   project-setup-mgt-service:
-    image: worth/project-setup-management-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    image: innovateuk/project-setup-management-service:1.0-SNAPSHOT
     networks:
       - ifs
 
   project-setup-service:
-    image: worth/project-setup-service:1.0-SNAPSHOT
-    links:
-      - data:data-service
+    image: innovateuk/project-setup-service:1.0-SNAPSHOT
     networks:
       - ifs
 
-  data:
-    image: worth/data-service:1.0-SNAPSHOT
+  data-service:
+    image: innovateuk/data-service:1.0-SNAPSHOT
     networks:
       ifs:
         aliases:

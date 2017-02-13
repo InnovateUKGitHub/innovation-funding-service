@@ -14,6 +14,7 @@ import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.OrganisationRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
@@ -25,6 +26,7 @@ import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
@@ -336,4 +338,13 @@ public class ProjectServiceImpl implements ProjectService {
         return projectRestService.getGrantOfferLetterWorkflowState(projectId).toServiceResult();
     }
 
+    @Override
+    public Optional<ProjectUserResource> getProjectManager(Long projectId) {
+        return projectRestService.getProjectManager(projectId).toServiceResult().getOptionalSuccessObject();
+    }
+
+    @Override
+    public final Boolean isProjectManager(Long userId, Long projectId) {
+        return getProjectManager(projectId).map(maybePM -> maybePM.isUser(userId)).orElse(false);
+    }
 }

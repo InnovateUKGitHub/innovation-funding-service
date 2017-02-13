@@ -7,14 +7,14 @@ public class FinanceCheckPartnerStatusResource {
     private Long id;
     private String name;
     private Viability viability;
-    private ViabilityStatus viabilityRagStatus;
+    private ViabilityRagStatus viabilityRagStatus;
     private Eligibility eligibility;
-    private EligibilityStatus eligibilityRagStatus;
+    private EligibilityRagStatus eligibilityRagStatus;
 
     public FinanceCheckPartnerStatusResource() {
     }
 
-    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityStatus viabilityRagStatus, Eligibility eligibility, EligibilityStatus eligibilityRagStatus) {
+    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityRagStatus viabilityRagStatus, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
         this.id = id;
         this.name = name;
         this.viability = viability;
@@ -47,9 +47,9 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibility = eligibility;
     }
 
-    public EligibilityStatus getEligibilityRagStatus() { return eligibilityRagStatus; }
+    public EligibilityRagStatus getEligibilityRagStatus() { return eligibilityRagStatus; }
 
-    public void setEligibilityRagStatus(EligibilityStatus eligibilityRagStatus) {
+    public void setEligibilityRagStatus(EligibilityRagStatus eligibilityRagStatus) {
         this.eligibilityRagStatus = eligibilityRagStatus;
     }
 
@@ -61,11 +61,11 @@ public class FinanceCheckPartnerStatusResource {
         this.viability = viability;
     }
 
-    public ViabilityStatus getViabilityRagStatus() {
+    public ViabilityRagStatus getViabilityRagStatus() {
         return viabilityRagStatus;
     }
 
-    public void setViabilityRagStatus(ViabilityStatus viabilityRagStatus) {
+    public void setViabilityRagStatus(ViabilityRagStatus viabilityRagStatus) {
         this.viabilityRagStatus = viabilityRagStatus;
     }
 }

@@ -16,7 +16,7 @@ public class SecurityRuleUtil {
         return hasRole(user, COMP_ADMIN);
     }
 
-    private boolean isInternal(UserResource user) {
+    public static boolean isInternal(UserResource user) {
         return hasRole(user, UserRoleType.COMP_ADMIN) || hasRole(user, UserRoleType.PROJECT_FINANCE);
     }
 
@@ -34,10 +34,6 @@ public class SecurityRuleUtil {
 
     public static boolean isAssessor(UserResource user) {
         return hasRole(user, ASSESSOR);
-    }
-
-    public static boolean isCompExec(UserResource user) {
-        return hasRole(user, COMP_EXEC);
     }
 
     private static boolean hasRole(UserResource user, UserRoleType type) {

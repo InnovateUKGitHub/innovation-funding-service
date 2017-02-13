@@ -12,6 +12,13 @@
 .header-global{
 	padding: 2px 0;
 }
+
+@include ie-lte(8) {
+  .header-global #logo {
+    white-space: nowrap;
+  }
+}
+
 //
 // #global-header #logo img{
 // 		width: 35px;

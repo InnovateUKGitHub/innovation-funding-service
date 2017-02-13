@@ -15,7 +15,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.checkProcessRole;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 
@@ -67,14 +68,9 @@ public class ApplicationFinanceRowPermissionRules extends BasePermissionRules {
         return isPartner(project.getId(), user.getId());
     }
 
-    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any project finance user can check if any of partners are seeking funding")
-    public boolean projectFinanceUsersCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
-    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any competition administrator can check if any of the partners are seeking funding")
-    public boolean compAdminsCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
-        return isCompAdmin(user);
+    @PermissionRule(value = "READ_ORGANISATION_FUNDING_STATUS", description = "Any internal user can check if any of the partners are seeking funding")
+    public boolean internalUsersCanCheckFundingStatusOfTeam(final ProjectResource project, final UserResource user) {
+        return isInternal(user);
     }
 
     private boolean isCollaborator(final FinanceRow cost, final UserResource user) {

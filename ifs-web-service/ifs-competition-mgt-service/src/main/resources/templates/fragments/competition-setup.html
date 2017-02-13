@@ -1,21 +1,41 @@
 <!-- =================== Comp setup section - Initial Details (1) ============================== -->
 
-<div th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)">
+<div th:fragment="comp-setup-navigation(sections, currentSection, competition, readyToOpen)"
+     xmlns:th="http://www.w3.org/1999/html">
     <div th:class="${(param.section != null ? 'visuallyhidden' : '')}">
         <ul class="list-overview">
-            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}">
-                <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${section.name}+'&quot; section is done'" th:alt="'The &quot;'+${section.name}+'&quot; section is done'"
-                     th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="section-status" />
-                <h3 class="heading-small">
-                    <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}) and ${section.toString() != 'APPLICATION_FORM'}"
-                       th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
-                       th:text="${section.name}">Section Name</a>
-                    <a th:if="${isInitialComplete} and ${section.toString() == 'APPLICATION_FORM'}"
-                       th:href="@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}"
-                       th:text="${section.name}">Section Name</a>
-                    <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
-                       th:text="${section.name}">Section Name</th:block>
-                </h3>
+            <li th:each="(section, iteration : ${sections})" th:if="${section.toString() != 'HOME'}" class="grid-row section">
+                <div class="column-two-thirds">
+                    <img width="30" height="30" th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}" th:title="'The &quot;'+${section.name}+'&quot; section is done'" th:alt="'The &quot;'+${section.name}+'&quot; section is done'"
+                         th:if="${section.isComplete(competition) and !competition.isSetupAndLive()}" class="section-status" />
+                    <h3 class="heading-small">
+                        <a th:if="(${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}) and ${section.toString() != 'APPLICATION_FORM'}"
+                           th:href="@{/competition/setup/{competitionId}/section/{sectionPath}(competitionId=${competition.id},sectionPath=${section.path})}"
+                           th:text="${section.name}">Section Name</a>
+                        <a th:if="${isInitialComplete} and ${section.toString() == 'APPLICATION_FORM'}"
+                           th:href="@{/competition/setup/{competitionId}/section/application/landing-page(competitionId=${competition.id})}"
+                           th:text="${section.name}">Section Name</a>
+                        <th:block th:unless="${isInitialComplete} or ${section.toString() == 'INITIAL_DETAILS'}"
+                           th:text="${section.name}">Section Name</th:block>
+                    </h3>
+                </div>
+            </li>
+            <li th:with="sectionName='Public content'" class="grid-row section">
+                <div class="column-two-thirds">
+                    <h3 class="heading-small">
+                        <a th:if="${isInitialComplete}" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${competition.id})}"
+                           th:text="${sectionName}">Section Name</a>
+                        <th:block th:unless="${isInitialComplete}"
+                                  th:text="${sectionName}">Section Name</th:block>
+                    </h3>
+                </div>
+                <div class="column-third">
+                    <p class="form-hint font-small"
+                       th:if="${isPublicContentPublished}"
+                       th:with="publishDay=${#temporals.format(publishDate, 'd MMMM yyyy')},
+                             publishTime=${#strings.toLowerCase(#temporals.format(publishDate, ' h:mma'))}"
+                       th:text="${'Last published ' + publishDay + ' ' + publishTime}">Last published</p>
+                </div>
             </li>
         </ul>
 
@@ -42,26 +62,39 @@
     </div>
 </div>
 
+<!-- ======== Comp admin - sub header with back link ======= -->
+<div th:fragment="comp-setup-header-sub (linkTitle, linkClass, linkUrl)">
+    <div class="sub-header">
+        <nav>
+            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
+        </nav>
+    </div>
+</div>
+
 
 <!-- ======== Comp admin - remove assigned assessor modal ======= -->
 <div th:fragment="comp-setup-remove-assigned-assessor-modal">
     <div class="remove-assigned-assessor-modal" role="dialog" aria-hidden="true">
         <div th:include="fragments/modals :: close-button" th:remove="tag" />
 
-        <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-form" th:remove="tag" />
+        <form th:action="'#'" method="post" novalidate="novalidate">
+            <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" th:remove="tag" />
+
+            <div class="alignright-button">
+                <button type="button" class="js-close buttonlink large">Cancel</button>
+                <button class="button large" type="submit">Remove assessor</button>
+            </div>
+        </form>
+
     </div>
 </div>
 
 
-<!-- ======== Assessment - remove assigned assessor form for modal and non-js page ======= -->
-<div th:fragment="comp-setup-remove-assigned-assessor-form">
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" novalidate="novalidate">
-        <h2 class="heading-medium no-margin">Are you sure you want to remove this Assessor from the application?</h2>
+<!-- ======== Comp admin - remove assigned assessor confirmation content for modal and non-js page ======= -->
+<div th:fragment="comp-setup-remove-assigned-assessor-content">
+    <h2 class="heading-medium no-margin">Are you sure you want to remove this assessor from the application?</h2>
 
-        <p>When you click <strong>Remove and notify</strong> the application will be removed from the assessor and they will be notified of the removal straight away.</p>
-
-        <p>If they have started the assessment of this application, their assessment will be <strong>permanently deleted</strong> when you click <strong>Remove and notify</strong>.</p>
-
-        <button class="button large extra-margin">Remove and notify</button>
-    </form>
+    <p>If you remove this application from the assessor then any work they may have started will be permanently deleted. This action cannot be undone.</p>
+    <hr/>
 </div>
+
