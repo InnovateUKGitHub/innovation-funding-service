@@ -488,7 +488,7 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
                     if (approval.equals(false)) {
                         project.setDocumentsSubmittedDate(null);
                     }
-                    return serviceSuccess();
+                    return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
                 });
     }
 
