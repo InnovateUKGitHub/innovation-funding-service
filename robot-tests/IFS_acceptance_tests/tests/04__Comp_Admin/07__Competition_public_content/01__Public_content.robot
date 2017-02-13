@@ -70,7 +70,8 @@ Summary: Contains the correct values when viewed
 Summary: Add, remove sections and submit
     [Documentation]    INFUND-6916
     Given the user navigates to the page            ${public_content_overview}
-    When the user clicks the button/link                         link=Summary
+    When the user clicks the button/link                        link=Summary
+    and  the user clicks the button/link                        jQuery=.button-secondary:contains("Edit")
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
@@ -117,7 +118,7 @@ Custom suite setup
     Set suite variable  ${nextyear}
     User creates a new competition   ${public_content_competition_name}
     ${competitionId}=  get comp id from comp title  ${public_content_competition_name}
-    ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/    ${competitionId}
+    ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/${competitionId}
     Set suite variable  ${public_content_overview}
 
 User creates a new competition
