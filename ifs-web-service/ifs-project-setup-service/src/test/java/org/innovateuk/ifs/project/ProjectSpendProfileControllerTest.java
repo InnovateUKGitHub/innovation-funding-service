@@ -243,6 +243,28 @@ public class ProjectSpendProfileControllerTest extends BaseControllerMockMVCTest
     }
 
     @Test
+    public void saveSpendProfileSuccessLeadPartner() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        SpendProfileTableResource table = new SpendProfileTableResource();
+
+        when(projectFinanceService.getSpendProfileTable(projectId, organisationId)).thenReturn(table);
+
+        when(projectFinanceService.saveSpendProfile(projectId, organisationId, table)).thenReturn(serviceSuccess());
+
+        when(projectService.isUserLeadPartner(eq(projectId),any())).thenReturn(true);
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile/edit", projectId, organisationId)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("table.markedAsComplete", "true")
+        )
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile/review"));
+    }
+
+    @Test
     public void markAsCompleteSpendProfileWhenSpendHigherThanEligible() throws Exception {
 
         Long organisationId = 1L;
