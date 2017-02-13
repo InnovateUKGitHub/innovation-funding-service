@@ -27,6 +27,25 @@ User can view the public content
     And the user should see the element      link=Dates
     And the user should see the element      link=How to apply
     And the user should see the element      link=Supporting information
+    And the user should see the element      jQuery=button:contains("Publish public content"):disabled
+
+Competition information and search: All fields required
+    [Documentation]    INFUND-6915
+    Given the user clicks the button/link           link=Competition information and search
+    When the user clicks the button/link            jQuery=.button:contains("Save and return")
+    Then the user should see a summary error        Please enter a short description.
+    Then the user should see a summary error        Please enter a project funding range.
+    Then the user should see a summary error        Please enter an eligibility summary.
+    Then the user should see a summary error        Please enter a valid set of keywords.
+
+Competition information and search: Valid values
+    [Documentation]    INFUND-6915
+    When the user enters text to a text field       id=short-description        Short public description
+    And the user enters text to a text field        id=funding-range            Up to £1million
+    And the user enters text to a text field        id=eligibility-summary      Summary of eligiblity
+    And the user enters text to a text field        id=keywords                 Search, For, Me
+    And the user clicks the button/link             jQuery=.button:contains("Save and return")
+    Then the user should see the element            jQuery=li:nth-of-type(1) img.complete
 
 Summary: Contains the correct options
     [Documentation]    INFUND-6916
@@ -54,7 +73,7 @@ Summary: User enters valid values and saves
     When the user enters valid data in the summary details
  #   Then the user should be redirected to the correct page
     And the user should see the element      link=Summary
-    And the user should see the element      link=Eligibility
+    And the user should see the element      jQuery=li:nth-of-type(2) img.complete
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916
@@ -91,7 +110,6 @@ Dates: Add, remove dates and submit
     And the user can add and remove multiple event groups
     And the user should see the element                         jQuery=li:nth-of-type(5) img.complete
 
-
 How to apply: Add, remove sections and submit
     [Documentation]    INFUND-6920 INFUND-7602
     And the user clicks the button/link                         link=How to apply
@@ -107,8 +125,18 @@ Supporting information: Add, remove sections and submit
     And the user should see the element                         jQuery=li:nth-of-type(7) img.complete
 
 
-*** Keywords ***
+Publish public content: Publish once all sections are complete
+    [Documentation]    INFUND-6914
+    Given the user should not see the text in the page  Last published
+    When the user clicks the button/link                jQuery=button:contains("Publish public content")
+    Then the user should see the text in the page       Last published
+    And the user should not see the element             jQuery=button:contains("Publish public content")
+    When the user clicks the button/link                link=Competition information and search
+    And the user clicks the button/link                 link=Edit
+    Then the user should not see the element            jQuery=button:contains("Save and return")
+    And the user should see the element                 jQuery=button:contains("Publish and return")
 
+*** Keywords ***
 Custom suite setup
     Connect to Database  @{database}
     Guest user log-in    &{Comp_admin1_credentials}
@@ -166,7 +194,7 @@ the user can add and remove multiple event groups
     And the user enters text to a text field    id=dates-2-month    12
     And the user enters text to a text field    id=dates-2-year     ${nextyear}
     And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
-    And the user clicks the button/link         jQuery=button:contains("Remove event"):eq(1)
+    And the user clicks the button/link         jQuery=button:contains("Remove event"):eq(2)
     Then the user should not see the element    id=dates-2-day
     And the user should not see the element     id=dates-2-month
     And the user should not see the element     id=dates-2-year
