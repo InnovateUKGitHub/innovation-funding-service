@@ -54,7 +54,6 @@ Review the application
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
-    #TODO update these selectors once the tables on this page have unique class names
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
     And the available assessors information is correct
 
