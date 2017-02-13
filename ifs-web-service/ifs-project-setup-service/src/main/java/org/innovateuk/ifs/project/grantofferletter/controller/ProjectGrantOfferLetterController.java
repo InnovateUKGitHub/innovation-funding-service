@@ -115,16 +115,12 @@ public class ProjectGrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
     @RequestMapping(value = "/signed-grant-offer-letter", method = GET)
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGrantOfferLetterFile(
-            @PathVariable("projectId") final Long projectId, @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        boolean isLeadPartner = projectService.isUserLeadPartner(projectId, loggedInUser.getId());
-        if(!isLeadPartner) {
-            throw new ForbiddenActionException();
-        }
+            @PathVariable("projectId") final Long projectId) {
         final Optional<ByteArrayResource> content = projectService.getSignedGrantOfferLetterFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);

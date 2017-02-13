@@ -130,10 +130,8 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
     @Test
     public void testDownloadSignedGrantOfferLetterByNonLead() throws Exception {
 
-        when(projectService.isUserLeadPartner(123L, 1L)).thenReturn(false);
-
         mockMvc.perform(get("/project/{projectId}/offer/signed-grant-offer-letter", 123L)).
-                andExpect(status().isForbidden());
+                andExpect(status().isInternalServerError());
     }
 
     @Test
