@@ -71,23 +71,33 @@ Summary: User enters valid values and saves
     [Documentation]    INFUND-6916
     [Tags]    HappyPath
     When the user enters valid data in the summary details
- #   Then the user should be redirected to the correct page
+    Then the user should be redirected to the correct page    ${public_content_overview}
     And the user should see the element      link=Summary
     And the user should see the element      jQuery=li:nth-of-type(2) img.complete
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916
     [Tags]    HappyPath
-    Given the user clicks the button/link           link=Summary
-    Then the user should see the text in the page   Text entered into this section will appear in the summary tab
-    And the user should see the text in the page    Grant
-    And the user should see the text in the page    10
-    And the user should see the element             jQuery=.button:contains("Return to public content")
-    And the user should see the element             jQuery=.button-secondary:contains("Edit")
-    And the user clicks the button/link             link=Public content
+    Given the user navigates to the page           ${public_content_overview}
+    When the user clicks the button/link                link=Summary
+    Then the user should see the text in the page       Text entered into this section will appear in the summary tab
+    And the user should see the text in the page        Grant
+    And the user should see the text in the page        10
+    And the user should see the element                 jQuery=.button:contains("Return to public content")
+    And the user should see the element                 jQuery=.button-secondary:contains("Edit")
+
+Summary: Add, remove sections and submit
+    [Documentation]    INFUND-6916
+    Given the user navigates to the page            ${public_content_overview}
+    When the user clicks the button/link                        link=Summary
+    and  the user clicks the button/link                        jQuery=.button-secondary:contains("Edit")
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
 
 Eligibility: Add, remove sections and submit
     [Documentation]    INFUND-6917 INFUND-7602
+    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Eligibility
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -95,6 +105,7 @@ Eligibility: Add, remove sections and submit
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918 INFUND-7602
+    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -112,14 +123,16 @@ Dates: Add, remove dates and submit
 
 How to apply: Add, remove sections and submit
     [Documentation]    INFUND-6920 INFUND-7602
-    And the user clicks the button/link                         link=How to apply
+    Given the user navigates to the page            ${public_content_overview}
+    When the user clicks the button/link                         link=How to apply
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(6) img.complete
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
-    And the user clicks the button/link                         link=Supporting information
+    Given the user navigates to the page            ${public_content_overview}
+    When the user clicks the button/link                         link=Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
     And the user should see the element                         jQuery=li:nth-of-type(7) img.complete
@@ -144,7 +157,7 @@ Custom suite setup
     Set suite variable  ${nextyear}
     User creates a new competition   ${public_content_competition_name}
     ${competitionId}=  get comp id from comp title  ${public_content_competition_name}
-    ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/    ${competitionId}
+    ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/${competitionId}
     Set suite variable  ${public_content_overview}
 
 User creates a new competition
