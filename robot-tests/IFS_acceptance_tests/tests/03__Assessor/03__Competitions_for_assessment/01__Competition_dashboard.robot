@@ -20,6 +20,13 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
+User cannot accept/reject aninvite to an application that has been withdrawn
+    [Documentation]
+    [Tags]
+    When the user navigates to the page    ${server}/assessment/128/assignment
+    Then the user should see the text in the page    Invitation withdrawn
+    [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
+
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
     [Tags]    HappyPath
