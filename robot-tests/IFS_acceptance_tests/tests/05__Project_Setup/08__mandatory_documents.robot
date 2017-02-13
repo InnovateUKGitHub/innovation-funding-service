@@ -97,8 +97,8 @@ Lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    link=What's the status of each of my partners?
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    link=status of my partners
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
@@ -123,7 +123,7 @@ Non-lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -147,7 +147,7 @@ PM can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -199,7 +199,7 @@ Status in the dashboard remains action required after uploads
     [Tags]    HappyPath
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 Mandatory document submission
@@ -219,7 +219,7 @@ Mandatory document submission
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.waiting:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
     And the user goes back to the previous page
 
@@ -279,7 +279,7 @@ Non-lead partner can still view both documents after submitting
     Then the user clicks the button/link    link=${valid_pdf}
     And the user should not see an error in the page
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(6)
 
 CompAdmin can see uploaded files
@@ -410,8 +410,8 @@ After rejection, lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    And the user should see the element    link=What's the status of each of my partners?
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the element    link=status of my partners
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
     [Teardown]    the user navigates to the page    ${project_in_setup_page}
 
@@ -436,7 +436,7 @@ After rejection, non-lead partner can view both documents
     When the user clicks the button/link    link=${valid_pdf}
     Then the user should not see an error in the page
     And the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 
@@ -445,7 +445,7 @@ After rejection, status in the dashboard remains action required after uploads
     [Tags]    HappyPath
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=ul li.complete:nth-child(7)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(6)
 
 After rejection, mandatory document submission
@@ -465,7 +465,7 @@ After rejection, mandatory document submission
     Then the user should be redirected to the correct page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.waiting:nth-child(7)
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
 
 
 Project Finance is able to Approve and Reject
