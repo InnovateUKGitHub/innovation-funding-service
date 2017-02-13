@@ -16,14 +16,19 @@ Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Nagivation to submitted applications
-    [Documentation]    INFUND-7367    INFUND-7371
+Applications Dashboard
+    [Documentation]    INFUND-7367
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Applications")
-    And the user should see the text in the page     Sustainable living models for the future
-    And the user clicks the button/link    link=Submitted applications
-    And the user should see the text in the page     Sustainable living models for the future
+    Then The user should see the element    jQuery=.button:contains(All applications)
+    And The user should see the element    link=Submitted applications
+
+Submitted applications
+    [Documentation]    INFUND-7367 INFUND-7371
+    [Tags]    HappyPath
+    When the user clicks the button/link    link=Submitted applications
+    And the user should see the text in the page    Sustainable living models for the future
 
 Columns show of the submitted applications
     [Documentation]    INFUND-7371

@@ -64,7 +64,7 @@
                 <th:block th:text="${subSection.getName()}" />
                 <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
             </h3>
-            <div class="collapsible-content" th:with="viewmode=${summaryModel.isReadOnly()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
+            <div class="collapsible-content" th:with="viewmode=${summaryModel.isApproved()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
                 <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
                     <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
 
@@ -81,7 +81,7 @@
                         </th:block>
                     </th:block>
                 </th:block>
-                <div class="alignright-button">
+                <div class="alignright-button" th:unless="${summaryModel.isReadOnly()}">
                     <a th:href="@{?section={sectionId}(sectionId=${subSection.id})}" th:if="${viewmode=='readonly'}" class="button button-secondary">Edit</a>
                     <button th:if="${viewmode=='edit'}" name="save-eligibility" class="button">Save</button>
                 </div>
@@ -105,9 +105,9 @@
     <input type="hidden" id="cacheTest" value="" />
     <input type="hidden" id="projectId" th:value="${summaryModel.projectId}" />
     <input type="hidden" id="organisationId" th:value="${summaryModel.organisationId}" />
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${eligibilityForm}" th:unless="${summaryModel.isReadOnly()}">
 
-        <th:block th:unless="${summaryModel.isReadOnly()}">
+        <th:block th:unless="${summaryModel.isApproved()}">
             <h2 class="heading-medium">Approve eligibility</h2>
             <p>After making any necessary changes, the eligible costs should be approved.</p>
             <p>Make sure the applicant has reviewed and understood all changes before you approve.</p>
