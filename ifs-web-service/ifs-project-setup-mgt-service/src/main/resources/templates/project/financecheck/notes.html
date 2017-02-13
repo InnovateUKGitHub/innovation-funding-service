@@ -44,7 +44,6 @@
     <hr />
 
     <th:block th:each="note : ${model.getNotes()}">
-        <hr />
         <h2 class="heading-medium non-margin-bottom" th:text="${note.title}">Note Title</h2>
         <th:block th:each="(post, iteration : ${note.viewModelPosts})">
             <th:block th:if="${iteration.index == 0}">
