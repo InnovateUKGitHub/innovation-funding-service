@@ -59,7 +59,7 @@ Summary: User enters valid values and saves
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916
     [Tags]    HappyPath
-    [Setup]    the user navigates to the page           ${public_content_overview}
+    Given the user navigates to the page           ${public_content_overview}
     When the user clicks the button/link                link=Summary
     Then the user should see the text in the page       Text entered into this section will appear in the summary tab
     And the user should see the text in the page        Grant
@@ -69,7 +69,7 @@ Summary: Contains the correct values when viewed
 
 Summary: Add, remove sections and submit
     [Documentation]    INFUND-6916
-    [Setup]    the user navigates to the page    ${public_content_overview}
+    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Summary
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -77,7 +77,7 @@ Summary: Add, remove sections and submit
 
 Eligibility: Add, remove sections and submit
     [Documentation]    INFUND-6917 INFUND-7602
-    [Setup]    the user navigates to the page    ${public_content_overview}
+    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Eligibility
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -85,7 +85,7 @@ Eligibility: Add, remove sections and submit
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918 INFUND-7602
-    [Setup]    the user navigates to the page    ${public_content_overview}
+    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -93,7 +93,7 @@ Scope: Add, remove sections and submit
 
 How to apply: Add, remove sections and submit
     [Documentation]    INFUND-6920 INFUND-7602
-    [Setup]    the user navigates to the page    ${public_content_overview}
+    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=How to apply
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -101,7 +101,7 @@ How to apply: Add, remove sections and submit
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
-    [Setup]    the user navigates to the page    ${public_content_overview}
+    Given the user navigates to the page            ${public_content_overview}
     When the user clicks the button/link                         link=Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
