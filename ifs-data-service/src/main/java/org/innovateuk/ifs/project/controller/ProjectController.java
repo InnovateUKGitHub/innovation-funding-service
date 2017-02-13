@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.controller;
 
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.invite.resource.InviteProjectResource;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.project.transactional.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -28,6 +30,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.*;
 import static java.util.Optional.ofNullable;
 import static org.springframework.web.bind.annotation.RequestMethod.*;
@@ -44,6 +47,9 @@ public class ProjectController {
 
     @Autowired
     private ProjectStatusService projectStatusService;
+
+    @Autowired
+    private ProjectGrantOfferService projectGrantOfferService;
 
     @Autowired
     @Qualifier("projectSetupOtherDocumentsFileValidator")
@@ -248,7 +254,9 @@ public class ProjectController {
     @RequestMapping(value = "/{projectId}/partner/documents/approved/{approved}", method = POST)
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
         //TODO INFUND-7493
-        return projectService.acceptOrRejectOtherDocuments(projectId, approved).toPostResponse();
+        return projectService.acceptOrRejectOtherDocuments(projectId, approved).andOnSuccess(() ->
+            projectGrantOfferService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE))
+        ).toPostResponse();
 
     }
 

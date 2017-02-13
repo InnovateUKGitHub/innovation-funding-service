@@ -8,6 +8,10 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.repository.CompetitionRepository;
+import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.publiccontent.domain.PublicContent;
 import org.innovateuk.ifs.publiccontent.mapper.PublicContentMapper;
 import org.innovateuk.ifs.publiccontent.repository.KeywordRepository;
@@ -17,12 +21,14 @@ import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.innovateuk.ifs.category.builder.CompetitionCategoryLinkBuilder.newCompetitionCategoryLink;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
@@ -39,6 +45,9 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
 
     @Mock
     private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
+
+    @Mock
+    private CompetitionRepository competitionRepository;
 
     @Mock
     private KeywordRepository keywordRepository;
@@ -209,6 +218,49 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         verify(publicContentRepository, times(1)).findAllPublishedForOpenCompetitionByKeywords(any(), any());
     }
 
+    @Test
+    public void testByCompetitionId() {
+        Long competitionId = 4L;
+
+        Competition competition = newCompetition().withId(competitionId).withMilestones(
+                newMilestone()
+                        .withDate(LocalDateTime.of(2017,1,2,3,4), LocalDateTime.of(2017,3,2,1,4))
+                        .withType(MilestoneType.OPEN_DATE, MilestoneType.SUBMISSION_DATE)
+                        .build(2)
+        ).build();
+        PublicContent publicContent = newPublicContent().withCompetitionId(competitionId).build();
+        PublicContentResource publicContentResource = newPublicContentResource().withCompetitionId(competitionId).build();
+        when(competitionRepository.findById(competitionId)).thenReturn(competition);
+        when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(publicContent);
+        when(publicContentMapper.mapToResource(publicContent)).thenReturn(publicContentResource);
+
+        ServiceResult<PublicContentItemResource> result = service.byCompetitionId(competitionId);
+        assertTrue(result.isSuccess());
+
+        PublicContentItemResource resultObject = result.getSuccessObject();
+
+        assertEquals(competition.getEndDate(), resultObject.getCompetitionCloseDate());
+        assertEquals(competition.getStartDate(), resultObject.getCompetitionOpenDate());
+        assertEquals(competition.getName(), resultObject.getCompetitionTitle());
+        assertEquals(publicContentResource, resultObject.getPublicContentResource());
+
+        verify(publicContentRepository, only()).findByCompetitionId(competitionId);
+        verify(competitionRepository, only()).findById(competitionId);
+    }
+
+    @Test
+    public void testByCompetitionIdFailure() {
+        Long competitionId = 4L;
+
+        when(competitionRepository.findById(competitionId)).thenReturn(null);
+        when(publicContentRepository.findByCompetitionId(competitionId)).thenReturn(null);
+
+        ServiceResult<PublicContentItemResource> result = service.byCompetitionId(competitionId);
+        assertTrue(result.isFailure());
+
+        verify(publicContentRepository, only()).findByCompetitionId(competitionId);
+        verify(competitionRepository, only()).findById(competitionId);
+    }
 
     private void makePublicContentIdsFound() {
         PublicContent publicContent = newPublicContent().withId(PUBLIC_CONTENT_ID).withCompetitionId(COMPETITION_ID).build();

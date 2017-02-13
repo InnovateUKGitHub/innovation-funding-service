@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static java.util.Optional.of;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @Component
@@ -21,8 +21,8 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
-    @PermissionRule( value = "PF_CREATE", description = "Only Internal Users can create Queries")
-    public boolean onlyInternalUsersCanCreateQueries(final QueryResource query, final UserResource user) {
+    @PermissionRule(value = "PF_CREATE", description = "Only ProjectFinance Users can create Queries")
+    public boolean onlyProjectFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
 
@@ -30,20 +30,14 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return query.posts.size() == 1 && query.posts.get(0).author.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "PF_READ", description = "Only Internal of Project Finance Users can view Queries")
-    public boolean onlyInternalUsersOrFinanceContactCanViewTheirQueries(final QueryResource query, final UserResource user) {
+    @PermissionRule(value = "PF_READ", description = "Only Project Finance or Finance Contact Users can view Queries")
+    public boolean onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
     }
 
-    @PermissionRule(value = "PF_ADD_POST", description = "Internal users or Project Finance users can add posts to a query,"
-            + " but first post has to come from the Internal user.")
-    public boolean onlyInternalUsersOrFinanceContactAddPostToTheirQueries(final QueryResource query, final UserResource user) {
+    @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users or Project Finance users can add posts to a query")
+    public boolean onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(final QueryResource query, final UserResource user) {
         return query.posts.isEmpty() ? isProjectFinanceUser(user) : isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
-    }
-
-    @PermissionRule(value = "PF_DELETE", description = "Only Internal Users can delete a Query")
-    public boolean onlyInternalUsersCanDeleteQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user);
     }
 
     private boolean isFinanceContact(UserResource user, Long projectFinance) {
@@ -52,6 +46,6 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {
-        return of(projectFinanceRepository.findOne(id));
+        return ofNullable(projectFinanceRepository.findOne(id));
     }
 }

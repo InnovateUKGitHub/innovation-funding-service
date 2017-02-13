@@ -37,7 +37,7 @@ public final class Query extends Thread {
 
     public boolean isAwaitingResponse() {
         return latestPost()
-                .map(Post::author).map(SecurityRuleUtil::isInternal)
+                .map(Post::author).map(SecurityRuleUtil::isProjectFinanceUser)
                 .orElse(false);
     }
 

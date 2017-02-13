@@ -103,8 +103,14 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<PublicContentItemResource> byCompetitionId(Long id) {
-        //TODO : INFUND-7484
-        throw new NotImplementedException("Not implemented yet");
+        Competition competition = competitionRepository.findById(id);
+        PublicContent publicContent = publicContentRepository.findByCompetitionId(id);
+
+        if(null == competition || null == publicContent) {
+            return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND));
+        }
+
+        return ServiceResult.serviceSuccess(mapPublicContentToPublicContentItemResource(publicContent, competition));
     }
 
     private List<String> separateSearchStringToList(String searchString) {

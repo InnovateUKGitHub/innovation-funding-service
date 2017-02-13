@@ -269,7 +269,14 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testCancelNewQuery() throws Exception {
 
-        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility"))
+        List<Long> attachmentIds = new ArrayList<>();
+        attachmentIds.add(1L);
+        Cookie ck = createAttachmentsCookie(attachmentIds);
+
+        when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
+
+        MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility")
+                    .cookie(ck))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 
@@ -277,6 +284,8 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
                 .filter(cookie -> cookie.getName().equals("finance_checks_queries_new_query_attachments_"+projectId+"_"+applicantOrganisationId))
                 .findAny();
         assertEquals(true, cookieFound.get().getValue().isEmpty());
+
+        verify(financeCheckServiceMock).deleteFile(1L);
     }
 
     @Test
@@ -318,14 +327,15 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     @Test
     public void testRemoveAttachment() throws Exception {
 
-        List<Long> attachmentIds = new ArrayList<Long>();
+        List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
-        String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
-        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
-        Cookie cookie = new Cookie("finance_checks_queries_new_query_attachments"+"_"+projectId+"_"+applicantOrganisationId, encryptedData);
+        Cookie ck = createAttachmentsCookie(attachmentIds);
+
+        when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
+
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
                 .param("removeAttachment", "1")
-                .cookie(cookie)
+                .cookie(ck)
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("queryTitle", "Title")
                 .param("query", "Query")
@@ -336,13 +346,59 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         List<Long> expectedAttachmentIds = new ArrayList<>();
         assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(expectedAttachmentIds), CharEncoding.UTF_8),
                 getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_query_attachments_"+projectId+"_"+applicantOrganisationId));
-        // TODO verify file removed
+
+        verify(financeCheckServiceMock).deleteFile(1L);
 
         FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
         assertEquals("Title", form.getQueryTitle());
         assertEquals("Query", form.getQuery());
         assertEquals(FinanceChecksSectionType.VIABILITY.name(), form.getSection().toUpperCase());
         assertEquals(null, form.getAttachment());
+
+        FinanceChecksQueriesAddQueryViewModel queryViewModel = (FinanceChecksQueriesAddQueryViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(0, queryViewModel.getNewAttachmentLinks().size());
+    }
+
+    @Test
+    public void testRemoveAttachmentDoesNotRemoveAttachmentNotInCookie() throws Exception {
+
+        List<Long> attachmentIds = new ArrayList<>();
+        attachmentIds.add(1L);
+        Cookie ck = createAttachmentsCookie(attachmentIds);
+
+        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+
+        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+
+        MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query?query_section=Eligibility")
+                .param("removeAttachment", "2")
+                .cookie(ck)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("queryTitle", "Title")
+                .param("query", "Query")
+                .param("section", FinanceChecksSectionType.VIABILITY.name()))
+                .andExpect(view().name("project/financecheck/new-query"))
+                .andReturn();
+
+        assertEquals(URLEncoder.encode(JsonUtil.getSerializedObject(attachmentIds), CharEncoding.UTF_8),
+                getDecryptedCookieValue(result.getResponse().getCookies(), "finance_checks_queries_new_query_attachments_"+projectId+"_"+applicantOrganisationId));
+
+        FinanceChecksQueriesAddQueryForm form = (FinanceChecksQueriesAddQueryForm) result.getModelAndView().getModel().get("form");
+        assertEquals("Title", form.getQueryTitle());
+        assertEquals("Query", form.getQuery());
+        assertEquals(FinanceChecksSectionType.VIABILITY.name(), form.getSection().toUpperCase());
+        assertEquals(null, form.getAttachment());
+
+
+        FinanceChecksQueriesAddQueryViewModel queryViewModel = (FinanceChecksQueriesAddQueryViewModel) result.getModelAndView().getModel().get("model");
+        assertEquals(1, queryViewModel.getNewAttachmentLinks().size());
+        assertEquals("name", queryViewModel.getNewAttachmentLinks().get(1L));
+    }
+
+    private Cookie createAttachmentsCookie(List<Long> attachmentIds) throws Exception{
+        String cookieContent = JsonUtil.getSerializedObject(attachmentIds);
+        String encryptedData = encryptor.encrypt(URLEncoder.encode(cookieContent, CharEncoding.UTF_8));
+        return new Cookie("finance_checks_queries_new_query_attachments_"+projectId+"_"+applicantOrganisationId, encryptedData);
     }
 
     @Override

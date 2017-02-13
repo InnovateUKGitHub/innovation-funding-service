@@ -26,7 +26,11 @@ public class SecurityRuleUtil {
     }
 
     public static boolean isProjectFinanceUser(UserResource user) {
-        return user.hasRole( PROJECT_FINANCE);
+        return user.hasRole(PROJECT_FINANCE);
+    }
+
+    public static boolean isProjectFinanceUser(User user) {
+        return user.hasRole(PROJECT_FINANCE);
     }
 
     public static boolean isSystemMaintenanceUser(UserResource user) {
