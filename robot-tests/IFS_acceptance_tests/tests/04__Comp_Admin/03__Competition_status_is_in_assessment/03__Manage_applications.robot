@@ -80,7 +80,7 @@ Notify an assigned user
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
-    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
     #TODO Check email once 7249 is done

@@ -22,7 +22,7 @@ Competition dashboard Open competition
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")
     And the user should see the element    link=View and update competition setup
     And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
-    And the user should see the element    jQuery=a:contains("Applications - All, submitted, non-submitted, ineligable")
+    And the user should see the element    jQuery=a:contains("Applications - All, submitted")
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")[aria-disabled="true"]
@@ -48,7 +48,7 @@ Competition dashboard ready to Open competition
     #The following checks test if the correct buttons are disabled
     And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
     And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")[aria-disabled="true"]
-    And the user should see the element    jQuery=a:contains("Applications - All, submitted, non-submitted, ineligable")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Applications - All, submitted")[aria-disabled="true"]
 
 Milestones for the ready to Open Competitons
     [Documentation]    INFUND-7561
