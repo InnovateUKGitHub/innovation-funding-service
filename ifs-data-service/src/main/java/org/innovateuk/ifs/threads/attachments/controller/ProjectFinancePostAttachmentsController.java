@@ -6,13 +6,9 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
-import org.innovateuk.ifs.threads.attachments.DownloadService;
-import org.innovateuk.ifs.threads.attachments.controller.AttachmentController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PostFilter;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,9 +19,9 @@ import java.io.IOException;
 public class ProjectFinancePostAttachmentsController extends AttachmentController {
 
     @Autowired
-    public ProjectFinancePostAttachmentsController(FileService fileService, FileEntryService fileEntryService, DownloadService downloadService,
+    public ProjectFinancePostAttachmentsController(FileService fileService, FileEntryService fileEntryService,
                                                    @Qualifier("postAttachmentValidator") FileHttpHeadersValidator fileValidator) {
-        super(fileService, fileEntryService, downloadService, fileValidator);
+        super(fileService, fileEntryService, fileValidator);
     }
 
     @Override

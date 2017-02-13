@@ -1,7 +1,6 @@
-package org.innovateuk.ifs.competition;
+package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.controller.CompetitionSearchController;
 import org.innovateuk.ifs.competition.populator.CompetitionSearchPopulator;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
 import org.junit.Test;

@@ -156,6 +156,42 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     }
 
     @Test
+    public void displayApplicationOverview_applicationProgressOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        long competitionId = competitionResource.getId();
+        long applicationId = applications.get(0).getId();
+
+        mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId)
+                .param("origin", "APPLICATION_PROGRESS"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionId + "/application/" + applicationId + "/assessors"));
+    }
+
+    @Test
+    public void displayApplicationOverview_fundingApplicationsOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        long competitionId = competitionResource.getId();
+        long applicationId = applications.get(0).getId();
+
+        mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId)
+                .param("origin", "FUNDING_APPLICATIONS"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionId + "/funding"));
+    }
+
+    @Test
     public void displayApplicationOverview_invalidOrigin() throws Exception {
         this.setupCompetition();
         this.setupApplicationWithRoles();

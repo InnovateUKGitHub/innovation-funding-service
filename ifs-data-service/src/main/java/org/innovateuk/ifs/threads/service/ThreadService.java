@@ -1,10 +1,9 @@
 package org.innovateuk.ifs.threads.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.threads.domain.Post;
-import org.innovateuk.ifs.threads.domain.Thread;
 
 import java.util.List;
+
 
 public interface ThreadService<E, P> {
 

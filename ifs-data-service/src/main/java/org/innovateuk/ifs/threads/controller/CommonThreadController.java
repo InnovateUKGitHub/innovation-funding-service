@@ -30,8 +30,8 @@ public class CommonThreadController<R> {
     }
 
     @RequestMapping(value = "", method = POST)
-    public RestResult<Long> create(@RequestBody R query) {
-        return service.create(query).toPostCreateResponse();
+    public RestResult<Long> create(@RequestBody R thread) {
+        return service.create(thread).toPostCreateResponse();
     }
 
     @RequestMapping(value = "/{threadId}/post", method = POST)

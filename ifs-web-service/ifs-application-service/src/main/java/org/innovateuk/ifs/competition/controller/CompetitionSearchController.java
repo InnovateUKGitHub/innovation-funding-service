@@ -32,6 +32,6 @@ public class CompetitionSearchController {
 
         model.addAttribute("model", itemSearchPopulator.createItemSearchViewModel(innovationAreaId, keywords,  pageNumber));
 
-        return TEMPLATE_FOLDER+"search";
+        return TEMPLATE_FOLDER + "search";
     }
 }

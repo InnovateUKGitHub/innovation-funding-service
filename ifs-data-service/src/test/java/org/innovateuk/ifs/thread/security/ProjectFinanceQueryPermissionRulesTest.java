@@ -55,56 +55,50 @@ public class ProjectFinanceQueryPermissionRulesTest extends BasePermissionRulesT
     }
 
     @Test
-    public void testThatOnlyInternalProjectFinanceUsersCanCreateQueries() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanCreateQueries(queryResource, projectFinanceUser));
-        assertFalse(rules.onlyInternalUsersCanCreateQueries(queryResource, financeContactUser));
+    public void testThatOnlyProjectFinanceProjectFinanceUsersCanCreateQueries() throws Exception {
+        assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, financeContactUser));
     }
 
     @Test
     public void testThatNewQueryMustContainInitialPost() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanCreateQueries(queryResource, projectFinanceUser));
-        assertFalse(rules.onlyInternalUsersCanCreateQueries(queryWithoutPosts(), financeContactUser));
+        assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryWithoutPosts(), financeContactUser));
     }
 
     @Test
     public void testThatNewQueryInitialPostAuthorMustBeTheCurrentUser() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanCreateQueries(queryResource, projectFinanceUser));
+        assertTrue(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, projectFinanceUser));
         UserResource anotherProjectFinanceUser = newUserResource().withId(675L)
                 .withRolesGlobal(newRoleResource().withType(PROJECT_FINANCE).build(1)).build();
-        assertFalse(rules.onlyInternalUsersCanCreateQueries(queryResource, anotherProjectFinanceUser));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateQueries(queryResource, anotherProjectFinanceUser));
     }
 
     @Test
     public void testThatFirstPostMustComeFromTheProjectFinanceUser() throws Exception {
         QueryResource queryWithoutPosts = queryWithoutPosts();
-        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithoutPosts, projectFinanceUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryWithoutPosts, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryWithoutPosts.contextClassPk))
                 .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
-        assertFalse(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryWithoutPosts, financeContactUser));
+        assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryWithoutPosts, financeContactUser));
     }
 
     @Test
     public void testThatOnlyTheProjectFinanceUserOrTheCorrectFinanceContactCanReplyToAQuery() throws Exception {
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
                 .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
-        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, projectFinanceUser));
-        assertTrue(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, financeContactUser));
-        assertFalse(rules.onlyInternalOrProjectFinanceUsersCanAddPosts(queryResource, incorrectFinanceContactUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, projectFinanceUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, financeContactUser));
+        assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(queryResource, incorrectFinanceContactUser));
     }
 
     @Test
-    public void testThatOnlyInternalProjectFinanceUsersCanDeleteQueries() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanDeleteQueries(queryResource, projectFinanceUser));
-        assertFalse(rules.onlyInternalUsersCanDeleteQueries(queryResource, financeContactUser));
-    }
-
-    @Test
-    public void testThatOnlyInternalUsersOrFinanceContactCanViewTheirQueries() {
-        assertTrue(rules.onlyInternalUsersOrFinanceContactCanViewTheirQueries(queryResource, projectFinanceUser));
+    public void testThatOnlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries() {
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, projectFinanceUser));
         when(projectFinanceRepositoryMock.findOne(queryResource.contextClassPk))
                 .thenReturn(mockedProjectFinanceWithUserAsFinanceContact(financeContactUser));
-        assertTrue(rules.onlyInternalUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser));
-        assertFalse(rules.onlyInternalUsersOrFinanceContactCanViewTheirQueries(queryResource, incorrectFinanceContactUser));
+        assertTrue(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser));
+        assertFalse(rules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, incorrectFinanceContactUser));
     }
 
 
