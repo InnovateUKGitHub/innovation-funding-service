@@ -19,7 +19,7 @@ ${quarantine_warning}    This file has been found to be unsafe
 
 *** Test Cases ***
 Application Dashboard
-    [Documentation]    INFUND-7367
+    [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
     When the user clicks the button/link    jQuery=.button:contains("Applications")
@@ -27,7 +27,7 @@ Application Dashboard
     And The user should see the element    link=All applications
 
 List of all Applications
-    [Documentation]    INFUND-7369
+    [Documentation]    INFUND-7367
     ...
     ...    INFUND-3063
     [Tags]    HappyPath
@@ -40,7 +40,7 @@ List of all Applications
     And the user should see the text in the page    Status
     And the user should see the text in the page    Percentage complete
 
-The correct number of applications shows in the table header
+All Applications page: calculation in the table header
     [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Then the table header matches correctly
@@ -55,46 +55,49 @@ The applications can be sorted by application number
 The applications can be sorted by project title
     [Documentation]    INFUND-2135: listing of applications for an open competition
     [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 21
+    #TODO UPDATE THIS IN SPRINT 22
     When the application list is sorted by    Project title
     Then the applications should be sorted by column    2
 
 The applications can be sorted by project lead
     [Documentation]    INFUND-2300: listing of applications for an open competition
     [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 21
+    #TODO UPDATE THIS IN SPRINT 22
     When the application list is sorted by    Lead
     Then the applications should be sorted by column    4
 
 The applications can be sorted by lead applicant
     [Documentation]    INFUND-3006
     [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 21
+    #TODO UPDATE THIS IN SPRINT 22
     When the application list is sorted by    Lead Name
     Then the applications should be sorted by column    3
 
 The applications can be sorted by percentage complete
     [Documentation]    INFUND-2300: listing of applications for an open competition
     [Tags]    Pending
-    #TODO UPDATE THIS IN SPRINT 21
+    #TODO UPDATE THIS IN SPRINT 22
     When the application list is sorted by    Percentage complete
     Then the applications should be sorted in reverse order by column    6
 
-Calculations of the open applications
+All Applications page: Key Statistics
     [Documentation]    INFUND-2259
+    ...
+    ...    INFUND-7369
     [Tags]
-    The calculation of the open applications should be correct
-
-Calculations of the submitted application
-    [Documentation]    INFUND-2259
-    [Tags]
-    The calculation for the submited applications should be correct
-
-Calculations for the Number of applications
-    [Documentation]    INFUND-2259
-    [Tags]    HappyPath
-    Then the calculations should be correct    jQuery=td:contains("00000")    css=.column-two-thirds p span:nth-child(1)
-    And both calculations in the page should show the same
+    #Calculation of the total number of Applications
+    ${TOTAL_APPLICATIONS}=    Get matching xpath count    //table/tbody/tr
+    ${TOTAL_COUNT}=    Get text    css=li:nth-child(1) > div > span
+    Should Be Equal As Integers    ${TOTAL_APPLICATIONS}    ${TOTAL_COUNT}
+    #Calculation of the Started Applications
+    ${STARTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Started"]
+    ${STARTED_COUNT}=    Get text    css=li:nth-child(2) > div > span
+    Should Be Equal As Integers    ${STARTED_APPLICATIONS}    ${STARTED_COUNT}
+    #Calculation of the Submitted Applications
+    ${SUBMITTED_APPLICATIONS}=    Get matching xpath count    //*[text()="Submitted"]
+    ${SUBMITTED_COUNT}=    Get text    css=li:nth-child(4) > div > span
+    Should Be Equal As Integers    ${SUBMITTED_APPLICATIONS}    ${SUBMITTED_COUNT}
+    #TODO ADD Check for the \ beyond 50% counts when we will have test data
 
 Comp admin can open the view mode of the application
     [Documentation]    INFUND-2300,INFUND-2304, INFUND-2435, INFUND-7503

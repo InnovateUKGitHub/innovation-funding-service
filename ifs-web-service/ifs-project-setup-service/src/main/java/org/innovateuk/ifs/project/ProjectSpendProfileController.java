@@ -156,7 +156,7 @@ public class ProjectSpendProfileController {
 
 
     private final String saveSpendProfileSuccessView(Long projectId, Long organisationId, Long userId) {
-        final String urlSuffix = projectService.isProjectManager(userId, projectId) ? "/review" : "";
+        final String urlSuffix = projectService.isUserLeadPartner(projectId, userId) ? "/review" : "";
         return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
 
     }
