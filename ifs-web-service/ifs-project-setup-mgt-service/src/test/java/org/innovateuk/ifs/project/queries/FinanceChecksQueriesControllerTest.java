@@ -278,7 +278,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testSaveNewResponse() throws Exception {
 
-        when(financeCheckServiceMock.savePost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
+        when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(1L))).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/"+queryId+"/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
@@ -286,7 +286,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 
-        verify(financeCheckServiceMock).savePost(savePostArgumentCaptor.capture(), eq(1L));
+        verify(financeCheckServiceMock).saveQueryPost(savePostArgumentCaptor.capture(), eq(1L));
 
         assertEquals("Query text", savePostArgumentCaptor.getAllValues().get(0).body);
         assertEquals(loggedInUser, savePostArgumentCaptor.getAllValues().get(0).author);
@@ -564,7 +564,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        when(financeCheckServiceMock.savePost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
+        when(financeCheckServiceMock.saveQueryPost(any(PostResource.class), eq(5L))).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_FORBIDDEN));
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/5/new-response?query_section=Eligibility")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED)
                 .param("response", "Query"))
