@@ -248,3 +248,20 @@ select[disabled]{
   border: 1px solid #bfc1c3;
   color: #0b0c0c;
 }
+
+
+/*----- Form footer - containing 'Mark as complete' CTA  ----*/
+.form-footer{
+  @include core-16;
+  color: $secondary-text-colour;
+  background: $panel-colour;
+  padding: 0.5em 0;
+
+  @include media-down(mobile) {
+    .alignright{
+      text-align: left;
+      margin-top: 0.5em;
+    }
+  }
+
+}

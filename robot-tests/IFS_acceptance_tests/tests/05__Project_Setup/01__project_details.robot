@@ -191,14 +191,23 @@ Lead partner can see the application overview
     [Tags]    HappyPath
     Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=View application and feedback
-    Then the user should see the text in the page    Congratulations, your application has been successful
-    And the user should see the text in the page    Application questions
+    Then the user should see the element    jQuery=.success-alert h2:contains("Congratulations, your application has been successful")
+    And the user should see the element     jQuery=h2:contains("Application questions")
     And the user should not see an error in the page
-    [Teardown]    the user goes back to the previous page
+
+Lead partner is able to see finances without an error
+    [Documentation]  INFUND-7634
+    [Tags]
+    Given the user clicks the button/link  jQuery=button:contains("Finances Summary")
+    When the user clicks the button/link   link=Detailed Organisation Finances
+    Then the user should not see an error in the page
+    And the user should see the element    jQuery=h2:contains("Finance summary")
+    Then the user clicks the button/link   link=Application Summary
 
 Lead partner can see the overview of the project details
     [Documentation]    INFUND-2613
     [Tags]    HappyPath
+    Given the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Project details
     Then the user should see the text in the page    Please supply the following details for your project and the team
     And the user should see the element    link=Target start date
@@ -384,7 +393,7 @@ Non lead partner nominates finance contact
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
-    # and not in Bank Details. Because for this scenario there are testing data for project 3.
+    # and not in Bank Details. Because for this scenario there are testing data for project 4.
 Non lead partner not eligible for funding
     [Documentation]    INFUND-7090, INFUND-7174
     [Tags]    HappyPath
@@ -620,7 +629,7 @@ Internal user can see the Project details as submitted
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given the user navigates to the page     ${internal_project_summary}
-    When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(1) td.status.ok a
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-child(2) td.status.ok a
     Then the user should see the element     jQuery=#project-details
     And the user can see all project details completed
     When the user should see the element     jQuery=#project-details-finance

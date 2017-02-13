@@ -13,6 +13,7 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.aff
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
@@ -252,11 +253,11 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void updateProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkills, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkillsEditResource, OK);
 
-        RestResult<Void> response = service.updateProfileSkills(userId, profileSkills);
+        RestResult<Void> response = service.updateProfileSkills(userId, profileSkillsEditResource);
         assertTrue(response.isSuccess());
     }
 

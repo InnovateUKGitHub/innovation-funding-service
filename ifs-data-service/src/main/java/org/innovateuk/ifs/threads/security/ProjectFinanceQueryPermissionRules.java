@@ -30,14 +30,14 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return query.posts.size() == 1 && query.posts.get(0).author.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "PF_VIEW", description = "Only Internal of Project Finance Users can view Queries")
+    @PermissionRule(value = "PF_READ", description = "Only Internal of Project Finance Users can view Queries")
     public boolean onlyInternalUsersOrFinanceContactCanViewTheirQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
     }
 
     @PermissionRule(value = "PF_ADD_POST", description = "Internal users or Project Finance users can add posts to a query,"
             + " but first post has to come from the Internal user.")
-    public boolean onlyInternalOrProjectFinanceUsersCanAddPosts(final QueryResource query, final UserResource user) {
+    public boolean onlyInternalUsersOrFinanceContactAddPostToTheirQueries(final QueryResource query, final UserResource user) {
         return query.posts.isEmpty() ? isProjectFinanceUser(user) : isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
     }
 

@@ -50,8 +50,8 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
     public void getReadyToOpenKeyStatisticsByCompetition() throws Exception {
         Long competitionId = 1L;
         CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource = newCompetitionReadyToOpenKeyStatisticsResource()
-                .withAssessorsAccepted(1L)
-                .withAssessorsInvited(2L)
+                .withAssessorsAccepted(1)
+                .withAssessorsInvited(2)
                 .build();
 
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(keyStatisticsResource.getAssessorsInvited());
@@ -65,12 +65,12 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
     public void getOpenKeyStatisticsByCompetition() throws Exception {
         Long competitionId = 1L;
         CompetitionOpenKeyStatisticsResource keyStatisticsResource = newCompetitionOpenKeyStatisticsResource()
-                .withAssessorsAccepted(1L)
-                .withAssessorsInvited(2L)
-                .withApplicationsPastHalf(3L)
-                .withApplicationsPerAssessor(4L)
-                .withApplicationsStarted(5L)
-                .withApplicationsSubmitted(6L)
+                .withAssessorsAccepted(1)
+                .withAssessorsInvited(2)
+                .withApplicationsPastHalf(3)
+                .withApplicationsPerAssessor(4)
+                .withApplicationsStarted(5)
+                .withApplicationsSubmitted(6)
                 .build();
 
         Competition competition = newCompetition()
@@ -95,12 +95,12 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         long competitionId = 1L;
 
         CompetitionClosedKeyStatisticsResource keyStatisticsResource = newCompetitionClosedKeyStatisticsResource()
-                .withAssessorsInvited(5L)
-                .withAssessorsAccepted(6L)
-                .withApplicationsPerAssessor(2L)
-                .withApplicationsRequiringAssessors(2L)
-                .withAssessorsWithoutApplications(2L)
-                .withAssignmentCount(3L)
+                .withAssessorsInvited(5)
+                .withAssessorsAccepted(6)
+                .withApplicationsPerAssessor(2)
+                .withApplicationsRequiringAssessors(2)
+                .withAssessorsWithoutApplications(2)
+                .withAssignmentCount(3)
                 .build();
 
         Competition competition = newCompetition()
@@ -146,11 +146,11 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         long competitionId = 1L;
 
         CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = newCompetitionInAssessmentKeyStatisticsResource()
-                .withAssessmentsStarted(1L)
-                .withAssessmentsSubmitted(2L)
-                .withAssignmentCount(3L)
-                .withAssignmentsAccepted(4L)
-                .withAssignmentsWaiting(5L)
+                .withAssessmentsStarted(1)
+                .withAssessmentsSubmitted(2)
+                .withAssignmentCount(3)
+                .withAssignmentsAccepted(4)
+                .withAssignmentsWaiting(5)
                 .build();
 
         List<Assessment> assessments = newAssessment()

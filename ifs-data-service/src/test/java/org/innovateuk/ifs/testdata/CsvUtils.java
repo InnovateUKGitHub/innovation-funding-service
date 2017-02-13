@@ -7,6 +7,7 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -343,6 +344,8 @@ class CsvUtils {
 
         String assessorEmail;
         String applicationName;
+        AssessmentRejectOutcomeValue rejectReason;
+        String rejectComment;
         AssessmentStates state;
 
         private AssessmentLine(List<String> line) {
@@ -350,6 +353,9 @@ class CsvUtils {
             int i = 0;
             assessorEmail = line.get(i++);
             applicationName = line.get(i++);
+            String rejectReasonString = nullable(line.get(i++));
+            rejectReason = rejectReasonString != null ? AssessmentRejectOutcomeValue.valueOf(rejectReasonString) : null;
+            rejectComment = nullable(line.get(i++));
             state = AssessmentStates.valueOf(line.get(i++));
         }
     }
