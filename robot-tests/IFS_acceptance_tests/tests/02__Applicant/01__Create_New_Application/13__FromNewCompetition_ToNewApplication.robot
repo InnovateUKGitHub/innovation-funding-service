@@ -131,12 +131,18 @@ As next step the Applicant cannot see the turnover field
 Organisation server side validation when no
     [Documentation]  INFUND-6393
     [Tags]  HappyPath
-    # TODO Pending due to INFUND-8033
     [Setup]  log in as a different user  &{lead_applicant_credentials}
     Given the user navigates to Your-finances page    ${applicationTitle}
     Then the user clicks the button/link  link=Your organisation
     When the user clicks the button/link  jQuery=button:contains("Mark as complete")
     Then the user should see the element  jQuery=.error-summary-list:contains("Enter your organisation size.")
+    When the user enters text to a text field  jQuery=label:contains("Turnover") + input  -42
+    And the user enters text to a text field   jQuery=label:contains("employees") + input  15.2
+    And the user clicks the button/link        jQuery=button:contains("Mark as complete")
+    Then the user should see the element       jQuery=.error-summary li:contains("This field should be 0 or higher.")
+    And the user should see the element        jQuery=.error-summary li:contains("This field can only accept whole numbers.")
+    And the user should not see the element    jQuery=h1:contains("Your finances")
+    # Checking that by marking as complete, the user doens't get redirected to the main finances page
 
 Organisation client side validation when no
     [Documentation]  INFUND-6393
@@ -181,10 +187,14 @@ Organisation server side validation when yes
     [Documentation]  INFUND-6393
     [Tags]
     [Setup]  the user navigates to Your-finances page  ${compWITHGrowth}
-    # TODO Update when INFUND-8033 is done
-    Given the user clicks the button/link  link=Your organisation
-    When the user clicks the button/link   jQuery=button:contains("Mark as complete")
-    Then the user should see the element   jQuery=.error-summary-list:contains("Enter your organisation size.")
+    Given the user clicks the button/link   link=Your organisation
+    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    Then the user should see the element    jQuery=.error-summary-list:contains("Enter your organisation size.")
+    When the user should see the element    jQuery=.error-summary-list li:contains("This field cannot be left blank.")
+    Then the user should see the element    jQuery=.error-message:contains("This field cannot be left blank.")
+    When the user should see the element    jQuery=.error-summary-list li:contains("Please enter a valid date.")
+    Then the user should see the element    jQuery=.error-message:contains("Please enter a valid date.")
+    # TODO Please update validation messages when INFUND-8033 is completed
 
 Organisation client side validation when yes
     [Documentation]  INFUND-6395
