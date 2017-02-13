@@ -22,7 +22,7 @@ public class CommonThreadController<R> {
     @RequestMapping(value = "/all/{contextClassId}", method = GET)
     public RestResult<List<R>> findAll(@PathVariable("contextClassId") final Long contextClassId) {
         return service.findAll(contextClassId).toGetResponse();
-    }//
+    }
 
     @RequestMapping(value = "/{threadId}", method = GET)
     public RestResult<R> findOne(@PathVariable("threadId") final Long threadId) {

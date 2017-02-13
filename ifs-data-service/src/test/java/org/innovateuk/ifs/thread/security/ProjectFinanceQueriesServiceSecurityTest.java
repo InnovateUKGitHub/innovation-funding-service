@@ -41,7 +41,7 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
         assertAccessDenied(
                 () -> classUnderTest.create(queryResource),
                 () -> {
-                    verify(queryRules).onlyInternalUsersCanCreateQueries(isA(QueryResource.class), isA(UserResource.class));
+                    verify(queryRules).onlyProjectFinanceUsersCanCreateQueries(isA(QueryResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(queryRules);
                 });
     }
@@ -51,7 +51,7 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
-            verify(queryRules).onlyInternalUsersOrFinanceContactCanViewTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
+            verify(queryRules).onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(queryRules);
         });
     }
@@ -63,7 +63,7 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
         ServiceResult<List<QueryResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(queryRules, times(2)).onlyInternalUsersOrFinanceContactCanViewTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
+        verify(queryRules, times(2)).onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(queryRules);
     }
 
@@ -75,7 +75,7 @@ public class ProjectFinanceQueriesServiceSecurityTest extends BaseServiceSecurit
 
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
-            verify(queryRules).onlyInternalUsersOrFinanceContactAddPostToTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
+            verify(queryRules).onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(isA(QueryResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(queryRules);
         });
     }
