@@ -24,7 +24,7 @@
 <div th:fragment="textarea (field)">
     <div class="form-group">
         <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
-            <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
+            <span class="form-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
             <div th:include="question-type/form-elements :: form-validation-messages (id=${field.id})" th:remove="tag" />
         </label>
 
