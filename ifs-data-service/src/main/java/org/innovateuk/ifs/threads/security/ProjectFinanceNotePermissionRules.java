@@ -12,8 +12,8 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 @PermissionRules
 public class ProjectFinanceNotePermissionRules {
 
-    @PermissionRule(value = "PF_CREATE", description = "Only Internal Users can create Notes")
-    public boolean onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
+    @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Notes")
+    public boolean onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user) && noteHasInitialPostWithAuthorBeingCurrentUser(note, user);
     }
 
@@ -21,13 +21,13 @@ public class ProjectFinanceNotePermissionRules {
         return note.posts.size() == 1 && note.posts.get(0).author.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "PF_ADD_POST", description = "Internal users can add posts to a note")
-    public boolean onlyInternalUsersCanAddPosts(final NoteResource note, final UserResource user) {
+    @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users can add posts to a note")
+    public boolean onlyProjectFinanceUsersCanAddPosts(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(value = "PF_READ", description = "Only Internal of Project Finance Users can view Notes")
-    public boolean onlyInternalUsersCanViewNotes(final NoteResource note, final UserResource user) {
+    @PermissionRule(value = "PF_READ", description = "Only Project Finance Users can view Notes")
+    public boolean onlyProjectFinanceUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user);
     }
 }
