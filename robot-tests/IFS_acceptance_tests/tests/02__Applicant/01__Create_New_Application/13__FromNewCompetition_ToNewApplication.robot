@@ -133,7 +133,7 @@ Organisation server side validation when no
     [Tags]  HappyPath
     # TODO Pending due to INFUND-8033
     [Setup]  log in as a different user  &{lead_applicant_credentials}
-    Given the user navigates to his finances page  ${applicationTitle}
+    Given the user navigates to Your-finances page    ${applicationTitle}
     Then the user clicks the button/link  link=Your organisation
     When the user clicks the button/link  jQuery=button:contains("Mark as complete")
     Then the user should see the element  jQuery=.error-summary-list:contains("Enter your organisation size.")
@@ -145,6 +145,7 @@ Organisation client side validation when no
     When the user enters text to a text field  jQuery=label:contains("Turnover") + input  -33
     And the user moves focus to the element    jQuery=label:contains("Full time employees") + input
     Then the user should see the element       jQuery=span:contains("Turnover") ~ .error-message:contains("This field should be 0 or higher.")
+    And the user enters text to a text field   jQuery=label:contains("Full time employees") + input  ${empty}
     When the user moves focus to the element   jQuery=button:contains("Mark as complete")
     And the user should see the element        jQuery=span:contains("Full time employees") ~ .error-message:contains("This field cannot be left blank.")
     When the user enters text to a text field  jQuery=label:contains("Turnover") + input  150
@@ -156,6 +157,7 @@ Mark Organisation as complete when no
     [Documentation]  INFUND-6393
     [Tags]  HappyPath
     Given the user enters text to a text field  jQuery=label:contains("employees") + input  42
+    And the user enters text to a text field    jQuery=label:contains("Turnover") + input  17506
     And the user selects medium organisation size
     When the user clicks the button/link        jQuery=button:contains("Mark as complete")
     Then the user should see the element        jQuery=img.complete[alt*="Your organisation"]
@@ -178,7 +180,7 @@ Funding subsection opens when Appl details and organisation info are provided
 Organisation server side validation when yes
     [Documentation]  INFUND-6393
     [Tags]
-    [Setup]  the user navigates to his finances page  ${compWITHGrowth}
+    [Setup]  the user navigates to Your-finances page  ${compWITHGrowth}
     # TODO Update when INFUND-8033 is done
     Given the user clicks the button/link  link=Your organisation
     When the user clicks the button/link   jQuery=button:contains("Mark as complete")
@@ -219,7 +221,7 @@ Organisation client side validation when yes
 Mark Organisation as complete when yes
     [Documentation]  INFUND-6393
     [Tags]
-    [Setup]  the user navigates to his finances page  ${compWITHGrowth}
+    [Setup]  the user navigates to Your-finances page  ${compWITHGrowth}
     Given the user clicks the button/link             link=Your organisation
     And the user selects medium organisation size
     Then the user enters text to a text field         css=input[name$="month"]  12
@@ -255,7 +257,7 @@ the user should see the dates in full format
     the user should see the element  jQuery=td:contains("Briefing event") ~ td:contains("${tomorrow_nextyear}")
 
 the the user should see that the funding depends on the research area
-    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must give your project a research category in application details")
+    the user should see the element  jQuery=h3:contains("Your funding") + p:contains("You must select a research category in application details ")
 
 the user should see his finances empty
     the user should see the element  jQuery=thead:contains("Total project costs") ~ *:contains("£0")

@@ -32,7 +32,7 @@ Application number navigates to Overview
     Then The user should see the text in the page    00000021: Intelligent water system
     And the user should see the text in the page    University of Bath
     And the user should see the text in the page    Cardiff University
-    [Teardown]    The user goes back to the previous page
+    [Teardown]    the user clicks the button/link    link=Back
 
 View application progress page
     [Documentation]    INFUND-7042, INFUND-7046
@@ -54,7 +54,6 @@ Review the application
 View the available assessors
     [Documentation]    INFUND-7233
     [Tags]
-    #TODO update these selectors once the tables on this page have unique class names
     Then the user should see the element    jQuery=.column-two-thirds:contains("Assessors")
     And the available assessors information is correct
 

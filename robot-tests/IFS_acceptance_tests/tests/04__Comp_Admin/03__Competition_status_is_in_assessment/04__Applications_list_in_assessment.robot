@@ -5,26 +5,31 @@ Documentation     INFUND-1987
 ...
 ...               INFUND-2411 When the competition is in assessment the total costs are showingn as zero in the list
 ...
-...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition so that I can see information and further actions for the competition
+...               INFUND-6602 As a member of the competitions team I can navigate to the dashboard of an 'In assessment' competition so...
+...
+...               INFUND-7367 Competition management: Applications dashboard
+...
+...               INFUND-7371 Competition management: View list of submitted applications
+...
+...               INFUND-7696 Competition management: View in progress/completed applications
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
-Competition status should be correct
-    [Documentation]    INFUND-2307
-    ...
-    ...    INFUND-6602
+Applications Dashboard
+    [Documentation]    INFUND-7367
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Applications")
-    And the user clicks the button/link    link=Submitted applications
-    And the user should see the text in the page     Sustainable living models for the future
+    Then The user should see the element    jQuery=.button:contains(All applications)
+    And The user should see the element    link=Submitted applications
 
-Columns show of the submitted applications
-    [Documentation]    INFUND-2307
+Submitted applications
+    [Documentation]    INFUND-7367 INFUND-7371
     [Tags]    HappyPath
+    When the user clicks the button/link    link=Submitted applications
     Then the user should see the text in the page    Application number
     And the user should see the text in the page    Project title
     And the user should see the text in the page    Lead
@@ -34,32 +39,43 @@ Columns show of the submitted applications
     And the user should see the text in the page    Total project cost (£)
     And the user should see the text in the page    Duration (months)
 
-Summary of the submitted applications
-    [Documentation]    INFUND-2307
+Submitted applications Key Statistics
+    [Documentation]    INFUND-7371
     [Tags]    HappyPath
     Then the calculations should be correct    css=.grid-row li:nth-child(2) span
     And both calculations in the page should show the same    css=.grid-row li:nth-child(2) span
 
+Submitted applications View completed applications
+    [Documentation]    INFUND-7351
+    [Tags]    HappyPath
+    Given the user clicks the button/link    link=00000018
+    And the user should see the text in the page    Application overview
+    When the user clicks the button/link    link=Back
+    Then the user should see the text in the page    Submitted applications
+
 Sort by Lead
     [Documentation]    INFUND-2307
     [Tags]    HappyPath    Pending
+    #TODO \ Pending sprint 22 stories
     When the application list is sorted by    Lead
     Then the applications should be sorted by column    3
 
 Sort by Grant requested
     [Documentation]    INFUND-2411
     [Tags]    Pending
+    #TODO \ Pending sprint 22 stories
     When the application list is sorted by    Grant requested
     Then the applications should be sorted by column    5
 
 Sort by Total project cost
     [Documentation]    INFUND-2411
     [Tags]    Pending
+    #TODO \ Pending sprint 22 stories
     When the application list is sorted by    Total project cost
     Then the applications should be sorted by column    6
 
 Finances are showing in the list
-    [Documentation]    INFUND-2411
+    [Documentation]    INFUND-7371
     [Tags]    HappyPath
     Then the user should see the text in the page    ${DEFAULT_INDUSTRIAL_FUNDING_SOUGHT_WITH_COMMAS}
     And the user should see the text in the page    ${DEFAULT_TOTAL_PROJECT_COST_WITH_COMMAS}
@@ -101,6 +117,7 @@ Non submitted applications from this competition should be visible
 Excel export
     [Documentation]    INFUND-1987, INFUND-4039
     [Tags]    HappyPath    Download    Pending
+    #TODO \ Pending sprint 22 stories
     When the admin downloads the excel
     And user opens the excel and checks the content
     [Teardown]    Remove the file from the operating system    submitted_applications.xlsx

@@ -49,6 +49,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is Sector competition
 ...
 ...               INFUND-6773 As a Competitions team member I want to see Finances form defaulted to Full application finances
+...
+...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -68,10 +70,10 @@ User can create a new competition
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
-    And The user should not see the element    link=Application Questions
-    And The user should not see the element    link=Application Finances
+    And The user should not see the element    link=Application
     And The user should not see the element    link=Assessors
-    And The user should not see the element    link=Description and brief
+    And The user should not see the element    link=Public content
+    And The user should see the element        link=Initial details
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -154,6 +156,22 @@ User should have access to all the sections
     And The user should see the element    link=Milestones
     And The user should see the element    link=Application
     And The user should see the element    link=Assessors
+    And The user should see the element    link=Public content
+
+Internal user can navigate to Public Content without having any issues
+    [Documentation]  INFUND-6922
+    [Tags]
+    Given the user clicks the button/link  link=Public content
+    Then the user should not see an error in the page
+    And the user should see the element  jQuery=h1:contains("Public content")
+    And the user should see the element  jQuery=a:contains("Competition information and search")
+    And the user should see the element  jQuery=a:contains("Summary")
+    And the user should see the element  jQuery=a:contains("Eligibility")
+    And the user should see the element  jQuery=a:contains("Scope")
+    And the user should see the element  jQuery=a:contains("Dates")
+    And the user should see the element  jQuery=a:contains("How to apply")
+    And the user should see the element  jQuery=a:contains("Supporting information")
+    [Teardown]  the user clicks the button/link  link=Return to setup overview
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
@@ -502,6 +520,43 @@ Assessor: Should have a Green Check
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
 
+Public content: Eligibility
+     [Documentation]    INFUND-6917 INFUND-7602
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Eligibility
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(3) img.complete
+
+Public content: Scope
+     [Documentation]    INFUND-6918 INFUND-7602
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Scope
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
+
+Public content: How to apply
+     [Documentation]    INFUND-6920 INFUND-7602
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=How to apply
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(6) img.complete
+
+Public content: Supporting information
+     [Documentation]    INFUND-6921 INFUND-7602
+     [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
+    When the user clicks the button/link                        link=Public content
+    And the user clicks the button/link                         link=Supporting information
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(7) img.complete
+
+
 *** Keywords ***
 the user moves focus and waits for autosave
     focus    link=Sign out
@@ -651,3 +706,19 @@ the user enters multiple innovation areas
     the user selects the option from the drop-down menu    Cyber Security    id=innovationAreaCategoryId-1
     the user clicks the button/link    jQuery=.buttonlink:contains("+ add another innovation area")
     the user selects the option from the drop-down menu    Design    id=innovationAreaCategoryId-2
+
+the user can add and remove multiple content groups
+    When the user clicks the button/link        jQuery=button:contains("Save and return")
+    Then the user should see a summary error    Please enter a heading.
+    And the user should see a summary error     Please enter content.
+    When the user enters text to a text field   id=heading-0    Heading 1
+    And the user enters text to a text field    jQuery=.editor:eq(0)     Content 1
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-1    Heading 2
+    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 2
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-2    Heading 3
+    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 3
+    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
+    Then the user should not see the element    id=heading-2
+    And the user should not see the element     jQuery=.editor:eq(2)
