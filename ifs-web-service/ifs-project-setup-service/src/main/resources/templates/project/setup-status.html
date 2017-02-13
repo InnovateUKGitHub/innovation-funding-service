@@ -34,7 +34,7 @@
         <!--<p><a href="/prototypes/4242-register-no-companies-house">Business has no legal responsibility to register with Companies House</a></p>-->
     <!--</div>*/-->
 
-    <p><a th:unless="${model.projectComplete}" th:href="@{/project/{id}/team-status(id=${model.projectId})}">What's the status of each of my partners?</a></p>
+    <p>What's the <a th:unless="${model.projectComplete}" th:href="@{/project/{id}/team-status(id=${model.projectId})}">status of my partners</a>?</p>
 
     <ul class="ifs-progress-list extra-margin">
 
