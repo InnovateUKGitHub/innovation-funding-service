@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.user.repository.RoleRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-//
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 
 public class SecurityRuleUtil {
