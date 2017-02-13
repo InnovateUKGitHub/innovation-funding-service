@@ -116,8 +116,8 @@ Non-lead partner can see the project setup page
     And the user should see the text in the page    Other documents
     And the user should see the element    jQuery=li.require-action:nth-of-type(2)    #Action required, seen by non-lead
     And the user should see the text in the page    Grant offer letter
-    And the user should see the text in the page    What's the status of each of my partners?
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the text in the page    status of my partners?
+    When the user clicks the button/link    link=status of my partners?
     Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
@@ -171,8 +171,8 @@ Lead partner can see the project setup page
     And the user should see the text in the page    Other documents
     And the user should see the element    jQuery=li.require-action:nth-of-type(2)    #Action required, seen by lead
     And the user should see the text in the page    Grant offer letter
-    And the user should see the text in the page    What's the status of each of my partners?
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    And the user should see the text in the page    status of my partners?
+    When the user clicks the button/link    link=status of my partners?
     Then the user navigates to the page    ${project_in_setup_page}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(1)
@@ -375,7 +375,7 @@ Non lead partner nominates finance contact
     [Tags]    HappyPath
     When Log in as a different user        &{collaborator1_credentials}
     Then the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners?
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=Project details
@@ -389,7 +389,7 @@ Non lead partner nominates finance contact
     And the user should see the element    link=Ludlow
     When the user navigates to the page    ${project_in_setup_page}
     Then the user should see the element   jQuery=li.complete:nth-of-type(2)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(1)
 
     # Please note that the following Test Cases regarding story INFUND-7090, have to remain in Project Details suite
@@ -402,7 +402,7 @@ Non lead partner not eligible for funding
     Then the user should not see the element    jQuery=ul li.require-action:nth-child(4)
     When The user navigates to the page and gets a custom error message    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/bank-details    You do not have the necessary permissions for your request
     When the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners?
     Then the user navigates to the page    ${server}/project-setup/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/team-status
     And the user should see the element    jQuery=#table-project-status tr:nth-child(2) td.status.na:nth-child(4)
 
@@ -529,7 +529,7 @@ Academic Partner nominates Finance contact
     [Tags]    HappyPath
     [Setup]    Log in as a different user   &{collaborator2_credentials}
     Then the user navigates to the page     ${project_in_setup_page}
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners?
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
     When the user clicks the button/link    link=Project setup status
     Then the user should not see the element    jQuery=li.require-action:nth-child(4)
@@ -545,7 +545,7 @@ Academic Partner nominates Finance contact
     When the user navigates to the page     ${project_in_setup_page}
     Then the user should see the element    jQuery=li.complete:nth-of-type(2)
     And the user should see the element    jQuery=li.require-action:nth-child(4)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(1)
 
 Project details submission flow
@@ -569,7 +569,7 @@ Lead partner can see the status update when all Project details are submitted
     Then the user should see the element   jQuery=ul li.complete:nth-child(2)
     And the user should see the element    jQuery=ul li.require-action:nth-child(4)
     And the user should see the element    jQuery=ul li.require-action:nth-child(7)
-    When the user clicks the button/link   link=What's the status of each of my partners?
+    When the user clicks the button/link   link=status of my partners?
     Then the user should see the element   id=table-project-status
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
@@ -592,7 +592,7 @@ All partners can view submitted project details
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     Then the user navigates to the page    ${project_in_setup_page}
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners?
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
     When log in as a different user         &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_details_page}
@@ -600,7 +600,7 @@ All partners can view submitted project details
     And all the fields are completed
     And the user should see the text in the page    ${project_details_submitted_message}
     When the user navigates to the page    ${project_in_setup_page}
-    Then the user clicks the button/link    link=What's the status of each of my partners?
+    Then the user clicks the button/link    link=status of my partners?
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(1)
 
 Non-lead partner cannot change any project details
