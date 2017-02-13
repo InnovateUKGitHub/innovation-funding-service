@@ -67,6 +67,14 @@ Summary: Contains the correct values when viewed
     And the user should see the element                 jQuery=.button:contains("Return to public content")
     And the user should see the element                 jQuery=.button-secondary:contains("Edit")
 
+Summary: Add, remove sections and submit
+    [Documentation]    INFUND-6916
+    [Setup]    the user navigates to the page    ${public_content_overview}
+    When the user clicks the button/link                         link=Summary
+    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                        jQuery=button:contains("Save and return")
+    And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
+
 Eligibility: Add, remove sections and submit
     [Documentation]    INFUND-6917 INFUND-7602
     [Setup]    the user navigates to the page    ${public_content_overview}
@@ -77,7 +85,7 @@ Eligibility: Add, remove sections and submit
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918 INFUND-7602
-    [Setup]    the user navigates to the page    foobar
+    [Setup]    the user navigates to the page    ${public_content_overview}
     When the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
