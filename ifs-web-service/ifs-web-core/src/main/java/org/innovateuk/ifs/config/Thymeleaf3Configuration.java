@@ -60,8 +60,6 @@ public class Thymeleaf3Configuration extends WebMvcConfigurerAdapter implements 
         SpringTemplateEngine engine = new SpringTemplateEngine();
         engine.setTemplateResolver(templateResolver());
         engine.setEnableSpringELCompiler(true);
-
-//        engine.addDialect(new CacheDialect());
         engine.addDialect(new Java8TimeDialect());
         engine.addDialect(new IfSThymeleafDialect());
 

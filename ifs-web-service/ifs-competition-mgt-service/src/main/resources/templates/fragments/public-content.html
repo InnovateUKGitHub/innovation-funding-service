@@ -1,4 +1,4 @@
-<!-- =================== Public content section - Competition information and search  ============================== -->
+    <!-- =================== Public content section - Competition information and search  ============================== -->
 <div th:fragment="section-search(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>This information is used for search results and the opening section of the competition page.</p>
     <th:block th:if="${model.readOnly}">
@@ -246,31 +246,31 @@
 <!-- =================== Public content section - Scope  =========================================================== -->
 <div th:fragment="section-scope(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
 <div th:fragment="section-supporting-information(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
 <div th:fragment="section-how-to-apply(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 
