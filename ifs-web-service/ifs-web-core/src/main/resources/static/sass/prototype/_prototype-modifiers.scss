@@ -14,7 +14,7 @@
   text-align: left;
 
   table td & {
-   text-align: left; 
+   text-align: left;
   }
 
 }
@@ -481,7 +481,7 @@ ul.underline{
   *zoom: 1;
 }
 
-/*---EXample code areas = taken from style guide---*/
+/*---Example code areas = taken from style guide---*/
 .result{
   border: 1px solid $border-colour;
   margin-bottom: 15px;
@@ -502,4 +502,15 @@ ul.underline{
     text-transform: none;
     top: 0;
   }
+}
+
+/*--- Modals - adding warning state ---*/
+[role="dialog"]{
+ &.warning-alert{
+  border-left: none;
+  border-top: 10px solid $red;
+  background-position: 20px 2.2em;
+  color: $text-colour;
+  padding-left: 60px;
+ }
 }
