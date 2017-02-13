@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
-import static java.util.Optional.of;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
@@ -22,7 +21,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
-    @PermissionRule( value = "PF_CREATE", description = "Only ProjectFinance Users can create Queries")
+    @PermissionRule(value = "PF_CREATE", description = "Only ProjectFinance Users can create Queries")
     public boolean onlyProjectFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
@@ -42,7 +41,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
     }
 
     private boolean isFinanceContact(UserResource user, Long projectFinance) {
-        return of(projectFinanceRepository.findOne(projectFinance))
+        return findProjectFinance(projectFinance)
                 .map(pf -> pf.getOrganisation().isFinanceContact(user.getId())).orElse(false);
     }
 
