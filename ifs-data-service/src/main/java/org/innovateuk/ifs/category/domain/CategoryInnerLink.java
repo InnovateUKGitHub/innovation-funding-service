@@ -3,9 +3,7 @@ package org.innovateuk.ifs.category.domain;
 import javax.persistence.*;
 
 /**
- * !!! WARNING !!!
- *
- * THIS CLASS SHOULD NOT BE EXTENDED OR USED DIRECTLY IN ANY MEANINGFUL WAY.
+ * NOTICE: THIS CLASS SHOULD NOT BE EXTENDED OR USED DIRECTLY IN ANY MEANINGFUL WAY.
  *
  * It only serves to circumvent JPA cascading issues & foreign key
  * constraints. This is primarily around deletion of {@link Category}
@@ -25,8 +23,8 @@ import javax.persistence.*;
  * cleared out.
  *
  * As a way around this, this class serves as a concrete class that
- * the maps against `category_link` rows in a NON-HIERARCHICAL manner
- * (it is no longer concerned about row type discrimination).
+ * the maps against `category_link` rows in a <strong>NON-POLYMORPHIC</strong>
+ * manner (it is no longer concerned about row type discrimination).
  *
  * Yes, this is dirty and feels wrong.
  * Yes, this could lead to weird scenarios.
