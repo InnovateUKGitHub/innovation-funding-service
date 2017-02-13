@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -55,4 +57,8 @@ public interface CompetitionService {
     void notifyAssessors(Long competitionId);
 
     ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId);
+
+    ByteArrayResource downloadPublicContentAttachment(Long contentGroupId);
+
+    FileEntryResource getPublicContentFileDetails(Long contentGroupId);
 }

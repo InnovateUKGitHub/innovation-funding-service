@@ -27,10 +27,57 @@
                      time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
             <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"></th:block></li>
     </ul>
-
     <p>
         <a href="details" class="button extra-margin">Start or continue your application</a>
     </p>
+
+    <ul class="inline-nav hide-mobile">
+        <th:block th:each="sectionType : ${model.allContentSections}">
+            <li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">
+                <h2>
+                    <a th:href="@{'/competition/' + ${model.competitionId} + '/overview/' + ${sectionType.path}}">
+                        <strong th:text="${sectionType.text}"></strong>
+                    </a>
+                </h2>
+            </li>
+        </th:block>
+    </ul>
+    <th:block>
+
+        <!-- Desktop layout -->
+        <div class="hide-mobile">
+            <th:block th:include="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection})"/>
+        </div>
+
+        <!-- Mobile layout - ->
+        <div class="show-mobile collapsible">
+            <h2 class="open">Summary</h2>
+            <div>
+                <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-summary" />
+            </div>
+            <h2 class="open">Eligibility</h2>
+            <div>
+                <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-eligibility" />
+            </div>
+            <h2 class="open">Scope</h2>
+            <div>
+                <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-scope" />
+            </div>
+            <h2 class="open">Dates</h2>
+            <div>
+                <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-dates" />
+            </div>
+            <h2 class="open">How to apply</h2>
+            <div>
+                <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-howToApply" />
+            </div>
+            <h2 class="open">Supporting information</h2>
+            <div>
+                <th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content-supportingInformation" />
+            </div>
+        </div>
+        -->
+    </th:block>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
 </main>

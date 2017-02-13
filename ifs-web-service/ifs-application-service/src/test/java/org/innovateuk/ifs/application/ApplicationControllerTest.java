@@ -387,7 +387,7 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(view().name("application-details"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition", competitionService.getById(app.getCompetition())))
-                .andExpect(model().attribute("sections", collectedSections))
+                .andExpect(model().attribute("contentGroups", collectedSections))
                 .andExpect(model().attribute("currentSectionId", section.getId()))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
                 .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
