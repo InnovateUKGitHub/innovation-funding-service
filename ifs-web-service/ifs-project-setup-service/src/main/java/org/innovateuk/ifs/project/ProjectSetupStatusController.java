@@ -92,9 +92,8 @@ public class ProjectSetupStatusController {
                 pu.getUser().equals(loggedInUser.getId()) &&
                 pu.getRoleName().equals(UserRoleType.PARTNER.getName())).get();
 
-        boolean financeContact = simpleFindFirst(projectUsers, pu ->
-                pu.getUser().equals(loggedInUser.getId()) &&
-                        pu.getRoleName().equals(UserRoleType.FINANCE_CONTACT.getName())).isPresent();
+
+        boolean isFinanceContact = projectUsers.stream().anyMatch(pu -> pu.isUser(loggedInUser.getId()) && pu.isFinanceContact());
 
         boolean leadPartner = teamStatus.getLeadPartnerStatus().getOrganisationId().equals(loggedInUserPartner.getOrganisation());
 
@@ -117,7 +116,7 @@ public class ProjectSetupStatusController {
         SectionAccess projectDetailsAccess = statusAccessor.canAccessProjectDetailsSection(organisation);
         SectionAccess monitoringOfficerAccess = statusAccessor.canAccessMonitoringOfficerSection(organisation);
         SectionAccess bankDetailsAccess = statusAccessor.canAccessBankDetailsSection(organisation);
-        SectionAccess financeChecksAccess = financeContact ? statusAccessor.canAccessFinanceChecksSection(organisation) : SectionAccess.NOT_ACCESSIBLE;
+        SectionAccess financeChecksAccess = isFinanceContact ? statusAccessor.canAccessFinanceChecksSection(organisation) : SectionAccess.NOT_ACCESSIBLE;
         SectionAccess spendProfileAccess = statusAccessor.canAccessSpendProfileSection(organisation);
         SectionAccess otherDocumentsAccess = statusAccessor.canAccessOtherDocumentsSection(organisation);
         SectionAccess grantOfferAccess = statusAccessor.canAccessGrantOfferLetterSection(organisation);
