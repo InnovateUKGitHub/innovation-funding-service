@@ -30,6 +30,9 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Base methods for all FinanceFormHandlers. For example methods that handle exceptions or errors that are possibly occurring in all FinanceFormHandlers.
  */
 public abstract class BaseFinanceFormHandler {
+
+    private static final String UNSPECIFIED_AMOUNT_STR = "£ 0";
+
     private static final Log LOG = LogFactory.getLog(BaseFinanceFormHandler.class);
 
     @Autowired
@@ -117,7 +120,7 @@ public abstract class BaseFinanceFormHandler {
             if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
                 id = Long.valueOf(financeFormField.getId());
             } else {
-                if(StringUtils.isEmpty(financeFormField.getValue()) || financeFormField.getValue().equals("£ 0")) {
+                if(StringUtils.isEmpty(financeFormField.getValue()) || financeFormField.getValue().equals(UNSPECIFIED_AMOUNT_STR)) {
                     continue;
                 }
                 id = -1L;
