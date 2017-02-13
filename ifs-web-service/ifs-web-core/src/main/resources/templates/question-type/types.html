@@ -259,20 +259,24 @@
                 <dl class="readonly-data">
                     <dt>Project title</dt>
                     <dd th:text="${currentApplication.name}">A novel solution to an old problem</dd>
-                    <dt>Research area</dt>
-                    <th:block th:each="cat : ${researchCategories}">
-                        <dd th:if="${cat.id == rsCategoryId}" th:text="${cat.name}" />
+                    <th:block th:unless="${rsCategoryId == null}">
+                        <dt>Research area</dt>
+                        <th:block th:each="cat : ${researchCategories}">
+                            <dd th:if="${cat.id == rsCategoryId}" th:text="${cat.name}" />
+                        </th:block>
                     </th:block>
-                    <dt>Is this application a resubmission of a previous application?</dt>
-                    <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}">No</dd>
-                    <th:block th:if="${currentApplication.resubmission}">
-                        <dt>Previous application number</dt>
-                        <dd th:text="${currentApplication.previousApplicationNumber}">1234</dd>
-                        <dt>Previous application title</dt>
-                        <dd th:text="${currentApplication.previousApplicationTitle}">A interesting solution to an old problem</dd>
+                    <th:block th:unless="${currentApplication.resubmission == null}">
+                        <dt>Is this application a resubmission of a previous application?</dt>
+                        <dd th:text="${currentApplication.resubmission ? 'Yes' : 'No'}">No</dd>
+                        <th:block th:if="${currentApplication.resubmission == true}">
+                            <dt>Previous application number</dt>
+                            <dd th:text="${currentApplication.previousApplicationNumber}">1234</dd>
+                            <dt>Previous application title</dt>
+                            <dd th:text="${currentApplication.previousApplicationTitle}">A interesting solution to an old problem</dd>
+                        </th:block>
                     </th:block>
                     <dt>Project start date</dt>
-                    <dd th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}">16 January 2017</dd>
+                    <dd th:if="${currentApplication.startDate}" th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}">16 January 2017</dd>
                     <dt>Duration in months</dt>
                     <dd th:text="${currentApplication.durationInMonths}">22 months</dd>
                     <dt>Lead organisation</dt>
@@ -289,7 +293,7 @@
             </th:block>
             <th:block th:unless="${(currentUser.id != questionAssignee?.assigneeUserId and questionAssignee?.assignee!=null) or (questionAssignee?.assignee==null and !userIsLeadApplicant)}">
                 <p th:unless="${appIsClosed}">
-                    <button th:if="${readonly}" class="buttonlink" type="submit" name="edit_question" th:value="${question.id}">Edit application details</button>
+                    <th:block th:if="${readonly}" th:include="question-type/form-elements :: form-edit-question-button" />
                     <th:block th:include="question-type/form-elements :: form-mark-as-complete-buttons" />
                 </p>
             </th:block>

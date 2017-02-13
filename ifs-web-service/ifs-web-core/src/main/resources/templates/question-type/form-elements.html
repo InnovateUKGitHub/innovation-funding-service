@@ -387,7 +387,7 @@
             name="edit_question"
             th:unless="${appIsClosed}"
             th:value="${question.getId()}"
-            th:class="${readonly} or ${costCategory!=null} ? 'button' : 'buttonlink'"
+            th:class="${readonly} or ${costCategory!=null} ? 'button-secondary' : 'buttonlink'"
             th:attrappend="formaction='/application/'+${currentApplication.getId()}+'/form/question/edit/'+${question.getId()}">
             Edit
     </button>
