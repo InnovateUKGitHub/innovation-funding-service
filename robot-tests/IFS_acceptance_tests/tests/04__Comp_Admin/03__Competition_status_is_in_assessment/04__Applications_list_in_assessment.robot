@@ -21,7 +21,7 @@ Applications Dashboard
     [Tags]    HappyPath
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
     When The user clicks the button/link    jQuery=.button:contains("Applications")
-    Then The user should see the element    jQuery=.button:contains(All applications)
+    Then The user should see the element    jQuery=a:contains(All applications)
     And The user should see the element    link=Submitted applications
 
 Submitted applications
