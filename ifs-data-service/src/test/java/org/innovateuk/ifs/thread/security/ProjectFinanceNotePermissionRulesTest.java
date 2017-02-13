@@ -63,35 +63,35 @@ public class ProjectFinanceNotePermissionRulesTest extends BasePermissionRulesTe
     }
 
     @Test
-    public void testThatOnlyInternalProjectFinanceUsersCanCreateNotes() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
-        assertFalse(rules.onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, intruder));
+    public void testThatOnlyProjectFinanceProjectFinanceUsersCanCreateNotes() throws Exception {
+        assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, intruder));
     }
 
     @Test
     public void testThatNoteCreationRequiresTheInitialPost() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
-        assertFalse(rules.onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(sampleNoteWithoutPosts(), projectFinanceUserOne));
+        assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(sampleNoteWithoutPosts(), projectFinanceUserOne));
     }
 
     @Test
     public void testThatNoteCreationRequiresTheInitialPostAuthorToBeTheCurrentUser() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
-        assertFalse(rules.onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserTwo));
+        assertTrue(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserOne));
+        assertFalse(rules.onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(noteResource, projectFinanceUserTwo));
     }
 
     @Test
     public void testThatOnlyProjectFinanceUserCanAddPostsToANote() throws Exception {
-        assertTrue(rules.onlyInternalUsersCanAddPosts(noteResource, projectFinanceUserOne));
-        assertTrue(rules.onlyInternalUsersCanAddPosts(noteResource, projectFinanceUserTwo));
-        assertFalse(rules.onlyInternalUsersCanAddPosts(noteResource, intruder));
+        assertTrue(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, projectFinanceUserOne));
+        assertTrue(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, projectFinanceUserTwo));
+        assertFalse(rules.onlyProjectFinanceUsersCanAddPosts(noteResource, intruder));
     }
 
     @Test
-    public void testThatOnlyInternalUsersViewNotes() {
-        assertTrue(rules.onlyInternalUsersCanViewNotes(noteResource, projectFinanceUserOne));
-        assertTrue(rules.onlyInternalUsersCanViewNotes(noteResource, projectFinanceUserTwo));
-        assertFalse(rules.onlyInternalUsersCanViewNotes(noteResource, intruder));
+    public void testThatOnlyProjectFinanceUsersViewNotes() {
+        assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserOne));
+        assertTrue(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, projectFinanceUserTwo));
+        assertFalse(rules.onlyProjectFinanceUsersCanViewNotes(noteResource, intruder));
     }
 
 }

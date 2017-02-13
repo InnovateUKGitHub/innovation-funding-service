@@ -42,7 +42,7 @@ public class ProjectFinanceNotesServiceSecurityTest extends BaseServiceSecurityT
         assertAccessDenied(
                 () -> classUnderTest.create(noteResource),
                 () -> {
-                    verify(noteRules).onlyInternalUsersCanCreateNotesWithInitialPostAndIsAuthor(isA(NoteResource.class), isA(UserResource.class));
+                    verify(noteRules).onlyProjectFinanceUsersCanCreateNotesWithInitialPostAndIsAuthor(isA(NoteResource.class), isA(UserResource.class));
                     verifyNoMoreInteractions(noteRules);
                 });
     }
@@ -52,7 +52,7 @@ public class ProjectFinanceNotesServiceSecurityTest extends BaseServiceSecurityT
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.findOne(1L), () -> {
-            verify(noteRules).onlyInternalUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
+            verify(noteRules).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(noteRules);
         });
     }
@@ -64,7 +64,7 @@ public class ProjectFinanceNotesServiceSecurityTest extends BaseServiceSecurityT
         ServiceResult<List<NoteResource>> results = classUnderTest.findAll(22L);
         assertEquals(0, results.getSuccessObject().size());
 
-        verify(noteRules, times(2)).onlyInternalUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
+        verify(noteRules, times(2)).onlyProjectFinanceUsersCanViewNotes(isA(NoteResource.class), isNull(UserResource.class));
         verifyNoMoreInteractions(noteRules);
     }
 
@@ -75,7 +75,7 @@ public class ProjectFinanceNotesServiceSecurityTest extends BaseServiceSecurityT
                 null, null));
 
         assertAccessDenied(() -> classUnderTest.addPost(isA(PostResource.class), 3L), () -> {
-            verify(noteRules).onlyInternalUsersCanAddPosts(isA(NoteResource.class), isNull(UserResource.class));
+            verify(noteRules).onlyProjectFinanceUsersCanAddPosts(isA(NoteResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(noteRules);
         });
     }
