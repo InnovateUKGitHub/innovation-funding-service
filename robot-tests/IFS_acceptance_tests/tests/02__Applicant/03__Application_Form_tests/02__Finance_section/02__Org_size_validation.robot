@@ -32,7 +32,7 @@ Funding section is now available
     [Documentation]    INFUND-6394
     [Tags]    HappyPath
     When the user clicks the button/link    link=Your funding
-    Then the user should see the text in the page    Please enter the funding level that you would like to apply for in this application
+    Then the user should see the text in the page    Enter your funding level
 
 
 Small org can't have more than 70% funding level
