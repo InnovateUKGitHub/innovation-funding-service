@@ -44,6 +44,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4839 As a project finance team member I want to be able to confirm the partner organisation is eligible for funding so that no further eligibility checks need to be carried out
 ...
 ...               INFUND-4823 As a project finance team member I want to be able to view the RAG rating for the viability and eligibility of each partner organisation if available so that I can be appraised of the effort level that may be expected to carry out the finance checks.
+...
+...               INFUND-7573 Partner view - main page - Finance Checks
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -543,6 +545,26 @@ Other internal users do not have access to Finance checks
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     # This is added to HappyPath because CompAdmin should NOT have access to FC page
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
+
+
+Finance contact can access the external view of the finance checks page
+    [Documentation]    INFUND-7573
+    [Tags]    HappyPath
+    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
+    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the text in the page    Innovate UK are reviewing your finances and may contact you with any queries
+    And the user should not see an error in the page
+
+
+Non finance contact can't view finance checks page
+    [Documentation]    INFUND-7573
+    [Tags]    Pending
+    # Pending due to INFUND-8158
+    [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should not see the element    link=Finance checks
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks    ${403_error_message}
 
 
 *** Keywords ***
