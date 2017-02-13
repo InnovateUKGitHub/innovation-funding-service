@@ -117,7 +117,7 @@ public abstract class BaseFinanceFormHandler {
             if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
                 id = Long.valueOf(financeFormField.getId());
             } else {
-                if(StringUtils.isEmpty(financeFormField.getValue())) {
+                if(StringUtils.isEmpty(financeFormField.getValue()) || financeFormField.getValue().equals("£ 0")) {
                     continue;
                 }
                 id = -1L;
