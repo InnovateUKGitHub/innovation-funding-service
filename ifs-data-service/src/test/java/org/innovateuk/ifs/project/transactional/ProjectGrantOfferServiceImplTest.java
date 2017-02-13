@@ -700,7 +700,7 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
 
     @Test
     public void testGenerateGrantOfferLetterFailureSpendProfilesNotApproved() {
-
+        when(projectRepositoryMock.findOne(123L)).thenReturn(project);
         when(projectFinanceServiceMock.getSpendProfileStatusByProjectId(123L)).thenReturn(serviceSuccess(ApprovalType.REJECTED));
 
         ServiceResult<Void> result = service.generateGrantOfferLetterIfReady(123L);

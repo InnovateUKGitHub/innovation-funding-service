@@ -1,76 +1,77 @@
   package org.innovateuk.ifs.project.controller;
 
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.address.resource.AddressResource;
-import org.innovateuk.ifs.address.resource.OrganisationAddressType;
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestErrorResponse;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.resource.FileEntryResource;
-import org.innovateuk.ifs.file.service.FileAndContents;
-import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
-import org.innovateuk.ifs.project.gol.resource.GOLState;
-import org.innovateuk.ifs.project.resource.ApprovalType;
-import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
-import org.innovateuk.ifs.project.resource.ProjectResource;
-import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
-import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
-import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
-import org.innovateuk.ifs.user.resource.UserResource;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
+  import org.innovateuk.ifs.BaseControllerMockMVCTest;
+  import org.innovateuk.ifs.address.resource.AddressResource;
+  import org.innovateuk.ifs.address.resource.OrganisationAddressType;
+  import org.innovateuk.ifs.commons.error.Error;
+  import org.innovateuk.ifs.commons.rest.RestErrorResponse;
+  import org.innovateuk.ifs.commons.service.ServiceResult;
+  import org.innovateuk.ifs.file.resource.FileEntryResource;
+  import org.innovateuk.ifs.file.service.FileAndContents;
+  import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
+  import org.innovateuk.ifs.project.gol.resource.GOLState;
+  import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
+  import org.innovateuk.ifs.project.resource.ProjectResource;
+  import org.innovateuk.ifs.project.resource.ProjectUserResource;
+  import org.innovateuk.ifs.project.status.resource.ProjectStatusResource;
+  import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
+  import org.innovateuk.ifs.project.transactional.ProjectService;
+  import org.innovateuk.ifs.project.transactional.SaveMonitoringOfficerResult;
+  import org.innovateuk.ifs.user.resource.UserResource;
+  import org.junit.Before;
+  import org.junit.Test;
+  import org.mockito.Mock;
+  import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+  import org.springframework.test.web.servlet.MvcResult;
+  import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+  import javax.servlet.http.HttpServletRequest;
+  import java.time.LocalDateTime;
+  import java.util.List;
+  import java.util.function.BiFunction;
+  import java.util.function.Function;
 
-import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
-import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
-import static org.innovateuk.ifs.commons.error.Error.fieldError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
-import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
-import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyMap;
-import static org.hamcrest.Matchers.hasSize;
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.isA;
-import static org.mockito.Mockito.*;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+  import static java.util.Arrays.asList;
+  import static java.util.Collections.emptyMap;
+  import static org.hamcrest.Matchers.hasSize;
+  import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+  import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+  import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
+  import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
+  import static org.innovateuk.ifs.commons.error.Error.fieldError;
+  import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+  import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+  import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
+  import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
+  import static org.innovateuk.ifs.project.builder.ProjectStatusResourceBuilder.newProjectStatusResource;
+  import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
+  import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+  import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+  import static org.innovateuk.ifs.util.JsonMappingUtil.fromJson;
+  import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
+  import static org.junit.Assert.assertEquals;
+  import static org.mockito.Matchers.isA;
+  import static org.mockito.Mockito.any;
+  import static org.mockito.Mockito.eq;
+  import static org.mockito.Mockito.never;
+  import static org.mockito.Mockito.verify;
+  import static org.mockito.Mockito.when;
+  import static org.springframework.http.MediaType.APPLICATION_JSON;
+  import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+  import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
+  import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+  import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+  import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+  import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+  import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+  import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+  import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectController> {
 
     private MonitoringOfficerResource monitoringOfficerResource;
 
     private RestDocumentationResultHandler document;
-
-    @Mock
-    ProjectGrantOfferService projectGrantOfferServiceMock;
 
     @Before
     public void setUp() {
@@ -483,15 +484,15 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
 
     @Test
     public void acceptOrRejectOtherDocuments() throws Exception {
-        FileEntryResource file = newFileEntryResource().build();
         when(projectServiceMock.acceptOrRejectOtherDocuments(1L, true)).thenReturn(serviceSuccess());
-        when(projectGrantOfferServiceMock.generateGrantOfferLetter(1L, file)).thenReturn(serviceSuccess(file));
+        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(1L)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/project/1/partner/documents/approved/{approved}", true).
                 contentType(APPLICATION_JSON).accept(APPLICATION_JSON))
                 .andExpect(status().isOk());
 
         verify(projectServiceMock).acceptOrRejectOtherDocuments(1L, true);
+        verify(projectGrantOfferServiceMock).generateGrantOfferLetterIfReady(1L);
     }
 
     @Test

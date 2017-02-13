@@ -49,7 +49,7 @@ public class ProjectController {
     private ProjectStatusService projectStatusService;
 
     @Autowired
-    private ProjectGrantOfferService projectGrantOfferLetterService;
+    private ProjectGrantOfferService projectGrantOfferService;
 
     @Autowired
     @Qualifier("projectSetupOtherDocumentsFileValidator")
@@ -255,7 +255,7 @@ public class ProjectController {
     public RestResult<Void> acceptOrRejectOtherDocuments(@PathVariable("projectId") long projectId, @PathVariable("approved") Boolean approved) {
         //TODO INFUND-7493
         return projectService.acceptOrRejectOtherDocuments(projectId, approved).andOnSuccess(() ->
-            projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE))
+            projectGrantOfferService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE))
         ).toPostResponse();
 
     }
