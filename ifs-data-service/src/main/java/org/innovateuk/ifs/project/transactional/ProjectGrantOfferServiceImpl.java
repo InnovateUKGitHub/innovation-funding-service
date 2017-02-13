@@ -236,11 +236,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
         Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
         ApprovalType spendProfileApproval = projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
 
-        if(project.isPresent()) {
-            return ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project.get().getOtherDocumentsApproved()) && project.get().getGrantOfferLetter() == null;
-        } else {
-            return false;
-        }
+        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
     }
 
     @Override
