@@ -41,11 +41,6 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return query.posts.isEmpty() ? isProjectFinanceUser(user) : isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
     }
 
-    @PermissionRule(value = "PF_DELETE", description = "Only Internal Users can delete a Query")
-    public boolean onlyInternalUsersCanDeleteQueries(final QueryResource query, final UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
     private boolean isFinanceContact(UserResource user, Long projectFinance) {
         return findProjectFinance(projectFinance)
                 .map(pf -> pf.getOrganisation().isFinanceContact(user.getId())).orElse(false);

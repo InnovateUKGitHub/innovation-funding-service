@@ -26,11 +26,6 @@ public class ProjectFinanceNotePermissionRules {
         return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(value = "PF_DELETE", description = "Only Internal Users can delete a Note")
-    public boolean onlyInternalUsersCanDeleteNotes(final NoteResource note, final UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
     @PermissionRule(value = "PF_READ", description = "Only Internal of Project Finance Users can view Notes")
     public boolean onlyInternalUsersCanViewNotes(final NoteResource note, final UserResource user) {
         return isProjectFinanceUser(user);
