@@ -60,10 +60,6 @@ task buildDocker( type:Docker, dependsOn: build) {
             from jar
             into stageDir
         }
-        copy{
-            from file('src/main/docker/jprofiler')
-            into stageDir
-        }
     }
 }
 
