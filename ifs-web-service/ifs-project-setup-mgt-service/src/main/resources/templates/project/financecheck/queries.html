@@ -52,7 +52,6 @@
     <hr />
 
     <th:block th:each="query : ${model.getQueries()}">
-        <hr />
         <h2 class="heading-medium non-margin-bottom" th:text="${query.title}">Query Thread Title</h2>
         <h3 class="heading-small no-margin" th:text="${#strings.capitalize(#strings.toLowerCase(query.sectionType))}">Query Thread Section</h3>
         <th:block th:each="(post, iteration : ${query.viewModelPosts})">
@@ -80,6 +79,9 @@
                     </th:block>
                 </div>
             </th:block>
+        </th:block>
+        <th:block th:if="${query.awaitingResponse and model.queryId == null}">
+            <hr />
         </th:block>
         <th:block th:if="${!query.awaitingResponse and model.queryId == null}">
             <hr />

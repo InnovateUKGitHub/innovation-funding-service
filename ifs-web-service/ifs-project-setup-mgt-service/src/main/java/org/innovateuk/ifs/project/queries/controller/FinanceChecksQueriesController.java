@@ -236,7 +236,7 @@ public class FinanceChecksQueriesController {
             }
             FinanceChecksQueriesViewModel viewModel = populateQueriesViewModel(projectId, organisationId, queryId, querySection, attachments);
             model.addAttribute("model", viewModel);
-            return ServiceResult.serviceSuccess();
+            return result;
         });
     }
 

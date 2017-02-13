@@ -28,6 +28,9 @@ IFS.application.loadOrder = {
     init: function () {
       IFS.core.unsavedChanges.init()
       IFS.core.repeatableFinanceRows.init()
+    },
+    finalize: function () {
+      IFS.application.financeSpecifics.init()
     }
   },
   'app-details': {
