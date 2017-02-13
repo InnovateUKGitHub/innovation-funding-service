@@ -16,7 +16,6 @@ ${public_content_competition_name}     Public content competition
 *** Test Cases ***
 User can view the public content
     [Documentation]    INFUND-6914
-    [Tags]    HappyPath
     Given the user navigates to the page     ${upcoming_competitions_dashboard}
     And the user clicks the button/link      link=${public_content_competition_name}
     Given the user clicks the button/link    link=Public content
@@ -49,7 +48,6 @@ Competition information and search: Valid values
 
 Summary: Contains the correct options
     [Documentation]    INFUND-6916
-    [Tags]    HappyPath
     Given the user clicks the button/link           link=Summary
     And the user should see the text in the page    Text entered into this section will appear in the summary tab
     Then the user should see the element            css=.editor
@@ -61,7 +59,6 @@ Summary: Contains the correct options
 
 Summary: User enters invalid values and saves
     [Documentation]    INFUND-6916
-    [Tags]    HappyPath
     When the user clicks the button/link                jQuery=.button:contains("Save and return")
     Then the user should see a summary error            Please enter a funding type.
     And the user should see a summary error             Please enter a project size.
@@ -69,7 +66,6 @@ Summary: User enters invalid values and saves
 
 Summary: User enters valid values and saves
     [Documentation]    INFUND-6916
-    [Tags]    HappyPath
     When the user enters valid data in the summary details
     Then the user should be redirected to the correct page    ${public_content_overview}
     And the user should see the element      link=Summary
@@ -77,7 +73,6 @@ Summary: User enters valid values and saves
 
 Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916
-    [Tags]    HappyPath
     Given the user navigates to the page           ${public_content_overview}
     When the user clicks the button/link                link=Summary
     Then the user should see the text in the page       Text entered into this section will appear in the summary tab
@@ -89,11 +84,12 @@ Summary: Contains the correct values when viewed
 Summary: Add, remove sections and submit
     [Documentation]    INFUND-6916
     Given the user navigates to the page            ${public_content_overview}
-    When the user clicks the button/link                        link=Summary
-    and  the user clicks the button/link                        jQuery=.button-secondary:contains("Edit")
-    Then the user can add and remove multiple content groups
+    When the user clicks the button/link                    link=Summary
+    And the user clicks the button/link                 jQuery=.button-secondary:contains("Edit")
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    Then the user can add and remove multiple content groups for summary
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
-    And the user should see the element                         jQuery=li:nth-of-type(4) img.complete
+    And the user should see the element                         jQuery=li:nth-of-type(2) img.complete
 
 Eligibility: Add, remove sections and submit
     [Documentation]    INFUND-6917 INFUND-7602
@@ -187,6 +183,23 @@ the user can add and remove multiple content groups
     And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
     Then the user should not see the element    id=heading-2
     And the user should not see the element     jQuery=.editor:eq(2)
+
+the user can add and remove multiple content groups for summary
+    When the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user clicks the button/link        jQuery=button:contains("Save and return")
+    Then the user should see a summary error    Please enter a heading.
+    And the user should see a summary error     Please enter content.
+    When the user enters text to a text field   id=heading-0    Heading 1
+    And the user enters text to a text field    jQuery=.editor:eq(1)     Content 1
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-1    Heading 2
+    And the user enters text to a text field    jQuery=.editor:eq(2)     Content 2
+    And the user clicks the button/link         jQuery=button:contains("+ add new section")
+    And the user enters text to a text field    id=heading-2    Heading 3
+    And the user enters text to a text field    jQuery=.editor:eq(3)     Content 3
+    And the user clicks the button/link         jQuery=button:contains("Remove section"):eq(1)
+    Then the user should not see the element    id=heading-2
+    And the user should not see the element     jQuery=.editor:eq(3)
 
 the user can add and remove multiple event groups
     When the user clicks the button/link        jQuery=button:contains("+ add new event")
