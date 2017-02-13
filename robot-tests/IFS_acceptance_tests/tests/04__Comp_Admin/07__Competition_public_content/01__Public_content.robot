@@ -52,7 +52,7 @@ Summary: User enters valid values and saves
     [Documentation]    INFUND-6916
     [Tags]    HappyPath
     When the user enters valid data in the summary details
-    Then the user should be redirected to the correct page
+ #   Then the user should be redirected to the correct page
     And the user should see the element      link=Summary
     And the user should see the element      link=Eligibility
 
@@ -60,16 +60,15 @@ Summary: Contains the correct values when viewed
     [Documentation]    INFUND-6916
     [Tags]    HappyPath
     Given the user clicks the button/link           link=Summary
-    Then the user should see the text in the page    Text entered into this section will appear in the summary tab
-    And the user should see the text in the page        Grant
-    And the user should see the text in the page        10
-    And the user should see the element                 jQuery=.button:contains("Return to public content")
-    And the user should see the element                 jQuery=.button:contains("Edit")
+    Then the user should see the text in the page   Text entered into this section will appear in the summary tab
+    And the user should see the text in the page    Grant
+    And the user should see the text in the page    10
+    And the user should see the element             jQuery=.button:contains("Return to public content")
+    And the user should see the element             jQuery=.button-secondary:contains("Edit")
+    And the user clicks the button/link             link=Public content
 
 Eligibility: Add, remove sections and submit
     [Documentation]    INFUND-6917 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
     And the user clicks the button/link                         link=Eligibility
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -77,8 +76,6 @@ Eligibility: Add, remove sections and submit
 
 Scope: Add, remove sections and submit
     [Documentation]    INFUND-6918 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
     And the user clicks the button/link                         link=Scope
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -86,8 +83,6 @@ Scope: Add, remove sections and submit
 
 How to apply: Add, remove sections and submit
     [Documentation]    INFUND-6920 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
     And the user clicks the button/link                         link=How to apply
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
@@ -95,8 +90,6 @@ How to apply: Add, remove sections and submit
 
 Supporting information: Add, remove sections and submit
     [Documentation]    INFUND-6921 INFUND-7602
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_COMP_SETUP}
-    When the user clicks the button/link                        link=Public content
     And the user clicks the button/link                         link=Supporting information
     Then the user can add and remove multiple content groups
     When the user clicks the button/link                        jQuery=button:contains("Save and return")
