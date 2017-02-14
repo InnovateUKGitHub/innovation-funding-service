@@ -58,7 +58,7 @@ public interface CompetitionService {
 
     ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId);
 
-    ByteArrayResource downloadPublicContentAttachment(Long contentGroupId);
+    ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId);
 
-    FileEntryResource getPublicContentFileDetails(Long contentGroupId);
+    ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId);
 }
