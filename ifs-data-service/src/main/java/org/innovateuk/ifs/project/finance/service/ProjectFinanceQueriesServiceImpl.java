@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -68,20 +69,22 @@ public class ProjectFinanceQueriesServiceImpl extends MappingThreadService<Query
                 NotificationSource from = systemNotificationSource;
 
                 List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getRole().isFinanceContact());
-                User financeContact = getOnlyElementOrEmpty(financeContacts).get().getUser();
+                Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
+                if (financeContact.isPresent()) {
 
-                String fullName = financeContact.getName();
+                    String fullName = financeContact.get().getUser().getName();
 
-                NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+                    NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.get().getUser().getEmail());
 
-                Map<String, Object> notificationArguments = new HashMap<>();
-                notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
+                    Map<String, Object> notificationArguments = new HashMap<>();
+                    notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
 
-                Notification notification = new Notification(from, singletonList(pmTarget), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
-                ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+                    Notification notification = new Notification(from, singletonList(pmTarget), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
+                    ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
 
-                if (!notificationResult.isSuccess()) {
-                    return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+                    if (!notificationResult.isSuccess()) {
+                        return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+                    }
                 }
             }
         }
