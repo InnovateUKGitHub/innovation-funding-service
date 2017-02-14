@@ -85,9 +85,9 @@ User pressing back button should get the correct version of the page
     Then the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
 
-Academic partner finnace section
+Academic partner finance section
     [Documentation]    INFUND-7522
-    [Tags]          HappyPath
+    [Tags]    HappyPath
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     Given the user navigates to Your-finances page     Providing sustainable childcare
     And The user should not see the element      link=Not requesting funding
@@ -97,11 +97,13 @@ Academic partner finnace section
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]          HappyPath
+    [Tags]    HappyPath   Pending
+    # Pending due to INFUND-8203
     Given the user navigates to Your-finances page     Providing sustainable childcare
     and the user clicks the button/link         link=Your funding
     and the user should see the element     jQuery=label[for="42"]
     and the user uploads the file  ${valid_pdf}
+    and the user should see the text in the page    ${valid_pdf}
 
 *** Keywords ***
 Custom Suite Setup
