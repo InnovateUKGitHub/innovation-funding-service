@@ -48,6 +48,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7573 Partner view - main page - Finance Checks
 ...
 ...               INFUND-5508 As a member of Project Finance I want to see the Finance Checks Overview table updating with approved funding amounts so that I can confirm any amended figures before generating the Spend Profile
+...
+...               INFUND-7574 Partner view updated finances - Finance Checks Eligibility
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -370,11 +372,13 @@ Clicking cancel on the eligibility modal
     And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
 
 Confirming eligibility should show info on a readonly page
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=a.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
@@ -457,18 +461,17 @@ Clicking cancel on the eligibility modal for partner
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the checkbox    project-eligible
-<<<<<<< HEAD
-    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")  # TODO to change to Return to finance checks 4834
-=======
     And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
->>>>>>> 548aea5a94f3fd65cb79dcfd06dd710de87d1f56
+
 
 Confirming eligibility should show info on a readonly page for partner
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
     And the user clicks the button/link    link=Finance checks
