@@ -698,4 +698,46 @@
   </div>
 </th:block>
 
+
+<!-- =========================== Modal dialog =========================== -->
+
+<th:block th:fragment="prot-modal-dialogs">
+  <div>
+    <a href="#" class="button" data-js-modal="test-modal">Launch modal</a>
+  </div>
+  <div class="extra-margin-top">
+    <a href="#" class="button" data-js-modal="test-warning-modal">Launch warning modal</a>
+  </div>
+
+  <div class="test-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
+    <div>
+      <div class="modal-content">
+        <h2 class="heading-medium no-margin">Submit project details</h2>
+        <p>Are you sure you wish to submit your project details to Innovate UK?</p>
+      </div>
+      <hr />
+      <div>
+        <a class="button" href="#">Submit</a>
+        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-warning-modal warning-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
+    <div>
+    <div class="modal-content">
+      <h2 class="heading-medium no-margin">Changing research category will reset the funding level of this application</h2>
+      <p>All partner organisations that have supplied their funding information will have to review and mark the section as complete again.</p>
+    </div>
+      <hr />
+      <div>
+        <a class="button" href="#">Submit</a>
+        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+      </div>
+    </div>
+  </div>
+</th:block>
+
 </html>
