@@ -42,7 +42,12 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-
+  jQuery(document).ready(function() {
+    jQuery('.modal-overlay').hide();
+    jQuery('.button, .button-link, .close').on('click', function (e) {
+      jQuery('.modal-overlay').toggle();
+    });
+  });
 	// ]]>
 </script>
 </body>
