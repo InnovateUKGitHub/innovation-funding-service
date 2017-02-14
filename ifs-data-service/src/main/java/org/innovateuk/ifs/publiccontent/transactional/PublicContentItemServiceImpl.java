@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.domain.InnovationArea;
@@ -123,7 +122,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         innovationAreaId.ifPresent(id -> {
             InnovationArea innovationArea = innovationAreaRepository.findOne(id);
             if(null != innovationArea) {
-                competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getSector().getId()).stream()
+                competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getId()).stream()
                         .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
                         .collect(Collectors.toList()));
             }
