@@ -105,8 +105,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                 .withCompetition(newCompetition()
                         .withId(COMPETITION_ID).build()).build(3);
 
-        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
-        when(competitionCategoryLinkRepository.findByCategoryId(2L)).thenReturn(competitionCategories);
+        when(competitionCategoryLinkRepository.findByCategoryId(INNOVATION_AREA_ID)).thenReturn(competitionCategories);
 
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.empty(), Optional.empty(), 10);
@@ -167,13 +166,10 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
                 .withCompetition(newCompetition()
                         .withId(COMPETITION_ID).build()).build(3);
 
-        InnovationArea innovationArea = newInnovationArea().withSector(newInnovationSector().withId(2L).build()).build();
-
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(newPublicContent().build());
         when(publicContentRepository.findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(expectedPublicContentIds, expectedCompetitionIds, new PageRequest(1, 10))).thenReturn(competitionPage);
         when(publicContentMapper.mapToResource(any(PublicContent.class))).thenReturn(newPublicContentResource().build());
-        when(innovationAreaRepository.findOne(INNOVATION_AREA_ID)).thenReturn(innovationArea);
-        when(competitionCategoryLinkRepository.findByCategoryId(2L)).thenReturn(competitionCategories);
+        when(competitionCategoryLinkRepository.findByCategoryId(INNOVATION_AREA_ID)).thenReturn(competitionCategories);
 
 
         ServiceResult<PublicContentItemPageResource> result = service.findFilteredItems(Optional.of(INNOVATION_AREA_ID), Optional.of("Big data"), Optional.of(1), 10);

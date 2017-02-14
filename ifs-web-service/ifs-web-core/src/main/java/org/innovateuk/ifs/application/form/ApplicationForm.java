@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.form;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.springframework.validation.FieldError;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
@@ -74,5 +75,11 @@ public class ApplicationForm extends Form {
 
     public void setStateAidAgreed(boolean stateAidAgreed) {
         this.stateAidAgreed = stateAidAgreed;
+    }
+
+    public String getRejectedValue(String fieldId){
+        FieldError fieldError = getBindingResult().getFieldError("formInput[" + fieldId + "]");
+        Object rejectedValue = fieldError != null ? fieldError.getRejectedValue() : null;
+        return rejectedValue != null ? rejectedValue.toString() : null;
     }
 }
