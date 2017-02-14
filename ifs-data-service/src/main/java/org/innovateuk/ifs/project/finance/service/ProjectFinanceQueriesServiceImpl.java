@@ -41,12 +41,12 @@ public class ProjectFinanceQueriesServiceImpl extends MappingThreadService<Query
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
-
     public enum Notifications {
         NEW_FINANCE_CHECK_QUERY_RESPONSE
     }
+
+    @Value("${ifs.web.baseURL}")
+    private String webBaseUrl;
 
     @Autowired
     public ProjectFinanceQueriesServiceImpl(QueryRepository queryRepository, QueryMapper queryMapper, PostMapper postMapper) {
