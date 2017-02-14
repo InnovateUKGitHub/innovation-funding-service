@@ -50,13 +50,13 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksSection);
     }
 
-    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "An internal can access the Spend Profile " +
+    @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "An internal user can access the Spend Profile " +
             "section when the lead partner submits the project spendprofile")
     public boolean internalCanAccessSpendProfileSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessSpendProfileSection);
     }
 
-    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An internal can access the Other Documents " +
+    @PermissionRule(value = "ACCESS_OTHER_DOCUMENTS_SECTION", description = "An internal user can access the Other Documents " +
             "section when the lead partner submits the documents")
     public boolean internalCanAccessOtherDocumentsSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessOtherDocumentsSection);
@@ -68,7 +68,7 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessGrantOfferLetterSendSection);
     }
 
-    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION", description = "A finance team can always access the Finance checks queries section")
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION", description = "A finance team user can always access the Finance checks queries section")
     public boolean internalCanAccessFinanceChecksQueriesSection(Long projectId, UserResource user) {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
     }
