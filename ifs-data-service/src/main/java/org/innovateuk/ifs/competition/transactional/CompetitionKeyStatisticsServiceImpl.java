@@ -4,10 +4,7 @@ import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
@@ -94,5 +91,17 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
         competitionKeyStatisticsResource.setAssessmentsStarted(assessmentRepository.countByActivityStateStateInAndTargetCompetitionId(of(OPEN, DECIDE_IF_READY_TO_SUBMIT, READY_TO_SUBMIT), competitionId));
         competitionKeyStatisticsResource.setAssessmentsSubmitted(assessmentRepository.countByActivityStateStateAndTargetCompetitionId(SUBMITTED, competitionId));
         return serviceSuccess(competitionKeyStatisticsResource);
+    }
+
+    @Override
+    public ServiceResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId) {
+        CompetitionFundedKeyStatisticsResource competitionFundedKeyStatisticsResource = new CompetitionFundedKeyStatisticsResource();
+        competitionFundedKeyStatisticsResource.setApplications(101);
+        competitionFundedKeyStatisticsResource.setApplicationsFunded(102);
+        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(103);
+        competitionFundedKeyStatisticsResource.setApplicationsOnHold(104);
+        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(105);
+        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(106);
+        return serviceSuccess(competitionFundedKeyStatisticsResource);
     }
 }

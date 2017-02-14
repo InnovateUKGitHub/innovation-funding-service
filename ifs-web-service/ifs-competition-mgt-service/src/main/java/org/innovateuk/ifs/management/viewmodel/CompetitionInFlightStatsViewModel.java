@@ -1,9 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 
 /**
  * Holder of key statistics for the in-flight dashboard
@@ -16,6 +13,7 @@ public class CompetitionInFlightStatsViewModel {
     private Integer statFour;
     private Integer statFive;
     private Integer statSix;
+    private boolean fundingNotificationsExist;
 
     public CompetitionInFlightStatsViewModel() {
 
@@ -50,6 +48,16 @@ public class CompetitionInFlightStatsViewModel {
         this.statThree = keyStatisticsResource.getAssignmentsAccepted();
         this.statFour = keyStatisticsResource.getAssessmentsStarted();
         this.statFive = keyStatisticsResource.getAssessmentsSubmitted();
+    }
+
+    public CompetitionInFlightStatsViewModel(CompetitionFundedKeyStatisticsResource keyStatisticsResource) {
+        this.statOne = keyStatisticsResource.getApplications();
+        this.statTwo = keyStatisticsResource.getApplicationsFunded();
+        this.statThree = keyStatisticsResource.getApplicationsNotFunded();
+        this.statFour = keyStatisticsResource.getApplicationsOnHold();
+        this.statFive = keyStatisticsResource.getApplicationsNotifiedOfDecision();
+        this.statSix = keyStatisticsResource.getApplicationsAwaitingDecision();
+        this.fundingNotificationsExist = statTwo > 0 || statThree > 0;
     }
 
     public int getStatOne() {
@@ -98,5 +106,13 @@ public class CompetitionInFlightStatsViewModel {
 
     public void setStatSix(Integer statSix) {
         this.statSix = statSix;
+    }
+
+    public boolean isFundingNotificationsExist() {
+        return fundingNotificationsExist;
+    }
+
+    public void setFundingNotificationsExist(boolean fundingNotificationsExist) {
+        this.fundingNotificationsExist = fundingNotificationsExist;
     }
 }
