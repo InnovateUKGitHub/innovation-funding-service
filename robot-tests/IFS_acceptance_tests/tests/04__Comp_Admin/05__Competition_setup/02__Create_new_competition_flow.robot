@@ -102,21 +102,21 @@ Initial details - User enters valid values and marks as done
     And the user should see the element             jQuery=.button:contains("Edit")
 
 Initial details - Sector competitions allow multiple innovation areas
-   [Documentation]    INFUND-6478, INFUND-6479
-   [Tags]    HappyPath
-   Given the user clicks the button/link            jQuery=.button:contains("Edit")
-   When the user enters multiple innovation areas
-   And the user clicks the button/link              jQuery=.button:contains("Done")
-   Then The user should see the text in the page    Cyber Security
-   And The user should see the text in the page     Design
+    [Documentation]    INFUND-6478, INFUND-6479
+    [Tags]    HappyPath
+    Given the user clicks the button/link            jQuery=.button:contains("Edit")
+    When the user enters multiple innovation areas
+    And the user clicks the button/link              jQuery=.button:contains("Done")
+    Then The user should see the text in the page    Cyber Security
+    And The user should see the text in the page     Design
 
 Initial Details - User can remove an innovation area
-   [Documentation]    INFUND-6478, INFUND-6479
-   [Tags]
-   Given the user clicks the button/link  jQuery=.button:contains("Edit")
-   And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
-   When the user clicks the button/link   jQuery=.button:contains("Done")
-   Then the user should not see the text in the page  Creative economy
+    [Documentation]    INFUND-6478, INFUND-6479
+    [Tags]
+    Given the user clicks the button/link  jQuery=.button:contains("Edit")
+    And the user clicks the button/link    jQuery=#innovation-row-2 button:contains('Remove')
+    When the user clicks the button/link   jQuery=.button:contains("Done")
+    Then the user should not see the text in the page  Creative economy
 
 Initial Details - drop down menu is populated with comp admin users
     [Documentation]    INFUND-6905

@@ -1,6 +1,6 @@
 *** Settings ***
 Documentation     INFUND-6914 Create 'Public content' menu page for "Front Door" setup pages
-
+...
 ...               INFUND-6916 As a Competitions team member I want to create a Public content summary page
 
 Suite Setup       Custom suite setup
