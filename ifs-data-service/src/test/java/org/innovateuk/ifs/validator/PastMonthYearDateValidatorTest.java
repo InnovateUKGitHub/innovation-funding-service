@@ -53,6 +53,15 @@ public class PastMonthYearDateValidatorTest {
     }
 
     @Test
+    public void testInvalidMonth() {
+        formInputResponse.setValue("45-2017");
+        validator.validate(formInputResponse, bindingResult);
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getAllErrors().size());
+        assertEquals("validation.standard.mm.yyyy.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
     public void testFutureInput() {
         String oneMonthInTheFuture = now().plusMonths(1).format(ofPattern("MM-yyyy"));
         formInputResponse.setValue(oneMonthInTheFuture);
