@@ -10,15 +10,17 @@
         <div class="column-two-thirds">
             <th:block ifs:utext="${contentGroup.content}" />
             <th:block th:if="${section.hasAttachment(contentGroup.id)}">
-                <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
-                   target="_blank"
-                   th:text="${section.fileName(contentGroup.id)}"></a>
+                <div>
+                    <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
+                        target="_blank"
+                        th:text="${section.fileName(contentGroup.id)}"></a>
+                </div>
             </th:block>
         </div>
     </div>
 </th:block>
 
-<!-- ===========================Front door - competition summary  =========================== -->
+<!-- ===========================Front door - competition summary  ============================= -->
 <th:block th:fragment="summary(section, competitionId)">
     <section>
         <div class="grid-row">
@@ -47,8 +49,7 @@
     </section>
 </th:block>
 
-<!-- ===========================Prototype Front door competition eligibility  =========================== -->
-
+<!-- ===========================Front door - competition eligibility  ============================ -->
 <th:block th:fragment="eligibility(section, competitionId)">
     <section>
         <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
@@ -56,79 +57,10 @@
 </th:block>
 
 
-<!-- ===========================Prototype Front door competition scope  =========================== -->
-
-<th:block th:fragment="prototype-front-door-competition-content-scope">
+<!-- ===========================Front door - competition scope  =================================== -->
+<th:block th:fragment="scope(section, competitionId)">
     <section>
-
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">Project scope</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p>Our Emerging and Enabling Technologies programme (E&amp;E) identifies and invests in new technologies and the underpinning capabilities that improve existing industries. Our aim is to inspire the new products, processes and services of tomorrow; those with the potential to unlock billions of pounds of value to industry and disrupt existing markets.</p>
-                <p>An emerging technology is one that is progressing in, or has recently emerged from, the research base. It allows us to do something that was not possible before. Because of this, it disrupts existing markets and enhances value to customers. It can improve our lives and lead to new sources of wealth generation.</p>
-                <p>Enabling technologies underpin the development of high-value products and services in many industrial sectors and markets. They improve performance and productivity.</p>
-                <p>The aim of this competition is to help businesses broaden out innovation activities, to find new sources of revenue from new products, processes or services. Projects will:</p>
-                <ul class="list list-bullet">
-                    <li>harness E&amp;E technologies across the economy</li>
-                    <li>develop and scale-up research and development to bring ideas, processes and products closer to availability at scale and commercial release</li>
-                    <li>use design processes to understand customer motivations and behaviour and use that insight to create better products, services and processes</li>
-                </ul>
-                <p>We are looking to fund a portfolio of projects that include:</p>
-                <ul class="list list-bullet">
-                    <li>technical feasibility</li>
-                    <li>industrial research</li>
-                    <li>experimental development</li>
-                    <li>We will choose a portfolio that achieves a balance across topic areas, timing and costs</li>
-                </ul>
-                <p>If your project falls outside these guidelines, please contact us at least 5 working days before the registration deadline to discuss further.</p>
-                <p>Projects must clearly show high-growth potential innovations in one or more of the following areas:</p>
-                <ul class="list list-bullet">
-                    <li>any emerging technology that can demonstrate a step change in performance and the potential to disrupt existing industrial approaches</li>
-                    <li>we are particularly looking to fund projects in energy harvesting, imaging technologies, graphene or biofilms</li>
-                    <li>any enabling technology in: satellite applications; electronics</li>
-                    <li>sensors; photonics; digital; internet of things; data; cybersecurity</li>
-                    <li>virtual or augmented reality; and distributed ledger technology</li>
-                </ul>
-                <p>The type of innovation project will depend on the challenges and opportunities your business faces</p>
-                <p>Proposals must show how project success will improve business growth and productivity and/or encourage export opportunities, including for at least one UK small and medium-sized enterprise (SME) involved in the project.</p>
-            </div>
-        </div>
-
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">Specific competition themes</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p>We welcome applications in one or more of the following areas:</p>
-                <p>Innovation in emerging technologies that show significant industry and commercial improvement in novel applications of:</p>
-                <ul class="list list-bullet">
-                    <li>energy harvesting</li>
-                    <li>imaging technologies</li>
-                    <li>graphene</li>
-                    <li>biofilms</li>
-                    <li>other areas of emerging technology</li>
-                </ul>
-                <p>Innovation in enabling technologies that:</p>
-                <ul class="list list-bullet">
-                    <li>show benefits across multiple industrial sectors or markets</li>
-                    <li>provide new products and services</li>
-                    <li>allow new applications for existing products and services</li>
-                    <li>enable new capabilities or business models</li>
-                </ul>
-                <p>We are particularly encouraging proposals that address:</p>
-                <ul class="list list-bullet">
-                    <li>systems that combine multiple technologies to deliver a focused, real-world outcome, for example, combining earth observation data from satellites with other technologies to improve business performance</li>
-                    <li>smart sensor systems that allow intelligent decisions to be made by looking at miniaturisation, low-power processing and communications</li>
-                    <li>smart technology that provides a richer and more informative output to the end user</li>
-                    <li>photonics for manufacturing, healthcare and imaging</li>
-                    <li>digital technologies with substantial potential to change and disrupt sectors of the economy; for example, distributed ledgers, or augmented and virtual reality</li>
-                </ul>
-                <p>We also encourage proposals to include user/customer perspectives or participation. Applications should clearly state the market opportunity and the barriers that the project addresses. Proposals should show how successful completion of the project will accelerate business growth. They should also include customer research and explain how that insight will be used to design more desirable products and solutions.</p>
-            </div>
-        </div>
-
+        <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
     </section>
 </th:block>
 
