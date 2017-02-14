@@ -87,10 +87,9 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection);
     }
 
-    @PermissionRule(value = "ACCESS_SIGNED_GRANT_OFFER_LETTER", description = "A lead partner can view or upload the Signed Grant Offer Letter " +
-            "when all other sections are complete and a Grant Offer Letter has been approved by the internal user")
-    public boolean leadPartnerCanAccessSignedGrantOfferLetterSection(Long projectId, UserResource user) {
-        return projectService.isUserLeadPartner(projectId, user.getId()) && doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection);
+    @PermissionRule(value = "LEAD_PARTNER_ACCESS", description = "A lead partner can access certain functionalities")
+    public boolean leadPartnerAccess(Long projectId, UserResource user) {
+        return projectService.isUserLeadPartner(projectId, user.getId());
     }
 
     @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "All lead partners can mark partners spend profiles as incomplete")

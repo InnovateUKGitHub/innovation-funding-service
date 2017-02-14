@@ -24,6 +24,6 @@ public class ProjectSignedGrantOfferLetterControllerSecurityTest extends BasePro
 
     @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.leadPartnerCanAccessSignedGrantOfferLetterSection(eq(123L), isA(UserResource.class));
+        return permissionRules -> permissionRules.leadPartnerAccess(eq(123L), isA(UserResource.class));
     }
 }

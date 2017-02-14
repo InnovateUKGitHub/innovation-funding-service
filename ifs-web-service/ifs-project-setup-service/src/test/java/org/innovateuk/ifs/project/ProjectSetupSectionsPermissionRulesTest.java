@@ -15,6 +15,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 
 import java.util.Collections;
 import java.util.List;
@@ -34,9 +35,7 @@ import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrg
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.OrganisationTypeEnum.BUSINESS;
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
+import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
@@ -95,6 +94,22 @@ public class ProjectSetupSectionsPermissionRulesTest extends BasePermissionRules
     @Test
     public void testGrantOfferLetterSectionAccess() {
         assertNonLeadPartnerSuccessfulAccess(ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection, () -> rules.partnerCanAccessGrantOfferLetterSection(123L, user));
+    }
+
+    @Test
+    public void testSignedGrantOfferLetterSuccessfulAccessByLead() {
+        UserResource userRes = new UserResource();
+        userRes.setId(1L);
+        when(projectServiceMock.isUserLeadPartner(123L, 1L)).thenReturn(true);
+        assertTrue(rules.leadPartnerAccess(123L, userRes));
+    }
+
+    @Test
+    public void testSignedGrantOfferLetterUnSuccessfulAccessByNonLead() {
+        UserResource userRes = new UserResource();
+        userRes.setId(1L);
+        when(projectServiceMock.isUserLeadPartner(123L, 1L)).thenReturn(false);
+        assertFalse(rules.leadPartnerAccess(123L, userRes));
     }
 
     @Test
