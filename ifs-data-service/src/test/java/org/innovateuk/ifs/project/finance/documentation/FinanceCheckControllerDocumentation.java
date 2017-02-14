@@ -38,7 +38,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -218,6 +217,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(123L, 456L);
     }
+
     @Override
     protected FinanceCheckController supplyControllerUnderTest() {
         return new FinanceCheckController();
