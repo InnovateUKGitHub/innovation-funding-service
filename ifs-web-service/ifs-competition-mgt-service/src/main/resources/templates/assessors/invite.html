@@ -203,7 +203,12 @@
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.assessors}">
-                            <td><span th:text="${assessor.name}">Dave Smith</span></td>
+                            <td>
+                                <a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${originQuery}" th:if="${assessor.id}"
+                                   th:text="${assessor.name}">John Barnes
+                                </a>
+                                <span th:text="${assessor.name}" th:if="${assessor.id == null}">John Barnes</span>
+                            </td>
                             <td th:text="${assessor.email}">dave@email.com</td>
                             <td th:text="${assessor.innovationAreas}">Earth Observation</td>
                             <td>

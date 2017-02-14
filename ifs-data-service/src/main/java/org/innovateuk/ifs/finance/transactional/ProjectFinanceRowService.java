@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.finance.transactional;
 
+import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.FinanceRow;
+import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.springframework.security.access.method.P;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
@@ -39,8 +42,7 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "UPDATE", securedType = FinanceRowItem.class, description = "Project Finance users can update  costs from project finance")
     ServiceResult<FinanceRowItem> updateCost(@P("costId")Long costId, FinanceRowItem newCostItem);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Project Finance users can add new rows to project finance categories")
+    @PreAuthorize("hasPermission(#projectFinanceId, 'org.innovateuk.ifs.finance.resource.ProjectFinanceResource', 'ADD_EMPTY_PROJECT_COST')")
     ServiceResult<FinanceRowItem> addCostWithoutPersisting(@P("projectFinanceId") Long projectFinanceId, Long questionId);
 
     @PreAuthorize("hasAuthority('project_finance')")
@@ -51,13 +53,14 @@ public interface ProjectFinanceRowService {
     @SecuredBySpring(value = "UPDATE", securedType = ProjectFinanceResource.class, description = "Internal users can update the finance checks details")
     ServiceResult<ProjectFinanceResource> updateCost(@P("projectFinanceId") Long projectFinanceId, ProjectFinanceResource applicationFinance);
 
-    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
-    @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
-            description = "Internal users can access the finance checks details")
+    @PostAuthorize("hasPermission(returnObject, 'READ_PROJECT_FINANCE')")
     ServiceResult<ProjectFinanceResource> financeChecksDetails(Long projectId, Long organisationId);
 
     @PreAuthorize("hasAuthority('project_finance')")
     @SecuredBySpring(value = "READ", securedType = ProjectFinanceResource.class,
             description = "Project Finance users can view financial overviews of Organisations on Projects")
     ServiceResult<List<ProjectFinanceResource>> financeChecksTotals(Long projectId);
+
+    @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
+    FinanceRowHandler getCostHandler(Long costItemId);
 }

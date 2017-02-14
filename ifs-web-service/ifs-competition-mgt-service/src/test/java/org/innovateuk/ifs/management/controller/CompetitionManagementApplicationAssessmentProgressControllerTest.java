@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResou
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Test;
@@ -18,6 +19,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessmentSummaryResourceBuilder.newApplicationAssessmentSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationAssessorResourceBuilder.newApplicationAssessorResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentCreateResourceBuilder.newAssessmentCreateResource;
@@ -28,6 +30,7 @@ import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TITLE;
 import static org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType.TOTAL_APPLICATIONS;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSESSMENT;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
@@ -67,6 +70,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                true,
                 "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
@@ -78,12 +82,44 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS"))
                 .andExpect(view().name("competition/application-progress"));
 
         InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService);
         inOrder.verify(applicationAssessmentSummaryRestService).getApplicationAssessmentSummary(applicationId);
         inOrder.verify(applicationAssessmentSummaryRestService).getAssessors(applicationId);
         inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void applicationProgress_preservesQueryParams() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+
+        ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = setupApplicationAssessmentSummaryResource(competitionId, applicationId);
+
+        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
+        when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(emptyList()));
+
+        ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
+                applicationId,
+                "Progressive Machines",
+                competitionId,
+                "Connected digital additive manufacturing",
+                true,
+                "Liquid Dynamics",
+                asList("Acme Ltd.", "IO Systems"),
+                emptyList(),
+                emptyList(),
+                emptyList(),
+                emptyList()
+        );
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&param2=def", competitionId, applicationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedModel))
+                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def"))
+                .andExpect(view().name("competition/application-progress"));
     }
 
     @Test
@@ -109,6 +145,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 "Progressive Machines",
                 competitionId,
                 "Connected digital additive manufacturing",
+                true,
                 "Liquid Dynamics",
                 asList("Acme Ltd.", "IO Systems"),
                 setupExpectedAssignedRows(),
@@ -264,6 +301,7 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
                 .withCompetitionName("Connected digital additive manufacturing")
                 .withLeadOrganisation("Liquid Dynamics")
                 .withPartnerOrganisations(asList("Acme Ltd.", "IO Systems"))
+                .withCompetitionStatus(IN_ASSESSMENT)
                 .build();
     }
 

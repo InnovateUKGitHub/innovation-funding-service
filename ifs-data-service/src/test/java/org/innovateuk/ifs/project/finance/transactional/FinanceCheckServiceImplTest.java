@@ -9,12 +9,8 @@ import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
-import org.innovateuk.ifs.notifications.resource.Notification;
-import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.CostCategory;
 import org.innovateuk.ifs.project.finance.domain.FinanceCheck;
 import org.innovateuk.ifs.project.finance.domain.FinanceCheckProcess;
@@ -25,16 +21,18 @@ import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.innovateuk.ifs.workflow.resource.State;
+import org.innovateuk.threads.resource.FinanceChecksSectionType;
+import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
@@ -56,9 +54,6 @@ import static org.innovateuk.ifs.finance.builder.OtherFundingCostCategoryBuilder
 import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.finance.resource.category.LabourCostCategory.WORKING_DAYS_PER_YEAR;
 import static org.innovateuk.ifs.finance.resource.category.OtherFundingCostCategory.OTHER_FUNDING;
-import static org.innovateuk.ifs.invite.builder.ProjectInviteBuilder.newInvite;
-import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.builder.CostBuilder.newCost;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.builder.CostGroupBuilder.newCostGroup;
@@ -67,7 +62,6 @@ import static org.innovateuk.ifs.project.builder.CostResourceBuilder.newCostReso
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
-import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.builder.SpendProfileBuilder.newSpendProfile;
 import static org.innovateuk.ifs.project.finance.builder.FinanceCheckBuilder.newFinanceCheck;
@@ -79,15 +73,11 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.PROJECT_SETUP_FINANCE_CHECKS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceCheckServiceImpl> {
-
-    private static final String webBaseUrl = "http://ifs-local-dev";
 
     @Test
     public void testGetByProjectAndOrganisationNotFound() {
@@ -312,7 +302,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
         User projectFinanceUser = newUser().withFirstName("Project").withLastName("Finance").build();
         Optional<SpendProfile> spendProfile = Optional.of(newSpendProfile().withGeneratedBy(projectFinanceUser).withGeneratedDate(new GregorianCalendar()).build());
-        List<ApplicationFinanceResource> applicationFinanceResourceList = newApplicationFinanceResource().build(3);
+        List<ProjectFinanceResource> projectFinanceResourceList = newProjectFinanceResource().build(3);
         ProjectTeamStatusResource projectTeamStatus = newProjectTeamStatusResource().build();
 
         FinanceCheckProcess process = newFinanceCheckProcess().withModifiedDate(new GregorianCalendar()).build();
@@ -327,7 +317,7 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(spendProfile);
-        when(financeRowServiceMock.financeTotals(application.getId())).thenReturn(serviceSuccess(applicationFinanceResourceList));
+        when(projectFinanceRowServiceMock.financeChecksTotals(project.getId())).thenReturn(serviceSuccess(projectFinanceResourceList));
         when(projectServiceMock.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(serviceSuccess(projectTeamStatus));
         when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(0).getId())).thenReturn(process);
         when(financeCheckProcessRepository.findOneByTargetId(partnerOrganisations.get(1).getId())).thenReturn(process);
@@ -339,6 +329,13 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(viability2));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
 
+        ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
+        when(projectFinanceServiceMock.getProjectFinances(projectId)).thenReturn(ServiceResult.serviceSuccess(Arrays.asList(projectFinanceResources)));
+        QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, LocalDateTime.now());
+        QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, LocalDateTime.now());
+        when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
+        when(projectFinanceQueriesService.findAll(345L)).thenReturn(serviceSuccess(new ArrayList<>()));
+        when(projectFinanceQueriesService.findAll(456L)).thenReturn(serviceSuccess(Arrays.asList(queryResource2)));
         ServiceResult<FinanceCheckSummaryResource> result = service.getFinanceCheckSummary(projectId);
         assertTrue(result.isSuccess());
 
@@ -349,14 +346,17 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         FinanceCheckPartnerStatusResource organisation1Results = partnerStatuses.get(0);
         assertEquals(Viability.APPROVED, organisation1Results.getViability());
         assertEquals(viability1.getViabilityRagStatus(), organisation1Results.getViabilityRagStatus());
+        assertTrue(organisation1Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation2Results = partnerStatuses.get(1);
         assertEquals(Viability.NOT_APPLICABLE, organisation2Results.getViability());
         assertEquals(ViabilityRagStatus.UNSET, organisation2Results.getViabilityRagStatus());
+        assertFalse(organisation2Results.isAwaitingResponse());
 
         FinanceCheckPartnerStatusResource organisation3Results = partnerStatuses.get(2);
         assertEquals(Viability.REVIEW, organisation3Results.getViability());
         assertEquals(viability3.getViabilityRagStatus(), organisation3Results.getViabilityRagStatus());
+        assertFalse(organisation3Results.isAwaitingResponse());
     }
 
     @Test
@@ -482,73 +482,10 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     }
 
-    @Test
-    public void testSaveNewQueryResponseFailure(){
-        User u = newUser().
-                withEmailAddress("a@b.com").
-                build();
-        Organisation o = newOrganisation().
-            withOrganisationSize(OrganisationSize.MEDIUM).
-            withOrganisationType(OrganisationTypeEnum.BUSINESS).
-            build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).withInvite(newInvite().build()).build(1);
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(newApplication().withName("App1").build()).build();
-
-        when(projectRepositoryMock.findOne(1L)).thenReturn(p);
-        when(notificationServiceMock.sendNotification(any(), eq(EMAIL))).thenReturn(serviceFailure(GENERAL_FORBIDDEN));
-
-        ServiceResult<Void> result = service.saveNewResponse(1L, 2L, 3L);
-
-        assertTrue(result.isFailure());
-    }
-
-    @Test
-    public void testSaveNewQueryResponseNoProject(){
-
-        when(projectRepositoryMock.findOne(1L)).thenReturn(null);
-
-        ServiceResult<Void> result = service.saveNewResponse(1L, 2L, 3L);
-
-        assertTrue(result.isFailure());
-    }
-
-    @Test
-    public void testSaveNewQueryResponseSuccess(){
-        User u = newUser().
-            withEmailAddress("a@b.com").
-            withFirstName("A").
-            withLastName("B").
-            build();
-        Organisation o = newOrganisation().
-                withOrganisationSize(OrganisationSize.MEDIUM).
-                withOrganisationType(OrganisationTypeEnum.BUSINESS).
-                build();
-        Long projectId = 1L;
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(newApplication().withName("App1").build()).build();
-
-        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
-
-        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/1",
-                                                                  "applicationName", "App1");
-
-        Notification notification = new Notification(systemNotificationSourceMock, Collections.singletonList(target), FinanceCheckServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
-
-        when(projectRepositoryMock.findOne(projectId)).thenReturn(p);
-        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
-
-        ServiceResult<Void> result = service.saveNewResponse(projectId, 2L, 3L);
-
-        verify(notificationServiceMock).sendNotification(notification, EMAIL);
-
-        assertTrue(result.isSuccess());
-    }
-
     @Override
     protected FinanceCheckServiceImpl supplyServiceUnderTest() {
 
         FinanceCheckServiceImpl impl = new FinanceCheckServiceImpl();
-        ReflectionTestUtils.setField(impl, "webBaseUrl", webBaseUrl);
         return impl;
     }
 

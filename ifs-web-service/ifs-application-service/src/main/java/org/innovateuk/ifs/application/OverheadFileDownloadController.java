@@ -5,6 +5,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.GET;
  */
 @Controller
 @RequestMapping("/application/download/overheadfile")
+@PreAuthorize("hasAuthority('applicant')")
 public class OverheadFileDownloadController {
     @Autowired
     private OverheadFileRestService overheadFileRestService;

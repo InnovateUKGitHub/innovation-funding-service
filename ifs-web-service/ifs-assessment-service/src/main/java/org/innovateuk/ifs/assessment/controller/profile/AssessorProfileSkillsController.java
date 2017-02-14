@@ -8,6 +8,7 @@ import org.innovateuk.ifs.user.resource.ProfileSkillsResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.f
  */
 @Controller
 @RequestMapping("/profile/skills")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessorProfileSkillsController {
 
     @Autowired
@@ -74,8 +76,8 @@ public class AssessorProfileSkillsController {
     }
 
     private void populateFormWithExistingValues(UserResource loggedInUser, AssessorProfileSkillsForm form) {
-        ProfileSkillsResource profileSkills = userService.getProfileSkills(loggedInUser.getId());
-        form.setAssessorType(profileSkills.getBusinessType());
-        form.setSkillAreas(profileSkills.getSkillsAreas());
+        ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
+        form.setAssessorType(profileSkillsResource.getBusinessType());
+        form.setSkillAreas(profileSkillsResource.getSkillsAreas());
     }
 }

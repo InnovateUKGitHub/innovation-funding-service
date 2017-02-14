@@ -28,27 +28,27 @@ public class CompetitionOpenKeyStatisticsResourceBuilder extends BaseBuilder<Com
         super(newMultiActions);
     }
 
-    public CompetitionOpenKeyStatisticsResourceBuilder withAssessorsInvited(Long... assessorsInviteds) {
+    public CompetitionOpenKeyStatisticsResourceBuilder withAssessorsInvited(Integer... assessorsInviteds) {
         return withArraySetFieldByReflection("assessorsInvited", assessorsInviteds);
     }
 
-    public CompetitionOpenKeyStatisticsResourceBuilder withAssessorsAccepted(Long... assessorsAccepteds) {
+    public CompetitionOpenKeyStatisticsResourceBuilder withAssessorsAccepted(Integer... assessorsAccepteds) {
         return withArraySetFieldByReflection("assessorsAccepted", assessorsAccepteds);
     }
 
-    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsPerAssessor(Long... applicationsPerAssessors) {
+    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsPerAssessor(Integer... applicationsPerAssessors) {
         return withArraySetFieldByReflection("applicationsPerAssessor", applicationsPerAssessors);
     }
 
-    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsStarted(Long... applicationsStarteds) {
+    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsStarted(Integer... applicationsStarteds) {
         return withArraySetFieldByReflection("applicationsStarted", applicationsStarteds);
     }
 
-    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsPastHalf(Long... applicationsPastHalfs) {
+    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsPastHalf(Integer... applicationsPastHalfs) {
         return withArraySetFieldByReflection("applicationsPastHalf", applicationsPastHalfs);
     }
 
-    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsSubmitted(Long... applicationsSubmitteds) {
+    public CompetitionOpenKeyStatisticsResourceBuilder withApplicationsSubmitted(Integer... applicationsSubmitteds) {
         return withArraySetFieldByReflection("applicationsSubmitted", applicationsSubmitteds);
     }
 

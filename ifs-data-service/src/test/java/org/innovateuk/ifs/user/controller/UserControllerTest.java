@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.user.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.token.domain.Token;
@@ -19,6 +18,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.token.resource.TokenType.VERIFY_EMAIL_ADDRESS;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
@@ -273,51 +273,51 @@ public class UserControllerTest extends BaseControllerMockMVCTest<UserController
     @Test
     public void getProfileSkills() throws Exception {
         Long userId = 1L;
-        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
+        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource().build();
 
-        when(userProfileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkills));
+        when(userProfileServiceMock.getProfileSkills(userId)).thenReturn(serviceSuccess(profileSkillsResource));
 
         mockMvc.perform(get("/user/id/{id}/getProfileSkills", userId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(toJson(profileSkills)));
+                .andExpect(content().string(toJson(profileSkillsResource)));
 
         verify(userProfileServiceMock, only()).getProfileSkills(userId);
     }
 
     @Test
     public void updateProfileSkills() throws Exception {
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
                 .withSkillsAreas(RandomStringUtils.random(5000))
                 .build();
 
         Long userId = 1L;
 
-        when(userProfileServiceMock.updateProfileSkills(userId, profileSkills)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileSkills)))
+                .content(objectMapper.writeValueAsString(profileSkillsEditResource)))
                 .andExpect(status().isOk());
 
-        verify(userProfileServiceMock, only()).updateProfileSkills(userId, profileSkills);
+        verify(userProfileServiceMock, only()).updateProfileSkills(userId, profileSkillsEditResource);
     }
 
     @Test
     public void updateProfileSkills_invalid() throws Exception {
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
                 .withSkillsAreas(RandomStringUtils.random(5001))
                 .build();
 
         Long userId = 1L;
 
-        when(userProfileServiceMock.updateProfileSkills(userId, profileSkills)).thenReturn(serviceSuccess());
+        when(userProfileServiceMock.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(serviceSuccess());
 
         mockMvc.perform(put("/user/id/{id}/updateProfileSkills", userId)
                 .contentType(APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(profileSkills)))
+                .content(objectMapper.writeValueAsString(profileSkillsEditResource)))
                 .andExpect(status().isNotAcceptable());
 
-        verify(userProfileServiceMock, never()).updateProfileSkills(userId, profileSkills);
+        verify(userProfileServiceMock, never()).updateProfileSkills(userId, profileSkillsEditResource);
     }
 
     @Test

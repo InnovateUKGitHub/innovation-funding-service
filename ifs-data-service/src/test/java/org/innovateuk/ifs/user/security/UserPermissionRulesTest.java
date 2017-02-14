@@ -50,26 +50,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testCompAdminsCanViewEveryone() {
+    public void testInternalUsersCanViewEveryone() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
-                if (user.equals(compAdminUser())) {
-                    assertTrue(rules.compAdminsCanViewEveryone(otherUser, user));
+                if (allInternalUsers.contains(user)) {
+                    assertTrue(rules.internalUsersCanViewEveryone(otherUser, user));
                 } else {
-                    assertFalse(rules.compAdminsCanViewEveryone(otherUser, user));
-                }
-            });
-        });
-    }
-
-    @Test
-    public void testProjectFinanceUserCanViewEveryone() {
-        allGlobalRoleUsers.forEach(user -> {
-            allGlobalRoleUsers.forEach(otherUser -> {
-                if (user.equals(projectFinanceUser())) {
-                    assertTrue(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
-                } else {
-                    assertFalse(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
+                    assertFalse(rules.internalUsersCanViewEveryone(otherUser, user));
                 }
             });
         });
@@ -353,20 +340,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testUsersCanViewTheirOwnProfileSkills() {
         UserResource user = newUserResource().build();
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource()
                 .withUser(user.getId())
                 .build();
-        assertTrue(rules.usersCanViewTheirOwnProfileSkills(profileSkills, user));
+        assertTrue(rules.usersCanViewTheirOwnProfileSkills(profileSkillsResource, user));
     }
 
     @Test
     public void testUsersCanViewTheirOwnProfileSkillsButAttemptingToViewAnotherUsersProfileSkills() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource()
                 .withUser(user.getId())
                 .build();
-        assertFalse(rules.usersCanViewTheirOwnProfileSkills(profileSkills, anotherUser));
+        assertFalse(rules.usersCanViewTheirOwnProfileSkills(profileSkillsResource, anotherUser));
     }
 
     @Test

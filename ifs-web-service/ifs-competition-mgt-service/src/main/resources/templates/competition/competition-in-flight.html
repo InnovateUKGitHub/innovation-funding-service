@@ -124,7 +124,7 @@
                                 <span class="heading-large" th:text="${model.keyStatistics.statFour}">4</span><br/>
                                 <th:block th:switch="${model.competitionStatus.name()}">
                                     <small th:case="OPEN">Applications started</small>
-                                    <small th:case="CLOSED">Invitations invited</small>
+                                    <small th:case="CLOSED">Assessors invited</small>
                                     <small th:case="IN_ASSESSMENT">Assessments started</small>
                                     <small th:case="FUNDERS_PANEL">Applications on hold</small>
                                     <small th:case="ASSESSOR_FEEDBACK">Applications on hold</small>
@@ -195,7 +195,7 @@
                                th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}">Funding decision</a>
                             <a class="button button-block"
                                th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}"
-                               href="#">Funding decision</a>
+                               th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}">Funding decision</a>
                         </div>
                         <!--
                         <div class="column-third">
