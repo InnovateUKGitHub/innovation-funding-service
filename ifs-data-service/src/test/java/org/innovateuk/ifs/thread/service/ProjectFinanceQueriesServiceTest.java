@@ -30,6 +30,7 @@ import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
@@ -131,6 +132,40 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest{
         assertEquals(result, Long.valueOf(1L));
 
         verify(notificationServiceMock).sendNotification(notification, EMAIL);
+    }
+
+    @Test
+    public void test_createNoFinanceContact() throws Exception {
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
+
+        Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
+
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
+
+        User u = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+        Organisation o = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
+
+        ProjectFinance pf = newProjectFinance().withProject(p).build();
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+
+        Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
+
+        assertEquals(result, Long.valueOf(1L));
+
     }
 
     @Test
