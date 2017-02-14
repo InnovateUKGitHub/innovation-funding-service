@@ -28,9 +28,6 @@ items:
           volumeMounts:
           - name: smtp-maildir-storage
             mountPath: /home/smtp/Maildir
-          resources:
-            limits:
-              memory: 20M
         - image: camptocamp/smtp-sink
           name: smtp
           ports:
@@ -45,9 +42,7 @@ items:
                     maildirmake test &&
                     mv test/* Maildir/ &&
                     chown -R smtp:smtp Maildir/
-          resources:
-            limits:
-              memory: 20M
+          resources: {}
           volumeMounts:
           - name: smtp-maildir-storage
             mountPath: /home/smtp/Maildir
@@ -63,9 +58,6 @@ items:
           volumeMounts:
           - name: smtp-maildir-storage
             mountPath: /home/smtp/Maildir
-          resources:
-            limits:
-              memory: 50M
         volumes:
         - emptyDir: {}
           name: smtp-maildir-storage

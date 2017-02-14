@@ -33,9 +33,7 @@ items:
             value: '{"logout":{"url": "https://<<SHIB-ADDRESS>>/Logout/"}}'
           ports:
           - containerPort: 8080
-          resources:
-            limits:
-              memory: 200M
+          resources: {}
     test: false
     triggers:
     - type: ConfigChange
