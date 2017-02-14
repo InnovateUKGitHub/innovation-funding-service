@@ -85,24 +85,35 @@ User pressing back button should get the correct version of the page
     Then the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
 
+Non-academic partner finance section
+    [Documentation]    INFUND-7522
+    [Tags]    HappyPath
+    [Setup]  Log in as a different user     &{collaborator1_credentials}
+    Given the user navigates to Your-finances page     Providing sustainable childcare
+    Then The user should see the element      link=Not requesting funding
+    and the user should see the element     link=Your project costs
+    and the user should see the element     link=Your organisation
+    and the user should not see the element     link=Your funding
+
 Academic partner finance section
     [Documentation]    INFUND-7522
     [Tags]    HappyPath
     [Setup]  Log in as a different user       &{collaborator2_credentials}
     Given the user navigates to Your-finances page     Providing sustainable childcare
-    And The user should not see the element      link=Not requesting funding
+    Then The user should not see the element      link=Not requesting funding
     and the user should see the element       link=Your project costs
     and the user should not see the element     link=Your organisation
     and the user should see the element        link=Your funding
+    and the user should not see the element     link=application details
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath   Pending
+    [Tags]    HappyPath    Pending
     # Pending due to INFUND-8203
     Given the user navigates to Your-finances page     Providing sustainable childcare
     and the user clicks the button/link         link=Your funding
-    and the user should see the element     jQuery=label[for="42"]
-    and the user uploads the file  ${valid_pdf}
+    Then the user should see the element     jQuery=label[for="42"]
+    and the user uploads the file   name=jes-upload   ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
 *** Keywords ***
@@ -153,7 +164,3 @@ the user should see the funding guidance
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
     the user should not see the element           jQuery=#details-content-0 p
-
-the user uploads the file
-    [Arguments]    ${upload_filename}
-    Choose File     name=jes-upload   ${UPLOAD_FOLDER}/${upload_filename}
