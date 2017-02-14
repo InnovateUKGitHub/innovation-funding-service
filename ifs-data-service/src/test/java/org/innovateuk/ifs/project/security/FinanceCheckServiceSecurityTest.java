@@ -18,6 +18,8 @@ import org.springframework.security.access.AccessDeniedException;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.fail;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -121,7 +123,7 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
-        public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return null; }
+        public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return serviceSuccess(newFinanceCheckEligibilityResource().build()); }
 
     }
 }
