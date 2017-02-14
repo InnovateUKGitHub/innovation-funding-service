@@ -12,7 +12,6 @@
                 <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" th:remove="tag" />
                 <div th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" th:remove="tag" />
             </label>
-
             <div th:include="question-type/form-elements :: form-guidance (guidable=${formInput})" th:remove="tag" />
             <input type="number"
                    min="0"
@@ -32,6 +31,8 @@
     </div>
 
     <!-- ===========================Form: organisation_size =========================== -->
+
+
     <div th:fragment="organisation_size" th:remove="tag">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
@@ -42,6 +43,7 @@
             <fieldset>
                 <legend>
                     <span class="form-label form-label-bold" th:text="${question.name}"/>
+                    <input type="hidden" name="organisationSize-formInputId" th:value="formInput[__${formInput.id}__]"/>
                     <div th:include="question-type/form-elements :: form-hint (hint=${question.getDescription()})" th:remove="tag" />
                     <div th:include="question-type/form-elements :: form-validation-messages (id=${formInput.getId()})" th:remove="tag" />
                 </legend>

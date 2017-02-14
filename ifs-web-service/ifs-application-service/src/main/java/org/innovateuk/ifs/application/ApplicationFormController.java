@@ -782,7 +782,13 @@ public class ApplicationFormController {
             List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
             String organisationType = organisationService.getOrganisationType(userId, applicationId);
             if (financePositionKeys.isEmpty() && !"University (HEI)".equals(organisationType)) {
-                bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
+                // We model the organisation size as a form input.
+                // In the templates we ignore the form input that it came from and generate radios which start with "financePosition-"
+                // But in order highlight errors we need to target the form input.
+                // We can do this is by having a hidden input which gives us the name.
+                // All of this is far from ideal and there is a tech dept tickets INFUND-8239
+                String originalFormInputId = params.get("organisationSize-formInputId")[0];
+                bindingResult.rejectValue(originalFormInputId,"APPLICATION_ORGANISATION_SIZE_REQUIRED");
                 return false;
             }
         }
