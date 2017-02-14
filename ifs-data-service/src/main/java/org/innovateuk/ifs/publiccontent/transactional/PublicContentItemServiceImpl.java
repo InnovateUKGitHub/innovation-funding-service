@@ -2,7 +2,6 @@ package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -120,12 +119,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         List<Long> competitionIds = new ArrayList<>();
 
         innovationAreaId.ifPresent(id -> {
-            InnovationArea innovationArea = innovationAreaRepository.findOne(id);
-            if(null != innovationArea) {
-                competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getId()).stream()
-                        .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
-                        .collect(Collectors.toList()));
-            }
+            competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(id).stream()
+                    .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
+                    .collect(Collectors.toList()));
         });
 
         return competitionIds;
