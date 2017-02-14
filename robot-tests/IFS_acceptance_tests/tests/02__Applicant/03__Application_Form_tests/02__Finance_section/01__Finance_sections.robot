@@ -9,6 +9,9 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2051: Remove the '0' in finance fields
 ...
 ...               INFUND-2961: ‘Working Days Per Year’ in Labour Costs do not default to 232.
+...
+...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -82,6 +85,24 @@ User pressing back button should get the correct version of the page
     Then the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
 
+Academic partner finnace section
+    [Documentation]    INFUND-7522
+    [Tags]          HappyPath
+    [Setup]  Log in as a different user       &{collaborator2_credentials}
+    Given the user navigates to Your-finances page     Providing sustainable childcare
+    And The user should not see the element      link=Not requesting funding
+    and the user should see the element       link=Your project costs
+    and the user should not see the element     link=Your organisation
+    and the user should see the element        link=Your funding
+
+Academic partner can upload file for field J-es PDF
+    [Documentation]    INFUND-7522
+    [Tags]          HappyPath
+    Given the user navigates to Your-finances page     Providing sustainable childcare
+    and the user clicks the button/link         link=Your funding
+    and the user should see the element     jQuery=label[for="42"]
+    and the user uploads the file  ${valid_pdf}
+
 *** Keywords ***
 Custom Suite Setup
     log in and create new application if there is not one already
@@ -130,3 +151,7 @@ the user should see the funding guidance
 the user should not see the funding guidance
     [Documentation]    INFUND-7093
     the user should not see the element           jQuery=#details-content-0 p
+
+the user uploads the file
+    [Arguments]    ${upload_filename}
+    Choose File     name=jes-upload   ${UPLOAD_FOLDER}/${upload_filename}
