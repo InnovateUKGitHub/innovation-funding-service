@@ -367,7 +367,7 @@ Clicking cancel on the eligibility modal
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the checkbox    project-eligible
-    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")  # TODO to change to Return to finance checks 4834
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
 
 Confirming eligibility should show info on a readonly page
     [Documentation]    INFUND-4839
@@ -457,7 +457,11 @@ Clicking cancel on the eligibility modal for partner
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the checkbox    project-eligible
+<<<<<<< HEAD
     And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")  # TODO to change to Return to finance checks 4834
+=======
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+>>>>>>> 548aea5a94f3fd65cb79dcfd06dd710de87d1f56
 
 Confirming eligibility should show info on a readonly page for partner
     [Documentation]    INFUND-4839
