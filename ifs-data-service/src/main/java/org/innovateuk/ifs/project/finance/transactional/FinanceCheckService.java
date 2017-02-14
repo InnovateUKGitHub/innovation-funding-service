@@ -40,7 +40,4 @@ public interface FinanceCheckService {
     @PostAuthorize("hasPermission(returnObject, 'READ_ELIGIBILITY')")
     ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
-    @SecuredBySpring(value = "EDIT", securedType = FinanceCheck.class, description = "Project finance user should be able create a new query")
-    ServiceResult<Void> saveNewQuery(Long projectId, Long organisationId);
 }

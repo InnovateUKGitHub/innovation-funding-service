@@ -9,11 +9,8 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.transactional.FinanceRowService;
 import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
-import org.innovateuk.ifs.notifications.resource.*;
-import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
-import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckRepository;
@@ -25,9 +22,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.transactional.AbstractProjectServiceImpl;
 import org.innovateuk.ifs.project.transactional.ProjectService;
-import org.innovateuk.ifs.project.transactional.ProjectServiceImpl;
 import org.innovateuk.ifs.user.domain.OrganisationType;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.util.GraphBuilderContext;
@@ -42,9 +37,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -52,11 +45,9 @@ import static java.math.BigDecimal.ONE;
 import static java.math.BigDecimal.ZERO;
 import static java.math.RoundingMode.HALF_EVEN;
 import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
-import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.NOT_REQUIRED;
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
@@ -96,19 +87,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
     @Autowired
     private ProjectFinanceQueriesService projectFinanceQueriesService;
-
-    @Autowired
-    private SystemNotificationSource systemNotificationSource;
-
-    @Autowired
-    private NotificationService notificationService;
-
-    enum Notifications {
-        NEW_FINANCE_CHECK_QUERY
-    }
-
-    @Value("${ifs.web.baseURL}")
-    private String webBaseUrl;
 
     @Override
     public ServiceResult<FinanceCheckResource> getByProjectAndOrganisation(ProjectOrganisationCompositeId key) {
@@ -183,34 +161,6 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
         return serviceSuccess(new FinanceCheckSummaryResource(project.getId(), project.getName(), competition.getId(), competition.getName(), project.getTargetStartDate(),
                 project.getDurationInMonths().intValue(), totalProjectCost, totalFundingSought, totalOtherFunding, totalPercentageGrant, spendProfile.isPresent(),
                 getPartnerStatuses(partnerOrganisations, projectId), financeChecksAllApproved, spendProfileGeneratedBy, spendProfileGeneratedDate));
-    }
-
-    @Override
-    public ServiceResult<Void> saveNewQuery(Long projectId, Long organisationId) {
-
-        return getProject(projectId).andOnSuccess( project -> {
-            NotificationSource from = systemNotificationSource;
-
-            List<ProjectUser> projectUsers = project.getProjectUsers();
-            List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getRole().isFinanceContact());
-            User financeContact =  getOnlyElementOrEmpty(financeContacts).get().getUser();
-
-            String fullName = financeContact.getName();
-
-            NotificationTarget pmTarget =  new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
-
-            Map<String, Object> notificationArguments = new HashMap<>();
-            notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
-
-            Notification notification = new Notification(from, singletonList(pmTarget), FinanceCheckServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
-            ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
-
-            if (!notificationResult.isSuccess()) {
-                return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
-            }
-            // TODO call actual save
-            return serviceSuccess();
-        });
     }
 
     public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) {

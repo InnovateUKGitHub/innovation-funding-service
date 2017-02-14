@@ -18,8 +18,6 @@ import org.springframework.security.access.AccessDeniedException;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static junit.framework.TestCase.fail;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.project.finance.builder.FinanceCheckPartnerStatusResourceBuilder.FinanceCheckEligibilityResourceBuilder.newFinanceCheckEligibilityResource;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
@@ -64,11 +62,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
     }
 
     @Test
-    public void testSaveFinanceCheckQuery() {
-        assertRolesCanPerform(() -> classUnderTest.saveNewQuery(1L, 2L), PROJECT_FINANCE);
-    }
-
-    @Test
     public void getFinanceCheckEligibilityDetails(){
         assertAccessDenied(
                 () -> classUnderTest.getFinanceCheckEligibilityDetails(1L, 2L),
@@ -77,10 +70,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
                     verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinancesForTheirOrganisation(isA(FinanceCheckEligibilityResource.class), isA(UserResource.class));
                 }
         );
-    }
-
-    private void assertInternalRolesCanPerform(Runnable actionFn) {
-        assertRolesCanPerform(actionFn, COMP_ADMIN, PROJECT_FINANCE);
     }
 
     private void assertRolesCanPerform(Runnable actionFn, UserRoleType... supportedRoles) {
@@ -133,9 +122,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return null; }
-
-        @Override
-        public ServiceResult<Void> saveNewQuery(Long projectId, Long organisationId) { return null; }
 
     }
 }

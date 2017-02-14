@@ -58,8 +58,4 @@ public class FinanceCheckController {
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}/query", method = POST)
-    public RestResult<Void> saveNewQuery(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId) {
-        return financeCheckService.saveNewQuery(projectId, organisationId).toPostResponse();
-    }
 }

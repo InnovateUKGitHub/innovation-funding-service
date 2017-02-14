@@ -218,23 +218,6 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(123L, 456L);
     }
 
-    @Test
-    public void saveNewQuery() throws Exception {
-
-        when(financeCheckServiceMock.saveNewQuery(123L, 456L)).thenReturn(serviceSuccess());
-
-        String url = FinanceCheckURIs.BASE_URL + "/{projectId}" + FinanceCheckURIs.ORGANISATION_PATH + "/{organisationId}/query";
-
-        mockMvc.perform(post(url, 123L, 456L)).
-                andExpect(status().isOk()).
-                andDo(document("project/{method-name}",
-                        pathParameters(
-                                parameterWithName("projectId").description("Id of the project to add the query to"),
-                                parameterWithName("organisationId").description("Id of the organisation to add the query to")
-                        )
-                ));
-        verify(financeCheckServiceMock).saveNewQuery(123L, 456L);
-    }
     @Override
     protected FinanceCheckController supplyControllerUnderTest() {
         return new FinanceCheckController();
