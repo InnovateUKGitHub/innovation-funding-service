@@ -19,30 +19,30 @@
         <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" th:remove="tag" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation size'})" th:remove="tag" />
+        <div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" th:remove="tag" />
 
         <div class="message-alert extra-margin-bottom" th:unless="${param.status != null and param.status[0] == 'readOnly'}">
           <h2 class="heading-small no-margin">Organisation size determines funding</h2>
-          <p>The organisation size is used to calculate your funding level in the application.</p>
-          <p>Changing this selection will reset your funding level.</p>
+          <p>Your organisation size will determine the level of funding you may receive.</p>
+          <p>Changing the organisation size will reset the funding level.</p>
         </div>
 
         <form action="#">
 
           <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
             <fieldset class="extra-margin-bottom">
-              <legend class="heading-medium no-margin-bottom">Organisation size</legend>
-              <p class="form-hint">To determine the level of funding you are eligible to receive, please provide your business size using the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
+              <legend class="heading-medium no-margin-bottom">Business size</legend>
+              <p class="form-hint">To determine your funding level please provide your business size. If you are unsure please use the <a href="http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm" target="_blank" rel="external">EU Definition</a> for guidance.</p>
               <div class="form-block">
-                <label class="block-label" for="radio-1">
+                <label class="block-label selection-button-radio" for="radio-1">
                   <input id="radio-1" type="radio" name="radio-group" value="Micro"/>
                   Micro / small
                 </label>
-                <label class="block-label" for="radio-2">
+                <label class="block-label selection-button-radio" for="radio-2">
                   <input id="radio-2" type="radio" name="radio-group" value="Medium"/>
                   Medium
                 </label>
-                <label class="block-label" for="radio-3">
+                <label class="block-label selection-button-radio" for="radio-3">
                   <input id="radio-3" type="radio" name="radio-group" value="Large"/>
                   Large
                 </label>
@@ -90,8 +90,7 @@
             </div>
             <div class="form-group">
               <label for="staff-count" class="form-label-bold">
-                Full time employees
-                <span class="form-hint">Number of full time employees at your organisation.</span>
+                Number of full-time employees
               </label>
               <input type="text" class="form-control width-medium" id="staff-count" name="staff-count" />
             </div>
