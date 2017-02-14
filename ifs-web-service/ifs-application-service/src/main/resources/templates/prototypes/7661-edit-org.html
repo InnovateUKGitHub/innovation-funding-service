@@ -25,19 +25,19 @@
           <span class="heading-secondary">0102468: Technology inspired</span>
 
           <th:block th:if="${param.company != null and param.company[0] == 'empire'}">
-            Edit Empire Ltd
+            Update Empire Ltd
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'ludlow'}">
-            Edit Ludlow
+            Update Ludlow
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'eggs'}">
-            Edit EGGS
+            Update EGGS
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
-            Add partner organisation
+            Add organisation
           </th:block>
 
         </h1>
@@ -57,7 +57,7 @@
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
-            From this page you are able to invite an new organisation to your application. You need to add at least one applicant before you can invite the organisation.
+            Add applicants or organisations to your application. Before you can invite an organisation you will need to add at least one individual from that organisation. If an organisation only has one individual you wish to remove, you must add a replacement individual before you can remove the first one.
           </th:block>
 
         </p>
@@ -151,13 +151,13 @@
           <a th:href="@{'?action=addApplicant&#38;company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Add new applicant</a>
         </p>
 
-        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
+        <!-- <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
           <a th:href="@{'?status=firstLoad&#38;company=empire&#38;action=addApplicant'}">Add new applicant</a>
-        </th:block>
+        </th:block> -->
 
         <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
           <fieldset>
-            <legend class="heading-medium">Partner organisation</legend>
+            <legend class="heading-medium">Organisation</legend>
             <div class="form-group">
               <label class="form-label-bold" for="new-org-name">Organisation name</label>
               <input class="form-control width-full" id="new-org-name" type="text" />

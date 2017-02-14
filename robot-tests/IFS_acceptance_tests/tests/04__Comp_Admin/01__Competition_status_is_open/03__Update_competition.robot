@@ -89,8 +89,8 @@ Assessed Questions are editable before open date
     When the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
     And the user clicks the button/link    link=Application
     And the user clicks the button/link    link=Business opportunity
-    Then the user should see the element    jquery=h1:contains("Business opportunity")
-    And the user clicks the button/link    jquery=.button:contains("Edit this question")
+    Then the user should see the element   jQuery=h1:contains("Business opportunity")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user edits the assessed question information
     And the user clicks the button/link    jQuery=.button[value="Save and close"]
     And the user clicks the button/link    link=Business opportunity
