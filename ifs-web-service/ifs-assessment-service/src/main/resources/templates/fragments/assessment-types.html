@@ -24,8 +24,8 @@
 <div th:fragment="textarea (field)">
     <div class="form-group">
         <label class="form-label form-label-bold" th:for="'form-textarea-'+${field.id}" th:id="'form-label-'+${field.id}">Feedback
-            <span class="form-hint">Please justify your score by writing two or three sentences which will be returned to the applicant as feedback</span>
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"  />
+            <span class="form-hint">Please justify your score by writing 2 or 3 sentences which will be returned to the applicant as feedback.</span>
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         </label>
 
         <details th:unless="${#strings.isEmpty(field.guidanceTitle)}">
@@ -50,7 +50,7 @@
                       th:attr="data-max_words=${field.wordCount},data-maxwordslength=${field.wordCount},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+field.wordCount+'.'},data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
                       th:id="'form-textarea-'+${field.id}"></textarea>
             <div class="textarea-footer" th:with="content=*{formInput[__${field.id}__]}">
-                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})"  />
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})" />
             </div>
         </div>
     </div>

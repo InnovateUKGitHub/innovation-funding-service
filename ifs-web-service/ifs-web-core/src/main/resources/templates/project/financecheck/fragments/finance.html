@@ -54,17 +54,19 @@
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id})" />
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.workingDaysPerYearCostItem?.id +'-labourDays'})" />
                     </label>
+                    <th:block th:with="rejectedValue=${form.getRejectedValue('cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays')}">
                     <input type="number"
                            class="form-control"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +']}') or #fields.hasErrors('${form.formInput[cost-'+ costCategory.workingDaysPerYearCostItem?.id +'-labourDays]}')} ? 'field-error' : ''"
                            th:id="${'cost-labour-'+costCategory.workingDaysPerYearCostItem?.id+'-labourDaysYearly'}"
                            th:name="${'labour-labourDaysYearly-' + question.id + '-' + costCategory.workingDaysPerYearCostItem?.id}"
-                           ifs:nonZeroValue="${costCategory.workingDaysPerYear}"
+                           ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : costCategory.workingDaysPerYear}"
                            th:readonly="${viewmode == 'readonly'}"
                            placeholder="0"
                            min="1"
                            max="365"
                            required="required" />
+                    </th:block>
                 </div>
                 <div class="form-group">
                     <table class="labour-costs-table">
@@ -112,7 +114,7 @@
     <th:block th:fragment="labour_row">
         <th:block  th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-            <td class="form-group"   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''">
+            <td class="form-group"   th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-role')}">
 
                 <label th:for="${'cost-labour-'+costIdentifier+'-role'}">
                     <span class="visuallyhidden">Role within project</span>
@@ -123,12 +125,12 @@
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? field-error : ''"
                        th:name="${'labour-role-' + question.id + '-' + costIdentifier}"
                        th:id="${'cost-labour-'+costIdentifier+'-role'}"
-                       th:value="${cost.getRole()}"
+                       th:value="${rejectedValue != null ? rejectedValue : cost.getRole()}"
                        th:readonly="${viewmode == 'readonly'}"
                        required="required"
                        maxlength="255"  />
             </td>
-            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossAnnualSalary]}')} ? 'error' : ''">
+            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossAnnualSalary]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-' + costIdentifier + '-grossAnnualSalary')}">
                 <label th:for="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}">
                     <span class="visuallyhidden">Gross Annual Salary</span>
                     <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossAnnualSalary'})" />
@@ -139,7 +141,7 @@
                        th:name="${'labour-grossAnnualSalary-' + question.id + '-' + costIdentifier}"
                        th:id="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}"
                        th:readonly="${viewmode == 'readonly'}"
-                       ifs:nonZeroValue="${cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : '0'}"
+                       ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.grossAnnualSalary != null ? #numbers.formatDecimal(cost.grossAnnualSalary,0,0) : '0')}"
                        placeholder="0"
                        required="required"
                        min="1"
@@ -161,7 +163,7 @@
                        th:value="${(costCategory?.workingDaysPerYear != null and cost.getRate(costCategory.workingDaysPerYear) != null) ? '£ '+#numbers.formatDecimal(cost.getRate(costCategory.workingDaysPerYear),0,0) : '£ 0'}"
                        maxlength="255" />
             </td>
-            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'error' : ''">
+            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-labourDays]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-labourDays')}">
                 <label th:for="${'cost-labour-'+costIdentifier+'-labourDays'}">
                     <span class="visuallyhidden">Days to be spent by all staff at this grade</span>
                     <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-labourDays'})" />
@@ -172,7 +174,7 @@
                        th:readonly="${viewmode == 'readonly'}"
                        th:id="${'cost-labour-'+costIdentifier+'-labourDays'}"
                        th:name="${'labour-labourDays-' + question.id + '-' + costIdentifier}"
-                       ifs:nonZeroValue="${cost.labourDays}"
+                       ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : cost.labourDays}"
                        placeholder="0"
                        required="required"
                        min="1"
@@ -297,7 +299,7 @@
     <th:block th:fragment="materials_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''">
+                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-item')}">
                     <label th:for="${'cost-materials-'+costIdentifier+'-item'}">
                         <span class="visuallyhidden">Item</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
@@ -306,13 +308,13 @@
                            class="form-control width-full"
                            th:name="${'materials-item-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-materials-'+costIdentifier+'-item'}"
-                           th:value="${cost.getItem()}"
+                           th:value="${rejectedValue != null ? rejectedValue : cost.getItem()}"
                            th:readonly="${viewmode == 'readonly'}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"
                            required="required"
                            maxlength="255" />
                 </td>
-                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''">
+                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-quantity')}">
                   <label th:for="${'cost-materials-'+costIdentifier+'-quantity'}">
                       <span class="visuallyhidden">Quantity</span>
                       <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})" />
@@ -322,7 +324,7 @@
                            th:name="${'materials-quantity-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-materials-'+costIdentifier+'-quantity'}"
                            placeholder="0"
-                           ifs:nonZeroValue="${cost.getQuantity()}"
+                           ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : cost.getQuantity()}"
                            th:readonly="${viewmode == 'readonly'}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"
                            min="1"
@@ -331,7 +333,7 @@
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
                            />
                 </td>
-                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
+                <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-cost')}">
                     <label th:for="${'cost-materials-'+costIdentifier+'-cost'}">
                         <span class="visuallyhidden">Cost Per Item</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
@@ -340,7 +342,7 @@
                            class="form-control width-full"
                            th:name="${'materials-cost-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-materials-'+costIdentifier+'-cost'}"
-                           ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+                           ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0')}"
                            th:readonly="${viewmode == 'readonly'}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"
                            placeholder="0"
@@ -476,7 +478,7 @@
                         </label>
                     </fieldset>
                 </div>
-                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'error' : ''">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-deprecation')}">
                     <label th:for="${'cost-capital_usage-'+costIdentifier+'-deprecation_period'}" class="form-label">
                         <span>Depreciation period (months)</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-deprecation'})" />
@@ -485,7 +487,7 @@
                             th:id="${'cost-capital_usage-'+costIdentifier+'-deprecation_period'}"
                             class="form-control form-finances-capital-usage-depreciation"
                             th:name="${'capital_usage-deprecation-' + question.id + '-' + costIdentifier}"
-                            ifs:nonZeroValue="${cost.deprecation}"
+                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : cost.deprecation}"
                             th:readonly="${viewmode == 'readonly'}"
                             placeholder="0"
                             min="1"
@@ -495,7 +497,7 @@
                             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-deprecation]}')} ? 'field-error' : ''"
                              />
                 </div>
-                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'error' : ''">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-npv')}">
                     <label th:for="${'cost-capital_usage-'+costIdentifier+'-npv'}" class="form-label">
                         <span>Net present value at the start of your project or the price you bought it for (£)</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-npv'})" />
@@ -505,7 +507,7 @@
                             th:id="${'cost-capital_usage-'+costIdentifier+'-npv'}"
                             class="form-control form-finances-capital-usage-npv"
                             th:name="${'capital_usage-npv-' + question.id + '-' + costIdentifier}"
-                            ifs:nonZeroValue="${cost.npv != null ? #numbers.formatDecimal(cost.npv,0,0) : '0'}"
+                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.npv != null ? #numbers.formatDecimal(cost.npv,0,0) : '0')}"
                             th:readonly="${viewmode == 'readonly'}"
                             placeholder="0"
                             min="1"
@@ -515,7 +517,7 @@
                             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-npv]}')} ? 'field-error' : ''" />
 
                 </div>
-                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'error' : ''">
+                <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-residualValue')}">
                     <label th:for="${'cost-capital_usage-'+costIdentifier+'-residual_value'}" class="form-label">
                         <span>Residual value at end of project (£)</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-residualValue'})" />
@@ -525,7 +527,7 @@
                             th:id="${'cost-capital_usage-'+costIdentifier+'-residual_value'}"
                             class="form-control form-finances-capital-usage-residual-value"
                             th:name="${'capital_usage-residualValue-' + question.id + '-' + costIdentifier}"
-                            ifs:nonZeroValue="${#numbers.formatDecimal(cost.residualValue,0,0)}"
+                            ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : #numbers.formatDecimal(cost.residualValue,0,0)}"
                             th:readonly="${viewmode == 'readonly'}"
                             placeholder="0"
                             min="0"
@@ -535,7 +537,7 @@
                             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-residualValue]}')} ? 'field-error' : ''"/>
                 </div>
 
-                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'error' : ''">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-utilisation]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-utilisation')}">
                     <label th:for="${'cost-capital_usage-'+costIdentifier+'-utilisation'}" class="form-label">
                         <span>Utilisation (%)</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-utilisation'})" />
@@ -544,7 +546,7 @@
                            th:id="${'cost-capital_usage-'+costIdentifier+'-utilisation'}"
                            class="form-control form-finances-capital-usage-utilisation"
                            th:name="${'capital_usage-utilisation-' + question.id + '-' + costIdentifier}"
-                           ifs:nonZeroValue="${cost.utilisation}"
+                           ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : cost.utilisation}"
                            th:readonly="${viewmode == 'readonly'}"
                            placeholder="0"
                            min="0"
@@ -641,7 +643,7 @@
     <th:block th:fragment="subcontracting_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <div class="form-row" th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'error' : ''">
+            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-name')}">
                 <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-name'}">
                     <span>Subcontractor name</span>
                     <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-name'})" />
@@ -650,13 +652,13 @@
                        th:name="${'subcontracting-name-' + question.id + '-' + costIdentifier}"
                        class="form-control form-finances-subcontracting-company"
                        th:id="${'cost-subcontracting-'+costIdentifier+'-name'}"
-                       th:value="${cost.name}"
+                       th:value="${rejectedValue != null ? rejectedValue : cost.name}"
                        th:readonly="${viewmode == 'readonly'}"
                        maxlength="255"
                        required="required"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'field-error' : ''"  />
             </div>
-            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'error' : ''">
+            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-country')}">
                 <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-country'}">
                     <span>Country where the subcontractor will work</span>
                     <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-country'})" />
@@ -665,7 +667,7 @@
                        th:name="${'subcontracting-country-' + question.id + '-' + costIdentifier}"
                        class="form-control"
                        th:id="${'cost-subcontracting-'+costIdentifier+'-country'}"
-                       th:value="${cost.country}"
+                       th:value="${rejectedValue != null ? rejectedValue : cost.country}"
                        th:readonly="${viewmode == 'readonly'}"
                        maxlength="255"
                        required="required"
@@ -681,7 +683,7 @@
                 <th:block th:include="question-type/form-elements :: form-finance-textarea (type='subcontracting', id=${costIdentifier}, name='role', value=${cost.role},readonly=${viewmode == 'readonly'},required=true)" />
             </div>
 
-            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
+            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-cost')}">
                 <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-subcontractingCost'}">
                       <span>Cost</span>
                       <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
@@ -690,7 +692,7 @@
                        class="form-control"
                        th:name="${'subcontracting-subcontractingCost-' + question.id + '-' + costIdentifier}"
                        th:id="${'cost-subcontracting-'+costIdentifier+'-subcontractingCost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+                       ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0')}"
                        th:readonly="${viewmode == 'readonly'}"
                        placeholder="0"
                        min="1"
@@ -790,7 +792,7 @@
     <th:block th:fragment="travel_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
         <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-              <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''">
+              <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-item')}">
                 <label th:for="${'cost-travel-'+costIdentifier+'-item'}">
                       <span class="visuallyhidden">Purpose of journey or description of subsistence cost</span>
                       <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-item'})" />
@@ -799,13 +801,13 @@
                        th:name="${'travel-item-' + question.id + '-' + costIdentifier}"
                        class="form-control width-full"
                        th:id="${'cost-travel-'+costIdentifier+'-item'}"
-                       th:value="${cost.item}"
+                       th:value="${rejectedValue != null ? rejectedValue : cost.item}"
                        th:readonly="${viewmode == 'readonly'}"
                        required="required"
                        maxlength="255"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-item]}')} ? 'field-error' : ''"/>
             </td>
-            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''">
+            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-quantity')}">
                 <label th:for="${'cost-travel-'+costIdentifier+'-quantity'}">
                       <span class="visuallyhidden">Number of times</span>
                       <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-quantity'})"  />
@@ -814,7 +816,7 @@
                        th:name="${'travel-quantity-' + question.id + '-' + costIdentifier}"
                        class="form-control width-full"
                        th:id="${'cost-travel-'+costIdentifier+'-quantity'}"
-                       ifs:nonZeroValue="${cost.quantity}"
+                       ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : cost.quantity}"
                        th:readonly="${viewmode == 'readonly'}"
                        placeholder="0"
                        min="1"
@@ -823,7 +825,7 @@
                        th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
                        th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"  />
             </td>
-            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
+            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-cost')}">
                 <label th:for="${'cost-travel-'+costIdentifier+'-cost'}">
                       <span class="visuallyhidden">Cost each (&pound;)</span>
                       <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
@@ -832,7 +834,7 @@
                        th:name="${'travel-cost-' + question.id + '-' + costIdentifier}"
                        class="form-control width-full"
                        th:id="${'cost-travel-'+costIdentifier+'-cost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+                       ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0')}"
                        th:readonly="${viewmode == 'readonly'}"
                        placeholder="0"
                        min="1"
@@ -942,7 +944,7 @@
                 </label>
                 <th:block th:include="question-type/form-elements :: form-finance-textarea (type='other_costs', id=${costIdentifier}, name='description', value=${cost.description},readonly=${viewmode == 'readonly'},required=true)"  />
             </td>
-            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''"  >
+            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-cost')}">
                 <label th:for="${'cost-other_costs-'+costIdentifier+'-otherCost'}">
                   <span class="visuallyhidden">Estimated cost (&pound;)</span>
                   <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})"  />
@@ -951,7 +953,7 @@
                        th:name="${'other_costs-otherCost-' + question.id + '-' + costIdentifier}"
                        class="form-control"
                        th:id="${'cost-other_costs-'+costIdentifier+'-otherCost'}"
-                       ifs:nonZeroValue="${cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0'}"
+                       ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.cost != null ? #numbers.formatDecimal(cost.cost,0,0) : '0')}"
                        th:readonly="${viewmode == 'readonly'}"
                        placeholder="0"
                        min="1"
@@ -1062,7 +1064,7 @@
     <th:block th:fragment="other_funding_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'error' : ''">
+                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingSource')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-source'}">
                         <span class="visuallyhidden">Source of funding</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
@@ -1072,13 +1074,13 @@
                            th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
                            class="form-control width-full"
                            th:id="${'cost-other_funding-'+costIdentifier+'-source'}"
-                           th:value="${cost.fundingSource}"
+                           th:value="${rejectedValue != null ? rejectedValue : cost.fundingSource}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'field-error' : ''"
                            required="required"
                            maxlength="255"
                            th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
                 </td>
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'error' : ''">
+                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-securedDate')}">
                     <label th:for="${'cost-other_funding-'+costIdentifier+'-date'}">
                         <span class="visuallyhidden">Date secured</span>
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
@@ -1092,12 +1094,12 @@
                            pattern="(0[1-9]|1[012])-[0-9]{4}"
                            th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
                            maxlength="7"
-                           th:value="${cost.securedDate}"
+                           th:value="${rejectedValue != null ? rejectedValue : cost.securedDate}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'field-error' : ''"
                            required="required" />
                 </td>
 
-                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'error' : ''">
+                <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'error' : ''" th:with="rejectedValue=${form.getRejectedValue('cost-'+ costIdentifier +'-fundingAmount')}">
                   <label th:for="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}">
                     <span class="visuallyhidden">Funding amount (&pound;)</span>
                     <th:block th:include="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
@@ -1107,7 +1109,7 @@
                            th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}"
-                           ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
+                           ifs:nonZeroValue="${rejectedValue != null ? rejectedValue : (cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0')}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'field-error' : ''"
                            required="required"
                            placeholder="0"
