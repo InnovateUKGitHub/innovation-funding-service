@@ -195,8 +195,6 @@ public class BaseUnitTest {
     @Mock
     public ProjectFinanceService projectFinanceService;
     @Mock
-    public FinanceCheckService financeCheckService;
-    @Mock
     public ProjectRestService projectRestService;
     @Mock
     public BankDetailsRestService bankDetailsRestService;

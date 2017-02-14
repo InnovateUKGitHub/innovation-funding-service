@@ -98,7 +98,7 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     }
 
     @Test
-    public void testSaveNewQuery() throws Exception {
+    public void testSaveNewNote() throws Exception {
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
