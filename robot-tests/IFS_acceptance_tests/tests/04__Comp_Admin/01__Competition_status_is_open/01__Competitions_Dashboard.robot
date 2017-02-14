@@ -73,7 +73,7 @@ Get the expected values for the counts
     Set Test Variable    ${Accepted}
     The user clicks the button/link    link=Competition
     The user clicks the button/link    jQuery=.button:contains(Applications)
-    The user clicks the button/link    jQuery=.button:contains(All applications)
+    The user clicks the button/link    jQuery=a:contains(All applications)
     ${Applications started}=    Get text    css=li:nth-child(2) > div > span
     Set Test Variable    ${Applications started}
     ${Applications_Beyond_50}=    Get text    css=li:nth-child(3) > div > span
