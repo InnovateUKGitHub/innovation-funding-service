@@ -27,43 +27,78 @@
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
 
-  <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
-
     <div class="grid-row competition-data">
-        <div class="column-fifth">
-              <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
-        </div>
-        <div class="column-four-fifth">
           <form method="get">
 				<input type="hidden" name="tab" th:if="${activeTab != null}" th:value="${activeTab}" />
 
-				<h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
-				<h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
-
-
 			    <div class="grid-row sort-by">
 			        <div class="column-two-thirds">
-			          <h3>
-			            <span class="heading-large" th:text="${results.totalElements}" /> applications
-			          </h3>
-			        </div>
-			        <div class="column-third alignright">
-			          <div th:include="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" th:remove="tag" />
+			          <h2>
+			            <span class="heading-xlarge no-margin" th:text="${results.totalElements}" /> applications
+			          </h2>
 			        </div>
 			    </div>
 
 			</form>
 
     <form method="post" id="submit-funding-decision-form" data-autosave="fundingDecision" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
-      <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-      <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
-      <p class="alignright-button">
-        <button id="notify-applicants" type="submit" class="visuallyhidden" name="action" value="notify">Notify applicants</button>
-        <button id="save-funding-decision" type="submit" class="button button-secondary no-margin" name="action" value="save">Save</button>
-      </p>
-    </form>
+        <div class="grid-row sorting sorting-controls">
+            <div class="column-half">
+                <div class="form-group no-margin">
+                    <fieldset class="alignleft select-all-applications">
+                        <legend class="visuallyhidden">Select applications</legend>
+                        <label class="block-label selection-button-checkbox" for="select-all-1">
+                            <input class="select-all" id="select-all-1" value="select-all" type="checkbox">
+                            Select all applications
+                        </label>
+                    </fieldset>
+                    <span class="form-hint alignleft"><span class="applications-selected">3</span> applications selected</span>
+                </div>
+            </div>
 
-  </div>
+            <div class="column-half">
+                <fieldset class="mark-applications alignright">
+                    <legend class="visuallyhidden">Mark selected applications</legend>
+                    <h3>Mark application as:</h3>
+                    <button class="button button-secondary select-app">Successful</button>
+                    <button class="button button-secondary select-app">Unsuccessful</button>
+                    <button class="button button-secondary select-app">On hold</button>
+                </fieldset>
+            </div>
+        </div>
+        <div class="table-overflow">
+          <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
+          <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
+          <p class="alignright-button">
+            <button id="notify-applicants" type="submit" class="visuallyhidden" name="action" value="notify">Notify applicants</button>
+            <button id="save-funding-decision" type="submit" class="button button-secondary no-margin" name="action" value="save">Save</button>
+          </p>
+        </div>
+        <div class="grid-row sorting sorting-controls extra-margin-top">
+            <div class="column-half">
+                <div class="form-group no-margin">
+                    <fieldset class="alignleft select-all-applications">
+                        <legend class="visuallyhidden">Select applications</legend>
+                        <label class="block-label selection-button-checkbox" for="select-all-2">
+                            <input class="select-all" id="select-all-2" value="select-all" type="checkbox">
+                            Select all applications
+                        </label>
+                    </fieldset>
+                    <span class="form-hint alignleft"><span class="applications-selected">3</span> applications selected</span>
+                </div>
+            </div>
+
+            <div class="column-half">
+                <fieldset class="mark-applications alignright">
+                    <legend class="visuallyhidden">Mark selected applications</legend>
+                    <h3>Mark application as:</h3>
+                    <button class="button button-secondary select-app">Successful</button>
+                    <button class="button button-secondary select-app">Unsuccessful</button>
+                    <button class="button button-secondary select-app">On hold</button>
+                </fieldset>
+            </div>
+        </div>
+    </form>
 </div>
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
