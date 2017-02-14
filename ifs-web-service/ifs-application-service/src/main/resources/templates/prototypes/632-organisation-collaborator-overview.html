@@ -26,7 +26,7 @@
           Application team
         </h1>
 
-        <p>View and manage your collaborators and contributors in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project. Collaborators can be individuals from your organisation.</p>
+        <p>View and manage your participants in the application. If an individual is ‘pending’ they have not yet joined the application.</p>
 
         <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
           <div class="message-alert">
@@ -39,7 +39,7 @@
           </div>
         </th:block>
 
-        <p th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant for this application please contact Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
+        <p th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
 
         <div class="table-display-stacked">
 
@@ -103,7 +103,7 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'ludlow'}">
             <p>
-              <a th:href="${'/prototypes/7661-edit-org?company=ludlow' + (param.company != null ? '&#38;user=nonLead' : '')}">Edit Ludlow</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=ludlow' + (param.company != null ? '&#38;user=nonLead' : '')}">Update Ludlow</a>
             </p>
           </th:block>
 
@@ -132,7 +132,7 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'eggs'}">
             <p>
-              <a th:href="${'/prototypes/7661-edit-org?company=eggs' + (param.company != null ? '&#38;user=nonLead' : '')}">Edit EGGS</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=eggs' + (param.company != null ? '&#38;user=nonLead' : '')}">Update EGGS</a>
             </p>
           </th:block>
 
@@ -140,7 +140,7 @@
 
         <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'newOrg'}">
 
-          <p class="extra-margin-top">Add any organisations collaborating with you on this project. Collaborators are responsible for creating their own account and submitting their finances</p>
+          <p class="extra-margin-top">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
 
           <p><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add organisation</a></p>
 
