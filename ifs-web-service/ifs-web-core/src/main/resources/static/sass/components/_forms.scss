@@ -264,25 +264,9 @@ td.autosave-info {
     color: $orange;
     font-weight: 700;
 }
-
-// .form-group{
-//     &.alignright{
-//         .form-control{
-//             margin-right: 1.25em;
-//         }
-//     }
-// }
-
-select.form-control{
-  -webkit-appearance: menulist;
-  width:auto;
-}
-
 .feedback .textarea-wrapped textarea{
-        border: 1px solid $border-colour;
-
+    border: 1px solid $border-colour;
 }
-
 
 // ------- file upload -------- //
 

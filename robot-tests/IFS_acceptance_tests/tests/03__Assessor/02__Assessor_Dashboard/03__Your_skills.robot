@@ -4,7 +4,7 @@ Documentation     INFUND-5182 As an assessor creating an account I need to suppl
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so that I can ensure that it is complete.
 ...
 ...               INFUND-7059 As an assessor I can view my skills page so I can decide if my skills need updating
-Suite Setup       guest user log-in    worth.email.test+jeremy.alufson@gmail.com    Passw0rd
+Suite Setup       guest user log-in    ${test_mailbox_one}+jeremy.alufson@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/GLOBAL_LIBRARIES.robot
@@ -56,6 +56,7 @@ Save Skills should redirect to the read-only view
     Then the user should be redirected to the correct page    ${assessment_skills_url}
     And the user sees the text in the element    id=skillAreas    assessor skill areas text
     And the user sees the text in the element    id=assessorType    Business
+    And the user should see the text in the page    Resource efficiency
 
 Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182

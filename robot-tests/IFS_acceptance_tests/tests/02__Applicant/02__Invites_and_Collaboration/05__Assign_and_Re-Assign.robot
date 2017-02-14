@@ -181,16 +181,16 @@ Appendices are assigned along with the question
 Collaborator can see that Research area is not selected
     [Documentation]  INFUND-6823
     [Tags]
-    Given the user navigates to his finances page    Assign test
-    Then The user should see the element     jQuery=p:contains("You must give your project a research category in application details")
+    Given the user navigates to Your-finances page    Assign test
+    Then The user should see the element     jQuery=p:contains("You must select a research category in application details")
 
 Lead selects Research Area
     [Documentation]  INFUND-6823
     [Tags]  Email
     [Setup]  log in as a different user       ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     # this test is tagged as Email since it relies on an earlier invitation being accepted via email
-    Given the user navigates to his finances page    Assign test
-    Then the user should see the element      jQuery=p:contains("You must give your project a research category in application details")
+    Given the user navigates to Your-finances page     Assign test
+    Then the user should see the element      jQuery=p:contains("You must select a research category in application details")
     When the user navigates to the page       ${DASHBOARD_URL}
     Then the user clicks the button/link      link=Assign test
     When the user clicks the button/link      link=Application details
@@ -206,16 +206,16 @@ Lead marks finances as complete
     [Tags]
     Given the user navigates to the page  ${DASHBOARD_URL}
     And the user clicks the button/link  link=Assign test
-    And the applicant completes the application details
-    Given the user navigates to his finances page  Assign test
+    And the applicant completes the application details      Application details
+    Given the user navigates to Your-finances page    Assign test
     Then the user should see the element   link=Your project costs
     And the user should see the element    link=Your organisation
     And the user should see the element    jQuery=h3:contains("Your funding")
     When the user fills in the project costs
-    And the user navigates to his finances page  Assign test
-    Then the user fills in the organisation information
+    And the user navigates to Your-finances page  Assign test
+    Then the user fills in the organisation information      Assign test
     And the user fills in the funding information  Assign test
-    When the user navigates to his finances page  Assign test
+    When the user navigates to Your-finances page  Assign test
     Then the user should see all finance subsections complete
 
 Collaborator from another organisation should be able to mark Finances as complete
@@ -223,7 +223,7 @@ Collaborator from another organisation should be able to mark Finances as comple
     ...              This test depends on the previous test suite to run first
     [Tags]
     [Setup]  log in as a different user     ${test_mailbox_one}+invitedregistered@gmail.com  ${correct_password}
-    Given the user navigates to his finances page  Assign test
+    Given the user navigates to Your-finances page   Assign test
     Then the user should see all finance subsections incomplete
     And the collaborator is able to edit the finances
 
@@ -276,8 +276,8 @@ the question should contain the correct status/name
 
 the collaborator is able to edit the finances
     the user fills in the project costs
-    the user navigates to his finances page  Assign test
-    the user fills in the organisation information
+    the user navigates to Your-finances page    Assign test
+    the user fills in the organisation information      Assign test
     the user fills in the funding information  Assign test
 
 the applicant changes the name of the application

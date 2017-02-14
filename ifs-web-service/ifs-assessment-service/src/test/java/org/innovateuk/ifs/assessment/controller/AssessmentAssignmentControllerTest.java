@@ -117,7 +117,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withCompetition(competitionId)
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/assignment/reject", assessmentId)
@@ -128,7 +128,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(redirectedUrl(format("/assessor/dashboard/competition/%s", competitionId)))
                 .andReturn();
 
-        verify(assessmentService).getAssignableById(assessmentId);
+        verify(assessmentService).getRejectableById(assessmentId);
         verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
         verifyNoMoreInteractions(assessmentService);
     }
@@ -146,7 +146,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
         when(assessmentService.rejectInvitation(assessmentId, reason, comment)).thenReturn(serviceFailure(ASSESSMENT_REJECTION_FAILED));
 
         // The non-js confirmation view should be returned with the fields pre-populated in the form and a global error
@@ -180,9 +180,9 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals(ASSESSMENT_REJECTION_FAILED.name(), bindingResult.getGlobalError().getCode());
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verify(assessmentService).rejectInvitation(assessmentId, reason, comment);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -198,7 +198,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -231,7 +231,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals("Please enter a reason.", bindingResult.getFieldError("rejectReason").getDefaultMessage());
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -248,7 +248,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -283,7 +283,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals(5000, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -300,7 +300,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .withApplicationName("application name")
                 .build();
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(assessment);
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(assessment);
 
         // The non-js confirmation view should be returned with the comment pre-populated in the form and an error for the missing reason
 
@@ -335,7 +335,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         assertEquals(100, bindingResult.getFieldError("rejectComment").getArguments()[1]);
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -345,7 +345,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
         Long assessmentId = 1L;
         Long applicationId = 2L;
 
-        when(assessmentService.getAssignableById(assessmentId)).thenReturn(newAssessmentResource()
+        when(assessmentService.getRejectableById(assessmentId)).thenReturn(newAssessmentResource()
                 .withId(assessmentId)
                 .withApplication(applicationId)
                 .withApplicationName("application name")
@@ -365,7 +365,7 @@ public class AssessmentAssignmentControllerTest extends BaseControllerMockMVCTes
                 .andExpect(view().name("assessment/assessment-reject-confirm"));
 
         InOrder inOrder = inOrder(assessmentService);
-        inOrder.verify(assessmentService).getAssignableById(assessmentId);
+        inOrder.verify(assessmentService).getRejectableById(assessmentId);
         inOrder.verifyNoMoreInteractions();
     }
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -25,6 +26,7 @@ import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.application.resource.SectionType.GENERAL;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -212,8 +214,13 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
                 .withApplication(application)
                 .build();
 
+        Section section = newSection()
+                .withSectionType(GENERAL)
+                .build();
+
         Question question = newQuestion()
                 .withCompetition(competition)
+                .withSection(section)
                 .build();
 
         QuestionResource questionResource = newQuestionResource().build();
