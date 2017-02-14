@@ -32,7 +32,9 @@ items:
           ports:
           - containerPort: 9443
           - containerPort: 9080
-          resources: {}
+          resources:
+            limits:
+              memory: 1G
           test: false
     triggers:
     - type: ConfigChange

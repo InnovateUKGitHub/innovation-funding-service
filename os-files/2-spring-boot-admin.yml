@@ -28,7 +28,9 @@ items:
           imagePullPolicy: IfNotPresent
           ports:
           - containerPort: 8123
-          resources: {}
+          resources:
+            limits:
+              memory: 800M
     test: false
     triggers:
     - type: ConfigChange

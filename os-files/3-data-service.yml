@@ -32,6 +32,9 @@ items:
           volumeMounts:
           - name: mysql-tmp-storage
             mountPath: /var/lib/mysql
+          resources:
+            limits:
+              memory: 1200M
         volumes:
           - emptyDir: {}
             name: mysql-tmp-storage
@@ -77,7 +80,9 @@ items:
             value: '{"ifs":{"web":{"baseURL": "https://<<SHIB-ADDRESS>>"}}}'
           ports:
           - containerPort: 8080
-          resources: {}
+          resources:
+            limits:
+              memory: 200M
           volumeMounts:
           - mountPath: /tmp/ifs-local
             name: dir-1

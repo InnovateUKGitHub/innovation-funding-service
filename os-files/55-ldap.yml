@@ -28,7 +28,9 @@ items:
           ports:
           - containerPort: 8389
           - containerPort: 8636
-          resources: {}
+          resources:
+            limits:
+              memory: 500M
     test: false
     triggers:
     - type: ConfigChange
