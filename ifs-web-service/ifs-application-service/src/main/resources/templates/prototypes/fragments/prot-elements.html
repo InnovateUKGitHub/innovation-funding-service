@@ -180,15 +180,98 @@
 <!-- =========================== Warnings and panels =========================== -->
 
 <th:block th:fragment="prot-panels">
-  <div class="message-alert extra-margin-bottom">
-    <h2 class="heading-small no-margin">Message alert</h2>
-    <p>This is a message alerting you of something.</p>
-    <ul class="message-summary-list">
-      <li><strong><a href="#">Respond to request</a></strong></li>
+
+
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="extra-margin-top">Success</div>
+    </div>
+    <div class="column-three-quarters">
+      <div class="message-panel message-success">
+        <p>You have succeeded or completed something</p>
+      </div>
+    </div>
+  </div>
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="extra-margin-top">Fail - internal only</div>
+    </div>
+    <div class="column-three-quarters">
+      <div class="message-panel message-fail">
+        <p>You have failed or been rejected</p>
+      </div>
+    </div>
+  </div>
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="extra-margin-top">Alert</div>
+    </div>
+    <div class="column-three-quarters">
+      <div class="message-panel message-alert">
+        <p>You must know this - or there is a problem</p>
+      </div>
+    </div>
+  </div>
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="extra-margin-top">Info</div>
+    </div>
+    <div class="column-three-quarters">
+      <div class="message-panel message-info">
+        <p>You might want to know or complete this</p>
+      </div>
+    </div>
+  </div>
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="extra-margin-top">Assign</div>
+    </div>
+    <div class="column-three-quarters">
+      <div class="message-panel message-assign">
+        <p>This is assigned or reassigned to you <a href="#" class="extra-margin-left">Assigned to you</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="extra-margin-top">Assigned</div>
+    </div>
+    <div class="column-three-quarters">
+      <div class="message-panel message-assigned">
+        <p>This is assigned to [someone else] <a href="#" class="extra-margin-left">Assigned to</a></p>
+      </div>
+    </div>
+  </div>
+  <div class="grid-row">
+    <div class="column-quarter">
+      <div class="extra-margin-top">Declare</div>
+    </div>
+    <div class="column-three-quarters">
+      <div class="message-panel message-declare">
+        <p>You must declare that you are ok with this</p>
+      </div>
+    </div>
+  </div>
+  <h2 class="heading-medium">Examples</h2>
+  <div class="message-panel message-info">
+    <h2 class="heading-small">Research category determines funding</h2>
+    <p>The research category is used to calculate the funding for all collaborators in the application. Changing this selection will reset the funding level for all collaborators that have their funding section.</p>
+  </div>
+  <div class="message-panel message-declare">
+    <p>You will not be able to make change to your application or resubmit after this point.</p>
+  </div>
+  <div class="message-panel message-info">
+    <h2 class="heading-small">Complete your profile</h2>
+    <p>You must complete your profile to continue.</p>
+    <ul class="list-bullet">
+      <li><a href="#">your name</a></li>
+      <li><a href="#">declaration of interest</a></li>
     </ul>
   </div>
-  <div class="success-alert extra-margin-bottom">
-    <h2 class="heading-small no-margin">Assessor account complete!</h2>
+  <div class="message-panel message-alert">
+    <h2 class="heading-small">Deadline reminder: Wednesday 20 April 2016</h2>
+    <p>Please accept or reject your assessment invites.</p>
+    <p>You will have 5 days after the deadline, to complete your assessments.</p>
   </div>
 </th:block>
 
@@ -613,6 +696,49 @@
       </li>
     </ul>
   </div>
+</th:block>
+
+
+<!-- =========================== Modal dialog =========================== -->
+
+<th:block th:fragment="prot-modal-dialogs">
+  <div>
+    <a href="#" class="button" data-js-modal="test-modal">Launch modal</a>
+  </div>
+  <div class="extra-margin-top">
+    <a href="#" class="button" data-js-modal="test-warning-modal">Launch warning modal</a>
+  </div>
+
+  <div class="test-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
+    <div>
+      <div class="modal-content">
+        <h2 class="heading-medium no-margin">Submit project details</h2>
+        <p>Are you sure you wish to submit your project details to Innovate UK?</p>
+      </div>
+      <hr />
+      <div>
+        <a class="button js-close" href="#">Submit</a>
+        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="test-warning-modal warning-modal" role="dialog" aria-hidden="true" style="margin-top: -174px;">
+    <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
+    <div>
+    <div class="modal-content">
+      <h2 class="heading-medium no-margin">Changing research category will reset the funding level of this application</h2>
+      <p>All partner organisations that have supplied their funding information will have to review and mark the section as complete again.</p>
+    </div>
+      <hr />
+      <div>
+        <a class="button js-close" href="#">Submit</a>
+        <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
+      </div>
+    </div>
+  </div>
+  <div class="modal-overlay"></div>
 </th:block>
 
 </html>

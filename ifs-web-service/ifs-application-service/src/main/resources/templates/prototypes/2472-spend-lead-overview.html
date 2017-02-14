@@ -28,10 +28,10 @@
 	<p>This overview shows the spend profile status of each partner in your project.</p>
 
 	<div th:if="${param.status != null and param.status[0] == 'Submitted'}" th:remove="tag">
-		<h2 class="heading-medium">Profile spend</h2>
+		<h2 class="heading-medium">Spend profile</h2>
 		<p>All spend profiles have been submitted to Innovate UK and the Monitoring Officer assigned to this application. You may view the submitted spend profiles.</p>
-		
-		<a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
+
+		<a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project spend profile</a>
 
 	</div>
 
@@ -91,11 +91,11 @@
 
 		<p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must make sure they fit the timelines of your project plan.</p>
 
-		<a href="/prototypes/3100-spend?task=reviewProject" class="button">Review and submit total project profile spend</a>
+		<a href="/prototypes/3100-spend?task=reviewProject" class="button">Review and submit total project spend profile</a>
 
 	</div>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
     <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
@@ -107,7 +107,7 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-	
+
 	// ]]>
 </script>
 </body>
