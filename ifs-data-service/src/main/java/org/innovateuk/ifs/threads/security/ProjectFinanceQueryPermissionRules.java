@@ -17,7 +17,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @Component
 @PermissionRules
-public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
+public class ProjectFinanceQueryPermissionRules  {
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
