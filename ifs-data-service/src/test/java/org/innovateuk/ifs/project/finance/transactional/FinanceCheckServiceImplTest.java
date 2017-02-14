@@ -312,6 +312,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.AMBER);
         ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityRagStatus.UNSET);
         ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityRagStatus.UNSET);
+        EligibilityResource eligibility1 = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.AMBER);
+        EligibilityResource eligibility2 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+        EligibilityResource eligibility3 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
@@ -327,6 +330,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(viability1));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(viability2));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(eligibility1));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(eligibility2));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(eligibility3));
 
         ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
         when(projectFinanceServiceMock.getProjectFinances(projectId)).thenReturn(ServiceResult.serviceSuccess(Arrays.asList(projectFinanceResources)));
