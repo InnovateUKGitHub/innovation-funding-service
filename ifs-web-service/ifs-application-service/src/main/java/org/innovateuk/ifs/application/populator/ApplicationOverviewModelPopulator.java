@@ -124,7 +124,7 @@ public class ApplicationOverviewModelPopulator {
             financeSectionId = financeSections.get(0).getId();
         }
 
-        model.addAttribute("contentGroups", sections);
+        model.addAttribute("sections", sections);
         model.addAttribute("subSections", subSections);
         model.addAttribute("sectionQuestions", sectionQuestions);
         model.addAttribute("hasFinanceSection", hasFinanceSection);

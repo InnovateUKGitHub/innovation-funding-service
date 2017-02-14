@@ -63,7 +63,7 @@
                     <div th:if="${subSections.get(section.id).size() ==0}" th:remove="tag">
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </div>
-                    <!--/* contentGroups with children like the finance */-->
+                    <!--/* sections with children like the finance */-->
                     <div th:unless="${subSections.get(section.id).size() ==0 }" th:remove="tag">
                         <li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}">
                             <div class="column-two-thirds">
