@@ -112,7 +112,7 @@
                 <!--/* edit */-->
                 <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
                     <label th:for="'formInput-'+${formInput.id}" th:id="'form-label-'+${formInput.id}">
-                        <span class="form-label form-label-bold" />
+                        <span class="form-label form-label-bold" th:text="${formInput.description}" />
                         <th:block th:include="question-type/form-elements :: form-hint (hint=${formInput.guidanceTitle})" />
                         <th:block th:include="question-type/form-elements :: form-validation-messages (id=${formInput.id})" />
                     </label>
@@ -120,11 +120,10 @@
                            type="number"
                            th:id="'formInput-'+${formInput.id}"
                            th:name="'formInput['+${formInput.id}+']'"
-                           th:min="0"
-                           th:max="2147483647"
+                           min="0"
+                           max="2147483647"
                            th:value="*{formInput[__${formInput.id}__]}"
-                           th:required="required"
-                    />
+                           required="required" />
                 </div>
             </th:block>
             <th:block th:if="${readonly}">
@@ -1023,13 +1022,13 @@
                            />
                 </div>
                 <th:block th:if="${viewmode == 'edit'}">
-                    <button type="submit"
+                    <button th:unless="${cost.id == null}" type="submit"
                             name="remove_cost"
                             class="buttonlink js-remove-row"
                             th:value="${cost.id}"
                             th:attrappend="formaction='&#35;question-'+${question.id}">Remove
                     </button>
-                    <span class="buttonplaceholder"></span>
+                    <span th:if="${cost.id == null}" class="buttonplaceholder"></span>
                 </th:block>
             </div>
         </th:block>
