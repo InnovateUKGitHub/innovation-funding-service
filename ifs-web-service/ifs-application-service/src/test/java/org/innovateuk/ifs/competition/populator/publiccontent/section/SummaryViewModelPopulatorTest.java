@@ -60,7 +60,6 @@ public class SummaryViewModelPopulatorTest {
                 .withProjectSize("5M")
                 .withContentSections(asList(publicContentSectionResource))
                 .build();
-
     }
 
     @Test
