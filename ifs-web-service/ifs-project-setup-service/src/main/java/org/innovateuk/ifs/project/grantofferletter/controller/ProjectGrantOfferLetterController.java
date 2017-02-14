@@ -115,7 +115,7 @@ public class ProjectGrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'LEAD_PARTNER_ACCESS')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
     @RequestMapping(value = "/signed-grant-offer-letter", method = GET)
     public
     @ResponseBody
