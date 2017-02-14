@@ -8,13 +8,11 @@ import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.transactional.FinanceCheckServiceImpl;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.service.MappingThreadService;
-import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
@@ -24,11 +22,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
-import static org.innovateuk.ifs.util.CollectionFunctions.pairsToMap;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Service
@@ -47,7 +44,7 @@ public class ProjectFinanceQueriesServiceImpl extends MappingThreadService<Query
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
-    enum Notifications {
+    public enum Notifications {
         NEW_FINANCE_CHECK_QUERY_RESPONSE
     }
 
@@ -61,7 +58,7 @@ public class ProjectFinanceQueriesServiceImpl extends MappingThreadService<Query
         ServiceResult<Void> result = super.addPost(post, threadId);
         if (result.isSuccess()) {
             if (post.author.hasRole(UserRoleType.PROJECT_FINANCE)) {
-                ServiceResult<QueryResource> query = super.findOne(threadId);
+                ServiceResult<QueryResource> query = findOne(threadId);
                 if (query.isSuccess()) {
                     ProjectFinance projectFinance = projectFinanceRepository.findOne(query.getSuccessObject().contextClassPk);
                     Project project = projectFinance.getProject();
@@ -89,6 +86,8 @@ public class ProjectFinanceQueriesServiceImpl extends MappingThreadService<Query
                             return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
                         }
                     }
+                } else {
+                    return serviceFailure(GENERAL_NOT_FOUND);
                 }
             }
         }
