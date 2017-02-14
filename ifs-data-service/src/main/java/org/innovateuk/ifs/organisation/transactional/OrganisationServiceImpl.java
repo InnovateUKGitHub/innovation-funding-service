@@ -76,7 +76,7 @@ public class OrganisationServiceImpl extends BaseTransactionalService implements
     @Override
     public ServiceResult<OrganisationResource> getPrimaryForUser(final Long userId) {
         List<Organisation> organisations = organisationRepository.findByUsersId(userId);
-        if (organisations.size() == 0) {
+        if (organisations.isEmpty()) {
             return serviceFailure(CommonErrors.notFoundError(Organisation.class));
         }
         return serviceSuccess(organisationMapper.mapToResource(organisations.get(0)));
