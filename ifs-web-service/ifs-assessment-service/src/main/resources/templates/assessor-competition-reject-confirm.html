@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Confirm rejection'" th:remove="tag"/>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm rejection'" />
     </head>
 
     <body th:with="context='assessment'" class="reject-invitation-confirm">
-        <div th:include="fragments/layout :: body-start" th:remove="tag"/>
-        <div th:include="fragments/layout :: global-header" th:remove="tag"/>
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+            <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge">Confirm rejection</h1>
@@ -17,12 +17,12 @@
 
             <p>Are you sure you want to reject <strong>'<span th:text="${model.competitionName}" th:remove="tag" />'</strong>?</p>
 
-            <div th:include="fragments/assessment :: assessor-reject-competition-form (inviteHash=${model.competitionInviteHash})" th:remove="tag" />
+            <th:block th:insert="fragments/assessment :: assessor-reject-competition-form (inviteHash=${model.competitionInviteHash})" />
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag"/>
-        <div th:include="fragments/layout :: body-end" th:remove="tag"/>
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

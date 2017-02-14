@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.config.rest;
 
+import org.apache.commons.codec.binary.Base64;
 import org.innovateuk.ifs.commons.service.AbstractRestTemplateAdaptor;
-import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowire;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
