@@ -46,7 +46,7 @@
 
         <!-- Desktop layout -->
         <div class="hide-mobile">
-            <th:block th:include="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection})"/>
+            <th:block th:include="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>
         </div>
 
         <!-- Mobile layout - ->
