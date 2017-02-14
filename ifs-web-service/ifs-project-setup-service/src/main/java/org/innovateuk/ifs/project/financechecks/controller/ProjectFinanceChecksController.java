@@ -126,9 +126,6 @@ public class ProjectFinanceChecksController {
     CompetitionService competitionService;
 
     @Autowired
-    ProjectFinanceService financeService;
-
-    @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
 
     @Autowired
@@ -497,7 +494,7 @@ public class ProjectFinanceChecksController {
 
         poulateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
 
-        EligibilityResource eligibility = financeService.getEligibility(project.getId(), organisation.getId());
+        EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
 
         if (eligibilityForm == null) {
             eligibilityForm = getEligibilityForm(eligibility);
