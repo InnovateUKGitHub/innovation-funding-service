@@ -200,7 +200,12 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
 
             ProjectOrganisationCompositeId compositeId = getCompositeId(org);
             Pair<Viability, ViabilityRagStatus> viability = getViability(compositeId);
-            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
+//            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
+
+            //TODO INFUND-6716 remove and use above.
+            Pair<Eligibility, EligibilityRagStatus> eligibility = financeChecksApproved ?
+                    Pair.of(Eligibility.APPROVED, EligibilityRagStatus.UNSET) :
+                    Pair.of(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
             ServiceResult<List<ProjectFinanceResource>> projectFinanceResources = projectFinanceService.getProjectFinances(projectId);
             boolean anyQueryAwaitingResponse = false;
