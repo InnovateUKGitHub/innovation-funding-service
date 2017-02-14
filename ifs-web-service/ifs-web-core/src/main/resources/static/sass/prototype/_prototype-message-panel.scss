@@ -17,16 +17,25 @@
 
   &.message-success {
     background-image: url('../images/icons/icon-messages/tick-icon.png');
+    background-image:
+            linear-gradient(transparent, transparent),
+            url('../images/icons/icon-messages/tick-icon.svg');
     color: $button-colour;
     border-color: $button-colour;
   }
   &.message-fail {
     background-image: url('../images/icons/icon-messages/cross-icon.png');
+    background-image:
+            linear-gradient(transparent, transparent),
+            url('../images/icons/icon-messages/cross-icon.svg');
     color: $red;
     border-color: $red;
   }
   &.message-alert {
     background-image: url('../images/icons/icon-messages/alert-icon.png');
+    background-image:
+            linear-gradient(transparent, transparent),
+            url('../images/icons/icon-messages/alert-icon.svg');
     color: $red;
     border-color: $red;
     //  This is here to overwrite a style already in dev - can be removed when this is rolled out into dev
@@ -36,10 +45,16 @@
   }
   &.message-info {
     background-image: url('../images/icons/icon-messages/info-icon.png');
+    background-image:
+            linear-gradient(transparent, transparent),
+            url('../images/icons/icon-messages/info-icon.svg');
     border-color: $link-colour;
   }
   &.message-assign {
     background-image: url('../images/icons/icon-messages/edit-icon.png');
+    background-image:
+            linear-gradient(transparent, transparent),
+            url('../images/icons/icon-messages/edit-icon.svg');
     border-color: $text-colour;
   }
   &.message-assigned {
@@ -47,6 +62,9 @@
   }
   &.message-declare {
     background-image: url('../images/icons/icon-messages/declare-icon.png');
+    background-image:
+            linear-gradient(transparent, transparent),
+            url('../images/icons/icon-messages/declare-icon.svg');
     border-color: $text-colour;
   }
   @include media-down(mobile){
