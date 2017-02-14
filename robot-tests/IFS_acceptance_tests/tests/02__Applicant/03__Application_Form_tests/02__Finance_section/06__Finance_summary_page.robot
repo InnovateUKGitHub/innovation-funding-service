@@ -129,11 +129,6 @@ Alert should not show If research participation is below the maximum level
 
 
 *** Keywords ***
-the user navigates to Your-finances page
-    [Arguments]  ${Application}
-    the user navigates to the page  ${DASHBOARD_URL}
-    the user clicks the button/link  link=${Application}
-    the user clicks the button/link  link=Your finances
 
 the finance Project cost breakdown calculations should be correct
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £385
