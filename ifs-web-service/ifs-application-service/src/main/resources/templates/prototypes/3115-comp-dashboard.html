@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="comp-dashboard full-width">
 
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
-<th:block th:insert="fragments/layout :: global-header" th:if="${param.userRole == null}"     />
-<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',userRole='admin',user='James Danek'" th:if="${param.userRole != null and param.userRole[0] == 'admin'}"   />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" th:if="${param.userRole == null}" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn',userRole='admin',user='James Danek'" th:if="${param.userRole != null and param.userRole[0] == 'admin'}" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -34,7 +34,7 @@
 
   <div class="no-constrain-width justify-left">
 
-    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-comp-dashboard-navigation" th:unless="${param.section != null and param.section[0] == 'search'}"  />
+    <th:block th:insert="prototypes/fragments/comp-setup :: prototype-comp-dashboard-navigation" th:unless="${param.section != null and param.section[0] == 'search'}" />
 
   	<th:block th:insert="prototypes/fragments/comp-setup :: ${'prototype-dashboard-'+ (param.section == null ? 'live' : param.section[0])}" />
 
@@ -42,11 +42,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

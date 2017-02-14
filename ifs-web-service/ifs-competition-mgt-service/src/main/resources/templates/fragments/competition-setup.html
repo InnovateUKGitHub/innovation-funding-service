@@ -75,10 +75,10 @@
 <!-- ======== Comp admin - remove assigned assessor modal ======= -->
 <div th:fragment="comp-setup-remove-assigned-assessor-modal">
     <div class="remove-assigned-assessor-modal" role="dialog" aria-hidden="true">
-        <th:block th:insert="fragments/modals :: close-button"  />
+        <th:block th:insert="fragments/modals :: close-button" />
 
         <form th:action="'#'" method="post" novalidate="novalidate">
-            <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content"  />
+            <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
 
             <div class="alignright-button">
                 <button type="button" class="js-close buttonlink large">Cancel</button>

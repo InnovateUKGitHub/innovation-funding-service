@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
 </head>
 <body th:with="context='project-management'" class="competition-management finance-checks-overview">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-  <th:block th:insert="fragments/layout :: main-content-start"    />
-  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}"  />
+  <th:block th:insert="fragments/layout :: main-content-start" />
+  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
           <div class="page-title">
-              <th:block th:insert="fragments/competition-management :: competition-id-and-name(${model.financeCheckSummaryResource.competitionId}, ${model.financeCheckSummaryResource.competitionName})"  />
+              <th:block th:insert="fragments/competition-management :: competition-id-and-name(${model.financeCheckSummaryResource.competitionId}, ${model.financeCheckSummaryResource.competitionName})" />
               <h1 class="heading-xlarge">Finance checks</h1>
           </div>
       </div>
@@ -104,11 +104,11 @@
         <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"  th:include="fragments/modals :: generate-spend-profile" />
     </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

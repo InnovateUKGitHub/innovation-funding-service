@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details'" />
 </head>
 <body th:with="context='project'" class="bank-detail">
-  <th:block th:insert="fragments/layout :: body-start"    />
+  <th:block th:insert="fragments/layout :: body-start" />
   <th:block th:insert="fragments/layout :: global-header" />
 
-  <th:block th:insert="fragments/modals :: modal-overlay"  />
+  <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <main id="content">
-  <th:block th:insert="fragments/layout :: main-content-start"    />
+  <th:block th:insert="fragments/layout :: main-content-start" />
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}"  th:remove="tag"></div>
 
   <div class="page-title">
-      <th:block th:insert="fragments/elements :: project-title (projectId=${applicationId}, projectName=${project.name})"  />
+      <th:block th:insert="fragments/elements :: project-title (projectId=${applicationId}, projectName=${project.name})" />
       <h1 class="heading-xlarge">Bank account</h1>
   </div>
   <form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:with="readonly=${bankDetails == null ? false : true}">
@@ -88,7 +88,7 @@
         </fieldset>
       </div>
 
-      <th:block th:insert="fragments/modals :: modal-bank-details"  />
+      <th:block th:insert="fragments/modals :: modal-bank-details" />
       <button th:attr="formaction=@{/project/{id}/bank-details/confirm(id=${project.id})}" class="button extra-margin" data-js-modal="modal-bank">Submit bank account details</button>
 
 
@@ -123,10 +123,10 @@
 
 	</form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

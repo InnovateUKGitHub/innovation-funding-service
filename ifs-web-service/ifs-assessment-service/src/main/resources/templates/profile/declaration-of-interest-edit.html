@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit declaration of interest'"  />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit declaration of interest'" />
     </head>
 
     <body th:with="context='assessment'" class="declaration-form">
-        <th:block th:insert="fragments/layout :: body-start"   />
-        <th:block th:insert="fragments/layout :: global-header"  />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"   />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}"  />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to declaration of interest',linkClass='link-back',linkUrl=@{/profile/declaration}" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your declaration of interest</h1>
@@ -132,7 +132,7 @@
                                            th:errorclass="field-error"
                                            th:field="*{appointments[__${appointmentStat.index}__].position}"
                                            required="required"
-                                           th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.position.required}"  />
+                                           th:attr="data-required-errormessage=#{validation.assessorprofileappointmentform.position.required}" />
                                 </td>
                                 <td>
                                     <button class="remove-another-row buttonlink" th:value="${appointmentStat.index}" name="removeAppointment" type="submit">Remove</button>
@@ -353,10 +353,10 @@
             </form>
             <input type="hidden" id="cacheTest" value="" />
 
-            <th:block th:insert="fragments/layout :: main-content-end"   />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"   />
-        <th:block th:insert="fragments/layout :: body-end"   />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

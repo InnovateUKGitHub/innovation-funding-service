@@ -708,7 +708,7 @@
         </fieldset>
 
         <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=essential, sectionId=1"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=essential, sectionId=1" />
         </div>
 
     </form>
@@ -872,7 +872,7 @@
         </fieldset>
 
         <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=funding, sectionId=2"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=funding, sectionId=2" />
         </div>
 
     </form>
@@ -948,7 +948,7 @@
 
         <div class="grid-row ">
             <div class="column-half">
-                 <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}"   />
+                 <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" th:unless="${(param.compStatus != null and param.compStatus[0] == 'ready' )}" />
             </div>
             <div class="column-half alignright">
                 <a th:href="@{'?section=eligibility&#38;action=new-stream'}" id="add-stream" style="display: none">Add stream</a>
@@ -956,7 +956,7 @@
         </div>
 
         <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=eligibility, sectionId=3" />
         </div>
 
     </form>
@@ -1208,7 +1208,7 @@
 
 
         <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=milestones, sectionId=4" />
         </div>
 
     </form>
@@ -1276,7 +1276,7 @@
     <form>
 
         <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=assessors, sectionId=5"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=assessors, sectionId=5" />
         </div>
 
     </form>
@@ -1348,7 +1348,7 @@
         </ul>
 
          <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=application, sectionId=6" />
         </div>
 
     </form>
@@ -1386,7 +1386,7 @@
     <form>
 
         <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=finance, sectionId=7"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=finance, sectionId=7" />
         </div>
 
     </form>
@@ -1420,7 +1420,7 @@
     <form>
 
         <div class="extra-margin">
-            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=description, sectionId=8"  />
+            <th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-cta" th:with="section=description, sectionId=8" />
         </div>
 
     </form>
@@ -1651,7 +1651,7 @@
 <!-- =================Section: Public content - index =========================== -->
 
 <th:block th:fragment="prototype-section-public-index">
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Public content'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Public content'}, ${null})" />
 
     <ul class="task-list">
         <li><div class="task"><h2 class="heading-small"><a th:href="${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready&amp;section=public-competition-information&amp;state=edit' : '?section=public-competition-information&amp;state=edit')}">Competition information and search</a></h2></div></li>
@@ -1678,7 +1678,7 @@
 
 <th:block th:fragment="prototype-section-public-competition-information">
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Competition information and search'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Competition information and search'}, ${null})" />
     <p>This information is used for search and the opening section of the competition page.</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <dl class="readonly-data">
@@ -1745,7 +1745,7 @@
 
 <th:block th:fragment="prototype-section-public-summary">
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Summary'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Summary'}, ${null})" />
     <p>Text entered into this section will appear within the summary tab.</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <h2 class="heading-medium">Mandatory content</h2>
@@ -1836,7 +1836,7 @@
 
 <th:block th:fragment="prototype-section-public-eligibility">
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Eligibility'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Eligibility'}, ${null})" />
     <p>Text entered into this section will appear within the eligibility tab</p>
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <h2 class="heading-small no-margin-bottom">Lead applicant eligibility</h2>
@@ -2104,7 +2104,7 @@
 
 <th:block th:fragment="prototype-section-public-scope">
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Scope'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Scope'}, ${null})" />
 
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <h2 class="heading-small no-margin-bottom">Project scope</h2>
@@ -2324,7 +2324,7 @@
 
 <th:block th:fragment="prototype-section-public-dates">
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Dates'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Dates'}, ${null})" />
 
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <dl class="readonly-data">
@@ -2439,7 +2439,7 @@
 
 <th:block th:fragment="prototype-section-public-how-to-apply">
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'How to apply'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'How to apply'}, ${null})" />
 
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <dl class="readonly-data">
@@ -2691,7 +2691,7 @@
 
 <th:block th:fragment="prototype-section-public-supporting-information">
 
-    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Supporting information'}, ${null})"  />
+    <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'Connected digital additive manufacturing'}, ${'Supporting information'}, ${null})" />
 
     <th:block th:if="${(param.state != null and param.state[0] == 'readOnly')}">
         <dl class="readonly-data">

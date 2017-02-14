@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
 
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader('Application questions', '/prototypes/5085-application-process')" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup" style="padding-top: 20px">
@@ -201,8 +201,8 @@ Your assessment of the project scope should be based upon the competition brief.
 						</tr>
 						</thead>
 						<tbody>
-							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=1,score=${'YES'},justification=${'The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?'}"  />
-							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=2,score=${'NO'},justification=${'One or more of the above requirements have not been satisfied.'}"  />
+							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=1,score=${'YES'},justification=${'The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?The application contains the following:  Is the consortia business led? Are there two or more partners to the collaboration? Does it meet the scope of the competition as defined in the competition brief?'}" />
+							<th:block th:insert="prototypes/fragments/comp-setup :: prototype-section-assessment-guidance-row" th:with="rowNo=2,score=${'NO'},justification=${'One or more of the above requirements have not been satisfied.'}" />
 						</tbody>
 					</table>
 					<p class="alignright extra-margin">
@@ -230,11 +230,11 @@ Your assessment of the project scope should be based upon the competition brief.
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
 
 </script>

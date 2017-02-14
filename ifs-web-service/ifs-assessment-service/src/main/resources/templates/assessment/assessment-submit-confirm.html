@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit assessments'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Submit assessments'" />
 </head>
 
     <body th:with="context='assessment'" class="assessment-submit-confirm">
-        <th:block th:insert="fragments/layout :: body-start"    />
+        <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"    />
+            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to your competition dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard/competition/{id}(id=${competitionId})})" />
 
             <div class="page-title">
@@ -27,7 +27,7 @@
             </form>
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"    />
-        <th:block th:insert="fragments/layout :: body-end"    />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

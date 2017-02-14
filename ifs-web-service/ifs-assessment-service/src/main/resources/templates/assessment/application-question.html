@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}"  />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" />
     </head>
 
     <body th:with="context='assessment', responseRequired=${!#lists.isEmpty(model.assessmentFormInputs)}" class="assessment" th:classappend="${responseRequired} ? assessment-form">
-        <th:block th:insert="fragments/layout :: body-start"    />
+        <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"    />
-            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})"  />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})"  />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
@@ -57,12 +57,12 @@
             </div>
             <input type="hidden" id="cacheTest" value="" />
 
-            <th:block th:insert="fragments/assessment :: assessment-pagination"  />
+            <th:block th:insert="fragments/assessment :: assessment-pagination" />
 
-            <th:block th:insert="fragments/layout :: main-content-end"    />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"    />
-        <th:block th:insert="fragments/layout :: body-end"    />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

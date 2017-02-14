@@ -1,38 +1,38 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-overview">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content" th:with="score=${param.unsuccessful} ? 3 : 7">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div th:if="${param.internal == null}" th:remove="tag">
 
 		<div th:if="${param.unsuccessful != null}" th:remove="tag">
-			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?unsuccessful'})"  />
+			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?unsuccessful'})" />
 		</div>
 
 		<div th:if="${param.unsuccessful == null}" th:remove="tag">
-			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback'})"  />
+			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback'})" />
 		</div>
 
 	</div>
 
 	<div th:if="${param.internal != null}" th:remove="tag">
-		<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?internal'})"  />
+		<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Feedback overview'}, ${'/prototypes/545-application-feedback?internal'})" />
 	</div>
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'0000003: Mobile Phone Data for Logistics Analytics'}, ${'Risks'})"  />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'0000003: Mobile Phone Data for Logistics Analytics'}, ${'Risks'})" />
 
 	<h2 class="heading-medium no-margin">7. What are the risks (technical, commercial and environmental) to your project's success? What is your risk management strategy?</h2>
 
@@ -95,10 +95,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

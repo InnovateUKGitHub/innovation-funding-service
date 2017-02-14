@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status'})"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${'/prototypes/1588-project-status'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})"  />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Bank account'})" />
 
 	<p>In order for us to pay your grant we need your bank account details. We will then verify the bank account to the lead organisation.</p>
 
@@ -39,7 +39,7 @@
 
 	<form action="#">
 
-		<th:block th:insert="prototypes/fragments/project-setup :: prototype-bank-details"  />
+		<th:block th:insert="prototypes/fragments/project-setup :: prototype-bank-details" />
 
 		<div class="extra-margin">
 			<a href="#" class="button" data-js-modal="modal-bank">Submit bank account details</a>
@@ -72,11 +72,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 <script type="text/javascript">
 	// <![CDATA[

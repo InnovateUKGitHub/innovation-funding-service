@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 
@@ -24,18 +24,18 @@
 <body th:class="${(param.fullWidth != null ? 'comp-assessors' : 'comp-assessors full-width')}">
 
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessments closed'}, ${'/prototypes/1827-assessment-closed'})"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessments closed'}, ${'/prototypes/1827-assessment-closed'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, 'Panel assessors')"  />
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title(${'Innovate UK, Technology inspired, (4891061)'}, 'Panel assessors')" />
 
 	<div id="sticky-zone">
 
@@ -91,9 +91,9 @@
 				        </div>
 				    </div> -->
 
-	    			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors invited'}, type='asessor-panel'"  />
+	    			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-search-filters" th:with="filterTitle=${'assessors invited'}, type='asessor-panel'" />
 
-	    			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-assessor-panel-table"  />
+	    			<th:block th:insert="prototypes/fragments/comp-admin :: prototype-assessor-panel-table" />
 
 	    			<div th:if="${param.filterStatus == null}" th:remove="tag">
 
@@ -113,11 +113,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">

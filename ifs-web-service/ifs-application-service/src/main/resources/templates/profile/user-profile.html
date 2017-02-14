@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your Profile'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your Profile'" />
 </head>
 <body th:with="context='applicant'" class="user-profile">
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
 
     <h1 class="heading-large">Your profile</h1>
@@ -44,11 +44,11 @@
     <h3 class="heading-small">Email address</h3>
     <p th:text="${model.emailAddress}" />
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

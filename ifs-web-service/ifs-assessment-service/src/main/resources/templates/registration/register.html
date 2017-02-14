@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create assessor account'"  />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create assessor account'" />
     </head>
 
     <body th:with="context='assessment'">
-        <th:block th:insert="fragments/layout :: body-start"   />
-        <th:block th:insert="fragments/layout :: global-header"  />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"   />
+            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
             <div class="hgroup">
@@ -218,10 +218,10 @@
                 <button class="button button-large extra-margin" name="create-account" type="submit">Continue</button>
             </form>
 
-            <th:block th:insert="fragments/layout :: main-content-end"   />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"   />
-        <th:block th:insert="fragments/layout :: body-end"   />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

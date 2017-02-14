@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionTitle}"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.competitionTitle}" />
 </head>
 
     <body th:with="context='assessment'" class="assessor-comp-dashboard">
         <th:block th:insert="fragments/modals :: modal-overlay" />
-        <th:block th:insert="fragments/layout :: body-start"    />
+        <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"    />
-            <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})"  />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/assessment :: assessment-header-sub (linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard})" />
 
             <div class="page-title">
                 <h1 class="heading-xlarge" th:text="${model.competitionTitle}" />
@@ -123,10 +123,10 @@
                 </div>
             </div>
 
-            <th:block th:insert="fragments/layout :: main-content-end"    />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"    />
-        <th:block th:insert="fragments/layout :: body-end"    />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

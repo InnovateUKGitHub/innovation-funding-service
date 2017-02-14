@@ -7,7 +7,7 @@
     <div class="form-group extra-margin">
         <label class="form-label" for="research-category">
             <span class="form-label-bold">Please select the research category for this project</span>
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})"  />
+            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${field.id})" />
         </label>
         <select class="form-control" id="research-category" th:field="*{formInput[__${field.id}__]}">
             <option value="">Please select...</option>

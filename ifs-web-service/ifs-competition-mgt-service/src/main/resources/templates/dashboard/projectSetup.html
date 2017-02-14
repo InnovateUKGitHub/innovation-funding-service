@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-overview">
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
-        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})"  />
+        <th:block th:insert="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" />
     </form>
-    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (tab=${'projectSetup'}, counts=${counts})"  />
+    <th:block th:insert="competition/dashboard :: comp-dashboard-navigation (tab=${'projectSetup'}, counts=${counts})" />
 
     <section th:with="projectSetupComps=${competitions.get(T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP)}">
         <h2 class="heading-medium"
@@ -31,11 +31,11 @@
         </ul>
     </section>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

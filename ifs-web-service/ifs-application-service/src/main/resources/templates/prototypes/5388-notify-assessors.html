@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notify assessors'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Notify assessors'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body>
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
-<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'"  />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage applications'}, ${'/prototypes/5470-manage-applications'})"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Manage applications'}, ${'/prototypes/5470-manage-applications'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -34,7 +34,7 @@
 
 		<p>Required Assessors for each application: 5</p>
 
-		<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-notify-table"  />
+		<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-notify-table" />
 
 		<p class="extra-margin">When you have finished assigning all required assignments to assessors,  upon selecting notify the assessors assigned to an application will be informed that they have been assigned applications to assess.</p>
 
@@ -82,11 +82,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>

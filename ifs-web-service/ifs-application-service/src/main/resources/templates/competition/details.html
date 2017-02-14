@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Details'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Details'" />
 </head>
 <body th:with="context='applicant'" class="competition-details">
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div class="page-title">
         <h1 class="heading-xlarge" th:text="${'Funding competition: '+currentCompetition.name}" />
@@ -21,7 +21,7 @@
             <p>Innovate UK are to invest up to &pound;4.5 million in collaborative research and development. The focus of this competition is to stimulate development in the commercial growth of additive manufacturing, which is also known as 3D printing.</p>
         </div>
         <div th:class="${#authorization.expression('isAuthenticated()')  ? 'column-half' : 'column-third'}">
-            <th:block th:insert="competition/fragments :: apply-button"  />
+            <th:block th:insert="competition/fragments :: apply-button" />
         </div>
     </div>
     <h2 class="heading-large">Summary</h2>
@@ -73,17 +73,17 @@
         <div class="column-two-thirds">
             <h2 class="heading-large">Before you apply</h2>
             <p>Before you apply for a competition you must first create an account. If you already have an account you'll need to sign in.</p>
-            <th:block th:insert="competition/fragments :: apply-button"  />
+            <th:block th:insert="competition/fragments :: apply-button" />
             <span class="form-hint">Closing date: <span th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'dd MMM yyyy')}" /></span>
         </div>
     </div>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

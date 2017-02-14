@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
     <style> .message-alert {
@@ -10,14 +10,14 @@
 </head>
 <body class="app-dashboard">
 
-    <th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-    <th:block th:insert="fragments/layout :: body-start"    />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+    <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
 
     <main id="content">
-        <th:block th:insert="fragments/layout :: main-content-start"    />
-        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/632-organisation-collaborator-overview'})"  />
+        <th:block th:insert="fragments/layout :: main-content-start" />
+        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/632-organisation-collaborator-overview'})" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
@@ -51,10 +51,10 @@
             <tbody>
                 <tr>
                     <td>
-                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-1" value="Rob Waite (lead)"  />
+                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-1" value="Rob Waite (lead)" />
                     </td>
                     <td>
-                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-1" value="robwaite@acmeltd.co.uk"  />
+                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-1" value="robwaite@acmeltd.co.uk" />
                     </td>
                     <td class="alignright remove">
                         <!-- <a class="delete-row" data-cost-row="12" href="#">Remove</a> -->
@@ -63,10 +63,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-2" value="Roger Axe"  />
+                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-2" value="Roger Axe" />
                     </td>
                     <td>
-                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-2" value="rogeraxe@acme.org.uk"  />
+                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-2" value="rogeraxe@acme.org.uk" />
                     </td>
                     <td class="alignright remove">
                         <!-- <a class="delete-row" data-cost-row="12" href="#">Remove</a> -->
@@ -75,10 +75,10 @@
                 </tr>
                 <tr>
                     <td>
-                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-3" value="Steven Smiths"  />
+                        <input readonly="readonly" type="text" name="name-item-1" id="name-item-3" value="Steven Smiths" />
                     </td>
                     <td>
-                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-3" value="ssmiths@acme.org.uk"  />
+                        <input readonly="readonly" type="email" name="mail-item-1" id="mail-item-3" value="ssmiths@acme.org.uk" />
                     </td>
                     <td class="alignright remove">
                     </td>
@@ -115,7 +115,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="Elvis Furcic"  />
+                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="Elvis Furcic" />
                     </td>
                     <td>
                         <input readonly="readonly" type="email" placeholder="name@name.com" name="mail-item-1" id="mail-item-5" value="efurcic@worth.systems" />
@@ -126,7 +126,7 @@
                 </tr>
                 <tr>
                     <td>
-                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="Christopher Johnson"  />
+                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="Christopher Johnson" />
                     </td>
                     <td>
                         <input readonly="readonly" type="email" placeholder="name@name.com" name="mail-item-1" id="mail-item-5" value="chris@worth.systems" />
@@ -156,7 +156,7 @@
             <tbody>
                 <tr>
                     <td>
-                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="John Dull"  />
+                        <input readonly="readonly" type="text" placeholder="name" name="name-item-1" id="name-item-5" value="John Dull" />
                     </td>
                     <td>
                         <input readonly="readonly" type="email" placeholder="name@name.com" name="mail-item-1" id="mail-item-5" value="John@io.systems" />
@@ -180,11 +180,11 @@
 </div>
 <!-- END OFHARDCODED PROTOTYPE HTML -->
 
-<th:block th:insert="fragments/layout :: main-content-end"    />
+<th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>
 </html>

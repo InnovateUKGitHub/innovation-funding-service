@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Sign In'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Sign In'" />
 </head>
 <body class="sign-in">
 
-<th:block th:insert="fragments/layout :: body-start"   />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large">Invalid URL</h1>
 
@@ -17,10 +17,10 @@
     <p>Try copying and pasting the entire URL from your email into your browser's address bar and press enter.</p>
     <p>If you still receive this error message then go back to the <a th:href="@{/login}">sign in page</a> and try again. You will be sent a new link by email.</p>
 
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

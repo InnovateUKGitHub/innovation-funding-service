@@ -2,18 +2,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Monitoring officer'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Monitoring officer'" />
 </head>
 <body th:with="context='project'" class="project-detail monitoring-officer">
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"  />
+        <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Monitoring Officer</h1>
     </div>
 
@@ -46,11 +46,11 @@
     <h3 class="heading-medium">Role of Monitoring Officer</h3>
 		<p>The Monitoring Officer will be the primary point of contact for the project. They will monitor and report progress to Innovate UK.</p>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

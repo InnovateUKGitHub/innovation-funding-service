@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Eligibility'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Eligibility'" />
 </head>
 
 <body th:with="context='project-management'" class="eligibility-form">
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})"  />
+        <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" />
         <h1 class="heading-xlarge">
             <th:block th:text="${summaryModel.organisationName}" />
             <small th:if="${summaryModel.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -132,9 +132,9 @@
         <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}">Return to finance checks</a>
     </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

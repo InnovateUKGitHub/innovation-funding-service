@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-form">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Technical approach'})"  />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Technical approach'})" />
 
 <form action="#" method="post" class="form-serialize-js">
 	<div class="form-group extra-margin" id="0">
@@ -107,7 +107,7 @@
 
 		</div>
 
-		<th:block th:insert="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})"  />
+		<th:block th:insert="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})" />
 
 		<!-- if  readonly we show the edit form button-->
 	</div>
@@ -132,10 +132,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

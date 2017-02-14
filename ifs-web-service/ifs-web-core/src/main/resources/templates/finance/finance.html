@@ -285,7 +285,7 @@
 	                       th:value="${cost.getRole()}"
 	                       th:readonly="${complete == 'complete'}"
 	                       required="required"
-	                       maxlength="255"  />
+	                       maxlength="255" />
 	            </td>
 	            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossAnnualSalary]}')} ? 'error' : ''">
 	                <label th:for="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}">
@@ -692,7 +692,7 @@
 	                    <span>Item description</span>
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
 	                  </label>
-	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)"  />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.getDescription()},readonly=${complete == 'complete'},required=true)" />
 	            </div>
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-existing]}')} ? 'error' : ''">
 	                <fieldset class="inline">
@@ -875,7 +875,7 @@
 	                       th:readonly="${complete == 'complete'}"
 	                       maxlength="255"
 	                       required="required"
-	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'field-error' : ''"  />
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-name]}')} ? 'field-error' : ''" />
 	            </div>
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'error' : ''">
 	                <label class="form-label" th:for="${'cost-subcontracting-'+costIdentifier+'-country'}">
@@ -890,7 +890,7 @@
 	                       th:readonly="${complete == 'complete'}"
 	                       maxlength="255"
 	                       required="required"
-	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'field-error' : ''"   />
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-country]}')} ? 'field-error' : ''" />
 	            </div>
 
 	            <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-role]}')} ? 'error' : ''">
@@ -899,7 +899,7 @@
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-role'})" />
 	                </label>
 
-	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)"  />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='role', value=${cost.role},readonly=${complete == 'complete'},required=true)" />
 	            </div>
 
 	            <div class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
@@ -1010,7 +1010,7 @@
 	                       max="999999999"
 	                       required="required"
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(10)}"
-	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''"  />
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-quantity]}')} ? 'field-error' : ''" />
 	            </td>
 	            <td class="numeric form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
 	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-cost'}">
@@ -1102,7 +1102,7 @@
 	                    <span class="visuallyhidden">Description and justification of the cost</span>
 	                    <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-description'})" />
 	                </label>
-	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)"  />
+	                <th:block th:insert="question-type/form-elements :: form-finance-textarea (type=${type}, id=${costIdentifier}, name='description', value=${cost.description},readonly=${complete == 'complete'},required=true)" />
 	            </td>
 	            <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''"  >
 	                <label th:for="${'cost-'+type+'-'+costIdentifier+'-cost'}">
@@ -1121,7 +1121,7 @@
 	                       max="9999999999999999999"
 	                       required="required"
                            th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
-	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''"  />
+	                       th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'field-error' : ''" />
 	            </td>
 	            <td th:unless="${complete == 'complete'}">
 	                <button th:unless="${cost.id == null}"

@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Manager'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project Manager'" />
 </head>
 <body th:with="context='project'" class="project-detail project-manager">
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{projectId}/details(projectId=${model.projectId})}"  th:remove="tag"></div>
 
     <div class="page-title">
-        <th:block th:insert="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})"  />
+        <th:block th:insert="fragments/elements :: project-title (projectId=${model.app.id}, projectName=${model.projectName})" />
         <h1 class="heading-xlarge">Project Manager</h1>
     </div>
 
@@ -40,7 +40,7 @@
                 </label>
 
                 <label for="new" class="block-label selection-button-radio" data-target="project-manager-table">
-                    <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1"  th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}"  />
+                    <input id="new" name="projectManager" th:checked="${model.inviteAction} or *{projectManager == -1}" required="required"  type="radio" value="-1"  th:attr="data-required-errormessage=#{validation.projectmanagerform.projectmanager.required}" />
                     Add new team member
                     <span class="form-hint">A new team member will be invited to join the project</span>
                 </label>
@@ -80,11 +80,11 @@
     <button class="button extra-margin" type="submit" id="save" name="save_pm">Save</button>
     </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

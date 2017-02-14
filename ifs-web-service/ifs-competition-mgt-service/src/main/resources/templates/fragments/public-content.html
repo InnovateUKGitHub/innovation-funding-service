@@ -67,7 +67,7 @@
             <dt>Project size</dt>
             <dd th:text="${form.projectSize}"></dd>
         </dl>
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <fieldset>
@@ -116,7 +116,7 @@
             </div>
         </fieldset>
 
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
 
     </th:block>
 </div>
@@ -125,11 +125,11 @@
 <div th:fragment="section-eligibility(model, form)" xmlns:th="http://www.w3.org/1999/html">
     <p>Text entered into this section will appear within the eligibility tab.</p>
     <th:block th:if="${model.readOnly}">
-        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" /></th:block>
+        <th:block th:include="fragments/public-content :: content-groups-read-only(form=${form},model=${model})" />
     </th:block>
     <th:block th:unless="${model.readOnly}">
         <h2 class="heading-medium no-margin">Content</h2>
-        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})"></th:block>
+        <th:block th:include="fragments/public-content :: content-groups(form=${form},model=${model})" />
     </th:block>
 </div>
 

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-details">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Project team'})"  />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Project team'})" />
 
     <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
@@ -34,7 +34,7 @@
             <a href="#">CVs-of-team.pdf (161.96 KB)</a>
         </div>
 
-		<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=5, questionTitle='question8'"  />
+		<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="score=5, questionTitle='question8'" />
 
 	</form>
 
@@ -57,10 +57,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

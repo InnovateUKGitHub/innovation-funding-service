@@ -5,11 +5,11 @@
     </head>
 
     <body class="dashboard-internal full-width">
-        <th:block th:insert="fragments/layout :: body-start"  />
-       <th:block th:insert="fragments/layout :: global-header"  />
+        <th:block th:insert="fragments/layout :: body-start" />
+       <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"  />
+            <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div th:include="fragments/layout :: header-sub"
                  th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
@@ -83,10 +83,10 @@
                 </table>
             </div>
 
-            <th:block th:insert="fragments/layout :: main-content-end"  />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"  />
-        <th:block th:insert="fragments/layout :: body-end"  />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

@@ -15,10 +15,10 @@
         <tbody>
             <tr>
                 <td>
-                    <input type="text" th:name="${'name-'+ addUserType +'1'}" th:id="${'name-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-name" value=""  />
+                    <input type="text" th:name="${'name-'+ addUserType +'1'}" th:id="${'name-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-name" value="" />
                 </td>
                 <td>
-                    <input type="email" th:name="${'email-'+ addUserType +'1'}" th:id="${'email-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-email" value=""  />
+                    <input type="email" th:name="${'email-'+ addUserType +'1'}" th:id="${'email-'+ addUserType +'1'}" class="form-control width-full" aria-labelledby="user-email" value="" />
                 </td>
                 <td class="alignright">
                     <button class="buttonlink no-margin-bottom" th:id="${'invite-' +addUserType}">Invite to project</button>
@@ -92,7 +92,7 @@
         </select>
     </div>
 
-    <th:block th:insert="prototypes/fragments/project-setup :: prototype-manual-address"  />
+    <th:block th:insert="prototypes/fragments/project-setup :: prototype-manual-address" />
 
 </div>
 

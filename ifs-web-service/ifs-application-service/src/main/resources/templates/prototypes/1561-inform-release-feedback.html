@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="dashboard-internal full-width show-applications">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-  <th:block th:insert="fragments/layout :: main-content-start"    />
+  <th:block th:insert="fragments/layout :: main-content-start" />
 
-  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Inform dashboard'}, ${'/prototypes/5721-dashboard?status=Inform'})"  />
+  <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Inform dashboard'}, ${'/prototypes/5721-dashboard?status=Inform'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -74,12 +74,12 @@ Yours sincerely,
 	</div>
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
-  <th:block th:insert="fragments/layout :: main-content-end"    />
+  <th:block th:insert="fragments/layout :: main-content-end" />
 
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">

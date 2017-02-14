@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Details'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Details'" />
 </head>
 <body th:with="context='applicant'" class="app-invite">
 
-<th:block th:insert="fragments/layout :: body-start"   />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <!--/* manage application text */-->
     <div th:if="${param.newApplication == null}" th:remove="tag">
-      <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/application/{id}/contributors(id=${currentApplication.getId()})},currentApplication=${currentApplication}"  />
+      <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl=@{/application/{id}/contributors(id=${currentApplication.getId()})},currentApplication=${currentApplication}" />
       <div class="page-title">
-          <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})"  />
+          <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
           <h1 class="heading-xlarge">Manage contributors</h1>
       </div>
       <p>From this page you are able to invite contributors to your application. To save your changes, please click on 'save changes' at the bottom of the page.</p>
@@ -194,10 +194,10 @@
     </form>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Confirm Bank Details'" />
 </head>
 <body th:with="context='project'" class="bank-detail-confirm">
-  <th:block th:insert="fragments/layout :: body-start"    />
+  <th:block th:insert="fragments/layout :: body-start" />
   <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-  <th:block th:insert="fragments/layout :: main-content-start"    />
+  <th:block th:insert="fragments/layout :: main-content-start" />
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${project.id})}"  th:remove="tag"></div>
 
   <div class="page-title">
@@ -33,10 +33,10 @@
   		</div>
   	</form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

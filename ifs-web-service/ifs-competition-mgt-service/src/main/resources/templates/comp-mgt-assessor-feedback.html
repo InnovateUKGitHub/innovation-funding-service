@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management application-assessor-feedback">
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" class="full-width">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
             <div class="page-title">
-                <th:block th:insert="fragments/competition-management :: competition-id(competition=${competitionSummary})"  />
+                <th:block th:insert="fragments/competition-management :: competition-id(competition=${competitionSummary})" />
                 <h1 class="heading-xlarge" th:text="${competitionSummary.competitionName}" />
             </div>
       </div>
       <div class="column-third alignright extra-margin">
-        <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})"  />
+        <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
       </div>
   </div>
 
@@ -27,13 +27,13 @@
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
 
-  <th:block th:insert="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})"  />
+  <th:block th:insert="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" />
 
 <div th:unless="${activeTab == 'overview'}" th:remove="tag">
 
     <div class="grid-row competition-data">
         <div class="column-fifth">
-              <th:block th:insert="fragments/competition-management :: info-area"  />
+              <th:block th:insert="fragments/competition-management :: info-area" />
         </div>
         <div class="column-four-fifth">
           <form method="get">
@@ -51,15 +51,15 @@
 	         </h3>
 	       </div>
 	       <div class="column-third alignright">
-	         <th:block th:insert="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})"  />
+	         <th:block th:insert="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" />
 	       </div>
 	   </div>
 
-	    <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})"  />
-	    <th:block th:insert="fragments/competition-management :: applications-pagination(results=${results})"  />
+	    <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" />
+	    <th:block th:insert="fragments/competition-management :: applications-pagination(results=${results})" />
 
 	 </form>
-     <th:block th:insert="fragments/modals :: modal-submit-assessor-feedback"  />
+     <th:block th:insert="fragments/modals :: modal-submit-assessor-feedback" />
 
  	</div>
  	</div>
@@ -123,11 +123,11 @@
 		</div>
  	</div>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding'"  />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Funding'" />
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-finances-summary">
-        <th:block th:insert="fragments/layout :: body-start"   />
-        <th:block th:insert="fragments/layout :: global-header"  />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"   />
-            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${assessmentId})},daysPercentage=${currentCompetition.assessmentDaysLeftPercentage},daysLeft=${currentCompetition.assessmentDaysLeft})"  />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${assessmentId})},daysPercentage=${currentCompetition.assessmentDaysLeftPercentage},daysLeft=${currentCompetition.assessmentDaysLeft})" />
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})"  />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
                 <h1 class="heading-xlarge">Funding</h1>
             </div>
 
@@ -76,10 +76,10 @@
             <h2 class="heading-medium extra-margin">Project cost breakdown</h2>
             <th:block th:insert="finance/finance-summary :: financial_summary_table" />
 
-            <th:block th:insert="fragments/layout :: main-content-end"   />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"   />
-        <th:block th:insert="fragments/layout :: body-end"   />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:unless="${param.version != null and param.version[0] == 'v2'}"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/1247-assessor-doi'})" th:unless="${param.version != null and param.version[0] == 'v2'}" />
 
     <th:block th:if="${param.version != null and param.version[0] == 'v2'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Assessor dashboard'}, ${'/prototypes/865-assessor-dashboard-invites?accepted=yes&#38;user=assessor&#38;version=v2'})"/>
 
@@ -25,7 +25,7 @@
 
 	<p>Please read through all of the terms of service before agreeing.</p>
 
-	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-terms"  />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-terms" />
 
 	<ul class="list list-bullet extra-margin">
 		<li><a href="/prototypes/5645-annex?page=a">Annex A</a></li>
@@ -68,11 +68,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script type="text/javascript">

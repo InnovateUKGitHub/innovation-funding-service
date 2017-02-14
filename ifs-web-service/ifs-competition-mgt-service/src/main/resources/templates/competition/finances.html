@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management competition-setup">
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}"  />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Application',linkClass='link-back',linkUrl=@{/competition/setup/{compId}/section/application/landing-page(compId = ${competitionId})}" />
 
     <div class="hgroup extra-margin-bottom">
         <h1 class="heading-xlarge no-margin">Application finances</h1>
@@ -90,11 +90,11 @@
         </div>
     </th:block>
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

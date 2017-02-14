@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml" class="no-js" lang="en">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
 </head>
 <body th:with="context='applicant'" class="create-application-organisation">
 
-<th:block th:insert="fragments/layout :: body-start"   />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large">Create your account</h1>
 
@@ -22,15 +22,15 @@
     <form th:action="@{/organisation/create/selected-organisation/{organisationId}/{postcode}/{selectedPostcode}(organisationId=${organisationForm.searchOrganisationId}, postcode=${organisationForm.addressForm.postcodeInput}, selectedPostcode=${organisationForm.addressForm.selectedPostcodeIndex})}" th:object="${organisationForm}" method="POST">
         <input type="hidden" th:field="*{searchOrganisationId}" />
         <h2 class="heading-medium">Address</h2>
-        <th:block th:insert="fragments/addresses :: company-address-details"              th:with="form=${organisationForm}"  />
+        <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
 
         <button type="submit" name="save-organisation-details" class="button button-large extra-margin">Save organisation and continue</button>
     </form>
 
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

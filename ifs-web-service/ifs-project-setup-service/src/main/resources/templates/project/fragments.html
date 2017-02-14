@@ -75,13 +75,13 @@
 
 <div th:fragment="consortium-partner-status-row(partner)">
     <th scope="row" th:text="${partner.name}" />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})"  />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})"  />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})"  />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.financeChecksStatus})"  />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})"  />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.otherDocumentsStatus})"  />
-    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})"  />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.projectDetailsStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.monitoringOfficerStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.bankDetailsStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.financeChecksStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.spendProfileStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.otherDocumentsStatus})" />
+    <th:block th:insert="project/fragments :: consortium-partner-status-indicator(${partner.grantOfferLetterStatus})" />
 </div>
 
 <div th:fragment="consortium-partner-status-indicator(status)">

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Sign In'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Sign In'" />
 </head>
 <body th:with="context='applicant'" class="sign-in">
 
-<th:block th:insert="fragments/layout :: body-start"   />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
         <h1 class="heading-large">Create your account</h1>
 
         <form th:action="@{/registration/register}" method="post" th:object="${registrationForm}">
@@ -180,7 +180,7 @@
                         <span class="error-message" th:if="${#fields.hasErrors('termsAndConditions')}" th:errors="*{termsAndConditions}"></span>
                       </legend>
                       <label class="block-label selection-button-checkbox" for="termsAndConditions">
-                          <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}"  />
+                          <input id="termsAndConditions" value="1" type="checkbox" th:field="*{termsAndConditions}" required="required" th:attr="data-required-errormessage=#{validation.account.termsandconditions.required}" />
                           I agree to the <a href="/info/terms-and-conditions">terms and conditions</a>
                       </label>
                   </fieldset>
@@ -188,10 +188,10 @@
 
             <button class="button button-large" name="create-account" type="submit">Create account</button>
         </form>
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

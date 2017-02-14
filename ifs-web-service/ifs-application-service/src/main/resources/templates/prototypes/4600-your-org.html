@@ -2,21 +2,21 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="app-overview">
 
-    <th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-    <th:block th:insert="fragments/layout :: body-start"    />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+    <th:block th:insert="fragments/layout :: body-start" />
     <th:block th:insert="fragments/layout :: global-header" />
 
     <main id="content">
 
-        <th:block th:insert="fragments/layout :: main-content-start"    />
+        <th:block th:insert="fragments/layout :: main-content-start" />
 
-        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})"  />
+        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-subheader(${'Finances'}, ${'/prototypes/4600-finances'})" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
         <th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Your organisation'})" />
@@ -119,7 +119,7 @@
             </fieldset>
             <fieldset>
               <legend th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="heading-medium no-margin-bottom">Financial overview</legend>
-              <span th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="form-hint">Details relating to your organisation over the last financial year.</span><br th:unless="${param.status != null and param.status[0] == 'readOnly'}"  />
+              <span th:unless="${param.status != null and param.status[0] == 'readOnly'}" class="form-hint">Details relating to your organisation over the last financial year.</span><br th:unless="${param.status != null and param.status[0] == 'readOnly'}" />
               <h2 th:if="${param.status != null and param.status[0] == 'readOnly'}" class="heading-small">Financial overview</h2>
               <div class="grid-row">
                 <div class="column-half">
@@ -375,11 +375,11 @@
 
         <!-- END OFHARDCODED PROTOTYPE HTML -->
 
-        <th:block th:insert="fragments/layout :: main-content-end"    />
+        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 
-    <th:block th:insert="fragments/layout :: footer"    />
-    <th:block th:insert="fragments/layout :: body-end"    />
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
     <script type="text/javascript">
 
 

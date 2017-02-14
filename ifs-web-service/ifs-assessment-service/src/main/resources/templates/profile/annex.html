@@ -5,12 +5,12 @@
     </head>
 
     <body th:with="context='assessment'">
-        <th:block th:insert="fragments/layout :: body-start"   />
-        <th:block th:insert="fragments/layout :: global-header"  />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"   />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to your terms of contract',linkClass='link-back',linkUrl=@{/profile/contract}"  />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to your terms of contract',linkClass='link-back',linkUrl=@{/profile/contract}" />
 
             <div class="hgroup no-margin-top">
                 <h1 class="heading-xlarge no-margin" th:text="|Annex ${model.annex}|">Annex A</h1>
@@ -18,10 +18,10 @@
 
             <div ifs:utext="${model.text}"/>
 
-            <th:block th:insert="fragments/layout :: main-content-end"   />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"   />
-        <th:block th:insert="fragments/layout :: body-end"   />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-dashboard">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup">
@@ -47,41 +47,41 @@
     <div class="my-applications">
 
         <div th:if="${param.noInvites != null}" th:remove="tag">
-            <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites-empty"  />
+            <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites-empty" />
         </div>
 
         <div th:if="${param.noInvites == null}" th:remove="tag">
             <!-- Standard view invite sent -->
             <div th:if="${param.accepted == null}" th:remove="tag">
-                <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites"  />
+                <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invites" />
 
-                <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions"  />
+                <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" />
             </div>
 
             <!-- Invite either accepted or declined -->
             <div th:if="${param.accepted != null}" th:remove="tag">
                 <div th:if="${param.accepted[0] == 'yes'}" th:remove="tag">
-                    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions"  />
-                    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invite-accepted"  />
+                    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" />
+                    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-invite-accepted" />
                 </div>
 
                 <div th:if="${param.accepted[0] == 'no'}" th:remove="tag">
-                    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions"  />
+                    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-dashboard-competitions" />
                 </div>
             </div>
         </div>
     </div>
 
-    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-profile"  />
+    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-profile" />
 
     <hr />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

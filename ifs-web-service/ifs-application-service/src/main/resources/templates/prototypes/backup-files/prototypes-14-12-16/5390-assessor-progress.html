@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor progress'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor progress'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="full-width">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
-<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'"  />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-admin-header" th:with="status='loggedIn'" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Allocate assessors'}, ${'/prototypes/5389-manage-assessors?comp=assessment'})"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Allocate assessors'}, ${'/prototypes/5389-manage-assessors?comp=assessment'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor progress'}, ${'in assessment'})"  />
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor progress'}, ${'in assessment'})" />
 
 	<h2 class="heading-large no-margin">John Smith</h2>
 
@@ -45,7 +45,7 @@
 
 	<p>You will need to confirm assignments before assessors are notified.</p>
 
-	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list3-table"  />
+	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list3-table" />
 
 	<div class="remove-assigned-application" role="dialog" aria-hidden="true" style="margin-top: -174px;">
 		<button class="js-close close" aria-label="Close Popup">X</button>
@@ -70,17 +70,17 @@
 
 	<h2 class="heading-medium">Rejected(1)</h2>
 
-	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list4-table"  />
+	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list4-table" />
 
 	<h2 class="heading-medium">Previously assigned(1)</h2>
 
-	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list8-table"  />
+	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list8-table" />
 
 	<h2 class="heading-medium">Applications</h2>
 
-	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=6"  />
+	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-comp-search-filters" th:with="type='Applications',filterType=false,sortByType=6" />
 
-	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list5-table"  />
+	<th:block th:insert="prototypes/fragments/manage-applications :: prototype-application-list5-table" />
 
 	<ul class="pagination">
 
@@ -108,11 +108,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">

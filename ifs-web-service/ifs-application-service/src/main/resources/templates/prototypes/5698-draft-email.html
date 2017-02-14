@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="comp-dashboard">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Ineligible applications'}, ${'/prototypes/5698-ineligible-applications?comp=Inform'})"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Ineligible applications'}, ${'/prototypes/5698-ineligible-applications?comp=Inform'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${(param.type != null and param.type[0] == 'multiple' ? 'Inform lead applicants' : 'Inform lead applicant')}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})"  />
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'5436854: Technology inspired'}, ${(param.type != null and param.type[0] == 'multiple' ? 'Inform lead applicants' : 'Inform lead applicant')}, ${(param.closed != null ? 'Competition closed' : 'Competition open')})" />
 
 	<h2 class="heading-medium no-margin">Application:</h2>
 	<p class="no-margin-top" th:text="${(param.type != null and param.type[0] == 'multiple' ? 'Multiple' : '94565678: The potential for glucose based contact lens monitoring in the management of type two diabetes')}"></p>
@@ -73,11 +73,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>

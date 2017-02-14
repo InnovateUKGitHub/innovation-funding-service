@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Other documents'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Other documents'" />
 </head>
 <body th:with="context='project'" class="project-other-documents">
-<th:block th:insert="fragments/layout :: body-start"   />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-partner-documents" />
-<th:block th:insert="fragments/modals :: modal-overlay"  />
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   />
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub"
          th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{projectId}(projectId=${model.projectId})}"
          th:remove="tag"/>
@@ -189,11 +189,11 @@
      <th:block th:if="${model.isShowDisabledSubmitDocumentsButton()}">
         <button disabled="disabled" class="button extra-margin">Submit partner documents</button>
      </th:block>
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

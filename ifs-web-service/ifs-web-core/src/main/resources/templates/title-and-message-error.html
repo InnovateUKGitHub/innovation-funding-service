@@ -5,11 +5,11 @@
 </head>
 <body class="error" th:attrappend="class='${errorMessageClass}'">
 
-<th:block th:insert="fragments/layout :: body-start"   />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large" th:text="${title}">Page title</h1>
 
@@ -45,10 +45,10 @@
         Stack trace will be printed here...
     </pre>
 
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

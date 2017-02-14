@@ -244,7 +244,7 @@
                             <option selected="selected">---</option>
                         </option>
 
-                        <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options"  />
+                        <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
                     </select>
                 </div>
 
@@ -280,19 +280,19 @@
                 <!-- <li id="assessor-org" class="width-third alignright"><a href="#" class="button button-secondary">Invite page</a></li> -->
             </ul>
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=1,name=${'John Barnes'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Horizon Ltd'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'},org=${'Plymouth University'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=2,name=${'Oliver Romero'},type=Academic,doi=Yes,area=${'Healthcare, Regenerative medicine, Stratified medicine'},org=${'Plymouth University'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'},org=${'London School of Economics'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=3,name=${'Jeffrey Carlson'},type=Academic,doi=Yes,area=${'Healthcare, Analytical science'},org=${'London School of Economics'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=4,name=${'Bill Limp'},type=Industry,doi=Yes,area=${'Architectures and operating systems'},org=${'ABC Ltd'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=4,name=${'Bill Limp'},type=Industry,doi=Yes,area=${'Architectures and operating systems'},org=${'ABC Ltd'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=5,name=${'Dave Smith'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Flash Ltd'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-find" th:with="row=5,name=${'Dave Smith'},type=Industry,doi=Yes,area=${'Electronics, sensors &#38; photonics, Materials'},org=${'Flash Ltd'}" />
 
         </div>
 
-        <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assessor-pagination"   />
+        <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assessor-pagination" />
 
 
     </th:block>
@@ -356,20 +356,20 @@
             </ul>
 
             <th:block th:if="${param.status != null and param.status[0] == 'invite-new'}">
-                <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=0,name=${param.name[0]},org=null,position=null,status=null"  />
+                <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=0,name=${param.name[0]},org=null,position=null,status=null" />
             </th:block>
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},status=${param.status != null and param.status[0] == 'invite-individual' or param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},status=${param.status != null and param.status[0] == 'invite-group' ? 'Invite sent ' + #dates.format(#dates.createNow(), 'dd/MM/yyyy'): null}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${'Invite declined'},msg=${'Invite declined as person is too busy'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=3,name=${'Martin Trollope'},org=${'Cardiff University'},position=${'Reader, Healthcare outcome measurement'},status=${'Invite declined'},msg=${'Invite declined as person is too busy'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${'Invite sent 12/02/2016'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},status=${'Invite sent 12/02/2016'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},status=${'Invite accepted'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-invite" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},status=${'Invite accepted'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assessor-pagination"   />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assessor-pagination" />
 
         </div>
     </th:block>
@@ -437,9 +437,9 @@
                 </li>
             </ul>
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},area=${'Information &#38; communications technology (ICT)'},assessors=0,site=${site},button=${'Assign'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},area=${'Information &#38; communications technology (ICT)'},assessors=0,site=${site},button=${'Assign'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},area=${'Satellite comms &#38; navigation'},assessors=1,site=${site},button=${'Assign'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},area=${'Satellite comms &#38; navigation'},assessors=1,site=${site},button=${'Assign'}" />
 
 
 
@@ -468,15 +468,15 @@
                 </li>
             </ul>
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1,type=assign-assessor"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=1,type=assign-assessor" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,type=assign-assessor"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,type=assign-assessor" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Martin Trollope'},org=${'London School of Economics'},position=${'Reader, Healthcare outcome measurement'},applications=1,type=assign-assessor"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Martin Trollope'},org=${'London School of Economics'},position=${'Reader, Healthcare outcome measurement'},applications=1,type=assign-assessor" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},applications=5,type=assign-assessor"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},applications=5,type=assign-assessor" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},applications=6,type=assign-assessor"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},applications=6,type=assign-assessor" />
 
         </div>
 
@@ -578,7 +578,7 @@
 
             <th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
 
-                <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${param.name[0]},org=${param.org[0]},position=${param.position[0]},applications=${#numbers.formatInteger(param.applications[0],0)} + 1,busType=${param.busType[0]},type=remove"  />
+                <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${param.name[0]},org=${param.org[0]},position=${param.position[0]},applications=${#numbers.formatInteger(param.applications[0],0)} + 1,busType=${param.busType[0]},type=remove" />
             </th:block>
 
         </div>
@@ -601,7 +601,7 @@
                                 <option selected="selected">---</option>
                             </option>
 
-                            <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options"  />
+                            <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
                         </select>
                     </div>
                     <div class="column-half" th:unless="${site == 'rc'}">
@@ -654,15 +654,15 @@
                 <li id="assessor-type" class="width-third"><a href="#">Number of applications</a></li>
             </ul>
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=0,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=1,name=${'Dave Smith'},org=${'Cardiff University'},position=${'Professor of Health Technology'},applications=0,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,busType=Industry,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=2,name=${'Christopher Soames'},org=${'Public Health England'},position=${'Senior Adviser on technology deployment'},applications=1,busType=Industry,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Martin Trollope'},org=${'London School of Economics'},position=${'Reader, Healthcare outcome measurement'},applications=3,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '3'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=3,name=${'Martin Trollope'},org=${'London School of Economics'},position=${'Reader, Healthcare outcome measurement'},applications=3,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '3'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},applications=5,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '4'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=4,name=${'Chantel Secrete'},org=${'University College London'},position=${'Reader, Technology Interventions'},applications=5,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '4'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},applications=5,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '5'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-assessor" th:with="row=5,name=${'Richard Turner'},org=${'Reading University'},position=${'Lecturer of physics'},applications=5,busType=Academic,type=assign" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '5'}" />
 
 
         </div>
@@ -684,7 +684,7 @@
 
             <th:block th:if="${param.action != null and param.action[0] == 'application-assigned'}">
 
-                 <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=${param.row[0]},name=${param.name[0]},number=${param.number[0]},application=${param.application[0]},assessors=${#numbers.formatInteger(param.assessors[0],0)} + 1,org=${param.org[0]},type=remove"  />
+                 <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=${param.row[0]},name=${param.name[0]},number=${param.number[0]},application=${param.application[0]},assessors=${#numbers.formatInteger(param.assessors[0],0)} + 1,org=${param.org[0]},type=remove" />
 
             </th:block>
         </div>
@@ -723,9 +723,9 @@
                 <li id="assessor-area" class="width-quarter">Number of assigned applications</li>
             </ul>
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},assessors=0,button=${'Assign'},type=assign,name=${param.name[0]}" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=1,application=${'The potential for glucose based contact lens monitoring in the management of type 2 diabetes'},number=${'10001000000'},org=${'Wessex University'},assessors=0,button=${'Assign'},type=assign,name=${param.name[0]}" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '1'}" />
 
-            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},assessors=1,button=${'Assign'},type=assign,name=${param.name[0]}" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}"  />
+            <th:block th:insert="prototypes/fragments/manage-assessors :: prototype-assesor-row-assign-application" th:with="row=2,application=${'Mobility problems and the potential for internet enabled zimmer frame'},number=${'10001000001'},org=${'Plymouth University'},assessors=1,button=${'Assign'},type=assign,name=${param.name[0]}" th:unless="${param.action != null and param.action[0] == 'application-assigned' and param.row != null and param.row[0] == '2'}" />
 
         </div>
 

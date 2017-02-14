@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Academic finances'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Academic finances'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     <style> .message-alert {
         background: #e4eff6;
@@ -10,14 +10,14 @@
 </head>
 <body class="app-overview">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="prototypes/fragments/layout :: prototype-sub-header"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-sub-header" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -32,7 +32,7 @@
 	<p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team.</p>
 
 
-	<th:block th:insert="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=partner"  />
+	<th:block th:insert="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=partner" />
 
 
 	<div class="alignright-button extra-margin">
@@ -53,10 +53,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

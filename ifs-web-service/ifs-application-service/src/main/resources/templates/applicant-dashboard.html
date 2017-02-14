@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 </head>
 <body th:with="context='applicant'" class="app-dashboard">
 
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div class="event-alert is-open" th:each="notification:${notifications}">
         <p>
@@ -55,11 +55,11 @@
                             </h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(app.id,8)}"></span></p>
                             <p class="form-hint">Current progress: </p>
-                            <th:block th:insert="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(app.getId())}"  />
+                            <th:block th:insert="fragments/elements :: progress-indicator" th:with="percentage=${applicationProgress.get(app.getId())}" />
                         </div>
                         <div class="column-half">
-                            <th:block th:insert="fragments/elements :: competition-deadline" th:with="endDate=${competitions.get(app.getId()).getEndDate()}"  />
-                            <th:block th:insert="fragments/elements :: pie" th:with="daysPercentage=${competitions.get(app.getId()).getStartDateToEndDatePercentage()},daysLeft=${competitions.get(app.getId()).getDaysLeft()}"  />
+                            <th:block th:insert="fragments/elements :: competition-deadline" th:with="endDate=${competitions.get(app.getId()).getEndDate()}" />
+                            <th:block th:insert="fragments/elements :: pie" th:with="daysPercentage=${competitions.get(app.getId()).getStartDateToEndDatePercentage()},daysLeft=${competitions.get(app.getId()).getDaysLeft()}" />
                         </div>
                     </div>
                     <div class="grid-row" th:if="${applicationStatuses.get(app.getId()).getName() == 'submitted'}" >
@@ -115,10 +115,10 @@
     </div>
 
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

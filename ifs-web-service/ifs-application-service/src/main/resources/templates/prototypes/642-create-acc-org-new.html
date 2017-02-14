@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-org-selected-from-companies-house'})"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/642-org-selected-from-companies-house'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -26,7 +26,7 @@
 		<strong>Nomensa</strong></p>
 	</div>
 
-	<!--<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'/prototypes/635-application-overview-collaborator'})"  /> -->
+	<!--<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'/prototypes/635-application-overview-collaborator'})" /> -->
 	<h2 class="heading-medium">Your details</h2>
 	<form>
 		<fieldset>
@@ -56,7 +56,7 @@
 				<input class="form-control" id="last-name" name="last-name" type="text" />
 			</div>
 
-			<th:block th:insert="prototypes/fragments/diversity :: diversity-questions"  />
+			<th:block th:insert="prototypes/fragments/diversity :: diversity-questions" />
 
 			<div class="form-group">
 				<label class="form-label" for="phone-number">
@@ -93,10 +93,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

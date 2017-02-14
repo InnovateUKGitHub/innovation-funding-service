@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit your skills'"  />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit your skills'" />
     </head>
 
     <body th:with="context='assessment'">
-        <th:block th:insert="fragments/layout :: body-start"   />
-        <th:block th:insert="fragments/layout :: global-header"  />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <th:block th:insert="fragments/layout :: main-content-start"   />
+            <th:block th:insert="fragments/layout :: main-content-start" />
             <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
             <div class="hgroup">
@@ -47,7 +47,7 @@
                             rows="4"
                             th:field="*{skillAreas}"></textarea>
                         <div class="textarea-footer" th:with="skillAreas=*{skillAreas}">
-                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, skillAreas)})"  />
+                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, skillAreas)})" />
                         </div>
                     </div>
                 </div>
@@ -75,10 +75,10 @@
                 <button class="button button-large extra-margin" type="submit">Save</button>
             </form>
 
-            <th:block th:insert="fragments/layout :: main-content-end"   />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <th:block th:insert="fragments/layout :: footer"   />
-        <th:block th:insert="fragments/layout :: body-end"   />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

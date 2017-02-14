@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
 </head>
 <body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
 <th:block th:insert="fragments/modals :: modal-overlay" />
@@ -11,11 +11,11 @@
      submitLink='/application/'+${currentApplication.getId()}+'/submit',
      submitText='Yes, I want to submit my application',
      cancelText='Cancel')" />
-<th:block th:insert="fragments/layout :: body-start"   />
-<th:block th:insert="fragments/layout :: global-header"  />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"   />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub"
          th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
@@ -63,10 +63,10 @@
         </th:block>
 
     </div>
-    <th:block th:insert="fragments/layout :: main-content-end"   />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"   />
-<th:block th:insert="fragments/layout :: body-end"   />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"  />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<th:block th:insert="prototypes/fragments/layout :: prototype-nav"  />
-<th:block th:insert="fragments/layout :: body-start"    />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"    />
-    <th:block th:insert="prototypes/fragments/layout :: prototype-sub-header"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-sub-header" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -25,7 +25,7 @@
 			</div>
         </div>
         <div class="column-third competition-details">
-            <th:block th:insert="prototypes/fragments/layout :: prototype-application-progress"  />
+            <th:block th:insert="prototypes/fragments/layout :: prototype-application-progress" />
         </div>
     </div>
 
@@ -45,7 +45,7 @@
        	</h2>
 
 		<div id="collapsible-1" aria-hidden="false">
-			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-labour"  />
+			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-labour" />
 		</div>
 
 
@@ -56,7 +56,7 @@
        	</h2>
 
 		<div id="collapsible-2" aria-hidden="false">
-			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-overheads"  />
+			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-overheads" />
     	</div>
 
 
@@ -67,7 +67,7 @@
        	</h2>
 
 		<div id="collapsible-3" aria-hidden="false">
-			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-materials"  />
+			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-materials" />
     	</div>
 
 
@@ -78,7 +78,7 @@
        	</h2>
 
 		<div id="collapsible-4" aria-hidden="false">
-			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-capital"  />
+			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-capital" />
     	</div>
 
 
@@ -89,7 +89,7 @@
        	</h2>
 
 		<div id="collapsible-5" aria-hidden="false">
-			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-subcontracting"  />
+			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-subcontracting" />
     	</div>
 
 
@@ -100,7 +100,7 @@
        	</h2>
 
 		<div id="collapsible-6" aria-hidden="false">
-			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-travel"  />
+			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-travel" />
     	</div>
 
 
@@ -111,7 +111,7 @@
        	</h2>
 
 		<div id="collapsible-7" aria-hidden="false">
-			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-other"  />
+			<th:block th:insert="prototypes/fragments/finance-questions-readonly :: finance-question-other" />
     	</div>
 
 
@@ -144,10 +144,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <th:block th:insert="fragments/layout :: main-content-end"    />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<th:block th:insert="fragments/layout :: footer"    />
-<th:block th:insert="fragments/layout :: body-end"    />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
