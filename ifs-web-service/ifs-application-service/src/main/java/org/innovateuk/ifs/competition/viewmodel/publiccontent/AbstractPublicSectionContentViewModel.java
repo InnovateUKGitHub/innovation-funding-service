@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.viewmodel.publiccontent;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 
-public abstract class PublicSectionContentViewModel {
+public abstract class AbstractPublicSectionContentViewModel {
 
     private PublicContentSectionType sectionType;
     private boolean published = false;

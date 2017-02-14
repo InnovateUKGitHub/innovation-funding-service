@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.populator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.PublicSectionContentViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.SectionViewModel;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +19,7 @@ import static java.util.Arrays.asList;
 public class CompetitionOverviewPopulator {
     private List<PublicContentSectionType> excludeSectionTypes = asList(PublicContentSectionType.SEARCH);
 
-    public CompetitionOverviewViewModel populateViewModel(PublicContentItemResource publicContentItemResource, PublicSectionContentViewModel sectionContentViewModel) {
+    public CompetitionOverviewViewModel populateViewModel(PublicContentItemResource publicContentItemResource, AbstractPublicSectionContentViewModel sectionContentViewModel) {
         CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
 
         viewModel.setCompetitionOpenDate(publicContentItemResource.getCompetitionOpenDate());

@@ -4,13 +4,13 @@ package org.innovateuk.ifs.competition.populator.publiccontent;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.PublicSectionContentViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 
 /**
  * Abstract class to populate the generic fields needed in the view.
  * @param <M> the view model class.
  */
-public abstract class PublicContentSectionViewModelPopulator<M extends PublicSectionContentViewModel>{
+public abstract class AbstractPublicContentSectionViewModelPopulator<M extends AbstractPublicSectionContentViewModel>{
 
     public M populate(PublicContentResource publicContentResource) {
         M model = createInitial();

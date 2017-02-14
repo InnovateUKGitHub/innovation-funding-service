@@ -3,7 +3,7 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
-import org.innovateuk.ifs.competition.populator.publiccontent.PublicContentSectionViewModelPopulator;
+import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentSectionViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
@@ -45,10 +45,10 @@ public class CompetitionController {
     @Autowired
     private CompetitionOverviewPopulator overviewPopulator;
 
-    private Map<PublicContentSectionType, PublicContentSectionViewModelPopulator> sectionModelPopulators;
+    private Map<PublicContentSectionType, AbstractPublicContentSectionViewModelPopulator> sectionModelPopulators;
 
     @Autowired
-    public void setSectionPopulator(Collection<PublicContentSectionViewModelPopulator> populators) {
+    public void setSectionPopulator(Collection<AbstractPublicContentSectionViewModelPopulator> populators) {
         sectionModelPopulators = populators.stream().collect(Collectors.toMap(p -> p.getType(), Function.identity()));
     }
 
@@ -113,7 +113,10 @@ public class CompetitionController {
         }
     }
 
-    private PublicContentSectionViewModelPopulator getPopulator(PublicContentSectionType sectionType) {
+    private AbstractPublicContentSectionViewModelPopulator getPopulator(PublicContentSectionType sectionType) {
+        if(PublicContentSectionType.SEARCH.equals(sectionType)) {
+            return null;
+        }
         return sectionModelPopulators.getOrDefault(sectionType, null);
     }
 }

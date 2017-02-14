@@ -9,7 +9,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResour
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.PublicSectionContentViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.SummaryViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
@@ -41,7 +41,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
     private CompetitionOverviewPopulator overviewPopulator;
 
     @Mock
-    private PublicSectionContentViewModel sectionContentViewModel;
+    private AbstractPublicSectionContentViewModel sectionContentViewModel;
 
     @Mock
     private SummaryViewModelPopulator summaryViewModelPopulator;
@@ -75,7 +75,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
         viewModel.setCompetitionCloseDate(closeDate);
         viewModel.setCompetitionTitle("Title");
 
-        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), any(PublicSectionContentViewModel.class))).thenReturn(viewModel);
+        when(overviewPopulator.populateViewModel(any(PublicContentItemResource.class), any(AbstractPublicSectionContentViewModel.class))).thenReturn(viewModel);
 
         mockMvc.perform(get("/competition/{id}/overview", compId))
                 .andExpect(status().isOk())

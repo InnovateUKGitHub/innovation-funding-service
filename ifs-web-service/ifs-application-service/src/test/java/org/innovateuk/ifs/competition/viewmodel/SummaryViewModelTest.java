@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
 import org.innovateuk.ifs.competition.publiccontent.resource.ContentGroupResource;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentGroupViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.SummaryViewModel;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.junit.Before;
@@ -20,7 +21,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Testing {@link SummaryViewModel} and the parts of {@link org.innovateuk.ifs.competition.viewmodel.publiccontent.PublicSectionContentGroupViewModel}
+ * Testing {@link SummaryViewModel} and the parts of {@link AbstractPublicSectionContentGroupViewModel}
  */
 @RunWith(MockitoJUnitRunner.class)
 public class SummaryViewModelTest {

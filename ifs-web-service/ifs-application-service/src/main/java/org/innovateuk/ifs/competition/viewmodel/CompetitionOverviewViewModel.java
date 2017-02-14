@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.competition.viewmodel;
 
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.PublicSectionContentViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.SectionViewModel;
 
 import java.time.LocalDateTime;
@@ -16,7 +16,7 @@ public class CompetitionOverviewViewModel {
     private Long competitionId;
     private String shortDescription;
     private List<SectionViewModel> allContentSections;
-    private PublicSectionContentViewModel currentSection;
+    private AbstractPublicSectionContentViewModel currentSection;
 
     public String getCompetitionTitle() {
         return competitionTitle;
@@ -66,11 +66,11 @@ public class CompetitionOverviewViewModel {
         this.allContentSections = allContentSections;
     }
 
-    public void setCurrentSection(PublicSectionContentViewModel currentSection) {
+    public void setCurrentSection(AbstractPublicSectionContentViewModel currentSection) {
         this.currentSection = currentSection;
     }
 
-    public PublicSectionContentViewModel getCurrentSection() {
+    public AbstractPublicSectionContentViewModel getCurrentSection() {
         return currentSection;
     }
 }

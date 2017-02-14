@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
 
-import org.innovateuk.ifs.competition.populator.publiccontent.PublicSectionContentGroupViewModelPopulator;
+import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicSectionContentGroupViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class SummaryViewModelPopulator extends PublicSectionContentGroupViewModelPopulator<SummaryViewModel> {
+public class SummaryViewModelPopulator extends AbstractPublicSectionContentGroupViewModelPopulator<SummaryViewModel> {
 
     @Override
     protected SummaryViewModel createInitial() {

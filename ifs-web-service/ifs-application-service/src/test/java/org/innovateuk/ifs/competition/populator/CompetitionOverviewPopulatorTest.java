@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.PublicSectionContentViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
@@ -38,7 +38,7 @@ public class CompetitionOverviewPopulatorTest {
     final String competitionTitle = "Title of competition";
 
     @Mock
-    private PublicSectionContentViewModel sectionContentViewModel;
+    private AbstractPublicSectionContentViewModel sectionContentViewModel;
 
     @Before
     public void setup() {
