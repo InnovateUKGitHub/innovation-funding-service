@@ -36,7 +36,9 @@ public abstract class PublicSectionContentGroupViewModel extends PublicSectionCo
     }
 
     public boolean hasAttachment(Long contentGroupId) {
-        return fileEntries.get(contentGroupId) != null && fileEntries.get(contentGroupId).getId() != null;
+        return fileEntries != null
+                && fileEntries.get(contentGroupId) != null
+                && fileEntries.get(contentGroupId).getId() != null;
     }
 
     public Long id(Long contentGroupId) {
