@@ -8,9 +8,11 @@ Documentation     INFUND-6604 As a member of the competitions team I can view th
 ...               INFUND-7362 Inflight competition dashboards: Closed dashboard
 ...
 ...               INFUND-7561 Inflight competition dashboards- View milestones
+...
+...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
-Force Tags        CompAdmin    Assessor
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 
 *** Test Cases ***
@@ -35,6 +37,11 @@ Milestones for the closed competitions
     And the user should see the element    css=li:nth-child(5).done    #this keyword verifies that the 5.Assessor briefing is done
     And the user should see the element    css=li:nth-child(7).not-done    #this keyword verifies that the 6.Assessor accepts is not done
 
+Key Statistics for Closed competitions
+    [Documentation]    INFUND-7560
+    [Setup]    Get The expected values from the invite page
+    Then the counts of the key statistics of the closed competition should be correct
+
 Invite Assessors
     [Documentation]    INFUND-6604
     ...
@@ -55,3 +62,27 @@ Notify Assessors
     Then the user should see the text in the page    In assessment
     [Teardown]    Run Keywords    Connect to Database    @{database}
     ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSORS_NOTIFIED' AND competition_id=12;
+
+*** Keywords ***
+Get The expected values from the invite page
+    The user clicks the button/link    jQuery=.button:contains(Invite assessors)
+    ${Invited}=    Get text    css=div:nth-child(1) > div > span
+    Set Test Variable    ${Invited}
+    ${Accepted}=    Get text    css=div:nth-child(2) > div > span
+    Set Test Variable    ${Accepted}
+    The user clicks the button/link    link=Competition
+    The user clicks the button/link    jQuery=.button:contains(Manage applications)
+    ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div[2]/table/tbody/tr
+    Set Test Variable    ${NUMBER_OF_APPLICATIONS}
+    The user clicks the button/link    link=Manage assessments
+
+the counts of the key statistics of the closed competition should be correct
+    ${INVITED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .heading-large
+    Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
+    ${ACCEPTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .heading-large
+    Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
+    ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=.extra-margin .column-third:nth-child(3) .heading-large
+    Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
+    ${APPLICATIONS_REQ}=    Get text    css=ul:nth-child(3) > li:nth-child(1) > div > span
+    Should Be Equal As Integers    ${NUMBER_OF_APPLICATIONS}    ${APPLICATIONS_REQ}
+    #TODO Should add \ checks for Assignments made and Assessors without applications \
