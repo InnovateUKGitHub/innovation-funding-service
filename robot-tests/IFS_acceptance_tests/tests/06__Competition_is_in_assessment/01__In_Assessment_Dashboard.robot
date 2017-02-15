@@ -1,5 +1,7 @@
 *** Settings ***
 Documentation     INFUND-7363 Inflight competitions dashboards: In assessment dashboard
+...
+...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
 Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    The user closes the browser
 Force Tags        CompAdmin    Assessor
@@ -23,3 +25,20 @@ Milestones for In Assessment competitions
     Then the user should see the element    jQuery=button:contains("Close assessment")
     And the user should see the element    css=li:nth-child(9).not-done    #this keyword verifies that the 8. Line Draw is not done
     And the user should see the element    css=li:nth-child(5).done    #this keyword verifies that the 5.Assessor briefing is done
+
+Key statistics of the In Assessment competitions
+    [Documentation]    INFUND-7560
+    Then The key statistics counts should be correct
+
+*** Keywords ***
+The key statistics counts should be correct
+    ${TOTAL_ASSIGNMENT}=    Get text    css=ul:nth-child(4) > li:nth-child(1) > div > span
+    Should Be Equal As Integers    ${TOTAL_ASSIGNMENT}    13
+    ${AWAITING}=    Get text    css=ul:nth-child(4) > li:nth-child(2) > div > span
+    Should Be Equal As Integers    ${AWAITING}    7
+    ${ACCEPTED}=    Get text    css=ul:nth-child(4) > li:nth-child(3) > div > span
+    Should Be Equal As Integers    ${ACCEPTED}    6
+    ${STARTED}=    Get text    css=.extra-margin > li:nth-child(1) > div > span
+    Should Be Equal As Integers    ${STARTED}    0
+    ${SUBMITTED}=    Get text    css=.extra-margin > li:nth-child(2) > div > span
+    Should Be Equal As Integers    ${SUBMITTED}    0
