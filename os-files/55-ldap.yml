@@ -30,7 +30,7 @@ items:
           - containerPort: 8636
           resources:
             limits:
-              memory: 500M
+              memory: 1G
     test: false
     triggers:
     - type: ConfigChange
