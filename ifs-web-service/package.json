@@ -22,7 +22,7 @@
     "node": "~6.9.2"
   },
   "standard": {
-    "globals": [ "jQuery", "IFS", "Cookies", "showdown", "md"]
+    "globals": [ "jQuery", "IFS", "Cookies", "showdown", "md", "ssm"]
   },
   "private": true
 }

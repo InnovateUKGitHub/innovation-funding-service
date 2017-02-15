@@ -60,23 +60,24 @@ var UTIL = (function () {
       ssm.addState({
         id: 'mobile',
         query: '(max-width: 639px)',
-        onEnter: function(){
+        onEnter: function () {
           UTIL.fire('stateManaged', 'mobile')
         },
-        onLeave: function(){
+        onLeave: function () {
           UTIL.fire('stateManaged', 'mobileLeave')
         }
-      });
+      })
+
       ssm.addState({
         id: 'desktop',
         query: '(min-width: 640px)',
-        onEnter: function(){
+        onEnter: function () {
           UTIL.fire('stateManaged', 'desktop')
         },
-        onLeave: function(){
+        onLeave: function () {
           UTIL.fire('stateManaged', 'desktopLeave')
         }
-      });
+      })
 
       jQuery.each(classNames, function (i, classnm) {
         UTIL.fire(classnm, 'finalize')
