@@ -1,12 +1,9 @@
 package org.innovateuk.ifs.competition.service;
 
 import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.commons.rest.RestResult;
-
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
@@ -15,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -29,6 +25,17 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
     protected MilestoneRestServiceImpl registerRestServiceUnderTest() {
         MilestoneRestServiceImpl milestoneService = new MilestoneRestServiceImpl();
         return milestoneService;
+    }
+
+    @Test
+    public void test_getAllPublicMilestonesByCompetitionId() {
+        List<MilestoneResource> returnedResponse = new ArrayList<>();
+        returnedResponse.add(getOpenDateMilestone());
+
+        setupGetWithRestResultAnonymousExpectations(milestonesRestURL + "/" + competitionId + "/public", milestoneResourceListType(), returnedResponse, HttpStatus.OK);
+        List<MilestoneResource> response = service.getAllPublicMilestonesByCompetitionId(competitionId).getSuccessObject();
+        assertNotNull(response);
+        assertEquals(returnedResponse, response);
     }
 
     @Test

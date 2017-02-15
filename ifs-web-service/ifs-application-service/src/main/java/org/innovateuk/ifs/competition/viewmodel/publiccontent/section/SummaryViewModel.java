@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.competition.viewmodel.publiccontent.section;
 
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicSectionContentGroupViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicContentGroupViewModel;
 
 
 /**
  * View model for the Summary section.
  */
-public class SummaryViewModel extends AbstractPublicSectionContentGroupViewModel {
+public class SummaryViewModel extends AbstractPublicContentGroupViewModel {
     private String description;
     private String fundingType;
     private String projectSize;

@@ -19,6 +19,12 @@ public class MilestoneController {
     @Autowired
     private MilestoneService milestoneService;
 
+    @RequestMapping(value = "/{competitionId}/public", method = RequestMethod.GET)
+    public RestResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(
+            @PathVariable("competitionId") final Long competitionId){
+        return milestoneService.getAllPublicMilestonesByCompetitionId(competitionId).toGetResponse();
+    }
+
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
     public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(
             @PathVariable("competitionId") final Long competitionId){

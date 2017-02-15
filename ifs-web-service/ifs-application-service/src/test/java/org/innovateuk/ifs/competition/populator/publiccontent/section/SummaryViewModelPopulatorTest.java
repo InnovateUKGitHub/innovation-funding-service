@@ -35,7 +35,6 @@ public class SummaryViewModelPopulatorTest {
 
     @Before
     public void setup() {
-        populator = new SummaryViewModelPopulator();
         viewModel = new SummaryViewModel();
 
         contentGroups = newContentGroupResource()

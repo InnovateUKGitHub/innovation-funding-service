@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
 
-import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicSectionContentGroupViewModelPopulator;
+import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentGroupViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.EligibilityViewModel;
 import org.springframework.stereotype.Service;
@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
  */
 
 @Service
-public class EligibilityViewModelPopulator extends AbstractPublicSectionContentGroupViewModelPopulator<EligibilityViewModel> {
+public class EligibilityViewModelPopulator extends AbstractPublicContentGroupViewModelPopulator<EligibilityViewModel> {
 
     @Override
     protected EligibilityViewModel createInitial() {

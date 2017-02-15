@@ -7,7 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbstractPublicSectionContentGroupViewModel extends AbstractPublicSectionContentViewModel {
+public abstract class AbstractPublicContentGroupViewModel extends AbstractPublicSectionContentViewModel {
 
     private Map<Long, FileEntryResource> fileEntries;
 

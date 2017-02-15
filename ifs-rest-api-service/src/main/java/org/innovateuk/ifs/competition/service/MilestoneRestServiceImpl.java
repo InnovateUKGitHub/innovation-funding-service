@@ -21,6 +21,11 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
     private String milestonesRestURL = "/milestone";
 
     @Override
+    public RestResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long competitionId) {
+        return getWithRestResultAnonymous(milestonesRestURL + "/" + competitionId + "/public", milestoneResourceListType());
+    }
+
+    @Override
     public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long competitionId) {
         return getWithRestResult(milestonesRestURL + "/" + competitionId, milestoneResourceListType());
     }
