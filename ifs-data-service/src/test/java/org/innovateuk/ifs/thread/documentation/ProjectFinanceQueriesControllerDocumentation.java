@@ -27,7 +27,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
 
     @Test
     public void testCreate() throws Exception {
-        final QueryResource query = new QueryResource(35L, 22L, null, null, null, false, null);
+        final QueryResource query = new QueryResource(35L, null, null, null, null, false, null);
         when(projectFinanceQueriesService.create(query)).thenReturn(serviceSuccess(query.id));
 
         mockMvc.perform(MockMvcRequestBuilders.post("/project/finance/queries")
@@ -48,8 +48,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .andExpect(status().isOk())
                 .andDo(document("queries/{method-name}",
                         pathParameters(parameterWithName("queryId").description("Id of the Query to be fetched")),
-                        responseFields(queryResourceFields))
-                );
+                        responseFields(queryResourceFields)));
     }
 
     @Test
