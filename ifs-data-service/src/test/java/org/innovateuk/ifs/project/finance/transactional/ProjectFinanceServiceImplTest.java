@@ -452,24 +452,6 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void approveSpendProfileGenerateGolFails() {
-        Long projectId = 49544L;
-        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
-
-        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
-
-        ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
-        spendProfileList.forEach(spendProfile ->
-                assertEquals(ApprovalType.APPROVED, spendProfile.getApproval())
-        );
-        verify(spendProfileRepositoryMock).save(spendProfileList);
-    }
-
-
-    @Test
     public void saveSpendProfileWhenValidationFails() {
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);

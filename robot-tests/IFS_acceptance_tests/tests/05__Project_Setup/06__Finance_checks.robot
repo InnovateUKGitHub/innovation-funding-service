@@ -79,8 +79,8 @@ Status of the Eligibility column (workaround for private beta competition)
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then The user should see the text in the page    Viability
-    And The user should not see the text in the page    Queries raised
-    And The user should not see the text in the page    Notes
+    And The user should see the text in the page    Queries raised
+    And The user should see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
 

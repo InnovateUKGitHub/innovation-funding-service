@@ -30,7 +30,6 @@ public class FinanceCheckRestServiceImplTest extends BaseRestServiceUnitTest<Fin
     @Test
     @Ignore
     public void testGetFinanceCheckApprovalStatus() {
-        //TODO nuno
         //FinanceCheckState currentState, ProjectUserResource participant, UserResource internalParticipant, LocalDateTime modifiedDate, boolean canApprove
         FinanceCheckProcessResource processStatus = new FinanceCheckProcessResource(null, null, null,null, false);
         setupGetWithRestResultExpectations("/project/123/partner-organisation/456/finance-check/status", FinanceCheckProcessResource.class, processStatus);
