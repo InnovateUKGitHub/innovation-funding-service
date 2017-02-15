@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Eligibility'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Eligibility'" />
 </head>
 
 <body th:with="context='project-management'" class="eligibility-form">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" th:remove="tag" />
+        <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" />
         <h1 class="heading-xlarge">
             <th:block th:text="${summaryModel.organisationName}" />
             <small th:if="${summaryModel.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -49,7 +49,6 @@
                 <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.fundingSought,1,'COMMA')}" /></td>
                 <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.otherPublicSectorFunding,1,'COMMA')}" /></td>
                 <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.eligibilityOverview.contributionToProject,1,'COMMA')}" /></td>
-
             </tr>
             </tbody>
         </table>
@@ -129,13 +128,13 @@
             <th:block  th:include="fragments/modals :: modal-confirm-eligibility" />
         </th:block>
         <hr/>
-        <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Save and return to finance checks</button>
+        <button th:if="${summaryModel.showSaveAndContinueButton}" class="button-secondary" name="save-and-continue">Return to finance checks</button>
         <a th:if="${summaryModel.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})}">Return to finance checks</a>
     </form>
 
-    <th:block th:include="fragments/layout :: main-content-end" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-<th:block th:include="fragments/layout :: footer" />
-<th:block th:include="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

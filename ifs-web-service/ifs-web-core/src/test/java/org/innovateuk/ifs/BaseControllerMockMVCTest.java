@@ -90,13 +90,24 @@ public abstract class BaseControllerMockMVCTest<ControllerType> extends BaseUnit
         ControllerModelAttributeAdvice modelAttributeAdvice = new ControllerModelAttributeAdvice();
 
         ReflectionTestUtils.setField(modelAttributeAdvice, "userAuthenticationService", new UserAuthenticationService() {
+
             @Override
             public Authentication getAuthentication(HttpServletRequest request) {
-                return new UserAuthentication(loggedInUserSupplier.get());
+                return getAuthentication(request, false);
             }
 
             @Override
             public UserResource getAuthenticatedUser(HttpServletRequest request) {
+                return getAuthenticatedUser(request, false);
+            }
+
+            @Override
+            public Authentication getAuthentication(HttpServletRequest request, boolean expireCache) {
+                return new UserAuthentication(loggedInUserSupplier.get());
+            }
+
+            @Override
+            public UserResource getAuthenticatedUser(HttpServletRequest request, boolean expireCache) {
                 return loggedInUserSupplier.get();
             }
         });

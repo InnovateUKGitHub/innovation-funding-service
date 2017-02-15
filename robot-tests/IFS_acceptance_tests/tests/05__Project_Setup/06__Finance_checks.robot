@@ -48,6 +48,8 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-7573 Partner view - main page - Finance Checks
 ...
 ...               INFUND-5508 As a member of Project Finance I want to see the Finance Checks Overview table updating with approved funding amounts so that I can confirm any amended figures before generating the Spend Profile
+...
+...               INFUND-7574 Partner view updated finances - Finance Checks Eligibility
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -287,12 +289,12 @@ Project finance user can see the lead partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 201,674
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 60,502
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    £ 138,704
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 60,502
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,704
 
 
 Finance checks eligibility validations
@@ -367,14 +369,16 @@ Clicking cancel on the eligibility modal
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the checkbox    project-eligible
-    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")  # TODO to change to Return to finance checks 4834
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
 
 Confirming eligibility should show info on a readonly page
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=a.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
@@ -406,12 +410,12 @@ Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 201,674
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    0%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 0
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    £ 199,206
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    0%
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 0
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 199,206
 
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
@@ -457,14 +461,17 @@ Clicking cancel on the eligibility modal for partner
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the checkbox    project-eligible
-    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")  # TODO to change to Return to finance checks 4834
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+
 
 Confirming eligibility should show info on a readonly page for partner
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
     And the user clicks the button/link    link=Finance checks
@@ -587,11 +594,11 @@ Non finance contact can't view finance checks page
 
 *** Keywords ***
 the table row has expected values
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(2)    3 months
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 505,174
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 146,075
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 6,170
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    29%
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 505,174
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 146,075
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(5)    £ 6,170
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(6)    29%
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
@@ -719,7 +726,7 @@ the rag rating updates on the finance check page for partner for eligibility
 
 verify total costs of project
     [Arguments]    ${total_costs}
-    the user should see the text in the element      jQuery=.table-overview tr:nth-child(1) td:nth-child(2)     ${total_costs}
+    the user should see the text in the element      jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)     ${total_costs}
 
 verify percentage and total
     [Arguments]  ${section}  ${percentage}  ${total}

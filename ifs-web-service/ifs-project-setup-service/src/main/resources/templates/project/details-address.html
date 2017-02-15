@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Project address'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Project address'" />
 </head>
 <body th:with="context='project'" class="project-details project-address">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start" />
   <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project details',linkClass='link-back',linkUrl=@{/project/{id}/details(id=${model.projectId})}"  th:remove="tag"></div>
 
 	<form th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" >
@@ -25,7 +25,7 @@
 
 			<p>We will assign a Monitoring Officer who will visit your project at this address.</p>
 
-			<div th:include="project/fragments :: select-address" th:with="form=${form}" th:remove="tag"/>
+			<th:block th:insert="project/fragments :: select-address" th:with="form=${form}" />
 
 		</fieldset>
 
@@ -33,9 +33,9 @@
 
 	</form>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
