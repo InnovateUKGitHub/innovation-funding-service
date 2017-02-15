@@ -10,11 +10,13 @@ abstract class BaseApplicationsViewModel<ApplicationRowViewModel extends BaseApp
     protected long competitionId;
     protected String competitionName;
     protected List<ApplicationRowViewModel> applications;
+    protected PaginationViewModel pagination;
 
-    BaseApplicationsViewModel(long competitionId, String competitionName, List<ApplicationRowViewModel> applications) {
+    BaseApplicationsViewModel(long competitionId, String competitionName, List<ApplicationRowViewModel> applications, PaginationViewModel pagination) {
         this.competitionId = competitionId;
         this.competitionName = competitionName;
         this.applications = applications;
+        this.pagination = pagination;
     }
 
     public long getCompetitionId() {
@@ -27,5 +29,9 @@ abstract class BaseApplicationsViewModel<ApplicationRowViewModel extends BaseApp
 
     public List<ApplicationRowViewModel> getApplications() {
         return applications;
+    }
+
+    public PaginationViewModel getPagination() {
+        return pagination;
     }
 }

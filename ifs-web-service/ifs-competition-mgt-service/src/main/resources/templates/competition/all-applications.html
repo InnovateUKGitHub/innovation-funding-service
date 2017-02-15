@@ -92,6 +92,7 @@
                     </tbody>
                 </table>
             </div>
+            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
             <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
         </main>

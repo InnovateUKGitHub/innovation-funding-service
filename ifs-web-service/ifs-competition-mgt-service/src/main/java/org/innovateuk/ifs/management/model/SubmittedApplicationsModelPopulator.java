@@ -3,10 +3,12 @@ package org.innovateuk.ifs.management.model;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.innovateuk.ifs.management.viewmodel.SubmittedApplicationsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.SubmittedApplicationsViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -21,29 +23,28 @@ public class SubmittedApplicationsModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public SubmittedApplicationsViewModel populateModel(long competitionId) {
+    public SubmittedApplicationsViewModel populateModel(long competitionId, String origin, int page) {
         CompetitionSummaryResource competitionSummary = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
 
+        ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
+                .getSubmittedApplications(competitionId, "", page, 20)
+                .getSuccessObjectOrThrowException();
 
         return new SubmittedApplicationsViewModel(
                 competitionSummary.getCompetitionId(),
                 competitionSummary.getCompetitionName(),
                 competitionSummary.getAssessorDeadline(),
                 competitionSummary.getApplicationsSubmitted(),
-                getApplications(competitionId)
+                getApplications(summaryPageResource),
+                new PaginationViewModel(summaryPageResource, origin)
         );
     }
 
-    private List<SubmittedApplicationsRowViewModel> getApplications(long competitionId) {
+    private List<SubmittedApplicationsRowViewModel> getApplications(ApplicationSummaryPageResource summaryPageResource) {
         // TODO: Implement sorting - INFUND-8058
         // TODO: Implement filtering - INFUND-8012
-        // TODO: Pagination required - INFUND-8067
-
-        ApplicationSummaryPageResource summaryPageResource = applicationSummaryRestService
-                .getSubmittedApplications(competitionId, "", 0, Integer.MAX_VALUE)
-                .getSuccessObjectOrThrowException();
 
         return simpleMap(
                 summaryPageResource.getContent(),

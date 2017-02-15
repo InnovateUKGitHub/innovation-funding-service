@@ -25,7 +25,7 @@ import static org.innovateuk.ifs.management.controller.CompetitionManagementAppl
 public class CompetitionManagementApplicationsController {
 
     @Autowired
-	private ApplicationsMenuModelPopulator applicationsMenuModelPopulator;
+    private ApplicationsMenuModelPopulator applicationsMenuModelPopulator;
 
     @Autowired
     private AllApplicationsPageModelPopulator allApplicationsPageModelPopulator;
@@ -35,16 +35,18 @@ public class CompetitionManagementApplicationsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String applicationsMenu(Model model, @PathVariable("competitionId") long competitionId) {
-		model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId));
-		return "competition/applications-menu";
-	}
+        model.addAttribute("model", applicationsMenuModelPopulator.populateModel(competitionId));
+        return "competition/applications-menu";
+    }
 
-	@RequestMapping(path = "/all", method = RequestMethod.GET)
-	public String allApplications(Model model,
+    @RequestMapping(path = "/all", method = RequestMethod.GET)
+    public String allApplications(Model model,
                                   @PathVariable("competitionId") long competitionId,
-                                  @RequestParam MultiValueMap<String, String> queryParams) {
-        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId));
-        model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams));
+                                  @RequestParam MultiValueMap<String, String> queryParams,
+                                  @RequestParam(value = "page", defaultValue = "0") int page) {
+        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams);
+        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page));
+        model.addAttribute("originQuery", originQuery);
 
         return "competition/all-applications";
     }
@@ -52,9 +54,11 @@ public class CompetitionManagementApplicationsController {
     @RequestMapping(path = "/submitted", method = RequestMethod.GET)
     public String submittedApplications(Model model,
                                         @PathVariable("competitionId") long competitionId,
-                                        @RequestParam MultiValueMap<String, String> queryParams) {
-        model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId));
-        model.addAttribute("originQuery", buildOriginQueryString(ApplicationOverviewOrigin.SUBMITTED_APPLICATIONS, queryParams));
+                                        @RequestParam MultiValueMap<String, String> queryParams,
+                                        @RequestParam(value = "page", defaultValue = "0") int page) {
+        String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.SUBMITTED_APPLICATIONS, queryParams);
+        model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, originQuery, page));
+        model.addAttribute("originQuery", originQuery);
 
         return "competition/submitted-applications";
     }

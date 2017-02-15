@@ -1,17 +1,23 @@
 package org.innovateuk.ifs.application.service;
 
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.BaseRestService;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import static java.util.Collections.singletonList;
 
 @Service
 public class ApplicationSummaryRestServiceImpl extends BaseRestService implements ApplicationSummaryRestService {
@@ -45,25 +51,8 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 	
 	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, Integer pageNumber, Integer pageSize, String sortField) {
-		
-		Map<String, String> params = new LinkedHashMap<>();
-		if(pageNumber != null) {
-			params.put("page", pageNumber.toString());
-		}
-		if(pageSize != null) {
-			params.put("size", pageSize.toString());
-		}
-		if(!StringUtils.isEmpty(sortField)){
-			params.put("sort", sortField);
-		}
-		
-		String urlWithParams;
-		if(params.isEmpty()) {
-			urlWithParams = url;
-		} else {
-			urlWithParams = url + "?" + params.entrySet().stream().map(e -> e.getKey() + "=" + e.getValue()).collect(Collectors.joining("&"));
-		}
-		
+
+		String urlWithParams = addSort(url, sortField, pageNumber, pageSize);
 		return getWithRestResult(urlWithParams, ApplicationSummaryPageResource.class);
 	}
 
@@ -82,6 +71,18 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		this.applicationSummaryRestUrl = applicationSummaryRestUrl;
 	}
 
-	
+	protected String addSort(String url, String sortField, Integer pageNumber, Integer pageSize) {
+		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+		if(pageNumber != null) {
+			params.put("page", singletonList(pageNumber.toString()));
+		}
+		if(pageSize != null) {
+			params.put("size", singletonList(pageSize.toString()));
+		}
+		if(!StringUtils.isEmpty(sortField)){
+			params.put("sort", singletonList(sortField));
+		}
+		return UriComponentsBuilder.fromPath(url).queryParams(params).build().toUriString();
+	}
 
 }
