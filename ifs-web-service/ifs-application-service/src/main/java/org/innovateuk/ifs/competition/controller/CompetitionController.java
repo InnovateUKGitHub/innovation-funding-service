@@ -57,8 +57,12 @@ public class CompetitionController {
                                       @PathVariable("competitionId") final Long competitionId,
                                       @PathVariable(name = "section", required = false) final Optional<String> section,
                                      HttpServletRequest request) {
-
         Optional<PublicContentSectionType> selectedSection = PublicContentSectionType.fromPath(section.orElse(null));
+
+        if(providedSectionNotFound(section, selectedSection)) {
+            return "redirect:/competition/" + competitionId + "/overview/summary";
+        }
+
         PublicContentItemResource publicContentItem = competitionService
                 .getPublicContentOfCompetition(competitionId)
                 .getSuccessObjectOrThrowException();
@@ -67,6 +71,10 @@ public class CompetitionController {
                 publicContentItem,
                 getPopulator(selectedSection.orElse(PublicContentSectionType.SUMMARY)).populate(publicContentItem.getPublicContentResource())));
         return TEMPLATE_PATH + "overview";
+    }
+
+    private Boolean providedSectionNotFound(Optional<String> section, Optional<PublicContentSectionType> selectedSection) {
+        return section.isPresent() && !selectedSection.isPresent();
     }
 
     @RequestMapping(value = "/{competitionId}/download/{contentGroupId}", method = RequestMethod.GET)

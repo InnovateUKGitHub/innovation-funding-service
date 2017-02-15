@@ -88,4 +88,11 @@
     </section>
 </th:block>
 
+<!-- ===========================Front door - competition supporting information  ================== -->
+<th:block th:fragment="supporting-information(section, competitionId)">
+    <section>
+        <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
+    </section>
+</th:block>
+
 </html>
