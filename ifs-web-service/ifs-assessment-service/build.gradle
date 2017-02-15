@@ -1,6 +1,4 @@
-if(!project.hasProperty('cloud')) {
-    apply from: "war-build.gradle";
-}
+
 configurations {
     providedRuntime
 }

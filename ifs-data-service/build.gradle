@@ -1,10 +1,6 @@
 def targetBuild = hasProperty('profile') ? profile : 'docker';
 apply from: targetBuild+"-build.gradle";
 
-if(!project.hasProperty('cloud')) {
-    apply from: "war-build.gradle";
-}
-
 apply from: "script-support.gradle"
 
 apply plugin: 'base'
