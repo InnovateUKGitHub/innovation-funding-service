@@ -9,7 +9,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.service.QueriesServiceImpl;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.builder.RoleBuilder;
@@ -55,7 +55,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     private static final String webBaseUrl = "http://ifs-local-dev";
 
     @InjectMocks
-    private QueriesServiceImpl service;
+    private ProjectFinanceQueriesServiceImpl service;
 
     @Before
     public void before() {
@@ -151,7 +151,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                                                                   "applicationName", "App1");
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
-                QueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
+                ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -272,7 +272,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 "applicationName", "App1");
 
         Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
-                QueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
+                ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));

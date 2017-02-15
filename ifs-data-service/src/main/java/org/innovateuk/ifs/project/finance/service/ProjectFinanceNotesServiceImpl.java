@@ -18,11 +18,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class NotesServiceImpl implements ProjectFinanceNotesService {
+public class ProjectFinanceNotesServiceImpl implements ProjectFinanceNotesService {
     private final ThreadService<NoteResource, PostResource> service;
 
     @Autowired
-    public NotesServiceImpl(NoteRepository noteRepository, NoteMapper noteMapper, PostMapper postMapper) {
+    public ProjectFinanceNotesServiceImpl(NoteRepository noteRepository, NoteMapper noteMapper, PostMapper postMapper) {
         service = new MappingThreadService<>(noteRepository, noteMapper, postMapper, ProjectFinance.class);
     }
 

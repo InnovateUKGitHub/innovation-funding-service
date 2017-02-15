@@ -31,7 +31,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Service
-public class QueriesServiceImpl implements ProjectFinanceQueriesService {
+public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesService {
 
     private final ThreadService<QueryResource, PostResource> service;
 
@@ -48,7 +48,7 @@ public class QueriesServiceImpl implements ProjectFinanceQueriesService {
     private String webBaseUrl;
 
     @Autowired
-    public QueriesServiceImpl(QueryRepository queryRepository, QueryMapper queryMapper, PostMapper postMapper) {
+    public ProjectFinanceQueriesServiceImpl(QueryRepository queryRepository, QueryMapper queryMapper, PostMapper postMapper) {
         service = new MappingThreadService<>(queryRepository, queryMapper, postMapper, ProjectFinance.class);
     }
 
