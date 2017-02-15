@@ -10,7 +10,7 @@ import java.util.function.Consumer;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
 
-public class ProjectGrantOfferLetterControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectGrantOfferLetterController> {
+public class ProjectSignedGrantOfferLetterControllerSecurityTest extends BaseProjectSetupControllerSecurityTest<ProjectGrantOfferLetterController> {
 
     @Override
     protected Class<? extends ProjectGrantOfferLetterController> getClassUnderTest() {
@@ -19,15 +19,11 @@ public class ProjectGrantOfferLetterControllerSecurityTest extends BaseProjectSe
 
     @Test
     public void testPublicMethods() {
-        assertSecured(() -> classUnderTest.confirmation(123L, null));
-        assertSecured(() -> classUnderTest.downloadAdditionalContractFile(123L));
-        assertSecured(() -> classUnderTest.downloadGeneratedGrantOfferLetterFile(123L));
-        assertSecured(() -> classUnderTest.submit(123L, null, null, null, null, null));
-        assertSecured(() -> classUnderTest.uploadSignedGrantOfferLetterFile(123L, null, null, null, null, null));
+        assertSecured(() -> classUnderTest.downloadGrantOfferLetterFile(123L));
     }
 
     @Override
     protected Consumer<ProjectSetupSectionsPermissionRules> getVerification() {
-        return permissionRules -> permissionRules.partnerCanAccessGrantOfferLetterSection(eq(123L), isA(UserResource.class));
+        return permissionRules -> permissionRules.leadPartnerAccess(eq(123L), isA(UserResource.class));
     }
 }
