@@ -777,23 +777,36 @@ public class ApplicationFormController {
                 valid = Boolean.FALSE;
             }
         }
+        if (!validateOrganisationSize(bindingResult, section, params, userId, applicationId)){
+            valid = Boolean.FALSE;
+        }
 
+        return valid;
+    }
+
+    // We model the organisation size as a form input.
+    // In the templates we ignore the form input that it came from and generate radios which start with "financePosition-"
+    // But in order highlight errors we need to target the form input.
+    // We can do this is by having a hidden input which gives us the name.
+    // Tech dept ticket INFUND-8239
+    private Boolean validateOrganisationSize(BindingResult bindingResult, SectionResource section, Map<String, String[]> params,Long userId, Long applicationId ){
         if(SectionType.ORGANISATION_FINANCES.equals(section.getType())) {
             List<String> financePositionKeys = params.keySet().stream().filter(k -> k.contains("financePosition-")).collect(Collectors.toList());
             String organisationType = organisationService.getOrganisationType(userId, applicationId);
             if (financePositionKeys.isEmpty() && !"University (HEI)".equals(organisationType)) {
-                // We model the organisation size as a form input.
-                // In the templates we ignore the form input that it came from and generate radios which start with "financePosition-"
-                // But in order highlight errors we need to target the form input.
-                // We can do this is by having a hidden input which gives us the name.
-                // All of this is far from ideal and there is a tech dept tickets INFUND-8239
-                String originalFormInputId = params.get("organisationSize-formInputId")[0];
-                bindingResult.rejectValue(originalFormInputId,"APPLICATION_ORGANISATION_SIZE_REQUIRED");
+                // Validation has failed but we need to work out which form input the validation should be attached to.
+                String[] originalFormInputId = params.get("organisationSize-formInputId");
+                if (originalFormInputId != null && originalFormInputId.length > 0) {
+                    bindingResult.rejectValue(originalFormInputId[0], "APPLICATION_ORGANISATION_SIZE_REQUIRED");
+                }
+                else {
+                    bindingResult.reject("APPLICATION_ORGANISATION_SIZE_REQUIRED");
+                }
                 return false;
             }
         }
+        return true;
 
-        return valid;
     }
 
     private void logSaveApplicationBindingErrors(ValidationHandler validationHandler) {
