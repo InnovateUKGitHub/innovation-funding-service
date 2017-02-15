@@ -55,7 +55,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("assessorPay").description("How much will assessors be paid per application they assess"),
             fieldWithPath("setupComplete").description("Has the setup been completed and will move to open once past the open date"),
             fieldWithPath("nonIfs").description("Is this competition a non-ifs competition (not managed via IFS)"),
-            fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if its a non-ifs competition")
+            fieldWithPath("nonIfsUrl").description("The URL to apply to the competition if it is a non-ifs competition")
     };
 
     public static final CompetitionResourceBuilder competitionResourceBuilder = newCompetitionResource()

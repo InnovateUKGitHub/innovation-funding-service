@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by luke.harper on 14/02/2017.
+ * Service for the competition dashboard search and tabs.
  */
 public interface CompetitionDashboardSearchService {
 

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 import static org.innovateuk.ifs.application.service.CompetitionServiceImpl.COMPETITION_PAGE_SIZE;
 
 /**
- * Created by luke.harper on 14/02/2017.
+ * Implementation of the competition dashboard searches.
  */
 @Service
 public class CompetitionDashboardSearchServiceImpl implements CompetitionDashboardSearchService {

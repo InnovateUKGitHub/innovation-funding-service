@@ -103,6 +103,14 @@ public class CompetitionSearchResultItem {
         this.projectsCount = projectsCount;
     }
 
+    public LocalDateTime getPublishDate() {
+        return publishDate;
+    }
+
+    public void setPublishDate(LocalDateTime publishDate) {
+        this.publishDate = publishDate;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -113,11 +121,14 @@ public class CompetitionSearchResultItem {
 
         return new EqualsBuilder()
                 .append(id, that.id)
+                .append(name, that.name)
                 .append(innovationAreaNames, that.innovationAreaNames)
                 .append(numberOfApplications, that.numberOfApplications)
                 .append(startDateDisplay, that.startDateDisplay)
                 .append(competitionStatus, that.competitionStatus)
+                .append(competitionTypeName, that.competitionTypeName)
                 .append(projectsCount, that.projectsCount)
+                .append(publishDate, that.publishDate)
                 .isEquals();
     }
 
@@ -125,11 +136,14 @@ public class CompetitionSearchResultItem {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
+                .append(name)
                 .append(innovationAreaNames)
                 .append(numberOfApplications)
                 .append(startDateDisplay)
                 .append(competitionStatus)
+                .append(competitionTypeName)
                 .append(projectsCount)
+                .append(publishDate)
                 .toHashCode();
     }
 }

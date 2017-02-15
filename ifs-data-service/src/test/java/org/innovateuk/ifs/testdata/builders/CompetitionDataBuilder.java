@@ -24,6 +24,7 @@ import java.util.stream.Stream;
 import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -78,7 +79,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
             doCompetitionDetailsUpdate(data, competition -> {
 
-                CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
+                if (competitionTypeName != null) {
+                    CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
+                    competition.setCompetitionType(competitionType.getId());
+                }
                 Long innovationArea = getInnovationAreaIdOrNull(innovationAreaName);
                 Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
                 Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
@@ -88,12 +92,11 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
 
                 competition.setName(name);
                 competition.setDescription(description);
-                competition.setInnovationAreas(singleton(innovationArea));
+                competition.setInnovationAreas(innovationArea == null ? emptySet() : singleton(innovationArea));
                 competition.setInnovationSector(innovationSector);
-                competition.setResearchCategories(singleton(researchCategory));
+                competition.setResearchCategories(researchCategory == null ? emptySet() : singleton(researchCategory));
                 competition.setMaxResearchRatio(30);
                 competition.setAcademicGrantPercentage(100);
-                competition.setCompetitionType(competitionType.getId());
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
                 competition.setExecutive(userRepository.findByEmail(compExecutive).map(User::getId).orElse(null));
                 competition.setPafCode(pafCode);

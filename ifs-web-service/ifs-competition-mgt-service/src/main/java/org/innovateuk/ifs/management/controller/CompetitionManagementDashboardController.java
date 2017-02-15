@@ -12,7 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -36,14 +35,14 @@ public class CompetitionManagementDashboardController {
     }
 
     @GetMapping(value="/dashboard/live")
-    public String live(Model model, HttpServletRequest request) {
+    public String live(Model model) {
         model.addAttribute("competitions", competitionDashboardSearchService.getLiveCompetitions());
         model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
         return TEMPLATE_PATH + "live";
     }
 
     @GetMapping(value="/dashboard/project-setup")
-    public String projectSetup(Model model, HttpServletRequest request) {
+    public String projectSetup(Model model) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
         model.addAttribute("competitions", projectSetupCompetitions);
         model.addAttribute("formattedInnovationAreas", formatInnovationAreaNames(projectSetupCompetitions));
@@ -52,7 +51,7 @@ public class CompetitionManagementDashboardController {
     }
 
     @GetMapping(value="/dashboard/upcoming")
-    public String upcoming(Model model, HttpServletRequest request) {
+    public String upcoming(Model model) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> upcomingCompetitions = competitionDashboardSearchService.getUpcomingCompetitions();
         model.addAttribute("competitions", upcomingCompetitions);
         model.addAttribute("formattedInnovationAreas", formatInnovationAreaNames(upcomingCompetitions));
@@ -61,7 +60,7 @@ public class CompetitionManagementDashboardController {
     }
 
     @GetMapping(value="/dashboard/complete")
-    public String complete(Model model, HttpServletRequest request) {
+    public String complete(Model model) {
         //TODO INFUND-3833
         model.addAttribute("competitions", new ArrayList<CompetitionResource>());
         model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
@@ -70,7 +69,7 @@ public class CompetitionManagementDashboardController {
 
 
     @GetMapping(value="/dashboard/non-ifs")
-    public String nonIfs(Model model, HttpServletRequest request) {
+    public String nonIfs(Model model) {
         model.addAttribute("competitions", competitionDashboardSearchService.getNonIfsCompetitions());
         model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
         return TEMPLATE_PATH + "non-ifs";
@@ -78,7 +77,7 @@ public class CompetitionManagementDashboardController {
 
     @GetMapping(value="/dashboard/search")
     public String search(@RequestParam(name = "searchQuery") String searchQuery,
-                           @RequestParam(name = "page", defaultValue = "1") int page, Model model, HttpServletRequest request) {
+                           @RequestParam(name = "page", defaultValue = "1") int page, Model model) {
         model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
         return TEMPLATE_PATH + "search";

@@ -414,7 +414,7 @@ class CsvUtils {
             int i = 0;
             name = nullable(line.get(i++));
             description = nullable(line.get(i++));
-            type = line.get(i++);
+            type = nullable(line.get(i++));
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));

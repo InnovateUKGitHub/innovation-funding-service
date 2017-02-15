@@ -10,6 +10,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+/**
+ * Controller for all Non-IFS competition actions.
+ */
 @Controller
 @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
 public class NonIfsCompetitionController {
