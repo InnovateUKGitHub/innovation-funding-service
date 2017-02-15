@@ -30,7 +30,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
 @Service
-public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesService {
+public class QueriesServiceImpl implements ProjectFinanceQueriesService {
 
     private final ThreadService<QueryResource, PostResource> service;
 
@@ -47,7 +47,7 @@ public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesSe
     private String webBaseUrl;
 
     @Autowired
-    public ProjectFinanceQueriesServiceImpl(QueryRepository queryRepository, QueryMapper queryMapper, PostMapper postMapper) {
+    public QueriesServiceImpl(QueryRepository queryRepository, QueryMapper queryMapper, PostMapper postMapper) {
         service = new MappingThreadService<>(queryRepository, queryMapper, postMapper, ProjectFinance.class);
     }
 
@@ -92,7 +92,7 @@ public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesSe
                         notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + project.getId());
                         notificationArguments.put("applicationName", application.getName());
 
-                        Notification notification = new Notification(from, Collections.singletonList(pmTarget), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
+                        Notification notification = new Notification(from, Collections.singletonList(pmTarget), Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
                         ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, NotificationMedium.EMAIL);
 
                         if (!notificationResult.isSuccess()) {
