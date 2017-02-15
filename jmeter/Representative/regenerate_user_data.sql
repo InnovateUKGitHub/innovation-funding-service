@@ -62,16 +62,16 @@ select concat_ws(',', u.email, 'Passw0rd', a.id, c.id, application_details_quest
              and public_description_form_input.description = 'Public description'
             join form_input project_exploitation_form_input 
               on project_exploitation_form_input.question_id = project_exploitation_question.id
-             and project_exploitation_form_input.description = '3. How will you exploit and market your project?'
+             and project_exploitation_form_input.description like '3. How will you exploit %'
             join form_input economic_benefit_form_input 
               on economic_benefit_form_input.question_id = economic_benefit_question.id
-             and economic_benefit_form_input.description = '4. What economic, social and environmental benefits do you expect your project to deliver and when?'
+             and economic_benefit_form_input.description like '4. What economic, social %'
             join form_input funding_form_input
               on funding_form_input.question_id = funding_question.id
              and funding_form_input.description = '9. What will your project cost?'
             join form_input adding_value_form_input 
               on adding_value_form_input.question_id = adding_value_question.id
-             and adding_value_form_input.description = '10. How does financial support from Innovate UK and its funding partners add value?'
+             and adding_value_form_input.description like '10. How does financial %'
             join application_finance travel_subsistence_finance
               on travel_subsistence_finance.application_id = a.id
             join finance_row travel_subsistence_row
@@ -98,3 +98,4 @@ select concat_ws(',', u.email, 'Passw0rd', a.id, c.id, application_details_quest
                            'david.wellington@load.example.com',
                            'felicity.jefferies@load.example.com')
             order by a.id
+            INTO OUTFILE 'users-csv.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
