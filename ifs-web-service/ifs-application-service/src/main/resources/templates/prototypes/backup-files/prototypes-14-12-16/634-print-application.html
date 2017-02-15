@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
       <style>
 body.print-doc {
   background: #dee0e2;
@@ -104,7 +104,7 @@ section + section {
   <button class="button" onclick="window.print()">Print your application</button>
 </div>
 
-<section> 
+<section>
 <h1 class="heading-large">Application details</h1>
 <div>
    <div>
@@ -248,7 +248,7 @@ section + section {
                   <p>asdfasdfasdfasdf</p>
                   <p>asdfasdfafsd</p>
                </div>
-             
+
             </div>
          </div>
       </div>
@@ -269,7 +269,7 @@ section + section {
                   <p><em>asdf</em></p>
                   <p><em>asdf</em></p>
                </div>
-               
+
 
             </div>
          </div>

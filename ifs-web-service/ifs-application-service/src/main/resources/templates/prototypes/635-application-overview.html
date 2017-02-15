@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:with="linkText=${'Your dashboard'},linkURL=${'/prototypes/675-dashboard'}" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header-collaborator" th:with="linkText=${'Your dashboard'},linkURL=${'/prototypes/675-dashboard'}" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Application overview'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${null}, ${'Application overview'})" />
 
 	<div class="grid-row">
 		 <div class="column-half">
@@ -34,7 +34,7 @@
 	            </dt>
           </dl>
 
-           <div th:include="prototypes/fragments/layout :: prototype-application-progress" th:remove="tag" />
+           <th:block th:insert="prototypes/fragments/layout :: prototype-application-progress" />
         </div>
         <div class="column-half">
             <ul class="list list-bullet">
@@ -55,25 +55,25 @@
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/5452-application-details">Application details</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assignedToYou" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assignedToYou" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="#2">Project summary</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
       </li>
       <li>
 				<div class="task">
 					<h3 class="heading-small"><a href="#3">Public description</a></h3>
 				</div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
 			</li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="#4">Scope</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
       </li>
 
     </ul>
@@ -90,61 +90,61 @@
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question1">1. Business opportunity</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assignedToYou" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assignedToYou" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question2">2. Potential market</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assigned,name=${'Jessica Doe'}" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assigned,name=${'Jessica Doe'}" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question3">3. Project exploitation</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question4">4. Economic benefit</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=reassignedToYou" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=reassignedToYou" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question5">5. Technical approach</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=reassignedToYou" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=reassignedToYou" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question6">6. Innovation</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assigned,name=${'Jessica Doe'}" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assigned,name=${'Jessica Doe'}" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question7">7. Risks</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assigned,name=${'Jessica Doe'}" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assigned,name=${'Jessica Doe'}" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question8">8. Project team</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question9">9. Funding</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
       </li>
       <li>
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/635-application-question10">10. Adding value</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=complete" />
       </li>
     </ul>
 
@@ -156,7 +156,7 @@
         <div class="task">
           <h3 class="heading-small"><a href="/prototypes/4600-finances">Your finances</a></h3>
         </div>
-        <th:block th:include="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assignedToYou" />
+        <th:block th:insert="prototypes/fragments/layout :: prototype-task-question-labels" th:with="status=assignedToYou" />
       </li>
       <li>
         <div class="task">
@@ -174,10 +174,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
