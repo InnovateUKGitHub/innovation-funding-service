@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Competition Management Dashboard'" th:remove="tag" />
+</head>
+<body th:with="context='comp-management'" class="competition-management competition-overview">
+
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+<main id="content">
+    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+    <form role="search" method="get" id="searchform" th:action="@{'/dashboard/search'}">
+        <div th:include="competition/dashboard :: comp-dashboard-header (searchQuery=${''})" th:remove="tag" />
+    </form>
+    <div th:include="competition/dashboard :: comp-dashboard-navigation (tab=${'non-ifs'}, counts=${counts})" th:remove="tag" />
+
+    <section>
+        <h2 class="heading-medium"
+            th:text="'Non-IFS competitions ('+${competitions.size()}+')'"></h2>
+        <ul class="list-overview">
+            <li class="grid-row" th:each="competition : ${competitions}">
+                <th:block
+                    th:include="competition/dashboard :: dashboard-row(true)"
+                    th:with="competition=${competition},
+                    cell3=${#strings.setJoin(competition.innovationAreaNames, ', ')},
+                    cell4=${publishDate == null ? '' : #temporals.format(publishDate, 'd MMMM yyyy')}">
+                </th:block>
+            </li>
+        </ul>
+    </section>
+
+
+    <a th:href="@{/non-ifs-competition/create}" class="button button-large extra-margin">Create non-IFS competition</a>
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+
+</body>
+</html>

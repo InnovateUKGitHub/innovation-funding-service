@@ -31,26 +31,33 @@
         <li id="section-4" th:class="${tab == 'complete' ? 'selected' : ''}"><a th:href="@{'/dashboard/complete'}"
                                                                                 th:text="'Complete ('+${counts.completedCount}+')'"></a>
         </li>
+        <li id="section-5" th:class="${tab == 'non-ifs' ? 'selected' : ''}"><a th:href="@{'/dashboard/non-ifs'}"
+                                                                                th:text="'Non-IFS ('+${counts.nonIfsCount}+')'"></a>
+        </li>
     </ul>
 </div>
 
-<div th:fragment="dashboard-row">
+<div th:fragment="dashboard-row(nonIfs)">
     <div class="column-third">
         <h3 class="heading-small">
-            <a th:href="@{'/competition/setup/'+${competition.id}}" th:if="${
-                competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}">
-                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
-                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
+            <a th:href="@{'/non-ifs-competition/setup/'+${competition.id}}"
+               th:if="${nonIfs}">
+                <th:block th:include="competition/dashboard :: competition-name(competition)" />
             </a>
-            <a th:href="@{/competition/{competitionId}(competitionId=${competition.id})}" th:if="${competition.competitionStatus.inFlight}">
-                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
-                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
-            </a>
-            <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
-               th:if="${T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP == competition.competitionStatus}">
-                <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
-                <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
-            </a>
+            <th:block th:unless="${competition.nonIfs}">
+                <a th:href="@{'/competition/setup/'+${competition.id}}"
+                   th:if="${competition.competitionStatus == T(org.innovateuk.ifs.competition.resource.CompetitionStatus).COMPETITION_SETUP}">
+                    <th:block th:include="competition/dashboard :: competition-name(competition)" />
+                </a>
+                <a th:href="@{/competition/{competitionId}(competitionId=${competition.id})}"
+                   th:if="${competition.competitionStatus.inFlight}">
+                    <th:block th:include="competition/dashboard :: competition-name(competition)" />
+                </a>
+                <a th:href="${'/project-setup-management/competition/'+competition.id+'/status'}"
+                   th:if="${T(org.innovateuk.ifs.competition.resource.CompetitionStatus).PROJECT_SETUP == competition.competitionStatus}">
+                    <th:block th:include="competition/dashboard :: competition-name(competition)" />
+                </a>
+            </th:block>
         </h3>
     </div>
     <div class="column-two-thirds">
@@ -58,6 +65,12 @@
         <div class="column-third"><p th:text="${cell3}"></p></div>
         <div class="column-third"><p th:text="${cell4}"></p></div>
     </div>
+</div>
+
+
+<div th:fragment="competition-name">
+    <th:block th:unless="${#strings.isEmpty(competition.name)}" th:text="${competition.name}"/>
+    <th:block th:if="${#strings.isEmpty(competition.name)}" th:text="#{ifs.competition.no_title}"/>
 </div>
 
 </html>

@@ -37,6 +37,9 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
 
+    @PostFilter("hasPermission(filterObject, 'READ')")
+    ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
+
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);

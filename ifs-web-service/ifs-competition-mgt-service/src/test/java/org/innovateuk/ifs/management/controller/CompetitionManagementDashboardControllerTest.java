@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +43,9 @@ public class CompetitionManagementDashboardControllerTest {
 	private CompetitionManagementDashboardController controller;
 
     @Mock
+    private CompetitionDashboardSearchService competitionDashboardSearchService;
+
+    @Mock
     private CompetitionService competitionService;
 
     private MockMvc mockMvc;
@@ -65,8 +69,8 @@ public class CompetitionManagementDashboardControllerTest {
         addInnovationAreaNamesToCompetitions(competitions);
         CompetitionCountResource counts = new CompetitionCountResource();
 
-        Mockito.when(competitionService.getLiveCompetitions()).thenReturn(competitions);
-        Mockito.when(competitionService.getCompetitionCounts()).thenReturn(counts);
+        Mockito.when(competitionDashboardSearchService.getLiveCompetitions()).thenReturn(competitions);
+        Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/live"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -82,8 +86,8 @@ public class CompetitionManagementDashboardControllerTest {
         addInnovationAreaNamesToCompetitions(competitions);
         CompetitionCountResource counts = new CompetitionCountResource();
 
-        Mockito.when(competitionService.getProjectSetupCompetitions()).thenReturn(competitions);
-        Mockito.when(competitionService.getCompetitionCounts()).thenReturn(counts);
+        Mockito.when(competitionDashboardSearchService.getProjectSetupCompetitions()).thenReturn(competitions);
+        Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/project-setup"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -105,8 +109,8 @@ public class CompetitionManagementDashboardControllerTest {
         addInnovationAreaNamesToCompetitions(competitions);
         CompetitionCountResource counts = new CompetitionCountResource();
 
-        Mockito.when(competitionService.getUpcomingCompetitions()).thenReturn(competitions);
-        Mockito.when(competitionService.getCompetitionCounts()).thenReturn(counts);
+        Mockito.when(competitionDashboardSearchService.getUpcomingCompetitions()).thenReturn(competitions);
+        Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/upcoming"))
                 .andExpect(MockMvcResultMatchers.status().isOk())
@@ -122,7 +126,7 @@ public class CompetitionManagementDashboardControllerTest {
         String searchQuery = "search";
         int defaultPage = 0;
 
-        Mockito.when(competitionService.searchCompetitions(searchQuery, defaultPage)).thenReturn(searchResult);
+        Mockito.when(competitionDashboardSearchService.searchCompetitions(searchQuery, defaultPage)).thenReturn(searchResult);
 
         mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/search?searchQuery=" + searchQuery))
                 .andExpect(MockMvcResultMatchers.status().isOk())

@@ -37,12 +37,17 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
     @Override
     public RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType());
+        return getWithRestResult(competitionsRestURL + "/project-setup", competitionSearchResultItemListType());
     }
 
     @Override
     public RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
         return getWithRestResult(competitionsRestURL + "/upcoming", competitionSearchResultItemListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType());
     }
 
     @Override

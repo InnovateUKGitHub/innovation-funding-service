@@ -103,7 +103,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_findLiveCompetitions() {
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionSearchResultItemListType(), returnedResponse);
 
@@ -116,9 +116,9 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void test_findProjectSetupCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
 
-        setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType(), returnedResponse);
+        setupGetWithRestResultExpectations(competitionsRestURL + "/project-setup", competitionSearchResultItemListType(), returnedResponse);
 
         List<CompetitionSearchResultItem> responses = service.findProjectSetupCompetitions().getSuccessObject();
         assertNotNull(responses);
@@ -129,7 +129,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void test_findUpcomingCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
 

@@ -40,7 +40,7 @@ public class CompetitionController {
         return competitionService.findLiveCompetitions().toGetResponse();
     }
 
-    @RequestMapping(value = "/projectSetup", method = RequestMethod.GET)
+    @RequestMapping(value = "/project-setup", method = RequestMethod.GET)
     public RestResult<List<CompetitionSearchResultItem>> projectSetup() {
         return competitionService.findProjectSetupCompetitions().toGetResponse();
     }
@@ -48,6 +48,11 @@ public class CompetitionController {
     @RequestMapping(value = "/upcoming", method = RequestMethod.GET)
     public RestResult<List<CompetitionSearchResultItem>> upcoming() {
         return competitionService.findUpcomingCompetitions().toGetResponse();
+    }
+
+    @RequestMapping(value = "/non-ifs", method = RequestMethod.GET)
+    public RestResult<List<CompetitionSearchResultItem>> nonIfs() {
+        return competitionService.findNonIfsCompetitions().toGetResponse();
     }
 
     @RequestMapping(value = "/search/{page}/{size}", method = RequestMethod.GET)
