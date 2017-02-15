@@ -28,9 +28,6 @@ public abstract class PageResource<PageableResource> {
     private int number;
     /**
      * The maximum size of any page's list of items.
-     *
-     * {@link this#content} size might not necessarily
-     * be the same as this on the outer pages.
      */
     private int size;
 
