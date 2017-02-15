@@ -1505,6 +1505,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInvite(newCompetitionInvite()
                         .withStatus(OPENED)
                         .withInnovationArea(innovationArea)
+                        .withUser(newUser().build())
                 )
                 .build();
 
@@ -1536,6 +1537,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInvite(newCompetitionInvite()
                         .withStatus(OPENED)
                         .withInnovationArea(innovationArea)
+                        .withUser(newUser().build())
                 )
                 .build();
 
