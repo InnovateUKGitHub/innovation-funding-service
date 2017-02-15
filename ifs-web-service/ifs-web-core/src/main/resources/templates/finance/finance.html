@@ -1532,7 +1532,7 @@
                           <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     </label>
                     <input type="text"
-                           th:name="${type +'-fundingSource-' + question.id + '-' + costIdentifier}"
+                           th:name="${'other_funding-fundingSource-' + question.id + '-' + costIdentifier}"
                            class="form-control width-full"
                            th:id="${'cost-other_funding-'+costIdentifier+'-source'}"
                            th:value="${cost.fundingSource}"
@@ -1547,7 +1547,7 @@
                       <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     </label>
                     <input type="text"
-                           th:name="${type +'-securedDate-' + question.id + '-' + costIdentifier}"
+                           th:name="${'other_funding-securedDate-' + question.id + '-' + costIdentifier}"
                            class="form-control width-medium"
                            th:id="${'cost-other_funding-'+costIdentifier+'-date'}"
                            placeholder="MM-YYYY"
@@ -1566,7 +1566,7 @@
                   </label>
                     <input class="form-control width-medium"
                            type="number"
-                           th:name="${type +'-fundingAmount-' + question.id + '-' + costIdentifier}"
+                           th:name="${'other_funding-fundingAmount-' + question.id + '-' + costIdentifier}"
                            th:id="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}"
                            ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'field-error' : ''"
