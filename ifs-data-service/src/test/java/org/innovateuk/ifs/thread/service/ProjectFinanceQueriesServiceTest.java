@@ -9,7 +9,7 @@ import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesServiceImpl;
+import org.innovateuk.ifs.project.finance.service.QueriesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.user.builder.RoleBuilder;
@@ -55,7 +55,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     private static final String webBaseUrl = "http://ifs-local-dev";
 
     @InjectMocks
-    private ProjectFinanceQueriesServiceImpl service;
+    private QueriesServiceImpl service;
 
     @Before
     public void before() {
@@ -150,7 +150,8 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
                                                                   "applicationName", "App1");
 
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
+        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
+                QueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
@@ -257,9 +258,11 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o)
+                .build(1);
         Application app = newApplication().withName("App1").build();
-        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation()
+                .withOrganisation(o).build(1)).withApplication(app).build();
 
         ProjectFinance pf = newProjectFinance().withProject(p).build();
 
@@ -268,7 +271,8 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
         Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
                 "applicationName", "App1");
 
-        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
+        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
+                QueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
         when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
