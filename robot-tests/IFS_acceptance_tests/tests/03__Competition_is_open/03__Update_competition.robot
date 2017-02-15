@@ -20,7 +20,7 @@ Suite Setup       Custom suite setup
 Suite Teardown    the user moves the competition back again
 Force Tags        CompAdmin    MySQL
 Resource          ../../resources/defaultResources.robot
-Resource          ../02__Competition_setup/CompAdmin_Commons.robot
+Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
