@@ -42,7 +42,7 @@ External user cannot view the GOL section before spend profiles have been approv
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     When the user should not see the element    jQuery=li.waiting:nth-child(8)
     And the user should not see the element    link=Grant offer letter
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
 
 
@@ -94,7 +94,7 @@ Lead should not be able to see GOL until it is sent by IUK
     [Setup]    log in as a different user            ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element              jQuery=li.waiting:nth-child(8)
-    When the user clicks the button/link             link=What's the status of each of my partners?
+    When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
     When the user clicks the button/link             link=Project setup status
@@ -107,7 +107,7 @@ Non lead should not be able to see GOL until it is sent by IUK
     Given the user navigates to the page             ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should not see the element         jQuery=li.complete:nth-child(8)
     And the user should not see the element          jQuery=li.require-action:nth-child(8)
-    When the user clicks the button/link             link=What's the status of each of my partners?
+    When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(2) td.status.na:nth-of-type(7)
     When the user clicks the button/link             link=Project setup status
@@ -159,7 +159,7 @@ PM can view the grant offer letter page
     And the user should see the element    jQuery=label:contains(+ Upload)
     And the user should not see the text in the page    This document is awaiting signature by the Project Manager
     And the user goes back to the previous page
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
@@ -209,7 +209,7 @@ PM should be able upload a file and then access the Send button
     Then the user should see the element    jQuery=.button:contains("Send signed offer letter")
     And the user clicks the button/link    link=Project setup status
     And the user should see the element    jQuery=li.require-action:nth-child(8)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(7)
 
@@ -322,7 +322,7 @@ PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
     Given the user navigates to the page   ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(7)
 

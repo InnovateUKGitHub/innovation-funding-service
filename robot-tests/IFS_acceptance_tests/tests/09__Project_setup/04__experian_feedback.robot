@@ -160,7 +160,7 @@ Lead partner can see that bank details has been approved
     [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_EF_APPLICATION_HEADER}
     Then the user should see the element           jQuery=ul li.complete:nth-child(4)
-    When the user clicks the button/link           link=What's the status of each of my partners?
+    When the user clicks the button/link           link=status of my partners
     And the user should see the text in the page   Project team status
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
 
