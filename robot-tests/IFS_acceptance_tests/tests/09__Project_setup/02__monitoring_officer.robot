@@ -259,3 +259,57 @@ Custom suite setup
     delete the emails from both test mailboxes
     ${nextyear} =  get next year
     Set suite variable  ${nextyear}
+    the lead partner fills in project details if they are not already filled in
+
+
+
+the lead partner fills in project details if they are not already filled in
+    log in as user    &{lead_applicant_credentials}
+    the user navigates to the page    ${project_in_setup_page}
+    the user clicks the button/link    link=Project details
+    ${project_details_not_completed}    ${value}=    run keyword and ignore error without screenshots    the user should not see the element    css=#project-address-status.yes
+    run keyword if    '${project_details_not_completed}' == 'PASS'    the users fill in project details
+
+
+the users fill in project details
+    the lead partner fills in project details
+    the academic partner fills in their finance contact
+    the industrial partner fills in their finance contact
+
+
+the lead partner fills in project details
+    the user clicks the button/link    link=Target start date
+    the user enters text to a text field    id=projectStartDate_month    1
+    the user enters text to a text field     id=projectStartDate_year    ${nextyear}
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    link=Project address
+    the user selects the radio button    addressType    REGISTERED
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    link=Project Manager
+    the user selects the radio button    projectManager    60
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    the user clicks the button/link    jQuery=.button:contains("Submit")
+    the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    the user selects the radio button    financeContact    55
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
+
+
+the academic partner fills in their finance contact
+    log in as a different user    &{collaborator2_credentials}
+    the user navigates to the page    ${project_in_setup_page}
+    the user clicks the button/link   link=Project details
+    the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+    the user selects the radio button    financeContact    57
+    the user clicks the button/link    jQuery=.button:contains("Save")
+
+
+the industrial partner fills in their finance contact
+    log in as a different user    &{collaborator1_credentials}
+    the user navigates to the page    ${project_in_setup_page}
+    the user clicks the button/link   link=Project details
+    the user clicks the button/link    link=${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    the user selects the radio button    financeContact    56
+    the user clicks the button/link    jQuery=.button:contains("Save")
+    the user closes the browser
