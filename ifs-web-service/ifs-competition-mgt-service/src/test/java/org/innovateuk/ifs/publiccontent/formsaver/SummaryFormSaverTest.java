@@ -56,4 +56,28 @@ public class SummaryFormSaverTest {
         verify(publicContentService).updateSection(resource, PublicContentSectionType.SUMMARY);
 
     }
+
+    @Test
+    public void testSaveWithNoContentGroups() {
+        SummaryForm form = new SummaryForm();
+        form.setDescription(DESCRIPTION);
+        form.setFundingType(FUNDING_TYPE.getDisplayName());
+        form.setProjectSize(PROJECT_SIZE);
+
+        PublicContentResource resource = newPublicContentResource().
+                withContentSections(
+                        newPublicContentSectionResource()
+                                .withType(PublicContentSectionType.SUMMARY)
+                                .build(1)
+                ).build();
+
+        target.save(form, resource);
+
+        assertThat(resource.getSummary(), equalTo(DESCRIPTION));
+        assertThat(resource.getFundingType(), equalTo(FUNDING_TYPE));
+        assertThat(resource.getProjectSize(), equalTo(PROJECT_SIZE));
+
+        verify(publicContentService).updateSection(resource, PublicContentSectionType.SUMMARY);
+
+    }
 }

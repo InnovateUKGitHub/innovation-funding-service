@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
@@ -103,8 +101,14 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Override
     public ServiceResult<PublicContentItemResource> byCompetitionId(Long id) {
-        //TODO : INFUND-7484
-        throw new NotImplementedException("Not implemented yet");
+        Competition competition = competitionRepository.findById(id);
+        PublicContent publicContent = publicContentRepository.findByCompetitionId(id);
+
+        if(null == competition || null == publicContent) {
+            return ServiceResult.serviceFailure(new Error(GENERAL_NOT_FOUND));
+        }
+
+        return ServiceResult.serviceSuccess(mapPublicContentToPublicContentItemResource(publicContent, competition));
     }
 
     private List<String> separateSearchStringToList(String searchString) {
@@ -115,12 +119,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         List<Long> competitionIds = new ArrayList<>();
 
         innovationAreaId.ifPresent(id -> {
-            InnovationArea innovationArea = innovationAreaRepository.findOne(id);
-            if(null != innovationArea) {
-                competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getSector().getId()).stream()
-                        .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
-                        .collect(Collectors.toList()));
-            }
+            competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(id).stream()
+                    .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
+                    .collect(Collectors.toList()));
         });
 
         return competitionIds;

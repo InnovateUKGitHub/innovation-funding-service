@@ -10,21 +10,15 @@ import java.util.List;
  */
 public class AvailableAssessorRowViewModel extends InviteAssessorsRowViewModel {
 
-    private Long id;
     private String email;
     private BusinessType businessType;
     private boolean added;
 
     public AvailableAssessorRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, BusinessType businessType, boolean added) {
-        super(name, innovationAreas, compliant);
-        this.id = id;
+        super(id, name, innovationAreas, compliant);
         this.email = email;
         this.businessType = businessType;
         this.added = added;
-    }
-
-    public Long getId() {
-        return id;
     }
 
     public String getEmail() {

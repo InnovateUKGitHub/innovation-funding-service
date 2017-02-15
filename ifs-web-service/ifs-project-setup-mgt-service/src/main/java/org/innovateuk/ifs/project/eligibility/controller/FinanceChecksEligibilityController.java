@@ -10,6 +10,7 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.application.viewmodel.BaseSectionViewModel;
+import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -18,8 +19,8 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.ProjectService;
-import org.innovateuk.ifs.project.eligibility.form.FinanceChecksEligibilityForm;
-import org.innovateuk.ifs.project.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
+import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEligibilityForm;
+import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
@@ -45,7 +46,9 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 
@@ -137,7 +140,7 @@ public class FinanceChecksEligibilityController {
         model.addAttribute("summaryModel", new FinanceChecksEligibilityViewModel(eligibilityOverview, organisation.getName(), project.getName(),
                 application.getFormattedId(), isLeadPartnerOrganisation, project.getId(), organisation.getId(),
                 eligibilityApproved, eligibility.getEligibilityRagStatus(), eligibility.getEligibilityApprovalUserFirstName(),
-                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate()));
+                eligibility.getEligibilityApprovalUserLastName(), eligibility.getEligibilityApprovalDate(), false));
 
         model.addAttribute("eligibilityForm", eligibilityForm);
         model.addAttribute("form", form);
@@ -221,9 +224,21 @@ public class FinanceChecksEligibilityController {
 
         ValidationMessages saveErrors = financeHandler.getProjectFinanceFormHandler(organisationType).update(request, organisationId, projectId, competitionId);
 
+        removeCapitalUsageExistingErrors(saveErrors);
+
         errors.addAll(saveErrors);
 
         return errors;
+    }
+
+    /**
+     * INFUND-2921, INFUND-4834 - This can be removed once capital usage existing or new field is handled correctly.
+     */
+    private void removeCapitalUsageExistingErrors(ValidationMessages errors){
+        if(errors != null && errors.hasErrors()) {
+            List<Error> filtered = errors.getErrors().stream().filter(e -> !e.getFieldName().contains("-existing")).collect(toList());
+            errors.setErrors(filtered);
+        }
     }
 
     private String getRedirectUrlToEligibility(Long projectId, Long organisationId){

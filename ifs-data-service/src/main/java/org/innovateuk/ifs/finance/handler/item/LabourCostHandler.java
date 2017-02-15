@@ -26,7 +26,7 @@ public class LabourCostHandler extends FinanceRowHandler {
     @Override
     public void validate(FinanceRowItem costItem, BindingResult bindingResult) {
         LabourCost labourCost = (LabourCost) costItem;
-        if(StringUtils.isNotEmpty(labourCost.getName()) && labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_KEY)){
+        if(StringUtils.isNotEmpty(labourCost.getName()) && (labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_KEY) || labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_PER_YEAR))){
             super.validate(costItem, bindingResult, LabourCost.YearlyWorkingDays.class);
         }else{
             super.validate(costItem, bindingResult);
