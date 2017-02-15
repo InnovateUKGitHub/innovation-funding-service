@@ -713,7 +713,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
-        existingCompetitionId.map(id -> competitionDataBuilder.
+        return existingCompetitionId.map(id -> competitionDataBuilder.
                 withExistingCompetition(1L).
                 withBasicData(line.name, line.description, line.type, line.innovationArea,
                         line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,

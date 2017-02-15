@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_SECTO
 import static org.innovateuk.ifs.category.resource.CategoryType.RESEARCH_CATEGORY;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
@@ -168,13 +169,14 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void test_searchCompetitions() throws Exception {
         String searchQuery = "SearchQuery";
         String searchLike = "%" + searchQuery + "%";
+        String competitionType = "Comp type";
         int page = 1;
         int size = 20;
         PageRequest pageRequest = new PageRequest(page, size);
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
         when(queryResponse.getTotalElements()).thenReturn(totalElements);
         when(queryResponse.getTotalPages()).thenReturn(totalPages);
         when(queryResponse.getNumber()).thenReturn(page);
@@ -190,7 +192,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, "Comp Type",0,null);
+                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType,0,null);
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 
