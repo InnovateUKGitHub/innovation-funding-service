@@ -67,7 +67,8 @@
                             <th:block th:with="userOrganisation=(${model.application.userOrganisation}), subSections=(${model.subSections}),
                                             markedAsComplete=(${model.application.markedAsComplete}), formInput=(${formInput}), currentSectionId=(${model.currentSectionId}),
                                             subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
-                                            currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection})">
+                                            currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
+                                            currentApplication=(${model.application.currentApplication}), userIsLeadApplicant=(${model.userIsLeadApplicant})">
                                 <th:block th:if="${formInput.type.displayableQuestionType}">
                                     <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                                 </th:block>
