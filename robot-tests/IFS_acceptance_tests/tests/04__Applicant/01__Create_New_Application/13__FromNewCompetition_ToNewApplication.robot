@@ -10,7 +10,7 @@ Suite Setup    Custom Suite Setup
 Force Tags     Applicant  CompAdmin
 Resource       ../../../resources/defaultResources.robot
 Resource       ../FinanceSection_Commons.robot
-Resource       ../../02__Competition_setup/CompAdmin_Commons.robot
+Resource       ../../02__Competition_Setup/CompAdmin_Commons.robot
 
 *** Variables ***
 ${compWithoutGrowth}    From new Competition to New Application
