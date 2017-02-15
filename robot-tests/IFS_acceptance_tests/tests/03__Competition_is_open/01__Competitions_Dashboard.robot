@@ -8,7 +8,7 @@ Documentation     INFUND-7358 Inflight competition dashboards: Ready to open das
 ...               INFUND-7560 Inflight competition dashboards- Viewing key statistics for 'Ready to Open', 'Open', 'Closed' and 'In assessment' competition states
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
-Force Tags        CompAdmin    Assessor
+Force Tags        CompAdmin
 Resource          ../../resources/defaultResources.robot
 Resource          ../02__Competition_setup/CompAdmin_Commons.robot
 
@@ -37,8 +37,8 @@ Milestones for the Open Competitions
 
 Key statistics for the open Competitions
     [Documentation]    INFUND-7560
-    [Setup]    Get the expected values for the counts
-    Then the coults should be correct
+    [Setup]    Get the expected values for the open counts
+    Then the counts of the open competition should be correct
 
 Competition dashboard ready to Open competition
     [Documentation]    INFUND-7358
@@ -59,16 +59,21 @@ Competition dashboard ready to Open competition
     And the user should see the element    jQuery=a:contains("Manage applications")[aria-disabled="true"]
     And the user should see the element    jQuery=a:contains("Applications")[aria-disabled="true"]
 
-Milestones for the ready to Open Competitons
+Milestones for the ready to Open Competitions
     [Documentation]    INFUND-7561
     Then the user should see the element    css=li:nth-child(1).not-done    #This keyword verifies that the first Milestone is not done
     And the user should see the element    css=li:nth-child(13).not-done    #This keyword verifies that the last Milestone is not done
 
+Key statistics for the Ready to Open Competitions
+    [Documentation]    INFUND-7560
+    [Setup]    Get the expected values for the Ready to open counts
+    Then the counts of the Ready to open statistics should be correct
+
 *** Keywords ***
-Get the expected values for the counts
+Get the expected values for the open counts
     The user clicks the button/link    jQuery=.button:contains(Invite assessors)
-    ${IInvited}=    Get text    css=div:nth-child(1) > div > span
-    Set Test Variable    ${IInvited}
+    ${Invited}=    Get text    css=div:nth-child(1) > div > span
+    Set Test Variable    ${Invited}
     ${Accepted}=    Get text    css=div:nth-child(2) > div > span
     Set Test Variable    ${Accepted}
     The user clicks the button/link    link=Competition
@@ -83,8 +88,30 @@ Get the expected values for the counts
     The user clicks the button/link    link=Applications
     The user clicks the button/link    link=Competition
 
-the coults should be correct
+the counts of the open competition should be correct
     ${INVITED_COUNT}=    Get text    css=ul:nth-child(3) > li:nth-child(1) > div > span
-    Should Be Equal As Integers    ${INVITED_COUNT}    ${IInvited}
+    Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
+    ${ACCEPTED_COUNT}=    Get text    css=ul:nth-child(3) > li:nth-child(2) > div > span
+    Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
+    ${STARTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .heading-large
+    Should Be Equal As Integers    ${Applications started}    ${STARTED_COUNT}
+    ${BEYOND_50)_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(2) .heading-large
+    Should Be Equal As Integers    ${Applications_Beyond_50}    ${BEYOND_50)_COUNT}
+    ${SUBMITTED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(3) .heading-large
+    Should Be Equal As Integers    ${SUBMITTED_COUNT}    ${Applications submitted}
+    ${APPLICATIONS_PER_ASSESSOR}=    Get text    css=ul:nth-child(3) > li:nth-child(3) > div > span
+    Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
+
+Get the expected values for the Ready to open counts
+    The user clicks the button/link    jQuery=.button:contains(Invite assessors)
+    ${Invited}=    Get text    css=div:nth-child(1) > div > span
+    Set Test Variable    ${Invited}
+    ${Accepted}=    Get text    css=div:nth-child(2) > div > span
+    Set Test Variable    ${Accepted}
+    The user clicks the button/link    link=Competition
+
+the counts of the Ready to open statistics should be correct
+    ${INVITED_COUNT}=    Get text    css=ul:nth-child(3) > li:nth-child(1) > div > span
+    Should Be Equal As Integers    ${INVITED_COUNT}    ${Invited}
     ${ACCEPTED_COUNT}=    Get text    css=ul:nth-child(3) > li:nth-child(2) > div > span
     Should Be Equal As Integers    ${ACCEPTED_COUNT}    ${Accepted}
