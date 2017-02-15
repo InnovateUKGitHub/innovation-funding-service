@@ -4,7 +4,7 @@ import org.innovateuk.ifs.competition.viewmodel.publiccontent.AbstractPublicCont
 
 
 /**
- * View model for the Scope section.
+ * View model for the How to apply section.
  */
-public class ScopeViewModel extends AbstractPublicContentGroupViewModel {
+public class HowToApplyViewModel extends AbstractPublicContentGroupViewModel {
 }

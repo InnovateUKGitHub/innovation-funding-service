@@ -81,91 +81,10 @@
     </section>
 </th:block>
 
-<!-- ===========================Prototype Front door competition supporting information  =========================== -->
-
-<th:block th:fragment="prototype-front-door-competition-content-supportingInformation">
+<!-- ===========================Front door - competition how to apply  ============================ -->
+<th:block th:fragment="how-to-apply(section, competitionId)">
     <section>
-
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">Background and further information</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p>Technology is transforming our lives and brings great opportunity. The UK is strong in fundamental research across many different disciplines. However, we sometimes struggle to fully commercialise the opportunities. The most promising emerging technologies and industries need to be guided through the innovation process to market success.</p>
-                <p>Enabling technologies or capabilities have the potential to make a difference in many sectors. Yet, they can be slow to spread through target industries. They need support to realise that potential. Some might need to be tailored to excel in the most important markets and sectors.</p>
-                <p>The government’s Emerging Technologies and Industries strategy aims to provide investment to help companies explore the potential of completely new technologies in their particular markets. It aims to disrupt markets and bring the potential for significant commercial results. Small early investments are followed by increased financial and wider support. This can be seen in areas with very high potential, such as quantum technologies.</p>
-                <p>The Enabling and Enabling Technologies programme brings together technology and end users to enhance productivity and efficiency across the UK economy. The programme provides opportunities for innovative companies to develop and use multiple technologies. Applications include disrupting markets and finding new sales routes. This could be through well-established systems integrators and manufacturers.</p>
-                <p>In 2016 and 2017 the programme will support companies through investments such as this competition. We will invest in enabling technologies by concentrating on innovative applications and/or service-led solutions in the areas of cybersecurity, data, satellite earth observation, electronics, sensors, photonics, the internet of things and robotics and autonomous systems.</p>
-                <p>The Emerging and Enabling Technologies sector group supports the Digital Catapult and Satellite Application and is establishing a new Compound Semiconductor Applications Catapult in Wales. Companies wishing to access the available equipment and expertise are invited to partner with the Catapults in this competition.</p>
-                <p>If you want help to find a project partner, contact the Knowledge Transfer Network.</p>
-            </div>
-        </div>
-
-    </section>
-</th:block>
-
-<!-- ===========================Prototype Front door competition how to apply  =========================== -->
-
-<th:block th:fragment="prototype-front-door-competition-content-howToApply">
-    <section>
-
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">How to apply</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p>The lead applicant must register for an account using the link on this page. This will start the application process. During this process the lead applicant will be able to invite all other collaborators. Collaborators will be sent a link, which will help them to create an account and give them access to the application.</p>
-            </div>
-        </div>
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">The application process</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p>The application process uses a collaborative, online form. Application progress can be saved and resumed at a later date without being submitted.</p>
-                <p>For more information on the online application form <a href="#">visit our general guidance for applicants.</a></p>
-                <p>External, independent experts assess the quality your application. We will then select the projects that we fund, to build a portfolio of projects as described in the competition guidance for applicants. Please read this carefully before you apply.</p>
-                <p>All applicants will receive feedback from the experts, so they can understand their assessment.</p>
-            </div>
-        </div>
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">Application questions</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p>Application questions are available for reference and to assist with preparation.</p>
-                <p><a href="/prototypes/6064-what-we-ask">View questions for the competition</a></p>
-            </div>
-        </div>
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">Competition contact</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p>If you need more information, contact the competition helpline on 0300 321 4357 or email us at support@innovateuk.gov.uk</p>
-            </div>
-        </div>
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">Rules</h3>
-            </div>
-            <div class="column-two-thirds">
-                <ul class="extra-margin-bottom">
-                    <li><a href="#">Funding rules</a></li>
-                    <li><a href="#">Information security and confidentiality</a></li>
-                    <li><a href="#">Assessor confidentiality and potential conflicts of interest</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="grid-row">
-            <div class="column-third">
-                <h3 class="heading-medium no-margin">Application link</h3>
-            </div>
-            <div class="column-two-thirds">
-                <p><a href="#" class="button">Start or continue your application</a></p>
-            </div>
-        </div>
-
+        <th:block th:include="competition/section/fragments :: content-group(section=${section}, competitionId=${competitionId})"/>
     </section>
 </th:block>
 

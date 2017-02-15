@@ -3,23 +3,23 @@ package org.innovateuk.ifs.competition.populator.publiccontent.section;
 
 import org.innovateuk.ifs.competition.populator.publiccontent.AbstractPublicContentGroupViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
-import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.ScopeViewModel;
+import org.innovateuk.ifs.competition.viewmodel.publiccontent.section.HowToApplyViewModel;
 import org.springframework.stereotype.Service;
 
 /**
- * Populates a public content scope view model.
+ * Populates a public content how to apply view model.
  */
 
 @Service
-public class ScopeViewModelPopulator extends AbstractPublicContentGroupViewModelPopulator<ScopeViewModel> {
+public class HowToApplyViewModelPopulator extends AbstractPublicContentGroupViewModelPopulator<HowToApplyViewModel> {
 
     @Override
-    protected ScopeViewModel createInitial() {
-        return new ScopeViewModel();
+    protected HowToApplyViewModel createInitial() {
+        return new HowToApplyViewModel();
     }
 
     @Override
     public PublicContentSectionType getType() {
-        return PublicContentSectionType.SCOPE;
+        return PublicContentSectionType.HOW_TO_APPLY;
     }
 }
