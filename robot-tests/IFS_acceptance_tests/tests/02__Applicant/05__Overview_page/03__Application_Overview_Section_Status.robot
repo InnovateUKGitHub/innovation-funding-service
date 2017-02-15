@@ -34,6 +34,6 @@ Blue flag shows after marking a question as incomplete
 
 Green check shows when finances are marked as complete
     [Documentation]    INFUND-1733
-    [Tags]
+    [Tags]          Pending
     Given the Application details are completed
     Then the user marks the finances as complete

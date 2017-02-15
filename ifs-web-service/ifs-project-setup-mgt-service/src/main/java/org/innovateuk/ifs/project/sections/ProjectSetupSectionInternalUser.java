@@ -96,6 +96,11 @@ public class ProjectSetupSectionInternalUser {
         return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
     }
 
+    public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
+        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
+    }
+
+
     private SectionAccess fail(String message) {
         LOG.info(message);
         return NOT_ACCESSIBLE;

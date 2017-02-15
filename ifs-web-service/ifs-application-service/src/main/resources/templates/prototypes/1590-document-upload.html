@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${(param.user != null and param.user[0] == 'nonLead' ?  '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})" th:remove="tag" th:unless="${param.status != null and param.status[0] == 'submitted'}"/>
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${(param.user != null and param.user[0] == 'nonLead' ?  '/prototypes/1588-project-status?user=nonLead':'/prototypes/1588-project-status')})"  th:unless="${param.status != null and param.status[0] == 'submitted'}"/>
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status?stage=level2'})" th:remove="tag" th:if="${param.status != null and param.status[0] == 'submitted'}"/>
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project status'}, ${'/prototypes/1588-project-status?stage=level2'})"  th:if="${param.status != null and param.status[0] == 'submitted'}"/>
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Other documents'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Other documents'})" />
 
 	<th:block th:if="${param.status != null and param.status[0] == 'approved'}">
 		<div class="success-alert extra-margin-bottom">
@@ -233,11 +233,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 <script type="text/javascript">
 	// <![CDATA[
