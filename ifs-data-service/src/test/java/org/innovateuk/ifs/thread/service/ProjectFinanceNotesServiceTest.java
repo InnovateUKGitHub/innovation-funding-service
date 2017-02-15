@@ -2,7 +2,7 @@ package org.innovateuk.ifs.thread.service;
 
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
-import org.innovateuk.ifs.project.finance.service.NotesServiceImpl;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Note;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.threads.resource.NoteResource;
@@ -22,7 +22,7 @@ import static org.mockito.Mockito.when;
 public class ProjectFinanceNotesServiceTest extends BaseUnitTestMocksTest {
 
     @InjectMocks
-    private NotesServiceImpl service;
+    private ProjectFinanceNotesServiceImpl service;
 
     @Test
     public void test_findOne() throws Exception {
