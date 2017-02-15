@@ -153,7 +153,7 @@ public class FinanceChecksViabilityController {
         return new FinanceChecksViabilityViewModel(organisationName, leadPartnerOrganisation,
                 totalCosts, percentageGrant, fundingSought, otherPublicSectorFunding, contributionToProject,
                 companyRegistrationNumber, turnover, headCount, organisationSize, projectId, viabilityConfirmed,
-                viabilityConfirmed, approver, approvalDate);
+                viabilityConfirmed, approver, approvalDate, organisationId);
     }
 
     private FinanceChecksViabilityForm getViabilityForm(Long projectId, Long organisationId) {
