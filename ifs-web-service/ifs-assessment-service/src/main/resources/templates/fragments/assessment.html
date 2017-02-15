@@ -38,7 +38,7 @@
             <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
         </nav>
         <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
-            <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
+            <th:block th:insert="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" />
         </div>
     </div>
 </div>
@@ -115,8 +115,8 @@
 <!-- ======== Assessor - reject competition modal ======= -->
 <div th:fragment="assessor-reject-competition-modal (inviteHash)">
     <div class="reject-competition-modal" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
-        <div th:include="fragments/assessment :: assessor-reject-competition-form (inviteHash=${inviteHash})" th:remove="tag" />
+        <th:block th:insert="fragments/modals :: close-button" />
+        <th:block th:insert="fragments/assessment :: assessor-reject-competition-form (inviteHash=${inviteHash})" />
     </div>
 </div>
 
@@ -163,7 +163,7 @@
                       rows="4"
                       th:field="*{rejectComment}"></textarea>
             <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
-                <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
         <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
@@ -174,9 +174,9 @@
 <!-- ======== Assessment - reject assessment modal ======= -->
 <div th:fragment="assessment-reject-assessment-modal (assessmentId)">
     <div class="reject-assessment-modal" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <th:block th:insert="fragments/modals :: close-button" />
 
-        <div th:include="fragments/assessment :: assessment-reject-application-form (assessmentId=${assessmentId})" th:remove="tag" />
+        <th:block th:insert="fragments/assessment :: assessment-reject-application-form (assessmentId=${assessmentId})" />
     </div>
 </div>
 
@@ -227,7 +227,7 @@
                 rows="4"
                 th:field="*{rejectComment}"></textarea>
             <div class="textarea-footer" th:with="rejectComment=*{rejectComment}">
-                <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" th:remove="tag"/>
+                <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
         <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
@@ -238,7 +238,7 @@
 <!-- ======== Confirmation assessment submissions ======= -->
 <div th:fragment="modal-submit-assessments">
     <div class="modal-submit-assessments" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <th:block th:insert="fragments/modals :: close-button" />
 
         <h2 class="heading-medium no-margin">You are about to submit your assessments.</h2>
         <p>You will not be able to edit after you submit. Are you sure you want to continue?</p>

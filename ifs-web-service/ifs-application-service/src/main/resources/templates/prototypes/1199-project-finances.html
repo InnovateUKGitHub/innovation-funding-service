@@ -8,20 +8,20 @@
 
 <body class="project-setup">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition dashboard'}, ${'/prototypes/4151-admin-competition-dash'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Finance checks'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Project details'}, ${'Finance checks'})" />
 
-	<!-- <div th:include="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" th:remove="tag" /> -->
+	<!-- <th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-navigation" th:with="page='project-setup', status='closed'" /> -->
 
 	<hr />
 
@@ -186,7 +186,7 @@
 
 		<h3 class="heading-medium">Generate spend profile</h3>
 
-		<p>To generate your spend profile, the viability and eligibility sections must be approved for all partners. This will create their individual flat spend profiles. These spend profils can be edited during the project.</p>
+		<p>To generate your spend profile, the viability and eligibility sections must be approved for all partners. This will create their individual flat profile spends. These profile spends can be edited during the project.</p>
 
 		<a href="#" class="button button-large" data-js-modal="generate-spend-profile">Generate spend profile</a>
 
@@ -196,7 +196,7 @@
 
 				<h2 class="heading-medium no-margin">Generate spend profile</h2>
 
-				<p>This will generate a flat spend profile for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
+				<p>This will generate a flat profile spend for all project partners. This assumes that finance checks have been completed for all partners and this section will be locked.</p>
 
 				<p>Partners will be notified that they can now create their spend profile.</p>
 
@@ -220,11 +220,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 <script type="text/javascript">

@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
 </head>
 <body th:with="context='project-management'" class="competition-management finance-checks-overview">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start" />
+  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
           <div class="page-title">
-              <div th:include="fragments/competition-management :: competition-id-and-name(${model.financeCheckSummaryResource.competitionId}, ${model.financeCheckSummaryResource.competitionName})" th:remove="tag" />
+              <th:block th:insert="fragments/competition-management :: competition-id-and-name(${model.financeCheckSummaryResource.competitionId}, ${model.financeCheckSummaryResource.competitionName})" />
               <h1 class="heading-xlarge">Finance checks</h1>
           </div>
       </div>
@@ -120,11 +120,11 @@
         <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"  th:include="fragments/modals :: generate-spend-profile" />
     </form>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>
