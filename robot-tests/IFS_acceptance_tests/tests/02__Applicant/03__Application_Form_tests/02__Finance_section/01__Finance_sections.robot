@@ -90,7 +90,7 @@ Non-academic partner finance section
     [Tags]    HappyPath
     [Setup]  Log in as a different user     &{collaborator1_credentials}
     Given the user navigates to Your-finances page     Providing sustainable childcare
-    Then The user should see the element      link=Not requesting funding
+    Then The user should see the element      JQuery=span.summary:contains("Not requesting funding")
     and the user should see the element     link=Your project costs
     and the user should see the element     link=Your organisation
     and the user should not see the element     link=Your funding
