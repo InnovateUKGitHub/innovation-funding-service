@@ -916,9 +916,8 @@
                                    value="New"
                                    required="required"
                                    th:checked="${cost.existing == 'New'}"
-                                   th:disabled="${viewmode == 'readonly'}">
+                                   th:disabled="${viewmode == 'readonly'}" />
                             New
-                            </input>
                         </label>
                         <label class="block-label selection-button-radio selection-button-radio">
                             <input th:id="${'cost-capital_usage-'+costIdentifier+'-existing_1'}"
@@ -927,9 +926,8 @@
                                    value="Existing"
                                    required="required"
                                    th:checked="${cost.existing == 'Existing'}"
-                                   th:disabled="${viewmode == 'readonly'}">
+                                   th:disabled="${viewmode == 'readonly'}" />
                             Existing
-                            </input>
                         </label>
                     </fieldset>
                 </div>
