@@ -1,24 +1,22 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorTemplate;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.util.Either;
-import org.apache.juli.logging.Log;
-import org.apache.juli.logging.LogFactory;
 
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static org.innovateuk.ifs.util.Either.left;
-import static org.innovateuk.ifs.util.Either.right;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a ServiceFailure, and a

@@ -2,20 +2,22 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="app-dashboard">
 
-    <div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-    <div th:include="fragments/layout :: body-start" th:remove="tag" />
-    <div th:include="fragments/layout :: global-header" th:remove="tag" />
+    <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+    <th:block th:insert="fragments/layout :: body-start" />
+    <th:block th:insert="fragments/layout :: global-header" />
 
 
     <main id="content">
         <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-        <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+
+        <th:block th:unless="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" />
+        <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}" th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Your dashboard'}, ${'/prototypes/675-dashboard'})" />
 
         <!-- HARDCODED PROTOTYPE HTML -->
 
@@ -24,16 +26,20 @@
           Application team
         </h1>
 
-        <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project.</p>
+        <p>View and manage your participants in the application. If an individual is ‘pending’ they have not yet joined the application.</p>
 
         <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
           <div class="message-alert">
-            <h2 class="heading-medium no-margin-bottom">You are the lead applicant</h2>
-            As the lead applicant you can add partner organisations and collaborators in the section below, you can also manage collaborators and assign questions from the application form.
+            <h2 class="heading-medium no-margin-bottom">As the lead applicant you can:</h2>
+            <ul class="list-bullet">
+              <li>add collaborating and contributing organisations and individuals</li>
+              <li>manage organisations and individuals</li>
+              <li>assign questions to individuals</li>
+            </ul>
           </div>
         </th:block>
 
-        <p th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant for this application please contact Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
+        <p th:unless="${param.status != null and param.status[0] == 'firstLoad'}">To change the lead applicant please email Innovate UK <a href="mailto:support@innovate.gov.uk">support@innovate.gov.uk</a>.</p>
 
         <div class="table-display-stacked">
 
@@ -63,7 +69,7 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'empire'}">
             <p>
-              <a th:href="${'/prototypes/7661-edit-org?company=empire' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}">Edit Empire Ltd</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=empire' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status='+ param.status[0] : '')}">Update Empire Ltd</a>
             </p>
           </th:block>
 
@@ -97,7 +103,7 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'ludlow'}">
             <p>
-              <a th:href="${'/prototypes/7661-edit-org?company=ludlow' + (param.company != null ? '&#38;user=nonLead' : '')}">Edit Ludlow</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=ludlow' + (param.company != null ? '&#38;user=nonLead' : '')}">Update Ludlow</a>
             </p>
           </th:block>
 
@@ -126,7 +132,7 @@
 
           <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'eggs'}">
             <p>
-              <a th:href="${'/prototypes/7661-edit-org?company=eggs' + (param.company != null ? '&#38;user=nonLead' : '')}">Edit EGGS</a>
+              <a th:href="${'/prototypes/7661-edit-org?company=eggs' + (param.company != null ? '&#38;user=nonLead' : '')}">Update EGGS</a>
             </p>
           </th:block>
 
@@ -134,9 +140,9 @@
 
         <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'newOrg'}">
 
-          <p class="extra-margin-top">Add any partner organisations collaborating with you on this project. Partners are responsible for creating their own account and submitting their finances</p>
+          <p class="extra-margin-top">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
 
-          <p><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add partner organisation</a></p>
+          <p><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add organisation</a></p>
 
         </th:block>
 
@@ -190,11 +196,11 @@
 
         <!-- END OFHARDCODED PROTOTYPE HTML -->
 
-        <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: main-content-end" />
     </main>
 
-    <div th:include="fragments/layout :: footer" th:remove="tag" />
-    <div th:include="fragments/layout :: body-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
 
     <script src="/js/ifs_prototype/tablesaw-init.js" type="text/javascript"></script>
     <script src="/js/ifs_prototype/tablesaw.stackonly.jquery.js" type="text/javascript"></script>

@@ -2,10 +2,10 @@ package org.innovateuk.ifs.publiccontent.formsaver.section;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.publiccontent.form.section.DatesForm;
 import org.innovateuk.ifs.publiccontent.form.section.subform.Date;
 import org.innovateuk.ifs.publiccontent.saver.section.DatesFormSaver;
-import org.innovateuk.ifs.publiccontent.service.ContentEventService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,11 +13,15 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+
 import static java.util.Arrays.asList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyList;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class DatesFormSaverTest {
@@ -28,26 +32,32 @@ public class DatesFormSaverTest {
     @Mock
     private PublicContentService publicContentService;
 
-    @Mock
-    private ContentEventService contentEventService;
-
     @Test
     public void testMarkAsComplete() {
         final Long publicContentId = 1L;
-
+        LocalDateTime localDateTime = LocalDateTime.now();
+        String content = "content";
         DatesForm form = new DatesForm();
         Date date = new Date();
-        date.setDay(1);
-        date.setMonth(2);
-        date.setYear(2017);
-        date.setContent("Content");
+        date.setDay(localDateTime.getDayOfMonth());
+        date.setMonth(localDateTime.getMonthValue());
+        date.setYear(localDateTime.getYear());
+        date.setContent(content);
         form.setDates(asList(date));
         PublicContentResource resource = newPublicContentResource()
                 .with(publicContentResource -> publicContentResource.setId(publicContentId))
                 .build();
 
+        when(publicContentService.markSectionAsComplete(resource, PublicContentSectionType.DATES)).thenReturn(ServiceResult.serviceSuccess());
+
         ServiceResult<Void> result = target.markAsComplete(form, resource);
 
-        verify(contentEventService).resetAndSaveEvents(any(PublicContentResource.class), anyList());
+        assertThat(result.isSuccess(), equalTo(true));
+
+        verify(publicContentService).markSectionAsComplete(resource, PublicContentSectionType.DATES);
+
+        assertThat(resource.getContentEvents().size(), equalTo(1));
+        assertThat(resource.getContentEvents().get(0).getDate(), equalTo(LocalDateTime.of(localDateTime.toLocalDate(), LocalTime.MIDNIGHT)));
+        assertThat(resource.getContentEvents().get(0).getContent(), equalTo(content));
     }
 }

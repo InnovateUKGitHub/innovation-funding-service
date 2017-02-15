@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="app-dashboard">
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -106,7 +106,7 @@
 			<ul>
 				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
+						<h4 class="heading-small"><a href="/prototypes/635-application-overview#">Providing sustainable childcare</a></h4>
             <ul class="application-details">
               <li>Application number: 0000002</li>
               <li>Competition: Technology inspired</li>
@@ -119,7 +119,7 @@
 				</li>
 				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
+						<h4 class="heading-small"><a href="/prototypes/635-application-overview">Providing sustainable childcare</a></h4>
             <ul class="application-details">
               <li>Application number: 0000008</li>
               <li>Competition: Technology inspired</li>
@@ -136,7 +136,7 @@
 				</li>
 				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="#">A new innovative solution</a></h4>
+						<h4 class="heading-small"><a href="/prototypes/635-application-overview">A new innovative solution</a></h4>
             <ul class="application-details">
               <li>Application number: 0000005</li>
               <li>Competition: Technology inspired</li>
@@ -283,11 +283,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
 
 	jQuery('input#address-same').on('click',function(e){

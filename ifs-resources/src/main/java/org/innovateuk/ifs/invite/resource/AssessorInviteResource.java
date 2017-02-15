@@ -11,6 +11,7 @@ import java.util.List;
  */
 public abstract class AssessorInviteResource {
 
+    private Long id;
     private String name;
     private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;
@@ -19,10 +20,19 @@ public abstract class AssessorInviteResource {
     protected AssessorInviteResource() {
     }
 
-    protected AssessorInviteResource(String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
+    protected AssessorInviteResource(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
+        this.id = id;
         this.name = name;
         this.innovationAreas = innovationAreas;
         this.compliant = compliant;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -59,6 +69,7 @@ public abstract class AssessorInviteResource {
 
         return new EqualsBuilder()
                 .append(compliant, that.compliant)
+                .append(id, that.id)
                 .append(name, that.name)
                 .append(innovationAreas, that.innovationAreas)
                 .isEquals();
@@ -67,6 +78,7 @@ public abstract class AssessorInviteResource {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(name)
                 .append(innovationAreas)
                 .append(compliant)

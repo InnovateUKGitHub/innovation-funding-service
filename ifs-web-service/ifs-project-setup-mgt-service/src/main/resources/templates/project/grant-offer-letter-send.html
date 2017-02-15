@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml" xmlns="http://www.w3.org/1999/html">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Grant Offer Letter'" />
 </head>
 <body th:with="context='project-management'" class="project-management grant-offer-letter">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-accept-send-gol" th:remove="tag"/>
-<div th:include="fragments/modals :: modal-accept-signed-gol" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
+<th:block th:insert="fragments/modals :: modal-accept-send-gol" />
+<th:block th:insert="fragments/modals :: modal-accept-signed-gol" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
 
     <div class="grid-row">
         <div class="column-two-thirds">
             <div class="page-title">
-                <div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+                <th:block th:insert="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" />
                 <h1 class="heading-xlarge">Grant offer letter</h1>
             </div>
         </div>
@@ -171,11 +171,11 @@
         <button data-js-modal="modal-accept-signed-gol" class="button large">Accept signed grant offer letter</button>
     </th:block>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

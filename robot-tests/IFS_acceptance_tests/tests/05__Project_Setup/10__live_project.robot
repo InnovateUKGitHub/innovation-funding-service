@@ -17,19 +17,19 @@ Project dashboard shows message that the project is live
     Then the user should see the text in the page    The project is live, you can review progress at
 
 
+
 Status indicators should not show
     [Documentation]    INFUND-6376
     [Tags]    Pending
     # TODO Pending due to INFUND-7922
-    When the user should not see the element    link=What's the status of each of my partners?
+    When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
     And the user should not see the element    css=.waiting
 
 Project details section is read-only
     [Documentation]    INFUND-6376
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7924
+    [Tags]
     When the user clicks the button/link    link=Project details
     Then the user should not see the element    link=Target start date
     And the user should not see the element    link=Project address
@@ -97,7 +97,7 @@ Status indicators should not show for industrial partner
     [Documentation]    INFUND-6376
     [Tags]    Pending
     # TODO Pending due to INFUND-7922
-    When the user should not see the element    link=What's the status of each of my partners?
+    When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
     And the user should not see the element    css=.waiting
@@ -174,7 +174,7 @@ Status indicators should not show for academic partner
     [Documentation]    INFUND-6376
     [Tags]    Pending
     # TODO Pending due to INFUND-7922
-    When the user should not see the element    link=What's the status of each of my partners?
+    When the user should not see the element    link=status of my partners
     And the user should not see the element    css.complete
     And the user should not see the element    css=.action
     And the user should not see the element    css=.waiting

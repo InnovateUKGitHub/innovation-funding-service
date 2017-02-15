@@ -16,8 +16,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -29,10 +27,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
-import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin.ALL_APPLICATIONS;
 import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -51,30 +46,6 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
     @InjectMocks
     private ApplicationSectionAndQuestionModelPopulator applicationSectionAndQuestionModelPopulator;
 
-    @Test
-    public void buildOriginQueryString() throws Exception {
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
-                "sort", asList("applicationNumber", "innovationArea")
-        ));
-
-        String result = CompetitionManagementApplicationController.buildOriginQueryString(ALL_APPLICATIONS, queryParams);
-        String expectedQuery = "?origin=ALL_APPLICATIONS&sort=applicationNumber&sort=innovationArea";
-
-        assertEquals(expectedQuery, result);
-    }
-
-    @Test
-    public void buildOriginQueryString_encodesReservedChars() throws Exception {
-        // Not exhaustive, but at least these characters should be covered
-        MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>(asMap(
-                "p", asList("&", "=", "%", " ")
-        ));
-
-        String result = CompetitionManagementApplicationController.buildOriginQueryString(ALL_APPLICATIONS, queryParams);
-        String expectedQuery = "?origin=ALL_APPLICATIONS&p=%26&p=%3D&p=%25&p=%20";
-
-        assertEquals(expectedQuery, result);
-    }
 
     @Test
     public void displayApplicationOverview() throws Exception {
@@ -153,6 +124,42 @@ public class CompetitionManagementApplicationControllerTest extends BaseControll
                 .andExpect(status().isOk())
                 .andExpect(view().name("competition-mgt-application-overview"))
                 .andExpect(model().attribute("backUrl", "/assessment/competition/" + competitionResource.getId()));
+    }
+
+    @Test
+    public void displayApplicationOverview_applicationProgressOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        long competitionId = competitionResource.getId();
+        long applicationId = applications.get(0).getId();
+
+        mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId)
+                .param("origin", "APPLICATION_PROGRESS"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionId + "/application/" + applicationId + "/assessors"));
+    }
+
+    @Test
+    public void displayApplicationOverview_fundingApplicationsOrigin() throws Exception {
+        this.setupCompetition();
+        this.setupApplicationWithRoles();
+        this.loginDefaultUser();
+        this.setupInvites();
+        this.setupOrganisationTypes();
+
+        long competitionId = competitionResource.getId();
+        long applicationId = applications.get(0).getId();
+
+        mockMvc.perform(get("/competition/" + competitionId + "/application/" + applicationId)
+                .param("origin", "FUNDING_APPLICATIONS"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition-mgt-application-overview"))
+                .andExpect(model().attribute("backUrl", "/competition/" + competitionId + "/funding"));
     }
 
     @Test

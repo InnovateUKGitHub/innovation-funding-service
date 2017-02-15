@@ -30,7 +30,7 @@ public class LabourCost implements FinanceRowItem {
     @Digits(integer = MAX_DIGITS, fraction = MAX_FRACTION, groups = Default.class, message = MAX_DIGITS_MESSAGE)
     private BigDecimal grossAnnualSalary;
 
-    @NotNull
+    @NotNull(groups = Default.class, message = NOT_BLANK_MESSAGE)
     @Min.List({
             @Min(value=1, groups = Default.class, message = VALUE_MUST_BE_HIGHER_MESSAGE),
             @Min(value=1, groups = LabourCost.YearlyWorkingDays.class, message = VALUE_MUST_BE_HIGHER_MESSAGE)
