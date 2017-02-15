@@ -1348,11 +1348,11 @@
                 <div class="form-group">
                     <table id="other-costs-table">
                         <thead>
-                        <tr>
-                            <th id="other_costs-description" scope="col" >Description and justification of the cost</th>
-                            <th id="other_costs-cost" scope="col" class="numeric">Estimated cost (£)</th>
-                            <th scope="col" th:if="${viewmode == 'edit'}"><span class="visuallyhidden">Actions</span></th>
-                        </tr>
+                            <tr>
+                                <th id="other_costs-description" scope="col" >Description and justification of the cost</th>
+                                <th id="other_costs-cost" scope="col" class="numeric">Estimated cost (£)</th>
+                                <th scope="col" th:if="${viewmode == 'edit'}"><span class="visuallyhidden">Actions</span></th>
+                            </tr>
                         </thead>
                         <tbody>
                             <th:block th:each="cost : ${costCategory.costs}">
@@ -1420,103 +1420,123 @@
 
 
     <!-- ===========================Form: Other funding=========================== -->
-    <th:block th:fragment="other_funding"
-         th:with="formInputType=${formInput.type},
-                   costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))},
-                   type=${formInput.type.nameLower}">
-
-        <div class="form-group"
-             th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
-
-
-            <h2 th:text="${question.getName()}" class="heading-medium" />
-            <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
-            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
-            <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
-
-            <fieldset class="inline" id="otherFundingShowHideToggle">
-                <legend class="visuallyhidden" th:text="${question.getName()}" />
-                <div class="form-block inline">
-
-                    <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
-                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
-                           data-target="other-funding-table">
-                        <input type="radio"
-                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
-                               th:name="${type + '-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                               value="Yes"
-                               required="required"
-                               th:checked="${costCategory.otherPublicFunding?.equals('Yes')}"
-                               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
-                                />
-                        Yes
-                    </label>
-                    <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
-                           th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
-                        <input type="radio"
-                               th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
-                               th:name="${type + '-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
-                               value="No"
-                               required="required"
-                               th:checked="${costCategory.otherPublicFunding?.equals('No')}"
-                               th:disabled="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"/>
-                        No
-                    </label>
-                </div>
-                <div id="other-funding-table">
-
-                <div class="form-group" th:attr="data-repeatable-container=${question.getId()}">
+    <th:block th:fragment="other_funding"  th:with="costCategory=${organisationFinance.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}">
+        <th:block th:with="readonly=${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+            <th:block th:if="${readonly}">
+                <h2 class="heading-medium">Other funding for this project</h2>
+                <th:block th:if="${costCategory.otherPublicFunding?.equals('No')}">
+                    <p>No other funding</p>
+                </th:block>
+                <th:block th:if="${costCategory.otherPublicFunding?.equals('Yes')}">
                     <table>
                         <thead>
                         <tr>
                             <th id="other-funding-source">Source of funding</th>
                             <th id="other-funding-date" class="width-medium">Date secured</th>
-                            <th id="other-funding-amount" class="width-medium">Funding amount (£)</th>
-                            <th th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"><span class="visuallyhidden">Actions</span></th>
+                            <th id="other-funding-amount" class="width-medium">Funding amount</th>
                         </tr>
                         </thead>
                         <tbody>
-                        <th:block th:each="cost : ${costCategory.costs}">
-                            <th:block th:insert="finance/finance :: other_funding_row" />
-                        </th:block>
+                            <tr th:each="cost : ${costCategory.costs}" th:unless="${cost.fundingAmount == null}">
+                                <th scope="row" th:text="${cost.fundingSource}">National rail</th>
+                                <td th:text="${cost.securedDate}">17 April 2016</td>
+                                <td class="numeric" th:text="'£ ' + ${cost.fundingAmount != null ? #numbers.formatInteger(cost.fundingAmount,0,'COMMA') : '0'}"></td>
+                            </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th scope="row" colspan="2">Total other funding</th>
+                                <td class="numeric" th:text="'£ ' + ${#numbers.formatInteger(costCategory.getTotal(), 0, 'COMMA')}"></td>
+                            </tr>
+                        </tfoot>
                     </table>
-                    <p class="alignright" th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
-                        <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
-                    </p>
+                </th:block>
+            </th:block>
+            <th:block th:unless="${readonly}">
+                <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costCategory.otherFundingCostItem?.id +'-otherPublicFunding]}') or #fields.hasErrors('${form.formInput['+ question.id +']}')}? 'error'">
+                    <h2 th:text="${question.getName()}" class="heading-medium"></h2>
+                    <fieldset class="inline" id="otherFundingShowHideToggle">
+                        <legend>
+                            <span class="visuallyhidden" th:text="${question.getName()}"></span>
+                            <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
+                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${question.id})" />
+                            <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding'})" />
+                        </legend>
+                        <th:block th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
+                        <div class="form-block inline">
+                            <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('Yes') ? ' selected focused' : '')}"
+                                   th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                                   data-target="other-funding-table">
+                                <input type="radio"
+                                       th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-yes'}"
+                                       th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                                       value="Yes"
+                                       required="required"
+                                       th:checked="${costCategory.otherPublicFunding?.equals('Yes')}" />
+                                Yes
+                            </label>
+                            <label th:class="${'block-label selection-button-radio'  + (costCategory.otherPublicFunding?.equals('No') ? ' selected focused' : '')}"
+                                   th:for="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}">
+                                <input type="radio"
+                                       th:id="${'cost-otherFunding-'+costCategory.otherFundingCostItem?.id+'-otherPublicFunding-no'}"
+                                       th:name="${'other_funding-otherPublicFunding-' + question.id + '-' + costCategory.otherFundingCostItem?.id}"
+                                       value="No"
+                                       required="required"
+                                       th:checked="${costCategory.otherPublicFunding?.equals('No')}" />
+                                No
+                            </label>
+                        </div>
+                        <div id="other-funding-table">
+                            <div class="form-group" th:attr="data-repeatable-container=${question.getId()}">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th scope="col" id="other-funding-source">Source of funding</th>
+                                            <th scope="col" id="other-funding-date" class="width-medium">Date secured</th>
+                                            <th scope="col" id="other-funding-amount" class="width-medium">Funding amount (£)</th>
+                                            <th scope="col"><span class="visuallyhidden">Actions</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <th:block th:each="cost : ${costCategory.costs}">
+                                            <th:block th:insert="finance/finance :: other_funding_row" />
+                                        </th:block>
+                                    </tbody>
+                                </table>
+                                <p class="alignright">
+                                    <th:block th:insert="question-type/types :: add_row(text='Add another source of funding', question=${question},rowcontainer='#other-funding-table tbody')" />
+                                </p>
+                            </div>
+                            <div class="form-group alignright inline">
+                                <label for="other-funding-total">Total other funding</label>
+                                <input class="form-control form-control-1-4 alignright"
+                                       data-calculation-fields="[id*=fundingAmount]"
+                                       data-calculation-operations="+"
+                                       id="other-funding-total"
+                                       th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
+                                       readonly="readonly"
+                                       type="text"
+                                       th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
+                            </div>
+                        </div>
+                    </fieldset>
                 </div>
-                <div class="form-group alignright inline">
-                    <label for="other-funding-total">Total other funding</label>
-                    <input class="form-control form-control-1-4 alignright"
-                           data-calculation-fields="[id*=fundingAmount]"
-                           data-calculation-operations="+"
-                           id="other-funding-total"
-                           th:attr="data-calculation-rawvalue=${costCategory.getTotal()}"
-                           readonly="readonly"
-                           type="text"
-                           th:value="'£ ' + ${#numbers.formatDecimal(costCategory.getTotal(), 0, 'COMMA', 0, 'POINT')}" />
-
-                </div>
-              </div>
-
-            </fieldset>
-        </div>
+            </th:block>
+        </th:block>
     </th:block>
 
     <th:block th:fragment="other_funding_row">
         <th:block th:with="costIdentifier=${(cost.id == null) ? 'unsaved' + T(java.util.UUID).randomUUID().toString().replaceAll('-','') : cost.id}">
             <tr th:id="${'cost-'+costIdentifier}" th:attr="data-repeatable-row=${costIdentifier}">
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'error' : ''">
-                    <label th:for="${'cost-'+type+'-'+costIdentifier+'-source'}">
+                    <label th:for="${'cost-other_funding-'+costIdentifier+'-source'}">
                           <span class="visuallyhidden">Source of funding</span>
                           <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingSource'})" />
                     </label>
                     <input type="text"
-                           th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${type +'-fundingSource-' + question.id + '-' + costIdentifier}"
                            class="form-control width-full"
-                           th:id="${'cost-'+type+'-'+costIdentifier+'-source'}"
+                           th:id="${'cost-other_funding-'+costIdentifier+'-source'}"
                            th:value="${cost.fundingSource}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingSource]}')} ? 'field-error' : ''"
                            required="required"
@@ -1524,17 +1544,16 @@
                            th:attr="data-required-errormessage=#{validation.finance.funding.source.blank}" />
                 </td>
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-securedDate]}')} ? 'error' : ''">
-                    <label th:for="${'cost-'+type+'-'+costIdentifier+'-date'}">
+                    <label th:for="${'cost-other_funding-'+costIdentifier+'-date'}">
                       <span class="visuallyhidden">Date secured</span>
                       <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-securedDate'})" />
                     </label>
                     <input type="text"
-                           th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${type +'-securedDate-' + question.id + '-' + costIdentifier}"
                            class="form-control width-medium"
-                           th:id="${'cost-'+type+'-'+costIdentifier+'-date'}"
+                           th:id="${'cost-other_funding-'+costIdentifier+'-date'}"
                            placeholder="MM-YYYY"
-                         pattern="(0[1-9]|1[012])-[0-9]{4}"
+                           pattern="(0[1-9]|1[012])-[0-9]{4}"
                            th:attr="data-pattern-errormessage=#{validation.finance.secured.date.invalid}"
                            maxlength="7"
                            th:value="${cost.securedDate}"
@@ -1543,25 +1562,23 @@
                 </td>
 
                 <td class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'error' : ''">
-                  <label th:for="${'cost-'+type+'-'+costIdentifier+'-fundingAmount'}">
+                  <label th:for="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}">
                     <span class="visuallyhidden">Funding amount (&pound;)</span>
                     <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-fundingAmount'})" />
                   </label>
                     <input class="form-control width-medium"
                            type="number"
-                           th:readonly="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}"
                            th:name="${type +'-fundingAmount-' + question.id + '-' + costIdentifier}"
-                           th:id="${'cost-'+type+'-'+costIdentifier+'-fundingAmount'}"
+                           th:id="${'cost-other_funding-'+costIdentifier+'-fundingAmount'}"
                            ifs:nonZeroValue="${cost.fundingAmount != null ? #numbers.formatDecimal(cost.fundingAmount,0,0) : '0'}"
                            th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-fundingAmount]}')} ? 'field-error' : ''"
                            required="required"
                            placeholder="0"
                            min="1"
                            max="9999999999999999999"
-                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}"
-                           />
+                           th:attr="data-max-errormessage=#{validation.field.max.number.of.digits(20)}" />
                 </td>
-                <td th:unless="${readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id))}">
+                <td>
                     <button th:unless="${cost.id == null}"
                             type="submit"
                             name="remove_cost"
