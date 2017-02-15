@@ -584,8 +584,7 @@ Finance contact can access the external view of the finance checks page
 
 Non finance contact can't view finance checks page
     [Documentation]    INFUND-7573
-    [Tags]    Pending
-    # Pending due to INFUND-8158
+    [Tags]
     [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
     When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
     Then the user should not see the element    link=Finance checks
