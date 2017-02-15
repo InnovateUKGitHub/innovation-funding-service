@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Create an application'" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Create an application'" />
 </head>
 <body th:with="context='applicant'" class="create-application-find-business">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back',linkClass='link-back',linkUrl='javascript:history.back()',currentApplication=${currentApplication}" />
 
     <h1 class="heading-large">Create your account</h1>
     <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p>
@@ -58,25 +58,25 @@
                 <button type="submit" class="buttonlink" name="not-in-company-house">Not on Companies House?</button>
 
                 <div th:if="${organisationForm.manualEntry}" th:remove="tag">
-                    <div th:include="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
-                    <div th:include="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+                    <th:block th:insert="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" />
+                    <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
                     <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
                 </div>
             </span>
         </span>
         <span th:unless="${searchEnabled}">
             <legend class="visuallyhidden" th:text="${organisationForm.organisationType.name} + ''">? organisation</legend>
-            <div th:include="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" th:remove="tag"></div>
-            <div th:include="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" th:remove="tag"></div>
+            <th:block th:insert="fragments/addresses :: organisation-name" th:with="form=${organisationForm}" />
+            <th:block th:insert="fragments/addresses :: company-address-details" th:with="form=${organisationForm}" />
             <button type="submit button-large extra-margin" name="save-organisation-details" class="button">Continue</button>
         </span>
     </form>
 
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

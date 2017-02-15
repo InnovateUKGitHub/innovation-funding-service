@@ -89,9 +89,12 @@ public class IFSWebConfiguration extends WebMvcConfigurerAdapter {
         return env.acceptsProfiles("environment");
     }
 
-    @Bean
-    public IfSThymeleafDialect getIfsIfSThymeleafDialect() {
+    public IfSThymeleafDialect getIfsThymeleafDialect() {
         return new IfSThymeleafDialect();
+    }
+
+    public IfsThymeleafPostProcessorDialect getIfsThymeleafPostProcessorDialect() {
+        return new IfsThymeleafPostProcessorDialect();
     }
 
     @Bean

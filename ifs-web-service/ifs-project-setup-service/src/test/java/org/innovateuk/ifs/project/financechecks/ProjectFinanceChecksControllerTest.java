@@ -10,6 +10,8 @@ import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionMod
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.constant.ProjectActivityStates;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
@@ -25,6 +27,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
+import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -33,16 +36,16 @@ import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
+import javax.management.Query;
 import java.time.LocalDate;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.rest.ValidationMessages.noErrors;
+import static org.innovateuk.ifs.finance.builder.ProjectFinanceResourceBuilder.newProjectFinanceResource;
 import static org.innovateuk.ifs.project.builder.ProjectPartnerStatusResourceBuilder.newProjectPartnerStatusResource;
 import static org.innovateuk.ifs.project.builder.ProjectResourceBuilder.newProjectResource;
 import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilder.newProjectTeamStatusResource;
@@ -163,6 +166,10 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
 
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(new QueryResource())));
+
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).
                 andReturn();
@@ -188,10 +195,13 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         ProjectTeamStatusResource expectedProjectTeamStatusResource = newProjectTeamStatusResource().withPartnerStatuses(Collections.singletonList(statusResource)).build();
         ProjectResource project = newProjectResource().withId(projectId).withName(projectName).build();
         OrganisationResource partnerOrganisation = newOrganisationResource().withId(organisationId).build();
+        ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().build();
 
         when(projectService.getById(projectId)).thenReturn(project);
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
+        when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
+        when(financeCheckServiceMock.loadQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(new QueryResource())));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).

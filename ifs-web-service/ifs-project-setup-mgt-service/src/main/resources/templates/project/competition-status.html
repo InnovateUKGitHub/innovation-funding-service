@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 </head>
 <body th:with="context='project-management'" class="project-management">
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" class="full-width">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start" />
     <div class="grid-container">
-    <th:block th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}"/>
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{~/management/dashboard/project-setup}"/>
     <div class="grid-row">
       <div class="column-two-thirds">
         <div class="page-title">
@@ -52,7 +52,7 @@
                   <th:block th:text="${'Lead: '+project.projectLeadOrganisationName}" />
                 </small>
               </th>
-              <th:block th:include="project/fragments :: project-status-table(${project.projectDetailsStatus})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
+              <th:block th:insert="project/fragments :: project-status-table(${project.projectDetailsStatus})" th:with="url=${'/project-setup-management/competition/' + model.competitionProjectsStatusResource.competitionNumber + '/project/' + project.projectNumber + '/details'}" />
 
               <th:block th:if="${model.projectStatusPermissions.get(project.getApplicationNumber()).canAccessMonitoringOfficer}"
                         th:include="project/fragments :: project-status-table(${project.monitoringOfficerStatus})" th:with="url=${'/project-setup-management/project/'+ project.projectNumber + '/monitoring-officer'}" />
@@ -99,10 +99,10 @@
         </tfoot>
       </table>
     </div>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
   </div>
 </main>
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
