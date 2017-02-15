@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 
-<!-- ===========================Spend profile intro area  =========================== --> 
+<!-- ===========================Spend profile intro area  =========================== -->
 
 <div th:fragment="prototype-spend-profile-intro">
-     
+
    <div class="centralise">
 
         <div th:if="${param.status != null and param.status[0] == 'MarkedComplete'}" th:remove="tag">
@@ -111,7 +111,7 @@
                 </tbody>
             </table>
         </div> -->
-        
+
         <th:block th:if="${type == 'business'}">
             <h2 class="heading-medium" th:unless="${param.task != null and param.task[0] == 'reviewProject'}" ><span th:text="${(param.user != null and param.user[0] == 'nonLead' ? 'Biotech Corp - Spend profile' : 'Aptrans Ltd - Spend profile')}">Spend profile</span></h2>
         </th:block>
@@ -141,12 +141,12 @@
             </div>
 
         </div>
-        
+
     </div>
- 
+
 </div>
 
-<!-- ===========================Spend profile main table=========================== --> 
+<!-- ===========================Spend profile main table=========================== -->
 
 <div th:fragment="prototype-spend-profile-table">
 
@@ -251,32 +251,32 @@
                     <th:block th:unless="${param.task != null and param.task[0] == 'reviewProject'}">
                         <tbody>
                             <th:block th:if="${param.status == null or param.status[0] != 'edit'}">
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Travel and subsistence'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Admin support costs  (20%)'}, value=${'2,500'}, total=${'90,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Travel and subsistence'}, value=${'1,000'}, total=${'36,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" />
                             </th:block>
 
                             <th:block th:if="${param.status != null and param.status[0] == 'edit'}">
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Admin support costs (20%)'}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel and subsistence'}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
-                                <div th:include="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" th:remove="tag"/>
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Labour '}, value=${'12,500'}, total=${'450,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Admin support costs (20%)'}, value=${'2,500'}, total=${'90,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Materials '}, value=${'3,000'}, total=${'108,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Capital usage'}, value=${'3,000'}, total=${'108,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Subcontracting costs'}, value=${'3,000'}, total=${'108,000'}, spend=${(param.spend != null and param.spend[0] == 'high' ? 'high' : 'ok')}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Travel and subsistence'}, value=${'1,000'}, total=${'36,000'}" />
+                                <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row-edit" th:with="header=${'Other '}, value=${'1,000'}, total=${'36,000'}" />
                             </th:block>
                         </tbody>
                     </th:block>
-                    
+
                     <th:block th:if="${param.task != null and param.task[0] == 'reviewProject'}">
                         <tbody>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Aptrans Ltd'}, type=${'Lead Partner'}, value=${'12,500'}, total=${'450,000'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Biotech Corp'}, type=${'Partner'}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'University of Cardiff'}, type=${'Partner'}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Aptrans Ltd'}, type=${'Lead Partner'}, value=${'12,500'}, total=${'450,000'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'Biotech Corp'}, type=${'Partner'}, value=${'2,500'}, total=${'90,000'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-row" th:with="header=${'University of Cardiff'}, type=${'Partner'}, value=${'3,000'}, total=${'108,000'}" />
                         </tbody>
                     </th:block>
 
@@ -288,7 +288,7 @@
 </div>
 
 
-<!-- ===========================Spend profile main table=========================== --> 
+<!-- ===========================Spend profile main table=========================== -->
 
 <div th:fragment="prototype-spend-profile-academic-table">
 
@@ -392,36 +392,36 @@
                     </tfoot>
                     <tbody>
                         <th:block th:if="${param.status == null or param.status[0] != 'edit'}">
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Staff '}, value=${'12,500'}, total=${'450,000'}, section=${'Directly incurred'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Travel and subsistence '}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Other costs '}, value=${'3,000'}, total=${'108,000'}, border=borderBottom" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Staff '}, value=${'12,500'}, total=${'450,000'}, section=${'Directly incurred'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Travel and subsistence '}, value=${'2,500'}, total=${'90,000'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Other costs '}, value=${'3,000'}, total=${'108,000'}, border=borderBottom" />
 
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Investigations '}, value=${'3,000'}, total=${'108,000'}, section=${'Directly allocated'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Estate costs '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Other costs '}, value=${'1,000'}, total=${'36,000'}, border=borderBottom" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Investigations '}, value=${'3,000'}, total=${'108,000'}, section=${'Directly allocated'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Estate costs '}, value=${'3,000'}, total=${'108,000'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Other costs '}, value=${'1,000'}, total=${'36,000'}, border=borderBottom" />
 
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Investigations '}, value=${'334'}, total=${'12,000'}, section=${'Indirect costs'}, border=borderBottom" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Investigations '}, value=${'334'}, total=${'12,000'}, section=${'Indirect costs'}, border=borderBottom" />
 
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Staff '}, value=${'333'}, total=${'12,000'}, section=${'Exceptions'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Other costs '}, value=${'333'}, total=${'12,000'}" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Staff '}, value=${'333'}, total=${'12,000'}, section=${'Exceptions'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row" th:with="header=${'Other costs '}, value=${'333'}, total=${'12,000'}" />
 
 
 
                         </th:block>
 
                         <div th:if="${param.status != null and param.status[0] == 'edit'}" th:remove="tag">
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Staff '}, value=${'12,500'}, total=${'450,000'}, section=${'Directly incurred'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Travel and subsistence '}, value=${'2,500'}, total=${'90,000'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Other costs '}, value=${'3,000'}, total=${'108,000'}, border=borderBottom" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Staff '}, value=${'12,500'}, total=${'450,000'}, section=${'Directly incurred'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Travel and subsistence '}, value=${'2,500'}, total=${'90,000'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Other costs '}, value=${'3,000'}, total=${'108,000'}, border=borderBottom" />
 
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Investigations '}, value=${'3,000'}, total=${'108,000'}, section=${'Directly allocated'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Estate costs '}, value=${'3,000'}, total=${'108,000'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Other costs '}, value=${'1,000'}, total=${'36,000'}, border=borderBottom" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Investigations '}, value=${'3,000'}, total=${'108,000'}, section=${'Directly allocated'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Estate costs '}, value=${'3,000'}, total=${'108,000'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Other costs '}, value=${'1,000'}, total=${'36,000'}, border=borderBottom" />
 
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Investigations '}, value=${'334'}, total=${'12,000'}, section=${'Indirect costs'}, border=borderBottom" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Investigations '}, value=${'334'}, total=${'12,000'}, section=${'Indirect costs'}, border=borderBottom" />
 
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Staff '}, value=${'333'}, total=${'12,000'}, section=${'Exceptions'}" th:remove="tag"/>
-                            <div th:include="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Other costs '}, value=${'333'}, total=${'12,000'}" th:remove="tag"/>
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Staff '}, value=${'333'}, total=${'12,000'}, section=${'Exceptions'}" />
+                            <th:block th:insert="prototypes/fragments/project-setup :: prototype-spend-academic-row-edit" th:with="header=${'Other costs '}, value=${'333'}, total=${'12,000'}" />
 
                         </div>
                     </tbody>
@@ -433,18 +433,18 @@
 </div>
 
 
-<!-- ===========================Spend profile totals=========================== --> 
+<!-- ===========================Spend profile totals=========================== -->
 
 <div th:fragment="prototype-spend-profile-totals">
-    
+
     <div class="centralise">
-        <div th:include="prototypes/fragments/applicant-view :: prototype-spend-year-totals" th:remove="tag" />
+        <th:block th:insert="prototypes/fragments/applicant-view :: prototype-spend-year-totals" />
     </div>
 
 </div>
 
 
-<!-- ===========================Spend profile main table=========================== --> 
+<!-- ===========================Spend profile main table=========================== -->
 
 
 <div th:fragment="prototype-spend-profile-controls">
@@ -468,7 +468,7 @@
             </th:block>
 
             <th:block th:if = "${type == 'academic'}">
-                <a th:href="@{'?status=edit&#38;user=nonLead'}" class="button button-secondary">Edit spend profile</a>        
+                <a th:href="@{'?status=edit&#38;user=nonLead'}" class="button button-secondary">Edit spend profile</a>
             </th:block>
 
             <p class="extra-margin" th:unless="${param.user == null or param.user[0] != 'nonLead'}">Before you submit to the lead partner, make sure you are satisfied with your spend profile. It should match the eligible project costs. The lead partner will submit all costs to Innovate UK.</p>
@@ -497,8 +497,8 @@
                         <hr />
 
                         <div class="alignright-button">
-                            
-                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
                             <a th:href="@{?status=Submitted&#38;user=nonLead}" class="button">Send</a>
                         </div>
@@ -544,8 +544,8 @@
                         <hr />
 
                         <div class="alignright-button">
-                            
-                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+
+                            <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
 
                             <a th:href="${(param.user != null and param.user[0] == 'nonLead' ? '/prototypes/3100-spend?spend=high&#38;user=nonLead' : '/prototypes/3100-spend?spend=high')}" class="button">Save</a>
                         </div>
@@ -564,7 +564,7 @@
     </div>
 
     <div th:if="${param.task != null and param.task[0] == 'reviewPartner'}" th:remove="tag">
-        
+
         <div class="centralise">
 
             <p>If required, you can edit this spend profile. It will not be possible to submit the spend profile to Innovate UK until the section is marked as complete</p>
@@ -611,7 +611,7 @@
                 <hr />
 
                 <div class="alignright-button">
-                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a> 
+                    <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
                     <a href="/prototypes/1588-project-status?stage=level4" class="button">Submit</a>
                 </div>
 

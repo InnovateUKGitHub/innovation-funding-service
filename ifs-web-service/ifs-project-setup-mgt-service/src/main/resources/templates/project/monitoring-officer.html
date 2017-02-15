@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<div th:include="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assign a Monitoring Officer'" />
 </head>
 <body th:with="context='project-management'" class="project-management assign-mo">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: main-content-start" />
 
 	<div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionSummary.competitionId})}"  th:remove="tag"></div>
 
 	<div class="grid-row">
 		<div class="column-two-thirds">
 			<div class="page-title">
-				<div th:include="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" th:remove="tag" />
+				<th:block th:insert="fragments/competition-management :: competition-id(competition=${model.competitionSummary})" />
 				<h1 class="heading-xlarge" th:text="${model.competitionSummary.competitionName}" />
 			</div>
 		</div>
 		<div class="column-third alignright extra-margin">
-			<div th:include="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" th:remove="tag" />
+			<th:block th:insert="fragments/competition-management :: competition-status(competition=${model.competitionSummary})" />
 		</div>
 	</div>
 
@@ -97,7 +97,7 @@
 							  Assign Monitoring Officer
 						  </button>
 
-							<div th:include="fragments/modals :: modal-assign-mo" th:remove="tag"/>
+							<th:block th:insert="fragments/modals :: modal-assign-mo" />
 					</div>
         </fieldset>
     </form>
@@ -128,10 +128,7 @@
 		<th:block th:if="${model.targetProjectStartDate}">
 			<h3 class="heading-medium no-margin">Target project start date</h3>
 			<p class="form-hint">Planned start date for the project.</p>
-			<p th:if="${model.targetProjectStartDate}">
-				<th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" />
-	 			<th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" />
-			</p>
+			<p th:if="${model.targetProjectStartDate}"><th:block th:include="fragments/elements :: ordinal-day (date=${model.targetProjectStartDate})" /> <th:block th:text="${#temporals.format(model.targetProjectStartDate, 'MMM yyyy')}" /></p>
 		</th:block>
 
 		<th:block th:if="${model.projectManagerName}">
@@ -148,11 +145,11 @@
 		</th:block>
 
 	</div>
-	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

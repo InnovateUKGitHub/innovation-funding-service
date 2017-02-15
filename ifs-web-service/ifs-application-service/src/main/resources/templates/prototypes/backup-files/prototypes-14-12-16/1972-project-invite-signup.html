@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${''}, ${''})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -34,21 +34,21 @@
         		<h3 class="heading-small>">Be based in the <strong>UK</strong></h3>
         		<p>Non UK organisations are not eligible to recieve funding from Innovate UK</p>
         	</li>
-        </ul> 
-        
+        </ul>
+
     </div>-->
 
 	<div class="grid-row">
 		<section class="column-half">
 
-		    <div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/1972-join-project'})" th:remove="tag" th:unless="${param.status != null and param.status[0] == 'accVerified'}"/> 
+		    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/1972-join-project'})"  th:unless="${param.status != null and param.status[0] == 'accVerified'}"/>
 
-            <div th:include="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/675-dashboard?status=projectSetup&#38;user=nonLead&#38;action=accVerified'})" th:remove="tag" th:unless="${param.status == null or param.status[0] != 'accVerified'}"/> 
-			
+            <th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin(${'/prototypes/675-dashboard?status=projectSetup&#38;user=nonLead&#38;action=accVerified'})"  th:unless="${param.status == null or param.status[0] != 'accVerified'}"/>
+
 		</section>
 		<section class="column-half">
-			
-			<div th:include="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/1972-join-project?action=signUp'})" th:remove="tag" /> 
+
+			<th:block th:insert="prototypes/fragments/applicant-view :: prototype-signin-create-acc(${'/prototypes/1972-join-project?action=signUp'})" />
 
 
 		</section>
@@ -56,10 +56,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

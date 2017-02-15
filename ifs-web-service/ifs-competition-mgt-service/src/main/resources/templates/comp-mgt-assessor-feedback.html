@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management application-assessor-feedback">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" class="full-width">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
             <div class="page-title">
-                <div th:include="fragments/competition-management :: competition-id(competition=${competitionSummary})" th:remove="tag" />
+                <th:block th:insert="fragments/competition-management :: competition-id(competition=${competitionSummary})" />
                 <h1 class="heading-xlarge" th:text="${competitionSummary.competitionName}" />
             </div>
       </div>
       <div class="column-third alignright extra-margin">
-        <div th:include="fragments/competition-management :: competition-status(competition=${competitionSummary})" th:remove="tag" />
+        <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
       </div>
   </div>
 
     <div th:if="${feedbackNotUploadedForAllApplications}" class="event-alert">
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
-    
-  <div th:include="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" th:remove="tag" />
+
+  <th:block th:insert="fragments/competition-management :: competition-mgt-menu(competitionStatus=${competitionSummary.competitionStatus.name()},competitionId=${competitionSummary.competitionId})" />
 
 <div th:unless="${activeTab == 'overview'}" th:remove="tag">
 
     <div class="grid-row competition-data">
         <div class="column-fifth">
-              <div th:include="fragments/competition-management :: info-area" th:remove="tag" />
+              <th:block th:insert="fragments/competition-management :: info-area" />
         </div>
         <div class="column-four-fifth">
           <form method="get">
@@ -43,7 +43,7 @@
     <h2 class="bold-large" th:if="${activeTab == 'submitted'}">Applications submitted</h2>
     <h2 class="bold-large" th:if="${activeTab == 'notSubmitted'}">Applications not submitted</h2>
 
-	
+
 	 	<div class="grid-row sort-by">
 	       <div class="column-two-thirds">
 	         <h3>
@@ -51,23 +51,23 @@
 	         </h3>
 	       </div>
 	       <div class="column-third alignright">
-	         <div th:include="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" th:remove="tag" />
+	         <th:block th:insert="fragments/competition-management :: applications-sort(activeTab=${activeTab},activeSortField=${activeSortField})" />
 	       </div>
 	   </div>
-	   
-	    <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-	    <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
- 
+
+	    <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" />
+	    <th:block th:insert="fragments/competition-management :: applications-pagination(results=${results})" />
+
 	 </form>
-     <div th:include="fragments/modals :: modal-submit-assessor-feedback" th:remove="tag" />
-	 
+     <th:block th:insert="fragments/modals :: modal-submit-assessor-feedback" />
+
  	</div>
  	</div>
 	</div>
  	<div th:if="${activeTab == 'overview'}" th:remove="tag">
  		<div class="grid-row constrain-width">
 		<div class="column-two-thirds">
-			
+
 			<dl class="standard-definition-list">
 			</dl>
 
@@ -101,9 +101,9 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<hr />
-	
+
 	<div class="grid-row extra-margin constrain-width">
 			<div class="column-third">
 				<a class="button-dashboard highlight" th:href="@{/competition/{competitionId}/applications?tab=submitted(competitionId=${competitionSummary.competitionId})}">
@@ -123,11 +123,11 @@
 		</div>
  	</div>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>
