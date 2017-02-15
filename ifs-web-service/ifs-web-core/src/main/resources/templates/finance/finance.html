@@ -39,7 +39,6 @@
             <p>Changing this selection will reset your funding level.</p>
         </div>
         <div class="form-group" th:classappend="${#fields.hasErrors('formInput[__${formInput.id}__]')} ? error : ''">
-            <input type="hidden" name="organisationSize-formInputId" th:value="formInput[__${formInput.id}__]"/>
             <fieldset>
                 <legend>
                     <span class="form-label form-label-bold" th:text="${question.name}"/>
