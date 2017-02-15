@@ -77,6 +77,17 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         Assert.assertEquals(competition, response);
     }
 
+    @Test
+    public void test_createNonIfs() {
+        CompetitionResource competition = new CompetitionResource();
+
+        setupPostWithRestResultExpectations(competitionsRestURL + "/non-ifs", CompetitionResource.class, null, competition, HttpStatus.CREATED);
+
+        CompetitionResource response = service.createNonIfs().getSuccessObject();
+        assertNotNull(response);
+        Assert.assertEquals(competition, response);
+    }
+
 
     @Test
     public void test_update() {
@@ -134,6 +145,19 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
         setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
 
         List<CompetitionSearchResultItem> responses = service.findUpcomingCompetitions().getSuccessObject();
+        assertNotNull(responses);
+        assertEquals(returnedResponse, responses);
+    }
+
+    @Test
+    public void test_findNonIfsCompetitions() {
+
+        List<CompetitionSearchResultItem> returnedResponse =
+                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0, null));
+
+        setupGetWithRestResultExpectations(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType(), returnedResponse);
+
+        List<CompetitionSearchResultItem> responses = service.findNonIfsCompetitions().getSuccessObject();
         assertNotNull(responses);
         assertEquals(returnedResponse, responses);
     }

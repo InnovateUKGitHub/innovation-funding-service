@@ -148,6 +148,19 @@ public class CompetitionControllerDocumentation extends BaseControllerMockMVCTes
     }
 
     @Test
+    public void nonIfs() throws Exception {
+        when(competitionService.findNonIfsCompetitions()).thenReturn(serviceSuccess(newCompetitionSearchResultItem().build(2)));
+
+        mockMvc.perform(get("/competition/non-ifs"))
+                .andExpect(status().isOk())
+                .andDo(this.document.snippets(
+                        responseFields(
+                                fieldWithPath("[]").description("list of non ifs competitions the authenticated user has access to")
+                        )
+                ));
+    }
+
+    @Test
     public void count() throws Exception {
         CompetitionCountResource resource = new CompetitionCountResource();
         when(competitionService.countCompetitions()).thenReturn(serviceSuccess(resource));

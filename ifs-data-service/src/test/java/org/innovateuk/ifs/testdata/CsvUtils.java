@@ -405,6 +405,8 @@ class CsvUtils {
         FundingType fundingType;
         String projectSize;
         List<String> keywords;
+        boolean nonIfs;
+        String nonIfsUrl;
 
 
         private CompetitionLine(List<String> line) {
@@ -453,6 +455,8 @@ class CsvUtils {
             fundingType = nullableEnum(line.get(i++), FundingType::valueOf);
             projectSize = nullable(line.get(i++));
             keywords = nullableSplittableString(line.get(i++));
+            nonIfs = nullableBoolean(line.get(i++));
+            nonIfsUrl = nullable(line.get(i++));
         }
     }
 

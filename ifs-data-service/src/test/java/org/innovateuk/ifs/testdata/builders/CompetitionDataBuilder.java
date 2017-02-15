@@ -48,6 +48,18 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
+    public CompetitionDataBuilder createNonIfsCompetition() {
+
+        return asCompAdmin(data -> {
+
+            CompetitionResource newCompetition = competitionSetupService.
+                    createNonIfs().
+                    getSuccessObjectOrThrowException();
+
+            updateCompetitionInCompetitionData(data, newCompetition.getId());
+        });
+    }
+
     public CompetitionDataBuilder withExistingCompetition(Long competitionId) {
 
         return asCompAdmin(data -> {
@@ -60,7 +72,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName,
                                                 String innovationSectorName, String researchCategoryName, String leadTechnologist,
                                                 String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
-                                                Boolean multiStream, String collaborationLevelCode, String leadApplicantTypeCode, Integer researchRatio, Boolean resubmission) {
+                                                Boolean multiStream, String collaborationLevelCode, String leadApplicantTypeCode, Integer researchRatio, Boolean resubmission, String nonIfsUrl) {
 
         return asCompAdmin(data -> {
 
@@ -95,6 +107,7 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setMultiStream(multiStream);
                 competition.setAssessorPay(assessorPay);
                 competition.setAssessorCount(assessorCount);
+                competition.setNonIfsUrl(nonIfsUrl);
             });
         });
     }

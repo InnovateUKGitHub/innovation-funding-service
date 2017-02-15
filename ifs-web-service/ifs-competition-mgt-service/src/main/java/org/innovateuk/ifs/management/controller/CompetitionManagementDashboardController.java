@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,19 +30,19 @@ public class CompetitionManagementDashboardController {
     @Autowired
     private CompetitionService competitionService;
 
-    @RequestMapping(value="/dashboard", method= RequestMethod.GET)
+    @GetMapping(value="/dashboard")
     public String dashboard() {
         return "redirect:/dashboard/live";
     }
 
-    @RequestMapping(value="/dashboard/live", method= RequestMethod.GET)
+    @GetMapping(value="/dashboard/live")
     public String live(Model model, HttpServletRequest request) {
         model.addAttribute("competitions", competitionDashboardSearchService.getLiveCompetitions());
         model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
         return TEMPLATE_PATH + "live";
     }
 
-    @RequestMapping(value="/dashboard/project-setup", method= RequestMethod.GET)
+    @GetMapping(value="/dashboard/project-setup")
     public String projectSetup(Model model, HttpServletRequest request) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> projectSetupCompetitions = competitionDashboardSearchService.getProjectSetupCompetitions();
         model.addAttribute("competitions", projectSetupCompetitions);
@@ -52,7 +51,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "projectSetup";
     }
 
-    @RequestMapping(value="/dashboard/upcoming", method= RequestMethod.GET)
+    @GetMapping(value="/dashboard/upcoming")
     public String upcoming(Model model, HttpServletRequest request) {
         final Map<CompetitionStatus, List<CompetitionSearchResultItem>> upcomingCompetitions = competitionDashboardSearchService.getUpcomingCompetitions();
         model.addAttribute("competitions", upcomingCompetitions);
@@ -61,7 +60,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "upcoming";
     }
 
-    @RequestMapping(value="/dashboard/complete", method= RequestMethod.GET)
+    @GetMapping(value="/dashboard/complete")
     public String complete(Model model, HttpServletRequest request) {
         //TODO INFUND-3833
         model.addAttribute("competitions", new ArrayList<CompetitionResource>());
@@ -70,14 +69,14 @@ public class CompetitionManagementDashboardController {
     }
 
 
-    @RequestMapping(value="/dashboard/non-ifs", method= RequestMethod.GET)
+    @GetMapping(value="/dashboard/non-ifs")
     public String nonIfs(Model model, HttpServletRequest request) {
         model.addAttribute("competitions", competitionDashboardSearchService.getNonIfsCompetitions());
         model.addAttribute("counts", competitionDashboardSearchService.getCompetitionCounts());
         return TEMPLATE_PATH + "non-ifs";
     }
 
-    @RequestMapping(value="/dashboard/search", method= RequestMethod.GET)
+    @GetMapping(value="/dashboard/search")
     public String search(@RequestParam(name = "searchQuery") String searchQuery,
                            @RequestParam(name = "page", defaultValue = "1") int page, Model model, HttpServletRequest request) {
         model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page - 1));
@@ -85,7 +84,7 @@ public class CompetitionManagementDashboardController {
         return TEMPLATE_PATH + "search";
     }
 
-    @RequestMapping("/competition/create")
+    @GetMapping("/competition/create")
     public String create(){
         CompetitionResource competition = competitionService.create();
         return String.format("redirect:/competition/setup/%s", competition.getId());

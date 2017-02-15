@@ -138,6 +138,17 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     }
 
     @Test
+    public void test_findNonIfsCompetitions() throws Exception {
+        List<Competition> competitions = Lists.newArrayList(new Competition());
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
+        when(competitionRepositoryMock.findNonIfs()).thenReturn(competitions);
+
+        List<CompetitionSearchResultItem> response = service.findNonIfsCompetitions().getSuccessObjectOrThrowException();
+
+        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+    }
+
+    @Test
     public void test_countCompetitions() throws Exception {
         Long countLive = 1L;
         Long countProjectSetup = 2L;

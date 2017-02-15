@@ -120,4 +120,9 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     public RestResult<Void> notifyAssessors(Long competitionId) {
         return putWithRestResult(String.format("%s/%s/notify-assessors", competitionsRestURL, competitionId), Void.class);
     }
+
+    @Override
+    public RestResult<CompetitionResource> createNonIfs() {
+        return postWithRestResult(competitionsRestURL + "/non-ifs", CompetitionResource.class);
+    }
 }

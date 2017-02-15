@@ -74,6 +74,17 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(Long.valueOf(1L), found.getId());
     }
 
+
+    @Test
+    public void test_createNonIfs() throws Exception {
+        CompetitionResource competitionResource = newCompetitionResource().withId(1L).build();
+
+        when(competitionsRestService.createNonIfs()).thenReturn(restSuccess(competitionResource));
+
+        final CompetitionResource found = service.createNonIfs();
+        assertEquals(Long.valueOf(1L), found.getId());
+    }
+
     @Test
     public void test_getAllCompetitions() throws Exception {
         CompetitionResource comp1 = newCompetitionResource().withName("Competition 1").withId(1L).build();

@@ -117,4 +117,9 @@ public class CompetitionServiceImpl implements CompetitionService {
     public ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId) {
         return publicContentItemRestService.getItemByCompetitionId(competitionId).toServiceResult();
     }
+
+    @Override
+    public CompetitionResource createNonIfs() {
+        return competitionsRestService.createNonIfs().getSuccessObjectOrThrowException();
+    }
 }

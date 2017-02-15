@@ -120,6 +120,24 @@ public class CompetitionManagementDashboardControllerTest {
                 .andExpect(MockMvcResultMatchers.model().attribute("formattedInnovationAreas", is(Arrays.asList(INNOVATION_AREA_NAME_ONE + ", " + INNOVATION_AREA_NAME_TWO))));
     }
 
+
+    @Test
+    public void nonIfsDashboard() throws Exception {
+
+        List<CompetitionSearchResultItem> competitions = new ArrayList<>();
+        CompetitionCountResource counts = new CompetitionCountResource();
+
+        Mockito.when(competitionDashboardSearchService.getNonIfsCompetitions()).thenReturn(competitions);
+        Mockito.when(competitionDashboardSearchService.getCompetitionCounts()).thenReturn(counts);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/non-ifs"))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("dashboard/non-ifs"))
+                .andExpect(MockMvcResultMatchers.model().attribute("competitions", is(competitions)))
+                .andExpect(MockMvcResultMatchers.model().attribute("counts", is(counts)));
+    }
+
+
     @Test
     public void searchDashboard() throws Exception {
         CompetitionSearchResult searchResult = new CompetitionSearchResult();

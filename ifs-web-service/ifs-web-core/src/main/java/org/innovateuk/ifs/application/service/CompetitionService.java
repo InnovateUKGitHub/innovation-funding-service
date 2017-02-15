@@ -44,4 +44,6 @@ public interface CompetitionService {
     void notifyAssessors(Long competitionId);
 
     ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId);
+
+    CompetitionResource createNonIfs();
 }
