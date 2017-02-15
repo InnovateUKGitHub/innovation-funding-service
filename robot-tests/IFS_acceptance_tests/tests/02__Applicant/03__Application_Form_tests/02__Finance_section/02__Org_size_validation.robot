@@ -156,9 +156,9 @@ the funding section has been reset including funding level
     [Arguments]    ${funding_level}
     Then the user should not see the text in the element    css=#cost-financegrantclaim    ${funding_level}
     And checkbox should not be selected  termsAgreed
-    And the user should not see the text in the element    css=[name*=other_funding-fundingSource]    Lottery funding
-    And the user should not see the text in the element    css=[name*=other_funding-securedDate]    12-2008
-    And the user should not see the text in the element    css=[name*=other_funding-fundingAmount]    20000
+    And the user should not see the text in the element    css=input[name*=null-fundingSource]  Lottery funding
+    And the user should not see the text in the element    css=[name*=null-securedDate]  12-2008
+    And the user should not see the text in the element    css=[name*=null-fundingAmount]  20000
 
 the user marks the 'your funding' section as incomplete again
     the user clicks the button/link    link=Your funding
