@@ -76,7 +76,7 @@ Non-logged in user can log in and continue with an existing application
 
 *** Keywords ***
 The user can see this new application on their dashboard
-    the user navigates to the page    ${applicant_dashboard_url}
+    the user navigates to the page    ${DASHBOARD_URL}
     the user should see the text in the page    ${OPEN_COMPETITION_LINK}
 
 The project start date is blank
