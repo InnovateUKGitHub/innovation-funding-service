@@ -15,7 +15,7 @@
                             <select class="form-control" id="filterInnovationArea" name="filterInnovationArea">
 
                                 <option selected="selected">---</option>
-                                <div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
+                                <th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
 
                             </select>
                         </div>

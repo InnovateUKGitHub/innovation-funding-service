@@ -68,6 +68,17 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessGrantOfferLetterSendSection);
     }
 
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_QUERIES_SECTION", description = "A finance team can always access the Finance checks queries section")
+    public boolean internalCanAccessFinanceChecksQueriesSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksQueriesSection);
+    }
+
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_NOTES_SECTION", description = "A finance team can always access the Finance checks notes section")
+    public boolean internalCanAccessFinanceChecksNotesSection(Long projectId, UserResource user) {
+        return doSectionCheck(projectId, user, ProjectSetupSectionInternalUser::canAccessFinanceChecksNotesSection);
+    }
+
+
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionInternalUser, UserResource, SectionAccess> sectionCheckFn) {
         ProjectStatusResource projectStatusResource;
 
