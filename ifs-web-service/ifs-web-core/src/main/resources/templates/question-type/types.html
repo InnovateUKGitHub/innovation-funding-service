@@ -36,7 +36,7 @@
         <th:block th:if="${readonly}">
             <span th:if="${question.getName()}" th:text="${question.name}" />
         </th:block>
-        <th:block th:unless="${readonly}"
+        <th:block th:unless="${readonly}">
           <span th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
           <th:block th:insert="question-type/form-elements :: form-hint (hint=${question.getDescription()})" />
         </th:block>
