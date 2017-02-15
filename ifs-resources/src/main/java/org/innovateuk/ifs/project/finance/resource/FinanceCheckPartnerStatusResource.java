@@ -9,17 +9,19 @@ public class FinanceCheckPartnerStatusResource {
     private Viability viability;
     private ViabilityRagStatus viabilityRagStatus;
     private Eligibility eligibility;
+    private EligibilityRagStatus eligibilityRagStatus;
     private boolean awaitingResponse;
 
     public FinanceCheckPartnerStatusResource() {
     }
 
-    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityRagStatus viabilityRagStatus, Eligibility eligibility, boolean awaitingResponse) {
+    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityRagStatus viabilityRagStatus, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse) {
         this.id = id;
         this.name = name;
         this.viability = viability;
         this.viabilityRagStatus = viabilityRagStatus;
         this.eligibility = eligibility;
+        this.eligibilityRagStatus = eligibilityRagStatus;
         this.awaitingResponse = awaitingResponse;
     }
 
@@ -47,6 +49,12 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibility = eligibility;
     }
 
+    public EligibilityRagStatus getEligibilityRagStatus() { return eligibilityRagStatus; }
+
+    public void setEligibilityRagStatus(EligibilityRagStatus eligibilityRagStatus) {
+        this.eligibilityRagStatus = eligibilityRagStatus;
+    }
+
     public Viability getViability() {
         return viability;
     }
@@ -70,10 +78,4 @@ public class FinanceCheckPartnerStatusResource {
     public void setAwaitingResponse(boolean awaitingResponse) {
         this.awaitingResponse = awaitingResponse;
     }
-
-    public enum Eligibility {
-        REVIEW,
-        APPROVED,
-    }
-
 }

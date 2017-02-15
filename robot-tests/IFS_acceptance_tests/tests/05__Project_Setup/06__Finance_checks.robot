@@ -44,6 +44,12 @@ Documentation     INFUND-5190 As a member of Project Finance I want to view an a
 ...               INFUND-4839 As a project finance team member I want to be able to confirm the partner organisation is eligible for funding so that no further eligibility checks need to be carried out
 ...
 ...               INFUND-4823 As a project finance team member I want to be able to view the RAG rating for the viability and eligibility of each partner organisation if available so that I can be appraised of the effort level that may be expected to carry out the finance checks.
+...
+...               INFUND-7573 Partner view - main page - Finance Checks
+...
+...               INFUND-5508 As a member of Project Finance I want to see the Finance Checks Overview table updating with approved funding amounts so that I can confirm any amended figures before generating the Spend Profile
+...
+...               INFUND-7574 Partner view updated finances - Finance Checks Eligibility
 Suite Setup       Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup
@@ -73,7 +79,8 @@ Status of the Eligibility column (workaround for private beta competition)
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then The user should see the text in the page    Viability
-    And The user should not see the text in the page    Notes
+    And The user should see the text in the page    Queries raised
+    And The user should see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
 
@@ -275,19 +282,19 @@ Project finance user can see the Eligibility check page for the lead partner
     [Documentation]    INFUND-4823
     [Tags]
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # clicking the review button for the lead partner
-    And the user navigates to the page   ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # to delete this when the new eligibility page is switched to
+    And the user navigates to the page   ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # TODO to delete this when the new eligibility page is switched to
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
 
 Project finance user can see the lead partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 201,674
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 60,502
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    £ 138,704
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 60,502
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,704
 
 
 Finance checks eligibility validations
@@ -324,7 +331,7 @@ Finance checks eligibility validations
     Then the user should see the text in the page    This field cannot be left blank
     When the user clicks the button/link             link=Finance checks
   #  When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # TODO this is to be uncommented once the switch to new eligibility page is done with 4823
-    And the user navigates to the page               ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # to delete this when the new eligibility page is switched to
+    And the user navigates to the page               ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # TODO to delete this when the new eligibility page is switched to
 
 Project finance user can amend all sections of eligibility
     [Documentation]    INFUND-4834
@@ -362,14 +369,16 @@ Clicking cancel on the eligibility modal
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the checkbox    project-eligible
-    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")  # to do to change to Return to finance checks 4834
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
 
 Confirming eligibility should show info on a readonly page
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=a.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
 
@@ -380,25 +389,33 @@ Confirming eligibility should update on the finance checks page
     When the user clicks the button/link    link=Finance checks
     Then the user should see the element    jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Approved")
 
+Project finance user can see updated finance overview after lead changes to eligibility
+    [Documentation]    INFUND-5508
+    [Tags]
+    When the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 322,786
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 92,593
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
+
 
 Project finance user can see the Eligibility check page for the partner
     [Documentation]    INFUND-4823
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check
     When the user clicks the button/link    jQuery=table.table-progress tr:nth-child(2) td:nth-child(4) a:contains("Review")
-    And the user navigates to the page  ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/39/eligibility   # to delete this when the new eligibility page is switched to
+    And the user navigates to the page  ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/39/eligibility   # TODO to delete this when the new eligibility page is switched to
     Then the user should see the text in the page    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
 
 Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 201,674
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    0%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 0
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    £ 199,206
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    0%
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 0
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 199,206
 
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
@@ -421,7 +438,7 @@ Project finance user can see the eligibility checks for the industrial partner
 Checking the approve eligibility checkbox enables RAG selection but not confirm viability button for partner
     [Documentation]    INFUND-4839
     [Tags]
-    When the user navigates to the page  ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/39/eligibility  # to be removed after 4823
+    When the user navigates to the page  ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/39/eligibility  # TODO to be removed after 4823
     And the user selects the checkbox    project-eligible
     Then the user should see the element    id=rag-rating
     And the user should see the element    jQuery=.button.disabled:contains("Approve eligible costs")
@@ -444,14 +461,17 @@ Clicking cancel on the eligibility modal for partner
     And the user clicks the button/link    jQuery=.buttonlink.js-close    # Clicking the cancel link on the modal
     Then the user should see the element    id=rag-rating
     And the user should see the checkbox    project-eligible
-    And the user should see the element    jQuery=.button-secondary:contains("Save and return to finance checks")  # to do to change to Return to finance checks 4834
+    And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+
 
 Confirming eligibility should show info on a readonly page for partner
-    [Documentation]    INFUND-4839
+    [Documentation]    INFUND-4839, INFUND-7574
     [Tags]
+    ${today} =  get today
     When the user clicks the button/link    jQuery=.button:contains("Approve eligible costs")
     And the user clicks the button/link    name=confirm-eligibility    # Clicking the confirm button on the modal
     Then the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
+    And the user should see the text in the page  The partner's finance eligibility has been approved by Lee Bowman, ${today}
     And the user should not see the element    id=rag-rating
     And the user should not see the checkbox    project-eligible
     And the user clicks the button/link    link=Finance checks
@@ -477,10 +497,18 @@ Approve Eligibility: Lead partner organisation
     And The user clicks the button/link    jQuery=.button:contains("Return to finance checks")    #Check that also the button works
     Then the user sees the text in the element    css=a.eligibility-0    Approved
 
+Project finance user can see updated finance overview after partner changes to eligibility
+    [Documentation]    INFUND-5508
+    [Tags]
+    When the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 241,236
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 68,128
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
 Approve Eligibility: Collaborator partner organisation
     [Documentation]    INFUND-5193
     [Tags]    HappyPath
+    Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check/
     When the user clicks the button/link    css=a.eligibility-1
     When the user fills in project costs
     And the user selects the checkbox    costs-reviewed
@@ -544,13 +572,33 @@ Other internal users do not have access to Finance checks
     Then the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check    You do not have the necessary permissions for your request
 
 
+Finance contact can access the external view of the finance checks page
+    [Documentation]    INFUND-7573
+    [Tags]    HappyPath
+    [Setup]    Log in as a different user    ${test_mailbox_one}+fundsuccess@gmail.com    Passw0rd
+    Given the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the text in the page    Innovate UK are reviewing your finances and may contact you with any queries
+    And the user should not see an error in the page
+
+
+Non finance contact can't view finance checks page
+    [Documentation]    INFUND-7573
+    [Tags]    Pending
+    # Pending due to INFUND-8158
+    [Setup]    Log in as a different user    steve.smith@empire.com    Passw0rd
+    When the user clicks the button/link    link=${FUNDERS_PANEL_APPLICATION_1_HEADER}
+    Then the user should not see the element    link=Finance checks
+    And the user navigates to the page and gets a custom error message    ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/partner-organisation/${EMPIRE_LTD_ID}/finance-checks    ${403_error_message}
+
+
 *** Keywords ***
 the table row has expected values
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(2)    3 months
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 505,174
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 146,075
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 6,170
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    29%
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 505,174
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 146,075
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(5)    £ 6,170
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(6)    29%
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
@@ -678,7 +726,7 @@ the rag rating updates on the finance check page for partner for eligibility
 
 verify total costs of project
     [Arguments]    ${total_costs}
-    the user should see the text in the element      jQuery=.table-overview tr:nth-child(1) td:nth-child(2)     ${total_costs}
+    the user should see the text in the element      jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)     ${total_costs}
 
 verify percentage and total
     [Arguments]  ${section}  ${percentage}  ${total}

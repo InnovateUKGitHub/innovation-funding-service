@@ -65,7 +65,7 @@ public class PublicContentServiceImpl implements PublicContentService {
         Optional<PublicContentSectionResource> optionalSection = CollectionFunctions.simpleFindFirst(resource.getContentSections(),
                 contentSectionResource -> type.equals(contentSectionResource.getType()));
         Optional<ContentGroupForm> withAttachment = CollectionFunctions.simpleFindFirst(contentGroups,
-                contentGroupForm -> contentGroupForm.getAttachment() != null);
+                contentGroupForm -> contentGroupForm.getAttachment() != null && !contentGroupForm.getAttachment().isEmpty());
 
         if (optionalSection.isPresent() && withAttachment.isPresent()) {
             Long groupToUpload = getIdFromResourceIndex(optionalSection.get(), contentGroups, withAttachment.get());

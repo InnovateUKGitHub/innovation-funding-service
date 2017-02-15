@@ -6,11 +6,13 @@ import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResour
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.service.FinanceCheckRestService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesRestService;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesRestService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.upload.service.PostAttachmentRestService;
 import org.innovateuk.thread.service.ThreadRestService;
+import org.innovateuk.threads.resource.NoteResource;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
 
     @Autowired
     private ProjectFinanceQueriesRestService queryService;
+
+    @Autowired
+    private ProjectFinanceNotesRestService noteService;
 
     @Override
     public FinanceCheckResource getByProjectAndOrganisation(ProjectOrganisationCompositeId key){
@@ -95,7 +100,22 @@ public class FinanceCheckServiceImpl implements FinanceCheckService {
     }
 
     @Override
-    public ServiceResult<Void> savePost(PostResource post, long threadId) {
+    public ServiceResult<Void> saveQueryPost(PostResource post, long threadId) {
         return queryService.addPost(post, threadId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Long> saveNote(NoteResource note) {
+        return noteService.create(note).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<List<NoteResource>> loadNotes(Long projectFinanceId) {
+        return noteService.findAll(projectFinanceId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<Void> saveNotePost(PostResource post, long noteId) {
+        return noteService.addPost(post, noteId).toServiceResult();
     }
 }

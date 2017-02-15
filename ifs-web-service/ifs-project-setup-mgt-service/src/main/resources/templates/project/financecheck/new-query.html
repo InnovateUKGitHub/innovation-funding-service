@@ -69,7 +69,7 @@
                     <th:block th:each="section_type : ${T(org.innovateuk.threads.resource.FinanceChecksSectionType).values()}">
                         <th:block th:if="*{section}">
                             <option th:value="${section_type.name()}"
-                                    th:selected="${#strings.toLowerCase(section_type.name())} == *{section}"
+                                    th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"
                                     th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
                         </th:block>
                         <th:block th:unless="*{section}">

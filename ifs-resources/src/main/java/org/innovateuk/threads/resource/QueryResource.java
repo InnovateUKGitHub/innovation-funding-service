@@ -8,18 +8,19 @@ import org.innovateuk.ifs.address.resource.AddressResource;
 import java.time.LocalDateTime;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Optional.ofNullable;
 
 public class QueryResource {
-    public final Long id;
-    public final Long contextClassPk;
-    public final List<PostResource> posts;
-    public final FinanceChecksSectionType section;
-    public final String title;
-    public final boolean awaitingResponse;
-    public final LocalDateTime createdOn;
+    public Long id;
+    public Long contextClassPk;
+    public List<PostResource> posts;
+    public FinanceChecksSectionType section;
+    public String title;
+    public boolean awaitingResponse;
+    public LocalDateTime createdOn;
 
     @JsonCreator
     public QueryResource(@JsonProperty("id") Long id, @JsonProperty("contextClassPk") Long contextClassPk,
@@ -33,6 +34,10 @@ public class QueryResource {
         this.title = title;
         this.awaitingResponse = awaitingResponse;
         this.createdOn = createdOn;
+    }
+
+    public QueryResource() {
+        this.posts = Collections.emptyList();
     }
 
     @Override

@@ -59,7 +59,7 @@ Bank details page
     Given log in as a different user        ${PS_BD_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link    link=${PS_BD_APPLICATION_HEADER}
     Then the user should see the element    jQuery=ul li.require-action:nth-child(4)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user navigates to the page     ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page    Project team status
     And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(3)
@@ -144,7 +144,7 @@ Bank details submission
     And the user should see the text in the page      The bank account details below are being reviewed
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element               jQuery=ul li.waiting:nth-child(4)
-    When the user clicks the button/link              link=What's the status of each of my partners?
+    When the user clicks the button/link              link=status of my partners
     Then the user navigates to the page               ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page      Project team status
     And the user should see the element               jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(3)
@@ -159,7 +159,7 @@ Bank details for Academic
     Given log in as a different user               ${PS_BD_APPLICATION_ACADEMIC_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
     Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
-    When the user clicks the button/link           link=What's the status of each of my partners?
+    When the user clicks the button/link           link=status of my partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(3)
@@ -181,7 +181,7 @@ Bank details for Academic
     And the user should see the text in the page   The bank account details below are being reviewed
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element            jQuery=ul li.complete:nth-child(2)
-    When the user clicks the button/link           link=What's the status of each of my partners?
+    When the user clicks the button/link           link=status of my partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(3)
@@ -206,7 +206,7 @@ Bank details for non-lead partner
     Given log in as a different user               ${PS_BD_APPLICATION_PARTNER_EMAIL}  ${short_password}
     When the user clicks the button/link           link=${PS_BD_APPLICATION_HEADER}
     Then the user should see the element           jQuery=ul li.require-action:nth-child(4)
-    And the user clicks the button/link            link=What's the status of each of my partners?
+    And the user clicks the button/link            link=status of my partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(3)
@@ -230,7 +230,7 @@ Bank details for non-lead partner
     And the user should see the element            jQuery=p:contains("The bank account details below are being reviewed")
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}
     And the user should see the element            jQuery=ul li.complete:nth-child(2)
-    When the user clicks the button/link           link=What's the status of each of my partners?
+    When the user clicks the button/link           link=status of my partners
     Then the user navigates to the page            ${server}/project-setup/project/${PS_BD_APPLICATION_PROJECT}/team-status
     And the user should see the text in the page   Project team status
     And the user should see the element            jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(3)
