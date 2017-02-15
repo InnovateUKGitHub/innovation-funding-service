@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="app-dashboard">
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<h1 class="heading-xlarge">Your dashboard</h1>
 
 	<div th:if="${param.status != null} and ${param.status[0] == 'projectSetup'}" th:remove="tag">
-		
+
 		<h2 class="heading-large">Projects in setup</h2>
 
 		<ul class="boxed-list">
@@ -64,7 +64,7 @@
 		        </div>
 		    </li>
 		    <li>
-		        
+
 		        <div class="grid-row">
 		            <div class="column-assessment-details">
 		                <h2 class="heading-medium">
@@ -109,9 +109,9 @@
 		            </div>
 		            <div class="column-assessment-status navigation-right">
 		                <div class="yes application-status assessed">
-		                    
+
 		                    <h3 class="results-status">Successful</h3>
-		            
+
 		                </div>
 		            </div>
 		        </div>
@@ -123,9 +123,9 @@
 		            </div>
 		            <div class="column-assessment-status navigation-right">
 		                <div class="yes application-status assessed">
-		                    
+
 		                    <h3 class="results-status">Successful</h3>
-		                    
+
 		                </div>
 		            </div>
 		        </div>
@@ -147,8 +147,8 @@
 
 
 
-	<h2 class="heading-large">Your profile</h2> 
-	
+	<h2 class="heading-large">Your profile</h2>
+
 
 	<ul class="list list-bullet">
 		<li>
@@ -161,18 +161,18 @@
 			<a href="/info/terms-and-conditions">read the terms and conditions</a>
 		</li>
 	</ul>
-		
+
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
-	
-	jQuery('input#address-same').on('click',function(e){ 
+
+	jQuery('input#address-same').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#manual-company-input").hide();
@@ -182,20 +182,20 @@
 
 	});
 
-	jQuery('#manual-company-trigger').on('click',function(e){ 
+	jQuery('#manual-company-trigger').on('click',function(e){
 		e.preventDefault();
 		jQuery("#manual-company-input").show();
 		jQuery("#org-results").hide();
 
 	});
 
-	jQuery('#postcode-lookup').on('click',function(e){ 
+	jQuery('#postcode-lookup').on('click',function(e){
 		e.preventDefault();
 		jQuery("#select-address-block").show();
 
 	});
 
-	jQuery('#select-address').on('change',function(e){ 
+	jQuery('#select-address').on('change',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#street").val("King William House");
@@ -205,7 +205,7 @@
 
 	});
 
-	jQuery('#enter-address-manually').on('click',function(e){ 
+	jQuery('#enter-address-manually').on('click',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#select-address-block").hide();

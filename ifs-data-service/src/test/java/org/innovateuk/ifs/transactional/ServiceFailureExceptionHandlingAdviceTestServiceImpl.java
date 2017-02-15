@@ -17,7 +17,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTransactionalService implements ServiceFailureExceptionHandlingAdviceTestService {
 
     @Autowired
-    public UserRepository userRepository;
+    private UserRepository userRepository;
+
+    @Autowired
+    private ServiceFailureExceptionHandlingAdviceInternalTestService internalTestService;
 
     @Override
     public ServiceResult<String> successfulMethod() {
@@ -57,6 +60,28 @@ public class ServiceFailureExceptionHandlingAdviceTestServiceImpl extends BaseTr
         userRepository.save(user);
 
         throw new RuntimeException("Exception");
+    }
+
+    @Override
+    public ServiceResult<String> successfulMethodWithInternalFailingCall() {
+
+        User user = getUser();
+        user.setFirstName("Successful Internal");
+        userRepository.save(user);
+
+        assert internalTestService.internalFailingCall().isFailure();
+
+        return serviceSuccess("Successful");
+    }
+
+    @Override
+    public ServiceResult<String> failingMethodWithInternalFailingCall() {
+
+        User user = getUser();
+        user.setFirstName("Successful Internal");
+        userRepository.save(user);
+
+        return internalTestService.internalFailingCall();
     }
 
     @Override

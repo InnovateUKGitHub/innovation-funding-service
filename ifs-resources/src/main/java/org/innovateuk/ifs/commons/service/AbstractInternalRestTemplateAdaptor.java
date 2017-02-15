@@ -127,11 +127,11 @@ public abstract class AbstractInternalRestTemplateAdaptor extends AbstractRestTe
         return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(null), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
-    public <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(objectToSend), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
-    public <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, HttpHeaders additionalHeaders, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
+    private <T> RestResult<T> exchangeObjectWithRestResult(String path, HttpMethod method, Object objectToSend, HttpHeaders additionalHeaders, Class<T> returnType, HttpStatus expectedSuccessCode, HttpStatus... otherExpectedStatusCodes) {
         return exchangeWithRestResult(() -> getRestTemplate().exchange(path, method, jsonEntity(objectToSend, additionalHeaders), returnType), expectedSuccessCode, otherExpectedStatusCodes);
     }
 
