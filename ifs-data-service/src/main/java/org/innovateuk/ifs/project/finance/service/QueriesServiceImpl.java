@@ -14,6 +14,7 @@ import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.service.MappingThreadService;
 import org.innovateuk.ifs.threads.service.ThreadService;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -81,23 +82,7 @@ public class QueriesServiceImpl implements ProjectFinanceQueriesService {
                     Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
 
                     if (financeContact.isPresent()) {
-                        NotificationSource from = systemNotificationSource;
-                        String fullName = financeContact.get().getUser().getName();
-
-                        Application application = project.getApplication();
-
-                        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.get().getUser().getEmail());
-
-                        Map<String, Object> notificationArguments = new HashMap<>();
-                        notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + project.getId());
-                        notificationArguments.put("applicationName", application.getName());
-
-                        Notification notification = new Notification(from, Collections.singletonList(pmTarget), Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
-                        ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, NotificationMedium.EMAIL);
-
-                        if (!notificationResult.isSuccess()) {
-                            return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
-                        }
+                        return sendResponseNotification(financeContact.get().getUser(), project);
                     }
                 } else {
                     return serviceFailure(GENERAL_NOT_FOUND);
@@ -105,6 +90,22 @@ public class QueriesServiceImpl implements ProjectFinanceQueriesService {
             }
         }
         return result;
+    }
+    private ServiceResult<Void> sendResponseNotification(User financeContact, Project project) {
+        NotificationSource from = systemNotificationSource;
+        String fullName = financeContact.getName();
+
+        Application application = project.getApplication();
+
+        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + project.getId());
+        notificationArguments.put("applicationName", application.getName());
+
+        Notification notification = new Notification(from, Collections.singletonList(pmTarget), Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, notificationArguments);
+        return notificationService.sendNotification(notification, NotificationMedium.EMAIL);
+
     }
 
     public enum Notifications {NEW_FINANCE_CHECK_QUERY_RESPONSE}
