@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Assessment summary'" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessment summary'" />
     </head>
 
     <body th:with="context='assessment'" class="assessment assessment-form">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{/{id}(id=${model.assessmentId})},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" th:remove="tag" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" />
                 <h1 class="heading-xlarge" th:text="${'Assessment summary'}" />
             </div>
 
@@ -23,9 +23,9 @@
                     <tbody>
                         <tr>
                             <th class="width-150" scope="row">Question</th>
-                            <td th:each="question : ${model.questionsForScoreOverview}">
-                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}" />
-                            </td>
+                            <th th:each="question : ${model.questionsForScoreOverview}" scope="col">
+                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}">Q1</a>
+                            </th>
                         </tr>
                         <tr>
                             <th class="width-150" scope="row">Score</th>
@@ -37,16 +37,16 @@
                 </table>
             </div>
 
-            <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
+            <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
 
             <h2 class="heading-medium">Review assessment</h2>
             <div class="collapsible section-overview">
                 <div th:each="question : ${model.questionsForReview}" th:remove="tag">
-                    <div th:include="fragments/assessment :: assessment-summary-section (question=${question})" th:remove="tag" />
+                    <th:block th:include="fragments/assessment :: assessment-summary-section (question=${question})" />
                 </div>
             </div>
 
-            <div th:include="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" th:remove="tag" />
+            <th:block th:insert="fragments/assessment :: assessment-summary-total-score((totalGiven=${model.totalScoreGiven}, totalPossible=${model.totalScorePossible}, totalPercentage=${model.totalScorePercentage}))" />
 
             <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" enctype="multipart/form-data" novalidate="novalidate">
                 <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
@@ -115,7 +115,7 @@
                                     rows="4"
                                     th:field="*{feedback}"></textarea>
                                 <div class="textarea-footer" th:with="feedback=*{feedback}">
-                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, feedback)})" th:remove="tag" />
+                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, feedback)})" />
                                 </div>
                             </div>
                         </div>
@@ -143,7 +143,7 @@
                                     th:field="*{comment}"></textarea>
 
                                 <div class="textarea-footer" th:with="comment=*{comment}">
-                                    <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, comment)})" th:remove="tag" />
+                                    <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, comment)})" />
                                 </div>
                             </div>
                         </div>
@@ -159,10 +159,10 @@
                 </div>
             </form>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

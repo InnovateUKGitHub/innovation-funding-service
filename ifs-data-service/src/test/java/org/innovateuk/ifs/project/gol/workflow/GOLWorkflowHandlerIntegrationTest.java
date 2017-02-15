@@ -96,7 +96,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
     @Test
     public void testGrantOfferLetterSent() throws Exception {
 
-        callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterSent(project, projectUser)),
+        callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterSent(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
                 GOLState.PENDING, GOLState.SENT, GOLOutcomes.GOL_SENT);
@@ -114,7 +114,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
     @Test
     public void testGrantOfferLetterRejected() throws Exception {
 
-        callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterRejected(project, projectUser)),
+        callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterRejected(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
                 GOLState.READY_TO_APPROVE, GOLState.PENDING, GOLOutcomes.GOL_REJECTED);
@@ -123,7 +123,7 @@ public class GOLWorkflowHandlerIntegrationTest extends
     @Test
     public void testGrantOfferLetterApproved() throws Exception {
 
-        callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterApproved(project, projectUser)),
+        callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
                 GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
@@ -132,28 +132,10 @@ public class GOLWorkflowHandlerIntegrationTest extends
     @Test
     public void testApproveSignedGrantOfferLetter() throws Exception {
 
-        callWorkflowAndCheckTransitionAndEventFired(((project, projectUser) -> golWorkflowHandler.grantOfferLetterApproved(project, projectUser)),
+        callWorkflowAndCheckTransitionAndEventFiredInternalUser(((project, internalUser) -> golWorkflowHandler.grantOfferLetterApproved(project, internalUser)),
 
                 // current State, destination State and expected Event to be fired
                 GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
-    }
-
-    @Test
-    public void testApproveSignedGrantOfferLetterWithoutProjectUser() throws Exception {
-
-        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.approve(project)),
-
-                // current State, destination State and expected Event to be fired
-                GOLState.READY_TO_APPROVE, GOLState.APPROVED, GOLOutcomes.GOL_APPROVED);
-    }
-
-    @Test
-    public void testSendGrantOfferLetterWithoutProjectUser() throws Exception {
-
-        callWorkflowAndCheckTransitionAndEventFiredWithoutProjectUser((project -> golWorkflowHandler.grantOfferLetterSent(project)),
-
-                // current State, destination State and expected Event to be fired
-                GOLState.PENDING, GOLState.SENT, GOLOutcomes.GOL_SENT);
     }
 
     @Test

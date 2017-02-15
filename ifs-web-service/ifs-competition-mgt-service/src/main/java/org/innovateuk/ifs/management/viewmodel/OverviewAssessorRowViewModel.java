@@ -15,8 +15,8 @@ public class OverviewAssessorRowViewModel extends InviteAssessorsRowViewModel {
     private ParticipantStatusResource status;
     private String details;
 
-    public OverviewAssessorRowViewModel(String name, List<InnovationAreaResource> innovationAreas, boolean compliant, BusinessType businessType, ParticipantStatusResource status, String details) {
-        super(name, innovationAreas, compliant);
+    public OverviewAssessorRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, BusinessType businessType, ParticipantStatusResource status, String details) {
+        super(id, name, innovationAreas, compliant);
         this.businessType = businessType;
         this.status = status;
         this.details = details;

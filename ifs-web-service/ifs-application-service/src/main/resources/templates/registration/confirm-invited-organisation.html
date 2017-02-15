@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Accept Invite'" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Accept Invite'" />
 </head>
 <body th:with="context='applicant'" class="create-application-eligibility">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
     <h1 class="heading-large">Your organisation</h1>
 
-    <h2 class="heading-medium">Business Organisation</h2>
+    <h2 class="heading-medium">Business organisation</h2>
 
     <fieldset>
-        <legend class="visuallyhidden">Business Organisation</legend>
+        <legend class="visuallyhidden">Business organisation</legend>
         <div class="form-block">
             <h3 class="heading-small">Organisation name</h3>
             <p th:text="${organisation.name}">Nomensa</p>
@@ -36,15 +36,15 @@
         </div>
     </fieldset>
 
-    <p>If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}">email the application lead</a></p>
+    <p>If this is not the correct organisation <a th:href="${'mailto:'+ invite.leadApplicantEmail}">email the application lead</a>.</p>
     <p><strong>Please note</strong>, if you are representing a different organisation then you will need to make a new account.</p>
 
     <a th:href="${registerUrl}" class="button button-large extra-margin">Continue</a>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

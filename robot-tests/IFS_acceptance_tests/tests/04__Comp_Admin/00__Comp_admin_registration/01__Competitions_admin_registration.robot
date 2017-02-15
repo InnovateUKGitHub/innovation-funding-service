@@ -13,7 +13,7 @@ If user from the list is not registered shouldn't be able to login
     [Tags]
     [Setup]    delete the emails from the default test mailbox
     Given the user navigates to the page    ${LOGIN_URL}
-    When the guest user enters the log in credentials    worth.email.test+admin2@gmail.com    Passw0rd
+    When the guest user enters the log in credentials    ${test_mailbox_one}+admin2@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the text in the page    Your username/password combination doesn't seem to work
 
@@ -22,7 +22,7 @@ Registration for a user who is in the list
     [Tags]    HappyPath    Email
     [Setup]    Delete the emails from both default test mailboxes
     Given the user navigates to the page    ${COMPETITION_DETAILS_URL}
-    And User creates new account verifies email and login    worth.email.test+admin1@gmail.com
+    And User creates new account verifies email and login    ${test_mailbox_one}+admin1@gmail.com
     Then the user should be redirected to the correct page    ${COMP_ADMINISTRATOR_DASHBOARD}
 
 *** Keywords ***

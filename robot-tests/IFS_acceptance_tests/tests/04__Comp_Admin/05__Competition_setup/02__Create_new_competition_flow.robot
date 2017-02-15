@@ -49,6 +49,8 @@ Documentation     INFUND-2945 As a Competition Executive I want to be able to cr
 ...               INFUND-6479 As a Competitions executive I will be able to edit (add or remove) multiple innovation areas when editing the Initial details of my application and the Competition type is Sector competition
 ...
 ...               INFUND-6773 As a Competitions team member I want to see Finances form defaulted to Full application finances
+...
+...               INFUND-6922 Update 'Competition setup' menu page to include a link to new 'Public content' page
 Suite Setup       Custom suite setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        CompAdmin
@@ -68,10 +70,10 @@ User can create a new competition
     And The user should not see the element    link=Funding information
     And The user should not see the element    link=Eligibility
     And The user should not see the element    link=Milestones
-    And The user should not see the element    link=Application Questions
-    And The user should not see the element    link=Application Finances
+    And The user should not see the element    link=Application
     And The user should not see the element    link=Assessors
-    And The user should not see the element    link=Description and brief
+    And The user should not see the element    link=Public content
+    And The user should see the element        link=Initial details
 
 New competition shows in Preparation section
     [Documentation]    INFUND-2980
@@ -116,10 +118,16 @@ Initial Details - User can remove an innovation area
    When the user clicks the button/link   jQuery=.button:contains("Done")
    Then the user should not see the text in the page  Creative economy
 
+Initial Details - drop down menu is populated with comp admin users
+    [Documentation]    INFUND-6905
+    [Tags]    HappyPath
+    [Setup]    the user clicks the button/link    jQuery=.button:contains("Edit")
+    When the user should see the option in the drop-down menu    John Doe    name=executiveUserId
+    And the user should see the option in the drop-down menu    Robert Johnson    name=executiveUserId
+
 Initial details - Comp Type and Date should not be editable
     [Documentation]    INFUND-2985, INFUND-3182, INFUND-4892
     [Tags]    HappyPath
-    When the user clicks the button/link      jQuery=.button:contains("Edit")
     And the user enters text to a text field  css=#title  Test competition
     And The element should be disabled        css=#competitionTypeId
     And The element should be disabled        css=#openingDateDay
@@ -131,6 +139,7 @@ Initial details - Comp Type and Date should not be editable
     And the user should see the text in the page    Design
     And the user should see the text in the page    Sector
     And the user should see the text in the page    Yes
+
 
 Initial details - should have a green check
     [Documentation]    INFUND-3002
@@ -147,6 +156,22 @@ User should have access to all the sections
     And The user should see the element    link=Milestones
     And The user should see the element    link=Application
     And The user should see the element    link=Assessors
+    And The user should see the element    link=Public content
+
+Internal user can navigate to Public Content without having any issues
+    [Documentation]  INFUND-6922
+    [Tags]
+    Given the user clicks the button/link  link=Public content
+    Then the user should not see an error in the page
+    And the user should see the element  jQuery=h1:contains("Public content")
+    And the user should see the element  jQuery=a:contains("Competition information and search")
+    And the user should see the element  jQuery=a:contains("Summary")
+    And the user should see the element  jQuery=a:contains("Eligibility")
+    And the user should see the element  jQuery=a:contains("Scope")
+    And the user should see the element  jQuery=a:contains("Dates")
+    And the user should see the element  jQuery=a:contains("How to apply")
+    And the user should see the element  jQuery=a:contains("Supporting information")
+    [Teardown]  the user clicks the button/link  link=Return to setup overview
 
 New application shows in Preparation section with the new name
     [Documentation]    INFUND-2980
@@ -494,6 +519,7 @@ Assessor: Should have a Green Check
     And the user clicks the button/link     jQuery=.button:contains("Save")
     When the user navigates to the page     ${CA_UpcomingComp}
     Then the user should see the element    h2:contains("In preparation") ~ ul:contains("Test competition")
+
 
 *** Keywords ***
 the user moves focus and waits for autosave

@@ -35,6 +35,11 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
+    public RestResult<AssessmentResource> getRejectableById(long id) {
+        return getWithRestResult(format("%s/%s/rejectable", assessmentRestURL, id), AssessmentResource.class);
+    }
+
+    @Override
     public RestResult<List<AssessmentResource>> getByUserAndCompetition(long userId, long competitionId) {
         return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), ParameterizedTypeReferences.assessmentResourceListType());
     }

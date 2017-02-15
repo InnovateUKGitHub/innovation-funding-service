@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.interceptors;
 
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.application.service.AlertService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +11,10 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Look for alertmessages on every page that has a modelAndView
@@ -17,6 +22,9 @@ import java.util.Optional;
 public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
 
     public static final String ALERT_MESSAGES = "alertMessages";
+
+    private static final Cache<String, List<AlertResource>> ALERT_CACHE
+            = CacheBuilder.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).build();
 
     @Autowired
     private AlertService alertService;
@@ -29,7 +37,12 @@ public class AlertMessageHandlerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private void addAlertMessages(ModelAndView modelAndView) {
-        List<AlertResource> alerts = alertService.findAllVisible();
+        List<AlertResource> alerts;
+        try {
+            alerts = ALERT_CACHE.get(ALERT_MESSAGES, () -> alertService.findAllVisible());
+        } catch (ExecutionException e) {
+            alerts = emptyList();
+        }
 
         if(!alerts.isEmpty()) {
             modelAndView.getModelMap().addAttribute(ALERT_MESSAGES, alerts);

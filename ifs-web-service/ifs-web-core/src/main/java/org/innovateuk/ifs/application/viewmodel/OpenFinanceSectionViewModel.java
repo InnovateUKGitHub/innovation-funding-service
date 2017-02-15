@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.application.viewmodel;
 
+import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.user.resource.UserResource;
@@ -90,5 +91,13 @@ public class OpenFinanceSectionViewModel extends BaseSectionViewModel {
         }
 
         return sectionsMarkedAsComplete.contains(fundingSection.getId());
+    }
+
+    public boolean isSectionDisplayed(SectionResource subSection) {
+        return !getIsAcademicFinance() || !SectionType.ORGANISATION_FINANCES.equals(subSection.getType());
+    }
+
+    public boolean getIsAcademicFinance() {
+        return (getFinanceViewModel() instanceof AcademicFinanceViewModel);
     }
 }

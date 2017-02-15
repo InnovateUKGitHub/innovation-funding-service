@@ -29,6 +29,10 @@ public class PublicContentBuilder extends BaseBuilder<PublicContent, PublicConte
         return with(publicContent -> setField("competitionId", competitionId, publicContent));
     }
 
+    public PublicContentBuilder withId(Long id) {
+        return with(publicContent -> setField("id", id, publicContent));
+    }
+
     public PublicContentBuilder withPublishDate(LocalDateTime publishDate) {
         return with(publicContent -> setField("publishDate", publishDate, publicContent));
     }
@@ -74,4 +78,6 @@ public class PublicContentBuilder extends BaseBuilder<PublicContent, PublicConte
     protected PublicContent createInitial() {
         return new PublicContent();
     }
+
+
 }

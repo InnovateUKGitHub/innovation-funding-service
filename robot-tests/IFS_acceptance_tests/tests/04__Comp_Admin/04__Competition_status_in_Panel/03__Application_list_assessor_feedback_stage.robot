@@ -4,14 +4,14 @@ Suite Setup       Log in as user    email=lee.bowman@innovateuk.test    password
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
-
+#TODO once new funding work is done INFUND-7376
 *** Variables ***
 
 *** Test Cases ***
 Status and applications are correct
     [Documentation]    INFUND-2606
     [Tags]    HappyPath
-    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/applications
+    When the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
     Then the user should see the text in the page    Assessor Feedback
     And the user should see the text in the page    Matter - Planning for Web
     And the user should see the text in the page    Sensing & Control network using the lighting infrastructure
@@ -25,8 +25,8 @@ The 'Fund project?' column title is now 'Funded' and isn't editable
     [Tags]
     When the user should see the text in the page    Funded
     And the user should not see the text in the page    Fund project?
-    Then the user should not see the element    id=fund24
-    And the user should not see the element    id=fund25
+    Then the user should not see the element    id=fund27
+    And the user should not see the element    id=fund28
 
 Publish assessor feedback button is now visible
     [Documentation]    INFUND-2606

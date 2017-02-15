@@ -55,8 +55,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void competition_readyToOpen() throws Exception {
         CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource = newCompetitionReadyToOpenKeyStatisticsResource()
-                .withAssessorsInvited(1L)
-                .withAssessorsAccepted(2L)
+                .withAssessorsInvited(1)
+                .withAssessorsAccepted(2)
                 .build();
         when(competitionKeyStatisticsRestServiceMock.getReadyToOpenKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatisticsResource));
         competition_inFlight(READY_TO_OPEN);
@@ -66,12 +66,12 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void competition_open() throws Exception {
         CompetitionOpenKeyStatisticsResource keyStatisticsResource = newCompetitionOpenKeyStatisticsResource()
-                .withAssessorsInvited(1L)
-                .withAssessorsAccepted(2L)
-                .withApplicationsPerAssessor(3L)
-                .withApplicationsStarted(4L)
-                .withApplicationsPastHalf(5L)
-                .withApplicationsSubmitted(6L)
+                .withAssessorsInvited(1)
+                .withAssessorsAccepted(2)
+                .withApplicationsPerAssessor(3)
+                .withApplicationsStarted(4)
+                .withApplicationsPastHalf(5)
+                .withApplicationsSubmitted(6)
                 .build();
         when(competitionKeyStatisticsRestServiceMock.getOpenKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatisticsResource));
         competition_inFlight(OPEN);
@@ -81,12 +81,12 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void competition_closed() throws Exception {
         CompetitionClosedKeyStatisticsResource keyStatisticsResource = newCompetitionClosedKeyStatisticsResource()
-                .withApplicationsRequiringAssessors(1L)
-                .withAssignmentCount(2L)
-                .withAssessorsWithoutApplications(3L)
-                .withAssessorsInvited(4L)
-                .withAssessorsAccepted(5L)
-                .withApplicationsPerAssessor(6L)
+                .withApplicationsRequiringAssessors(1)
+                .withAssignmentCount(2)
+                .withAssessorsWithoutApplications(3)
+                .withAssessorsInvited(4)
+                .withAssessorsAccepted(5)
+                .withApplicationsPerAssessor(6)
                 .build();
         when(competitionKeyStatisticsRestServiceMock.getClosedKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatisticsResource));
         competition_inFlight(CLOSED);
@@ -96,11 +96,11 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void competition_inAssessment() throws Exception {
         CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource = newCompetitionInAssessmentKeyStatisticsResource()
-                .withAssignmentCount(1L)
-                .withAssignmentsWaiting(2L)
-                .withAssignmentsAccepted(3L)
-                .withAssessmentsStarted(4L)
-                .withAssessmentsSubmitted(5L)
+                .withAssignmentCount(1)
+                .withAssignmentsWaiting(2)
+                .withAssignmentsAccepted(3)
+                .withAssessmentsStarted(4)
+                .withAssessmentsSubmitted(5)
                 .build();
         when(competitionKeyStatisticsRestServiceMock.getInAssessmentKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatisticsResource));
         competition_inFlight(IN_ASSESSMENT);
@@ -162,14 +162,14 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
         switch (state) {
             case OPEN:
             case CLOSED:
-                assertEquals(6L, (long) model.getStatSix());
+                assertEquals(6, (int) model.getStatSix());
             case IN_ASSESSMENT:
-                assertEquals(5L, (long) model.getStatFive());
-                assertEquals(4L, (long) model.getStatFour());
-                assertEquals(3L, (long) model.getStatThree());
+                assertEquals(5, (int) model.getStatFive());
+                assertEquals(4, (int) model.getStatFour());
+                assertEquals(3, (int) model.getStatThree());
             case READY_TO_OPEN:
-                assertEquals(2L, model.getStatTwo());
-                assertEquals(1L, model.getStatOne());
+                assertEquals(2, model.getStatTwo());
+                assertEquals(1, model.getStatOne());
         }
     }
 
