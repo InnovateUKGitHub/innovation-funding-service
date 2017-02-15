@@ -51,7 +51,7 @@ public class CompetitionInFlightStatsViewModel {
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionFundedKeyStatisticsResource keyStatisticsResource) {
-        this.statOne = keyStatisticsResource.getApplications();
+        this.statOne = keyStatisticsResource.getApplicationsSubmitted();
         this.statTwo = keyStatisticsResource.getApplicationsFunded();
         this.statThree = keyStatisticsResource.getApplicationsNotFunded();
         this.statFour = keyStatisticsResource.getApplicationsOnHold();

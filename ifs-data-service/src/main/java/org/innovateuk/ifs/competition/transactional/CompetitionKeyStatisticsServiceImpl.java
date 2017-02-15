@@ -98,13 +98,12 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId) {
         CompetitionFundedKeyStatisticsResource competitionFundedKeyStatisticsResource = new CompetitionFundedKeyStatisticsResource();
-        competitionFundedKeyStatisticsResource.setApplications(applicationStatisticsRepository.findByCompetition(competitionId).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
-        applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId());
-        competitionFundedKeyStatisticsResource.setApplicationsFunded(102);
-        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(103);
-        competitionFundedKeyStatisticsResource.setApplicationsOnHold(104);
-        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(105);
-        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(106);
+        competitionFundedKeyStatisticsResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
+        competitionFundedKeyStatisticsResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId()));
+        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.REJECTED.getId()));
+        competitionFundedKeyStatisticsResource.setApplicationsOnHold(104); // TODO
+        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(105); // TODO
+        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(106); // TODO
         return serviceSuccess(competitionFundedKeyStatisticsResource);
     }
 }

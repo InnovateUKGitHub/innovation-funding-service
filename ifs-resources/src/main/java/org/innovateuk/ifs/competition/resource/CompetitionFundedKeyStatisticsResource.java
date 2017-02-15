@@ -5,19 +5,19 @@ package org.innovateuk.ifs.competition.resource;
  */
 public class CompetitionFundedKeyStatisticsResource {
 
-    private int applications;
+    private int applicationsSubmitted;
     private int applicationsFunded;
     private int applicationsNotFunded;
     private int applicationsOnHold;
     private int applicationsNotifiedOfDecision;
     private int applicationsAwaitingDecision;
 
-    public int getApplications() {
-        return applications;
+    public int getApplicationsSubmitted() {
+        return applicationsSubmitted;
     }
 
-    public void setApplications(int applications) {
-        this.applications = applications;
+    public void setApplicationsSubmitted(int applicationsSubmitted) {
+        this.applicationsSubmitted = applicationsSubmitted;
     }
 
     public int getApplicationsFunded() {
@@ -67,7 +67,7 @@ public class CompetitionFundedKeyStatisticsResource {
 
         CompetitionFundedKeyStatisticsResource that = (CompetitionFundedKeyStatisticsResource) o;
 
-        if (applications != that.applications) return false;
+        if (applicationsSubmitted != that.applicationsSubmitted) return false;
         if (applicationsFunded != that.applicationsFunded) return false;
         if (applicationsNotFunded != that.applicationsNotFunded) return false;
         if (applicationsOnHold != that.applicationsOnHold) return false;
@@ -78,7 +78,7 @@ public class CompetitionFundedKeyStatisticsResource {
 
     @Override
     public int hashCode() {
-        int result = applications;
+        int result = applicationsSubmitted;
         result = 31 * result + applicationsFunded;
         result = 31 * result + applicationsNotFunded;
         result = 31 * result + applicationsOnHold;

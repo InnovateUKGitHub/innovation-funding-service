@@ -3,10 +3,7 @@ package org.innovateuk.ifs.competition.controller;
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -80,4 +77,15 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
         assertEquals(1L, keyStatisticsResource.getAssignmentsWaiting());
     }
 
+    @Test
+    public void getFundedKeyStatistics() throws Exception {
+
+        CompetitionFundedKeyStatisticsResource keyStatisticsResource = controller.getFundedKeyStatistics(1L).getSuccessObject();
+        assertEquals(4L, keyStatisticsResource.getApplicationsSubmitted());
+        assertEquals(9L, keyStatisticsResource.getApplicationsFunded());
+        assertEquals(2L, keyStatisticsResource.getApplicationsNotFunded());
+        assertEquals(1L, keyStatisticsResource.getApplicationsOnHold());
+        assertEquals(1L, keyStatisticsResource.getApplicationsNotifiedOfDecision());
+        assertEquals(1L, keyStatisticsResource.getApplicationsAwaitingDecision());
+    }
 }

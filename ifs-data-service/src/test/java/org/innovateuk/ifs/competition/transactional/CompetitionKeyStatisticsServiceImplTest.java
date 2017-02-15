@@ -1,13 +1,11 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -26,6 +24,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
@@ -175,6 +174,32 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
         when(assessmentRepositoryMock.countByActivityStateStateAndTargetCompetitionId(SUBMITTED, competitionId)).thenReturn(keyStatisticsResource.getAssessmentsSubmitted());
 
         CompetitionInAssessmentKeyStatisticsResource response = service.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
+        assertEquals(keyStatisticsResource, response);
+    }
+
+    @Test
+    public void getFundedKeyStatisticsByCompetition() throws Exception {
+        long competitionId = 1L;
+
+        CompetitionFundedKeyStatisticsResource keyStatisticsResource = newCompetitionFundedKeyStatisticsResource()
+                .withApplicationsSubmitted(1)
+                .withApplicationsFunded(2)
+                .withApplicationsNotFunded(3)
+                .withApplicationsOnHold(4)
+                .withApplicationsNotifiedOfDecision(5)
+                .withApplicationsAwaitingDecision(6)
+                .build();
+
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS)).thenReturn(keyStatisticsResource.getApplicationsSubmitted());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId())).thenReturn(keyStatisticsResource.getApplicationsFunded());
+        when(applicationRepositoryMock.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.REJECTED.getId())).thenReturn(keyStatisticsResource.getApplicationsNotFunded());
+
+        // TODO
+        //competitionFundedKeyStatisticsResource.setApplicationsOnHold(104); // TODO
+        //competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(105); // TODO
+        //competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(106); // TODO
+
+        CompetitionFundedKeyStatisticsResource response = service.getFundedKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
         assertEquals(keyStatisticsResource, response);
     }
 }
