@@ -10,7 +10,6 @@ import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesRestServi
 import org.innovateuk.ifs.project.finance.workflow.financechecks.resource.FinanceCheckProcessResource;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.upload.service.PostAttachmentRestService;
-import org.innovateuk.thread.service.ThreadRestService;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
