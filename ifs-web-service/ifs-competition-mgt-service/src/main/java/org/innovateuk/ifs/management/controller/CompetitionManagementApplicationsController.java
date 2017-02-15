@@ -14,7 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+
 
 /**
  * This controller will handle all requests that are related to the applications of a Competition within Competition Management.

@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Viability'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Viability'" />
 </head>
 <body th:with="context='project-management'">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})}" />
 
     <h1 class="heading-xlarge">
         <th:block th:text="${model.organisationName}" />
@@ -20,7 +20,7 @@
 
     <th:block th:if="${model.isShowApprovalMessage()}">
         <div class="success-alert">
-            <p>The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"/>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+            <p>The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"></span>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"></span></p>
         </div>
     </th:block>
 
@@ -82,6 +82,10 @@
           <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
         </label>
       </div>
+      <div class="extra-margin">
+          <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button button-secondary">Queries</a>
+          <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="button button-secondary">Notes</a>
+      </div>
       <th:block th:unless="${model.isReadOnly()}">
           <h2 class="heading-medium">Approve viability</h2>
           <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
@@ -108,9 +112,9 @@
       <a th:if="${model.showBackToFinanceCheckButton}" class="button button-secondary" th:href="@{/project/{projectId}/finance-check(projectId=${model.projectId})}">Return to finance checks</a>
     </form>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

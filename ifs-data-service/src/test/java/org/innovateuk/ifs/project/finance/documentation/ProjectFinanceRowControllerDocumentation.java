@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.finance.documentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.controller.ProjectFinanceRowController;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
@@ -74,7 +75,7 @@ public class ProjectFinanceRowControllerDocumentation extends BaseControllerMock
 
         GrantClaim costItem = new GrantClaim();
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
-
+        when(validationUtil.validateProjectCostItem(isA(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         mockMvc.perform(put("/cost/project/update/{id}", "123")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(new ObjectMapper().writeValueAsString(costItem)))

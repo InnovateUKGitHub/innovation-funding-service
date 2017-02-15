@@ -14,12 +14,21 @@ Documentation     INFUND-1188 As an assessor I want to be able to review my asse
 ...               INFUND-3724 As an Assessor and I am looking at my competition assessment dashboard, I can review the status of applications that I am allocated so that I can track my work
 ...
 ...               INFUND-3725 As an Assessor I want to see the scores that I have given for applications I have completed assessing so that I can compare all the applications I am assessing.
+...
+...               INFUND-4797 Handle scenario where invitation to assess an application has been removed from this user before they have responded
 Suite Setup       Log in as user    email=felix.wilson@gmail.com    password=Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
+User cannot accept/reject an invite to an application that has been withdrawn
+    [Documentation]    INFUND-4797
+    [Tags]
+    When the user navigates to the page    ${server}/assessment/128/assignment
+    Then the user should see the text in the page    Invitation withdrawn
+    [Teardown]    the user clicks the button/link    jQuery=#proposition-links a:contains(My dashboard)
+
 Competition link should navigate to the applications
     [Documentation]    INFUND-3716
     [Tags]    HappyPath
