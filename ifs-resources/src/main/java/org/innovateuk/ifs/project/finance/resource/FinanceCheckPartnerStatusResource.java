@@ -7,18 +7,22 @@ public class FinanceCheckPartnerStatusResource {
     private Long id;
     private String name;
     private Viability viability;
-    private ViabilityStatus viabilityRagStatus;
+    private ViabilityRagStatus viabilityRagStatus;
     private Eligibility eligibility;
+    private EligibilityRagStatus eligibilityRagStatus;
+    private boolean awaitingResponse;
 
     public FinanceCheckPartnerStatusResource() {
     }
 
-    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityStatus viabilityRagStatus, Eligibility eligibility) {
+    public FinanceCheckPartnerStatusResource(Long id, String name, Viability viability, ViabilityRagStatus viabilityRagStatus, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus, boolean awaitingResponse) {
         this.id = id;
         this.name = name;
         this.viability = viability;
         this.viabilityRagStatus = viabilityRagStatus;
         this.eligibility = eligibility;
+        this.eligibilityRagStatus = eligibilityRagStatus;
+        this.awaitingResponse = awaitingResponse;
     }
 
     public Long getId() {
@@ -45,6 +49,12 @@ public class FinanceCheckPartnerStatusResource {
         this.eligibility = eligibility;
     }
 
+    public EligibilityRagStatus getEligibilityRagStatus() { return eligibilityRagStatus; }
+
+    public void setEligibilityRagStatus(EligibilityRagStatus eligibilityRagStatus) {
+        this.eligibilityRagStatus = eligibilityRagStatus;
+    }
+
     public Viability getViability() {
         return viability;
     }
@@ -53,16 +63,19 @@ public class FinanceCheckPartnerStatusResource {
         this.viability = viability;
     }
 
-    public ViabilityStatus getViabilityRagStatus() {
+    public ViabilityRagStatus getViabilityRagStatus() {
         return viabilityRagStatus;
     }
 
-    public void setViabilityRagStatus(ViabilityStatus viabilityRagStatus) {
+    public void setViabilityRagStatus(ViabilityRagStatus viabilityRagStatus) {
         this.viabilityRagStatus = viabilityRagStatus;
     }
 
-    public enum Eligibility {
-        REVIEW,
-        APPROVED,
+    public boolean isAwaitingResponse() {
+        return awaitingResponse;
+    }
+
+    public void setAwaitingResponse(boolean awaitingResponse) {
+        this.awaitingResponse = awaitingResponse;
     }
 }

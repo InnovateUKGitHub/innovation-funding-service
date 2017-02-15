@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-	<div th:include="fragments/layout :: head" th:with="pageTitle='Bank Details Partner progress'" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: head" th:with="pageTitle='Bank Details Partner progress'" />
 </head>
 <body th:with="context='project-management'" class="project-management application-overview">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-	<th:block th:include="fragments/layout :: header-sub"	 th:with="linkTitle='Competition Dashboard',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"/>
-	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: header-sub"	 th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.competitionId})}"/>
+	<th:block th:insert="fragments/layout :: main-content-start" />
   <div class="grid-row">
     <div class="column-two-thirds">
       <div class="page-title">
@@ -40,14 +40,14 @@
             <div th:text="${partner.organisationName}" />
           </td>
           <td>
-            <th:block th:include="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
+            <th:block th:insert="project/fragments :: bankDetailsStatus(${partner.bankDetailsStatus.name()})" />
           </td>
       </tr>
     </tbody>
   </table>
-	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+	<th:block th:insert="fragments/layout :: main-content-end" />
 </main>
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

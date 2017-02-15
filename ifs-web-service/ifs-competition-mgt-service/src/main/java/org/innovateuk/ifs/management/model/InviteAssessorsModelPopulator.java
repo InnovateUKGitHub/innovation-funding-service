@@ -1,8 +1,11 @@
 package org.innovateuk.ifs.management.model;
 
 import org.apache.commons.lang3.StringUtils;
+import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.invite.resource.CompetitionInviteStatisticsResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsViewModel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,9 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssessorsViewModel> {
 
+    @Autowired
+    private CompetitionInviteRestService competitionInviteRestService;
+
     public ViewModelType populateModel(CompetitionResource competition) {
         ViewModelType model = populateCompetitionDetails(createModel(), competition);
-        populateStatistics(model);
+        populateStatistics(model,competition);
         populateCompetitionInnovationSectorAndArea(model, competition);
         return model;
     }
@@ -26,11 +32,12 @@ abstract class InviteAssessorsModelPopulator<ViewModelType extends InviteAssesso
         return model;
     }
 
-    private ViewModelType populateStatistics(ViewModelType model) {
-        model.setAssessorsInvited(60);
-        model.setAssessorsAccepted(23);
-        model.setAssessorsDeclined(3);
-        model.setAssessorsStaged(6);
+    private ViewModelType populateStatistics(ViewModelType model, CompetitionResource competitionResource) {
+        CompetitionInviteStatisticsResource competitionInviteStatisticsResource = competitionInviteRestService.getInviteStatistics(competitionResource.getId()).getSuccessObject();
+        model.setAssessorsInvited(competitionInviteStatisticsResource.getInvited());
+        model.setAssessorsAccepted(competitionInviteStatisticsResource.getAccepted());
+        model.setAssessorsDeclined(competitionInviteStatisticsResource.getDeclined());
+        model.setAssessorsStaged(competitionInviteStatisticsResource.getInviteList());
         return model;
     }
 

@@ -85,7 +85,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
-        when(financeRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(false);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 
@@ -162,7 +162,7 @@ public class ByProjectFinanceCostCategorySummaryStrategyTest extends BaseService
 
         when(projectServiceMock.getProjectById(project.getId())).thenReturn(serviceSuccess(project));
         when(organisationServiceMock.findById(organisation.getId())).thenReturn(serviceSuccess(organisation));
-        when(financeRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
+        when(projectFinanceRowServiceMock.financeChecksDetails(project.getId(), organisation.getId())).thenReturn(serviceSuccess(projectFinance));
         when(organisationFinanceDelegateMock.isUsingJesFinances(organisation.getOrganisationTypeName())).thenReturn(true);
         when(costCategoryTypeStrategyMock.getOrCreateCostCategoryTypeForSpendProfile(project.getId(), organisation.getId())).thenReturn(serviceSuccess(costCategoryType));
 

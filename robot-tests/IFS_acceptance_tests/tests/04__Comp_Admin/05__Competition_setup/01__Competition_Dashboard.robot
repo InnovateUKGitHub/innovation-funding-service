@@ -14,6 +14,7 @@ Suite Setup       Guest user log-in    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
 Resource          ../../../resources/defaultResources.robot
+Resource          ../CompAdmin_Commons.robot
 
 *** Test Cases ***
 Sections of Live Competitions
@@ -55,18 +56,18 @@ PS projects title and lead
     And the user should see the element    link=${PROJECT_SETUP_COMPETITION_NAME}
     When the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
     Then the user should see the element    jQuery=h2:contains("Projects in setup")
-    And the user should see the element    jQuery=tr:nth-child(1) th:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
-    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
-    And the user should see the element    jQuery=tr:nth-child(2) th:contains("Office Chair for Life")
-    And the user should see the element    jQuery=tr:nth-child(2) th:contains("Lead: Guitar Gods Ltd")
-    And the user should see the element    jQuery=tr:nth-child(3) th:contains("Elbow grease")
-    And the user should see the element    jQuery=tr:nth-child(3) th:contains("Lead: Big Riffs And Insane Solos Ltd")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Elbow grease")
+    And the user should see the element    jQuery=tr:nth-child(1) th:contains("Lead: Big Riffs And Insane Solos Ltd")
+    And the user should see the element    jQuery=tr:nth-child(2) th:contains("${PROJECT_SETUP_APPLICATION_1_NUMBER}")
+    And the user should see the element    jQuery=tr:nth-child(2) th:contains("Lead: ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}")
+    And the user should see the element    jQuery=tr:nth-child(3) th:contains("Office Chair for Life")
+    And the user should see the element    jQuery=tr:nth-child(3) th:contains("Lead: Guitar Gods Ltd")
 
 PS projects status page
     [Documentation]    INFUND-2610
     Given the user navigates to the page    ${COMP_MANAGEMENT_PROJECT_SETUP}
     And the user clicks the button/link    link=${PROJECT_SETUP_COMPETITION_NAME}
-    Then the user should see the element    jQuery=tr:nth-child(1):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
+    Then the user should see the element    jQuery=tr:nth-child(2):contains("${PROJECT_SETUP_APPLICATION_1_TITLE}")
     And The user should see the text in the page    Projects in setup
     [Teardown]    The user navigates to the page    ${COMP_ADMINISTRATOR_DASHBOARD}
 
@@ -87,14 +88,14 @@ Upcoming competitions calculations
 
 Competition Opens automatically on date
     [Documentation]    INFUND-3004
-    [Tags]    MySQL    Failing
+    [Tags]    MySQL
     [Setup]    Connect to Database    @{database}
-    Given the user should see the text in the page    Ready to open
-    And The competition is ready to open
-    When Change the open date of the ${READY_TO_OPEN_COMPETITION_NAME} in the database to one day before
-    And the user navigates to the page    ${SERVER}/management/dashboard/live
-    Then the user should see the text in the page    Open
-    And The competition should be open
+    Given the user should see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
+    When Change the open date of the Competition in the database to one day before  ${READY_TO_OPEN_COMPETITION_NAME}
+    And the user reloads the page
+    Then the user should not see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
+    When the user navigates to the page     ${CA_Live}
+    Then the user should see the element  jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
     [Teardown]    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`='2018-02-24 00:00:00' WHERE `competition_id`='${READY_TO_OPEN_COMPETITION}' and type = 'OPEN_DATE';
 
 Search existing applications
@@ -118,7 +119,7 @@ Clearing filters should show all the competitions
 *** Keywords ***
 the total calculation should be correct
     [Documentation]    This keyword is for the total of the search results with or without second page
-    ${pagination}    ${VALUE}=    run keyword and ignore error    Element Should Be Visible    name=page
+    ${pagination}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Element Should Be Visible    name=page
     run keyword if    '${pagination}' == 'PASS'    check calculations on both pages
     run keyword if    '${pagination}' == 'FAIL'    check calculations on one page
 
@@ -138,9 +139,3 @@ check calculations on one page
     ${NO_OF_COMP_Page_one}=    Get Matching Xpath Count    //section/div/ul/li
     ${length_summary}=    Get text    css=.heading-xlarge    #gets the total number
     Should Be Equal As Integers    ${length_summary}    ${NO_OF_COMP_Page_one}
-
-The competition is ready to open
-    the user should see the element  jQuery=h2:contains('Ready to open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')
-
-The competition should be open
-    the user should see the element  jQuery=h2:contains('Open') ~ ul a:contains('${READY_TO_OPEN_COMPETITION_NAME}')

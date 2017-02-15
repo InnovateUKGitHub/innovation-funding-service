@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.user.builder;
 
-import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.user.domain.*;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.junit.Test;
 
@@ -20,6 +20,8 @@ import static org.innovateuk.ifs.user.resource.Disability.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Disability.YES;
 import static org.innovateuk.ifs.user.resource.Gender.FEMALE;
 import static org.innovateuk.ifs.user.resource.Gender.MALE;
+import static org.innovateuk.ifs.user.resource.Title.Miss;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
 import static java.util.Arrays.asList;
@@ -49,7 +51,7 @@ public class UserBuilderTest {
     @Test
     public void buildOne() {
         Long expectedId = 1L;
-        String expectedTitle = "Title";
+        Title expectedTitle = Mr;
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedInviteName = "Invite Name";
@@ -62,9 +64,8 @@ public class UserBuilderTest {
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
         Ethnicity expectedEthnicity = newEthnicity().build();
-        Profile expectedProfile = newProfile().build();
+        Long expectedProfile = 1L;
         List<Affiliation> expectedAffiliations = newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2);
-        List<InnovationArea> innovationAreas = newInnovationArea().withName("Earth Observation", "Internet of Things").build(2);
 
         User user = newUser()
                 .withId(expectedId)
@@ -81,7 +82,7 @@ public class UserBuilderTest {
                 .withGender(expectedGender)
                 .withDisability(expectedDisability)
                 .withEthnicity(expectedEthnicity)
-                .withProfile(expectedProfile)
+                .withProfileId(expectedProfile)
                 .withAffiliations(expectedAffiliations)
                 .build();
 
@@ -99,14 +100,14 @@ public class UserBuilderTest {
         assertEquals(expectedGender, user.getGender());
         assertEquals(expectedDisability, user.getDisability());
         assertEquals(expectedEthnicity, user.getEthnicity());
-        assertEquals(expectedProfile.getId(), user.getProfileId());
+        assertEquals(expectedProfile, user.getProfileId());
         assertEquals(expectedAffiliations, user.getAffiliations());
     }
 
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        String[] expectedTitles = {"Miss", "Mr"};
+        Title[] expectedTitles = {Miss, Mr};
         String[] expectedFirstNames = {"First 1", "First 2"};
         String[] expectedLastNames = {"Last 1", "Last 2"};
         String[] expectedInviteNames = {"Invite Name 1", "Invite Name 2"};
@@ -119,7 +120,7 @@ public class UserBuilderTest {
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
         Ethnicity[] expectedEthnicities = newEthnicity().buildArray(2, Ethnicity.class);
-        Profile[] expectedProfiles = newProfile().buildArray(2, Profile.class);
+        Long[] expectedProfiles = {1L, 2L};
         List<Affiliation>[] expectedAffiliations = new List[]{
                 newAffiliation().withAffiliationType(EMPLOYER, FAMILY_FINANCIAL).build(2),
                 newAffiliation().withAffiliationType(PERSONAL_FINANCIAL, FAMILY_FINANCIAL).build(2)
@@ -140,7 +141,7 @@ public class UserBuilderTest {
                 .withGender(expectedGenders)
                 .withDisability(expectedDisabilities)
                 .withEthnicity(expectedEthnicities)
-                .withProfile(expectedProfiles)
+                .withProfileId(expectedProfiles)
                 .withAffiliations(expectedAffiliations)
                 .build(2);
 
@@ -161,7 +162,7 @@ public class UserBuilderTest {
         assertEquals(expectedGenders[0], first.getGender());
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
-        assertEquals(expectedProfiles[0].getId(), first.getProfileId());
+        assertEquals(expectedProfiles[0], first.getProfileId());
         assertEquals(expectedAffiliations[0], first.getAffiliations());
 
         User second = users.get(1);
@@ -180,7 +181,7 @@ public class UserBuilderTest {
         assertEquals(expectedGenders[1], second.getGender());
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
-        assertEquals(expectedProfiles[1].getId(), second.getProfileId());
+        assertEquals(expectedProfiles[1], second.getProfileId());
         assertEquals(expectedAffiliations[1], second.getAffiliations());
     }
 }

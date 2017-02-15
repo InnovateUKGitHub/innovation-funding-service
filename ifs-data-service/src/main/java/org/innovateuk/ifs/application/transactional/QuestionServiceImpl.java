@@ -24,24 +24,20 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
-import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static java.time.LocalDateTime.now;
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.application.resource.SectionType.GENERAL;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
  * Transactional and secured service focused around the processing of Applications
@@ -95,7 +91,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<Void> assign(final QuestionApplicationCompositeId ids, final Long assigneeId, final Long assignedById) {
-        return find(getQuestion(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
+        return find(getQuestionSupplier(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById)).andOnSuccess((question, application, assignee, assignedBy) -> {
 
             QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
 
@@ -146,7 +142,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<QuestionResource> getNextQuestion(final Long questionId) {
 
-        return find(getQuestion(questionId)).andOnSuccess(question -> {
+        return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
 
             // retrieve next question within current section
             Question nextQuestion = questionRepository.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
@@ -213,7 +209,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<QuestionResource> getPreviousQuestion(final Long questionId) {
 
-        return find(getQuestion(questionId)).andOnSuccess(question -> {
+        return find(getQuestionSupplier(questionId)).andOnSuccess(question -> {
 
             Question previousQuestion = null;
             if (question != null) {
@@ -319,7 +315,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Override
     public ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId) {
-        return find(getAssessment(assessmentId), getQuestion(questionId)).andOnSuccess((assessment, question) -> {
+        return find(getAssessment(assessmentId), getQuestionSupplier(questionId)).andOnSuccess((assessment, question) -> {
             if (question.getCompetition().getId().equals(assessment.getTarget().getCompetition().getId())) {
                 return serviceSuccess(questionMapper.mapToResource(question));
             }
@@ -337,7 +333,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     }
     
     private ServiceResult<List<ValidationMessages>> setComplete(Long questionId, Long applicationId, Long processRoleId, boolean markAsComplete) {
-        return find(processRole(processRoleId), openApplication(applicationId), getQuestion(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
+        return find(processRole(processRoleId), openApplication(applicationId), getQuestionSupplier(questionId)).andOnSuccess((markedAsCompleteBy, application, question)
                 -> setCompleteOnFindAndSuccess(markedAsCompleteBy, application, question, processRoleId, markAsComplete));
     }
 
@@ -356,7 +352,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         } else {
             questionStatus = getQuestionStatusByMarkedAsCompleteId(question, application.getId(), processRoleId);
         }
-        List<ValidationMessages> applicationIsValid = validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId());
+
+        List<ValidationMessages> validationMessages = markAsComplete ? validationUtil.isQuestionValid(question, application, markedAsCompleteBy.getId()): new ArrayList<>();
 
         if (questionStatus == null) {
             questionStatus = new QuestionStatus(question, application, markedAsCompleteBy, markAsComplete);
@@ -371,7 +368,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         application.setCompletion(completion);
         applicationRepository.save(application);
 
-        return serviceSuccess(applicationIsValid);
+        return serviceSuccess(validationMessages);
     }
 
     private Question getNextQuestionBySection(Long section, Long competitionId) {
@@ -463,7 +460,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return () -> find(assessmentRepository.findOne(assessmentId), notFoundError(Assessment.class, assessmentId));
     }
 
-    private Supplier<ServiceResult<Question>> getQuestion(Long questionId) {
+    private Supplier<ServiceResult<Question>> getQuestionSupplier(Long questionId) {
         return () -> find(questionRepository.findOne(questionId), notFoundError(Question.class, questionId));
     }
 

@@ -14,3 +14,5 @@ Library           robot.libraries.DateTime
 Library           String
 Library           CsvLibrary
 Library           ../libs/Debugging.py
+Library           ../libs/WaitUntilLibrary.py
+Library           ../libs/EmailExtensionLibrary.py

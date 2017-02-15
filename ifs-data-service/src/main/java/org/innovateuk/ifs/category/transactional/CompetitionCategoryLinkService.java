@@ -2,6 +2,7 @@ package org.innovateuk.ifs.category.transactional;
 
 import java.util.Set;
 
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -20,7 +21,8 @@ public interface CompetitionCategoryLinkService {
      * @param categoryType The type of the Category.
      * @param competition the Competition that the Category is linked to
      */
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> updateCategoryLink(Long categoryId, CategoryType categoryType, Competition competition);
     
     /**
@@ -31,6 +33,7 @@ public interface CompetitionCategoryLinkService {
      * @param categoryType The type of the Category.
      * @param competition the Competition that the Category is linked to
      */
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> updateCategoryLinks(Set<Long> categoryIds, CategoryType categoryType, Competition competition);
 }

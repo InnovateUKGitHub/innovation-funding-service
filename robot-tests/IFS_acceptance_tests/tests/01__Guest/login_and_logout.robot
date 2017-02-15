@@ -109,10 +109,10 @@ Reset password
     ...    AND    the guest user opens the browser
     Given the user navigates to the page    ${LOGIN_URL}
     When the user clicks the forgot psw link
-    And the user enters text to a text field    id=id_email    worth.email.test+changepsw@gmail.com
+    And the user enters text to a text field    id=id_email    ${test_mailbox_one}+changepsw@gmail.com
     And the user clicks the button/link    css=input.button
     Then the user should see the text in the page    If your email address is recognised, you’ll receive an email with instructions about how to reset your password.
-    And the user reads his email from the default mailbox and clicks the link    worth.email.test+changepsw@gmail.com    Reset your password    If you didn't request this
+    And the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+changepsw@gmail.com    Reset your password    If you didn't request this
     And the user should see the text in the page    Password reset
     # TODO INFUND-5582
 
@@ -134,10 +134,10 @@ Reset password user enters new psw
     And the user clicks the button/link    jQuery=input[value*="Save password"]
     Then the user should see the text in the page    Your password is updated, you can now sign in with your new password
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rd
+    And the guest user enters the log in credentials    ${test_mailbox_one}+changepsw@gmail.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the guest user should get an error message
-    When the guest user enters the log in credentials    worth.email.test+changepsw@gmail.com    Passw0rdnew
+    When the guest user enters the log in credentials    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
     And the user should be redirected to the correct page    ${applicant_dashboard_url}
@@ -163,5 +163,5 @@ Clear the login fields
     wait for autosave
 
 the user clicks the forgot psw link
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    click element    link=Forgot your password?
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    click element    link=Forgot your password?
     Run Keyword If    '${status}' == 'FAIL'    click element    link=forgot your password?

@@ -21,7 +21,8 @@
         <li th:class="${(sprint == 'sprint17' ? 'selected' : '')}"><a href="/prototypes/index-sprint17">17</a></li>
         <li th:class="${(sprint == 'sprint18' ? 'selected' : '')}"><a href="/prototypes/index-sprint18">18</a></li>
         <li th:class="${(sprint == 'sprint19' ? 'selected' : '')}"><a href="/prototypes/index-sprint19">19</a></li>
-        <li th:class="${(sprint == 'sprint20' ? 'selected' : '')}"><a href="/prototypes/index-sprint20"><strong>20</strong></a></li>
+        <li th:class="${(sprint == 'sprint20' ? 'selected' : '')}"><a href="/prototypes/index-sprint20">20</a></li>
+        <li th:class="${(sprint == 'sprint21' ? 'selected' : '')}"><a href="/prototypes/index-sprint21"><strong>21</strong></a></li>
     </ul>
 
     <div class="alignright">
@@ -64,7 +65,7 @@
 
 <div th:fragment="prototype-admin-header">
     <header role="banner" id="global-header">
-        <div th:include="fragments/elements :: notification" th:remove="tag" />
+        <th:block th:insert="fragments/elements :: notification" />
         <div class="header-wrapper">
             <div class="header-global header-admin">
 
@@ -130,15 +131,16 @@
 
 <div th:fragment="prototype-sub-header-collaborator">
     <div class="sub-header">
-        <div class="deadline">Days left to submit&nbsp;&nbsp;
-            <div class="pie-container">
-                <div class="pie small"><svg viewBox="0 0 32 32"><title>100%</title><circle r="16" cx="16" cy="16" stroke-dasharray="100 100"></circle></svg></div>
-                <div class="pie-overlay">
-                    <div>0</div>
-                </div>
-            </div>
-        </div>
-        <a href="/prototypes/635-application-overview-collaborator">Application overview</a>
+      <div class="deadline">Days left to submit&nbsp;&nbsp;
+          <div class="pie-container">
+              <div class="pie small" aria-hidden="true"><svg viewBox="0 0 32 32"><title>1%</title><circle r="16" cx="16" cy="16" stroke-dasharray="10 100"></circle></svg></div>
+              <div class="pie-overlay">
+                  <span class="day">2</span>
+                  <span class="visuallyhidden">Days left</span>
+              </div>
+          </div>
+      </div>
+        <a th:href="${linkURL != null ? linkURL :'/prototypes/635-application-overview-collaborator'}" th:text="${linkText != null ? linkText :'Application overview'}" class="link-back">Application overview</a>
     </div>
 </div>
 
@@ -263,6 +265,53 @@
             Assigned to John Smith
         </div>
     </div>
+</div>
+
+<!-- ========UPDATED TASK LIST - ======= -->
+
+<div th:fragment="prototype-task-question-labels">
+	<div class="assign-container" th:classappend="${(status == 'assignedToYou' or status == 'reassignedToYou' ? 'action-required' : 'secondary-notification')}" th:unless="${status == 'complete'}">
+
+    <th:block th:if="${status == 'assigned'}">
+      <div class="assign-button">
+         Assigned to <span th:text="${name}">you</span>
+      </div>
+    </th:block>
+
+    <th:block th:if="${status == 'assignedToYou'}">
+      <div class="assign-button">
+          <strong> Assigned to you</strong>
+      </div>
+    </th:block>
+
+    <th:block th:if="${status == 'reassignedToYou'}">
+      <div class="assign-button">
+          <strong> Reassigned to you</strong>
+      </div>
+    </th:block>
+
+    <div class="assign-team">
+      <h3>Reassign question</h3>
+      <ul class="list list-bullet">
+          <li>
+              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Pete Tom">Pete Tom</button>
+          </li>
+          <li>
+              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Jessica Doe">Jessica Doe</button>
+          </li>
+          <li>
+              <button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="Steve Smith">Steve Smith</button>
+          </li>
+      </ul>
+    </div>
+
+  </div>
+
+  <th:block th:if="${status == 'complete'}">
+    <div class="task-status-complete">
+      <span>Completed</span>
+    </div>
+  </th:block>
 </div>
 
 

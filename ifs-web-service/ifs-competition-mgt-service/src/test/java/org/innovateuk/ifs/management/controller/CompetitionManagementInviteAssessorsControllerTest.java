@@ -2,12 +2,15 @@ package org.innovateuk.ifs.management.controller;
 
 import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.address.resource.AddressResource;
+import org.innovateuk.ifs.assessment.resource.AssessorProfileResource;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
+import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -33,7 +36,10 @@ import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
+import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.assessment.builder.AssessorProfileResourceBuilder.newAssessorProfileResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.assessment.builder.ProfileResourceBuilder.newProfileResource;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.category.builder.InnovationSectorResourceBuilder.newInnovationSectorResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -42,10 +48,12 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.IN_ASSES
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
+import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteResourceBuilder.newNewUserStagedInviteResource;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.ACCEPTED;
 import static org.innovateuk.ifs.invite.resource.ParticipantStatusResource.REJECTED;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.ACADEMIC;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
 import static org.innovateuk.ifs.util.CollectionFunctions.asLinkedSet;
@@ -53,8 +61,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.inOrder;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -75,7 +82,13 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     @InjectMocks
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
+    @Spy
+    @InjectMocks
+    private AssessorProfileModelPopulator assessorProfileModelPopulator;
+
     private CompetitionResource competition;
+
+    private CompetitionInviteStatisticsResource inviteStatistics;
 
     @Override
     protected CompetitionManagementInviteAssessorsController supplyControllerUnderTest() {
@@ -94,7 +107,15 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withInnovationAreaNames(asLinkedSet("Transport Systems", "Urban living"))
                 .build();
 
+        inviteStatistics = newCompetitionInviteStatisticsResource()
+                .withAccepted(46)
+                .withInvited(23)
+                .withInviteList(10)
+                .withDeclined(52)
+                .build();
+
         when(competitionService.getById(competition.getId())).thenReturn(competition);
+        when(competitionInviteRestService.getInviteStatistics(competition.getId())).thenReturn(restSuccess(inviteStatistics));
     }
 
     @Test
@@ -361,7 +382,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         List<NewUserStagedInviteResource> expectedInvites = newNewUserStagedInviteResource()
                 .withEmail("test1@test.com", "test2@test.com")
                 .withName("Tester 1", "Tester 2")
-                .withInnovationCategoryId(1L)
+                .withInnovationAreaId(1L)
                 .withCompetitionId(competition.getId())
                 .build(2);
         NewUserStagedInviteListResource expectedInviteListResource = newNewUserStagedInviteListResource()
@@ -511,10 +532,10 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
     }
 
     private void assertStatistics(InviteAssessorsViewModel model) {
-        assertEquals(60, model.getAssessorsInvited());
-        assertEquals(23, model.getAssessorsAccepted());
-        assertEquals(3, model.getAssessorsDeclined());
-        assertEquals(6, model.getAssessorsStaged());
+        assertEquals(inviteStatistics.getInvited(), model.getAssessorsInvited());
+        assertEquals(inviteStatistics.getAccepted(), model.getAssessorsAccepted());
+        assertEquals(inviteStatistics.getDeclined(), model.getAssessorsDeclined());
+        assertEquals(inviteStatistics.getInviteList(), model.getAssessorsStaged());
     }
 
     private void assertAvailableAssessors(List<AvailableAssessorResource> expectedAvailableAssessors, MvcResult result) {

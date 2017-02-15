@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 /**
@@ -24,23 +25,13 @@ public class CompetitionPermissionRules extends BasePermissionRules {
         return !CompetitionStatus.COMPETITION_SETUP.equals(competition.getCompetitionStatus());
     }
 
-    @PermissionRule(value = "READ", description = "Competition Admininstrators can see all competitions")
-    public boolean compAdminUserCanViewAllCompetitions(CompetitionResource competition, UserResource user) {
-        return isCompAdmin(user);
+    @PermissionRule(value = "READ", description = "Internal users can see all competitions")
+    public boolean internalUserCanViewAllCompetitions(CompetitionResource competition, UserResource user) {
+        return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Project finance users can see all competitions")
-    public boolean projectFinanceUserCanViewAllCompetitions(CompetitionResource competition, UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
-    @PermissionRule(value = "READ", description = "Competition Admininstrators can see all competition search results")
-    public boolean compAdminUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
-        return isCompAdmin(user);
-    }
-
-    @PermissionRule(value = "READ", description = "Project finance users can see all competition search results")
-    public boolean projectFinanceUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
-        return isProjectFinanceUser(user);
+    @PermissionRule(value = "READ", description = "Internal users can see all competition search results")
+    public boolean internalUserCanViewAllCompetitionSearchResults(CompetitionSearchResultItem competition, UserResource user) {
+        return isInternal(user);
     }
 }

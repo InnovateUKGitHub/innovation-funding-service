@@ -37,10 +37,10 @@ export -f addUserToShibboleth
 
 cat <<'END'
               SINKING THE SHIB!!!
-                   ,:',:`,:' 
+                   ,:',:`,:'
                 __||_||_||_||___
            ____[""""""""""""""""]___
-           \ " '''''''''''''''''''' \ 
+           \ " '''''''''''''''''''' \
     ~~^~^~^~^~^^~^~^~^~^~^~^~^~~^~^~^~^~~^~^
 END
 
@@ -53,7 +53,7 @@ done
 
 docker-compose exec -T shib /tmp/_delete-shib-users-remote.sh
 
-mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null | xargs -I{} bash -c "addUserToShibboleth {}" 
+mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null | xargs -I{} bash -c "addUserToShibboleth {}"
 
 cat <<'END'
 

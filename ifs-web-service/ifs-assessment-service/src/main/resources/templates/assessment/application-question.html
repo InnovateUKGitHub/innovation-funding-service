@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${#strings.isEmpty(model.questionShortName) ? 'Assessment' : model.questionShortName}" />
     </head>
 
     <body th:with="context='assessment', responseRequired=${!#lists.isEmpty(model.assessmentFormInputs)}" class="assessment" th:classappend="${responseRequired} ? assessment-form">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (app=${model.application})" th:remove="tag" />
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
@@ -57,12 +57,12 @@
             </div>
             <input type="hidden" id="cacheTest" value="" />
 
-            <div th:include="fragments/assessment :: assessment-pagination" th:remove="tag" />
+            <th:block th:insert="fragments/assessment :: assessment-pagination" />
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

@@ -25,15 +25,14 @@ import org.innovateuk.ifs.project.financecheck.viewmodel.ProjectFinanceCheckSumm
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
-import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -50,6 +49,7 @@ import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.application.resource.ApplicationResource.formatter;
 import static org.innovateuk.ifs.project.finance.resource.FinanceCheckState.APPROVED;
+import static org.innovateuk.ifs.project.util.ControllersUtil.isLeadPartner;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFindFirst;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
@@ -57,6 +57,8 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller is for allowing internal users to view and update application finances entered by applicants
+ * It is only used by the workaround in place for adding finance check eligible totals currently.  It will in future
+ * be replaced by different controller.
  */
 @Controller
 @RequestMapping("/project/{projectId}/finance-check")
@@ -86,6 +88,7 @@ public class FinanceCheckController {
     private PartnerOrganisationService partnerOrganisationService;
 
     @RequestMapping(value = "/organisation/{organisationId}", method = GET)
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String view(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") Long organisationId,
                        @ModelAttribute(FORM_ATTR_NAME) FinanceCheckForm form,
                        @ModelAttribute("loggedInUser") UserResource loggedInUser,
@@ -96,6 +99,7 @@ public class FinanceCheckController {
     }
 
     @RequestMapping(value = "/organisation/{organisationId}", method = POST)
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String update(@PathVariable("projectId") Long projectId,
                          @PathVariable("organisationId") Long organisationId,
                          @ModelAttribute(FORM_ATTR_NAME) @Valid FinanceCheckForm form,
@@ -129,6 +133,7 @@ public class FinanceCheckController {
         );
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @RequestMapping(value = "/organisation/{organisationId}", params = "approve", method = POST)
     public String approveFinanceCheck(@PathVariable Long projectId, @PathVariable Long organisationId, Model model,
                                        @ModelAttribute FinanceCheckForm form,
@@ -145,6 +150,7 @@ public class FinanceCheckController {
         );
     }
 
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     @RequestMapping(value = "/organisation/{organisationId}/jes-file", method = GET)
     public @ResponseBody ResponseEntity<ByteArrayResource> downloadJesFile(@PathVariable("projectId") final Long projectId,
                                                                            @PathVariable("organisationId") Long organisationId) {

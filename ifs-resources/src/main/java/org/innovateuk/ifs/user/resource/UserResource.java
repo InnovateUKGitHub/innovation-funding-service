@@ -18,7 +18,7 @@ import static java.util.stream.Collectors.toList;
 public class UserResource {
     private Long id;
     private String uid;
-    private String title;
+    private Title title;
     private String firstName;
     private String lastName;
     private String inviteName;
@@ -53,11 +53,11 @@ public class UserResource {
         this.uid = uid;
     }
 
-    public String getTitle() {
+    public Title getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(Title title) {
         this.title = title;
     }
 

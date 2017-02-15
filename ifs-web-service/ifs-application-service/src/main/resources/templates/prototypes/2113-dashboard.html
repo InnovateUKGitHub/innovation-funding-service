@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="app-dashboard">
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -22,136 +22,143 @@
 
 		<div th:if="${param.status != null and param.status[0] == 'successful' or param.status != null and param.status[0] == 'successfulFeedback'}" th:remove="tag">
 
-			<h2 class="heading-large">Projects in setup</h2>
+      <div class="progress-list">
+  			<h2 class="heading-medium">Projects in setup</h2>
 
-			<ul class="boxed-list">
-				<li th:unless="${param.status[0] == 'successful'}">
-			        <div class="grid-row">
-			            <div class="column-assessment-details">
-			                <h2 class="heading-medium">
-			                <a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">194741: Mobile Phone Data for Logistics Analytics</a>
-			                </h2>
-			            </div>
-			            <div class="column-assessment-status navigation-right">
-			                <div class="awaiting-assessment">
-			                	<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>
-			                    <p>Project in set-up</p>
-			                </div>
-			            </div>
-			        </div>
-			    </li>
-			    <li th:unless="${param.status[0] == 'successfulFeedback'}">
-			        <div class="grid-row">
-			            <div class="column-assessment-details">
-			                <h2 class="heading-medium">
-			                <a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">10294856: Machine learning in robots</a>
-			                </h2>
-			            </div>
-			            <div class="column-assessment-status navigation-right">
-			                <div class="awaiting-assessment">
-			                	<img src="../images/icons/icon-awaiting-assessment.png" width="36" height="36" alt=""/>
-			                    <p>Project in set-up</p>
-			                </div>
-			            </div>
-			        </div>
-			    </li>
-			</ul>
+  			<ul>
+  				<li th:unless="${param.status[0] == 'successful'}">
+              <div class="task">
+                  <h2 class="heading-small">
+                  <a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Mobile Phone Data for Logistics Analytics</a>
+                  </h2>
+                  <ul class="application-details">
+                    <li>Application number: 194741</li>
+                    <li>Competition: Technology inspired</li>
+                  </ul>
+              </div>
+              <div class="status">
+                  <strong class="status-msg msg-progress">In progress</strong>
+              </div>
+  			    </li>
+  			    <li th:unless="${param.status[0] == 'successfulFeedback'}">
+		            <div class="task">
+		                <h2 class="heading-small">
+		                  <a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Machine learning in robots</a>
+		                </h2>
+                    <ul class="application-details">
+                      <li>Application number: 10294856</li>
+                      <li>Competition: Technology inspired</li>
+                    </ul>
+		            </div>
+                <div class="status">
+                    <strong class="status-msg msg-progress">In progress</strong>
+                </div>
+  			    </li>
+  			</ul>
+      </div>
 
 		</div>
 
-		<h2 class="heading-large">Previous applications</h2>
+    <div class="progress-list">
+  		<h2 class="heading-medium">Previous applications</h2>
+  		<ul>
+  			 <li class="negative" th:unless="${param.status != null and param.status[0] != 'unsuccessful'}">
+            <div class="task">
+                <h2 class="heading-small"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessful">Machine learning in robots</a></h2>
+                <ul class="application-details">
+                  <li>Application number: 10294856</li>
+                  <li>Competition: Technology inspired</li>
+                </ul>
+            </div>
+            <div class="status">
+                <strong class="status-msg msg-progress">Unsuccessful</strong>
+            </div>
+  		    </li>
+  		    <li class="positive" th:unless="${param.status != null and param.status[0] != 'successful'}">
+	            <div class="task">
+	                <h2 class="heading-small"><a href="/prototypes/2111-submitted-application-overview?status=successful">Machine learning in robots</a></h2>
+                  <ul class="application-details">
+                    <li>Application number: 0294856</li>
+                    <li>Competition: Technology inspired</li>
+                  </ul>
+              </div>
+              <div class="status">
+                  <strong class="status-msg msg-progress">Successful</strong>
+              </div>
+  		    </li>
+  		    <li class="positive" th:unless="${param.status != null and param.status[0] != 'successfulFeedback'}">
+	            <div class="task">
+	                <h2 class="heading-small"><a href="/prototypes/2111-submitted-application-overview?status=successfulFeedback">Mobile Phone Data for Logistics Analytics</a></h2>
+                  <ul class="application-details">
+                    <li>Application number: 10294855</li>
+                    <li>Competition: Technology inspired</li>
+                  </ul>
+              </div>
+              <div class="status">
+                  <strong class="status-msg msg-progress">Successful</strong>
+              </div>
+  		    </li>
+  		    <li class="negative" th:unless="${param.status != null and param.status[0] != 'unsuccessfulFeedback'}">
+	            <div class="task">
+                  <h2 class="heading-small"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessfulFeedback">Mobile Phone Data for Logistics Analytics</a></h2>
+                  <ul class="application-details">
+                    <li>Application number: 10294855</li>
+                    <li>Competition: Technology inspired</li>
+                  </ul>
+              </div>
+              <div class="status">
+                  <strong class="status-msg msg-progress">Unsuccessful</strong>
+              </div>
+  		    </li>
 
-		<ul class="boxed-list">
-			 <li th:unless="${param.status != null and param.status[0] != 'unsuccessful'}">
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessful">10294856: Machine learning in robots</a></h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="no application-status assessed">
-		                    <h3 class="results-status">Unsuccessful</h3>
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		    <li th:unless="${param.status != null and param.status[0] != 'successful'}">
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=successful">10294856: Machine learning in robots</a></h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="yes application-status assessed">
+  			<div th:if="${param.status != null and param.status[0] == 'notSubmitted'}" th:remove="tag">
+  				<li class="negative">
+	            <div class="task">
+	                <h2 class="heading-small"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessful">Machine learning in robots</a></h2>
+                  <ul class="application-details">
+                    <li>Application number: 10294856</li>
+                    <li>Competition: Technology inspired</li>
+                  </ul>
+              </div>
+              <div class="status">
+                  <strong class="status-msg msg-progress">Unsuccessful</strong>
+              </div>
+  		   		</li>
+  				<li>
+	            <div class="task">
+	                <h2 class="heading-small"><a href="/prototypes/2111-submitted-application-overview?status=notSubmitted">Additive manufacturing</a></h2>
+                  <ul class="application-details">
+                    <li>Application number: 10295748</li>
+                    <li>Competition: Technology inspired</li>
+                  </ul>
+	            </div>
+              <div class="status">
+                  <strong class="status-msg msg-progress">Not submitted</strong>
+              </div>
+  				</li>
+  			</div>
 
-		                    <h3 class="results-status">Successful</h3>
+  		</ul>
+  </div>
 
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		    <li th:unless="${param.status != null and param.status[0] != 'successfulFeedback'}">
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=successfulFeedback">10294855: Mobile Phone Data for Logistics Analytics</a></h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="yes application-status assessed">
-		                    <h3 class="results-status">Successful</h3>
-		                </div>
-		            </div>
-		        </div>
-		    </li>
-		    <li th:unless="${param.status != null and param.status[0] != 'unsuccessfulFeedback'}">
-		        <div class="grid-row">
-		            <div class="column-assessment-details">
-		                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessfulFeedback">10294855: Mobile Phone Data for Logistics Analytics</a></h2>
-		            </div>
-		            <div class="column-assessment-status navigation-right">
-		                <div class="no application-status assessed">
-		                    <h3 class="results-status">Unsuccessful</h3>
-		                </div>
-		            </div>
-		        </div>
-		    </li>
+  <div class="progress-list">
+    <h2 class="heading-medium">Live projects</h2>
 
-			<div th:if="${param.status != null and param.status[0] == 'notSubmitted'}" th:remove="tag">
-				<li>
-			        <div class="grid-row">
-			            <div class="column-assessment-details">
-			                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=unsuccessful">10294856: Machine learning in robots</a></h2>
-			            </div>
-			            <div class="column-assessment-status navigation-right">
-			                <div class="no application-status assessed">
-			                    <h3 class="results-status">Unsuccessful</h3>
-			                </div>
-			            </div>
-			        </div>
-		   		</li>
-				<li>
-					<div class="grid-row">
-			            <div class="column-assessment-details">
-			                <h2 class="heading-medium"><a href="/prototypes/2111-submitted-application-overview?status=notSubmitted">10295748: Additive manufacturing</a></h2>
-			            </div>
-			            <div class="column-assessment-status navigation-right">
-			                <div class="application-status not-submitted">
-			                    <h3 class="results-status">Not submitted</h3>
-			                </div>
-			            </div>
-			        </div>
-				</li>
-			</div>
+  	<p>View your live projects on <a href="#">_connect</a></p>
 
-		</ul>
-	</div>
+  	<ul>
+  		<li>
+        <div class="task">
+          <h2 class="heading-small"><a href="/prototypes/1588-project-status?stage=level7&#38;status=setup-complete">10294856: Machine learning in robots</a></h2>
+          <ul class="application-details">
+            <li>Application number: 10294856</li>
+            <li>Competition: Technology inspired</li>
+          </ul>
+        </div>
+  		</li>
+  	</ul>
 
-	<h2 class="heading-large">Live projects</h2>
-
-	<p>View your live projects on <a href="#">_connect</a></p>
-
-	<ul class="boxed-list extra-margin-bottom">
-		<li>
-			<h2 class="heading-medium"><a href="/prototypes/1588-project-status?stage=level7&#38;status=setup-complete">10294856: Machine learning in robots</a></h2>
-		</li>
-	</ul>
+  </div>
 
 
 
@@ -176,11 +183,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
 
 	jQuery('input#address-same').on('click',function(e){

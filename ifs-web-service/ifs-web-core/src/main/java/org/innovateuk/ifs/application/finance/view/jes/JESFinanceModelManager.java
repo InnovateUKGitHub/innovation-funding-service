@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.application.finance.view.jes;
 
+import org.apache.commons.lang3.NotImplementedException;
 import org.innovateuk.ifs.application.finance.form.AcademicFinance;
 import org.innovateuk.ifs.application.finance.model.AcademicFinanceFormField;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceModelManager;
+import org.innovateuk.ifs.application.finance.viewmodel.AcademicFinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.OrganisationService;
@@ -36,7 +38,7 @@ public class JESFinanceModelManager implements FinanceModelManager {
     FinanceService financeService;
 
     @Override
-    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form) {
+    public void addOrganisationFinanceDetails(Model model, Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
         ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
 
         if (applicationFinanceResource != null) {
@@ -64,8 +66,40 @@ public class JESFinanceModelManager implements FinanceModelManager {
     }
 
     @Override
-    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long userId, Long questionId, FinanceRowType costType) {
+    public AcademicFinanceViewModel getFinanceViewModel(Long applicationId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
+        AcademicFinanceViewModel financeViewModel = new AcademicFinanceViewModel();
 
+        ApplicationFinanceResource applicationFinanceResource = getOrganisationFinances(applicationId, userId);
+
+        if (applicationFinanceResource != null) {
+
+            ProcessRoleResource processRole = processRoleService.findProcessRole(userId, applicationId);
+            OrganisationResource organisationResource = organisationService.getOrganisationById(processRole.getOrganisationId());
+
+            Map<FinanceRowType, FinanceRowCostCategory> organisationFinanceDetails = applicationFinanceResource.getFinanceOrganisationDetails();
+            AcademicFinance academicFinance = mapFinancesToFields(organisationFinanceDetails);
+            if(applicationFinanceResource.getFinanceFileEntry() != null) {
+                financeService.getFinanceEntry(applicationFinanceResource.getFinanceFileEntry()).andOnSuccessReturn(
+                        fileEntry -> {
+                            financeViewModel.setFilename(fileEntry.getName());
+                            return fileEntry;
+                        }
+                );
+            }
+
+            financeViewModel.setTitle(organisationResource.getName() + " finances");
+            financeViewModel.setApplicationFinanceId(applicationFinanceResource.getId());
+            financeViewModel.setAcademicFinance(academicFinance);
+        }
+
+        financeViewModel.setFinanceView("academic-finance");
+
+        return financeViewModel;
+    }
+
+    @Override
+    public void addCost(Model model, FinanceRowItem costItem, long applicationId, long organisationId, long userId, Long questionId, FinanceRowType costType) {
+        throw new NotImplementedException("JES forms dont have any cost data.");
     }
 
     protected ApplicationFinanceResource getOrganisationFinances(Long applicationId, Long userId) {

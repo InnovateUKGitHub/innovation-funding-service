@@ -3,12 +3,13 @@ package org.innovateuk.ifs.competition.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionFunderResource;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 
 public class CompetitionFunderResourceBuilder extends BaseBuilder<CompetitionFunderResource, CompetitionFunderResourceBuilder> {
 
@@ -28,7 +29,7 @@ public class CompetitionFunderResourceBuilder extends BaseBuilder<CompetitionFun
         return with(competitionFunder -> setField("funder", funder, competitionFunder));
     }
 
-    public CompetitionFunderResourceBuilder withFunderBudget(BigDecimal funderBudget) {
+    public CompetitionFunderResourceBuilder withFunderBudget(BigInteger funderBudget) {
         return with(competitionFunder -> setField("funderBudget", funderBudget, competitionFunder));
     }
 

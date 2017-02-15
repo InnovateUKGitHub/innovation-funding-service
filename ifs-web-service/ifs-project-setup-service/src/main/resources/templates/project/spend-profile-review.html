@@ -1,22 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
 </head>
 <body th:class="${(param.view != null and param.view[0] == 'full' ? 'app-overview full-width' : 'app-overview ')}">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-start" />
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
 
 
     <div class="page-title">
-            <div th:include="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"
-             th:remove="tag"/>
+            <th:block th:insert="fragments/elements :: project-title (projectId=${model.applicationId}, projectName=${model.projectName})"               />
         <h1 class="heading-xlarge">Spend Profile</h1>
     </div>
 
@@ -35,14 +34,11 @@
     <p>This overview shows the spend profile status of each partner in your project.</p>
 
     <div th:if="${model.submitted}" th:remove="tag">
-        <h2 class="heading-medium">Profile spend</h2>
+        <h2 class="heading-medium">Spend profile</h2>
         <p th:if="${!model.approved}" >All spend profiles have been sent to Innovate UK and the Monitoring Officer assigned to this application.
            You may view these profiles.</p>
         <p th:if="${model.approved}" >All spend profiles have been accepted by Innovate UK and the Monitoring Officer assigned to this application.
             You may view these profiles.</p>
-
-        <a href="/prototypes/3100-spend?task=reviewProject&#38;status=Submitted">Total project profile spend</a>
-
     </div>
 
 
@@ -97,16 +93,16 @@
         <p class="extra-margin">Please review each partner's spend profile once they are marked as complete. You must
             make sure they fit the timelines of your project plan.</p>
 
-        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and submit total project profile
+        <a th:href="@{/project/{id}/spend-profile/total(id=${model.projectId})}" class="button">Review and send total project profile
             spend</a>
 
     </div>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

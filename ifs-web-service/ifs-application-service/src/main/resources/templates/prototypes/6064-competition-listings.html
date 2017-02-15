@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Innovation competitions'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Innovation competitions'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body>
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="prototypes/fragments/front-door :: prototype-front-door-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/front-door :: prototype-front-door-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -39,7 +39,7 @@
 							<select class="form-control width-full" id="innovation-area" name="innovation-area">
 
 								<option selected="selected">Any</option>
-								<div th:include="prototypes/fragments/comp-admin :: prototype-innovation-area-options" th:remove="tag" />
+								<th:block th:insert="prototypes/fragments/comp-admin :: prototype-innovation-area-options" />
 
 							</select>
 						</div>
@@ -117,7 +117,7 @@
 			</div>
 			<ul>
 				<li>
-					<h2 class="heading-medium no-margin-top extra-margin-bottom"><a href="/prototypes/6064-competition-page">Funding competition: emerging and enabling technologies round 1</a></h2>
+					<h2 class="heading-medium no-margin-top extra-margin-bottom"><a href="/prototypes/6064-competition-page">Connected digital additive manufacturing</a></h2>
 					<p>Innovate UK is investing up to £15 million in innovation projects to stimulate the new products and services of tomorrow.</p>
 					<p>The aim of this competition is to help businesses innovate to find new revenue sources. Proposals should show how to achieve a step change in business growth, productivity and export ...</p>
 					<dl class="standard-definition-list"   >
@@ -129,7 +129,7 @@
 						<dt>Opens:</dt>
 						<dd>14 November 2016</dd>
 						<dt>Closes:</dt>
-						<dd>25 March 2017</dd>
+						<dd>1 March 2017</dd>
 					</dl>
 					<hr />
 				</li>
@@ -318,11 +318,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>

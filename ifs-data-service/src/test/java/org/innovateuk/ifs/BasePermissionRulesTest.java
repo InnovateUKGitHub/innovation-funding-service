@@ -47,6 +47,8 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected List<UserResource> allGlobalRoleUsers;
 
+    protected List<UserResource> allInternalUsers;
+
     protected RoleResource compAdminRole() {
         return getRoleResource(COMP_ADMIN);
     }
@@ -55,10 +57,6 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
-    }
-
-    protected UserResource compExecUser() {
-        return getUserWithRole(COMP_EXEC);
     }
 
     protected UserResource projectFinanceUser() {
@@ -82,6 +80,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         allRoles = newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
         allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
         allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
+        allInternalUsers = asList(compAdminUser(), projectFinanceUser());
 
         // Set up global role method mocks
         for (Role role : allRoles) {
@@ -170,7 +169,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         Role leadApplicantRole = newRole().build();
         Role partnerRole = newRole().build();
         Organisation leadOrganisation = newOrganisation().build();
-        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisation(leadOrganisation).build();
+        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);

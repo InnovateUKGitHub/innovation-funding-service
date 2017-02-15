@@ -4,7 +4,7 @@ Documentation     INFUND-3715 - As an Assessor I need to declare any conflicts o
 ...               INFUND-5432 As an assessor I want to receive an alert to complete my profile when I log into my dashboard so...
 ...
 ...               INFUND-7060 As an assessor I can view my declaration of interest page so...
-Suite Setup       guest user log-in    worth.email.test+jeremy.alufson@gmail.com    Passw0rd
+Suite Setup       guest user log-in    ${test_mailbox_one}+jeremy.alufson@gmail.com    Passw0rd
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
@@ -116,5 +116,5 @@ the user should see the correct inputs in the declaration form
 
 the user should not see the validation error
     [Arguments]    ${ERROR_TEXT}
-    wait until page contains element    jQuery=.error-message
-    Wait Until Page Contains    ${ERROR_TEXT}
+    Wait Until Page Contains Element Without Screenshots    jQuery=.error-message
+    Wait Until Page Contains Without Screenshots    ${ERROR_TEXT}

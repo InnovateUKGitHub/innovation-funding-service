@@ -69,6 +69,8 @@ import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newEx
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
+import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
@@ -126,6 +128,8 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private CompetitionDataBuilder competitionDataBuilder;
     private CompetitionFunderDataBuilder competitionFunderDataBuilder;
+    private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
+    private PublicContentDateDataBuilder publicContentDateDataBuilder;
     private ExternalUserDataBuilder externalUserBuilder;
     private InternalUserDataBuilder internalUserBuilder;
     private OrganisationDataBuilder organisationBuilder;
@@ -142,6 +146,10 @@ public class GenerateTestData extends BaseIntegrationTest {
     private static List<CompetitionLine> competitionLines;
 
     private static List<CompetitionFunderLine> competitionFunderLines;
+
+    private static List<PublicContentGroupLine> publicContentGroupLines;
+
+    private static List<PublicContentDateLine> publicContentDateLines;
 
     private static List<ApplicationLine> applicationLines;
 
@@ -203,6 +211,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
         competitionFunderLines = readCompetitionFunders();
+        publicContentGroupLines = readPublicContentGroups();
+        publicContentDateLines = readPublicContentDates();
         applicationLines = readApplications();
         inviteLines = readInvites();
         externalUserLines = readExternalUsers();
@@ -254,6 +264,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
         projectDataBuilder = newProjectData(serviceLocator);
+        publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
+        publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
     }
 
     @Test
@@ -265,6 +277,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         createExternalUsers();
         createCompetitions();
         createCompetitionFunders();
+        createPublicContentGroups();
+        createPublicContentDates();
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
@@ -361,19 +375,37 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.state).
-                build();
+        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
+                .rejectComment, line.state).build();
     }
 
     private void createCompetitionFunders() {
         competitionFunderLines.forEach(this::createCompetitionFunder);
     }
 
+    private void createPublicContentGroups() {
+        publicContentGroupLines.forEach(this::createPublicContentGroup);
+    }
+
+    private void createPublicContentDates() {
+        publicContentDateLines.forEach(this::createPublicContentDate);
+    }
+
+
     private void createCompetitionFunder(CompetitionFunderLine line) {
         competitionFunderDataBuilder.withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder)
                 .build();
     }
 
+    private void createPublicContentGroup(PublicContentGroupLine line) {
+        publicContentGroupDataBuilder.withPublicContentGroup(line.competitionName, line.heading, line.content, line.section)
+                .build();
+    }
+
+    private void createPublicContentDate(PublicContentDateLine line) {
+        publicContentDateDataBuilder.withPublicContentDate(line.competitionName, line.date, line.content)
+                .build();
+    }
     private void createInternalUsers() {
         internalUserLines.forEach(line -> {
 
@@ -384,7 +416,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     createPreRegistrationEntry(line.emailAddress);
 
             if (line.emailVerified) {
-                createUser(baseBuilder, line, !asList(COMP_TECHNOLOGIST, COMP_EXEC).contains(role));
+                createUser(baseBuilder, line, !COMP_TECHNOLOGIST.equals(role));
             } else {
                 baseBuilder.build();
             }
@@ -662,7 +694,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                                 line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                                 line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
-                        withNewMilestones()
+                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                        .withNewMilestones()
 
                 ).orElse(competitionDataBuilder.
                         createCompetition().
@@ -670,6 +704,8 @@ public class GenerateTestData extends BaseIntegrationTest {
                                 line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
                                 line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
                                 line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
+                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords).
                         withApplicationFormFromTemplate().
                         withNewMilestones()).
                         withOpenDate(line.openDate).
@@ -781,6 +817,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         AssessorDataBuilder builder = assessorUserBuilder;
 
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
+        Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
+        Optional<LocalDateTime> sentOn = Optional.of(LocalDateTime.now());
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
             builder = builder.withInviteToAssessCompetition(
@@ -790,7 +828,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                     invite.hash,
                     invite.status,
                     existingUser,
-                    invite.innovationAreaName
+                    invite.innovationAreaName,
+                    sentBy,
+                    sentOn
             );
         }
 
@@ -804,7 +844,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 inviteHash,
                 line.inviteStatus,
                 existingUser,
-                innovationArea
+                innovationArea,
+                sentBy,
+                sentOn
         );
 
         if (!existingUser.isPresent()) {
@@ -854,7 +896,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                 line.hash,
                 line.status,
                 userRepository.findByEmail(line.email),
-                line.innovationAreaName
+                line.innovationAreaName,
+                userRepository.findByEmail(line.sentByEmail),
+                Optional.of(line.sentOn)
         ).
                 build();
     }

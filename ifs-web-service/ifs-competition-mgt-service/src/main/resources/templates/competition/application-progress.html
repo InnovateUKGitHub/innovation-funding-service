@@ -1,23 +1,23 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Application progress'" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application progress'" />
     </head>
 
     <body th:with="context='comp-management'" class="competition-management competition-setup">
-        <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-        <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" th:remove="tag" />
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <th:block th:insert="fragments/modals :: modal-overlay" />
+        <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-modal" />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Allocate applications',linkClass='link-back',linkUrl=@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}" />
 
             <h1 class="heading-xlarge">
                 <span class="heading-secondary" th:text="|${#numbers.formatInteger(model.competitionId,8)}: ${model.competitionName}|">0102468: Technology inspired, in assessment</span>
-                Application progress
+                <span th:text="${model.inAssessment ? 'Application progress' : 'Assign to application'}" th:remove="tag">Application progress</span>
             </h1>
 
             <h2 class="heading-medium" th:text="|${#numbers.formatInteger(model.applicationId,8)}: ${model.applicationName}|">
@@ -28,7 +28,10 @@
                 <div class="column-quarter">
                     <h3 class="heading-small">Partners</h3>
                     <ul>
-                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Aptrans Ltd (Lead)</li>
+                        <li th:unless="${#strings.isEmpty(model.leadOrganisation)}"
+                            th:text="${model.leadOrganisation} + ' (Lead)'">Aptrans Ltd (Lead)
+                        </li>
+                        <li th:each="partner : ${model.partnerOrganisations}" th:text="${partner}">Biotech Corp.</li>
                     </ul>
                 </div>
                 <div class="column-quarter">
@@ -37,13 +40,13 @@
                 </div>
             </div>
             <div class="extra-margin">
-                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})}">Review application</a>
+                <a th:href="@{/competition/{competitionId}/application/{applicationId}(competitionId=${model.competitionId},applicationId=${model.applicationId})} + ${applicationOriginQuery}">Review application</a>
             </div>
 
-            <h2 class="heading-medium" th:text="|Assigned (${#lists.size(model.assigned)})|">Assigned (4)</h2>
+            <h2 class="heading-medium" th:text="(${model.inAssessment} ? 'Assigned' : 'Assign Assessors') + | (${#lists.size(model.assigned)})|">Assigned (4)</h2>
 
-            <div class="table-overflow">
-                <table>
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.assigned)}">
+                <table class="assessors-assigned">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -51,59 +54,63 @@
                             <th scope="col">Innovation area</th>
                             <th class="aligncentre" scope="col">Total applications</th>
                             <th class="aligncentre" scope="col">Assigned</th>
-                            <th class="aligncentre" scope="col">Notified</th>
-                            <th class="aligncentre" scope="col">Accepted</th>
-                            <th class="aligncentre" scope="col">Started</th>
-                            <th class="aligncentre" scope="col">Submitted</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Notified</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Accepted</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Started</th>
+                            <th th:if="${model.inAssessment}" class="aligncentre" scope="col">Submitted</th>
                             <th scope="col"><span class="visuallyhidden">Actions</span></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.assigned}">
-                            <td><a th:href="${'/'}" th:text="${assessor.name}">Oliver Romero</a></td>
+                            <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                   th:text="${assessor.name}">Oliver Romero</a></td>
                             <td th:text="${assessor.businessType}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.notified} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.notified} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.accepted} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.accepted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.started} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.started} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
-                            <td class="aligncentre">
+                            <td th:if="${model.inAssessment}" class="aligncentre">
                                 <span th:remove="${assessor.submitted} ? 'all' : 'tag'">-</span>
                                 <span th:remove="${assessor.submitted} ? 'tag' : 'all'" class="yes">Yes</span>
                             </td>
                             <td class="alignright">
                                 <a class="button-secondary no-margin" data-js-modal="remove-assigned-assessor-modal"
-                                href="#"
-                                th:attr="data-modal-form-url=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId})}"
-                                th:unless="${assessor.submitted}">Remove</a>
+                                   th:href="${removeActionNonJs}"
+                                   th:attr="data-modal-form-action=${removeAction}"
+                                   th:with="
+                                   removeAction=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},sortField=${form.sortField})},
+                                   removeActionNonJs=@{/competition/{competitionId}/application/{applicationId}/assessors/withdraw/{assessmentId}/confirm(competitionId=${model.competitionId},applicationId=${model.applicationId},assessmentId=${assessor.assessmentId},sortField=${form.sortField})}"
+                                   th:unless="${assessor.submitted}">Remove</a>
                             </td>
-                        </tr>
-                        <tr th:if="${#lists.isEmpty(model.assigned)}">
-                            <td colspan="10">There are no assessors assigned to this application.</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
 
+            <p th:if="${#lists.isEmpty(model.assigned)}">No assessors have been assigned to this application.</p>
+
+            <th:block th:if="${model.inAssessment}">
             <h2 class="heading-medium" th:text="|Rejected (${#lists.size(model.rejected)})|">Rejected (1)</h2>
 
-            <div class="table-overflow" th:if="${#lists.size(model.rejected) > 0}">
-                <table>
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.rejected)}">
+                <table class="assessors-rejected">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
                             <th scope="col">Type</th>
-                            <th scope="col">Innovation Area</th>
+                            <th scope="col">Innovation area</th>
                             <th class="aligncentre" scope="col">Total applications</th>
                             <th class="aligncentre" scope="col">Assigned</th>
                             <th scope="col">Reason</th>
@@ -111,12 +118,13 @@
                     </thead>
                     <tbody>
                     <tr th:each="assessor : ${model.rejected}">
-                            <td><a th:href="${'/'}" th:text="${assessor.name}">Irving Wolfe</a></td>
+                        <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                               th:text="${assessor.name}">Irving Wolfe</a></td>
                             <td th:text="${assessor.businessType}">Academic</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Healthcare, Regenerative medicine</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">4</td>
-                            <td><strong th:text="${assessor.rejectReason}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
+                            <td><strong th:text="${assessor.rejectReason.displayLabel}">Too many assignments</strong><br /><span th:remove="tag" th:text="${assessor.rejectComment}">You have frequently assignme me too may applications, I can and have told you previously that will only be able to assign a reduced amount of applications during th summer. I do like reviewing the applications to your competitions but please do not assign so many to me.</span></td>
                         </tr>
                     </tbody>
                 </table>
@@ -124,10 +132,11 @@
 
             <p th:if="${#lists.isEmpty(model.rejected)}">No assessors have rejected this application.</p>
 
+
             <h2 class="heading-medium" th:text="|Previously assigned (${#lists.size(model.previouslyAssigned)})|">Previously assigned (0)</h2>
 
-            <div class="table-overflow" th:if="${#lists.size(model.previouslyAssigned) > 0}">
-                <table>
+            <div class="table-overflow" th:unless="${#lists.isEmpty(model.previouslyAssigned)}">
+                <table class="assessors-previous">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -139,7 +148,8 @@
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.previouslyAssigned}">
-                            <td><a th:href="${'/'}" th:text="${assessor.name}">Dave Smith</a></td>
+                            <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                   th:text="${assessor.name}">Dave Smith</a></td>
                             <td th:text="${assessor.businessType}">Business</td>
                             <td th:text="${#strings.listJoin(assessor.innovationAreas,', ')}">Electronics, sensors &amp; photonics, Materials</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">6</td>
@@ -149,8 +159,9 @@
                 </table>
             </div>
 
-            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">There are no assessors previously assigned to this application.</p>
+            <p th:if="${#lists.isEmpty(model.previouslyAssigned)}">No assessors were previously assigned to this application.</p>
 
+            </th:block>
             <h2 class="heading-medium">Available assessors</h2>
 
             <!--/* TODO INFUND-7055
@@ -245,7 +256,7 @@
             </div>
 
             <div class="table-overflow">
-                <table>
+                <table class="assessors-available">
                     <thead>
                         <tr>
                             <th scope="col">Assessor</th>
@@ -258,20 +269,21 @@
                     </thead>
                     <tbody>
                         <tr th:each="assessor : ${model.available}">
-                            <td><a th:href="${'/'}" th:text="${assessor.name}">John Barnes</a></td>
+                            <td><a th:href="@{/competition/{competitionId}/assessors/profile/{assessorId}(competitionId=${model.competitionId},assessorId=${assessor.id})} + ${assessorProfileOriginQuery}"
+                                   th:text="${assessor.name}">John Barnes</a></td>
                             <td th:text="${assessor.skillAreas}">skills</td>
                             <td class="aligncentre" th:text="${assessor.totalApplicationsCount}">4</td>
                             <td class="aligncentre" th:text="${assessor.assignedCount}">2</td>
                             <td class="aligncentre" th:text="${assessor.submittedApplications}">1</td>
                             <td class="alignright">
                                 <form method="post"
-                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}?sortField={sortField}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, sortField=${form.sortField})}">
+                                      th:action="@{/competition/{cid}/application/{appId}/assessors/assign/{assId}(cid=${model.competitionId}, appId=${model.applicationId}, assId=${assessor.id}, sortField=${form.sortField})}">
                                     <button type="submit" class="button-secondary no-margin">Assign</button>
                                 </form>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.available)}">
-                            <td colspan="6">There were no available assessors found.</td>
+                            <td colspan="6">No available assessors found.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -300,10 +312,10 @@
             </div>
             */-->
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

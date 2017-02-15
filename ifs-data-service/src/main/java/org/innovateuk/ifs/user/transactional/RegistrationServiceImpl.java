@@ -3,6 +3,7 @@ package org.innovateuk.ifs.user.transactional;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.innovateuk.ifs.address.mapper.AddressMapper;
+import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.authentication.service.IdentityProviderService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
@@ -33,14 +34,15 @@ import org.springframework.util.StringUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+import static java.lang.String.format;
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.lang.String.format;
-import static java.time.LocalDateTime.now;
-import static java.util.Collections.singletonList;
 
 /**
  * A service around Registration and general user-creation operations
@@ -50,9 +52,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
 
     final JsonNodeFactory factory = JsonNodeFactory.instance;
 
-    private static final CharSequence HASH_SALT = "klj12nm6nsdgfnlk12ctw476kl";
-
-    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(HASH_SALT);
+    private StandardPasswordEncoder encoder = new StandardPasswordEncoder(UUID.randomUUID().toString());
 
     public enum ServiceFailures {
         UNABLE_TO_CREATE_USER
@@ -122,13 +122,10 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
     public ServiceResult<UserResource> createUser(@P("user") UserRegistrationResource userRegistrationResource) {
         final UserResource userResource = userRegistrationResource.toUserResource();
 
-        return validateUser(userResource, userResource.getPassword()).andOnSuccess(validUser -> {
-                    final User user = userMapper.mapToDomain(userResource);
-                    Profile profile = new Profile();
-                    profile.setAddress(addressMapper.mapToDomain(userRegistrationResource.getAddress()));
-                    profile = profileRepository.save(profile);
-                    user.setProfileId(profile.getId());
-                    return createUserWithUid(user, userResource.getPassword());
+        return validateUser(userResource, userResource.getPassword()).
+                andOnSuccess(validUser -> {
+                        final User user = userMapper.mapToDomain(userResource);
+                        return createUserWithUid(user, userResource.getPassword(), userRegistrationResource.getAddress());
                 });
     }
 
@@ -148,7 +145,7 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
                         () -> addUserToOrganisation(newUser, organisationId).
                                 andOnSuccess(user -> addRoleToUser(user, roleName))).
                 andOnSuccess(
-                        () -> createUserWithUid(newUser, userResource.getPassword())
+                        () -> createUserWithUid(newUser, userResource.getPassword(), null)
                 );
     }
 
@@ -165,13 +162,17 @@ public class RegistrationServiceImpl extends BaseTransactionalService implements
         });
     }
 
-    private ServiceResult<UserResource> createUserWithUid(User user, String password) {
+    private ServiceResult<UserResource> createUserWithUid(User user, String password, AddressResource addressResource) {
 
         ServiceResult<String> uidFromIdpResult = idpService.createUserRecordWithUid(user.getEmail(), password);
 
         return uidFromIdpResult.andOnSuccessReturn(uidFromIdp -> {
             user.setUid(uidFromIdp);
             user.setStatus(UserStatus.INACTIVE);
+            Profile profile = new Profile();
+            if (addressResource != null) profile.setAddress(addressMapper.mapToDomain(addressResource));
+            Profile savedProfile = profileRepository.save(profile);
+            user.setProfileId(savedProfile.getId());
             User savedUser = userRepository.save(user);
             final UserResource userResource = userMapper.mapToResource(savedUser);
             return userResource;

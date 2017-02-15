@@ -1,28 +1,47 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body>
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'#'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'#'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
-	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor profile'}, ${null})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor profile'}, ${null})" />
 
-	<h1 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h1>
+    <h2 class="heading-medium">Assessor details</h2>
 
-	<h2 class="heading-medium">Innovation area and skills</h2>
+    <h3 class="heading-small">Name</h3>
+    <p th:text="${param.name != null ? param.name[0] : 'John Smith'}">John Smith</p>
+
+    <h3 class="heading-small">Address</h3>
+    <p>
+        Nomensa <br />
+        King William House <br />
+        13 Queens Square <br />
+        Bristol <br />
+        BS3 1RF
+    </p>
+
+    <h3 class="heading-small">Phone number</h3>
+    <p>01234 567891</p>
+
+    <h3 class="heading-small">Email address</h3>
+    <p><a href="mailto:j.b@assessor.com">j.b@assessor.com</a></p>
+
+
+	<h2 class="heading-medium">Skills</h2>
 
 	<div id="prototype-innovation-areas">
 		<h3 class="heading-small">Innovation areas <small th:if="${param.user != null and param.user[0] == 'compExec'}"><a href="#" id="prototype-edit-innovation-areas">Edit innovation areas</a></small></h3>
@@ -111,43 +130,12 @@
 
 	</div>
 
-	<h3 class="heading-small no-margin">Type</h3>
-	<ul class="list list-bullet">
-		<li>business</li>
-	</ul>
-
-	<h3 class="heading-small no-margin-bottom">Skills</h3>
+	<h3 class="heading-small no-margin-bottom">Skill areas</h3>
 	<p>Human computer interaction, Wearables, IoT</p>
 
-	<h2 class="heading-medium">Assessor details</h2>
+	<h3 class="heading-small no-margin">Assessor type</h3>
+	<p>business</p>
 
-	<div class="grid-row">
-
-		<div class="column-half">
-
-			<h3 class="heading-small no-margin-bottom">Email</h3>
-			<p><a href="mailto:j.b@assessor.com">j.b@assessor.com</a></p>
-
-			<h3 class="heading-small no-margin-bottom">Phone</h3>
-			<p>01234 567891</p>
-
-			<h3 class="heading-small no-margin-bottom">Principal employer and role</h3>
-			<p>ASDF solutions <br /> CEO</p>
-
-		</div>
-
-		<div class="column-half">
-			<h3 class="heading-small no-margin-bottom">Address</h3>
-			<p>
-				Nomensa <br />
-				King William House <br />
-				13 Queens Square <br />
-				Bristol <br />
-				BS3 1RF
-			</p>
-		</div>
-
-	</div>
 
 	<h2 class="heading-medium">Personal affiliations</h2>
 
@@ -264,11 +252,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
 	// <![CDATA[
 	$(document).ready(function() {

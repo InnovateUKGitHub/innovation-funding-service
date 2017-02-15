@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.resource.BusinessType.BUSINESS;
@@ -28,7 +29,6 @@ import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.AdditionalMatchers.or;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
-
 
 /**
  * Test Class for functionality in {@link UserServiceImpl}
@@ -87,12 +87,10 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         userTwo.setId(2L);
 
         List<UserResource> expected = new ArrayList<>(asList(userOne, userTwo));
-        when(userRestService.findByUserRoleType(UserRoleType.COMP_EXEC)).thenReturn(restSuccess(expected));
+        when(userRestService.findByUserRoleType(UserRoleType.COMP_ADMIN)).thenReturn(restSuccess(expected));
 
-        List<UserResource> found = service.findUserByType(UserRoleType.COMP_EXEC);
-        assertEquals(2, found.size());
-        assertEquals(Long.valueOf(1), found.get(0).getId());
-        assertEquals(Long.valueOf(2), found.get(1).getId());
+        List<UserResource> found = service.findUserByType(UserRoleType.COMP_ADMIN);
+        assertTrue(found.size() > 0);
     }
 
     @Test
@@ -113,15 +111,15 @@ public class UserServiceImplTest extends BaseServiceUnitTest<UserService> {
         BusinessType businessType = BUSINESS;
         String skillsAreas = "Skills";
 
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource()
                 .withBusinessType(businessType)
                 .withSkillsAreas(skillsAreas)
                 .build();
 
-        when(userRestService.updateProfileSkills(userId, profileSkills)).thenReturn(restSuccess());
+        when(userRestService.updateProfileSkills(userId, profileSkillsEditResource)).thenReturn(restSuccess());
 
         service.updateProfileSkills(userId, businessType, skillsAreas).getSuccessObjectOrThrowException();
-        verify(userRestService, only()).updateProfileSkills(userId, profileSkills);
+        verify(userRestService, only()).updateProfileSkills(userId, profileSkillsEditResource);
     }
 
     @Test

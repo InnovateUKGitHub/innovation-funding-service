@@ -7,9 +7,12 @@ import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.*;
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
+import org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.builder.FormInputResourceBuilder;
@@ -73,6 +76,9 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
 
     @Mock
     protected OrganisationService organisationService;
+
+    @Mock
+    private CategoryService categoryService;
 
     @Test
     public void testAddMappedSectionsDetails() {
@@ -184,12 +190,14 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         List<SectionResource> eachOrganisationFinanceSections = newSectionResource().build(1);
         Set<Long> sectionsMarkedAsComplete = new TreeSet<>();
         sectionsMarkedAsComplete.add(completedSectionId);
+        List<ResearchCategoryResource> categoryResources = ResearchCategoryResourceBuilder.newResearchCategoryResource().build(3);
 
         when(sectionService.getCompletedSectionsByOrganisation(application.getId())).thenReturn(completedSectionsByOrganisation);
         when(questionService.getMarkedAsComplete(application.getId(), organisationId)).thenReturn(markedAsComplete);
         when(sectionService.allSectionsMarkedAsComplete(application.getId())).thenReturn(allQuestionsCompleted);
         when(sectionService.getFinanceSection(application.getCompetition())).thenReturn(financeSection);
         when(sectionService.getSectionsForCompetitionByType(application.getCompetition(), SectionType.FINANCE)).thenReturn(eachOrganisationFinanceSections);
+        when(categoryService.getResearchCategories()).thenReturn(categoryResources);
 
         target.addCompletedDetails(model, application, Optional.of(userOrganisation));
 
@@ -200,6 +208,8 @@ public class ApplicationSectionAndQuestionModelPopulatorTest {
         verify(model).addAttribute("hasFinanceSection", true);
         verify(model).addAttribute("financeSectionId", financeSection.getId());
         verify(model).addAttribute("eachCollaboratorFinanceSectionId", eachOrganisationFinanceSections.get(0).getId());
+        verify(model).addAttribute("researchCategories", categoryResources);
+
         verifyNoMoreInteractions(model);
     }
 

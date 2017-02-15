@@ -120,7 +120,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         User user = newUser().build();
         Organisation organisation = newOrganisation().with(name("testOrganisation")).build();
         Role leadApplicantRole = newRole().withType(LEADAPPLICANT).build();
-        ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisation(organisation).build();
+        ProcessRole processRole = newProcessRole().withUser(user).withRole(leadApplicantRole).withOrganisationId(organisation.getId()).build();
         ApplicationStatus applicationStatus = newApplicationStatus().withName(CREATED).build();
 
         Application application = ApplicationBuilder.newApplication().
@@ -652,7 +652,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(roleRepositoryMock.findOneByName(role.getName())).thenReturn(role);
         when(userRepositoryMock.findOne(userId)).thenReturn(user);
         when(processRoleRepositoryMock.findByUser(user)).thenReturn(singletonList(
-            newProcessRole().withUser(user).withOrganisation(organisation).build()
+            newProcessRole().withUser(user).withOrganisationId(organisation.getId()).build()
         ));
         when(organisationRepositoryMock.findByUsers(user)).thenReturn(singletonList(organisation));
         when(applicationRepositoryMock.save(any(Application.class))).thenReturn(application);

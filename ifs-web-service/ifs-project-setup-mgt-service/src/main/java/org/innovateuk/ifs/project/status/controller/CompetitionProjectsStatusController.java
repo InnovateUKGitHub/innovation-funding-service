@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.project.status.controller;
 
+import org.apache.commons.io.IOUtils;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.project.sections.ProjectSetupSectionInternalUser;
@@ -8,7 +9,6 @@ import org.innovateuk.ifs.project.status.resource.CompetitionProjectsStatusResou
 import org.innovateuk.ifs.project.status.viewmodel.CompetitionProjectStatusViewModel;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,6 +37,7 @@ public class CompetitionProjectsStatusController {
     private BankDetailsService bankDetailsService;
 
     @RequestMapping(method = GET)
+    @PreAuthorize("hasAnyAuthority('project_finance', 'comp_admin')")
     public String viewCompetitionStatus(
             Model model,
             @ModelAttribute("loggedInUser") UserResource loggedInUser,

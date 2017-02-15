@@ -3,7 +3,7 @@ package org.innovateuk.ifs.testdata.builders;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.CompetitionFunder;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -13,7 +13,7 @@ import java.util.function.BiConsumer;
  */
 public class CompetitionFunderDataBuilder extends BaseDataBuilder<Void, CompetitionFunderDataBuilder>{
 
-    public CompetitionFunderDataBuilder withCompetitionFunderData(String competitionName, String funder, BigDecimal funderBudget, boolean isCoFunder) {
+    public CompetitionFunderDataBuilder withCompetitionFunderData(String competitionName, String funder, BigInteger funderBudget, boolean isCoFunder) {
         return with(data -> {
 
             Competition competition = retrieveCompetitionByName(competitionName);

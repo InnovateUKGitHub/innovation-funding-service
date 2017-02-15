@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -90,10 +91,12 @@ public interface QuestionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<QuestionResource> save(QuestionResource questionResource);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'ASSESS')")
     ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ')")

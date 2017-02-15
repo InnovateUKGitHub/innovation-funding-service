@@ -1,18 +1,14 @@
 package org.innovateuk.ifs.invite.builder;
 
-import org.innovateuk.ifs.BaseBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
-import java.util.Set;
 import java.util.function.BiConsumer;
 
 import static java.util.Collections.emptyList;
 
-public class AvailableAssessorResourceBuilder extends BaseBuilder<AvailableAssessorResource, AvailableAssessorResourceBuilder> {
+public class AvailableAssessorResourceBuilder extends AssessorInviteResourceBuilder<AvailableAssessorResource, AvailableAssessorResourceBuilder> {
 
     private AvailableAssessorResourceBuilder(List<BiConsumer<Integer, AvailableAssessorResource>> newMultiActions) {
         super(newMultiActions);
@@ -32,8 +28,8 @@ public class AvailableAssessorResourceBuilder extends BaseBuilder<AvailableAsses
         return new AvailableAssessorResourceBuilder(emptyList());
     }
 
-    public AvailableAssessorResourceBuilder withName(String... value) {
-        return withArraySetFieldByReflection("name", value);
+    public AvailableAssessorResourceBuilder withId(Long... value) {
+        return withArraySetFieldByReflection("id", value);
     }
 
     public AvailableAssessorResourceBuilder withEmail(String... value) {
@@ -42,14 +38,6 @@ public class AvailableAssessorResourceBuilder extends BaseBuilder<AvailableAsses
 
     public AvailableAssessorResourceBuilder withBusinessType(BusinessType... value) {
         return withArraySetFieldByReflection("businessType", value);
-    }
-
-    public AvailableAssessorResourceBuilder withInnovationAreas(List<InnovationAreaResource>... value) {
-        return withArraySetFieldByReflection("innovationAreas", value);
-    }
-
-    public AvailableAssessorResourceBuilder withCompliant(Boolean... value) {
-        return withArraySetFieldByReflection("compliant", value);
     }
 
     public AvailableAssessorResourceBuilder withAdded(Boolean... value) {

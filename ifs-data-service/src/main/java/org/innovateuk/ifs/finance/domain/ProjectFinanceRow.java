@@ -1,9 +1,12 @@
 package org.innovateuk.ifs.finance.domain;
 
+import org.innovateuk.ifs.application.domain.Question;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.math.BigDecimal;
 
 /**
  * An Entity similar to ApplicationFinanceRow, which represents a Project Finance Checks version of an Application Finance Row
@@ -24,6 +27,17 @@ public class ProjectFinanceRow extends FinanceRow<ProjectFinance> {
 
     public ProjectFinanceRow(ProjectFinance target) {
         this.target = target;
+    }
+
+    public ProjectFinanceRow(ProjectFinance projectFinance, Question question) {
+        super(question);
+        this.target = projectFinance;
+    }
+
+    public ProjectFinanceRow(Long id, String name, String item, String description, Integer quantity,
+                             BigDecimal cost, ProjectFinance projectFinance, Question question) {
+        super(id, name, item, description, quantity, cost, question);
+        this.target = projectFinance;
     }
 
     @Override

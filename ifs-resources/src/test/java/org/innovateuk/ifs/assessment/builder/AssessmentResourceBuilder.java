@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.Builder;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionOutcomeResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.workflow.resource.ProcessEvent;
@@ -10,9 +13,9 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static java.util.Collections.emptyList;
 
 public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, AssessmentResourceBuilder> {
 
@@ -34,43 +37,59 @@ public class AssessmentResourceBuilder extends BaseBuilder<AssessmentResource, A
         return new AssessmentResource();
     }
 
-    public AssessmentResourceBuilder withId(Long... ids) {
-        return withArray((id, assessment) -> setField("id", id, assessment), ids);
+    public AssessmentResourceBuilder withId(Long... value) {
+        return withArraySetFieldByReflection("id", value);
     }
 
     public AssessmentResourceBuilder withProcessEvent(ProcessEvent... processEvents) {
         return withArray((processEvent, object) -> setField("event", processEvent.name(), object), processEvents);
     }
 
-    public AssessmentResourceBuilder withLastModifiedDate(Calendar... lastModifiedDates) {
-        return withArray((lastModifiedDate, object) -> setField("lastModified", lastModifiedDate, object), lastModifiedDates);
+    public AssessmentResourceBuilder withLastModifiedDate(Calendar... value) {
+        return withArraySetFieldByReflection("lastModified", value);
     }
 
-    public AssessmentResourceBuilder withStartDate(LocalDate... startDates) {
-        return withArray((startDate, object) -> setField("startDate", startDate, object), startDates);
+    public AssessmentResourceBuilder withStartDate(LocalDate... value) {
+        return withArraySetFieldByReflection("startDate", value);
     }
 
-    public AssessmentResourceBuilder withEndDate(LocalDate... endDates) {
-        return withArray((endDate, object) -> setField("endDate", endDate, object), endDates);
+    public AssessmentResourceBuilder withEndDate(LocalDate... value) {
+        return withArraySetFieldByReflection("endDate", value);
     }
 
-    public AssessmentResourceBuilder withProcessOutcome(List<Long>... processOutcomes) {
-        return withArray((processOutcome, object) -> setField("processOutcomes", processOutcome, object), processOutcomes);
+    public AssessmentResourceBuilder withFundingDecision(AssessmentFundingDecisionOutcomeResource... value) {
+        return withArraySetFieldByReflection("fundingDecision", value);
     }
 
-    public AssessmentResourceBuilder withProcessRole(Long... processRoles) {
-        return withArray((processRole, object) -> setField("processRole", processRole, object), processRoles);
+    public AssessmentResourceBuilder withFundingDecision(Builder<AssessmentFundingDecisionOutcomeResource, ?> value) {
+        return withFundingDecision(value.build());
     }
 
-    public AssessmentResourceBuilder withApplication(Long... applications) {
-        return withArray((application, object) -> setField("application", application, object), applications);
+    public AssessmentResourceBuilder withRejection(AssessmentRejectOutcomeResource... value) {
+        return withArraySetFieldByReflection("rejection", value);
     }
 
-    public AssessmentResourceBuilder withCompetition(Long... competitions) {
-        return withArray((competition, object) -> setField("competition", competition, object), competitions);
+    public AssessmentResourceBuilder withRejection(Builder<AssessmentRejectOutcomeResource, ?> value) {
+        return withRejection(value.build());
     }
 
-    public AssessmentResourceBuilder withActivityState(AssessmentStates... states) {
-        return withArray((state, object) -> object.setAssessmentState(state), states);
+    public AssessmentResourceBuilder withProcessRole(Long... value) {
+        return withArraySetFieldByReflection("processRole", value);
+    }
+
+    public AssessmentResourceBuilder withApplication(Long... value) {
+        return withArraySetFieldByReflection("application", value);
+    }
+
+    public AssessmentResourceBuilder withApplicationName(String... values) {
+        return withArraySetFieldByReflection("applicationName", values);
+    }
+
+    public AssessmentResourceBuilder withCompetition(Long... value) {
+        return withArraySetFieldByReflection("competition", value);
+    }
+
+    public AssessmentResourceBuilder withActivityState(AssessmentStates... value) {
+        return withArraySetFieldByReflection("assessmentState", value);
     }
 }

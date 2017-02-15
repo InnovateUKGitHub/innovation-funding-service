@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Terms and Conditions'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Terms and conditions'" />
 </head>
 <body th:with="context='applicant'" class="terms-and-conditions">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
     <div class="page-title">
-        <h1 class="heading-xlarge no-margin">Terms and Conditions</h1>
+        <h1 class="heading-xlarge no-margin">Terms and conditions</h1>
     </div>
 
     <h2 class="heading-large">1. Overview</h2>
-    <h3 class="heading-medium">1.1. Information About Us</h3>
+    <h3 class="heading-medium">1.1. Information about us</h3>
     <p>Innovate UK is the trading name of the Innovate UK, a business-led non-departmental public body established by Royal Charter, under company number RC818. Our  main place of business is at North Star House, North Star Avenue,  Swindon, SN2 1UE ("us", "we", "our").</p>
     <p>Innovate UK is sponsored and funded by the United Kingdom Government Department for Business, Innovation and Skills.</p>
 
-    <h3 class="heading-medium">1.2 This Site</h3>
+    <h3 class="heading-medium">1.2 This site</h3>
     <p>Innovate UK owns this website. The terms (including any referenced documents) set out the conditions of use pursuant to which you may make use of our site, whether as a visitor, a guest or a registered user ("you", "your").</p>
     <p>Please read these terms of use carefully before you start to use our  site. By entering our site, you accept these terms of use and agree always to act in accordance with them. If you do not agree to these terms of use, please refrain from using our site.</p>
 
@@ -46,7 +46,7 @@
 
     <h2 class="heading-large">3. Acceptable use policy</h2>
     <p>This acceptable use policy ("Acceptable Use Policy") sets out the terms on which we allow you to use our site, whether as a user, guest or visitor.</p>
-    <h3 class="heading-medium">3.1. Prohibited Uses</h3>
+    <h3 class="heading-medium">3.1. Prohibited uses</h3>
     <p>You may use our site only for lawful purposes. You may not use our site:</p>
     <ul class="list-bullet">
         <li>in any way that breaches any applicable local, national or international law or regulation;</li>
@@ -90,7 +90,7 @@
     <h2 class="heading-large">5. Grant applications</h2>
     <h3 class="heading-medium">5.1. General</h3>
     <p>If you make a grant application through the site, you agree to be bound by these specific terms ("the Grant Application Terms"), together with the Terms as applicable from time to time, and any application guidance. To the extent that the Grant Application Terms conflict with any of the other Terms, the Grant Application Terms shall prevail.</p>
-    <h3 class="heading-medium">5.2. Confidentiality &amp; personal information</h3>
+    <h3 class="heading-medium">5.2. Confidentiality and personal information</h3>
     <p>Innovate UK reserves the right as a condition of any grant application and/or award to contact an organisation and its named lead staff.This can be directly or through an Affinity Partner, with limited, relevant, specific information that can assist with your application, grant or in developing and/or exploiting your specific idea, product or service which was the basis of your live or recent application or grant.</p>
     <h3 class="heading-medium">5.3. Intellectual property</h3>
     <p>For the avoidance of doubt, you retain all rights in your intellectual property and confidential information when submitting applications for grants.</p>
@@ -157,11 +157,11 @@
     <h2 class="heading-large">14. Information Management Policy</h2>
     <p>See the <a href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter">Information Management Policy</a> here.</p>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

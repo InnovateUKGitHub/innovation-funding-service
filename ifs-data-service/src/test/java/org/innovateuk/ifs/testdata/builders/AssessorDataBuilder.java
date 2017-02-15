@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.*;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.function.BiConsumer;
 
@@ -74,7 +75,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                                                              String inviteHash,
                                                              InviteStatus inviteStatus,
                                                              Optional<User> existingUser,
-                                                             String innovationAreaName
+                                                             String innovationAreaName,
+                                                             Optional<User> sentBy,
+                                                             Optional<LocalDateTime> sentOn
     ) {
         return with(data -> {
             newAssessorInviteData(serviceLocator).withInviteToAssessCompetition(
@@ -84,7 +87,9 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
                     inviteHash,
                     inviteStatus,
                     existingUser,
-                    innovationAreaName
+                    innovationAreaName,
+                    sentBy,
+                    sentOn
             ).build();
 
             data.setEmail(emailAddress);
@@ -140,12 +145,12 @@ public class AssessorDataBuilder extends BaseDataBuilder<AssessorData, AssessorD
             }
 
             doAs(data.getUser(), () -> {
-                ProfileSkillsResource profileSkillsResource = new ProfileSkillsResource();
-                profileSkillsResource.setBusinessType(businessType);
-                profileSkillsResource.setSkillsAreas(skillAreas);
-                profileSkillsResource.setUser(data.getUser().getId());
+                ProfileSkillsEditResource profileSkillsEditResource = new ProfileSkillsEditResource();
+                profileSkillsEditResource.setBusinessType(businessType);
+                profileSkillsEditResource.setSkillsAreas(skillAreas);
+                profileSkillsEditResource.setUser(data.getUser().getId());
 
-                userProfileService.updateProfileSkills(data.getUser().getId(), profileSkillsResource);
+                userProfileService.updateProfileSkills(data.getUser().getId(), profileSkillsEditResource);
                 testService.flushAndClearSession();
             });
         });

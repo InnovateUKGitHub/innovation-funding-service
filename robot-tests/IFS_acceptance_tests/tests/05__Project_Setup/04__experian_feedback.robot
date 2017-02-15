@@ -8,6 +8,10 @@ Documentation     INFUND-3763 As a project finance team member I want to receive
 ...               INFUND-6714 Proj finance cannot change account details
 ...
 ...               INFUND-7161 If browser back button is used bank account details can be changed again by IUK inspite of being approved once
+...
+...               INFUND-7109 Bank Details Status - Internal user
+...
+...               INFUND-5899 As an internal user I want to be able to use the breadcrumb navigation consistently throughout Project Setup so I can return to the previous page as appropriate
 Suite Setup       all preliminary steps are completed
 Suite Teardown    the user closes the browser
 Force Tags        Experian    Project Setup
@@ -101,8 +105,9 @@ Bank account number and sort code validations server side
      Then the user should see the text in the page    Please enter a valid account number
      And the user should see the text in the page    Please enter a valid sort code
 
+
 Project Finance cancels bank details changes
-    [Documentation]    INFUND-4054
+    [Documentation]    INFUND-4054,  INFUND-5899
     [Tags]    HappyPath
     When the user clicks the button/link          link=Cancel bank account changes
     Then the user should be redirected to the correct page  ${server}/project-setup-management/project/${PS_EF_APPLICATION_PROJECT}/organisation/${Ntag_Id}/review-bank-details
@@ -113,6 +118,9 @@ Project Finance cancels bank details changes
     When the user clicks the button/link    jQuery=.column-half.alignright .button:contains("Update bank account details")
     And the user clicks the button/link     jQuery=.alignright-button button:contains("Cancel")
     Then the text box should be editable    id=company-name
+    When the user clicks the button/link    link=Review bank details
+    Then the user should see the text in the page    These details are now undergoing an internal review.
+    [Teardown]    the user goes back to the previous page
 
 Project Finance updates bank account details
     [Documentation]    INFUND-4054
@@ -146,6 +154,16 @@ Project Finance approves the bank details
     And the user clicks the button/link            jQuery=.modal-partner-change-bank-details .button:contains("Update bank account details")   #Due to popup
     Then the user should see the text in the page  Bank details have already been approved and cannot be changed
 
+Lead partner can see that bank details has been approved
+    [Documentation]    INFUND-7109
+    [Tags]    HappyPath
+    [Setup]    log in as a different user          ${PS_EF_APPLICATION_PM_EMAIL}  ${short_password}
+    When the user clicks the button/link           link=${PS_EF_APPLICATION_HEADER}
+    Then the user should see the element           jQuery=ul li.complete:nth-child(4)
+    When the user clicks the button/link           link=What's the status of each of my partners?
+    And the user should see the text in the page   Project team status
+    And the user should see the element            jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(3)
+
 Other internal users cannot access this page
     [Documentation]    INFUND-3763
     [Tags]
@@ -162,7 +180,7 @@ Project partners cannot access this page
 *** Keywords ***
 the text box should be editable
     [Arguments]    ${text_field}
-    wait until element is visible    ${text_field}
+    Wait Until Element Is Visible Without Screenshots    ${text_field}
     Element Should Be Enabled    ${text_field}
 
 all preliminary steps are completed

@@ -162,7 +162,9 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setLastName(lastName);
         user.setPassword(password);
         user.setEmail(email);
-        user.setTitle(title);
+        if(!StringUtils.isEmpty(title)) {
+            user.setTitle(Title.valueOf(title));
+        }
         user.setPhoneNumber(phoneNumber);
         if(!StringUtils.isEmpty(gender)) {
             user.setGender(Gender.valueOf(gender));
@@ -196,7 +198,9 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         user.setEmail(email);
         user.setFirstName(firstName);
         user.setLastName(lastName);
-        user.setTitle(title);
+        if(!StringUtils.isEmpty(title)) {
+            user.setTitle(Title.valueOf(title));
+        }
         user.setPhoneNumber(phoneNumber);
         if(!StringUtils.isEmpty(gender)) {
             user.setGender(Gender.valueOf(gender));
@@ -215,8 +219,8 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
     }
 
     @Override
-    public RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileSkills) {
-        return putWithRestResult(format("%s/id/%s/updateProfileSkills", userRestURL, userId), profileSkills, Void.class);
+    public RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkillsEditResource) {
+        return putWithRestResult(format("%s/id/%s/updateProfileSkills", userRestURL, userId), profileSkillsEditResource, Void.class);
     }
 
     @Override

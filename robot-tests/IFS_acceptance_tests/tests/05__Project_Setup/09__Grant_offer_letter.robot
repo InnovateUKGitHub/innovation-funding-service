@@ -24,6 +24,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-7361 GOL is seen by internal user soon after the external user uploads it
 ...
 ...               INFUND-6048 As the contracts team I can have access to a generated Grant Offer Letter so that I can send it to the partners
+...
+...               INFUND-7170 Approved signed-GOL cannot be seen/downloaded by external users
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -140,8 +142,8 @@ Comp Admin user uploads new grant offer letter
     And the user should see the element    jQuery=button.button-secondary:contains("Remove")
     When the user uploads a file           annex  ${valid_pdf}
     And the user clicks the button/link    id=send-gol
-    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Send to project team")
-    Then the user should not see the element  jQuery=.button:contains("Send to project team")
+    And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
+    Then the user should not see the element  jQuery=.button:contains("Publish to project team")
     And the user should not see the element   jQuery=button.button-secondary:contains("Remove")
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
     Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting   # GOL
@@ -181,7 +183,7 @@ Links to other sections in Project setup dependent on project details (applicabl
     And the user should see the text in the page    Successful application
     Then the user should see the element    link = Monitoring Officer
     And the user should see the element    link = Bank details
-    And the user should not see the element    link = Finance checks
+    And the user should see the element    link = Finance checks
     And the user should see the element    link= Spend profile
     And the user should see the element    link = Grant offer letter
 
@@ -280,7 +282,7 @@ Academic partner can download the annex
     [Tags]  HappyPath    Download
     Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file        ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
-    [Teardown]    remove the file from the operating system    annex.pdf]
+    [Teardown]    remove the file from the operating system    annex.pdf
 
 PM can view the uploaded Annex file
     [Documentation]    INFUND-4851, INFUND-4849
@@ -306,6 +308,15 @@ PM Sends the Grant Offer letter
     And the user should not see an error in the page
     When the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     Then the user should see the element    jQuery=li.waiting:nth-child(8)
+
+PM can download the signed grant offer letter
+    [Documentation]    INFUND-7170
+    [Tags]  HappyPath    Download
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user should see the text in the page   Signed grant offer letter
+    And the user downloads the file        ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/signedGOL.pdf
+    [Teardown]    remove the file from the operating system    signedGOL.pdf
+
 
 PM's status should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
@@ -362,9 +373,7 @@ Project manager's status should be updated
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PM_EMAIL}  ${short_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element    jQuery=li.complete:nth-child(8)
-    When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the text in the page    Project team status
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And the user should see the element      link=_connect
 
 Non lead's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
@@ -372,9 +381,7 @@ Non lead's status should be updated
     [Setup]    log in as a different user    ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
     And the user should see the element    jQuery=li.complete:nth-child(8)
-    When the user clicks the button/link    link=What's the status of each of my partners?
-    Then the user should see the text in the page    Project team status
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(7)
+    And the user should see the element      link=_connect
 
 Non lead can see the GOL approved
     [Documentation]  INFUND-6377
@@ -383,30 +390,39 @@ Non lead can see the GOL approved
     Then the user should see the element  jQuery=.grant-offer-download:contains("testing.pdf")
     And the user should see the element   jQuery=.success-alert p:contains("Your signed grant offer letter has been received and accepted by Innovate UK")
 
-Non lead can download the signed GOL
+Non lead can download the GOL
     [Documentation]  INFUND-6377
     [Tags]  Download
     Given the user navigates to the page  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
     Then the user downloads the file      ${PS_GOL_APPLICATION_PARTNER_EMAIL}  ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/grant-offer-letter  ${DOWNLOAD_FOLDER}/testing.pdf
     [Teardown]    remove the file from the operating system    testing.pdf
 
+Non lead cannot see the signed GOL
+    [Documentation]    INFUND-7170
+    [Tags]
+    Given the user navigates to the page    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer
+    Then the user should not see the text in the page   Signed grant offer letter
+
 PM receives an email when the GOL is approved
     [Documentation]    INFUND-6375
-    [Tags]    Email    HappyPath    Pending
-    # TODO Pending due to INFUND-7413
-    Then the user reads his email    amy.ortiz@gabtype.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+    [Tags]    Email    HappyPath
+    Then the user reads his email    ${PS_GOL_APPLICATION_PM_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
+Lead finance contact receives an email when the GOL is approved
+    [Documentation]    INFUND-6375
+    [Tags]    Email    HappyPath
+    Then the user reads his email    ${PS_GOL_APPLICATION_FINANCE_CONTACT_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+
 
 Industrial finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
-    [Tags]    Email    HappyPath    Pending
-    # TODO Pending due to INFUND-7413
-    Then the user reads his email    karen.ramos@kazio.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+    [Tags]    Email    HappyPath
+    Then the user reads his email    ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
 
 Academic finance contact receives an email when the GOL is approved
     [Documentation]    INFUND-6375
-    [Tags]    Email    HappyPath    Pending
-    # TODO Pending due to INFUND-7413
-    Then the user reads his email    juan.campbell@cogilith.example.com    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
+    [Tags]    Email    HappyPath
+    Then the user reads his email    ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Grant offer letter approval    Innovate UK has reviewed and accepted the signed grant offer letter you have uploaded for your project.
 
 
 *** Keywords ***
@@ -471,20 +487,20 @@ project finance approves Viability for
 all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
-    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
-        And the user clicks the button/link    jQuery=.button:contains("Send")
+    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Cogilith_Id}/spend-profile
-    When the user clicks the button/link    jQuery=a:contains("Send to lead partner")
-        And the user clicks the button/link    jQuery=.button:contains("Send")
+    When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
+        And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
-    the user clicks the button/link    jQuery=.button:contains("Review and submit total project")
-    the user clicks the button/link    jQuery=.button:contains("Submit project spend profile")
-    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Submit"]
+    the user clicks the button/link    jQuery=.button:contains("Review and send total project")
+    the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
+    the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}

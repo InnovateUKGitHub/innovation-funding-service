@@ -74,6 +74,7 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'APPLICATION_SUBMITTED_NOTIFICATION')")
     ServiceResult<Void> sendNotificationApplicationSubmitted(@P("applicationId") Long application);
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<ApplicationResource>> getApplicationsByCompetitionIdAndUserId(final Long competitionId,
                                                                                      final Long userId,
@@ -85,7 +86,8 @@ public interface ApplicationService {
     @PreAuthorize("hasPermission(#id, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ObjectNode> applicationReadyForSubmit(final Long id);
 
-    @PreAuthorize("hasAuthority('comp_admin') || hasAuthority('project_finance')")
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	ServiceResult<List<Application>> getApplicationsByCompetitionIdAndStatus(Long competitionId, Collection<Long> applicationStatusId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")

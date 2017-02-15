@@ -1,11 +1,10 @@
 package org.innovateuk.ifs.prototype;
 
-import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
+import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.TestRestTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.web.client.RestTemplate;
@@ -21,12 +20,12 @@ import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
  */
 @Ignore("Ignored since fetching these pages invokes org.innovateuk.ifs.interceptors.AlertMessageHandlerInterceptor.addAlertMessages. Needs running ifs-data-service which is not deployed to the embedded Tomcat")
 @ActiveProfiles("prototypes")
-public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
+public class PrototypeControllerIntegrationTest extends BaseIntegrationTest {
 
     @Value("http://localhost:${local.server.port}")
     private String baseWebUrl;
 
-    private RestTemplate template = new TestRestTemplate();
+    private RestTemplate template = new RestTemplate();
 
     private static final String KNOWN_PROTOTYPE = "/prototypes/631-finances-assigned-to-you";
 

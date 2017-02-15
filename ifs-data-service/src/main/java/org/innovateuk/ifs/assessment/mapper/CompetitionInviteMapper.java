@@ -24,6 +24,7 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvi
             @Mapping(source = "target.assessorDeadlineDate", target = "deadlineDate"),
             @Mapping(source = "target.assessorPay", target = "assessorPay"),
             @Mapping(source = "target.assessorBriefingDate", target = "briefingDate"),
+            @Mapping(source = "innovationAreaOrNull", target = "innovationArea"),
     })
     @Override
     public abstract CompetitionInviteResource mapToResource(CompetitionInvite domain);
@@ -33,7 +34,7 @@ public abstract class CompetitionInviteMapper extends BaseMapper<CompetitionInvi
             @Mapping(target="name", ignore=true),
             @Mapping(target="hash", ignore=true),
             @Mapping(target="user", ignore=true),
-            @Mapping(target="target", ignore=true)
+            @Mapping(target="target", ignore=true),
     })
     @Override
     public abstract CompetitionInvite mapToDomain(CompetitionInviteResource resource);

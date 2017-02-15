@@ -69,7 +69,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         mockMvc.perform(post("/section/getCompletedSections/" + application.getId() + "/" + organisationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(completedSectionIds)))
+                .andExpect(content().string(objectMapper.writeValueAsString(completedSectionIds)))
                 .andExpect(status().isOk());
     }
 
@@ -90,7 +90,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         mockMvc.perform(post("/section/getIncompleteSections/" + application.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(incompleteSectionIds)))
+                .andExpect(content().string(objectMapper.writeValueAsString(incompleteSectionIds)))
                 .andExpect(status().isOk());
     }
 
@@ -104,7 +104,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(nextSection)));
+                .andExpect(content().string(objectMapper.writeValueAsString(nextSection)));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(previousSection)));
+                .andExpect(content().string(objectMapper.writeValueAsString(previousSection)));
     }
 
     @Test

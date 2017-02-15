@@ -33,47 +33,4 @@ public class NonNegativeIntegerValidatorTest {
         assertEquals(1, bindingResult.getAllErrors().size());
         assertEquals("validation.standard.non.negative.integer.non.negative.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
     }
-
-    @Test
-    public void testDecimal() {
-        formInputResponse.setValue("1.1");
-        validator.validate(formInputResponse, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-        assertEquals(1, bindingResult.getAllErrors().size());
-        assertEquals("validation.standard.non.negative.integer.non.decimal.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
-    }
-
-    @Test
-    public void testGreaterThanMAX_VALUE() {
-        String greaterThatMaxValue = Integer.MAX_VALUE + "1";
-        formInputResponse.setValue(greaterThatMaxValue);
-        validator.validate(formInputResponse, bindingResult);
-        assertTrue(bindingResult.hasErrors());
-        assertEquals(1, bindingResult.getAllErrors().size());
-        assertEquals("validation.standard.non.negative.integer.max.value.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
-    }
-
-    @Test
-    public void testMultipleFailures() {
-        String multipleFailures = Integer.MAX_VALUE + ".1";
-        formInputResponse.setValue(multipleFailures);
-        validator.validate(formInputResponse, bindingResult);
-        assertEquals(2, bindingResult.getAllErrors().size());
-        assertEquals("validation.standard.non.negative.integer.non.decimal.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
-        assertEquals("validation.standard.non.negative.integer.max.value.format", bindingResult.getAllErrors().get(1).getDefaultMessage());
-    }
-
-    @Test
-    public void testZero() {
-        formInputResponse.setValue("0");
-        validator.validate(formInputResponse, bindingResult);
-        assertFalse(bindingResult.hasErrors());
-    }
-
-    @Test
-    public void testValid() {
-        formInputResponse.setValue("10000");
-        validator.validate(formInputResponse, bindingResult);
-        assertFalse(bindingResult.hasErrors());
-    }
 }

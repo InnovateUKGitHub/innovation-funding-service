@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="app-dashboard">
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -46,9 +46,14 @@
 				<li>
 					<div class="task">
 						<h4 class="heading-small"><a th:href="${(param.user == null ? '/prototypes/1588-project-status' : '/prototypes/1588-project-status?user=nonLead')}">Machine learning in robots</a></h4>
-						<span>Application number: 194741</span>
+            <ul class="application-details">
+              <li>Application number: 19474</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
-					<div class="status"><strong>In progress</strong></div>
+					<div class="status">
+            <strong class="status-msg msg-progress">In progress</strong>
+          </div>
 				</li>
 			</ul>
 		</div>
@@ -99,43 +104,47 @@
 		<div class="progress-list">
 			<h3 class="heading-medium no-margin-top">Applications in progress</h3>
 			<ul>
-				<li>
+				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
-						<span>Application number: 0000002</span>
+						<h4 class="heading-small"><a href="/prototypes/635-application-overview#">Providing sustainable childcare</a></h4>
+            <ul class="application-details">
+              <li>Application number: 0000002</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
 					<div class="status">
-						<img src="../images/icons/icon-awaiting-assessment.svg" width="70" height="70" alt="Awaiting assessment" />
-						<span class="awaiting">Awaiting assessment</span>
-						<strong>Application submitted</strong>
+						<span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
+						<span class="status-msg msg-progress">Application submitted</span>
 					</div>
 				</li>
-				<li>
+				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="#">Providing sustainable childcare</a></h4>
-						<span>Application number: 0000008</span>
+						<h4 class="heading-small"><a href="/prototypes/635-application-overview">Providing sustainable childcare</a></h4>
+            <ul class="application-details">
+              <li>Application number: 0000008</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
 					<div class="status">
-						<div class="pie-container">
-							<div class="pie medium">50%</div>
-							<div class="pie-overlay">
-								<span class="day">41</span>
-								<span>days left</span>
-							</div>
-						</div>
-						<span class="deadline">Deadline 28 January</span>
-						<strong>50% complete</strong>
+						<span class="status-msg msg-deadline">
+              <strong class="bold-medium">41</strong><br />
+              Days left <br />
+              Deadline 28 January
+            </span>
+						<span class="status-msg msg-progress">50% complete</span>
 					</div>
 				</li>
-				<li>
+				<li class="status-2-col">
 					<div class="task">
-						<h4 class="heading-small"><a href="#">A new innovative solution</a></h4>
-						<span>Application number: 0000005</span>
+						<h4 class="heading-small"><a href="/prototypes/635-application-overview">A new innovative solution</a></h4>
+            <ul class="application-details">
+              <li>Application number: 0000005</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
-					<div class="status">
-						<img src="../images/icons/icon-awaiting-assessment.svg" width="70" height="70" alt="Awaiting assessment" />
-						<span class="awaiting">Awaiting assessment</span>
-						<strong>Application submitted</strong>
+          <div class="status">
+						<span class="status-msg msg-deadline-waiting">Awaiting assessment</span>
+						<span class="status-msg msg-progress">Application submitted</span>
 					</div>
 				</li>
 			</ul>
@@ -209,36 +218,56 @@
 				<li class="negative">
 					<div class="task">
 						<h4 class="heading-small"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
-						<span>Application number: 0000004</span>
+            <ul class="application-details">
+              <li>Application number: 0000004</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
-					<div class="status"><strong>Not successful</strong></div>
+					<div class="status">
+            <strong class="status-msg msg-progress">Not successful</strong>
+          </div>
 				</li>
 				<li class="positive">
 					<div class="task">
 						<h4 class="heading-small"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
-						<span>Application number: 0000003</span>
+            <ul class="application-details">
+              <li>Application number: 0000003</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
-					<div class="status"><strong>Successful</strong></div>
+          <div class="status">
+					  <strong class="status-msg msg-progress">Successful</strong>
+          </div>
 				</li>
 				<li class="positive">
 					<div class="task">
 						<h4 class="heading-small"><a href="/prototypes/545-application-feedback">Mobile Phone Data for Logistics Analytics</a></h4>
-						<span>Application number: 0000002</span>
+            <ul class="application-details">
+              <li>Application number: 0000002</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
-					<div class="status"><strong>Successful</strong></div>
+					<div class="status">
+            <strong class="status-msg msg-progress">Successful</strong>
+          </div>
 				</li>
 				<li class="negative">
 					<div class="task">
 						<h4 class="heading-small"><a href="/prototypes/545-application-feedback?unsuccessful">Using natural gas to heat homes</a></h4>
-						<span>Application number: 0000001</span>
+            <ul class="application-details">
+              <li>Application number: 0000001</li>
+              <li>Competition: Technology inspired</li>
+            </ul>
 					</div>
-					<div class="status"><strong>Not successful</strong></div>
+					<div class="status">
+            <strong class="status-msg msg-progress">Not successful</strong>
+          </div>
 				</li>
 			</ul>
 		</div>
 	</th:block>
 
-	<h2 class="heading-large">Your profile</h2> 
+	<h2 class="heading-large">Your profile</h2>
 
 	<ul class="list list-bullet">
 		<li>
@@ -254,14 +283,14 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
-	
-	jQuery('input#address-same').on('click',function(e){ 
+
+	jQuery('input#address-same').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#manual-company-input").hide();
@@ -271,20 +300,20 @@
 
 	});
 
-	jQuery('#manual-company-trigger').on('click',function(e){ 
+	jQuery('#manual-company-trigger').on('click',function(e){
 		e.preventDefault();
 		jQuery("#manual-company-input").show();
 		jQuery("#org-results").hide();
 
 	});
 
-	jQuery('#postcode-lookup').on('click',function(e){ 
+	jQuery('#postcode-lookup').on('click',function(e){
 		e.preventDefault();
 		jQuery("#select-address-block").show();
 
 	});
 
-	jQuery('#select-address').on('change',function(e){ 
+	jQuery('#select-address').on('change',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#street").val("King William House");
@@ -294,7 +323,7 @@
 
 	});
 
-	jQuery('#enter-address-manually').on('click',function(e){ 
+	jQuery('#enter-address-manually').on('click',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#select-address-block").hide();

@@ -45,7 +45,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplication/1/2"))
             .andExpect(status().isOk())
-            .andExpect(content().string(new ObjectMapper().writeValueAsString(questionStatuses)))
+            .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
             .andDo(document("questionStatus/findByQuestionAndApplication"));
     }
 
@@ -60,7 +60,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/findByQuestionAndApplicationAndOrganisation/" + questionId + "/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(questionStatuses)))
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
                 .andDo(document("questionStatus/findByQuestionAndApplicationAndOrganisation"));
     }
 
@@ -76,7 +76,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/findByQuestionIdsAndApplicationIdAndOrganisationId/" + questionIdsList.stream().map(id -> id.toString()).collect(Collectors.joining(",")) + "/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(questionStatuses)))
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
                 .andDo(document("questionStatus/findByQuestionIdsAndApplicationIdAndOrganisationId"));
     }
 
@@ -90,7 +90,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/findByApplicationAndOrganisation/" + applicationId + "/" + organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(questionStatuses)))
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatuses)))
                 .andDo(document("questionStatus/findByQuestionIdsAndApplicationIdAndOrganisationId"));
     }
 
@@ -103,7 +103,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/" + questionStatusId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(questionStatus)))
+                .andExpect(content().string(objectMapper.writeValueAsString(questionStatus)))
                 .andDo(document("questionStatus/findById"));
     }
 
@@ -117,7 +117,7 @@ public class QuestionStatusControllerTest extends BaseControllerMockMVCTest<Ques
 
         mockMvc.perform(get("/questionStatus/getAssignedQuestionsCountByApplicationIdAndAssigneeId/" + applicationId + "/" + assigneeId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(count)))
+                .andExpect(content().string(objectMapper.writeValueAsString(count)))
                 .andDo(document("questionStatus/getAssignedQuestionsCountByApplicationIdAndAssigneeId"));
     }
 }

@@ -10,6 +10,8 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.finance.builder.ApplicationFinanceResourceBuilder.newApplicationFinanceResource;
@@ -139,5 +141,31 @@ public class ApplicationFinanceControllerTest extends BaseControllerMockMVCTest<
         mockMvc.perform(get("/applicationfinance/financeDocument/fileentry?applicationFinanceId=123"))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(fileEntry)));
+    }
+
+    @Test
+    public void testFinanceDetails() throws Exception {
+        ApplicationFinanceResource applicationFinanceResource = newApplicationFinanceResource().build();
+
+        when(financeRowServiceMock.financeDetails(123L, 456L)).thenReturn(serviceSuccess(applicationFinanceResource));
+
+        mockMvc.perform(get("/applicationfinance/financeDetails/{applicationId}/{organisationId}", "123", "456"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(applicationFinanceResource)));
+
+        verify(financeRowServiceMock).financeDetails(123L, 456L);
+    }
+
+    @Test
+    public void testGetFinanceDetailsForApplication() throws Exception {
+        List<ApplicationFinanceResource> applicationFinanceResources = newApplicationFinanceResource().build(3);
+
+        when(financeRowServiceMock.financeDetails(123L)).thenReturn(serviceSuccess(applicationFinanceResources));
+
+        mockMvc.perform(get("/applicationfinance/financeDetails/{applicationId}", "123"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(applicationFinanceResources)));
+
+        verify(financeRowServiceMock).financeDetails(123L);
     }
 }

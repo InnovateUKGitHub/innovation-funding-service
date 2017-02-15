@@ -23,6 +23,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("fundersPanelDate").description("date on which the funders panel begins"),
             fieldWithPath("fundersPanelEndDate").description("date on which the funders panel ended"),
             fieldWithPath("assessorFeedbackDate").description("date on which applicants can expect to receive feedback from the assessments"),
+            fieldWithPath("releaseFeedbackDate").description("date on which the feedback is released"),
             fieldWithPath("competitionStatus").description("the current status of the competition"),
             fieldWithPath("maxResearchRatio").description("maximum ratio of research participation"),
             fieldWithPath("academicGrantPercentage").description("grant claim percentage for the academics"),
@@ -30,6 +31,7 @@ public class CompetitionResourceDocs {
             fieldWithPath("competitionType").description("the competition type this competition belongs to"),
             fieldWithPath("competitionTypeName").description("the name of the competition type this competition belongs to"),
             fieldWithPath("executive").description("the user id of the competition executive"),
+            fieldWithPath("executiveName").description("the name of the competition executive"),
             fieldWithPath("leadTechnologist").description("the user id of the competition leadTechnologist"),
             fieldWithPath("leadTechnologistName").description("the name of the competition leadTechnologist"),
             fieldWithPath("innovationSector").description("the Innovation sector this competition belongs to"),
@@ -65,6 +67,7 @@ public class CompetitionResourceDocs {
             .withFundersPanelDate(LocalDateTime.now().plusDays(42))
             .withFundersPanelEndDate(LocalDateTime.now().plusDays(44))
             .withAssessorFeedbackDate(LocalDateTime.now().plusDays(56))
+            .withReleaseFeedbackDate(LocalDateTime.now().plusDays(62))
             .withMaxResearchRatio(20)
             .withAcademicGrantClaimPercentage(100)
             .withCompetitionCode("COMP-1")

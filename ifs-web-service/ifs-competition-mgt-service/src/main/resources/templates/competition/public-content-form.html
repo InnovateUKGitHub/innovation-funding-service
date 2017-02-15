@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Public Content'" />
+</head>
+<body th:with="context='comp-management'" class="competition-management competition-setup">
+
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${form}" novalidate="novalidate" method="post" enctype="multipart/form-data">
+        <!-- Link back -->
+        <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Public content',linkClass='link-back',linkUrl=@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}"  th:remove="tag"></div>
+
+        <div class="page-title">
+            <th:block th:insert="fragments/elements :: competition-title (competition=${model.competition})" />
+            <h1 class="heading-xlarge" th:text="${model.section.type.text}"></h1>
+        </div>
+
+        <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
+            <h2 class="heading-medium error-summary-heading">There was a problem submitting the public content.</h2>
+
+            <ul class="error-summary-list">
+                <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
+            </ul>
+        </div>
+
+        <!-- sections -->
+        <th:block th:insert="fragments/public-content :: ${'section-' + model.section.type.path} (model=${model},form=${form})" />
+
+        <!-- buttons -->
+        <div class="grid-row extra-margin">
+            <th:block th:if="${model.readOnly}">
+            <div class="column-half">
+                <a class="button" th:href="@{/competition/setup/public-content/{competitionId}(competitionId=${model.competition.id})}">Return to public content</a>
+            </div>
+            <div class="column-half alignright">
+                <a class="button-secondary no-margin" th:href="@{/competition/setup/public-content/{sectionName}/{competitionId}/edit(competitionId=${model.competition.id}, sectionName=${model.section.type.path})}">Edit</a>
+            </div>
+            </th:block>
+            <th:block th:unless="${model.readOnly}">
+                <div class="column-half">
+                    <button name="save-and-return" class="button" th:text="${model.published ? 'Publish and return' : 'Save and return'}"></button>
+                </div>
+            </th:block>
+        </div>
+        <hr />
+    </form>
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

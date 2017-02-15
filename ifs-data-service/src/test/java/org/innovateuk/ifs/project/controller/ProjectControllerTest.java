@@ -10,6 +10,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -30,6 +31,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_MULTIPLE;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -63,6 +65,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     private MonitoringOfficerResource monitoringOfficerResource;
 
     private RestDocumentationResultHandler document;
+
+
 
     @Before
     public void setUp() {
@@ -516,5 +520,28 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
                 .andReturn();
 
         verify(projectServiceMock).getGrantOfferLetterWorkflowState(projectId);
+    }
+
+    @Test
+    public void tetsGetProjectManager() throws Exception {
+        Long project1Id = 1L;
+
+        ProjectUserResource projectManager = newProjectUserResource().withId(project1Id).build();
+
+        when(projectServiceMock.getProjectManager(project1Id)).thenReturn(serviceSuccess(projectManager));
+
+        mockMvc.perform(get("/project/{id}/project-manager", project1Id))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(projectManager)));
+    }
+
+    @Test
+    public void tetsGetProjectManagerNotFound() throws Exception {
+        Long project1Id = -1L;
+
+        when(projectServiceMock.getProjectManager(project1Id)).thenReturn(serviceFailure(GENERAL_NOT_FOUND));
+
+        mockMvc.perform(get("/project/{id}/project-manager", project1Id))
+                .andExpect(status().isNotFound());
     }
 }

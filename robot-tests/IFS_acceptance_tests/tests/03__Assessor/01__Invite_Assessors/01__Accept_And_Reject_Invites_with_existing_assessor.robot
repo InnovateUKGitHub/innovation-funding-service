@@ -34,7 +34,7 @@ Resource          ../../../resources/defaultResources.robot
 *** Variables ***
 ${Invitation_existing_assessor1}    ${server}/assessment/invite/competition/dcc0d48a-ceae-40e8-be2a-6fd1708bd9b7
 ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competition/1ec7d388-3639-44a9-ae62-16ad991dc92c
-${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:worth.email.test+david.peters@gmail.com
+${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 ${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
 
@@ -72,7 +72,7 @@ Existing assessor: Reject invitation from Dashboard
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
-    And The user enters text to a text field    id=rejectComment    a a a a a a a a \ a a a a \ a a a a a a \ a a a a a \ a a a a \ a a a a \ a a a a a a a a a a a \ a a \ a a a a a a a a a a \ a a a a a a a a a a a a a a a a a a a \ a a a a a a a \ a a a \ a a \ aa \ a a a a a a a a a a a a a a \ a
+    And The user enters text to a text field    id=rejectComment    a a a a a a a a \\ a a a a \\ a a a a a a \\ a a a a a \\ a a a a \\ a a a a \\ a a a a a a a a a a a \\ a a \\ a a a a a a a a a a \\ a a a a a a a a a a a a a a a a a a a \\ a a a a a a a \\ a a a \\ a a \\ aa \\ a a a a a a a a a a a a a a \\ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see an error    The reason cannot be blank.
     And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
@@ -89,7 +89,7 @@ Existing Assessor tries to accept closed competition
     And the user navigates to the page    ${Invitation_for_upcoming_comp_assessor1}
     Then The user should see the text in the page    This invitation is now closed
     [Teardown]    Run Keywords    Connect to Database    @{database}
-    ...    AND    execute sql string    UPDATE `ifs`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=4;
+    ...    AND    execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE type='ASSESSMENT_CLOSED' AND competition_id=4;
 
 Existing assessor: Accept invitation from the invite link
     [Documentation]    INFUND-228

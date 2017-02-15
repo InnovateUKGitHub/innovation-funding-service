@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.viability.form;
 
 import org.innovateuk.ifs.controller.BaseBindingResultTarget;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 
 /**
  * Form backing the checkboxes and dropdowns on the Viability page
@@ -9,14 +9,14 @@ import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
 
     private boolean creditReportConfirmed;
-    private ViabilityStatus ragStatus;
+    private ViabilityRagStatus ragStatus;
     private boolean confirmViabilityChecked;
 
     // for Spring MVC
     FinanceChecksViabilityForm() {
     }
 
-    public FinanceChecksViabilityForm(boolean creditReportConfirmed, ViabilityStatus ragStatus, boolean confirmViabilityChecked) {
+    public FinanceChecksViabilityForm(boolean creditReportConfirmed, ViabilityRagStatus ragStatus, boolean confirmViabilityChecked) {
         this.creditReportConfirmed = creditReportConfirmed;
         this.ragStatus = ragStatus;
         this.confirmViabilityChecked = confirmViabilityChecked;
@@ -26,7 +26,7 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
         return creditReportConfirmed;
     }
 
-    public ViabilityStatus getRagStatus() {
+    public ViabilityRagStatus getRagStatus() {
         return ragStatus;
     }
 
@@ -34,7 +34,7 @@ public class FinanceChecksViabilityForm extends BaseBindingResultTarget {
         this.creditReportConfirmed = creditReportConfirmed;
     }
 
-    public void setRagStatus(ViabilityStatus ragStatus) {
+    public void setRagStatus(ViabilityRagStatus ragStatus) {
         this.ragStatus = ragStatus;
     }
 

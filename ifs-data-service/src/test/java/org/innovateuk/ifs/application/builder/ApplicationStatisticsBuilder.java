@@ -46,11 +46,11 @@ public class ApplicationStatisticsBuilder extends BaseBuilder<ApplicationStatist
         return withArraySetFieldByReflection("competition", competitions);
     }
 
-    public ApplicationStatisticsBuilder withProcessRoles(ProcessRole... processRoles) {
-        return with(applicationStatistics -> applicationStatistics.setProcessRoles(asList(processRoles)));
+    public ApplicationStatisticsBuilder withProcessRoles(List<ProcessRole>... processRoles) {
+        return withArraySetFieldByReflection("processRoles", processRoles);
     }
 
-    public ApplicationStatisticsBuilder withAssessments(Assessment... assessments) {
-        return with(applicationStatistics -> applicationStatistics.setAssessments(asList(assessments)));
+    public ApplicationStatisticsBuilder withAssessments(List<Assessment>... assessments) {
+        return withArraySetFieldByReflection("assessments", assessments);
     }
 }

@@ -14,6 +14,7 @@ import java.util.stream.IntStream;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.*;
 
@@ -211,7 +212,7 @@ public final class CollectionFunctions {
      */
     public static <T> Optional<T> getOnlyElementOrEmpty(List<T> list) {
         if (list == null || list.isEmpty()) {
-            return Optional.empty();
+            return empty();
         }
 
         if (list.size() > 1) {
@@ -271,6 +272,16 @@ public final class CollectionFunctions {
         return simpleMap(asList(list), mappingFn);
     }
 
+    public static <T, R> Map<T, R> simpleFilter(Map<T, R> map, Predicate<T> filterFn) {
+        return  simpleFilter(map, (k,v) -> filterFn.test(k));
+    }
+
+    public static <T, R, S> Map<S, Map<T,R>> simpleGroupBy(Map<T, R> map, Function<T, S> filterFn) {
+        Map<S, List<Entry<T, R>>> intermediate = map.entrySet().stream().collect(groupingBy(e -> filterFn.apply(e.getKey())));
+        Map<S, Map<T, R>> result = simpleMapKeyAndValue(intermediate, identity(), value -> simpleToMap(value, Entry::getKey, Entry::getValue));
+        return result;
+    }
+
     /**
      * A simple wrapper around a 1-stage mapping function, to remove boilerplate from production code
      *
@@ -305,6 +316,11 @@ public final class CollectionFunctions {
                 Pair.of(keyMappingFn.apply(entry.getKey()), valueMappingFn.apply(entry.getValue())));
 
         return simpleToLinkedMap(list, Pair::getKey, Pair::getValue);
+    }
+
+    public static <S, T, R, U> Map<R, U> simpleMapEntry(Map<S, T> map, Function<Entry<S, T>, R> keyMapping, Function<Entry<S,T>, U> valueMapping) {
+        Map<R, U> result = map.entrySet().stream().collect(toMap(keyMapping, valueMapping));
+        return result;
     }
 
     /**
@@ -432,7 +448,9 @@ public final class CollectionFunctions {
             return Collections.emptyMap();
         }
 
-        return list.stream().collect(toMap(keyMapper, valueMapper));
+        Map<K,U> map = new HashMap<K,U>();
+        list.forEach(item -> map.put(keyMapper.apply(item), valueMapper.apply(item)));
+        return map;
     }
 
     /**
@@ -547,7 +565,10 @@ public final class CollectionFunctions {
      * @return
      */
     public static <T> Optional<T> simpleFindFirst(List<T> list, Predicate<T> filterFn) {
-        return simpleFilter(list, filterFn).stream().findFirst();
+        if (list == null || list.isEmpty()) {
+            return empty();
+        }
+        return list.stream().filter(filterFn).findFirst();
     }
 
     /**
@@ -778,4 +799,7 @@ public final class CollectionFunctions {
         }
     }
 
+    public static <S> boolean matchAll(Collection<S> collectionToMatch, Predicate<S> predicate){
+        return collectionToMatch.stream().allMatch(predicate);
+    }
 }
