@@ -56,7 +56,7 @@ var UTIL = (function () {
 
       // now all the finalize statements first common, then classes
       UTIL.fire('common', 'finalize')
-<<<<<<< HEAD
+
       ssm.addState({
         id: 'mobile',
         query: '(max-width: 639px)',
@@ -77,11 +77,10 @@ var UTIL = (function () {
           UTIL.fire('stateManaged', 'desktopLeave')
         }
       });
-=======
+
       jQuery.each(classNames, function (i, classnm) {
         UTIL.fire(classnm, 'finalize')
       })
->>>>>>> development
     }
   }
 })()
