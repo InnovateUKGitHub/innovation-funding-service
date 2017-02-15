@@ -5,7 +5,6 @@ import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.finance.service.FinanceRowService;
 import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.resource.QuestionResource;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
@@ -17,9 +16,9 @@ import org.innovateuk.ifs.user.service.ProcessRoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 /**
@@ -50,9 +49,16 @@ public class FundingLevelResetHandler {
 
     public void resetFundingAndMarkAsIncomplete(ApplicationFinanceResource applicationFinance, Long competitionId, Long userId) {
 
-        Optional<ProcessRoleResource> processRole = processRoleService.getByApplicationId(applicationFinance.getApplication()).stream()
-                .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
-                .findFirst();
+        final Optional<ProcessRoleResource> processRole;
+        try {
+            processRole = processRoleService.findAssignableProcessRoles(applicationFinance.getApplication()).get().stream()
+                    .filter(processRoleResource -> userId.equals(processRoleResource.getUser()))
+                    .findFirst();
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.error("Couldn't reset funding level for user "  + userId, e);
+            return;
+        }
+
 
         sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
                 .forEach(fundingSection ->
@@ -69,10 +75,14 @@ public class FundingLevelResetHandler {
     public void resetFundingLevelAndMarkAsIncompleteForAllCollaborators(Long competitionId, Long applicationId) {
 
         QuestionResource financeQuestion = questionService.getQuestionByCompetitionIdAndFormInputType(competitionId, FormInputType.FINANCE).getSuccessObjectOrThrowException();
-
-        Set<Long> processRoleIds = processRoleService.getByApplicationId(applicationId).stream().filter(processRole -> processRole.getUser() != null).map(
-                processRole -> processRole.getId()).collect(Collectors.toSet());
-
+        final Set<Long> processRoleIds;
+        try {
+            processRoleIds = processRoleService.findAssignableProcessRoles(applicationId).get().stream().filter(processRole -> processRole.getUser() != null).map(
+                    processRole -> processRole.getId()).collect(Collectors.toSet());
+        } catch (InterruptedException | ExecutionException e) {
+            LOG.error("Couldn't reset all funding level for application "  + applicationId, e);
+            return;
+        }
         processRoleIds.stream().forEach(processRoleId ->
                 sectionService.getSectionsForCompetitionByType(competitionId, SectionType.FUNDING_FINANCES)
                         .forEach(fundingSection ->

@@ -32,13 +32,26 @@ public class ServiceFailureExceptionHandlingAdvice {
 
     private static final Log LOG = LogFactory.getLog(ServiceFailureExceptionHandlingAdvice.class);
 
+    /**
+     * Track whether or not the current ServiceResult is the top-level one.  If so, it has responsibilities to control
+     * transaction rollback based on whether it succeeds or fails
+     */
+    private ThreadLocal<Boolean> topLevelMethod = new ThreadLocal<>();
+
     @Around("@target(org.springframework.stereotype.Service) && execution(public org.innovateuk.ifs.commons.service.ServiceResult *.*(..))")
     public Object handleReturnedServiceResults(ProceedingJoinPoint joinPoint) throws Throwable {
+
+        Boolean originalTopLevelValue = topLevelMethod.get();
+        boolean currentlyAtTopLevel = topLevelMethod.get() == null;
+
         try {
+
+            topLevelMethod.set(false);
+
             ServiceResult<?> result = (ServiceResult<?>) joinPoint.proceed();
 
             if (result == null || result.isFailure()) {
-                handleFailure(result);
+                handleFailure(result, currentlyAtTopLevel);
             }
 
             if (result == null) {
@@ -50,24 +63,29 @@ public class ServiceFailureExceptionHandlingAdvice {
 
         } catch (Exception e) {
             LOG.warn(e.getClass().getSimpleName() + " caught while processing ServiceResult-returning method.  Converting to a ServiceFailure", e);
-            handleFailure(null);
+            handleFailure(null, currentlyAtTopLevel);
             return serviceFailure(GENERAL_SERVICE_RESULT_EXCEPTION_THROWN_DURING_PROCESSING);
+        } finally {
+            topLevelMethod.set(originalTopLevelValue);
         }
     }
 
-    private void handleFailure(ServiceResult<?> result) {
-        LOG.debug("Failure encountered during processing of a ServiceResult-returning Service method - rolling back any transactions");
+    private void handleFailure(ServiceResult<?> result, boolean topLevel) {
+        LOG.debug("Failure encountered during processing of a ServiceResult-returning Service method");
         if(result!=null) {
             result.getFailure().getErrors().stream().forEach(error ->
                 LOG.debug("    " + error.getErrorKey())
             );
         }
 
-        try {
-            TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
-        } catch (NoTransactionException e) {
-            LOG.trace("No transaction to roll back");
-            LOG.trace(e);
+        if (topLevel) {
+            LOG.debug("Failure encountered during processing of a top-level ServiceResult-returning Service method - rolling back any transactions");
+            try {
+                TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+            } catch (NoTransactionException e) {
+                LOG.trace("No transaction to roll back");
+                LOG.trace(e);
+            }
         }
     }
 

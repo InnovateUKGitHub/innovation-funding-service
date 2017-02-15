@@ -32,6 +32,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.thymeleaf.dialect.IDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
+import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
 
 import java.time.Instant;
@@ -248,7 +249,7 @@ public class CsrfStatelessFilterControllerTest {
         @Bean
         public ViewResolver viewResolver() {
             ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
-            templateResolver.setTemplateMode("HTML5");
+            templateResolver.setTemplateMode(TemplateMode.HTML);
             templateResolver.setSuffix(".html");
             templateResolver.setPrefix("templates/");
 
