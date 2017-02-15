@@ -232,7 +232,7 @@
 
                                 <button type="submit"
                                         th:case="'FUNDERS_PANEL'"
-                                        th:disabled="${!model.fundingNotificationsExist}"
+                                        th:disabled="${!model.canManagefundingNotifications}"
                                         th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         class="button button-large">Manage funding notifications
                                 </button>

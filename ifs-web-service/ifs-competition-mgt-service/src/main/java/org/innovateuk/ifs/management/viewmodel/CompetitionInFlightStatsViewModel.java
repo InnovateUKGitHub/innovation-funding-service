@@ -13,7 +13,7 @@ public class CompetitionInFlightStatsViewModel {
     private Integer statFour;
     private Integer statFive;
     private Integer statSix;
-    private boolean fundingNotificationsExist;
+    private boolean canManageFundingNotifications = true;
 
     public CompetitionInFlightStatsViewModel() {
 
@@ -22,6 +22,7 @@ public class CompetitionInFlightStatsViewModel {
     public CompetitionInFlightStatsViewModel(CompetitionReadyToOpenKeyStatisticsResource keyStatisticsResource) {
         this.statOne = keyStatisticsResource.getAssessorsInvited();
         this.statTwo = keyStatisticsResource.getAssessorsAccepted();
+        this.canManageFundingNotifications = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionOpenKeyStatisticsResource keyStatisticsResource) {
@@ -31,6 +32,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statFour = keyStatisticsResource.getApplicationsStarted();
         this.statFive = keyStatisticsResource.getApplicationsPastHalf();
         this.statSix = keyStatisticsResource.getApplicationsSubmitted();
+        this.canManageFundingNotifications = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionClosedKeyStatisticsResource keyStatisticsResource) {
@@ -40,6 +42,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statFour = keyStatisticsResource.getAssessorsInvited();
         this.statFive = keyStatisticsResource.getAssessorsAccepted();
         this.statSix = keyStatisticsResource.getApplicationsPerAssessor();
+        this.canManageFundingNotifications = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionInAssessmentKeyStatisticsResource keyStatisticsResource) {
@@ -48,6 +51,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statThree = keyStatisticsResource.getAssignmentsAccepted();
         this.statFour = keyStatisticsResource.getAssessmentsStarted();
         this.statFive = keyStatisticsResource.getAssessmentsSubmitted();
+        this.canManageFundingNotifications = false;
     }
 
     public CompetitionInFlightStatsViewModel(CompetitionFundedKeyStatisticsResource keyStatisticsResource) {
@@ -57,7 +61,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statFour = keyStatisticsResource.getApplicationsOnHold();
         this.statFive = keyStatisticsResource.getApplicationsNotifiedOfDecision();
         this.statSix = keyStatisticsResource.getApplicationsAwaitingDecision();
-        this.fundingNotificationsExist = statTwo > 0 || statThree > 0;
+        this.canManageFundingNotifications = statTwo > 0 || statThree > 0 || statFour > 0;
     }
 
     public int getStatOne() {
@@ -108,11 +112,11 @@ public class CompetitionInFlightStatsViewModel {
         this.statSix = statSix;
     }
 
-    public boolean getFundingNotificationsExist() {
-        return fundingNotificationsExist;
+    public boolean getCanManageFundingNotifications() {
+        return canManageFundingNotifications;
     }
 
-    public void setFundingNotificationsExist(boolean fundingNotificationsExist) {
-        this.fundingNotificationsExist = fundingNotificationsExist;
+    public void setCanManageFundingNotifications(boolean canManageFundingNotifications) {
+        this.canManageFundingNotifications = canManageFundingNotifications;
     }
 }
