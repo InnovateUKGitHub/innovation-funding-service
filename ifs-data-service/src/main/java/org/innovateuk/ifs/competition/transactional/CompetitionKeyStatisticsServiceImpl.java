@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -96,7 +98,8 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId) {
         CompetitionFundedKeyStatisticsResource competitionFundedKeyStatisticsResource = new CompetitionFundedKeyStatisticsResource();
-        competitionFundedKeyStatisticsResource.setApplications(101);
+        competitionFundedKeyStatisticsResource.setApplications(applicationStatisticsRepository.findByCompetition(competitionId).stream().mapToInt(ApplicationStatistics::getAssessors).sum());
+        applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId());
         competitionFundedKeyStatisticsResource.setApplicationsFunded(102);
         competitionFundedKeyStatisticsResource.setApplicationsNotFunded(103);
         competitionFundedKeyStatisticsResource.setApplicationsOnHold(104);

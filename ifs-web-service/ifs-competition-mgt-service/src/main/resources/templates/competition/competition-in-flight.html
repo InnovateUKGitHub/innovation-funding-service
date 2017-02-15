@@ -208,7 +208,7 @@
                     </div>
                 </div>
                 <div class="column-third">
-                    <h2 class="heading-medium no-margin-top">Competition milestones</h2>
+                    <h2 class="heading-medium no-margin-top">Competition milestones XXx</h2>
                     <ul class="timeline-status">
                         <th:block th:each="milestone : ${model.milestones}">
                             <li th:if="${milestone.milestoneType.presetDate}"
@@ -231,9 +231,10 @@
                                         th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}"
                                         class="button button-large">Close assessment
                                 </button>
+
                                 <button type="submit"
                                         th:case="'FUNDERS_PANEL'"
-                                        th:enabled="${model.fundingNotificationsExist}"
+                                        th:disabled="${!model.fundingNotificationsExist}"
                                         th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         class="button button-large">Manage funding notifications
                                 </button>

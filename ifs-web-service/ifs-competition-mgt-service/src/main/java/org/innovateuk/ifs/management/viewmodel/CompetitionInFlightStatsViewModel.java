@@ -108,7 +108,7 @@ public class CompetitionInFlightStatsViewModel {
         this.statSix = statSix;
     }
 
-    public boolean isFundingNotificationsExist() {
+    public boolean getFundingNotificationsExist() {
         return fundingNotificationsExist;
     }
 
