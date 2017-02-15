@@ -11,6 +11,7 @@ import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.service.MappingThreadService;
+import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.threads.resource.QueryResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -65,21 +66,10 @@ public class ProjectFinanceQueriesServiceImpl extends MappingThreadService<Query
                 Long projectId = projectFinance.getSuccessObject().getProject().getId();
                 List<ProjectUser> projectUsers = projectFinance.getSuccessObject().getProject().getProjectUsers();
 
-                NotificationSource from = systemNotificationSource;
-
                 List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getRole().isFinanceContact());
                 Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
                 if (financeContact.isPresent()) {
-
-                    String fullName = financeContact.get().getUser().getName();
-
-                    NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.get().getUser().getEmail());
-
-                    Map<String, Object> notificationArguments = new HashMap<>();
-                    notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
-
-                    Notification notification = new Notification(from, singletonList(pmTarget), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
-                    ServiceResult<Void> notificationResult = notificationService.sendNotification(notification, EMAIL);
+                    ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), projectId);
 
                     if (!notificationResult.isSuccess()) {
                         return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
@@ -88,5 +78,19 @@ public class ProjectFinanceQueriesServiceImpl extends MappingThreadService<Query
             }
         }
         return result;
+    }
+
+    private ServiceResult<Void> sendNewQueryNotification(User financeContact, Long projectId) {
+
+        NotificationSource from = systemNotificationSource;
+        String fullName = financeContact.getName();
+
+        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
+
+        Notification notification = new Notification(from, singletonList(pmTarget), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
+        return notificationService.sendNotification(notification, EMAIL);
     }
 }
