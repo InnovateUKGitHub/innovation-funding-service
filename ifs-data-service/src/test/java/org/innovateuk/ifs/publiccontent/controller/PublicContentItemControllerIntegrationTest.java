@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.publiccontent.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
+import org.innovateuk.ifs.category.domain.Category;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -25,8 +26,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.publiccontent.builder.KeywordBuilder.newKeyword;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newPublicContent;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 public class PublicContentItemControllerIntegrationTest extends BaseControllerIntegrationTest<PublicContentItemController> {
@@ -65,10 +65,12 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Rollback
     public void findFilteredItems_findByKeywords() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
+        long innovationId = 5L;
+        Category category = categoryRepository.findOne(innovationId);
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.of("key wor"), Optional.of(0), 20);
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("key wor"), Optional.of(0), 20);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -76,7 +78,7 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
         assertEquals(1, publicContentItemResourcesOne.size());
         assertEquals(competition.getName(), publicContentItemResourcesOne.get(0).getCompetitionTitle());
 
-        RestResult<PublicContentItemPageResource> resultTwo = controller.findFilteredItems(Optional.of(5L), Optional.empty(), Optional.of(0),20);
+        RestResult<PublicContentItemPageResource> resultTwo = controller.findFilteredItems(Optional.of(innovationId), Optional.empty(), Optional.of(0),20);
 
         assertTrue(resultTwo.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesTwo = resultTwo.getSuccessObject().getContent();
@@ -131,11 +133,12 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Rollback
     public void findFilteredItems_findByInnovationAreaId() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
-        long innovationAreaId = 1L;
+        long innovationId = 5L;
+        Category category = categoryRepository.findOne(innovationId);
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.empty(), Optional.empty(), 10);
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.empty(), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();
@@ -148,11 +151,12 @@ public class PublicContentItemControllerIntegrationTest extends BaseControllerIn
     @Rollback
     public void findFilteredItems_findByKeywordsAndInnovationAreaId() throws Exception {
         Competition competition = competitionRepository.findById(COMPETITION_ID);
-        long innovationAreaId = 1L;
+        long innovationId = 5L;
+        Category category = categoryRepository.findOne(innovationId);
 
         flushAndClearSession();
 
-        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(5L), Optional.of("Nothing key wor"), Optional.empty(), 10);
+        RestResult<PublicContentItemPageResource> resultOne = controller.findFilteredItems(Optional.of(innovationId), Optional.of("Nothing key wor"), Optional.empty(), 10);
 
         assertTrue(resultOne.isSuccess());
         List<PublicContentItemResource> publicContentItemResourcesOne = resultOne.getSuccessObject().getContent();

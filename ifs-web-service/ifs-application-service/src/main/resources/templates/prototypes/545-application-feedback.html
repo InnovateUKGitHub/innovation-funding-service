@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content" th:with="score=${param.unsuccessful} ? 3 : 7">
 
 
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'10294855: Mobile Phone Data for Logistics Analytics'}, ${'Feedback overview'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'10294855: Mobile Phone Data for Logistics Analytics'}, ${'Feedback overview'})" />
 
 
 	<div th:if="${param.internal == null}" th:remove="tag">
@@ -221,7 +221,7 @@
 	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application details</h2>
 	<p class="form-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
 
 
 	<ul class="list-overview extra-margin">
@@ -275,7 +275,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">1. Business opportunity</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -283,7 +283,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">2. Potential market</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -291,7 +291,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">3. Project exploitation</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -299,7 +299,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">4. Economic benefit</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -307,7 +307,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">5. Technical approach</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -315,7 +315,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">6. Innovation</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}"  th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -332,7 +332,7 @@
 				</div>
 
 
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -340,7 +340,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">8. Project team</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}"  th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -348,7 +348,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">9. Funding</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -356,7 +356,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">10. Adding value</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}"  th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 	</ul>
@@ -383,9 +383,9 @@
 
 			<div class="question">
 
-				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" />
 
-				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:with="action='feedback'" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:with="action='feedback'" />
 			</div>
 
 		</div>
@@ -422,16 +422,16 @@
 		</li>
 	</ul>
 
-	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" />
 
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

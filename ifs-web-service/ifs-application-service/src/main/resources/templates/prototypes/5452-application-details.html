@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" />
 
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Application details')" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Application details')" />
 
 	<form>
     <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
@@ -35,7 +35,7 @@
           <legend>
               <span class="heading-medium">Estimated timescales</span>
           </legend>
-          <h2 class="heading-small">Project start date</h2>
+          <h2 class="heading-small">When do you wish to start your project?</h2>
           <p class="form-hint" id="project-start-hint">For example: 31 12 2015</p>
 
           <div class="form-date">
@@ -62,15 +62,15 @@
         </fieldset>
 
         <fieldset>
-            <div class="message-alert extra-margin-bottom">
-                <h2 class="heading-small no-margin">Research area determines funding</h2>
-                <p>The research area is used to calculate the funding for all collaborators in the application.</p>
-              <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
+          <legend class="visuallyhidden">Type of research</legend>
+          <div class="message-alert extra-margin-bottom">
+              <h2 class="heading-small no-margin">What type of research are you undertaking in this project? </h2>
+              <p>The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.</p>
           </div>
           <div class="form-group">
               <legend>
                   <span class="heading-medium">Research category</span>
-                  <span class="form-hint">Please confirm the research category for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
+                  <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" target="_blank">Innovate UK funding rules</a>.</span>
               </legend>
               <label class="block-label selected selection-button-radio" for="feasibility-studies">
                   <input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
@@ -129,10 +129,11 @@
     </div>
 
       <fieldset>
+        <legend class="visuallyhidden">Application resubmission?</legend>
           <div class="form-group">
               <legend>
                   <span class="heading-medium">Is this application a resubmission of a previous application?</span>
-                  <span class="form-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
+                  <span class="form-hint">Let us know if this application has been previously submitted to Innovate UK.</span>
               </legend>
               <label data-target="resubmission-details" class="block-label selection-button-radio" for="resubmission-yes">
                   <input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
@@ -147,6 +148,8 @@
 
 
     <div id="resubmission-details" class="cf">
+      <fieldset>
+        <legend class="visuallyhidden">Previous application details</legend>
         <div class="form-group">
             <h2 class="heading-medium no-margin">Please provide the details of this previous application</h2>
         </div>
@@ -162,6 +165,7 @@
             </label>
             <input class="form-control width-full" type="text" id="application_details-previousapplicationtitle" name="application.previousApplicationTitle" value="" />
         </div>
+      </fieldset>
     </div>
 
 
@@ -186,7 +190,7 @@
             </dl>
             <h2 class="heading-medium">Estimated timescales</h2>
             <dl class="readonly-data">
-              <dt>Project start date</dt>
+              <dt>When do you wish to start your project?</dt>
               <dd>16 January 2017</dd>
             </dl>
 
@@ -260,11 +264,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>
