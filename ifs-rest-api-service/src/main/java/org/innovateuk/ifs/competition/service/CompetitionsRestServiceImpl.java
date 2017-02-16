@@ -37,12 +37,17 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
 
     @Override
     public RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions() {
-        return getWithRestResult(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType());
+        return getWithRestResult(competitionsRestURL + "/project-setup", competitionSearchResultItemListType());
     }
 
     @Override
     public RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
         return getWithRestResult(competitionsRestURL + "/upcoming", competitionSearchResultItemListType());
+    }
+
+    @Override
+    public RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
+        return getWithRestResult(competitionsRestURL + "/non-ifs", competitionSearchResultItemListType());
     }
 
     @Override
@@ -58,6 +63,11 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
+    }
+
+    @Override
+    public RestResult<CompetitionResource> getPublishedCompetitionById(Long competitionId) {
+        return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }
 
     @Override
@@ -114,5 +124,10 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     @Override
     public RestResult<Void> notifyAssessors(Long competitionId) {
         return putWithRestResult(String.format("%s/%s/notify-assessors", competitionsRestURL, competitionId), Void.class);
+    }
+
+    @Override
+    public RestResult<CompetitionResource> createNonIfs() {
+        return postWithRestResult(competitionsRestURL + "/non-ifs", CompetitionResource.class);
     }
 }

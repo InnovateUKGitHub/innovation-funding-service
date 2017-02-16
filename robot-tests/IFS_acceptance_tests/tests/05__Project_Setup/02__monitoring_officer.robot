@@ -32,7 +32,7 @@ Before Monitoring Officer is assigned
     Then the user should see the text in the page    Your project has not yet been assigned a Monitoring Officer.
     And the user should not see the text in the page    A Monitoring Officer has been assigned.
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(2)
 
 Status updates correctly for internal user's table
@@ -132,7 +132,7 @@ MO details can be added
     And the user navigates to the page    ${project_in_setup_page}
     And the user should see the element    jQuery=ul li.complete:nth-child(3)
     And Element Should Contain    jQuery=ul li.complete:nth-child(3) p    Your Monitoring Officer for this project is Abbey Abigail.
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details(email step)
@@ -166,7 +166,7 @@ MO details can be edited and viewed in the Project setup status page
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 MO details edit(email step)
@@ -191,7 +191,7 @@ MO details accessible/seen by all partners
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
     When Log in as a different user       &{lead_applicant_credentials}
     And the user navigates to the page    ${project_in_setup_page}
@@ -203,7 +203,7 @@ MO details accessible/seen by all partners
     And the user should see the text in the page    ${test_mailbox_two}+monitoringofficer@gmail.com
     And the user should see the text in the page    08549731414
     When the user navigates to the page    ${project_in_setup_page}
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.ok:nth-of-type(2)
 
 

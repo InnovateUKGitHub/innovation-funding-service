@@ -6,13 +6,13 @@
 <div th:fragment="prot-snippet(element)">
 
   <div class="result">
-    <th:block th:include="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
+    <th:block th:insert="prototypes/fragments/prot-elements :: ${'prot-' + element}" />
   </div>
 
   <pre>
     <code class="language-markup">
       <xmp>
-        <th:block th:include="prototypes/fragments/prot-elements :: ${'prot-' + element}"  />
+        <th:block th:insert="prototypes/fragments/prot-elements :: ${'prot-' + element}" />
       </xmp>
     </code>
   </pre>
@@ -718,7 +718,7 @@
       </div>
       <hr />
       <div>
-        <a class="button" href="#">Submit</a>
+        <a class="button js-close" href="#">Submit</a>
         <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
       </div>
     </div>
@@ -733,11 +733,12 @@
     </div>
       <hr />
       <div>
-        <a class="button" href="#">Submit</a>
+        <a class="button js-close" href="#">Submit</a>
         <a href="#" aria-label="Close Popup" class="button-link js-close">Cancel</a>
       </div>
     </div>
   </div>
+  <div class="modal-overlay"></div>
 </th:block>
 
 </html>

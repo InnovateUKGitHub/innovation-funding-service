@@ -51,4 +51,8 @@ public interface CompetitionSetupService {
     @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId);
+
+    @SecuredBySpring(value = "TODO", description = "TODO")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
+    ServiceResult<CompetitionResource> createNonIfs();
 }

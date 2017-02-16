@@ -79,8 +79,8 @@ Status of the Eligibility column (workaround for private beta competition)
     [Tags]
     Given the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
     Then The user should see the text in the page    Viability
-    And The user should not see the text in the page    Queries raised
-    And The user should not see the text in the page    Notes
+    And The user should see the text in the page    Queries raised
+    And The user should see the text in the page    Notes
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
 
@@ -289,12 +289,12 @@ Project finance user can see the lead partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 201,674
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 60,502
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    £ 138,704
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 60,502
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,704
 
 
 Finance checks eligibility validations
@@ -410,12 +410,12 @@ Project finance user can see the partner's information about eligibility
     [Documentation]    INFUND-4832
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    £ 201,674
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    0%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 0
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    £ 199,206
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    0%
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 0
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 199,206
 
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
@@ -593,11 +593,11 @@ Non finance contact can't view finance checks page
 
 *** Keywords ***
 the table row has expected values
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(2)    3 months
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(3)    £ 505,174
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(4)    £ 146,075
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(5)    £ 6,170
-    the user sees the text in the element    jQuery=.table-overview td:nth-child(6)    29%
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 505,174
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 146,075
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(5)    £ 6,170
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(6)    29%
 
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
@@ -725,7 +725,7 @@ the rag rating updates on the finance check page for partner for eligibility
 
 verify total costs of project
     [Arguments]    ${total_costs}
-    the user should see the text in the element      jQuery=.table-overview tr:nth-child(1) td:nth-child(2)     ${total_costs}
+    the user should see the text in the element      jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)     ${total_costs}
 
 verify percentage and total
     [Arguments]  ${section}  ${percentage}  ${total}

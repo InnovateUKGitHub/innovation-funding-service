@@ -43,15 +43,6 @@ public class CompetitionManagementAssessorProfileController extends BaseControll
         }
     }
 
-    public static String buildOriginQueryString(AssessorProfileOrigin origin, MultiValueMap<String, String> queryParams) {
-        return UriComponentsBuilder.newInstance()
-                .queryParam("origin", origin.toString())
-                .queryParams(queryParams)
-                .build()
-                .encode()
-                .toUriString();
-    }
-
     @RequestMapping(value = "/profile/{assessorId}", method = RequestMethod.GET)
     public String profile(Model model,
                           @PathVariable("competitionId") long competitionId,
