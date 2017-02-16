@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.project.domain.Project;
@@ -85,10 +86,12 @@ public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesSe
                 ServiceResult<QueryResource> query = findOne(threadId);
                 if (query.isSuccess()) {
                     ProjectFinance projectFinance = projectFinanceRepository.findOne(query.getSuccessObject().contextClassPk);
+
                     Project project = projectFinance.getProject();
 
-                    List<ProjectUser> projectUsers = project.getProjectUsers();
-                    List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getRole().isFinanceContact());
+                    List<ProjectUser> projectUsers = project.getProjectUsersWithRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
+                    List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getOrganisation().getId() == projectFinance.getOrganisation().getId());
+
                     Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
 
                     if (financeContact.isPresent()) {
@@ -108,13 +111,14 @@ public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesSe
         if (result.isSuccess()) {
             ServiceResult<ProjectFinance> projectFinance = find(projectFinanceRepository.findOne(query.contextClassPk), notFoundError(ProjectFinance.class, query.contextClassPk));
             if (projectFinance.isSuccess()) {
-                Long projectId = projectFinance.getSuccessObject().getProject().getId();
-                List<ProjectUser> projectUsers = projectFinance.getSuccessObject().getProject().getProjectUsers();
+                Project project = projectFinance.getSuccessObject().getProject();
 
-                List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getRole().isFinanceContact());
+                List<ProjectUser> projectUsers = project.getProjectUsersWithRole(ProjectParticipantRole.PROJECT_FINANCE_CONTACT);
+                List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getOrganisation().getId() == projectFinance.getSuccessObject().getOrganisation().getId());
+
                 Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
                 if (financeContact.isPresent()) {
-                    ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), projectId);
+                    ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), project.getId());
 
                     if (!notificationResult.isSuccess()) {
                         return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);

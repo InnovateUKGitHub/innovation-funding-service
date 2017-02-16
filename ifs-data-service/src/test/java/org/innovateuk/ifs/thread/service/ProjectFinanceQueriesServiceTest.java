@@ -35,6 +35,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
@@ -118,10 +119,19 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
 
@@ -160,10 +170,19 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
 
@@ -194,10 +213,19 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
 
@@ -257,11 +285,20 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Application app = newApplication().withName("App1").build();
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
 
@@ -342,11 +379,20 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Application app = newApplication().withName("App1").build();
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
 
@@ -377,13 +423,21 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o)
-                .build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Application app = newApplication().withName("App1").build();
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation()
                 .withOrganisation(o).build(1)).withApplication(app).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
 
