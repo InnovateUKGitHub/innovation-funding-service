@@ -37,13 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             .csrf().disable()
             .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterAfter(csrfStatelessFilter, StatelessAuthenticationFilter.class)
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-                .anonymous()
-            .and()
-                .exceptionHandling()
-            .and()
-                .headers()
-                    .cacheControl().disable();
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .anonymous().and()
+            .exceptionHandling().and()
+            .headers().cacheControl().disable();
     }
 }

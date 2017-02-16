@@ -117,6 +117,9 @@ public class Competition implements ProcessActivity {
 
     private boolean template = false;
 
+    private boolean nonIfs = false;
+    private String nonIfsUrl;
+
     public Competition() {
         setupComplete = false;
     }
@@ -633,6 +636,22 @@ public class Competition implements ProcessActivity {
 
     public void closeAssessment(LocalDateTime date) {
         setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, date);
+    }
+
+    public boolean isNonIfs() {
+        return nonIfs;
+    }
+
+    public void setNonIfs(boolean nonIfs) {
+        this.nonIfs = nonIfs;
+    }
+
+    public String getNonIfsUrl() {
+        return nonIfsUrl;
+    }
+
+    public void setNonIfsUrl(String nonIfsUrl) {
+        this.nonIfsUrl = nonIfsUrl;
     }
 }
 

@@ -5,7 +5,10 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.domain.Milestone;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
@@ -14,11 +17,14 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
+import static org.innovateuk.ifs.competition.builder.CompetitionTypeBuilder.newCompetitionType;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.forEachWithIndex;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -28,6 +34,9 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     protected CompetitionServiceImpl supplyServiceUnderTest() {
         return new CompetitionServiceImpl();
     }
+
+    @Mock
+    private PublicContentService publicContentService;
 
     @Test
     public void test_getCompetitionById() throws Exception {
@@ -57,6 +66,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_findLiveCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findLive()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findLiveCompetitions().getSuccessObjectOrThrowException();
@@ -67,6 +77,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_findProjectSetupCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findProjectSetup()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findProjectSetupCompetitions().getSuccessObjectOrThrowException();
@@ -77,9 +88,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     @Test
     public void test_findUpcomingCompetitions() throws Exception {
         List<Competition> competitions = Lists.newArrayList(new Competition());
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         when(competitionRepositoryMock.findUpcoming()).thenReturn(competitions);
 
         List<CompetitionSearchResultItem> response = service.findUpcomingCompetitions().getSuccessObjectOrThrowException();
+
+        assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
+    }
+
+    @Test
+    public void test_findNonIfsCompetitions() throws Exception {
+        List<Competition> competitions = Lists.newArrayList(new Competition());
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
+        when(competitionRepositoryMock.findNonIfs()).thenReturn(competitions);
+
+        List<CompetitionSearchResultItem> response = service.findNonIfsCompetitions().getSuccessObjectOrThrowException();
 
         assertCompetitionSearchResultsEqualToCompetitions(competitions, response);
     }
@@ -104,20 +127,21 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
     public void test_searchCompetitions() throws Exception {
         String searchQuery = "SearchQuery";
         String searchLike = "%" + searchQuery + "%";
+        String competitionType = "Comp type";
         int page = 1;
         int size = 20;
         PageRequest pageRequest = new PageRequest(page, size);
         Page<Competition> queryResponse = mock(Page.class);
         long totalElements = 2L;
         int totalPages = 1;
-        Competition competition = newCompetition().build();
+        Competition competition = newCompetition().withCompetitionType(newCompetitionType().withName(competitionType).build()).build();
         when(queryResponse.getTotalElements()).thenReturn(totalElements);
         when(queryResponse.getTotalPages()).thenReturn(totalPages);
         when(queryResponse.getNumber()).thenReturn(page);
         when(queryResponse.getNumberOfElements()).thenReturn(size);
         when(queryResponse.getContent()).thenReturn(singletonList(competition));
         when(competitionRepositoryMock.search(searchLike, pageRequest)).thenReturn(queryResponse);
-
+        when(publicContentService.findByCompetitionId(any())).thenReturn(serviceSuccess(PublicContentResourceBuilder.newPublicContentResource().build()));
         CompetitionSearchResult response = service.searchCompetitions(searchQuery, page, size).getSuccessObjectOrThrowException();
 
         assertEquals(totalElements, response.getTotalElements());
@@ -126,7 +150,7 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
         assertEquals(size, response.getSize());
 
         CompetitionSearchResultItem expectedSearchResult = new CompetitionSearchResultItem(competition.getId(),
-                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, "Comp Type",0);
+                competition.getName(), Collections.EMPTY_SET, 0, "", CompetitionStatus.COMPETITION_SETUP, competitionType,0,null);
         assertEquals(singletonList(expectedSearchResult), response.getContent());
     }
 

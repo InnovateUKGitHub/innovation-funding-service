@@ -161,6 +161,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
+        public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
+        }
+
+        @Override
         public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
             return serviceSuccess(new CompetitionSearchResult());
         }

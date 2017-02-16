@@ -13,6 +13,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.category.resource.CategoryType.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -45,6 +47,9 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Autowired
     private ProjectRepository projectRepository;
+
+    @Autowired
+    private PublicContentService publicContentService;
 
     @Override
     public ServiceResult<CompetitionResource> getCompetitionById(Long id) {
@@ -82,6 +87,12 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
+    public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
+        List<Competition> competitions = competitionRepository.findNonIfs().stream().map(this::addCategories).collect(Collectors.toList());
+        return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
+    }
+
+    @Override
     public ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size) {
         String searchQueryLike = String.format("%%%s%%", searchQuery);
         PageRequest pageRequest = new PageRequest(page, size);
@@ -107,7 +118,8 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
                 c.startDateDisplay(),
                 c.getCompetitionStatus(),
                 ofNullable(c.getCompetitionType()).map(CompetitionType::getName).orElse(null),
-                projectRepository.findByApplicationCompetitionId(c.getId()).size()
+                projectRepository.findByApplicationCompetitionId(c.getId()).size(),
+                publicContentService.findByCompetitionId(c.getId()).getSuccessObjectOrThrowException().getPublishDate()
         );
     }
 
@@ -115,7 +127,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<CompetitionCountResource> countCompetitions() {
         //TODO INFUND-3833 populate complete count
         return serviceSuccess(new CompetitionCountResource(competitionRepository.countLive(), competitionRepository.countProjectSetup(),
-                competitionRepository.countUpcoming(), 0L));
+                competitionRepository.countUpcoming(), 0L, competitionRepository.countNonIfs()));
     }
 
     @Override

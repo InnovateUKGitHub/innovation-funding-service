@@ -122,9 +122,14 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
         competition.setSetupComplete(false);
-        Competition savedCompetition = competitionRepository.save(competition);
-        return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
-                .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
+        return persistNewCompetition(competition);
+    }
+
+    @Override
+    public ServiceResult<CompetitionResource> createNonIfs() {
+        Competition competition = new Competition();
+        competition.setNonIfs(true);
+        return persistNewCompetition(competition);
     }
 
     @Override
@@ -318,5 +323,11 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
             guidanceRowRepository.save(row);
             return row;
         };
+    }
+
+    private ServiceResult<CompetitionResource> persistNewCompetition(Competition competition) {
+        Competition savedCompetition = competitionRepository.save(competition);
+        return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
+                .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 }
