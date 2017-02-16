@@ -36,6 +36,7 @@ import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.get
 @PreAuthorize("permitAll")
 public class CompetitionController {
     public static final String TEMPLATE_PATH = "competition/";
+
     @Autowired
     private UserAuthenticationService userAuthenticationService;
 
@@ -108,12 +109,11 @@ public class CompetitionController {
     }
 
     private void addCompetitionToModel(Model model, Long competitionId) {
-        model.addAttribute("currentCompetition", competitionService.getById(competitionId));
+        model.addAttribute("currentCompetition", competitionService.getPublishedById(competitionId));
     }
 
     private boolean userIsLoggedIn(HttpServletRequest request) {
         Authentication authentication = userAuthenticationService.getAuthentication(request);
-
         if(authentication != null) {
             return true;
         } else {

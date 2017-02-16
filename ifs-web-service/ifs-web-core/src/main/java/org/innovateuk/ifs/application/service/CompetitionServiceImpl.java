@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +44,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public CompetitionResource getPublishedById(Long competitionId){
+        return competitionsRestService.getPublishedCompetitionById(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public CompetitionResource create(){
         return competitionsRestService.create().getSuccessObjectOrThrowException();
     }
@@ -69,36 +73,6 @@ public class CompetitionServiceImpl implements CompetitionService {
         return competitionsRestService.getCompetitionTypes().getSuccessObjectOrThrowException();
     }
 
-    @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>>getLiveCompetitions() {
-        return mapToStatus(competitionsRestService.findLiveCompetitions().getSuccessObjectOrThrowException());
-    }
-
-    @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
-        return mapToStatus(competitionsRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException());
-    }
-
-    @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
-        return mapToStatus(competitionsRestService.findUpcomingCompetitions().getSuccessObjectOrThrowException());
-    }
-
-    @Override
-    public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
-        CompetitionSearchResult searchResult = competitionsRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
-        searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
-        return searchResult;
-    }
-
-    @Override
-    public CompetitionCountResource getCompetitionCounts() {
-        return competitionsRestService.countCompetitions().getSuccessObjectOrThrowException();
-    }
-
-    private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {
-        return resources.stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
-    }
 
     @Override
     public ServiceResult<Void> update(CompetitionResource competition) {
@@ -163,5 +137,10 @@ public class CompetitionServiceImpl implements CompetitionService {
     @Override
     public ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId) {
         return contentGroupRestService.getFileDetails(contentGroupId).toServiceResult();
+    }
+
+    @Override
+    public CompetitionResource createNonIfs() {
+        return competitionsRestService.createNonIfs().getSuccessObjectOrThrowException();
     }
 }

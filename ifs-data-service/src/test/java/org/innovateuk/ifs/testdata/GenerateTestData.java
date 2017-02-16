@@ -73,7 +73,8 @@ import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.
 import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.*;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_TECHNOLOGIST;
+import static org.innovateuk.ifs.user.resource.UserRoleType.SYSTEM_REGISTRATION_USER;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
@@ -687,44 +688,66 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
-        CompetitionDataBuilder basicInformation =
-                existingCompetitionId.map(id -> competitionDataBuilder.
-                        withExistingCompetition(1L).
-                        withBasicData(line.name, line.description, line.type, line.innovationArea,
-                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
-                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
-                        .withNewMilestones()
-
-                ).orElse(competitionDataBuilder.
-                        createCompetition().
-                        withBasicData(line.name, line.description, line.type, line.innovationArea,
-                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
-                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
-                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
-                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
-                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords).
-                        withApplicationFormFromTemplate().
-                        withNewMilestones()).
-                        withOpenDate(line.openDate).
-                        withBriefingDate(line.briefingDate).
-                        withSubmissionDate(line.submissionDate).
-                        withAllocateAssesorsDate(line.allocateAssessorDate).
-                        withAssessorBriefingDate(line.assessorBriefingDate).
-                        withAssessorAcceptsDate(line.assessorAcceptsDate).
-                        withAssessorsNotifiedDate(line.assessorsNotifiedDate).
-                        withAssessorEndDate(line.assessorEndDate).
-                        withAssessmentClosedDate(line.assessmentClosedDate).
-                        withLineDrawDate(line.drawLineDate).
-                        withAsessmentPanelDate(line.assessmentPanelDate).
-                        withPanelDate(line.panelDate).
-                        withFundersPanelDate(line.fundersPanelDate).
-                        withFundersPanelEndDate(line.fundersPanelEndDate).
-                        withReleaseFeedbackDate(line.releaseFeedback);
+        CompetitionDataBuilder basicInformation;
+                if (line.nonIfs) {
+                    basicInformation = nonIfsCompetitionDataBuilder(line);
+                } else {
+                    basicInformation = ifsCompetitionDataBuilder(line, existingCompetitionId);
+                }
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
+    }
+
+    private CompetitionDataBuilder nonIfsCompetitionDataBuilder(CsvUtils.CompetitionLine line) {
+        return competitionDataBuilder
+                .createNonIfsCompetition()
+                .withBasicData(line.name, null, null, line.innovationArea,
+                        line.innovationSector, null, null, null,
+                        null, null, null, null, null, null, null,
+                        null, null, null, null, line.nonIfsUrl)
+                .withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                .withOpenDate(line.openDate)
+                .withSubmissionDate(line.submissionDate)
+                .withReleaseFeedbackDate(line.releaseFeedback);
+    }
+
+    private CompetitionDataBuilder ifsCompetitionDataBuilder(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
+        return existingCompetitionId.map(id -> competitionDataBuilder.
+                withExistingCompetition(1L).
+                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                        line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                .withNewMilestones()
+
+        ).orElse(competitionDataBuilder.
+                createCompetition().
+                withBasicData(line.name, line.description, line.type, line.innovationArea,
+                        line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                        line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                        line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission, null).
+                withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                        line.competitionDescription, line.fundingType, line.projectSize, line.keywords).
+                withApplicationFormFromTemplate().
+                withNewMilestones()).
+                withOpenDate(line.openDate).
+                withBriefingDate(line.briefingDate).
+                withSubmissionDate(line.submissionDate).
+                withAllocateAssesorsDate(line.allocateAssessorDate).
+                withAssessorBriefingDate(line.assessorBriefingDate).
+                withAssessorAcceptsDate(line.assessorAcceptsDate).
+                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                withAssessorEndDate(line.assessorEndDate).
+                withAssessmentClosedDate(line.assessmentClosedDate).
+                withLineDrawDate(line.drawLineDate).
+                withAsessmentPanelDate(line.assessmentPanelDate).
+                withPanelDate(line.panelDate).
+                withFundersPanelDate(line.fundersPanelDate).
+                withFundersPanelEndDate(line.fundersPanelEndDate).
+                withReleaseFeedbackDate(line.releaseFeedback);
     }
 
     private void freshDb() throws Exception {
