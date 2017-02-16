@@ -2,6 +2,7 @@ package org.innovateuk.ifs.sil.experian.controller;
 
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.sil.experian.resource.*;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @RestController
 @RequestMapping("/silstub")
+@Profile("local")
 public class ExperianEndpointController {
     public static HashMap<SILBankDetails, ValidationResultWrapper> validationErrors;
     public static HashMap<SILBankDetails, SilError> otherErrorsDuringValidation;
