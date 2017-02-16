@@ -5,7 +5,7 @@ EXPOSE 8090
 EXPOSE 8081
 EXPOSE 8000
 EXPOSE 12345
-ENV JAVA_OPTS -Xmx150m
+ENV JAVA_OPTS -Xmx300m
 RUN apk --update add curl
 COPY certificate /certificate
 WORKDIR $JAVA_HOME

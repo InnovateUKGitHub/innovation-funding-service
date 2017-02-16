@@ -4,7 +4,7 @@ RUN apk --update add curl
 EXPOSE 8009
 EXPOSE 8000
 EXPOSE 8080
-ENV JAVA_OPTS -Xmx150m
+ENV JAVA_OPTS -Xmx300m
 VOLUME /tmp
 RUN sh -c 'touch /app.jar'
 ADD project-setup-management-1.0-SNAPSHOT.jar app.jar
