@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
@@ -33,6 +34,16 @@ public class FileEntryServiceImpl extends BaseTransactionalService implements Fi
         return find(repository.findOne(id), notFoundError(FileEntry.class, id)).andOnSuccessReturn(mapper::mapToResource);
     }
 
+    @Override
+    public ServiceResult<FileEntryResource> saveFile(FileEntryResource newFile) {
+        return serviceSuccess(mapper.mapToResource(repository.save(mapper.mapToDomain(newFile))));
+    }
+
+    @Override
+    public ServiceResult<Void> removeFile(Long fileId) {
+        repository.delete(fileId);
+        return serviceSuccess();
+    }
     @Override
     public ServiceResult<FileEntryResource> getFileEntryByApplicationFinanceId(Long applicationFinanceId) {
         return find(applicationFinance(applicationFinanceId)).andOnSuccessReturn(finance -> mapper.mapToResource(finance.getFinanceFileEntry()));

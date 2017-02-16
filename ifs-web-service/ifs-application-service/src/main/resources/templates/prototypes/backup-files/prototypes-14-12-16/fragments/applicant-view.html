@@ -602,19 +602,19 @@
     <div th:class="${param.error} ? 'upload-section error' :upload-section">
 
         <div th:if="${page == 'question-5'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question5" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/applicant-view :: appendix-question5" />
         </div>
 
         <div th:if="${page == 'question-6'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question6" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/applicant-view :: appendix-question6" />
         </div>
 
         <div th:if="${page == 'question-8'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question8" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/applicant-view :: appendix-question8" />
         </div>
 
          <div th:if="${page == 'question-8-jes'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question8-jes" th:remove="tag" />
+            <th:block th:insert="prototypes/fragments/applicant-view :: appendix-question8-jes" />
         </div>
 
             <div th:if="${param.uploaded == null}" th:remove="tag">
@@ -666,7 +666,7 @@
 
 <!-- ========Applicant view - readonly application view======= -->
 <div th:fragment="prototype-readonly-application">
-    <div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
 
     <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 
@@ -940,9 +940,9 @@
 
             <div class="question">
 
-                <div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+                <th:block th:insert="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" />
 
-                <div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+                <th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" />
             </div>
 
         </div>

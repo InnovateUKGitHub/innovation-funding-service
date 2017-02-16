@@ -1,30 +1,30 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-details">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to assessment overview'}, ${'/prototypes/984-assessor-application-overview'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Technical approach'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'12347353: A novel solution to an old problem'}, ${'Technical approach'})" />
 
     <p class="form-hint">Please review the answer provided and score the answer out of 10 points.</p>
 
 	<form action="#" method="post">
 		<div class="form-group">
-			
+
 			<h2 class="heading-medium">5. What technical approach will you use and how will you manage your project?</h2>
-			
+
 			<p>Our Academic partner has developed a technique to identify the precise cause of the issue and have been able to demonstrate it at a small scale. Taking this information they will scale up the experiment to a percentage of industrial scale to confirm. We will take this data and engineer a solution to isolate the problem we will then collude with our fabrication partner to design and prototype a tool to correct the obstacle.</p>
 
 		</div>
@@ -34,7 +34,7 @@
             <a href="#">Project-plan.pdf (161.96 KB)</a>
         </div>
 
-		<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="questionTitle='question5'" th:remove="tag" />
+		<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-feedback" th:with="questionTitle='question5'" />
 
 	</form>
 
@@ -57,10 +57,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
