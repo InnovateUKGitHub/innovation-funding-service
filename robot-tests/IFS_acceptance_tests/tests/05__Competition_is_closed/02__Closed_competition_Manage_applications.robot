@@ -12,6 +12,7 @@ Allocate Applications
     [Documentation]    INFUND-7042
     ...    INFUND-7729
     Given The user clicks the button/link    link=${CLOSED_COMPETITION_NAME}
+    And the user clicks the button/Link    jQuery=a:contains("Assessor management - assignment to applications")
     And the user clicks the button/Link    jQuery=a:contains("Applications - All, submitted")
     When the user clicks the button/Link    jQuery=tr:contains(Neural Industries) .no-margin
     Then The user should see the text in the page    00000012: Machine learning for transport infrastructure

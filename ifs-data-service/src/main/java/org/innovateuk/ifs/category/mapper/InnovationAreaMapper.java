@@ -9,12 +9,15 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 
 @Mapper(config = GlobalMapperConfig.class,
         uses = { InnovationSectorMapper.class })
 public abstract class InnovationAreaMapper extends BaseMapper<InnovationArea, InnovationAreaResource, Long> {
-
 
     @Override
     public abstract InnovationArea mapToDomain(InnovationAreaResource resource);
@@ -34,6 +37,14 @@ public abstract class InnovationAreaMapper extends BaseMapper<InnovationArea, In
             return null;
         }
         return object.getId();
+    }
+
+    public Set<String> mapInnovationAreaNames(Set<InnovationArea> innovationAreas) {
+        if (innovationAreas == null) {
+            return Collections.emptySet();
+        }
+
+        return simpleMapSet(innovationAreas, Category::getName);
     }
 
     public Long mapCategoryToId(Category object) {
