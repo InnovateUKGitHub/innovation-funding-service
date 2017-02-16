@@ -9,7 +9,7 @@ project(':ifs-web-service').bootRepackage {
 build.enabled = false
 jar.enabled=false
 
-task endpointDocumentation(type: Test) {
+task endpointDocumentation() {
     dependsOn "ifs-application-service:test"
     dependsOn "ifs-assessment-service:test"
     dependsOn "ifs-competition-mgt-service:test"
