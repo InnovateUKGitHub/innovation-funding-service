@@ -1,31 +1,36 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Information management policy'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Information management policy'" />
 </head>
 <body th:with="context='guest'">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/}" />
 
-    <h1 class="heading-large">Information management policy</h1>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="page-title">
+                <p class="subtitle">Help</p>
+                <h1 class="heading-xlarge">Information management policy</h1>
+            </div>
     <p>This Innovate UK ("<strong>us</strong>", "<strong>we</strong>", "<strong>our</strong>") Information Management Policy ("the <b>Policy</b>") provides a simple framework to explain
         how we store, use and share your information that works across all areas of the organisation and allows us to maximise
         the utilisation of the information we obtain. This will enhance our ability to fund, support and connect innovative
         businesses to accelerate sustainable economic growth for the UK. Accordingly, any information we obtain from you,
         whether it is through our online platforms, our grant applications and administration, through events or elsewhere,
         will be managed pursuant to this Policy.</p>
-    <h2>Definitions</h2>
+    <h2 class="heading-medium">Definitions</h2>
     <p>The following definitions apply in this Policy:</p>
-    <dl class="standard-definition-list">
+    <dl>
         <dt>Affinity Partner Activities</dt>
         <dd>
             <p>Means one or more of the following activities conducted by an Affinity Partner (either itself or through use of a sub-contractor/consultant):</p>
-            <ol class="list-style-type-roman">
+            <ol class="list roman">
                 <li>grant administration, evaluation and reporting;</li>
                 <li>research into the impact and effectiveness of grants and its administration;</li>
                 <li>undertaking its own administration, reporting and compliance; and</li>
@@ -80,7 +85,7 @@
         <dt>Internal Activity</dt>
         <dd>
         <p>means all internal activities of Innovate UK (whether conducted itself or through use of a sub-contractor/consultant) and includes:</p>
-            <ol class="list-style-type-roman">
+            <ol class="list roman">
                 <li>grant/contract support, administration, evaluation and reporting;</li>
                 <li>research into the impact and effectiveness of grants/contracts and its administration;</li>
                 <li>Innovate UK’s own administration, reporting and compliance;</li>
@@ -99,7 +104,7 @@
         <dt>Joint-Sponsor</dt>
         <dd>
             <p>means another UK Sponsor that Innovate UK is collaborating with in respect of the funding, management, assessment, award and/or monitoring of a grant (or other similarly advertised contract) and which Innovate UK has explicitly identified within the competition guidance and/or contract. This shall be the case regardless as to whether Innovate UK and/or the Joint Sponsor each individually:</p>
-            <ol class="list-style-type-roman">
+            <ol class="list roman">
                 <li>fund the entire contract, part of the contract, or none of the contract;</li>
                 <li>run or contribute to the management and/or assessment of the competition; or</li>
                 <li>run or contribute to the management and/or monitoring of the contract.</li>
@@ -120,33 +125,33 @@
         <dt>UK Sponsor</dt>
         <dd>Means another UK based organisation that operates or funds grant awards or other similar contracts, such as a department within UK Administration or the Research Councils.</dd>
     </dl>
-    <h2>Policy Principles</h2>
+    <h2 class="heading-medium">Policy Principles</h2>
     <p>Instead of creating a number of prescriptive policies with detailed rules applicable to each area of Innovate UK, this Policy is principle based, using a three-stage
         'engagement journey' for all areas of work. Information obtained from an Information Provider (you) is separated into four 'use categories' to simply explain our responsibilities
         and treatment of that information.</p>
 
-    <h2>Joint-Sponsors</h2>
+    <h2 class="heading-medium">Joint-Sponsors</h2>
     <p>It is noted that any Information (including Closed Information) received for a competition and/or grant (or other similar contract) run by, with or on behalf of a
         Joint-Sponsor shall be deemed to be directly shared by you with both Innovate UK and such Joint-Sponsor at the time of submission of such Information. Any Information
         generated by either Innovate UK or the Joint-Sponsor during the collaboration shall also be shared with each other on the same basis.</p>
     <p>Innovate UK and the Joint-Sponsor shall be directly and individually accountable to you for the Information it holds and shall handle such Information in
         accordance with its own funding and information management policies.</p>
 
-    <h2>Engagement Journey</h2>
+    <h2 class="heading-medium">Engagement Journey</h2>
     <p>There are three stages of any engagement by Innovate UK with an Information Provider ("<strong>you</strong>", "<strong>your</strong>"), in ascending order of commitment:</p>
-    <ol>
+    <ol class="list list-number">
         <li>Dialogue
-            <ul>This concerns communication of information not under Stages 2 or 3 below; generally this is open or informal engagement without pre-defined rules or contracts.
+            <ul class="list list-bullet">This concerns communication of information not under Stages 2 or 3 below; generally this is open or informal engagement without pre-defined rules or contracts.
                 <li>For example, an ad hoc telephone call (not covered under a more formal relationship below).</li>
             </ul>
         </li>
         <li>Engagement
-            <ul>This concerns communication of information under 'implied' terms in relation to which Innovate UK has specified how it will treat information.
+            <ul class="list list-bullet">This concerns communication of information under 'implied' terms in relation to which Innovate UK has specified how it will treat information.
                 <li>For example, a grant application, where there is no signed contract in place, but pursuant to which we receive significant amounts of your Information.</li>
             </ul>
         </li>
         <li>Contractual
-            <ul>This concerns any communication of information under a signed set of terms and conditions.
+            <ul class="list list-bullet">This concerns any communication of information under a signed set of terms and conditions.
                 <li>For example, Information received under a grant funding agreement.</li>
             </ul>
         </li>
@@ -160,7 +165,7 @@
     <p>For example, if you sign a grant funding agreement with us, Information that you provided as part of the grant application process will also be held and used in accordance with the terms of the agreed grant.</p>
 
     <p>There are four Use Categories for the different types of Information Innovate UK receives during each stage of an Engagement Journey:</p>
-    <ol>
+    <ol class="list list-numbered">
         <li>Closed</li>
         <li>Closed, with Agreed Exceptions</li>
         <li>Limited</li>
@@ -169,7 +174,7 @@
 
     <p>The use and disclosure of Information within each use category is set out below:</p>
 
-    <table>
+    <table class="bordered-table">
         <thead>
             <tr>
                 <th colspan="2" scope="col">1. Closed</th>
@@ -183,7 +188,7 @@
             <tr>
                 <td>
                     We may use the Information for:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>Internal Activities.</li>
                     </ol>
                 </td>
@@ -191,7 +196,7 @@
                     Information will be kept confidential and not
                     disclosed to third parties unless, and only insofar
                     as is reasonably necessary:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>to undertake an Internal Activity; or</li>
                         <li>as required by law.</li>
                     </ol>
@@ -214,24 +219,24 @@
             <tr>
                 <td>
                     We may use the Information for:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>Internal Activities.</li>
                     </ol>
                         The Agreed Third Parties may use the (Agreed) Information for:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>Agreed Activities.</li>
                     </ol>
                     <em>Note:</em> The Agreed Activities will be made explicit in the terms of our engagement with you. For example, in the grant application rules, or in the grant funding agreement.
                 </td>
                 <td>
                     Information will be kept confidential and not disclosed to third parties unless, and only insofar as is reasonably necessary:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>to Agreed Third Parties, but only with Agreed Information;</li>
                         <li>to undertake an Internal Activity; or</li>
                         <li>as required by law.</li>
                     </ol>
                         The Agreed Third Parties may use the (Agreed) Information for:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>Agreed Activities.</li>
                     </ol>
                     <em>Note:</em> The Agreed Information and Agreed Third Parties will be made explicit in the terms of our engagement with you. For example, in the grant application rules, or in the grant funding agreement.
@@ -254,11 +259,11 @@
             <tr>
                 <td>
                     We may use the Information for:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>Internal Activities.</li>
                     </ol>
                     The Affinity Partners may use the Information for:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>Affinity Partner Activities.</li>
                     </ol>
                 </td>
@@ -266,7 +271,7 @@
                     Information will be kept confidential and not
                     disclosed to third parties unless, and only insofar
                     as is reasonable:
-                    <ol class="list-style-type-roman">
+                    <ol class="list roman">
                         <li>to our Affinity Partners;</li>
                         <li>to undertake an Internal Activity; or</li>
                         <li>as required by law.</li>
@@ -298,29 +303,29 @@
         </tbody>
     </table>
 
-    <ul class="list">
+    <ul class="list list-bullet">
         <li>We hold all information in compliance with the Data Protection Act 1998, and subject to the Freedom of Information Laws. Where we share Information with an Affinity Partner, it shall hold that information subject to the Applicable FOI Laws.</li>
         <li>Where we ‘generally’ share personal data with Affinity Partners, such Affinity Partners shall become the data controllers of that personal data and must act in accordance with the terms of this Policy and the Data Protection Act, and shall become directly responsible to you (and the Information Commissioner) thereunder. The exception to this is where Innovate UK ‘specifically’ stipulates limited and detailed requirements for Affinity Partner use of your personal data, where Innovate UK shall remain directly responsible to you for the compliance of its sub-contractor.</li>
         <li>It is specifically noted that some applications and services process personal data outside the European Economic Area. Where this occurs, Innovate UK and/or the relevant Affinity Partner shall ensure that it complies with its responsibilities to keep your personal data safe and secure.</li>
     </ul>
-
-    <!-- <div class="related-container">
-        <aside class="govuk-related-items">
-            <h2>Elsewhere on GOV.UK</h2>
-        </aside>
-        <ul>
-            <li>
-                <a href="/info/cookies.html">Cookies</a>
-            </li>
-            <li>
-                <a href="/info/terms-and-conditions.html">Terms and conditions</a>
-            </li>
-        </ul>
-    </div> -->
+</div>
+<div class="column-one-third">
+    <aside role="complementary" class="related-items extra-margin">
+        <h2 class="heading-medium">Elsewhere on Innovation Funding Service</h2>
+        <nav>
+            <ul>
+                <li><a href="#">test</a></li>
+                <li><a href="#">test</a></li>
+                <li><a href="#">test</a></li>
+            </ul>
+        </nav>
+  </aside>
+</div>
+</div>
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

@@ -96,6 +96,9 @@ dl dt,
 dl dt.font-small {
 	font-weight:bold;
 }
+dl dd {
+	margin-bottom:0.5em;
+}
 
 .dl-left {
 	overflow: hidden;
@@ -134,6 +137,12 @@ ol.list-alpha {
 			margin-left:-45px; //negative of the ol li padding
 	}
 }
+ol.list.roman {
+  list-style-type: lower-roman;
+  padding-left:25px;
+
+}
+
 
 ol.list-counted {
 	counter-reset: item;
