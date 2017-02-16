@@ -501,6 +501,7 @@ public class ProjectDetailsControllerTest extends BaseControllerMockMVCTest<Proj
         assertEquals(project.getId(), viewModel.getProjectId());
         assertEquals(project.getName(), viewModel.getProjectName());
         assertEquals(project.getFormattedId(), viewModel.getProjectNumber());
+        assertEquals(project.getApplication(), viewModel.getApplicationId());
         assertNull(viewModel.getOperatingAddress());
         assertEquals(addressResource, viewModel.getRegisteredAddress());
         assertNull(viewModel.getProjectAddress());

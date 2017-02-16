@@ -95,7 +95,6 @@ ${APPLICATION_2_SUMMARY_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICA
 ${ECONOMIC_BENEFIT_URL_APPLICATION_2}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_2}/form/question/4
 ${APPLICATION_3_OVERVIEW_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3}
 ${ECONOMIC_BENEFIT_URL_APPLICATION_3}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_3}/form/question/4
-${applicant_dashboard_url}    ${SERVER}/applicant/dashboard
 ${assessor_dashboard_url}    ${SERVER}/assessment/assessor/dashboard
 ${COMPETITION_DETAILS_URL}    ${SERVER}/competition/${OPEN_COMPETITION}/details/
 ${LOG_OUT}        ${LOGIN_URL}/Logout

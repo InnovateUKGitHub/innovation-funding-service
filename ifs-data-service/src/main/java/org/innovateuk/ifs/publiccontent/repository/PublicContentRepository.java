@@ -19,7 +19,6 @@ import java.util.Set;
 public interface PublicContentRepository extends PagingAndSortingRepository<PublicContent, Long> {
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
-            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < CURRENT_TIMESTAMP AND open_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
@@ -30,7 +29,6 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
 
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
-            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < CURRENT_TIMESTAMP AND open_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
@@ -41,7 +39,6 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
     
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
-            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < CURRENT_TIMESTAMP AND open_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +
@@ -53,7 +50,6 @@ public interface PublicContentRepository extends PagingAndSortingRepository<Publ
     Page<Competition> findAllPublishedForOpenCompetitionByKeywordsAndInnovationId(@Param(value="filteredPublicContentIds") Set<Long> filteredPublicContentIds, @Param(value="competitionIds") List<Long> competitionIds, Pageable pageable);
     @Query("SELECT c FROM Competition c " +
             "INNER JOIN c.milestones closed_milestone ON (closed_milestone.date > CURRENT_TIMESTAMP AND closed_milestone.type='SUBMISSION_DATE') " +
-            "INNER JOIN c.milestones open_milestone ON (open_milestone.date < CURRENT_TIMESTAMP AND open_milestone.type='OPEN_DATE') " +
             "WHERE EXISTS(   SELECT p " +
                             "FROM PublicContent p " +
                             "WHERE p.competitionId = c.id " +

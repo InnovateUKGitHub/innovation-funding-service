@@ -109,7 +109,6 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         when(projectFinanceServiceMock.approveOrRejectSpendProfile(isA(Long.class), isA(ApprovalType.class)))
                 .thenReturn(serviceSuccess());
-
         mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
