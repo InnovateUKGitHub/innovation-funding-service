@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.populator.CompetitionOverviewPopulator;
 import org.innovateuk.ifs.competition.populator.publiccontent.section.SummaryViewModelPopulator;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -68,7 +67,7 @@ public class CompetitionControllerTest extends BaseControllerMockMVCTest<Competi
                 .withCompetitionTitle(competitionTitle)
                 .withContentSection(publicContentResource)
                 .build();
-        when(competitionService.getPublicContentOfCompetition(compId)).thenReturn(ServiceResult.serviceSuccess(publicContentItem));
+        when(competitionService.getPublicContentOfCompetition(compId)).thenReturn(publicContentItem);
 
         CompetitionOverviewViewModel viewModel = new CompetitionOverviewViewModel();
         viewModel.setCompetitionOpenDate(openDate);

@@ -9,7 +9,7 @@
     <th:block th:insert="fragments/layout :: global-header" />
 
     <main id="content">
-        <th:block th:include="fragments/layout :: main-content-start" />
+        <th:block th:insert="fragments/layout :: main-content-start" />
 
         <div class="sub-header">
             <a href="/competition/search" class="link-back">Back to all competitions</a>
@@ -43,13 +43,13 @@
             </th:block>
         </ul>
         <div>
-            <th:block th:include="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>
+            <th:block th:insert="competition/section/fragments :: ${model.currentSection.sectionPath} (section=${model.currentSection}, competitionId=${model.competitionId})"/>
         </div>
 
-        <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+        <div th:insert="fragments/layout :: main-content-end" th:remove="tag" />
     </main>
 
-    <th:block th:include="fragments/layout :: footer" />
-    <th:block th:include="fragments/layout :: body-end" />
+    <th:block th:insert="fragments/layout :: footer" />
+    <th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
