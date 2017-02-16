@@ -14,21 +14,21 @@ Invalid Large pdf
     [Documentation]    INFUND-2602
     [Tags]    Upload
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    When the user uploads the file    ${too_large_pdf}
+    When the user uploads the file    id=assessorFeedback   ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
 
 Invalid Non pdf
     [Documentation]    INFUND-2602
     [Tags]
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    When the user uploads the file    ${text_file}
+    When the user uploads the file    id=assessorFeedback   ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
 
 Valid upload to a successful application
     [Documentation]    INFUND-2602
     [Tags]    HappyPath
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    And the user uploads the file    ${valid_pdf}
+    And the user uploads the file    id=assessorFeedback    ${valid_pdf}
 
 Open and view the file
     [Documentation]    INFUND-2602
@@ -58,17 +58,14 @@ Re-upload after removing
     [Documentation]    INFUND-2602
     [Tags]    HappyPath
     Given the user can see the option to upload a file on the page    ${successful_application_overview}
-    And the user uploads the file    ${valid_pdf}
+    And the user uploads the file    id=assessorFeedback    ${valid_pdf}
     [Teardown]    the user clicks the button/link    name=removeAssessorFeedback
 
 Upload a file to an unsuccessful application
     [Documentation]    INFUND-2602
     [Tags]
     Given the user can see the option to upload a file on the page    ${unsuccessful_application_overview}
-    And the user uploads the file    ${valid_pdf}
+    And the user uploads the file    id=assessorFeedback    ${valid_pdf}
     [Teardown]    the user clicks the button/link    name=removeAssessorFeedback
 
 *** Keywords ***
-the user uploads the file
-    [Arguments]    ${upload_filename}
-    Choose File    id=assessorFeedback    ${UPLOAD_FOLDER}/${upload_filename}
