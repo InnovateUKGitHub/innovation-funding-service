@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competition.form;
 
 public class ManageFundingApplicationsQueryForm {
 
-    private int page = 1;
+    private int page = 0;
     private String filter = "";
     private String sortField = "id";
 

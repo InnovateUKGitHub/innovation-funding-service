@@ -2,24 +2,22 @@ package org.innovateuk.ifs.management.viewmodel;
 
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 
 public class ManageFundingApplicationViewModel {
 
     private ApplicationSummaryPageResource results;
     private String sortField;
     private String filter;
-    private CompetitionResource competitionResource;
+    private long competitionId;
+    private String competitionName;
 
-    public CompetitionResource getCompetitionResource() {
-        return competitionResource;
-    }
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, String sortField, String filter, CompetitionResource competitionResource) {
+    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, String sortField, String filter, long competitionId, String competitionName) {
         this.results = results;
         this.sortField = sortField;
         this.filter = filter;
-        this.competitionResource = competitionResource;
+        this.competitionId = competitionId;
+        this.competitionName = competitionName;
     }
 
     public ApplicationSummaryPageResource getResults() {
@@ -28,6 +26,14 @@ public class ManageFundingApplicationViewModel {
 
     public String getSortField() {
         return sortField;
+    }
+
+    public long getCompetitionId() {
+        return competitionId;
+    }
+
+    public String getCompetitionName() {
+        return competitionName;
     }
 
     public String getFilter() {
