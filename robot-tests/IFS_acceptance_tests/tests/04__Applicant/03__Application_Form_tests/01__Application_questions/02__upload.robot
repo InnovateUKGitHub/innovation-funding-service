@@ -37,7 +37,7 @@ Large pdf uploads not allowed
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    When the user uploads the file to the 'technical approach' question    ${too_large_pdf}
+    When the user uploads the file     name=formInput[14]    ${too_large_pdf}
     Then the user should get an error page    ${too_large_pdf_validation_error}
 
 Non pdf uploads not allowed
@@ -47,7 +47,7 @@ Non pdf uploads not allowed
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    When the user uploads the file to the 'technical approach' question    ${text_file}
+    When the user uploads the file      name=formInput[14]    ${text_file}
     Then the user should get an error page    ${wrong_filetype_validation_error}
 
 
@@ -58,7 +58,7 @@ Lead applicant can upload a pdf file
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=5. Technical approach
-    Then the user uploads the file to the 'technical approach' question    ${valid_pdf}
+    Then the user uploads the file      name=formInput[14]    ${valid_pdf}
     And the user should see the text in the page    ${valid_pdf}
 
 Lead applicant can view a file
@@ -138,7 +138,7 @@ Collaborators can upload a file when the question is assigned
     And the user clicks the button/link    link=Academic robot test application
     And the user clicks the button/link    link=6. Innovation
     When the user should see the text in the page    Upload
-    Then the user uploads the file to the 'Innovation' question    ${valid_pdf}
+    Then the user uploads the file     name=formInput[17]     ${valid_pdf}
     And the user can re-assign the question back to the lead applicant
 
 Quarantined files are not returned to the user and the user is informed

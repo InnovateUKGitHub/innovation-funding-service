@@ -58,7 +58,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         // Assert that we actually have some services.
         assertNotNull(services);
         assertFalse(services.isEmpty());
-
+        
         // Find all the methods that should have a security annotation on and check they do.
         int totalMethodsChecked = 0;
         for (Object service : services) {

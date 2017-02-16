@@ -168,6 +168,19 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     }
 
     @Test
+    public void testSendNewFinanceCheckQueryResponseEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/project",
+                "applicationName", "Application 1"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_response_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_response_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_response_text_html.html", templateArguments);
+    }
+
+    @Test
     public void testSendNewFinanceCheckQueryEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
