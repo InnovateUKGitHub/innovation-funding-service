@@ -26,36 +26,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         super(true);
     }
 
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-                .anonymous()
-            .and()
-                .authorizeRequests()
-                // allow anonymous resource requests
-                .requestMatchers(statelessAuthenticationFilter.getIgnoredRequestMatchers()).permitAll()
-                .antMatchers("/user/uid/*").permitAll()
-                .antMatchers("/user/verifyEmail/*").permitAll()
-                .antMatchers("/user/createLeadApplicantForOrganisation/*").permitAll()
-                .antMatchers("/user/findByEmail/*/").permitAll()
-                .antMatchers("/organisation/findById/*").permitAll()
-                .antMatchers("/address/doLookup/**").permitAll()
-                .antMatchers("/alert/findAllVisible").permitAll()
-                .antMatchers("/alert/findAllVisible/*").permitAll()
-                .antMatchers("/browser/**").permitAll()
-                .antMatchers("/idpstub/**").permitAll()
-                .antMatchers("/health").permitAll()
+            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+            .anonymous().and()
+            .authorizeRequests()
+                .antMatchers("/silstub/**").permitAll()
+                .antMatchers("/monitoring/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
-                .exceptionHandling()
-                .and()
-                .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling().and()
+            .addFilterBefore(statelessAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers().cacheControl();
     }
-
-
 }

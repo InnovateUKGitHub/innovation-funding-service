@@ -60,7 +60,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findExistingUserByEmailShouldReturnUserResource() {
         UserResource userResource = newUserResource().withEmail("testemail@email.com").build();
 
-        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", UserResource.class, userResource);
+        setupGetWithRestResultAnonymousExpectations(usersUrl + "/findByEmail/" + userResource.getEmail() + "/", UserResource.class, userResource);
 
         UserResource user = service.findUserByEmail(userResource.getEmail()).getSuccessObject();
         assertEquals(userResource, user);
@@ -70,7 +70,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     public void findingNonExistingUserByEmailShouldReturnEmptyList() {
         String email = "email@test.test";
 
-        setupGetWithRestResultExpectations(usersUrl + "/findByEmail/" + email + "/", UserResource.class, null, HttpStatus.NOT_FOUND);
+        setupGetWithRestResultAnonymousExpectations(usersUrl + "/findByEmail/" + email + "/", UserResource.class, null, HttpStatus.NOT_FOUND);
 
         RestResult<UserResource> restResult = service.findUserByEmail(email);
         assertTrue(restResult.isFailure());
