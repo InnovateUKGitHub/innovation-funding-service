@@ -25,4 +25,10 @@ public interface ServiceFailureExceptionHandlingAdviceTestService {
     @SecuredBySpring(value="TODO", description = "TODO")
     @PreAuthorize("hasAuthority('nonexistentrole')")
     ServiceResult<String> accessDeniedMethod();
+
+    @NotSecured("just a test method")
+    ServiceResult<String> successfulMethodWithInternalFailingCall();
+
+    @NotSecured("just a test method")
+    ServiceResult<String> failingMethodWithInternalFailingCall();
 }

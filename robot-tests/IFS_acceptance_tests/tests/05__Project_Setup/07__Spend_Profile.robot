@@ -97,7 +97,7 @@ Lead partner can view spend profile page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
-    When the user clicks the button/link             link=What's the status of each of my partners?
+    When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
@@ -135,7 +135,7 @@ Calculations in the spend profile table
     And the sum of tds equals the total    div.spend-profile-table    3    38    10000    # Materials
     And the sum of tds equals the total    div.spend-profile-table    5    38    10000    # Subcontracting
     And the sum of tds equals the total    div.spend-profile-table    6    38    10000    # Travel & subsistence
-    And the sum of tds equals the total    div.spend-profile-table    7    38    10000    # Other Costs
+    And the sum of tds equals the total    div.spend-profile-table    7    38    10000    # Other costs
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971
@@ -236,7 +236,7 @@ Lead partner marks spend profile as complete
     Then the user should not see the element   jQuery=.success-alert p:contains("Your spend profile is marked as complete. You can still edit this page.")
     And the user should not see the element    css=table a[type="number"]    # checking here that the table has become read-only
     When the user clicks the button/link            link=Project setup status
-    And the user clicks the button/link             link=What's the status of each of my partners?
+    And the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
@@ -261,7 +261,7 @@ Non-lead partner can view spend profile page
     [Tags]    HappyPath
     [Setup]    Log in as a different user           ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     Given the user clicks the button/link           link=${PS_SP_APPLICATION_HEADER}
-    When the user clicks the button/link             link=What's the status of each of my partners?
+    When the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
@@ -299,7 +299,7 @@ Status updates for industrial user after spend profile submission
     [Documentation]    INFUND-6881
     When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
     Then the user should see the element    jQuery=ul li.complete:nth-child(6)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
@@ -308,7 +308,7 @@ Project Manager doesn't have the option to send spend profiles until all partner
     [Tags]
     [Setup]    log in as a different user       ${PS_SP_APPLICATION_PM_EMAIL}    ${short_password}
     Given the user clicks the button/link       link=${PS_SP_APPLICATION_HEADER}
-    And the user clicks the button/link             link=What's the status of each of my partners?
+    And the user clicks the button/link             link=status of my partners
     Then the user should see the text in the page    Project team status
     And the user should see the element              jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     When the user clicks the button/link             link=Project setup status
@@ -402,7 +402,7 @@ Status updates for academic user after spend profile submission
     [Documentation]    INFUND-6881
     When the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
     Then the user should see the element    jQuery=ul li.complete:nth-child(6)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
@@ -510,7 +510,7 @@ PM's Spend profile Summary page gets updated after submit
 Status updates after spend profile submitted
     [Documentation]    INFUND-6225
     Given the user navigates to the page    ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     And the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.waiting:nth-of-type(5)
 
 
@@ -625,7 +625,7 @@ Lead partner can see that the spend profile has been rejected
     # TODO please switch out the PM login above with lead partner once INFUND-8136 is completed
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td.status.action:nth-of-type(5)
     [Teardown]    the user goes back to the previous page
 
@@ -655,7 +655,7 @@ Industrial partner receives edit rights and can submit their spend profile
     Given log in as a different user    ${PS_SP_APPLICATION_PARTNER_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     When the user clicks the button/link    link=Spend profile
@@ -664,7 +664,7 @@ Industrial partner receives edit rights and can submit their spend profile
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(5)
 
 Academic partner receives edit rights and can submit their spend profile
@@ -672,7 +672,7 @@ Academic partner receives edit rights and can submit their spend profile
     Given log in as a different user    ${PS_SP_APPLICATION_ACADEMIC_EMAIL}    ${short_password}
     When the user clicks the button/link    link=${PS_SP_APPLICATION_HEADER}
     Then the user should see the element    jQuery=li.require-action:nth-of-type(6)
-    When the user clicks the button/link    link=What's the status of each of my partners?
+    When the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.action:nth-of-type(5)
     And the user goes back to the previous page
     And the user clicks the button/link    link=Spend profile
@@ -681,7 +681,7 @@ Academic partner receives edit rights and can submit their spend profile
     Then the user should see the text in the page    Your spend profile has been sent to the lead partner
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
-    And the user clicks the button/link    link=What's the status of each of my partners?
+    And the user clicks the button/link    link=status of my partners
     Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
 
 
