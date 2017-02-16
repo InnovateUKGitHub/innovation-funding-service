@@ -4,8 +4,8 @@ package org.innovateuk.ifs.application.resource;
  * Applications to a competition either receive funding or they do not.  These possibilities are expressed in this enum.
 */
 public enum FundingDecision {
-	FUNDED("Succesful"),
-	UNFUNDED("Unsuccesful"),
+	FUNDED("Successful"),
+	UNFUNDED("Unsuccessful"),
 	UNDECIDED("-"),
 	ON_HOLD("On hold");
 
@@ -18,6 +18,4 @@ public enum FundingDecision {
 	public String getName() {
 		return name;
 	}
-
-
 }

@@ -41,7 +41,7 @@
 
 			</form>
 
-    <form method="post" id="submit-funding-decision-form" data-autosave="fundingDecision" th:action="@{/competition/{competitionId}/fundingdecision(competitionId=${competitionSummary.getCompetitionId()})}">
+    <form method="post" id="submit-funding-decision-form" th:action="@{''}">
         <div class="grid-row sorting sorting-controls">
             <div class="column-half">
                 <div class="form-group no-margin">
@@ -60,15 +60,15 @@
                 <fieldset class="mark-applications alignright">
                     <legend class="visuallyhidden">Mark selected applications</legend>
                     <h3>Mark application as:</h3>
-                    <button class="button button-secondary select-app">Successful</button>
-                    <button class="button button-secondary select-app">Unsuccessful</button>
-                    <button class="button button-secondary select-app">On hold</button>
+                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary select-app">Successful</button>
+                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary select-app">Unsuccessful</button>
+                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary select-app">On hold</button>
                 </fieldset>
             </div>
         </div>
         <div class="table-overflow">
           <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-          <div th:include="fragments/modals :: modal-publish-funding-decision" th:remove="tag" />
+
           <p class="alignright-button">
             <button id="notify-applicants" type="submit" class="visuallyhidden" name="action" value="notify">Notify applicants</button>
             <button id="save-funding-decision" type="submit" class="button button-secondary no-margin" name="action" value="save">Save</button>
@@ -92,12 +92,16 @@
                 <fieldset class="mark-applications alignright">
                     <legend class="visuallyhidden">Mark selected applications</legend>
                     <h3>Mark application as:</h3>
-                    <button class="button button-secondary select-app">Successful</button>
-                    <button class="button button-secondary select-app">Unsuccessful</button>
-                    <button class="button button-secondary select-app">On hold</button>
+                    <button type="submit" value='FUNDED' name="fundingDecision" class="button button-secondary select-app">Successful</button>
+                    <button type="submit" value='UNFUNDED' name="fundingDecision" class="button button-secondary select-app">Unsuccessful</button>
+                    <button type="submit" value='ON_HOLD' name="fundingDecision" class="button button-secondary select-app">On hold</button>
                 </fieldset>
             </div>
         </div>
+
+    </form>
+    <form method="get">
+        <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
     </form>
 </div>
 

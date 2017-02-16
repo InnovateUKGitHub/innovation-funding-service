@@ -1,9 +1,9 @@
 package org.innovateuk.ifs.application.service;
 
-import java.util.Map;
-
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.rest.RestResult;
+
+import java.util.Map;
 
 /**
  * Interface for the action for the funding decisions.
@@ -16,6 +16,7 @@ public interface ApplicationFundingDecisionRestService {
 	 * @param applicationIdToFundingDecision a map of all application ids for the competition to the decision for each
 	 * @return rest result to indicate if this has successfully been done
 	 */
+	//TODO: reuse or remove this and subsequent methods after implementation of INFUND-7378
 	RestResult<Void> makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision);
 
 	/**

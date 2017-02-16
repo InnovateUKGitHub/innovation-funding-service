@@ -1,15 +1,15 @@
 package org.innovateuk.ifs.application.service;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-import java.util.stream.Collectors;
-
+import org.apache.catalina.util.ParameterMap;
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class ApplicationFundingDecisionServiceImpl implements ApplicationFundingDecisionService {
@@ -17,81 +17,63 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	@Autowired
 	private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
 
+
+	//TODO: remove this and subsequent methods after implementation of INFUND-7378
+	/*
 	@Override
 	public void makeApplicationFundingDecision(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
 		applicationFundingDecisionRestService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
-	}
+	}*/
+
+	@Autowired
+	private ApplicationSummaryService applicationSummaryService;
 	
 	@Override
-	public void saveApplicationFundingDecisionData(Long competitionId, Map<Long, FundingDecision> applicationIdToFundingDecision) {
+	public ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, String fundingDecision, List<Long> applicationIds) {
+		Map<Long, FundingDecision> applicationIdToFundingDecision = createSubmittedApplicationFundingDecisionMap(applicationIds, competitionId, fundingDecision);
 		applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
+		return ServiceResult.serviceSuccess();
 	}
-	
-	@Override
-	public boolean verifyAllApplicationsRepresented(Map<String, String[]> parameterMap, List<Long> applicationIds) {
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToDeterminedFundingDecisionFromRequestParams(parameterMap, applicationIds);
-		
-		Set<Long> submittedIds = applicationIdToFundingDecision.keySet();
-		
-		List<Long> notSubmittedIds = applicationIds.stream()
-				.filter(e -> submittedIds.stream().noneMatch(s -> s.equals(e)))
-				.collect(Collectors.toList());
 
-		return notSubmittedIds.isEmpty();
+	public boolean isAllowedFundingDecision(String fundingDecisionString) {
+		FundingDecision fundingDecision = fundingDecisionForString(fundingDecisionString);
+		if(fundingDecision.equals(FundingDecision.UNDECIDED)) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
-	@Override
-	public Map<Long, FundingDecision> applicationIdToFundingDecisionFromRequestParams(Map<String, String[]> parameterMap, List<Long> applicationIds) {
-		return parameterMap.entrySet().stream()
-				.filter(e -> keyIsApplicationId(e.getKey(), applicationIds) && valueIsValid(e.getValue()))
-				.collect(Collectors.toMap(
-		            e -> Long.parseLong(e.getKey()),
-		            e -> fundingDecisionForStringArray(e.getValue())
-		        ));
-	}
-	
-	@Override
 	public FundingDecision fundingDecisionForString(String val) {
-		switch(val) {
-			case "Y":
-				return FundingDecision.FUNDED;
-			case "N":
-				return FundingDecision.UNFUNDED;
-			case "-":
-				return FundingDecision.UNDECIDED;
-			default:
-				return null;	
-		}
-	}
-	
-	private Map<Long, FundingDecision> applicationIdToDeterminedFundingDecisionFromRequestParams(Map<String, String[]> parameterMap, List<Long> applicationIds) {
-		Map<Long, FundingDecision> applicationIdToFundingDecision = applicationIdToFundingDecisionFromRequestParams(parameterMap, applicationIds);
-		return applicationIdToFundingDecision.entrySet().stream()
-								.filter(e -> !FundingDecision.UNDECIDED.equals(e.getValue()))
-								.collect(Collectors.toMap(Entry::getKey, Entry::getValue));
+		return FundingDecision.valueOf(val);
 	}
 
-	
-	private boolean valueIsValid(String[] value) {
-		if(value.length == 0) {
-			return false;
-		}
-		return ("Y".equals(value[0]) || "N".equals(value[0]) || "-".equals(value[0]));
+	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
+		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE).getContent()
+				.stream().map(e -> e.getId()).collect(Collectors.toList());
 	}
 
-	private boolean keyIsApplicationId(String key, List<Long> applicationIds) {
-		Long id;
-		try {
-			id = Long.parseLong(key);
-		} catch(NumberFormatException e) {
-			return false;
+	private Map<Long, FundingDecision> createSubmittedApplicationFundingDecisionMap(List<Long> applicationIds, Long competitionId, String fundingDecisionChoice) {
+		FundingDecision fundingDecision = fundingDecisionForString(fundingDecisionChoice);
+
+		Map<Long, FundingDecision> applicationIdToFundingDecision = new HashMap<>();
+
+		if(fundingDecision != null) {
+			applicationIdToFundingDecision = filteredListOfFundingDecisions(applicationIds, competitionId, fundingDecision);
 		}
-		
-		return applicationIds.stream().anyMatch(e -> e.equals(id));
-	}
-	
-	private FundingDecision fundingDecisionForStringArray(String[] val) {
-		return fundingDecisionForString(val[0]);
+
+		return applicationIdToFundingDecision;
 	}
 
+	private Map<Long, FundingDecision> filteredListOfFundingDecisions(List<Long> applicationIds, Long competitionId, FundingDecision fundingDecision) {
+		Map<Long, FundingDecision> applicationIdToFundingDecision = new ParameterMap<>();
+
+		List<Long> ids = submittedApplicationIdsForCompetition(competitionId);
+		applicationIds.stream()
+				.filter(id -> ids.contains(id))
+				.forEach(id -> applicationIdToFundingDecision.put(id, fundingDecision));
+
+		return applicationIdToFundingDecision;
+	}
 }
