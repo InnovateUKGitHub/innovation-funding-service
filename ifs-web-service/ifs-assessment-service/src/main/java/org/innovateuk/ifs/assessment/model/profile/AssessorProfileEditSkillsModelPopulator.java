@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
  * Populator for the Assessor Skills Edit view.
  */
 @Component
-public class AssessorProfileEditSkillsModelPopulator {
+public class AssessorProfileEditSkillsModelPopulator extends AssessorProfileBaseSkillsModelPopulator<AssessorProfileEditSkillsViewModel> {
 
     public AssessorProfileEditSkillsViewModel populateModel(ProfileSkillsResource profileSkillsResource) {
-        return new AssessorProfileEditSkillsViewModel(profileSkillsResource.getInnovationAreas());
+        return new AssessorProfileEditSkillsViewModel(getInnovationAreasSectorMap(profileSkillsResource));
     }
 
 }

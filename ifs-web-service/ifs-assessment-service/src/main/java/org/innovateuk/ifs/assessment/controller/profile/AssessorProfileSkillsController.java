@@ -45,7 +45,8 @@ public class AssessorProfileSkillsController {
     @RequestMapping(method = RequestMethod.GET)
     public String getReadonlySkills(Model model,
                                     @ModelAttribute("loggedInUser") UserResource loggedInUser) {
-        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(loggedInUser.getId()));
+        ProfileSkillsResource profileSkillsResource = userService.getProfileSkills(loggedInUser.getId());
+        model.addAttribute("model", assessorProfileSkillsModelPopulator.populateModel(profileSkillsResource));
         return "profile/skills";
     }
 

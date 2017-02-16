@@ -2,27 +2,22 @@ package org.innovateuk.ifs.assessment.viewmodel.profile;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Holder of model attributes for the Assessor skills view.
  */
-public class AssessorProfileSkillsViewModel {
-    private List<InnovationAreaResource> innovationAreas;
+public class AssessorProfileSkillsViewModel extends AssessorProfileBaseSkillsViewModel {
     private String skillAreas;
     private BusinessType assessorType;
 
-    public AssessorProfileSkillsViewModel(List<InnovationAreaResource> innovationAreas, String skillAreas, BusinessType assessorType) {
-        this.innovationAreas = innovationAreas;
+    public AssessorProfileSkillsViewModel(Map<String, List<String>> innovationAreas, String skillAreas, BusinessType assessorType) {
+        super(innovationAreas);
         this.skillAreas = skillAreas;
         this.assessorType = assessorType;
-    }
-
-    public List<InnovationAreaResource> getInnovationAreas() {
-        return innovationAreas;
     }
 
     public String getSkillAreas() {
@@ -46,7 +41,7 @@ public class AssessorProfileSkillsViewModel {
         AssessorProfileSkillsViewModel that = (AssessorProfileSkillsViewModel) o;
 
         return new EqualsBuilder()
-                .append(innovationAreas, that.innovationAreas)
+                .appendSuper(super.equals(o))
                 .append(skillAreas, that.skillAreas)
                 .append(assessorType, that.assessorType)
                 .isEquals();
@@ -55,7 +50,7 @@ public class AssessorProfileSkillsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(innovationAreas)
+                .appendSuper(super.hashCode())
                 .append(skillAreas)
                 .append(assessorType)
                 .toHashCode();

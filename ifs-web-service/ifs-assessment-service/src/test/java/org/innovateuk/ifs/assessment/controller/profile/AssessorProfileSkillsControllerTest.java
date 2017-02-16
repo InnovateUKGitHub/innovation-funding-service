@@ -10,6 +10,7 @@ import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileSkillsView
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -19,8 +20,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.nCopies;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -57,10 +61,18 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = "skill1 skill2 skill3";
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreas("Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = CollectionFunctions.combineLists(
+                setUpInnovationAreasForSector("Emerging and enabling technologies",
+                        "Data", "Cyber Security"),
+                setUpInnovationAreasForSector("Health and life sciences",
+                        "Bioscience", "Enhanced Food Quality"));
         UserResource userResource = setUpProfileSkills(businessType, skillAreas, innovationAreaResources);
 
-        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(innovationAreaResources,
+        Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
+        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+        expectedInnovationAreas.put("Health and life sciences", asList("Bioscience", "Enhanced Food Quality"));
+
+        AssessorProfileSkillsViewModel expectedModel = new AssessorProfileSkillsViewModel(expectedInnovationAreas,
                 skillAreas, businessType);
 
         mockMvc.perform(get("/profile/skills"))
@@ -76,10 +88,13 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = "skill1 skill2 skill3";
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreas("Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(businessType, skillAreas, innovationAreaResources);
 
-        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(innovationAreaResources);
+        Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
+        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+
+        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
         AssessorProfileSkillsForm expectedForm = new AssessorProfileSkillsForm();
         expectedForm.setAssessorType(businessType);
@@ -116,10 +131,13 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = RandomStringUtils.random(5001);
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreas("Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(ACADEMIC, "skill1 skill2 skill3", innovationAreaResources);
 
-        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(innovationAreaResources);
+        Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
+        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+
+        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
         MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -154,10 +172,13 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         BusinessType businessType = BUSINESS;
         String skillAreas = String.join(" ", nCopies(101, "skill"));
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreas("Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(ACADEMIC, "skill1 skill2 skill3", innovationAreaResources);
 
-        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(innovationAreaResources);
+        Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
+        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+
+        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
         MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -191,10 +212,13 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
     public void submitSkills_incomplete() throws Exception {
         String skillAreas = String.join(" ", nCopies(100, "skill"));
 
-        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreas("Data", "Cyber Security");
+        List<InnovationAreaResource> innovationAreaResources = setUpInnovationAreasForSector("Emerging and enabling technologies", "Data", "Cyber Security");
         UserResource userResource = setUpProfileSkills(ACADEMIC, "skill1 skill2 skill3", innovationAreaResources);
 
-        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(innovationAreaResources);
+        Map<String, List<String>> expectedInnovationAreas = new LinkedHashMap<>();
+        expectedInnovationAreas.put("Emerging and enabling technologies", asList("Data", "Cyber Security"));
+
+        AssessorProfileEditSkillsViewModel expectedModel = new AssessorProfileEditSkillsViewModel(expectedInnovationAreas);
 
         MvcResult result = mockMvc.perform(post("/profile/skills/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -222,8 +246,9 @@ public class AssessorProfileSkillsControllerTest extends BaseControllerMockMVCTe
         verify(userService, only()).getProfileSkills(userResource.getId());
     }
 
-    private List<InnovationAreaResource> setUpInnovationAreas(String... innovationAreaNames) {
+    private List<InnovationAreaResource> setUpInnovationAreasForSector(String sectorName, String... innovationAreaNames) {
         return newInnovationAreaResource()
+                .withSectorName(sectorName)
                 .withName(innovationAreaNames)
                 .build(innovationAreaNames.length);
     }

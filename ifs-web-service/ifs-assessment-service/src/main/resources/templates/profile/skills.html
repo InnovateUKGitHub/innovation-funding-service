@@ -21,11 +21,14 @@
 
             <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
 
-            <ul class="list list-bullet">
-                <li th:each="innovationArea : ${model.innovationAreas}">
-                    <span th:text="${innovationArea.sectorName}" th:remove="tag">health and life sciences</span>
+            <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
+                <li th:each="innovationSectorEntry : ${model.innovationAreas}"
+                    th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
+                    <span th:text="${innovationSector}" th:remove="tag">health and life sciences</span>
                     <ul class="list list-bullet">
-                        <li th:text="${innovationArea.name}">information and communications technology (ICT)</li>
+                        <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
+                            information and communications technology (ICT)
+                        </li>
                     </ul>
                 </li>
             </ul>
