@@ -10,10 +10,16 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/}" />
 
-    <div class="page-title">
-        <h1 class="heading-xlarge no-margin">Terms and conditions</h1>
-    </div>
+    <div class="grid-row">
+        <div class="column-two-thirds">
+            <div class="page-title">
+                <p class="subtitle">Help</p>
+                <h1 class="heading-xlarge no-margin">Terms and conditions</h1>
+            </div>
+
+
 
     <h2 class="heading-large">1. Overview</h2>
       <h3 class="heading-medium">1.1. Information about us</h3>
@@ -155,7 +161,11 @@
 
     <h2 class="heading-large">14. Information Management Policy</h2>
     <p>See the <a href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter">Information Management Policy</a> here.</p>
-
+</div>
+    <div class="column-one-third">
+        <th:block th:insert="content/fragments :: content-menu" />
+    </div>
+</div>
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

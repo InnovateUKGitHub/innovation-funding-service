@@ -137,12 +137,17 @@ ol.list-alpha {
 			margin-left:-45px; //negative of the ol li padding
 	}
 }
+//todo clean a lot up over here
+ol.roman,
+ol.lower-alpha{
+	padding-left:25px;
+}
 ol.list.roman {
   list-style-type: lower-roman;
-  padding-left:25px;
-
 }
-
+ol.list.lower-alpha {
+	list-style-type: lower-alpha;
+}
 
 ol.list-counted {
 	counter-reset: item;
