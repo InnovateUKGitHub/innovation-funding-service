@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.junit.Assert;
 import org.junit.Test;
+import org.springframework.http.HttpStatus;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,7 +29,7 @@ public class AddressRestServiceMocksTest extends BaseRestServiceUnitTest<Address
         String postcode = "BS348XU";
         String expectedUrl = addressRestURL + "/doLookup?lookup=" + postcode;
         List<AddressResource> returnedAddresses = Arrays.asList(1,2,3,4).stream().map(i -> new AddressResource()).collect(Collectors.toList());// newAddressResource().build(4);
-        setupGetWithRestResultExpectations(expectedUrl, addressResourceListType(), returnedAddresses);
+        setupGetWithRestResultAnonymousExpectations(expectedUrl, addressResourceListType(), returnedAddresses, HttpStatus.OK);
 
         // now run the method under test
         List<AddressResource> addresses = service.doLookup(postcode).getSuccessObject();
