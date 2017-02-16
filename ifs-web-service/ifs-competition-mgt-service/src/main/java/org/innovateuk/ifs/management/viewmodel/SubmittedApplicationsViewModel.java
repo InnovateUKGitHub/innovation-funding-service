@@ -15,9 +15,11 @@ public class SubmittedApplicationsViewModel extends BaseApplicationsViewModel<Su
                                           String competitionName,
                                           LocalDateTime assessmentDeadline,
                                           int applicationsSubmitted,
+                                          String sorting,
+                                          String filter,
                                           List<SubmittedApplicationsRowViewModel> applications,
                                           PaginationViewModel pagination) {
-        super(competitionId, competitionName, applications, pagination);
+        super(competitionId, competitionName, applications, pagination, sorting, filter);
         this.assessmentDeadline = assessmentDeadline;
         this.applicationsSubmitted = applicationsSubmitted;
     }

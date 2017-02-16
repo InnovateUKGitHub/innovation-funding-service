@@ -44,9 +44,11 @@ public class CompetitionManagementApplicationsController {
     public String allApplications(Model model,
                                   @PathVariable("competitionId") long competitionId,
                                   @RequestParam MultiValueMap<String, String> queryParams,
-                                  @RequestParam(value = "page", defaultValue = "0") int page) {
+                                  @RequestParam(value = "page", defaultValue = "0") int page,
+                                  @RequestParam(value = "sort", defaultValue = "") String sort,
+                                  @RequestParam(value = "filter", defaultValue = "") String filter) {
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.ALL_APPLICATIONS, queryParams);
-        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page));
+        model.addAttribute("model", allApplicationsPageModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/all-applications";
@@ -56,9 +58,11 @@ public class CompetitionManagementApplicationsController {
     public String submittedApplications(Model model,
                                         @PathVariable("competitionId") long competitionId,
                                         @RequestParam MultiValueMap<String, String> queryParams,
-                                        @RequestParam(value = "page", defaultValue = "0") int page) {
+                                        @RequestParam(value = "page", defaultValue = "0") int page,
+                                        @RequestParam(value = "sort", defaultValue = "") String sort,
+                                        @RequestParam(value = "filter", defaultValue = "") String filter) {
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.SUBMITTED_APPLICATIONS, queryParams);
-        model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, originQuery, page));
+        model.addAttribute("model", submittedApplicationsModelPopulator.populateModel(competitionId, originQuery, page, sort, filter));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/submitted-applications";

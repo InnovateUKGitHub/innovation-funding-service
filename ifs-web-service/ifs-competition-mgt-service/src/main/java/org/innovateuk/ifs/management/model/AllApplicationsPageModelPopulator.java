@@ -23,13 +23,13 @@ public class AllApplicationsPageModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page) {
+    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, String filter) {
         CompetitionSummaryResource competitionSummaryResource = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
                 .getSuccessObjectOrThrowException();
 
         ApplicationSummaryPageResource applicationSummaryPageResource = applicationSummaryRestService
-                .getAllApplications(competitionId, "", page, 3)
+                .getAllApplications(competitionId, sorting, page, 3, filter)
                 .getSuccessObjectOrThrowException();
 
         return new AllApplicationsViewModel(
@@ -39,6 +39,8 @@ public class AllApplicationsPageModelPopulator {
                 competitionSummaryResource.getApplicationsStarted(),
                 competitionSummaryResource.getApplicationsInProgress(),
                 competitionSummaryResource.getApplicationsSubmitted(),
+                sorting,
+                filter,
                 getApplications(applicationSummaryPageResource),
                 new PaginationViewModel(applicationSummaryPageResource, origin)
         );

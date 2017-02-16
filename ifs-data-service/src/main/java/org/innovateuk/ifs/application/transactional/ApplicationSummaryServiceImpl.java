@@ -70,20 +70,32 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
 
     @Override
-    public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize) {
+    public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, String filter) {
+
+        String filterStr = "%" + filter + "%";
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionId(competitionId, pageable),
-                () -> applicationRepository.findByCompetitionId(competitionId));
+                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr,pageable),
+                () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
+    }
+
+    private Long tryParse(String str) {
+        Long result;
+        try {
+            result = Long.parseLong(str);
+        } catch (NumberFormatException e) {
+            result = null;
+        }
+        return result;
     }
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize) {
+            Long competitionId, String sortBy, int pageIndex, int pageSize, String filter) {
 
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filter, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filter));
     }
 
     @Override

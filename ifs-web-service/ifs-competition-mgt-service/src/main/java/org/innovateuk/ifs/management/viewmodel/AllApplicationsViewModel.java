@@ -20,9 +20,11 @@ public class AllApplicationsViewModel extends BaseApplicationsViewModel<AllAppli
                                     int applicationsStarted,
                                     int applicationsInProgress,
                                     int applicationsSubmitted,
+                                    String sorting,
+                                    String filter,
                                     List<AllApplicationsRowViewModel> applications,
                                     PaginationViewModel pagination) {
-        super(competitionId, competitionName, applications, pagination);
+        super(competitionId, competitionName, applications, pagination, sorting, filter);
         this.totalNumberOfApplications = totalNumberOfApplications;
         this.applicationsStarted = applicationsStarted;
         this.applicationsInProgress = applicationsInProgress;
