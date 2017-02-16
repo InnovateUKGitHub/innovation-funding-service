@@ -25,7 +25,6 @@ public abstract class ThreadRestService<T> extends BaseRestService {
 
     public RestResult<T> findOne(final Long id) {
         return getWithRestResult(baseURL + "/" + id, type);
-
     }
 
     public RestResult<Long> create(T thread) {

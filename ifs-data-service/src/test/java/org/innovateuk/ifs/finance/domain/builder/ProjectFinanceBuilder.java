@@ -24,7 +24,6 @@ public class ProjectFinanceBuilder extends BaseBuilder<ProjectFinance, ProjectFi
         return withArray((v, finance) -> finance.setProject(v), value);
     }
 
-
     private ProjectFinanceBuilder(List<BiConsumer<Integer, ProjectFinance>> newMultiActions) {
         super(newMultiActions);
     }
