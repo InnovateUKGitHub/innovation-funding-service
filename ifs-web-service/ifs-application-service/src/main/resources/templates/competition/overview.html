@@ -10,10 +10,7 @@
 
     <main id="content">
         <th:block th:insert="fragments/layout :: main-content-start" />
-
-        <div class="sub-header">
-            <a href="/competition/search" class="link-back">Back to all competitions</a>
-        </div>
+        <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to all competitions',linkClass='link-back',linkUrl='/competition/search'" />
 
         <p class="subtitle">Funding competition</p>
         <h1 class="heading-large no-margin" th:text="${model.competitionTitle}"></h1>
@@ -25,17 +22,19 @@
 
             <li th:with="date=${#temporals.format(model.competitionCloseDate, 'EEEE d MMMM yyyy')},
                          time=${#strings.toLowerCase(#temporals.format(model.competitionCloseDate, ' h:mma'))}">
-                <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"></th:block></li>
+                <strong>Competition closes:</strong> <th:block th:text="${date + ' ' + time}"/></li>
         </ul>
         <p>
-            <a href="details" class="button extra-margin">Start or continue your application</a>
+            <a th:href="@{/application/create/check-eligibility/{competitionId}(competitionId=${model.competitionId})}" class="button extra-margin">
+                Start or continue your application
+            </a>
         </p>
 
         <ul class="inline-nav hide-mobile">
             <th:block th:each="sectionType : ${model.allContentSections}">
                 <li th:class="${(sectionType.active ? 'selected' : 'not-selected' )}">
                     <h2>
-                        <a th:href="@{'/competition/' + ${model.competitionId} + '/overview/' + ${sectionType.path}}">
+                        <a th:href="@{/competition/{competitionId}/overview/{type}(competitionId=${model.competitionId}, type=${sectionType.path})}">
                             <strong th:text="${sectionType.text}"></strong>
                         </a>
                     </h2>

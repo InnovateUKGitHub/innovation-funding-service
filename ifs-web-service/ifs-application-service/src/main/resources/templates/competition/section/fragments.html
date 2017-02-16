@@ -12,7 +12,6 @@
             <th:block th:if="${section.hasAttachment(contentGroup.id)}">
                 <div>
                     <a th:href="@{/competition/{competitionId}/download/{contentGroupId}(competitionId=${competitionId}, contentGroupId=${contentGroup.id})}"
-                        target="_blank"
                         th:text="${section.fileName(contentGroup.id)}"></a>
                 </div>
             </th:block>
