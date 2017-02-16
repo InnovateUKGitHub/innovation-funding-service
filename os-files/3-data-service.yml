@@ -63,7 +63,7 @@ items:
         - image: innovateuk/data-service:1.0-SNAPSHOT
           readinessProbe:
             httpGet:
-              path: /health
+              path: /monitoring/health
               port: 8080
           name: data-service
           imagePullPolicy: IfNotPresent
