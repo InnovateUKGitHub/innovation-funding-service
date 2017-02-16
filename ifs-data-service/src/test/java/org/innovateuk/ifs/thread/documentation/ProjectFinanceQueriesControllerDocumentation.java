@@ -26,9 +26,7 @@ import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuild
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -57,7 +55,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .andExpect(content().string(objectMapper.writeValueAsString(query)))
                 .andDo(this.document.snippets(
                         pathParameters(parameterWithName("queryId").description("Id of the Query to be fetched")),
-                        responseFields(queryResourceFields)));
+                        responseFields(queryResourceFields())));
     }
 
     @Test
@@ -102,7 +100,7 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
                 .content(objectMapper.writeValueAsString(query)))
                 .andExpect(content().string(objectMapper.writeValueAsString(55L)))
                 .andExpect(status().isCreated())
-                .andDo(this.document.snippets(requestFields(queryResourceFields)));
+                .andDo(this.document.snippets(requestFields(queryResourceFields())));
     }
 
     @Override
@@ -115,6 +113,4 @@ public class ProjectFinanceQueriesControllerDocumentation extends BaseController
     protected ProjectFinanceQueriesController supplyControllerUnderTest() {
         return null;
     }
-
-
 }
