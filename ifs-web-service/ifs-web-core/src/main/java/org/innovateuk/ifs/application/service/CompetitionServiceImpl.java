@@ -38,6 +38,11 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
+    public CompetitionResource getPublishedById(Long competitionId){
+        return competitionsRestService.getPublishedCompetitionById(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
     public CompetitionResource create(){
         return competitionsRestService.create().getSuccessObjectOrThrowException();
     }
