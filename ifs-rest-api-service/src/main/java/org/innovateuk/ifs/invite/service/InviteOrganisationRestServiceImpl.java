@@ -12,7 +12,7 @@ public class InviteOrganisationRestServiceImpl extends BaseRestService implement
 
     @Override
     public RestResult<InviteOrganisationResource> findOne(Long id) {
-        return getWithRestResult(restUrl + "/" + id, InviteOrganisationResource.class);
+        return getWithRestResultAnonymous(restUrl + "/" + id, InviteOrganisationResource.class);
     }
 
     @Override
