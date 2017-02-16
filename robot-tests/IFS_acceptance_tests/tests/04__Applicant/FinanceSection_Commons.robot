@@ -33,8 +33,10 @@ Complete the org size section
     the user clicks the button/link    link=Robot test application
     the user clicks the button/link    link=Your finances
     the user clicks the button/link    link=Your organisation
+    ${orgSizeReadonly}=  Run Keyword And Return Status    Element Should Be Visible   jQuery=button:contains("Edit your organisation")
+    Run Keyword If    ${orgSizeReadonly}    the user clicks the button/link    jQuery=button:contains("Edit your organisation")
     the user selects the radio button    financePosition-organisationSize  LARGE
-    run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=.button:contains("Mark as complete")
+    run keyword and ignore error without screenshots    the user clicks the button/link    jQuery=button:contains("Mark as complete")
     run keyword and ignore error without screenshots    the user clicks the button/link    link=Your finances
 
 
