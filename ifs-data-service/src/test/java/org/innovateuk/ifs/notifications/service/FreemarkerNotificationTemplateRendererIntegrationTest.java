@@ -168,6 +168,17 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     }
 
     @Test
+    public void testSendNewFinanceCheckQueryEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "dashboardUrl", "https://ifs-local-dev/project"
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("new_finance_check_query_text_html.html", templateArguments);
+    }
+
     public void testInviteProjectManagerEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
@@ -180,6 +191,7 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
         assertRenderedEmailTemplateContainsExpectedLines("invite_project_manager_text_plain.txt", templateArguments);
         assertRenderedEmailTemplateContainsExpectedLines("invite_project_manager_text_html.html", templateArguments);
     }
+
     private void assertRenderedEmailTemplateContainsExpectedLines(String templateName, Map<String, Object> templateArguments) throws IOException, URISyntaxException {
 
         UserNotificationSource notificationSource = new UserNotificationSource(newUser().withFirstName("User").withLastName("1").build());

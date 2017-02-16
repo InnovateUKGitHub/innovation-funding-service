@@ -271,6 +271,7 @@ td.autosave-info {
 // ------- file upload -------- //
 
 .upload-section{
+  overflow: hidden;
 	border: 1px solid $border-colour;
 	background: $grey-4;
 	padding: 16px 16px 8px 16px;
