@@ -3,6 +3,8 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.competition.resource.AvailableAssessorsSortFieldType;
+import org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
+import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.AvailableAssessorsForm;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.ApplicationAssessmentProgressRemoveViewModel;
@@ -17,9 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.ApplicationOverviewOrigin;
-import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
-import static org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.buildOriginQueryString;
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller will handle all Competition Management requests related to allocating assessors to an Application.
@@ -43,8 +43,6 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId,
                                       @RequestParam MultiValueMap<String, String> queryParams) {
-        model.addAttribute("applicationOriginQuery", buildOriginQueryString(ApplicationOverviewOrigin.APPLICATION_PROGRESS, queryParams));
-
         return doProgressView(model, applicationId, form.getSortField(), queryParams);
     }
 
@@ -83,9 +81,12 @@ public class CompetitionManagementApplicationAssessmentProgressController {
     }
 
     private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort, MultiValueMap<String, String> queryParams) {
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort));
         queryParams.add("applicationId", applicationId.toString());
-        model.addAttribute("assessorProfileOriginQuery", buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams));
+
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort));
+        model.addAttribute("applicationOriginQuery", buildOriginQueryString(ApplicationOverviewOrigin.APPLICATION_PROGRESS, queryParams));
+        model.addAttribute("assessorProfileOriginQuery", buildOriginQueryString(AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams));
+
         return "competition/application-progress";
     }
 }
