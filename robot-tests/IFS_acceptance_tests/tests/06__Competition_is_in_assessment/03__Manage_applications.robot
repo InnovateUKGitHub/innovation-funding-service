@@ -22,7 +22,7 @@ View the list of the applications
     [Documentation]    INFUND-7042
     [Tags]
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    When The user clicks the button/link    jQuery=.button:contains("Manage applications")
+    When The user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
     Then the application list is correct before changes
 
 Application number navigates to Overview
@@ -80,7 +80,7 @@ Notify an assigned user
     [Tags]
     Given the user clicks the button/link    jQuery=tr:contains(Paul Plum) button:contains("Assign")
     And the user clicks the button/link    jQuery=a:contains("Allocate applications")
-    And the user clicks the button/link    jQuery=a:contains("Manage assessments")
+    And the user clicks the button/link    jQuery=a:contains("Competition")
     And the user clicks the button/link    jQuery=button:contains("Notify assessors")
     And the element should be disabled    jQuery=button:contains("Notify assessors")
     #TODO Check email once 7249 is done
@@ -96,7 +96,7 @@ Remove and notify an assessor (Notified)
     [Tags]
     [Setup]    Log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=.button:contains("Manage applications")
+    And the user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
     And the user clicks the button/link    jQuery=tr:nth-child(1) a:contains(View progress)
     When the user clicks the button/link    jQuery=tr:nth-child(1) a:contains("Remove")
     And the user clicks the button/link    jQuery=.buttonlink:contains(Cancel)

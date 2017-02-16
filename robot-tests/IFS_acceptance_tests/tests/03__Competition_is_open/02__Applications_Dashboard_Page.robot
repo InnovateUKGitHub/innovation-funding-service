@@ -22,7 +22,7 @@ Application Dashboard
     [Documentation]    INFUND-7369
     [Tags]    HappyPath
     Given the user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    When the user clicks the button/link    jQuery=.button:contains("Applications")
+    When the user clicks the button/link    jQuery=a:contains("Applications - All, submitted")
     Then The user should see the element    jQuery=a:contains(Submitted applications)
     And The user should see the element    link=All applications
 

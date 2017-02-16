@@ -14,7 +14,7 @@ Competition Dashboard
     And The user should see the text in the page    Programme
     And The user should see the text in the page    Materials and manufacturing
     And The user should see the text in the page    Earth Observation
-    And The user should see the element    jQuery=.button:contains("Invite assessors")
+    And The user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     And the user should not see the element    link=View and update competition setup
 
 Milestones for the In inform competition

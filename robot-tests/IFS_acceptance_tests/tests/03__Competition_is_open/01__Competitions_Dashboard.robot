@@ -23,12 +23,11 @@ Competition dashboard Open competition
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")
     And the user should see the element    link=View and update competition setup
-    And the user should see the element    jQuery=a:contains("Invite assessors")
-    And the user should see the element    jQuery=.button:contains("Applications")
+    And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
+    And the user should see the element    jQuery=a:contains("Applications - All, submitted")
     #The following checks test if the correct buttons are disabled
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("View panel sheet")
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Funding decision")
-    And the user should see the element    jQuery=a:contains("Manage applications")[aria-disabled="true"]
+    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
+    And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")[aria-disabled="true"]
 
 Milestones for the Open Competitions
     [Documentation]    INFUND-7561
@@ -52,12 +51,11 @@ Competition dashboard ready to Open competition
     And the user should see the element    jQuery=dt:contains("Innovation sector") ~ dd:contains("Materials and manufacturing")
     And the user should see the element    jQuery=dt:contains("Innovation area") ~ dd:contains("Earth Observation")
     And the user should see the element    link=View and update competition setup
-    And the user should see the element    jQuery=a:contains("Invite assessors")
+    And the user should see the element    jQuery=a:contains("Invite assessors to assess the competition")
     #The following checks test if the correct buttons are disabled
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("View panel sheet")
-    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Funding decision")
-    And the user should see the element    jQuery=a:contains("Manage applications")[aria-disabled="true"]
-    And the user should see the element    jQuery=a:contains("Applications")[aria-disabled="true"]
+    And the user should see the element    jQuery=.disabled[aria-disabled="true"]:contains("Input and review funding decision")
+    And the user should see the element    jQuery=a:contains("Assessor management - assignment to applications")[aria-disabled="true"]
+    And the user should see the element    jQuery=a:contains("Applications - All, submitted")[aria-disabled="true"]
 
 Milestones for the ready to Open Competitions
     [Documentation]    INFUND-7561
