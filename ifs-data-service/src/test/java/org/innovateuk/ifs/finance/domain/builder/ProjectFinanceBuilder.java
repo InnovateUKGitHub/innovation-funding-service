@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.domain.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.user.domain.Organisation;
 
 import java.util.List;
@@ -18,6 +19,11 @@ public class ProjectFinanceBuilder extends BaseBuilder<ProjectFinance, ProjectFi
     public ProjectFinanceBuilder withOrganisation(Organisation... value) {
         return withArray((v, finance) -> finance.setOrganisation(v), value);
     }
+
+    public ProjectFinanceBuilder withProject(Project... value) {
+        return withArray((v, finance) -> finance.setProject(v), value);
+    }
+
 
     private ProjectFinanceBuilder(List<BiConsumer<Integer, ProjectFinance>> newMultiActions) {
         super(newMultiActions);

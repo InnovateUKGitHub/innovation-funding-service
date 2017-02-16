@@ -463,7 +463,6 @@ Clicking cancel on the eligibility modal for partner
     And the user should see the checkbox    project-eligible
     And the user should see the element    jQuery=.button-secondary:contains("Return to finance checks")
 
-
 Confirming eligibility should show info on a readonly page for partner
     [Documentation]    INFUND-4839, INFUND-7574
     [Tags]

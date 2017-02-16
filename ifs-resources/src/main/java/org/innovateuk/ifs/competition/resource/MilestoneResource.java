@@ -6,7 +6,7 @@ public class MilestoneResource {
     private Long id;
     private MilestoneType type;
     private LocalDateTime date;
-    private Long competition;
+    private Long competitionId;
 
 
     public Long getId() {
@@ -33,11 +33,11 @@ public class MilestoneResource {
         this.date = date;
     }
 
-    public Long getCompetition() {
-        return competition;
+    public Long getCompetitionId() {
+        return competitionId;
     }
 
-    public void setCompetition(Long competition) {
-        this.competition = competition;
+    public void setCompetitionId(Long competitionId) {
+        this.competitionId = competitionId;
     }
 }
