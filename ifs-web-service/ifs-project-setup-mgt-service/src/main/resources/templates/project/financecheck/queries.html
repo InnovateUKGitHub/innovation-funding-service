@@ -24,7 +24,7 @@
     <h2 class="heading-medium">Finance Contact</h2>
     <p>
         <th:block th:text="${model.financeContactName}">Finance Contact</th:block> <br />
-        <a th:href="${'mailto:'+model.financeContactEmail}" th:text="${model.financeContactEmail}">example@example.com</a> <br />
+        <th:block th:text="${model.financeContactEmail}">example@example.com</th:block> <br />
         <th:block th:text="${model.financeContactPhoneNumber}">0</th:block>
     </p>
 
