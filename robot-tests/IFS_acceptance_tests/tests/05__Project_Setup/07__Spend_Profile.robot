@@ -476,6 +476,7 @@ PM can return edit rights to partners
     [Setup]  log in as a different user      ${PS_SP_APPLICATION_LEAD_PARTNER_EMAIL}  ${short_password}
     Given the user navigates to the page     ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Meembee_Id}/spend-profile/review
     When the user clicks the button/link     jQuery=.button:contains("Allow edits")
+    And the user clicks the button/link      jQuery=.button:contains("Allow partner to edit")
     Then the user navigates to the page      ${server}/project-setup/project/${PS_SP_APPLICATION_PROJECT}/partner-organisation/${Katz_Id}/spend-profile
     And the user should see the element      jQuery=.extra-margin-bottom tr:nth-child(2) td:nth-child(2):contains("In progress")
 
@@ -883,4 +884,5 @@ the user returns edit rights for the organisation
     [Arguments]    ${org_name}
     the user clicks the button/link    link=${org_name}
     the user clicks the button/link    jQuery=.button:contains("Allow edits")
+    the user clicks the button/link    jQuery=.button:contains("Allow partner to edit")
     the user should see the text in the page    In progress
