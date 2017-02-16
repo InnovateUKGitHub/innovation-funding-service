@@ -15,7 +15,6 @@ import org.innovateuk.ifs.user.resource.UserProfileStatusResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.UserRestService;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -119,7 +118,6 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    @Ignore
     public void dashboard_activeStartsToday() throws Exception {
         CompetitionParticipantResource participant = newCompetitionParticipantResource()
                 .withCompetitionParticipantRole(ASSESSOR)
@@ -370,10 +368,10 @@ public class AssessorDashboardControllerTest extends BaseControllerMockMVCTest<A
 
         List<AssessorDashboardPendingInviteViewModel> expectedPendingInvitesModel = participantResources.stream().map(competitionParticipantResource ->
                 new AssessorDashboardPendingInviteViewModel(
-                competitionParticipantResource.getInvite().getHash(),
-                competitionParticipantResource.getCompetitionName(),
-                competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
-                competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
+                        competitionParticipantResource.getInvite().getHash(),
+                        competitionParticipantResource.getCompetitionName(),
+                        competitionParticipantResource.getAssessorAcceptsDate().toLocalDate(),
+                        competitionParticipantResource.getAssessorDeadlineDate().toLocalDate())).collect(Collectors.toList());
 
         AssessorProfileStatusViewModel expectedAssessorProfileStatusViewModel = new AssessorProfileStatusViewModel(profileStatusResource);
 
