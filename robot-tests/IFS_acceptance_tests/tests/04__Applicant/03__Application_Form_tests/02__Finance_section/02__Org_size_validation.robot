@@ -140,7 +140,8 @@ The user marks their organisation as
     the user selects the radio button    financePosition-organisationSize  ${org_size}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user should not see the element  jQuery=.error-message
-    the user should see the text in the page    Each partner should submit their own project finances and funding rates
+    the user should see the text in the page    Please complete your project finances.
+
 
 the user completes the funding section with funding level
     [Arguments]    ${funding_level}
