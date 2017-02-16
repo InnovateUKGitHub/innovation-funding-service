@@ -7,6 +7,7 @@
 <th:block th:insert="fragments/layout :: body-start" />
 <th:block th:insert="fragments/layout :: global-header" />
 <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-submit" />
+<th:block th:insert="fragments/modals :: modal-confirm-allow-spend-profile-edits (orgName=${model.organisationName})"/>
 <th:block th:insert="fragments/modals :: modal-overlay" />
 
 <main id="content" class="no-grid">
@@ -334,10 +335,9 @@
 
             <th:block th:if="${model.leadPartner and model.markedAsComplete and !model.userPartOfThisOrganisation}">
                 <p class="extra-margin">You can still allow partners to edit their spend profile at this stage. Once this section has been marked as complete you can submit it to Innovate UK.</p>
-                <form method="post"
-                      th:action="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}">
-                    <button class="button button-secondary extra-margin" name="allow-edit">Allow edits</button>
-                </form>
+                <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/spend-profile/incomplete(projectId=${model.projectId},organisationId=${model.organisationId})}"
+                    class="button extra-margin" data-js-modal="modal-confirm-allow-spend-profile-edits">Allow edits
+                </a>
             </th:block>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

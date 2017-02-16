@@ -50,7 +50,7 @@ public class ApplicationAssessmentManagementControllerTest extends BaseControlle
                 .withAccepted(2L, 3L)
                 .withAssessors(3L, 4L)
                 .withSubmitted(1L, 2L).build(2);
-        when(competitionRestService.getCompetitionById(competitionResource.getId())).thenReturn(restSuccess(competitionResource));
+        when(competitionService.getById(competitionResource.getId())).thenReturn(competitionResource);
         when(applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionResource.getId())).thenReturn(restSuccess(summaryResources));
 
         ManageApplicationsViewModel model = (ManageApplicationsViewModel) mockMvc.perform(get("/assessment/competition/{competitionId}", competitionResource.getId()))

@@ -53,8 +53,26 @@ public class PastMonthYearDateValidatorTest {
     }
 
     @Test
+    public void testInvalidMonth() {
+        formInputResponse.setValue("13-2017");
+        validator.validate(formInputResponse, bindingResult);
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getAllErrors().size());
+        assertEquals("validation.standard.mm.yyyy.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
+    public void testInvalidMonth2() {
+        formInputResponse.setValue("0-2017");
+        validator.validate(formInputResponse, bindingResult);
+        assertTrue(bindingResult.hasErrors());
+        assertEquals(1, bindingResult.getAllErrors().size());
+        assertEquals("validation.standard.mm.yyyy.format", bindingResult.getAllErrors().get(0).getDefaultMessage());
+    }
+
+    @Test
     public void testFutureInput() {
-        String oneMonthInTheFuture = now().plusMonths(1).format(ofPattern("MM-yyyy"));
+        String oneMonthInTheFuture = now().plusMonths(1).format(ofPattern("MM-uuuu"));
         formInputResponse.setValue(oneMonthInTheFuture);
         validator.validate(formInputResponse, bindingResult);
         assertTrue(bindingResult.hasErrors());
@@ -64,8 +82,18 @@ public class PastMonthYearDateValidatorTest {
 
     @Test
     public void testNow() {
-        String now = now().format(ofPattern("MM-yyyy"));
+        String now = now().format(ofPattern("MM-uuuu"));
         formInputResponse.setValue(now);
+        validator.validate(formInputResponse, bindingResult);
+        assertFalse(bindingResult.hasErrors());
+    }
+
+    @Test
+    public void testValid() {
+        formInputResponse.setValue("01-2000");
+        validator.validate(formInputResponse, bindingResult);
+        assertFalse(bindingResult.hasErrors());
+        formInputResponse.setValue("12-2000");
         validator.validate(formInputResponse, bindingResult);
         assertFalse(bindingResult.hasErrors());
     }
