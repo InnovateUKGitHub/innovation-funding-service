@@ -204,10 +204,10 @@
                                         th:if="${model.competitionStatus.name() == 'IN_ASSESSMENT'}"
                                         class="button button-large">Close assessment
                                 </button>
-
                                 <button type="submit"
                                         th:case="'FUNDERS_PANEL'"
-                                        th:disabled="${!model.canManagefundingNotifications}"
+                                        th:disabled="${model.keyStatistics.canManageFundingNotifications == false}"
+                                        th:formaction="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
                                         class="button button-large">Manage funding notifications
                                 </button>
