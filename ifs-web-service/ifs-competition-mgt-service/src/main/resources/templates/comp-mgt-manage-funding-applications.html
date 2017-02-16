@@ -17,6 +17,75 @@
         <span>Manage funding applications</span>
     </h1>
 
+    <form>
+
+        <div class="grid-row sorting sorting-controls">
+            <div class="column-half">
+                <div class="form-group">
+                    <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+                </div>
+            </div>
+
+            <div class="column-half alignright">
+                <input type="hidden" name="comp" value="panel" />
+                <button class="button button-notification extra-margin-top" disabled="disabled">Write and send email</button>
+            </div>
+        </div>
+
+        <div class="table-overflow">
+            <table id="application-list">
+                <thead>
+                <tr>
+                    <th scope="col" id="select-applications-label">Select applications</th>
+                    <th scope="col">Application number</th>
+                    <th scope="col">Project title</th>
+                    <th scope="col">Lead</th>
+                    <th scope="col">Funding decision</th>
+                    <th scope="col">Email status</th>
+                    <th scope="col" class="alignright">Date sent</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="applicationSummary : ${model.content}">
+                    <td class="form-group-cell">
+                        <label class="block-label selection-button-checkbox" th:for="'application-' + ${applicationSummary.id}">
+                            <input type="checkbox" class="app-row-select row-successful" th:name="'application-' + ${applicationSummary.id}" th:id="'application-' + ${applicationSummary.id}" aria-labelledby="select-applications-label" />
+                            <small class="visibility-hidden">Select application</small>
+                        </label>
+                    </td>
+                    <td th:text="${#numbers.formatInteger(applicationSummary.id,8)}">194731</td>
+                    <td th:text="${applicationSummary.name}">Machine learning in robots</td>
+                    <td th:text="${applicationSummary.lead}">PWC</td>
+                    <th:block th:switch="${applicationSummary.fundingDecision}">
+                        <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).FUNDED}">Successful</td>
+                        <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNFUNDED}">Unsuccessful</td>
+                        <td th:case="${T(org.innovateuk.ifs.application.resource.FundingDecision).UNDECIDED}">Undecided</td>
+                        <td th:case="*">-</td>
+                    </th:block>
+                    <td th:text="${applicationSummary.manageFundingEmailDate} ? 'Sent' : '-'">-</td>
+                    <td class="alignright" th:text="${applicationSummary.manageFundingEmailDate} ? ${#temporals.format(applicationSummary.manageFundingEmailDate, 'dd MMMM yyyy')} : '-'">9 January 2017</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="grid-row sorting sorting-controls no-border">
+            <div class="column-half">
+                <div class="form-group">
+                    <span class="form-hint alignleft"><span class="applications-selected">0</span> applications selected</span>
+                </div>
+            </div>
+
+            <div class="column-half alignright">
+                <input type="hidden" name="comp" value="panel" />
+                <button class="button button-notification extra-margin-top" disabled="disabled">Write and send email</button>
+            </div>
+        </div>
+
+    </form>
+
+
+
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 

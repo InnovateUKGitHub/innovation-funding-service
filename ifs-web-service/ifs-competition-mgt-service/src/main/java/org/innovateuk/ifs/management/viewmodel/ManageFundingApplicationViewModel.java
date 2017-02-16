@@ -2,6 +2,10 @@ package org.innovateuk.ifs.management.viewmodel;
 
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+
+import java.util.Collections;
+import java.util.List;
 
 public class ManageFundingApplicationViewModel {
 
@@ -38,5 +42,9 @@ public class ManageFundingApplicationViewModel {
 
     public String getFilter() {
         return filter;
+    }
+
+    public List<ApplicationSummaryResource> getContent(){
+        return results != null ? results.getContent() : Collections.emptyList();
     }
 }
