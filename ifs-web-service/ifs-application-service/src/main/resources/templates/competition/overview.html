@@ -49,8 +49,7 @@
         <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
     </main>
 
-    <div th:include="fragments/layout :: footer" th:remove="tag" />
-    <div th:include="fragments/layout :: body-end" th:remove="tag" />
-
+    <th:block th:include="fragments/layout :: footer" />
+    <th:block th:include="fragments/layout :: body-end" />
 </body>
 </html>

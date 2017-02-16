@@ -14,9 +14,9 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
@@ -53,7 +53,7 @@ public class CompetitionController {
         sectionModelPopulators = populators.stream().collect(Collectors.toMap(p -> p.getType(), Function.identity()));
     }
 
-    @RequestMapping(value = {"/{competitionId}/overview", "/{competitionId}/overview/{section}"})
+    @GetMapping(value = {"/{competitionId}/overview", "/{competitionId}/overview/{section}"})
     public String competitionOverview(Model model,
                                       @PathVariable("competitionId") final Long competitionId,
                                       @PathVariable(name = "section", required = false) final Optional<String> section,
@@ -77,7 +77,7 @@ public class CompetitionController {
         return section.isPresent() && !selectedSection.isPresent();
     }
 
-    @RequestMapping(value = "/{competitionId}/download/{contentGroupId}", method = RequestMethod.GET)
+    @GetMapping(value = "/{competitionId}/download/{contentGroupId}")
     public ResponseEntity<ByteArrayResource> getFileDetails(Model model,
                                                             @PathVariable("competitionId") Long competitionId,
                                                             @PathVariable("contentGroupId") Long contentGroupId) {
@@ -86,7 +86,7 @@ public class CompetitionController {
         return getFileResponseEntity(resource, fileDetails);
     }
 
-    @RequestMapping("/{competitionId}/details")
+    @GetMapping("/{competitionId}/details")
     public String competitionDetails(Model model, @PathVariable("competitionId") final Long competitionId,
                                      HttpServletRequest request) {
         addUserToModel(model, request);
@@ -94,7 +94,7 @@ public class CompetitionController {
         return TEMPLATE_PATH + "details";
     }
 
-    @RequestMapping("/{competitionId}/info/{templateName}")
+    @GetMapping("/{competitionId}/info/{templateName}")
     public String getInfoPage(Model model, @PathVariable("competitionId") final Long competitionId,
                               HttpServletRequest request, @PathVariable("templateName") String templateName) {
         addUserToModel(model, request);

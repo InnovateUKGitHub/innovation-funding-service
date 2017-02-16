@@ -17,7 +17,7 @@ public interface MilestoneService {
             description = "All users can get see the public milestones for the given competition")
     ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(final Long id);
 
-    @PreAuthorize("hasAnyAuthority('system_registrar', 'comp_admin' , 'project_finance')")
+    @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
             description = "Only Comp Admins and project finance users can see all the milestones for the given competition")
     ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(final Long id);

@@ -19,36 +19,36 @@ public class MilestoneController {
     @Autowired
     private MilestoneService milestoneService;
 
-    @RequestMapping(value = "/{competitionId}/public", method = RequestMethod.GET)
+    @GetMapping(value = "/{competitionId}/public")
     public RestResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(
             @PathVariable("competitionId") final Long competitionId){
         return milestoneService.getAllPublicMilestonesByCompetitionId(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.GET)
+    @GetMapping(value = "/{competitionId}")
     public RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(
             @PathVariable("competitionId") final Long competitionId){
         return milestoneService.getAllMilestonesByCompetitionId(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{competitionId}/getByType", method = RequestMethod.GET)
+    @GetMapping(value = "/{competitionId}/getByType")
     public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@RequestParam("type") final MilestoneType type,
                                                                             @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.getMilestoneByTypeAndCompetitionId(type, competitionId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
+    @PostMapping(value = "/{competitionId}")
     public RestResult<MilestoneResource> create(@RequestParam("type") final MilestoneType type,
                                                 @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.create(type, competitionId).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/many", method = RequestMethod.PUT)
+    @PutMapping(value = "/many")
     public RestResult<Void> saveMilestones(@RequestBody final List<MilestoneResource> milestones) {
          return milestoneService.updateMilestones(milestones).toPutResponse();
     }
 
-    @RequestMapping(value = "/", method = RequestMethod.PUT)
+    @PutMapping(value = "/")
     public RestResult<Void> saveMilestone(@RequestBody final MilestoneResource milestone) {
         return milestoneService.updateMilestone(milestone).toPutResponse();
     }
