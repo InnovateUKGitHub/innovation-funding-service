@@ -38,7 +38,7 @@
     </th:block>
 
     <!-- ===========================Form: organisation_size =========================== -->
-    <th:block th:fragment="organisation_size" th:if="${model.finance.organisationType?.name == 'Business'}">
+    <th:block th:fragment="organisation_size">
         <div class="message-alert extra-margin-bottom" th:if="${model.organisationSizeAlert}">
             <h2 class="heading-small no-margin">Organisation size determines funding</h2>
             <p>The organisation size is used to calculate your funding level in the application.</p>
@@ -71,9 +71,7 @@
                 <!--/* view  */-->
                 <dl class="readonly-data">
                     <dt th:text="${formInput.description}">Organisation size</dt>
-                    <th:block  th:each="size : ${T(org.innovateuk.ifs.user.resource.OrganisationSize).values()}">
-                        <dd th:if="${size == model.finance.organisationFinanceSize}" th:text="${size.name}">Micro / small: claim up to 70%</dd>
-                    </th:block>
+                    <dd th:unless="${model.finance.organisationFinanceSize == null}" th:text="${model.finance.organisationFinanceSize.name}">Micro / small: claim up to 70%</dd>
                 </dl>
             </th:block>
         </th:block>
