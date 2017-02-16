@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.thread.service;
 
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
@@ -11,10 +12,12 @@ import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesServiceImpl;
 import org.innovateuk.ifs.threads.domain.Post;
 import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.user.builder.RoleBuilder;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
 import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
@@ -27,16 +30,19 @@ import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_MANAGER;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_PARTNER;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder.newPartnerOrganisation;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
@@ -45,7 +51,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest{
+public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
 
     private static final String webBaseUrl = "http://ifs-local-dev";
 
@@ -113,10 +119,19 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest{
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
 
@@ -155,10 +170,19 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest{
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
 
@@ -189,10 +213,19 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest{
                 withOrganisationSize(OrganisationSize.MEDIUM).
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).
                 build();
-        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
         Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
 
-        ProjectFinance pf = newProjectFinance().withProject(p).build();
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
 
         NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
 
@@ -230,17 +263,194 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest{
     @Test
     public void test_addPost() throws Exception {
         Long queryId = 1L;
-        PostResource post = new PostResource(null, newUserResource().withId(33L).build(), null, null, null);
-        Post mappedPost = new Post(null, newUser().withId(33L).build(), null, null, null);
-        Query targetedQuery = new Query(queryId, null, null, null, null, null, null);
+
+        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
+        Post mappedPost = new Post(null, user, null, null, null);
+        Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
 
         when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
 
         when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
 
+        when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
+
+        User u = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+        Organisation o = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
+        Application app = newApplication().withName("App1").build();
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
+
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+
+        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
+                                                                  "applicationName", "App1");
+
+        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
+                ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
+
+        assertTrue(service.addPost(post, queryId).isSuccess());
+
+        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+    }
+
+    @Test
+    public void test_addPostNotFinanceTeam() throws Exception {
+        Long queryId = 1L;
+        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.COMP_ADMIN).build())).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
+        Post mappedPost = new Post(null, user, null, null, null);
+        Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+
+        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+
+        when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
+
+        when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
+
         assertTrue(service.addPost(post, queryId).isSuccess());
 
     }
 
+    @Test
+    public void test_addPostSuperAddPostFails() throws Exception {
+        Long queryId = 1L;
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
+
+        when(queryRepositoryMock.findOne(queryId)).thenReturn(null);
+
+        assertTrue(service.addPost(post, queryId).isFailure());
+    }
+
+    @Test
+    public void test_addPostNoQueryToAddPostTo() throws Exception {
+        Long queryId = 1L;
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build(), null, null, null);
+
+        when(queryRepositoryMock.findOne(queryId)).thenReturn(null);
+
+        assertTrue(service.addPost(post, queryId).isFailure());
+    }
+
+    @Test
+    public void test_addPostNoFinanceContact() throws Exception {
+        Long queryId = 1L;
+        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
+        Post mappedPost = new Post(null, user, null, null, null);
+        Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+
+        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+
+        when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
+
+        when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
+
+        User u = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+        Organisation o = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
+        Application app = newApplication().withName("App1").build();
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).withApplication(app).build();
+
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+
+        assertTrue(service.addPost(post, queryId).isSuccess());
+    }
+
+    @Test
+    public void test_addPostNotificationNotSent() throws Exception {
+        Long queryId = 1L;
+        User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
+        PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
+        Post mappedPost = new Post(null, user, null, null, null);
+        Query targetedQuery = new Query(queryId, 22L, null, null, null, null, null);
+        QueryResource queryResource = new QueryResource(queryId, 22L, null, null, null, false, null);
+
+        when(queryRepositoryMock.findOne(queryId)).thenReturn(targetedQuery);
+
+        when(postMapper.mapToDomain(post)).thenReturn(mappedPost);
+
+        when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
+
+        User u = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+        Organisation o = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        User u2 = newUser().
+                withEmailAddress("Z@Y.com").
+                withFirstName("Z").
+                withLastName("Y").
+                build();
+        Organisation o2 = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT, PROJECT_PARTNER).withUser(u, u2).withOrganisation(o, o2).build(1);
+        Application app = newApplication().withName("App1").build();
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation()
+                .withOrganisation(o).build(1)).withApplication(app).build();
+
+        ProjectFinance pf = newProjectFinance().withProject(p).withOrganisation(o).build();
+
+        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId(),
+                "applicationName", "App1");
+
+        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target),
+                ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY_RESPONSE, expectedNotificationArguments);
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+
+        assertTrue(service.addPost(post, queryId).isFailure());
+    }
 
 }
