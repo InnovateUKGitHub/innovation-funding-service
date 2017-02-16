@@ -1,24 +1,14 @@
 package org.innovateuk.ifs.competition.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.BaseControllerMockMVCTest;
-import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
-import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseControllerIntegrationTest<CompetitionKeyStatisticsController> {
@@ -29,8 +19,9 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
         this.controller = controller;
     }
 
-    @Autowired
-    private CompetitionRepository competitionRepository;
+    @Mock
+    protected CompetitionKeyStatisticsService competitionKeyStatisticsService;
+
 
     @Before
     public void setup() {
@@ -81,11 +72,12 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
     public void getFundedKeyStatistics() throws Exception {
 
         CompetitionFundedKeyStatisticsResource keyStatisticsResource = controller.getFundedKeyStatistics(1L).getSuccessObject();
-        assertEquals(4L, keyStatisticsResource.getApplicationsSubmitted());
-        assertEquals(9L, keyStatisticsResource.getApplicationsFunded());
-        assertEquals(2L, keyStatisticsResource.getApplicationsNotFunded());
-        assertEquals(1L, keyStatisticsResource.getApplicationsOnHold());
-        assertEquals(1L, keyStatisticsResource.getApplicationsNotifiedOfDecision());
-        assertEquals(1L, keyStatisticsResource.getApplicationsAwaitingDecision());
+
+        assertEquals(5, keyStatisticsResource.getApplicationsSubmitted());
+        assertEquals(1, keyStatisticsResource.getApplicationsFunded());
+        assertEquals(1, keyStatisticsResource.getApplicationsNotFunded());
+        assertEquals(0, keyStatisticsResource.getApplicationsOnHold());
+        assertEquals(0, keyStatisticsResource.getApplicationsNotifiedOfDecision());
+        assertEquals(0, keyStatisticsResource.getApplicationsAwaitingDecision());
     }
 }

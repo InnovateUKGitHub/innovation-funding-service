@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
-import org.innovateuk.ifs.application.domain.ApplicationStatus;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.repository.ApplicationStatisticsRepository;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.util.EnumSet;
+import java.util.List;
 
 import static java.util.EnumSet.of;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
@@ -98,12 +99,25 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
     @Override
     public ServiceResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId) {
         CompetitionFundedKeyStatisticsResource competitionFundedKeyStatisticsResource = new CompetitionFundedKeyStatisticsResource();
-        competitionFundedKeyStatisticsResource.setApplicationsSubmitted(applicationRepository.countByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
-        competitionFundedKeyStatisticsResource.setApplicationsFunded(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.APPROVED.getId()));
-        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(applicationRepository.countByCompetitionIdAndApplicationStatusId(competitionId, ApplicationStatusConstants.REJECTED.getId()));
-        competitionFundedKeyStatisticsResource.setApplicationsOnHold(104); // TODO
-        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(105); // TODO
-        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(106); // TODO
+        List<Application> applications = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS);
+        competitionFundedKeyStatisticsResource.setApplicationsSubmitted(applications.size());
+        competitionFundedKeyStatisticsResource.setApplicationsFunded(
+                (int) applications.stream().filter(application -> {
+                    if (application.getFundingDecision() != null) {
+                        return application.getFundingDecision().equals(FundingDecisionStatus.FUNDED);
+                    }
+                    return false;
+                }).count());
+        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(
+                (int) applications.stream().filter(application -> {
+                    if (application.getFundingDecision() != null) {
+                        return application.getFundingDecision().equals(FundingDecisionStatus.UNFUNDED);
+                    }
+                    return false;
+                }).count());
+        competitionFundedKeyStatisticsResource.setApplicationsOnHold(0); // TODO
+        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(0); // TODO
+        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(0); // TODO
         return serviceSuccess(competitionFundedKeyStatisticsResource);
     }
 }
