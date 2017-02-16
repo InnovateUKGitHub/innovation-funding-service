@@ -1,21 +1,22 @@
 package org.innovateuk.ifs.commons.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.util.Either;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BinaryOperator;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.nullSafe;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.nullSafe;
 
 /**
  * Represents the result of an action, that will be either a failure or a success.  A failure will result in a FailureType, and a
@@ -124,6 +125,12 @@ public abstract class BaseEitherBackedResult<T, FailureType extends ErrorHolder>
         } catch (Exception e) {
             LOG.warn("Exception caught while processing failure function - throwing as a runtime exception", e);
             throw new RuntimeException(e);
+        }
+    }
+
+    public void ifSuccessful(Consumer<? super T> successHandler) {
+        if (isSuccess()) {
+            successHandler.accept(getSuccessObject());
         }
     }
 

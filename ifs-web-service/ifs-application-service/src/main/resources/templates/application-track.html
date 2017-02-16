@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Status'"  th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Status'" />
 </head>
 <body th:with="context='applicant'" class="app-track">
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Dashboard',linkClass='link-back',linkUrl=@{/applicant/dashboard}" />
 
     <div class="page-title">
-              <div th:include="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" th:remove="tag" />
+              <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
               <h1 class="heading-xlarge">Application status</h1>
     </div>
 
@@ -25,7 +25,7 @@
                     <div th:remove="tag" th:if="${currentApplication.submittedDate != null}">
                       on
                       <div th:remove="tag" th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
-                      <div th:include="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" th:remove="tag" />
+                      <th:block th:insert="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" />
                       at
                       <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
                     </div>
@@ -55,7 +55,7 @@
     				<h2 class="heading-medium">Decision notification</h2>
     				<p>You will be notified of our decision by
             <strong>
-              <div th:include="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" th:remove="tag" />
+              <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" />
               <div th:remove="tag" th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
               <div th:remove="tag" th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" />
             </strong>.
@@ -94,10 +94,10 @@
     	</li>
     </ul>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

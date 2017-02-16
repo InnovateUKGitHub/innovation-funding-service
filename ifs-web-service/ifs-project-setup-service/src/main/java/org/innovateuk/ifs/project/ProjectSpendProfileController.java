@@ -156,7 +156,7 @@ public class ProjectSpendProfileController {
 
 
     private final String saveSpendProfileSuccessView(Long projectId, Long organisationId, Long userId) {
-        final String urlSuffix = projectService.isProjectManager(userId, projectId) ? "/review" : "";
+        final String urlSuffix = projectService.isUserLeadPartner(projectId, userId) ? "/review" : "";
         return "redirect:/project/" + projectId + "/partner-organisation/" + organisationId + "/spend-profile" + urlSuffix;
 
     }
@@ -198,6 +198,17 @@ public class ProjectSpendProfileController {
         ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
         model.addAttribute("model", viewModel);
         return "project/spend-profile-confirm";
+    }
+
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @RequestMapping(value = "/incomplete", method = GET)
+    public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") Long projectId,
+                                              @PathVariable("organisationId") Long organisationId,
+                                              Model model,
+                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
+        model.addAttribute("model", viewModel);
+        return "project/spend-profile-confirm-edits";
     }
 
     private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,

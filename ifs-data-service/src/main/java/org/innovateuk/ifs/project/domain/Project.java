@@ -44,7 +44,7 @@ public class Project implements ProcessActivity {
     private Address address;
 
     @Min(0)
-    private Long durationInMonths; // in months
+    private Long durationInMonths;
 
     private String name;
 
