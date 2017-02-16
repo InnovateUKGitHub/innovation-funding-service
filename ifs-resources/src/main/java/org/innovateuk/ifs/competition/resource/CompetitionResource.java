@@ -75,6 +75,9 @@ public class CompetitionResource {
 
     private boolean useResubmissionQuestion;
 
+    private boolean nonIfs = false;
+    private String nonIfsUrl;
+
     public CompetitionResource() {
         // no-arg constructor
     }
@@ -504,5 +507,21 @@ public class CompetitionResource {
 
     public void setSetupComplete(Boolean setupComplete) {
         this.setupComplete = setupComplete;
+    }
+
+    public boolean isNonIfs() {
+        return nonIfs;
+    }
+
+    public void setNonIfs(boolean nonIfs) {
+        this.nonIfs = nonIfs;
+    }
+
+    public String getNonIfsUrl() {
+        return nonIfsUrl;
+    }
+
+    public void setNonIfsUrl(String nonIfsUrl) {
+        this.nonIfsUrl = nonIfsUrl;
     }
 }
