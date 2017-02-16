@@ -48,7 +48,6 @@ public class ApplicationServiceImpl implements ApplicationService {
         if (applicationId == null) {
             return null;
         }
-
         return applicationRestService.getApplicationById(applicationId).getSuccessObjectOrThrowException();
     }
 

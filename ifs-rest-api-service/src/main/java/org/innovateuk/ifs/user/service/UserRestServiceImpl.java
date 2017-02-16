@@ -37,7 +37,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
         if(StringUtils.isEmpty(uid))
             return restFailure(CommonErrors.notFoundError(UserResource.class, uid));
 
-        return getWithRestResult(userRestURL + "/uid/" + uid, UserResource.class);
+        return getWithRestResultAnonymous(userRestURL + "/uid/" + uid, UserResource.class);
     }
 
     @Override
@@ -76,7 +76,7 @@ public class UserRestServiceImpl extends BaseRestService implements UserRestServ
             return restFailure(CommonErrors.notFoundError(UserResource.class, email));
         }
 
-        return getWithRestResult(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
+        return getWithRestResultAnonymous(userRestURL + "/findByEmail/" + email + "/", UserResource.class);
     }
 
     @Override

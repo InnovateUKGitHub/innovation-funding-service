@@ -49,11 +49,11 @@
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'ludlow'}">
-            From this page you are able to invite and remove contributors from Ludlow.
+            From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'eggs'}">
-            From this page you are able to invite and remove contributors from EGGS.
+            From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners
           </th:block>
 
           <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
@@ -103,8 +103,9 @@
               <thead>
                 <tr>
                   <th class="width-30-percent">Applicant</th>
-                  <th class="width-50-percent">Email</th>
-                  <th class="width-20-percent">Status</th>
+                  <th class="width-40-percent">Email</th>
+                  <th class="width-15-percent">Status</th>
+                  <th class="width-15-percent alignright" th:text="${(param.user != null and param.user[0] == 'nonLead') ? '' : 'Actions'}">ACTION HEADER</th>
                 </tr>
               </thead>
               <tbody>
@@ -112,11 +113,13 @@
                   <td>Jessica Doe</td>
                   <td>jessica.dow@ludlow.com</td>
                   <td></td>
+                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
                 </tr>
                 <tr>
                   <td>Ryan Dell</td>
                   <td>ryan.dell@ludlow.com</td>
                   <td>Invite pending</td>
+                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
                 </tr>
               </tbody>
             </table>
@@ -132,8 +135,9 @@
               <thead>
                 <tr>
                   <th class="width-30-percent">Applicant</th>
-                  <th class="width-50-percent">Email</th>
-                  <th>Status</th>
+                  <th class="width-40-percent">Email</th>
+                  <th class="width-15-percent">Status</th>
+                  <th class="width-15-percent alignright" th:text="${(param.user != null and param.user[0] == 'nonLead') ? '' : 'Actions'}">ACTION HEADER</th>
                 </tr>
               </thead>
               <tbody>
@@ -141,13 +145,14 @@
                   <td>Paul Tom</td>
                   <td>paul.tom@eggs.com</td>
                   <td></td>
+                  <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]}}" th:unless="${param.user != null and param.user[0] == 'nonLead'}">Remove</a></td>
                 </tr>
               </tbody>
             </table>
           </div>
         </th:block>
 
-        <p th:unless="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg' or param.status != null and param.status[0] == 'firstLoad'}">
+        <p th:unless="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg'}">
           <a th:href="@{'?action=addApplicant&#38;company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Add new applicant</a>
         </p>
 
