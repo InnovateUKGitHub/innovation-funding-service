@@ -3,6 +3,7 @@ package org.innovateuk.ifs.assessment.controller;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.model.UpcomingCompetitionModelPopulator;
 import org.innovateuk.ifs.assessment.viewmodel.UpcomingCompetitionViewModel;
+import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -51,23 +52,23 @@ public class UpcomingCompetitionControllerTest extends BaseControllerMockMVCTest
 
         UpcomingCompetitionViewModel expectedViewModel = new UpcomingCompetitionViewModel(competitionResource);
 
-        when(competitionRestService.getCompetitionById(1L)).thenReturn(restSuccess(competitionResource));
+        when(competitionService.getById(1L)).thenReturn(competitionResource);
 
         mockMvc.perform(get(restUrl + "/{competitionId}/upcoming", "1"))
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(status().isOk());
 
-        verify(competitionRestService).getCompetitionById(1L);
+        verify(competitionService).getById(1L);
     }
 
     @Test
     public void viewSummary_competitionNotExists() throws Exception {
-        when(competitionRestService.getCompetitionById(1L)).thenReturn(restFailure(notFoundError(CompetitionResource.class, "notExistId")));
+        when(competitionService.getById(1L)).thenThrow(new ObjectNotFoundException());
 
         mockMvc.perform(get(restUrl + "/{competitionId}/upcoming", "1"))
                 .andExpect(model().attributeDoesNotExist("model"))
                 .andExpect(status().isNotFound());
 
-        verify(competitionRestService).getCompetitionById(1L);
+        verify(competitionService).getById(1L);
     }
 }

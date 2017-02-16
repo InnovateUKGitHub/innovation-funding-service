@@ -25,9 +25,17 @@ configurations {
     providedRuntime
 }
 
+//
+// Workaround for https://github.com/spring-projects/spring-boot/issues/8308
+// Can reinstate excludeDevtools in the bootRepackage task in next release
+//
+springBoot {
+    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+}
+
 bootRepackage {
     mainClass = 'org.innovateuk.ifs.Application'
-    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
+//    excludeDevtools = !(project.hasProperty('cloud') && cloud == 'development');
 }
 
 ext {
@@ -103,7 +111,7 @@ dependencies {
     compile "org.apache.httpcomponents:httpasyncclient"
     compile "com.google.guava:guava:19.0"
     compile "commons-io:commons-io:2.4"
-    compile 'org.jsoup:jsoup:1.9.1'
+    compile 'org.jsoup:jsoup:1.10.2'
     compile "net.sf.opencsv:opencsv:2.3"
     compile "org.xhtmlrenderer:flying-saucer-core:9.1.0"
     compile "org.xhtmlrenderer:flying-saucer-pdf:9.1.0"

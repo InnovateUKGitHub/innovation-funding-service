@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Project details'}, ${'/prototypes/1575-project-details'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" th:remove="tag" />
-	
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project details'})" />
+
 	<form action="#">
 
 		<fieldset>
@@ -28,7 +28,7 @@
 			<legend class="visuallyhidden">Target project start date</legend>
 
 			<p>Please select the date you want the project to start. Projects must start on the first day of a month.</p>
-			
+
 			<p><strong>Please remember the project can start only when:</strong></p>
 
 			<ul class="list list-bullet">
@@ -40,7 +40,7 @@
 			<p>Please consider the above information when selecting your target start date. The above processes must be complete before your project can begin.</p>
 
 			<p>If required, the start date can be changed later.</p>
-			
+
 			<div class="date-group extra-margin">
 				<div class="day">
 					<label class="form-label" for="start-day">
@@ -67,21 +67,21 @@
 			<h3 class="heading-medium">Project duration</h3>
 
 			<p>Project duration stated in your application: <br /><strong>9 months</strong></p>
-			
+
 			<button class="button button-large" formaction="/prototypes/1575-project-details">Save</button>
 
 		</fieldset>
 
 	</form>
 
-	
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 <script type="text/javascript">
 	// <![CDATA[

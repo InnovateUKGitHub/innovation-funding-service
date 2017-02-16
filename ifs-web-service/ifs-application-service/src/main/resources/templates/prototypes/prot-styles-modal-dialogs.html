@@ -29,7 +29,7 @@
     Modal dialogs
   </h1>
 
-  <th:block th:include="prototypes/fragments/prot-elements :: prot-snippet('modal-dialogs')"  />
+  <th:block th:include="prototypes/fragments/prot-elements :: prot-snippet('modal-dialogs')" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -42,7 +42,12 @@
 
 <script type="text/javascript">
 	// <![CDATA[
-
+  jQuery(document).ready(function() {
+    jQuery('.modal-overlay').hide();
+    jQuery('.button, .button-link, .close').on('click', function (e) {
+      jQuery('.modal-overlay').toggle();
+    });
+  });
 	// ]]>
 </script>
 </body>

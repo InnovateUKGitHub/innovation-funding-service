@@ -192,6 +192,16 @@ public class CompetitionResourceBuilder extends BaseBuilder<CompetitionResource,
         return with(competition -> setField("sectionSetupStatus", sectionSetupStatus, competition));
     }
 
+    public CompetitionResourceBuilder withNonIfs(Boolean... nonIfs) {
+        return withArraySetFieldByReflection("nonIfs", nonIfs);
+    }
+
+    public CompetitionResourceBuilder withNonIfsUrl(String... nonIfsUrl) {
+        return withArraySetFieldByReflection("nonIfsUrl", nonIfsUrl);
+    }
+
+
+
     @Override
     protected CompetitionResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, CompetitionResource>> actions) {
         return new CompetitionResourceBuilder(actions);

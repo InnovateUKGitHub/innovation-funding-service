@@ -1,32 +1,31 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
 </head>
 <body th:with="context='comp-management'" class="competition-management application-funders-panel">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" class="full-width">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
             <div class="page-title">
-                <div th:include="fragments/competition-management :: competition-id(competition=${competitionSummary})" th:remove="tag" />
+                <th:block th:insert="fragments/competition-management :: competition-id(competition=${competitionSummary})" />
                 <h1 class="heading-xlarge" th:text="${competitionSummary.competitionName}" />
             </div>
       </div>
       <div class="column-third alignright extra-margin">
-        <div th:include="fragments/competition-management :: competition-status(competition=${competitionSummary})" th:remove="tag" />
+        <th:block th:insert="fragments/competition-management :: competition-status(competition=${competitionSummary})" />
       </div>
   </div>
 
     <div th:if="${fundingNotDecidedForAllApplications}" class="event-alert">
         <p><span>A funding decision is required for all applications to the competition.</span></p>
     </div>
-
     <div class="grid-row competition-data">
           <form method="get">
 				<input type="hidden" name="tab" th:if="${activeTab != null}" th:value="${activeTab}" />
@@ -40,7 +39,6 @@
 			    </div>
 
 			</form>
-
     <form method="post" id="submit-funding-decision-form" th:action="@{''}">
         <div class="grid-row sorting sorting-controls">
             <div class="column-half">
@@ -67,8 +65,7 @@
             </div>
         </div>
         <div class="table-overflow">
-          <div th:include="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" th:remove="tag" />
-
+            <th:block th:insert="fragments/competition-management :: applications-table(competition=${competitionSummary},results=${results})" />
           <p class="alignright-button">
             <button id="notify-applicants" type="submit" class="visuallyhidden" name="action" value="notify">Notify applicants</button>
             <button id="save-funding-decision" type="submit" class="button button-secondary no-margin" name="action" value="save">Save</button>
@@ -101,15 +98,15 @@
 
     </form>
     <form method="get">
-        <div th:include="fragments/competition-management :: applications-pagination(results=${results})" th:remove="tag" />
+        <th:block th:insert="fragments/competition-management :: applications-pagination(results=${results})" />
     </form>
 </div>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

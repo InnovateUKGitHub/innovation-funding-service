@@ -27,12 +27,12 @@ public class AlertRestServiceImpl extends BaseRestService implements AlertRestSe
 
     @Override
     public RestResult<List<AlertResource>> findAllVisible() {
-        return getWithRestResult(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType());
+        return getWithRestResultAnonymous(alertRestURL + "/findAllVisible", ParameterizedTypeReferences.alertResourceListType());
     }
 
     @Override
     public RestResult<List<AlertResource>> findAllVisibleByType(AlertType type) {
-        return getWithRestResult(alertRestURL + "/findAllVisible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
+        return getWithRestResultAnonymous(alertRestURL + "/findAllVisible/" + type.name(), ParameterizedTypeReferences.alertResourceListType());
     }
 
     @Override

@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Handles the Competition Management Funding decision views and submission of funding decision.
