@@ -160,8 +160,7 @@
                         <li>
                             <a class="disabled" aria-disabled="true"
                                th:if="${model.competitionStatus.name() == 'READY_TO_OPEN'}">Applications - All, submitted</a>
-                            <a class=""
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
+                            <a th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
                                th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications - All, submitted</a>
                         </li>
                         <li>
@@ -170,15 +169,13 @@
                         <li>
                             <a class="disabled" aria-disabled="true"
                                th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}">Assessor management - assignment to applications</a>
-                            <a class=""
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}"
+                            <a th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}"
                                th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Assessor management - assignment to applications</a>
                         </li>
                         <li>
                             <a class="disabled" aria-disabled="true"
                                th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}">Input and review funding decision</a>
-                            <a class=""
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}"
+                            <a th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}"
                                th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}">Input and review funding decision</a>
                         </li>
                     </ul>
