@@ -18,9 +18,9 @@ Back to the dashboard link
     ...    INFUND-7060
     Given The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your declaration of interest")    #this checks the alert message on the top of the page
     When the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    And The user should see the text in the element    css=p:nth-child(5)    Not answered
-    And The user should see the text in the element    css=p:nth-child(15)    Not answered
-    And the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
+    And The user should see the text in the element    css=p:nth-child(4)    Not answered
+    And The user should see the text in the element    css=p:nth-child(14)    Not answered
+    And the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
 
 Server-side validations when No selected at yes/no
@@ -29,7 +29,7 @@ Server-side validations when No selected at yes/no
     ...    INFUND-7060
     [Tags]    HappyPath
     Given the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    When the user clicks the button/link    jQuery=a:contains("Edit your declaration of interest")
+    When the user clicks the button/link    jQuery=a:contains("Edit")
     Then the user clicks the button/link    jQuery=button:contains("Save")
     Then The user should see a summary error    Please correct the errors in the form below.
     And the user should see a field error    Please enter a principal employer.
@@ -85,11 +85,11 @@ Successful save for the DOI form
     And the user should see the text in the page    Innovate
     And the user should see the text in the page    Director
     And the user should see the text in the page    My interests
-    When the user clicks the button/link    jQuery=a:contains("Back to assessor dashboard")
+    When the user clicks the button/link    jQuery=a:contains("Assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     And the user should not see the element    jQuery=.message-alert a:contains('your declaration of interest')    #his checks the alert message on the top od the page
     And the user clicks the button/link    jQuery=a:contains("your declaration of interest")
-    And the user clicks the button/link    jQuery=a:contains("Edit your declaration of interest")
+    And the user clicks the button/link    jQuery=a:contains("Edit")
     And the user should see the correct inputs in the declaration form
 
 *** Keywords ***
