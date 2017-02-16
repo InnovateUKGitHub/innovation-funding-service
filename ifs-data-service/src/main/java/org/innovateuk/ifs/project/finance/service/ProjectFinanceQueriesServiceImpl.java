@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.project.finance.service;
 
+
 import org.innovateuk.ifs.application.domain.Application;
-import org.innovateuk.ifs.commons.security.NotSecured;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
@@ -23,12 +23,21 @@ import org.springframework.stereotype.Service;
 
 import java.util.*;
 
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.NOTIFICATIONS_UNABLE_TO_SEND_SINGLE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.innovateuk.ifs.util.CollectionFunctions.getOnlyElementOrEmpty;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 
 @Service
 public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesService {
@@ -47,14 +56,15 @@ public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesSe
     @Value("${ifs.web.baseURL}")
     private String webBaseUrl;
 
+    public enum Notifications {
+        NEW_FINANCE_CHECK_QUERY,
+        NEW_FINANCE_CHECK_QUERY_RESPONSE
+    }
+
+
     @Autowired
     public ProjectFinanceQueriesServiceImpl(QueryRepository queryRepository, QueryMapper queryMapper, PostMapper postMapper) {
         service = new MappingThreadService<>(queryRepository, queryMapper, postMapper, ProjectFinance.class);
-    }
-
-    @Override
-    public ServiceResult<Long> create(QueryResource query) {
-        return service.create(query);
     }
 
     @Override
@@ -91,6 +101,30 @@ public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesSe
         }
         return result;
     }
+
+    @Override
+    public ServiceResult<Long> create(QueryResource query) {
+        ServiceResult<Long> result = service.create(query);
+        if (result.isSuccess()) {
+            ServiceResult<ProjectFinance> projectFinance = find(projectFinanceRepository.findOne(query.contextClassPk), notFoundError(ProjectFinance.class, query.contextClassPk));
+            if (projectFinance.isSuccess()) {
+                Long projectId = projectFinance.getSuccessObject().getProject().getId();
+                List<ProjectUser> projectUsers = projectFinance.getSuccessObject().getProject().getProjectUsers();
+
+                List<ProjectUser> financeContacts = simpleFilter(projectUsers, pu -> pu.getRole().isFinanceContact());
+                Optional<ProjectUser> financeContact = getOnlyElementOrEmpty(financeContacts);
+                if (financeContact.isPresent()) {
+                    ServiceResult<Void> notificationResult = sendNewQueryNotification(financeContact.get().getUser(), projectId);
+
+                    if (!notificationResult.isSuccess()) {
+                        return serviceFailure(NOTIFICATIONS_UNABLE_TO_SEND_SINGLE);
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     private ServiceResult<Void> sendResponseNotification(User financeContact, Project project) {
         NotificationSource from = systemNotificationSource;
         String fullName = financeContact.getName();
@@ -108,5 +142,17 @@ public class ProjectFinanceQueriesServiceImpl implements ProjectFinanceQueriesSe
 
     }
 
-    public enum Notifications {NEW_FINANCE_CHECK_QUERY_RESPONSE}
+    private ServiceResult<Void> sendNewQueryNotification(User financeContact, Long projectId) {
+
+        NotificationSource from = systemNotificationSource;
+        String fullName = financeContact.getName();
+
+        NotificationTarget pmTarget = new ExternalUserNotificationTarget(fullName, financeContact.getEmail());
+
+        Map<String, Object> notificationArguments = new HashMap<>();
+        notificationArguments.put("dashboardUrl", webBaseUrl + "/project-setup/project/" + projectId);
+
+        Notification notification = new Notification(from, singletonList(pmTarget), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, notificationArguments);
+        return notificationService.sendNotification(notification, EMAIL);
+    }
 }

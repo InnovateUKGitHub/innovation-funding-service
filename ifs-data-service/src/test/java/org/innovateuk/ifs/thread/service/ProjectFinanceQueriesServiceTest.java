@@ -61,6 +61,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
     public void before() {
         ReflectionTestUtils.setField(service, "webBaseUrl", webBaseUrl);
     }
+
     @Test
     public void test_findOne() throws Exception {
         Long queryId = 1L;
@@ -96,7 +97,6 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
         assertEquals(queryResources, response);
     }
 
-
     @Test
     public void test_create() throws Exception {
         QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
@@ -109,15 +109,133 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
         QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
         when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
 
+        User u = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+        Organisation o = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
+
+        ProjectFinance pf = newProjectFinance().withProject(p).build();
+
+        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
+
+        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceSuccess());
 
         Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
 
         assertEquals(result, Long.valueOf(1L));
+
+        verify(notificationServiceMock).sendNotification(notification, EMAIL);
+    }
+
+    @Test
+    public void test_createNoFinanceContact() throws Exception {
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
+
+        Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
+
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
+
+        User u = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+        Organisation o = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_MANAGER).withUser(u).withOrganisation(o).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
+
+        ProjectFinance pf = newProjectFinance().withProject(p).build();
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+
+        Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
+
+        assertEquals(result, Long.valueOf(1L));
+
+    }
+
+    @Test
+    public void test_createNotificationNotSent() throws Exception {
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
+
+        Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
+
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
+
+        User u = newUser().
+                withEmailAddress("a@b.com").
+                withFirstName("A").
+                withLastName("B").
+                build();
+        Organisation o = newOrganisation().
+                withOrganisationSize(OrganisationSize.MEDIUM).
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).
+                build();
+        List<ProjectUser> pu = newProjectUser().withRole(PROJECT_FINANCE_CONTACT).withUser(u).withOrganisation(o).build(1);
+        Project p = newProject().withProjectUsers(pu).withPartnerOrganisations(newPartnerOrganisation().withOrganisation(o).build(1)).build();
+
+        ProjectFinance pf = newProjectFinance().withProject(p).build();
+
+        NotificationTarget target = new ExternalUserNotificationTarget(u.getName(), u.getEmail());
+
+        Map<String, Object> expectedNotificationArguments = asMap("dashboardUrl", "http://ifs-local-dev/project-setup/project/" + p.getId());
+
+        Notification notification = new Notification(systemNotificationSourceMock, singletonList(target), ProjectFinanceQueriesServiceImpl.Notifications.NEW_FINANCE_CHECK_QUERY, expectedNotificationArguments);
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(pf);
+        when(notificationServiceMock.sendNotification(notification, EMAIL)).thenReturn(serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+
+        assertEquals(false, service.create(queryToCreate).isSuccess());
+
+    }
+
+    @Test
+    public void test_createNoProjectFinance() throws Exception {
+        QueryResource queryToCreate = new QueryResource(null, 22L, null, null, null, false, null);
+        Query queryToCreateAsDomain = new Query(null, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryMapper.mapToDomain(queryToCreate)).thenReturn(queryToCreateAsDomain);
+
+        Query savedQuery = new Query(1L, 22L, ProjectFinance.class.getName(), null, null, null, null);
+        when(queryRepositoryMock.save(queryToCreateAsDomain)).thenReturn(savedQuery);
+
+        QueryResource createdQuery = new QueryResource(1L, 22L, null, null, null, false, null);
+        when(queryMapper.mapToResource(savedQuery)).thenReturn(createdQuery);
+
+        when(projectFinanceRepositoryMock.findOne(22L)).thenReturn(null);
+
+        Long result = service.create(queryToCreate).getSuccessObjectOrThrowException();
+
+        assertEquals(result, Long.valueOf(1L));
+
     }
 
     @Test
     public void test_addPost() throws Exception {
         Long queryId = 1L;
+
         User user = newUser().withId(33L).withRoles(asList(RoleBuilder.newRole(UserRoleType.PROJECT_FINANCE).build())).build();
         PostResource post = new PostResource(null, newUserResource().withId(33L).withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.PROJECT_FINANCE).build())).build(), null, null, null);
         Post mappedPost = new Post(null, user, null, null, null);
@@ -177,6 +295,7 @@ public class ProjectFinanceQueriesServiceTest extends BaseUnitTestMocksTest {
         when(queryMapper.mapToResource(targetedQuery)).thenReturn(queryResource);
 
         assertTrue(service.addPost(post, queryId).isSuccess());
+
     }
 
     @Test
