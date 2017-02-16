@@ -1,6 +1,7 @@
-package org.innovateuk.ifs.commons.resource;
+package org.innovateuk.ifs.commons.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
+import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
 import java.util.function.BiConsumer;
@@ -19,7 +20,7 @@ public abstract class PageResourceBuilder<T extends PageResource, S extends Page
         return withArraySetFieldByReflection("totalPages", totalPages);
     }
 
-    public S withContent(List<T>... content) {
+    public S withContent(List<?>... content) {
         return withArraySetFieldByReflection("content", content);
     }
 
