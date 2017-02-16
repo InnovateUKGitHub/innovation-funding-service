@@ -47,6 +47,6 @@ public class MilestoneRestServiceImpl extends BaseRestService implements Milesto
 
     @Override
     public RestResult<MilestoneResource> create(MilestoneType type, Long competitionId) {
-        return postWithRestResult(milestonesRestURL + "/" + competitionId, type, MilestoneResource.class);
+        return postWithRestResult(milestonesRestURL + "/" + competitionId + "?type=" + type, MilestoneResource.class);
     }
 }

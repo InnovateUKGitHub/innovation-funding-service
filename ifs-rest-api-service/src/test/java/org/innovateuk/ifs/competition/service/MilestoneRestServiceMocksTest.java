@@ -14,6 +14,7 @@ import java.util.List;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.milestoneResourceListType;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.springframework.http.HttpStatus.CREATED;
 
 public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<MilestoneRestServiceImpl> {
 
@@ -64,16 +65,18 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
 
     @Test
     public void test_createMilestone() {
-        MilestoneResource milestone = new MilestoneResource();
-        milestone.setId(3L);
-        milestone.setType(MilestoneType.OPEN_DATE);
-        milestone.setCompetition(newCompetitionId);
+        MilestoneResource milestoneResource = new MilestoneResource();
+        milestoneResource.setId(3L);
+        milestoneResource.setType(MilestoneType.OPEN_DATE);
+        milestoneResource.setCompetitionId(newCompetitionId);
 
-        setupPostWithRestResultExpectations(milestonesRestURL + "/" + newCompetitionId, MilestoneResource.class, MilestoneType.OPEN_DATE, milestone, HttpStatus.OK);
+        String url = milestonesRestURL + "/" + newCompetitionId + "?type=" + MilestoneType.OPEN_DATE;
+
+        setupPostWithRestResultExpectations(url, MilestoneResource.class, null, milestoneResource, CREATED);
 
         MilestoneResource response = service.create(MilestoneType.OPEN_DATE, newCompetitionId).getSuccessObject();
         assertNotNull(response);
-        Assert.assertEquals(milestone, response);
+        Assert.assertEquals(milestoneResource, response);
     }
 
     @Test
@@ -131,7 +134,7 @@ public class MilestoneRestServiceMocksTest extends BaseRestServiceUnitTest<Miles
         milestone.setId(id);
         milestone.setType(type);
         milestone.setDate(date);
-        milestone.setCompetition(competitionId);
+        milestone.setCompetitionId(competitionId);
         return milestone;
     }
 }

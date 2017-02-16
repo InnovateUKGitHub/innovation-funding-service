@@ -32,13 +32,13 @@ public class MilestoneController {
     }
 
     @RequestMapping(value = "/{competitionId}/getByType", method = RequestMethod.GET)
-    public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@RequestParam final MilestoneType type,
+    public RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(@RequestParam("type") final MilestoneType type,
                                                                             @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.getMilestoneByTypeAndCompetitionId(type, competitionId).toGetResponse();
     }
 
     @RequestMapping(value = "/{competitionId}", method = RequestMethod.POST)
-    public RestResult<MilestoneResource> create(@RequestBody final MilestoneType type,
+    public RestResult<MilestoneResource> create(@RequestParam("type") final MilestoneType type,
                                                 @PathVariable("competitionId") final Long competitionId) {
         return milestoneService.create(type, competitionId).toPostCreateResponse();
     }
