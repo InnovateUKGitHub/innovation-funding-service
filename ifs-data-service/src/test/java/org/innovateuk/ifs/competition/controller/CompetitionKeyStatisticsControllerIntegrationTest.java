@@ -74,8 +74,8 @@ public class CompetitionKeyStatisticsControllerIntegrationTest extends BaseContr
         CompetitionFundedKeyStatisticsResource keyStatisticsResource = controller.getFundedKeyStatistics(1L).getSuccessObject();
 
         assertEquals(5, keyStatisticsResource.getApplicationsSubmitted());
-        assertEquals(1, keyStatisticsResource.getApplicationsFunded());
-        assertEquals(1, keyStatisticsResource.getApplicationsNotFunded());
+        assertEquals(0, keyStatisticsResource.getApplicationsFunded());
+        assertEquals(0, keyStatisticsResource.getApplicationsNotFunded());
         assertEquals(0, keyStatisticsResource.getApplicationsOnHold());
         assertEquals(0, keyStatisticsResource.getApplicationsNotifiedOfDecision());
         assertEquals(0, keyStatisticsResource.getApplicationsAwaitingDecision());
