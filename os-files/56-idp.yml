@@ -17,7 +17,7 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: 721685138178.dkr.ecr.eu-west-2.amazonaws.com/innovateuk/ifs-shib-idp:0.2.0
+        - image: docker-registry-default.apps.prod.ifs-test-clusters.com/innovateuk/ifs-shib-idp:0.2.0
           name: idp
           imagePullPolicy: IfNotPresent
           env:

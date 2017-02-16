@@ -22,7 +22,7 @@ items:
             value: "8389"
           - name: LDAPSSLPORT
             value: "8636"
-          image: 721685138178.dkr.ecr.eu-west-2.amazonaws.com/innovateuk/ifs-ldap:0.2.1
+          image: docker-registry-default.apps.prod.ifs-test-clusters.com/innovateuk/ifs-ldap:0.2.1
           name: ldap
           imagePullPolicy: IfNotPresent
           ports:

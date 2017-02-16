@@ -12,7 +12,9 @@ else
 fi
 
 ROUTE_DOMAIN=apps.$HOST
-REGISTRY=721685138178.dkr.ecr.eu-west-2.amazonaws.com
+REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
+#REGISTRY=docker-registry-default.apps.dev.ifs-test-clusters.com
+
 
 echo "Deploying the $PROJECT Openshift PROJECTironment"
 
@@ -51,8 +53,6 @@ function useContainerRegistry() {
         ${REGISTRY}/innovateuk/application-service:1.0-$PROJECT
     docker tag innovateuk/shib-init:1.0-SNAPSHOT \
         ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT
-
-    docker login -u AWS -p AQECAHhNDzWVnYGylK3tUalHANpmrnQza5w4W4cHYMU82tbNIwAAAyEwggMdBgkqhkiG9w0BBwagggMOMIIDCgIBADCCAwMGCSqGSIb3DQEHATAeBglghkgBZQMEAS4wEQQMVFtyjirJJII8+LhmAgEQgIIC1MWJ8OP82l1WT2lgElhPG+A3fsqtbV+wL4dOkuA8f7ZExPrDeTot+RcMuaJAMPYpud+Bc6U3CCXdBT87hFsf6rJBHwHQQ5H2TV7TNhuNcDHea2FwkQlv8L4CuajohE/BCZsPmtdnCU7yWKmeMLKFIt9ugDeDRDDlPEcGL+yH/PKVbldzY/SAIdSQDAUyrNGiVB/NDjhDKPZNbYNEqlZl0EBqwnkIStFrW4PRsEmOLsYmXgBJqYZB8KXshVBp8kHZzAWnSri9XSCxfKPFAwXnldnVBsDSzzEPInH0TC7YPw+MffIqIGMfgnrQypF0yhij0SQVJZolIRPIOkjlFa5OO/+JqmPdEaHq3GyVtFJaKUPg4gQm1zd1rF6I6SON4/wFjRUYlawPH8Q9fZeASzyetoamUcQT1HjjY/SEYgnewr6RBN2oRfzOZG02wWou9PS36Hjej1LgmWBdZ7tKvfGXgm5x77M1CcchIvuf5unTIjWpmnzu9LlRFJVIWTmRh0E0KC6sr+9pjHkGbgV4YwjOhEXrp2QAbNQEwCRru8tedYOFrhz7IsZbq67IhrbWb+PcV27wPgdGGm+6obBNOeINBcNBfv9qlGkp2iWO2dktgoRPg0WGkTrjoOSdK6r7ZsVTflDC68kjGIIS0B9SLkAp/INM5ywBnW0obg9eUll6J8CwWnRPfsmkeMfoZxlyjmwF0p+iKRqgYuSTAGT8vLjqxcBr2FPnGkQ4U+DwiW3TwTxx6d1CBJqRe1W2qEnVhdwO509ty+9SiYiipQfEq7FA+POkQK6UienYbEhjYBkaIVZ/Xgi6z4hoYA2i35y8U5ByPt5KbxBAlNgAAtt/7PmgsKE4C3wwMVME2Uu35aBaWX2jklwh17gWRMciHQ0WVkZIRKZDiyK/szZxGbflIA5hp/p9U+yhkwJlkb2AWCnIRWBmp4nMD0lR1rU2SnJhaIUva6aMxoo= -e none https://721685138178.dkr.ecr.eu-west-2.amazonaws.com
 
     docker push ${REGISTRY}/innovateuk/data-service:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/project-setup-service:1.0-$PROJECT
