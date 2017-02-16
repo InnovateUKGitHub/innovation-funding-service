@@ -47,7 +47,7 @@ public interface CompetitionService {
 
     void notifyAssessors(Long competitionId);
 
-    ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId);
+    PublicContentItemResource getPublicContentOfCompetition(Long competitionId);
 
     ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId);
 

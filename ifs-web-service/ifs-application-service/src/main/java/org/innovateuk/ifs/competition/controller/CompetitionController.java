@@ -65,8 +65,7 @@ public class CompetitionController {
         }
 
         PublicContentItemResource publicContentItem = competitionService
-                .getPublicContentOfCompetition(competitionId)
-                .getSuccessObjectOrThrowException();
+                .getPublicContentOfCompetition(competitionId);
 
         model.addAttribute("model", overviewPopulator.populateViewModel(
                 publicContentItem,
