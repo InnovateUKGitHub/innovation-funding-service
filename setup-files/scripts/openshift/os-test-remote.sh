@@ -27,6 +27,7 @@ function cleanUp() {
 
 function buildAndPushTestImages() {
     docker build -t ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT robot-tests-tmp/
+    docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
     docker push ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT
 }
 

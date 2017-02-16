@@ -54,6 +54,8 @@ function useContainerRegistry() {
     docker tag innovateuk/shib-init:1.0-SNAPSHOT \
         ${REGISTRY}/innovateuk/shib-init:1.0-$PROJECT
 
+    docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
+
     docker push ${REGISTRY}/innovateuk/data-service:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/project-setup-service:1.0-$PROJECT
     docker push ${REGISTRY}/innovateuk/project-setup-management-service:1.0-$PROJECT
