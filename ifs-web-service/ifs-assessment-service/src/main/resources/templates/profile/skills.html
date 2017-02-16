@@ -14,13 +14,20 @@
 
             <h1 class="heading-xlarge">Your skills</h1>
 
-            <p>These areas have been chosen as your current areas of expertise. They will influence the types of competition you will be invited to assess.</p>
+            <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
+                of competition you will be invited to assess. If you would like to amend them or add new ones please
+                contact a member of the Competitions team <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
+            </p>
 
-            <h2 class="heading-medium no-margin-bottom">Innovation areas &nbsp; <small><a th:href="@{/profile/skills/edit}"> Edit your skills</a></small></h2>
+            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
 
             <ul class="list list-bullet">
-                <li th:each="innovationArea : ${model.innovationAreas}" th:text="${innovationArea}">Digital
-                    sciences</li>
+                <li th:each="innovationArea : ${model.innovationAreas}">
+                    <span th:text="${innovationArea.sectorName}" th:remove="tag">health and life sciences</span>
+                    <ul class="list list-bullet">
+                        <li th:text="${innovationArea.name}">information and communications technology (ICT)</li>
+                    </ul>
+                </li>
             </ul>
 
             <h2 class="heading-medium">Skill areas</h2>
@@ -30,6 +37,15 @@
             <h2 class="heading-medium">Assessor type</h2>
             <p id="assessorType"
                th:text="${model.assessorType} ? ${model.assessorType.displayName} : 'Not answered'" />
+
+            <div class="grid-row extra-margin-top">
+                <div class="column-half">
+                    <a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>
+                </div>
+                <div class="column-half alignright">
+                    <a th:href="@{/profile/skills/edit}" class="button-secondary">Edit</a>
+                </div>
+            </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
