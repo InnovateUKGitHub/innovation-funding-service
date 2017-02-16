@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Controller for the manage application dashboard
