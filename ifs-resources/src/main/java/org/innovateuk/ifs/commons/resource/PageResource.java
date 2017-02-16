@@ -31,6 +31,18 @@ public abstract class PageResource<PageableResource> {
      */
     private int size;
 
+    public PageResource() {
+
+    }
+
+    public PageResource(long totalElements, int totalPages, List<PageableResource> content, int number, int size) {
+        this.totalElements = totalElements;
+        this.totalPages = totalPages;
+        this.content = content;
+        this.number = number;
+        this.size = size;
+    }
+
     public long getTotalElements() {
         return totalElements;
     }
