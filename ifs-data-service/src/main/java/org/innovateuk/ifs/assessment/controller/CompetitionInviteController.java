@@ -55,8 +55,10 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/getAvailableAssessors/{competitionId}", method = RequestMethod.GET)
-    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(@PathVariable Long competitionId) {
-        return competitionInviteService.getAvailableAssessors(competitionId).toGetResponse();
+    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(@PathVariable long competitionId,
+                                                                           @RequestParam(defaultValue = "0") int page,
+                                                                           @RequestParam(defaultValue = "20") int pageSize) {
+        return competitionInviteService.getAvailableAssessors(competitionId, page, pageSize).toGetResponse();
     }
 
     @RequestMapping(value = "/getCreatedInvites/{competitionId}", method = RequestMethod.GET)

@@ -50,8 +50,8 @@ public class CompetitionInviteRestServiceImpl extends BaseRestService implements
     }
 
     @Override
-    public RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
-        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId), availableAssessorResourceListType());
+    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s", competitionInviteRestUrl, "getAvailableAssessors", competitionId), AvailableAssessorPageResource.class);
     }
 
     @Override

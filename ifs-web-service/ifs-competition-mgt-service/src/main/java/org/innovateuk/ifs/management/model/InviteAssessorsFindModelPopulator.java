@@ -30,6 +30,7 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
 
     private List<AvailableAssessorRowViewModel> getAssessors(CompetitionResource competition) {
         return competitionInviteRestService.getAvailableAssessors(competition.getId()).getSuccessObjectOrThrowException()
+                .getContent()
                 .stream()
                 .map(this::getRowViewModel)
                 .collect(toList());

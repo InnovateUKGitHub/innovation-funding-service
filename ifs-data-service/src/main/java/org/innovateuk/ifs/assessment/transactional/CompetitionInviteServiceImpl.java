@@ -196,22 +196,38 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
-        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetition(competitionId);
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, int pageSize) {
+        int pageStart = page * pageSize;
+        int pageEnd = pageStart + pageSize;
+        int totalAvailableAssessors = userRepository.countAllAvailableAssessorsByCompetition(competitionId);
+        int totalPages = (int) Math.ceil(totalAvailableAssessors / pageSize);
 
-        return serviceSuccess(assessors.stream()
-                .map(assessor -> {
-                    AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
-                    availableAssessor.setId(assessor.getId());
-                    availableAssessor.setEmail(assessor.getEmail());
-                    availableAssessor.setName(assessor.getName());
-                    availableAssessor.setBusinessType(getBusinessType(assessor));
-                    Profile profile = profileRepository.findOne(assessor.getProfileId());
-                    availableAssessor.setCompliant(profile.isCompliant(assessor));
-                    availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
-                    availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
-                    return availableAssessor;
-                }).collect(toList()));
+        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetitionByPage(competitionId, pageStart, pageEnd);
+
+        List<AvailableAssessorResource> availableAssessors = simpleMap(assessors, assessor -> {
+            AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
+            availableAssessor.setId(assessor.getId());
+            availableAssessor.setEmail(assessor.getEmail());
+            availableAssessor.setName(assessor.getName());
+            availableAssessor.setBusinessType(getBusinessType(assessor));
+
+            Profile profile = profileRepository.findOne(assessor.getProfileId());
+            availableAssessor.setCompliant(profile.isCompliant(assessor));
+            availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
+            availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
+
+            return availableAssessor;
+        });
+
+        AvailableAssessorPageResource availableAssessorPage = new AvailableAssessorPageResource(
+                totalAvailableAssessors,
+                totalPages,
+                availableAssessors,
+                page,
+                pageSize
+        );
+
+        return serviceSuccess(availableAssessorPage);
     }
 
     @Override

@@ -23,7 +23,7 @@ public interface CompetitionInviteRestService {
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
 
-    RestResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId);
+    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId);
 
     RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
 
@@ -33,7 +33,7 @@ public interface CompetitionInviteRestService {
 
     RestResult<CompetitionInviteResource> inviteUser(ExistingUserStagedInviteResource existingUserStagedInvite);
 
-    RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competionId);
+    RestResult<Void> inviteNewUsers(NewUserStagedInviteListResource newUserStagedInvites, long competitionId);
 
     RestResult<Void> deleteInvite(String email, long competitionId);
 
