@@ -64,16 +64,16 @@ Notify Assessors
 
 *** Keywords ***
 Get The expected values from the invite page
-    The user clicks the button/link    jQuery=.button:contains(Invite assessors)
+    The user clicks the button/link    jQuery=a:contains(Invite assessors)
     ${Invited}=    Get text    css=div:nth-child(1) > div > span
     Set Test Variable    ${Invited}
     ${Accepted}=    Get text    css=div:nth-child(2) > div > span
     Set Test Variable    ${Accepted}
     The user clicks the button/link    link=Competition
-    The user clicks the button/link    jQuery=.button:contains(Manage applications)
+    The user clicks the button/link    jQuery=a:contains(Assessor management - assignment to applications)
     ${NUMBER_OF_APPLICATIONS}=    Get matching xpath count    //div[2]/table/tbody/tr
     Set Test Variable    ${NUMBER_OF_APPLICATIONS}
-    The user clicks the button/link    link=Manage assessments
+    The user clicks the button/link    link=Competition
 
 the counts of the key statistics of the closed competition should be correct
     ${INVITED_COUNT}=    Get text    css=.extra-margin .column-third:nth-child(1) .heading-large
