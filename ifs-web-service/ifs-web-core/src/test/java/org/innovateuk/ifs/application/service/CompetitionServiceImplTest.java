@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
-import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.AssessorCountOptionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.assertTrue;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.builder.AssessorCountOptionResourceBuilder.newAssessorCountOptionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
@@ -204,9 +202,8 @@ public class CompetitionServiceImplTest extends BaseServiceUnitTest<CompetitionS
 
         when(publicContentItemRestService.getItemByCompetitionId(competitionId)).thenReturn(restSuccess(expected));
 
-        ServiceResult<PublicContentItemResource> result = service.getPublicContentOfCompetition(competitionId);
+        PublicContentItemResource result = service.getPublicContentOfCompetition(competitionId);
 
-        assertTrue(result.isSuccess());
-        assertEquals(expected, result.getSuccessObject());
+        assertEquals(expected, result);
     }
 }

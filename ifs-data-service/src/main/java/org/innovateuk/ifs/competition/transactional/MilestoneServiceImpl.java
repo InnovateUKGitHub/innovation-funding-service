@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -11,8 +13,6 @@ import org.innovateuk.ifs.competition.repository.MilestoneRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,10 +21,11 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
+import static java.util.Comparator.comparing;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static java.util.Comparator.comparing;
 
 /**
  * Service for operations around the usage and processing of Milestones
@@ -42,6 +43,14 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
 
     @Autowired
     private MilestoneMapper milestoneMapper;
+
+    @Override
+    public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
+        return serviceSuccess ((List<MilestoneResource>)
+                milestoneMapper.mapToResource(milestoneRepository
+                        .findByCompetitionIdAndTypeIn(id,
+                                asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE))));
+    }
 
     @Override
     public ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long id) {
