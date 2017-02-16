@@ -86,9 +86,14 @@ th[scope="row"]{
 }
 
 .table-bordered {
-  td {
+  td,th {
     padding:0.5em;
     border: 1px solid $border-colour;
+    vertical-align: top;
+  }
+  td.fixed-half,
+  th.fixed-half {
+    width:50%;
   }
 }
 
