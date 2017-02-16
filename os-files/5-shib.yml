@@ -17,7 +17,7 @@ items:
           deploymentconfig: shib
       spec:
         containers:
-        - image: docker-registry-default.apps.prod.ifs-test-clusters.com/innovateuk/ifs-shib-sp:0.2.0
+        - image: 172.30.80.28:5000/innovateuk/ifs-shib-sp:0.2.0
           name: shib
           imagePullPolicy: IfNotPresent
           env:
