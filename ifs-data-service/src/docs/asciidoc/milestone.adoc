@@ -1,0 +1,71 @@
+=== Get all public milestones by competitionId
+==== Request
+include::{snippets}/milestone/get-all-public-milestones-by-competition-id/http-request.adoc[]
+include::{snippets}/milestone/get-all-public-milestones-by-competition-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/milestone/get-all-public-milestones-by-competition-id/http-response.adoc[]
+include::{snippets}/milestone/get-all-public-milestones-by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/milestone/get-all-public-milestones-by-competition-id/curl-request.adoc[]
+
+=== Get all milestones by competitionId
+==== Request
+include::{snippets}/milestone/get-all-milestones-by-competition-id/http-request.adoc[]
+include::{snippets}/milestone/get-all-milestones-by-competition-id/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/milestone/get-all-milestones-by-competition-id/http-response.adoc[]
+include::{snippets}/milestone/get-all-milestones-by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/milestone/get-all-milestones-by-competition-id/curl-request.adoc[]
+
+=== Get milestone by type and competitionId
+==== Request
+include::{snippets}/milestone/get-milestone-by-type-and-competition-id/http-request.adoc[]
+include::{snippets}/milestone/get-milestone-by-type-and-competition-id/path-parameters.adoc[]
+include::{snippets}/milestone/get-milestone-by-type-and-competition-id/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/milestone/get-milestone-by-type-and-competition-id/http-response.adoc[]
+include::{snippets}/milestone/get-milestone-by-type-and-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/milestone/get-milestone-by-type-and-competition-id/curl-request.adoc[]
+
+=== Create an milestone
+==== Request
+include::{snippets}/milestone/create/http-request.adoc[]
+include::{snippets}/milestone/create/path-parameters.adoc[]
+include::{snippets}/milestone/create/request-parameters.adoc[]
+
+==== Response
+include::{snippets}/milestone/create/http-response.adoc[]
+include::{snippets}/milestone/create/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/milestone/create/curl-request.adoc[]
+
+=== Save multiple milestones
+==== Request
+include::{snippets}/milestone/save-milestones/http-request.adoc[]
+include::{snippets}/milestone/save-milestones/request-fields.adoc[]
+
+==== Response
+include::{snippets}/milestone/save-milestones/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}//milestone/save-milestones/curl-request.adoc[]
+
+=== Save single milestone
+==== Request
+include::{snippets}/milestone/save-milestone/http-request.adoc[]
+include::{snippets}/milestone/save-milestone/request-fields.adoc[]
+
+==== Response
+include::{snippets}/milestone/save-milestone/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/milestone/save-milestone/curl-request.adoc[]

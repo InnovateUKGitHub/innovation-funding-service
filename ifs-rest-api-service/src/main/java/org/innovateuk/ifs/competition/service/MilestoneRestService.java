@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface MilestoneRestService {
 
+    RestResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long competitionId);
+
     RestResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(Long competitionId);
 
     RestResult<MilestoneResource> getMilestoneByTypeAndCompetitionId(MilestoneType type, Long CompetitionId);
