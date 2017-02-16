@@ -78,6 +78,8 @@ public interface ProjectRestService {
 
     RestResult<Void> removeGrantOfferLetter(Long projectId);
 
+    RestResult<Void> removeSignedGrantOfferLetter(Long projectId);
+
     RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId);
 
     RestResult<Optional<FileEntryResource>> getAdditionalContractFileDetails(Long projectId);
