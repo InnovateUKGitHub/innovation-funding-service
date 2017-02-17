@@ -59,7 +59,11 @@ small {
 .bordered {
   border:1px solid $border-colour;
 }
-
+.no-border,
+table td.no-border,
+table th.no-border {
+  border:none;
+}
 .grey-box {
   padding: 15px;
   background: $grey-4;
@@ -94,6 +98,14 @@ th[scope="row"]{
   td.fixed-half,
   th.fixed-half {
     width:50%;
+  }
+  td.w29,
+  th.w29 {
+    width:29%;
+  }
+  caption {
+    font-weight: normal;
+    margin-bottom:0.8em;
   }
 }
 
