@@ -88,7 +88,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
 
     @Override
     public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
-        List<Competition> competitions = competitionRepository.findNonIfs().stream().map(this::addCategories).collect(Collectors.toList());
+        List<Competition> competitions = competitionRepository.findNonIfs();
         return serviceSuccess(simpleMap(competitions, this::searchResultFromCompetition));
     }
 
