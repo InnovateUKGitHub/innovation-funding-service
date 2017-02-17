@@ -72,7 +72,7 @@ public class MilestonesSectionSaverTest {
         List<Long> milestones = competition.getMilestones();
 
         assertEquals(1L, milestones.get(0).longValue());
-        assertTrue(resourceList.get(0).getCompetition() == 1L);
+        assertTrue(resourceList.get(0).getCompetitionId() == 1L);
         assertNotNull(resourceList.get(0).getDate());
         assertTrue(resourceList.get(0).getType().equals(MilestoneType.OPEN_DATE));
     }

@@ -13,6 +13,8 @@ import java.util.List;
 @Service
 public interface MilestoneService {
 
+    List<MilestoneResource> getAllPublicMilestonesByCompetitionId(Long competitionId);
+
     List<MilestoneResource> getAllMilestonesByCompetitionId(Long competitionId);
 
     MilestoneResource getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId);
