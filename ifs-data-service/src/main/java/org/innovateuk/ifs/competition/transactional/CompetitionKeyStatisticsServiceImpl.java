@@ -101,23 +101,20 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
         CompetitionFundedKeyStatisticsResource competitionFundedKeyStatisticsResource = new CompetitionFundedKeyStatisticsResource();
         List<Application> applications = applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS);
         competitionFundedKeyStatisticsResource.setApplicationsSubmitted(applications.size());
-        competitionFundedKeyStatisticsResource.setApplicationsFunded(
-                (int) applications.stream().filter(application -> {
-                    if (application.getFundingDecision() != null) {
-                        return application.getFundingDecision().equals(FundingDecisionStatus.FUNDED);
-                    }
-                    return false;
-                }).count());
-        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(
-                (int) applications.stream().filter(application -> {
-                    if (application.getFundingDecision() != null) {
-                        return application.getFundingDecision().equals(FundingDecisionStatus.UNFUNDED);
-                    }
-                    return false;
-                }).count());
+        competitionFundedKeyStatisticsResource.setApplicationsFunded(getFundingDecisionCount(applications, FundingDecisionStatus.FUNDED));
+        competitionFundedKeyStatisticsResource.setApplicationsNotFunded(getFundingDecisionCount(applications, FundingDecisionStatus.UNFUNDED));
         competitionFundedKeyStatisticsResource.setApplicationsOnHold(0); // TODO
         competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(0); // TODO
         competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(0); // TODO
         return serviceSuccess(competitionFundedKeyStatisticsResource);
+    }
+
+    private int getFundingDecisionCount(List<Application> applications, FundingDecisionStatus fundingDecisionStatus) {
+        return (int) applications.stream().filter(application -> {
+            if (application.getFundingDecision() != null) {
+                return application.getFundingDecision().equals(fundingDecisionStatus);
+            }
+            return false;
+        }).count();
     }
 }
