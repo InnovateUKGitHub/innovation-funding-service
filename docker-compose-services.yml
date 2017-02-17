@@ -28,6 +28,7 @@ services:
       ifs:
         aliases:
           - auth.local-dev
+          - iuk-auth-localdev
 
   ldap:
     image: innovateuk/ifs-ldap:0.2.1

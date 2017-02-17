@@ -49,8 +49,11 @@ cd $BASEDIR
 
 docker-compose -f ../../../docker-compose-services.yml exec -T ldap /usr/local/bin/ldap-delete-all-users.sh
 
-mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null | xargs -I{} bash -c "addUserToShibboleth {}"
-
+for user in $(mysql ifs -uroot -ppassword -hifs-database -N -s -e "select email from user;" 2>/dev/null)
+do
+    addUserToShibboleth ${user} &
+done
+wait
 cat <<'END'
 
           ____

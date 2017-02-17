@@ -6,6 +6,7 @@ ${SERVER_BASE}    ifs-local-dev
 ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
+${SAUCELABS_RUN}    1
 ${LOGIN_URL}      ${SERVER}/
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    100,837
@@ -187,8 +188,6 @@ ${Comp_admin_all_competitions_page}    ${server}/management/dashboard/live
 ${CLOSED_COMPETITION_NAME}    Machine learning for transport infrastructure
 ${UPCOMING_COMPETITION_TO_ASSESS_NAME}    Home and industrial efficiency programme
 ${UPCOMING_COMPETITION_TO_ASSESS_ID}    11
-
-
 
 
 ${CURRENTLY_WAITING_UNTIL}      false

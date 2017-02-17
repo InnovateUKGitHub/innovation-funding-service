@@ -186,6 +186,9 @@ function startPybot() {
     -v DOWNLOAD_FOLDER:download_files \
     -v BROWSER=chrome \
     -v REMOTE_URL:'http://ifs.local-dev:4444/wd/hub' \
+    -v SAUCELABS_RUN:0 \
+    -v local_imap:'ifs.local-dev' \
+    -v local_imap_port:9876 \
     $includeHappyPath \
     $includeBespokeTags \
     $excludeBespokeTags \
