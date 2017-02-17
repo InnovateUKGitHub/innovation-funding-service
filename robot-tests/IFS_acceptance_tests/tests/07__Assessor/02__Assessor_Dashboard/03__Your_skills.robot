@@ -24,8 +24,8 @@ Client-side validations
     Given The user should see the text in the page    Complete your assessor account
     And The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link    jQuery=a:contains("your skills")
-    And The user should see the element    link=Edit your skills
-    When the user clicks the button/link    jQuery=a:contains("Edit your skills")
+    And The user should see the element    link=Edit
+    When the user clicks the button/link    jQuery=a:contains("Edit")
     And the user enters multiple strings into a text field    id=skillAreas    w${SPACE}    101
     And the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see an error    Please select an assessor type.
@@ -61,7 +61,7 @@ Save Skills should redirect to the read-only view
 Your skills does not appear in dashboard alert
     [Documentation]    INFUND-5182
     [Tags]
-    When the user clicks the button/link    link=Back to assessor dashboard
+    When the user clicks the button/link    link=Assessor dashboard
     Then The user should not see the element    jQuery=.message-alert a:contains('your skills')    #this checks the alert message on the top of the page
 
 *** Keywords ***
