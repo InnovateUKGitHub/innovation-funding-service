@@ -10,7 +10,7 @@
 
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to your details',linkClass='link-back',linkUrl=@{/profile/details}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your details',linkClass='link-back',linkUrl=@{/profile/details}" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your details</h1>
@@ -202,7 +202,7 @@
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
                     <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
-                        <span class="form-hint">We may use this to contact you about the application</span>
+                        <span class="form-hint">We may use this to contact you about the application.</span>
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
                         </th:block>
@@ -230,7 +230,8 @@
 
                 <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
 
-                <button class="button button-large extra-margin" type="submit">Save changes</button>
+                <button class="button button-large" type="submit">Save and return to your details</button>
+                <a th:href="@{/profile/details}">Cancel</a>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />

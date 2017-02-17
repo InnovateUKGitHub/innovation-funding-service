@@ -17,7 +17,7 @@ Validations for invalid inputs
     And the user enters text to a text field    id=addressForm.addressLine1    ${EMPTY}
     And the user enters text to a text field    id=addressForm.town    ${EMPTY}
     And the user enters text to a text field    id=addressForm.postcode    ${EMPTY}
-    And the user clicks the button/link    jQuery=button:contains("Save changes")
+    And the user clicks the button/link    jQuery=button:contains("Save and return to your details")
     Then the user should see an error    Please enter a first name.
     And the user should see an error    Please enter a last name.
     And the user should see an error    Please enter a valid phone number.
@@ -48,7 +48,7 @@ the assessor updates profile details
     the user enters text to a text field    id=addressForm.town    Reading
     the user enters text to a text field    id=addressForm.postcode    RG1 7UH
     the user enters text to a text field    id=phoneNumber    18549731414
-    the user clicks the button/link    jQuery=button:contains("Save changes")
+    the user clicks the button/link    jQuery=button:contains("Save and return to your details")
 
 the saved changes are visible
     the user should see the text in the page    Dr
@@ -61,4 +61,4 @@ the saved changes are visible
 
 User opens the edit details form
     Given the user clicks the button/link    jQuery=a:contains("your details")
-    And the user clicks the button/link    jQuery=a:contains("Edit your details")
+    And the user clicks the button/link    jQuery=a:contains("Edit")

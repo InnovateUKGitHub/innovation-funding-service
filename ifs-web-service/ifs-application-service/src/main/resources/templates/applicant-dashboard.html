@@ -23,7 +23,7 @@
             <h1 class="heading-large">Your dashboard</h1>
             <section th:if="${!projectsInSetup.isEmpty()}" class="projects-in-setup">
                 <div class="progress-list">
-                    <h2 class="heading-medium">Projects in setup</h2>
+                    <h2 class="heading-medium">Set up your project</h2>
                     <ul>
                         <li th:each="project : ${projectsInSetup}">
                             <div class="task">
