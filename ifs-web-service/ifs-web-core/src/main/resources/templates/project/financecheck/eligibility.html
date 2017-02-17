@@ -54,7 +54,7 @@
         </table>
     </div>
 
-    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"  enctype="multipart/form-data" novalidate="novalidate">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"  enctype="multipart/form-data">
         <h2 class="heading-medium">Finances overview</h2>
         <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
         <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
