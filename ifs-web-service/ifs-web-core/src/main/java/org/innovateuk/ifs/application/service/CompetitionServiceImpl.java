@@ -5,13 +5,15 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -31,11 +33,19 @@ public class CompetitionServiceImpl implements CompetitionService {
     private PublicContentItemRestService publicContentItemRestService;
 
     @Autowired
+    private ContentGroupRestService contentGroupRestService;
+
+    @Autowired
     private AssessorCountOptionsRestService assessorCountOptionsRestService;
 
     @Override
     public CompetitionResource getById(Long competitionId){
         return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public CompetitionResource getPublishedById(Long competitionId){
+        return competitionsRestService.getPublishedCompetitionById(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -63,36 +73,6 @@ public class CompetitionServiceImpl implements CompetitionService {
         return competitionsRestService.getCompetitionTypes().getSuccessObjectOrThrowException();
     }
 
-    @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>>getLiveCompetitions() {
-        return mapToStatus(competitionsRestService.findLiveCompetitions().getSuccessObjectOrThrowException());
-    }
-
-    @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getProjectSetupCompetitions() {
-        return mapToStatus(competitionsRestService.findProjectSetupCompetitions().getSuccessObjectOrThrowException());
-    }
-
-    @Override
-    public Map<CompetitionStatus, List<CompetitionSearchResultItem>> getUpcomingCompetitions() {
-        return mapToStatus(competitionsRestService.findUpcomingCompetitions().getSuccessObjectOrThrowException());
-    }
-
-    @Override
-    public CompetitionSearchResult searchCompetitions(String searchQuery, int page) {
-        CompetitionSearchResult searchResult = competitionsRestService.searchCompetitions(searchQuery, page, COMPETITION_PAGE_SIZE).getSuccessObjectOrThrowException();
-        searchResult.setMappedCompetitions(mapToStatus(searchResult.getContent()));
-        return searchResult;
-    }
-
-    @Override
-    public CompetitionCountResource getCompetitionCounts() {
-        return competitionsRestService.countCompetitions().getSuccessObjectOrThrowException();
-    }
-
-    private Map<CompetitionStatus, List<CompetitionSearchResultItem>> mapToStatus(List<CompetitionSearchResultItem> resources) {
-        return resources.stream().collect(Collectors.groupingBy(CompetitionSearchResultItem::getCompetitionStatus));
-    }
 
     @Override
     public ServiceResult<Void> update(CompetitionResource competition) {
@@ -145,7 +125,22 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId) {
-        return publicContentItemRestService.getItemByCompetitionId(competitionId).toServiceResult();
+    public PublicContentItemResource getPublicContentOfCompetition(Long competitionId) {
+        return publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId) {
+        return contentGroupRestService.getFile(contentGroupId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId) {
+        return contentGroupRestService.getFileDetails(contentGroupId).toServiceResult();
+    }
+
+    @Override
+    public CompetitionResource createNonIfs() {
+        return competitionsRestService.createNonIfs().getSuccessObjectOrThrowException();
     }
 }

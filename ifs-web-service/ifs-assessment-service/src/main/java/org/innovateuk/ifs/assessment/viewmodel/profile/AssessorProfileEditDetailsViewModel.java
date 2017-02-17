@@ -4,7 +4,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Holder of model attributes for the Assessor edit user details view.
+ * Holder of model attributes for the Assessor edit details view.
  */
 public class AssessorProfileEditDetailsViewModel {
     private String email;

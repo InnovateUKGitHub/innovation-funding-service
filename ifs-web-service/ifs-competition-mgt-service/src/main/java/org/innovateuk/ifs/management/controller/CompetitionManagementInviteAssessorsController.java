@@ -10,6 +10,7 @@ import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
+import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
-import static org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.buildOriginQueryString;
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * This controller will handle all Competition Management requests related to inviting assessors to a Competition.
@@ -167,7 +168,7 @@ public class CompetitionManagementInviteAssessorsController {
                            @RequestParam MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
         model.addAttribute("model", inviteAssessorsOverviewModelPopulator.populateModel(competition));
-        model.addAttribute("originQuery", buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams));
+        model.addAttribute("originQuery", buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_OVERVIEW, queryParams));
 
         return "assessors/overview";
     }
@@ -183,7 +184,7 @@ public class CompetitionManagementInviteAssessorsController {
     private String doViewFind(Model model, Long competitionId, MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
         model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition));
-        model.addAttribute("originQuery", buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.ASSESSOR_FIND, queryParams));
+        model.addAttribute("originQuery", buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams));
 
         return "assessors/find";
     }
@@ -191,7 +192,7 @@ public class CompetitionManagementInviteAssessorsController {
     private String doViewInvite(Model model, Long competitionId, MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
         model.addAttribute("model", inviteAssessorsInviteModelPopulator.populateModel(competition));
-        model.addAttribute("originQuery", buildOriginQueryString(CompetitionManagementAssessorProfileController.AssessorProfileOrigin.ASSESSOR_INVITE, queryParams));
+        model.addAttribute("originQuery", buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_INVITE, queryParams));
 
         return "assessors/invite";
     }

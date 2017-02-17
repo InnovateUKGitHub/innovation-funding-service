@@ -41,6 +41,10 @@ the user can see the option to upload a file on the page
     The user navigates to the page    ${url}
     Page Should Contain    Upload
 
+the user uploads the file
+    [Arguments]    ${upload_button_id}    ${upload_filename}
+    Choose File      ${upload_button_id}   ${UPLOAD_FOLDER}/${upload_filename}
+
 the user can remove the uploaded file
     [Arguments]  ${name}  ${file_name}
     Reload Page
@@ -48,3 +52,5 @@ the user can remove the uploaded file
     Wait Until Page Does Not Contain Without Screenshots    Remove
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
+
+

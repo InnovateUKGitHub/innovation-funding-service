@@ -25,9 +25,8 @@
                 </h2>
                 <p>This is the given timescale for reading, scoring, providing written comments and submitting your assessments in our online service. Each assessor could receive up to 10 proposals to assess, however the number could be less dependant on how many applications have been submitted. Our assessment fee for this competition is &pound;<span th:text="${#numbers.formatDecimal(model.assessorPay,0, 'COMMA', 0, 'POINT')}" th:remove="tag">100</span> per application.</p>
 
-                <p th:if="${model.briefingDate}">The assessor webinar briefing will last one hour,
-                    taking place at <span th:text="${#temporals.format(model.briefingDate, 'dd MMMM yyyy')}" th:remove="tag">21 March 2017</span>.
-                </p>
+                <p th:if="${model.briefingDate}" th:text="|The assessor webinar briefing will last one hour,
+                    taking place at ${#strings.toLowerCase(#temporals.format(model.briefingDate, 'hh:mma'))} on ${#temporals.format(model.briefingDate, 'dd MMMM')}.|"></p>
             </section>
 
             <section>
@@ -50,7 +49,7 @@
                     <legend class="visuallyhidden">Are you available to assess this competition?</legend>
                     <h2 class="heading-medium">Are you available to assess this competition?</h2>
 
-                    <p th:if="${!model.userLoggedIn}">If you are available you will be taken through the account creation process. As this is a new service you will need to create an account and sign our terms and conditions even if you are an existing assessor for Innovate UK.</p>
+                    <p th:if="${!model.userLoggedIn}">If you are available you will be taken through the account creation process. As this is a new service, existing assessors with Innovate UK will also need to create an account and sign our terms and conditions.</p>
 
                     <button class="button large extra-margin" type="submit" th:text="${model.userLoggedIn} ? 'Yes' : 'Yes, create account'">Yes, create account</button>
 
