@@ -37,7 +37,6 @@ Valid Profile Update
 
 *** Keywords ***
 the assessor updates profile details
-    The user selects the radio button    title    title5
     The user enters text to a text field    id=firstName    Joy
     The user enters text to a text field    id=lastName    Archer
     the user moves focus to the element    id=firstName
@@ -51,7 +50,6 @@ the assessor updates profile details
     the user clicks the button/link    jQuery=button:contains("Save and return to your details")
 
 the saved changes are visible
-    the user should see the text in the page    Dr
     the user should see the text in the page    Joy
     the user should see the text in the page    Archer
     the user should see the text in the page    Male

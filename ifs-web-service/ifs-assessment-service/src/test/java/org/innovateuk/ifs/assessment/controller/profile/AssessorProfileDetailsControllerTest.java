@@ -89,7 +89,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         AssessorProfileEditDetailsForm form = (AssessorProfileEditDetailsForm) result.getModelAndView().getModel().get("form");
 
-        assertEquals(userProfile.getTitle(), form.getTitle());
         assertEquals(userProfile.getFirstName(), form.getFirstName());
         assertEquals(userProfile.getLastName(), form.getLastName());
         assertEquals(userProfile.getEmail(), user.getEmail());
@@ -112,7 +111,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", profileDetails.getTitle().name())
                 .param("firstName", profileDetails.getFirstName())
                 .param("lastName", profileDetails.getLastName())
                 .param("phoneNumber", profileDetails.getPhoneNumber())
@@ -127,7 +125,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .andReturn();
 
         AssessorProfileEditDetailsForm form = (AssessorProfileEditDetailsForm) result.getModelAndView().getModel().get("form");
-        assertEquals(profileDetails.getTitle(), form.getTitle());
         assertEquals(profileDetails.getFirstName(), form.getFirstName());
         assertEquals(profileDetails.getLastName(), form.getLastName());
         assertEquals(profileDetails.getPhoneNumber(), form.getPhoneNumber());
@@ -141,7 +138,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void submitDetails_changeDetails() throws Exception {
-        Title title = Mrs;
         String firstName = "Felicia";
         String lastName = "Wilkinson";
         String phoneNumber = "87654321";
@@ -156,7 +152,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         setLoggedInUser(user);
 
         UserProfileResource profileDetails = newUserProfileResource()
-                .withTitle(title)
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withPhoneNumber(phoneNumber)
@@ -177,7 +172,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
@@ -192,7 +186,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .andReturn();
 
         AssessorProfileEditDetailsForm form = (AssessorProfileEditDetailsForm) result.getModelAndView().getModel().get("form");
-        assertEquals(form.getTitle(), title);
         assertEquals(form.getFirstName(), firstName);
         assertEquals(form.getLastName(), lastName);
         assertEquals(form.getPhoneNumber(), phoneNumber);
@@ -217,7 +210,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", profileDetails.getTitle().name())
                 .param("firstName", "")
                 .param("lastName", "")
                 .param("phoneNumber", profileDetails.getPhoneNumber())
@@ -271,7 +263,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .andExpect(model().attributeHasFieldErrors("form", "phoneNumber"))
                 .andExpect(model().attributeHasFieldErrors("form", "gender"))
                 .andExpect(model().attributeHasFieldErrors("form", "ethnicity"))
-                .andExpect(model().attributeHasFieldErrors("form", "title"))
                 .andExpect(model().attributeHasFieldErrors("form", "disability"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.addressLine1"))
                 .andExpect(model().attributeHasFieldErrors("form", "addressForm.town"))
@@ -284,8 +275,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
-        assertEquals(10, bindingResult.getFieldErrorCount());
-        assertEquals("Please select a title.", bindingResult.getFieldError("title").getDefaultMessage());
+        assertEquals(9, bindingResult.getFieldErrorCount());
         assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
         assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
         assertEquals("Please enter a phone number.", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
@@ -310,7 +300,6 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .build();
 
         return newUserProfileResource()
-                .withTitle(Mr)
                 .withFirstName("Felix")
                 .withLastName("Wilson")
                 .withPhoneNumber("12345678")
