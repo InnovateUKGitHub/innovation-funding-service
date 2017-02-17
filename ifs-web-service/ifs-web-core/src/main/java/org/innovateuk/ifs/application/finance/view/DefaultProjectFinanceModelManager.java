@@ -121,7 +121,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
             projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
         }
 
-        String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
+        /*String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
 
         // TODO: INFUND-4834 Check if we need any condition checks here and add them (after merge of approval branch)
         // CompetitionResource competition = competitionService.getById(application.getCompetition());
@@ -130,12 +130,12 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
 	        for(QuestionResource question: costsQuestions) {
 	        	FinanceRowType costType = costTypeForQuestion(question);
 	        	if(costType != null) {
-		        	FinanceRowCostCategory category = projectFinanceResource.getFinanceOrganisationDetails(costType);
+		        	projectFinanceResource.getFinanceOrganisationDetails(costType);
 		            FinanceRowItem costItem = financeHandler.getProjectFinanceFormHandler(organisationType).addCostWithoutPersisting(projectId, organisationId, question.getId());
 		        	category.addCost(costItem);
 	        	}
 	        }
-        //}
+        //}*/
 
         return projectFinanceResource;
     }
