@@ -5,15 +5,15 @@ PROJECT=$1
 HOST=prod.ifs-test-clusters.com
 ROUTE_DOMAIN=apps.$HOST
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
+INTERNAL_REGISTRY=172.30.80.28:5000
 
 echo "Deploying tests to the $PROJECT Openshift environment"
 
 function tailorToAppInstance() {
     rm -rf os-files-tmp
     cp -r os-files os-files-tmp
-    sed -i.bak "s#innovateuk/#${REGISTRY}/innovateuk/#g" os-files-tmp/robot-tests/*.yml
+    sed -i.bak "s#innovateuk/#${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/robot-tests/*.yml
-    sed -i.bak "s/1.0-SNAPSHOT/1.0-$PROJECT/g" os-files-tmp/robot-tests/*.yml
 
     cp -r robot-tests robot-tests-tmp
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" robot-tests-tmp/openshift/*.sh
@@ -26,9 +26,9 @@ function cleanUp() {
 }
 
 function buildAndPushTestImages() {
-    docker build -t ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT robot-tests-tmp/
+    docker build -t ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT robot-tests-tmp/
     docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
-    docker push ${REGISTRY}/innovateuk/robot-framework:1.0-$PROJECT
+    docker push ${REGISTRY}/${PROJECT}/robot-framework:1.0-SNAPSHOT
 }
 
 function deployTests() {
