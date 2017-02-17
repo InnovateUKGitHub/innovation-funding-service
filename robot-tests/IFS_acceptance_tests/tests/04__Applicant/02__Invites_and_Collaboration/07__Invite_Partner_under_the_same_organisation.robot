@@ -32,11 +32,11 @@ Create a new application
 the new application should show the correct partners
     Given the user navigates to the page    ${DASHBOARD_URL}
     When The user clicks the button/link    link=TEST ONE
-    And The user clicks the button/link    link=view team members and add collaborators
+    And The user clicks the button/link    link=view and add participants to your application
     Then The user should not see the text in the page    Partner two
     And The user should see the text in the page    Partner one
     When the user navigates to the page    ${DASHBOARD_URL}
     And The user clicks the button/link    link=TEST TWO
-    And The user clicks the button/link    link=view team members and add collaborators
+    And The user clicks the button/link    link=view and add participants to your application
     Then The user should not see the text in the page    Partner one
     And The user should see the text in the page    Partner two

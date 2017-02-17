@@ -21,7 +21,7 @@
         <h1 class="heading-large">Your dashboard</h1>
 
 		<section th:if="${!projectsInSetup.isEmpty()}" class="projects-in-setup">
-            <h2 class="heading-medium">Projects in setup</h2>
+            <h2 class="heading-medium">Set up your project</h2>
               <ul class="boxed-list">
                 <li th:each="project : ${projectsInSetup}">
                     <div class="grid-row" >
