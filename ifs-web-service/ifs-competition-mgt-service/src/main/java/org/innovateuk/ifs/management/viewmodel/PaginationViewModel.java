@@ -14,15 +14,17 @@ public class PaginationViewModel {
     private int totalPages;
     private int currentPage;
     private int pageSize;
+    private long totalCount;
     private List<PaginationLinkViewModel> pageNames;
 
     public PaginationViewModel(PageResource pageResource, String rootPath) {
+        this.totalCount = pageResource.getTotalElements();
         this.hasPrevious = pageResource.hasPrevious();
         this.hasNext = pageResource.hasNext();
         this.totalPages = pageResource.getTotalPages();
         this.currentPage = pageResource.getNumber();
         this.pageSize = pageResource.getSize();
-        this.pageNames = IntStream.range(0,totalPages).mapToObj(i -> new PaginationLinkViewModel(i, pageSize, rootPath)).collect(toList());
+        this.pageNames = IntStream.range(0,totalPages).mapToObj(i -> new PaginationLinkViewModel(i, pageSize, totalCount, rootPath)).collect(toList());
     }
 
     public boolean isHasPrevious() {
@@ -47,5 +49,9 @@ public class PaginationViewModel {
 
     public List<PaginationLinkViewModel> getPageNames() {
         return pageNames;
+    }
+
+    public long getTotalCount() {
+        return totalCount;
     }
 }

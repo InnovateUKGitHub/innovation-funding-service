@@ -22,6 +22,8 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
 	static final String COMP_FILTER = "SELECT a FROM Application a WHERE a.competition.id = :compId AND (str(a.id) LIKE :filter)";
 
+	static final String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE a.competition.id = :compId AND (a.applicationStatus.id IN :statuses) AND (str(a.id) LIKE :filter)";
+
     @Override
     List<Application> findAll();
     
@@ -34,20 +36,27 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 
     @Query(COMP_FILTER)
     List<Application> findByCompetitionIdAndIdLike(@Param("compId") Long competitionId, @Param("filter") String filter);
+	
+	Page<Application> findByCompetitionIdAndApplicationStatusIdIn(@Param("compId")Long competitionId, @Param("statuses") Collection<Long> applicationStatusIds, Pageable pageable);
 
-	Page<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
+	@Query(COMP_STATUS_FILTER)
+	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
+																		   @Param("statuses") Collection<Long> applicationStatusIds,
+																		   @Param("filter") String filter,
+																		   Pageable pageable);
 
-	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(Long competitionId, Collection<Long> applicationStatusIds, String filter, Pageable pageable);
+	@Query(COMP_STATUS_FILTER)
+	List<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,
+																		   @Param("statuses") Collection<Long> applicationStatusIds,
+																		   @Param("filter") String filter);
 
 	Page<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
-	
+
 	List<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId);
 
 	Page<Application> findByCompetitionIdAndApplicationStatusId(Long competitionId, Long applicationStatusId, Pageable pageable);
-	
-	List<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds);
 
-	List<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(Long competitionId, Collection<Long> applicationStatusIds, String filter);
+	List<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds);
 
 	List<Application> findByCompetitionIdAndApplicationStatusIdNotIn(Long competitionId, Collection<Long> applicationStatusIds);
 
