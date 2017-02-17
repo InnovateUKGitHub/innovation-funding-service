@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.commons.resource;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+
 import java.util.List;
 
 /**
@@ -89,5 +92,33 @@ public abstract class PageResource<PageableResource> {
 
     public boolean hasNext() {
         return totalPages > (number + 1);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        PageResource<?> that = (PageResource<?>) o;
+
+        return new EqualsBuilder()
+                .append(totalElements, that.totalElements)
+                .append(totalPages, that.totalPages)
+                .append(number, that.number)
+                .append(size, that.size)
+                .append(content, that.content)
+                .isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(totalElements)
+                .append(totalPages)
+                .append(content)
+                .append(number)
+                .append(size)
+                .toHashCode();
     }
 }
