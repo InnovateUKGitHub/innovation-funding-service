@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource.Order;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
@@ -115,11 +116,17 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void findAllAvailableAssessorsByCompetitionByPage() {
-        List<User> users = repository.findAllAvailableAssessorsByCompetitionAndPage(4L, 0, 10);
+        List<User> users = repository.findAllAvailableAssessorsByCompetitionAndSortedPage(
+                4L,
+                0,
+                10,
+                Order.FIRST_NAME.getColumn(),
+                "ASC"
+        );
         assertEquals(2, users.size());
 
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
-        List<String> expectedEmail = asList("paul.plum@gmail.com", "felix.wilson@gmail.com");
+        List<String> expectedEmail = asList("felix.wilson@gmail.com", "paul.plum@gmail.com");
         assertTrue(emailAddresses.containsAll(expectedEmail));
     }
 

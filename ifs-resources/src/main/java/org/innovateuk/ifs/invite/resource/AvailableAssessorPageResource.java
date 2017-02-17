@@ -9,6 +9,20 @@ import java.util.List;
  */
 public class AvailableAssessorPageResource extends PageResource<AvailableAssessorResource> {
 
+    public enum Order {
+        FIRST_NAME("first_name");
+
+        private String column;
+
+        Order(String column) {
+            this.column = column;
+        }
+
+        public String getColumn() {
+            return column;
+        }
+    }
+
     public AvailableAssessorPageResource() {
     }
 

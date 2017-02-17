@@ -31,10 +31,10 @@ import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
-import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -189,14 +189,24 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, int pageSize) {
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId,
+                                                                              int page,
+                                                                              int pageSize,
+                                                                              AvailableAssessorPageResource.Order orderBy,
+                                                                              Sort.Direction direction) {
         long totalAvailableAssessors = userRepository.countAllAvailableAssessorsByCompetition(competitionId);
 
         int pageStart = page * pageSize;
         int pageEnd = pageStart + pageSize;
         int totalPages = (int) Math.ceil((double) totalAvailableAssessors / (double) pageSize);
 
-        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetitionAndPage(competitionId, pageStart, pageEnd);
+        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetitionAndSortedPage(
+                competitionId,
+                pageStart,
+                pageEnd,
+                orderBy.getColumn(),
+                direction.toString()
+        );
 
         List<AvailableAssessorResource> availableAssessors = simpleMap(assessors, assessor -> {
             Profile profile = profileRepository.findOne(assessor.getProfileId());

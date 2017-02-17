@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource.Order;
 import org.innovateuk.ifs.notifications.resource.ExternalUserNotificationTarget;
 import org.innovateuk.ifs.notifications.resource.Notification;
 import org.innovateuk.ifs.notifications.resource.NotificationTarget;
@@ -80,6 +81,7 @@ import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.same;
 import static org.mockito.Mockito.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<CompetitionInviteServiceImpl> {
     private static final String UID = "5cc0ac0d-b969-40f5-9cc5-b9bdd98c86de";
@@ -845,14 +847,15 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(1);
 
         when(userRepositoryMock.countAllAvailableAssessorsByCompetition(competitionId)).thenReturn(totalElements);
-        when(userRepositoryMock.findAllAvailableAssessorsByCompetitionAndPage(competitionId, 20, 40)).thenReturn(assessors);
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetitionAndSortedPage(competitionId, 20, 40, Order.FIRST_NAME.getColumn(), "ASC"))
+                .thenReturn(assessors);
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreas.get(0));
 
-        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, pageSize).getSuccessObjectOrThrowException();
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, pageSize, Order.FIRST_NAME, ASC).getSuccessObjectOrThrowException();
 
         verify(userRepositoryMock).countAllAvailableAssessorsByCompetition(competitionId);
-        verify(userRepositoryMock).findAllAvailableAssessorsByCompetitionAndPage(competitionId, 20, 40);
+        verify(userRepositoryMock).findAllAvailableAssessorsByCompetitionAndSortedPage(competitionId, 20, 40, Order.FIRST_NAME.getColumn(), "ASC");
         verify(profileRepositoryMock).findOne(profile.getId());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
 
@@ -877,11 +880,11 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
         User compliantUser = newUser()
                 .withAffiliations(newAffiliation()
-                    .withAffiliationType(EMPLOYER)
-                    .withOrganisation("Hive IT")
-                    .withPosition("Software Developer")
-                    .withExists(true)
-                    .build(1))
+                        .withAffiliationType(EMPLOYER)
+                        .withOrganisation("Hive IT")
+                        .withPosition("Software Developer")
+                        .withExists(true)
+                        .build(1))
                 .withProfileId(profile1.getId())
                 .build();
 
@@ -982,7 +985,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withProfileId(simpleMapArray(profiles, Profile::getId, Long.class))
                 .build(3);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-        LocalDateTime[] sentOn = { LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
+        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
 
         List<CompetitionInvite> invites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
@@ -1041,7 +1044,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInvited(4)
                 .build();
 
-        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED,SENT))).thenReturn(expected.getInvited());
+        when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(OPENED, SENT))).thenReturn(expected.getInvited());
         when(competitionInviteRepositoryMock.countByCompetitionIdAndStatusIn(competitionId, EnumSet.of(CREATED))).thenReturn(expected.getInviteList());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, ACCEPTED)).thenReturn(expected.getAccepted());
         when(competitionParticipantRepositoryMock.countByCompetitionIdAndRoleAndStatus(competitionId, ASSESSOR, REJECTED)).thenReturn(expected.getDeclined());
@@ -1067,7 +1070,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withName("Earth Observation", "Internet of Things", "Data")
                 .build(3);
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MMM-yyyy");
-        LocalDateTime[] sentOn = { LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
+        LocalDateTime[] sentOn = {LocalDateTime.now(), LocalDateTime.now().plusMinutes(10), LocalDateTime.now().plusHours(1)};
 
         CompetitionInvite[] invites = newCompetitionInvite()
                 .withName("John Barnes", "Dave Smith", "Richard Turner")

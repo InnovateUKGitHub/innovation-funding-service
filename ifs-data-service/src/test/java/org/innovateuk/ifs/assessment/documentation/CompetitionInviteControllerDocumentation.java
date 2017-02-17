@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource.Order;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
 import org.springframework.http.MediaType;
@@ -16,19 +17,18 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.AssessorCreatedInviteResourceDocs.assessorCreatedInviteResourceFields;
 import static org.innovateuk.ifs.documentation.AssessorInviteOverviewResourceDocs.assessorInviteOverviewResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceBuilder;
-import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.AvailableAssessorPageResourceDocs.availableAssessorPageResourceFields;
+import static org.innovateuk.ifs.documentation.AvailableAssessorResourceDocs.availableAssessorResourceFields;
 import static org.innovateuk.ifs.documentation.CompetitionInviteDocs.*;
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceBuilder;
 import static org.innovateuk.ifs.documentation.CompetitionInviteStatisticsResourceDocs.competitionInviteStatisticsResourceFields;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
-import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
-import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.mockito.Mockito.*;
+import static org.springframework.data.domain.Sort.Direction.ASC;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
@@ -156,20 +156,30 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, 0, 20))
+        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, 0, 20, Order.FIRST_NAME, ASC))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
-        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId))
+        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId)
+                .param("size", "20")
+                .param("page", "0")
+                .param("orderBy", "FIRST_NAME")
+                .param("direction", "ASC"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
+                        requestParameters(
+                                parameterWithName("size").description("Maximum number of elements in a single page"),
+                                parameterWithName("page").description("Page number of the paginated data. Starts at 0."),
+                                parameterWithName("orderBy").description("The property that the paginated elements should be ordered by"),
+                                parameterWithName("direction").description("The direction to order the paginated elements in")
+                        ),
                         responseFields(availableAssessorPageResourceFields)
                                 .andWithPrefix("content[].", availableAssessorResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, 0, 20);
+        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, 0, 20, Order.FIRST_NAME, ASC);
     }
 
     @Test

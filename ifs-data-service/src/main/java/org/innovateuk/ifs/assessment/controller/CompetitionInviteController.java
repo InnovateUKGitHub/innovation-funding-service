@@ -6,6 +6,7 @@ import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,10 +56,14 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/getAvailableAssessors/{competitionId}", method = RequestMethod.GET)
-    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(@PathVariable long competitionId,
-                                                                           @RequestParam(defaultValue = "0") int page,
-                                                                           @RequestParam(defaultValue = "20") int pageSize) {
-        return competitionInviteService.getAvailableAssessors(competitionId, page, pageSize).toGetResponse();
+    public RestResult<AvailableAssessorPageResource> getAvailableAssessors(
+            @PathVariable long competitionId,
+            @RequestParam(defaultValue = "0", name = "page") int page,
+            @RequestParam(defaultValue = "20", name = "size") int pageSize,
+            @RequestParam(defaultValue = "FIRST_NAME", name = "orderBy") AvailableAssessorPageResource.Order orderBy,
+            @RequestParam(defaultValue = "ASC", name = "direction") Sort.Direction direction
+    ) {
+        return competitionInviteService.getAvailableAssessors(competitionId, page, pageSize, orderBy, direction).toGetResponse();
     }
 
     @RequestMapping(value = "/getCreatedInvites/{competitionId}", method = RequestMethod.GET)
@@ -71,7 +76,7 @@ public class CompetitionInviteController {
         return competitionInviteService.getInvitationOverview(competitionId).toGetResponse();
     }
 
-    @RequestMapping(value ="/getInviteStatistics/{competitionId}", method = RequestMethod.GET)
+    @RequestMapping(value = "/getInviteStatistics/{competitionId}", method = RequestMethod.GET)
     public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(@PathVariable Long competitionId) {
         return competitionInviteService.getInviteStatistics(competitionId).toGetResponse();
     }
