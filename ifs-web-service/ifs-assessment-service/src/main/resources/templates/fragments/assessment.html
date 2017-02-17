@@ -166,7 +166,8 @@
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
-        <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+        <button class="button large button-warning" name="submit-app-details">Reject</button>
+        <button class="js-close button buttonlink large" type="button">Cancel</button>
     </form>
 </div>
 
@@ -230,7 +231,10 @@
                 <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, rejectComment)})" />
             </div>
         </div>
-        <button class="button large button-warning extra-margin" name="submit-app-details">Reject</button>
+        <div>
+            <button class="button large button-warning" name="submit-app-details">Reject</button>
+            <button class="js-close button buttonlink large" type="button">Cancel</button>
+        </div>
     </form>
 </div>
 
