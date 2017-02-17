@@ -4,10 +4,8 @@ import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -116,8 +114,8 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findAvailableAssessors() {
-        List<User> users = repository.findAllAvailableAssessorsByCompetition(4L);
+    public void findAllAvailableAssessorsByCompetitionByPage() {
+        List<User> users = repository.findAllAvailableAssessorsByCompetitionAndPage(4L, 0, 10);
         assertEquals(2, users.size());
 
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());

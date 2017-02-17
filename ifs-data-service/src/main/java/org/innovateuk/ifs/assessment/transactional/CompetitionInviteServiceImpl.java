@@ -37,8 +37,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -197,21 +195,22 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, int pageSize) {
+        long totalAvailableAssessors = userRepository.countAllAvailableAssessorsByCompetition(competitionId);
+
         int pageStart = page * pageSize;
         int pageEnd = pageStart + pageSize;
-        int totalAvailableAssessors = userRepository.countAllAvailableAssessorsByCompetition(competitionId);
-        int totalPages = (int) Math.ceil(totalAvailableAssessors / pageSize);
+        int totalPages = (int) Math.ceil((double) totalAvailableAssessors / (double) pageSize);
 
-        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetitionByPage(competitionId, pageStart, pageEnd);
+        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetitionAndPage(competitionId, pageStart, pageEnd);
 
         List<AvailableAssessorResource> availableAssessors = simpleMap(assessors, assessor -> {
+            Profile profile = profileRepository.findOne(assessor.getProfileId());
+
             AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
             availableAssessor.setId(assessor.getId());
             availableAssessor.setEmail(assessor.getEmail());
             availableAssessor.setName(assessor.getName());
-            availableAssessor.setBusinessType(getBusinessType(assessor));
-
-            Profile profile = profileRepository.findOne(assessor.getProfileId());
+            availableAssessor.setBusinessType(profile.getBusinessType());
             availableAssessor.setCompliant(profile.isCompliant(assessor));
             availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
             availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
@@ -268,9 +267,10 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     assessorInviteOverview.setDetails(getDetails(participant));
 
                     if (participant.getUser() != null) {
-                        assessorInviteOverview.setId(participant.getUser().getId());
-                        assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
                         Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
+
+                        assessorInviteOverview.setId(participant.getUser().getId());
+                        assessorInviteOverview.setBusinessType(profile.getBusinessType());
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));
                         assessorInviteOverview.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
                     } else {
@@ -342,11 +342,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         }
 
         return details;
-    }
-
-    private BusinessType getBusinessType(User assessor) {
-        Profile profile = profileRepository.findOne(assessor.getProfileId());
-        return (profile != null) ? profile.getBusinessType() : null;
     }
 
     private boolean wasInviteCreated(String email, long competitionId) {

@@ -27,6 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
@@ -339,15 +340,49 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
+        int page = 5;
+        int pageSize = 30;
+
         List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
 
-        when(competitionInviteServiceMock.getAvailableAssessors(competitionId)).thenReturn(serviceSuccess(expectedAvailableAssessorResources));
+        AvailableAssessorPageResource expectedAvailableAssessorPageResource = newAvailableAssessorPageResource()
+                .withContent(expectedAvailableAssessorResources)
+                .withNumber(page)
+                .withTotalElements(300L)
+                .withTotalPages(10)
+                .withSize(30)
+                .build();
+
+        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, page, pageSize))
+                .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
+
+        mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId)
+                .param("page", String.valueOf(page))
+                .param("pageSize", String.valueOf(pageSize)))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedAvailableAssessorPageResource)));
+
+        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, page, pageSize);
+    }
+
+    @Test
+    public void getAvailableAssessors_defaultPage() throws Exception {
+        long competitionId = 1L;
+
+        List<AvailableAssessorResource> expectedAvailableAssessorResources = newAvailableAssessorResource().build(2);
+
+        AvailableAssessorPageResource expectedAvailableAssessorPageResource = newAvailableAssessorPageResource()
+                .withContent(expectedAvailableAssessorResources)
+                .build();
+
+        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, 0, 20))
+                .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
 
         mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedAvailableAssessorResources)));
+                .andExpect(content().json(toJson(expectedAvailableAssessorPageResource)));
 
-        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId);
+        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, 0, 20);
     }
 
     @Test

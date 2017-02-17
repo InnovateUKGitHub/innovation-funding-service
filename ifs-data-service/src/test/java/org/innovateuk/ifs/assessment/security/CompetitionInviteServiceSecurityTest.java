@@ -151,7 +151,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getAvailableAssessors() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L), COMP_ADMIN, PROJECT_FINANCE);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, 0, 10), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -237,7 +237,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<List<AvailableAssessorResource>> getAvailableAssessors(long competitionId) {
+        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, int pageSize) {
             return null;
         }
 

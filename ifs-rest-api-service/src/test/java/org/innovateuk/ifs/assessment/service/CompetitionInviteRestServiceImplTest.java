@@ -15,6 +15,7 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.NewUserStagedInviteListResourceBuilder.newNewUserStagedInviteListResource;
@@ -96,11 +97,15 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
-        List<AvailableAssessorResource> expected = newAvailableAssessorResource().build(2);
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAvailableAssessors", competitionId), availableAssessorResourceListType(), expected);
+        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
+                .withContent(assessorItems)
+                .build();
 
-        List<AvailableAssessorResource> actual = service.getAvailableAssessors(competitionId).getSuccessObject();
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAvailableAssessors", competitionId), AvailableAssessorPageResource.class, expected);
+
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId).getSuccessObject();
         assertEquals(expected, actual);
     }
 

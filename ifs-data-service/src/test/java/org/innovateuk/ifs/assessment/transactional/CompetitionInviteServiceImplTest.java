@@ -58,6 +58,7 @@ import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newE
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
+import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorResourceBuilder.newAvailableAssessorResource;
 import static org.innovateuk.ifs.invite.builder.CompetitionInviteStatisticsResourceBuilder.newCompetitionInviteStatisticsResource;
 import static org.innovateuk.ifs.invite.builder.ExistingUserStagedInviteResourceBuilder.newExistingUserStagedInviteResource;
@@ -795,12 +796,16 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
         long assessorId = 3L;
+        int page = 1;
+        int pageSize = 20;
+        long totalElements = 21;
+        int totalPages = 2;
 
         List<InnovationAreaResource> innovationAreas = newInnovationAreaResource()
                 .withName("Emerging Tech and Industries")
                 .build(1);
 
-        List<AvailableAssessorResource> expected = newAvailableAssessorResource()
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource()
                 .withId(assessorId)
                 .withName("Jeremy Alufson")
                 .withCompliant(TRUE)
@@ -809,6 +814,14 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withAdded(FALSE)
                 .withInnovationAreas(innovationAreas)
                 .build(1);
+
+        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
+                .withContent(assessorItems)
+                .withSize(pageSize)
+                .withNumber(page)
+                .withTotalPages(totalPages)
+                .withTotalElements(totalElements)
+                .build();
 
         InnovationArea innovationArea = newInnovationArea()
                 .withName("Emerging Tech and Industries")
@@ -820,7 +833,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withBusinessType(BUSINESS)
                 .withContractSignedDate(now())
                 .build();
-        User assessor = newUser()
+        List<User> assessors = newUser()
                 .withId(assessorId)
                 .withFirstName("Jeremy")
                 .withLastName("Alufson")
@@ -832,17 +845,21 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                         .withExists(true)
                         .build(1))
                 .withProfileId(profile.getId())
-                .build();
-        when(userRepositoryMock.findAllAvailableAssessorsByCompetition(competitionId)).thenReturn(singletonList(assessor));
+                .build(1);
+
+        when(userRepositoryMock.countAllAvailableAssessorsByCompetition(competitionId)).thenReturn(totalElements);
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetitionAndPage(competitionId, 20, 40)).thenReturn(assessors);
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreas.get(0));
 
-        List<AvailableAssessorResource> actual = service.getAvailableAssessors(competitionId).getSuccessObjectOrThrowException();
-        assertEquals(expected, actual);
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, pageSize).getSuccessObjectOrThrowException();
 
-        verify(userRepositoryMock, only()).findAllAvailableAssessorsByCompetition(competitionId);
-        verify(profileRepositoryMock, times(2)).findOne(profile.getId());
+        verify(userRepositoryMock).countAllAvailableAssessorsByCompetition(competitionId);
+        verify(userRepositoryMock).findAllAvailableAssessorsByCompetitionAndPage(competitionId, 20, 40);
+        verify(profileRepositoryMock).findOne(profile.getId());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
+
+        assertEquals(expected, actual);
     }
 
     @Test
@@ -1011,7 +1028,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         InOrder inOrder = inOrder(competitionParticipantRepositoryMock, participantStatusMapperMock, profileRepositoryMock, innovationAreaMapperMock);
         inOrder.verify(competitionParticipantRepositoryMock).getByCompetitionIdAndRole(competitionId, ASSESSOR);
         inOrder.verify(participantStatusMapperMock, calls(3)).mapToResource(isA(ParticipantStatus.class));
-        inOrder.verify(profileRepositoryMock, calls(2)).findOne(isA(Long.class));
+        inOrder.verify(profileRepositoryMock).findOne(isA(Long.class));
         inOrder.verify(innovationAreaMapperMock).mapToResource(isA(InnovationArea.class));
 
         inOrder.verifyNoMoreInteractions();

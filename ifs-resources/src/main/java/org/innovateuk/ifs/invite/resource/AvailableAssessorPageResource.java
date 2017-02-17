@@ -4,6 +4,9 @@ import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
 
+/**
+ * Resource encapsulating a pageable list of {@link AvailableAssessorResource}s.
+ */
 public class AvailableAssessorPageResource extends PageResource<AvailableAssessorResource> {
 
     public AvailableAssessorPageResource() {

@@ -44,10 +44,10 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
             "           AND user.email = invite.email)";
 
     @Query(value = "SELECT * " + AVAILABLE_ASSESSORS_QUERY + " LIMIT :pageStart,:pageEnd", nativeQuery = true)
-    List<User> findAllAvailableAssessorsByCompetitionByPage(@Param("competitionId") long competitionId,
-                                                            @Param("pageStart") int pageStart,
-                                                            @Param("pageEnd") int pageEnd);
+    List<User> findAllAvailableAssessorsByCompetitionAndPage(@Param("competitionId") long competitionId,
+                                                             @Param("pageStart") int pageStart,
+                                                             @Param("pageEnd") int pageEnd);
 
     @Query(value = "SELECT COUNT(*) " + AVAILABLE_ASSESSORS_QUERY, nativeQuery = true)
-    int countAllAvailableAssessorsByCompetition(@Param("competitionId") long competitionId);
+    long countAllAvailableAssessorsByCompetition(@Param("competitionId") long competitionId);
 }
