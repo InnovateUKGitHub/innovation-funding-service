@@ -25,7 +25,7 @@ Travel and Subsisdence
     And the user should see the text in the page    Public transport
     And the user should see the text in the page    Mileage rates
     And the user should see the text in the page    Please make sure your travel claims, receipts and tickets are all submitted.
-    [Teardown]    And the user clicks the button/link    link=Back to assessor dashboard
+    [Teardown]    And the user clicks the button/link    link=Assessor dashboard
 
 Server-side validations
     [Documentation]    INFUND-1481
@@ -34,7 +34,7 @@ Server-side validations
     [Tags]    HappyPath
     Given The user should see the element    link=your contract    #his checks the alert message on the top of the page
     And the user clicks the button/link    jQuery=a:contains("your contract")
-    When the user clicks the button/link    jQuery=button:contains("Save and continue")
+    When the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
     Then the user should see an error    Please agree to the terms and conditions.
 
 Terms and Conditions
@@ -65,7 +65,7 @@ Client-side validations and Submit
     [Tags]    HappyPath
     When the user selects the checkbox    agreesToTerms1
     And the user should not see an error in the page
-    And the user clicks the button/link    jQuery=button:contains("Save and continue")
+    And the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
     Then the user should be redirected to the correct page    ${assessor_dashboard_url}
     And The user should not see the element    jQuery=.message-alert a:contains('your contract')    #his checks the alert message on the top od the page
 
