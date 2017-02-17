@@ -93,7 +93,7 @@ Collaborator should be able to edit the assigned question
     ...
     ...    This test depends on the previous test suite to run first
     [Tags]    Email    HappyPath
-    When the user clicks the button/link    jQuery=button:contains("Public description")
+    When the user clicks the button/link    jQuery=h3:contains("Public description")
     And the user should see the element    jQuery=button:contains("Assign to lead for review")
 
 Last update message is correctly updating
@@ -244,7 +244,7 @@ The question is disabled on the summary page for other collaborators
     ...    This test case is still using the old application
     [Tags]
     Given the user navigates to the page    ${SUMMARY_URL}
-    When the user clicks the button/link    jQuery=button:contains("Public description")
+    When the user clicks the button/link    jQuery=h3:contains("Public description")
     Then the user should see the element    css=#form-input-12 .readonly
     And the user should not see the element    jQuery=button:contains("Assign to lead for review")
 

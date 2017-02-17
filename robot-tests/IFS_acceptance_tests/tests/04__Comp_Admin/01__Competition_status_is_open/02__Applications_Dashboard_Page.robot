@@ -124,7 +124,7 @@ Comp admin should be able to view but not edit the finances for every partner
     [Documentation]    INFUND-2443, INFUND-2483
     [Tags]
     Given the user navigates to the page    ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}
-    When the user clicks the button/link    jQuery=button:contains("Finances Summary")
+    When the user clicks the button/link    jQuery=h3:contains("Finances Summary")
     Then the user should not see the element    link=your finances
     And the user should see the element    jQuery=h3:contains("Finances Summary")
     And the user should see the element    jQuery=h2:contains("Funding breakdown")
@@ -185,7 +185,7 @@ the finance Project cost breakdown calculations should be correct
 
 the applicant edits the Subcontracting costs section
     the user clicks the button/link    link=Your project costs
-    the user clicks the button/link    jQuery=#form-input-20 button:contains("Subcontracting costs")
+    the user clicks the button/link    jQuery=#form-input-20 h2:contains("Subcontracting costs")
     the user should see the text in the page    Subcontractor name
     The user enters text to a text field    css=#collapsible-4 .form-row:nth-child(2) input[id$=subcontractingCost]    2000
     The user enters text to a text field    css=.form-row:nth-child(1) [name^="subcontracting-name"]    Jackson Ltd

@@ -61,7 +61,7 @@ Guidance in the your project costs
     [Tags]
     [Setup]  Applicant navigates to the finances of the Robot application
     Given the user clicks the button/link   link=Your project costs
-    When the user clicks the button/link    jQuery=#form-input-20 button:contains("Labour")
+    When the user clicks the button/link    jQuery=#form-input-20 h2:contains("Labour")
     And the user clicks the button/link     css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
     And the user should see the element     jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
@@ -88,7 +88,7 @@ Custom Suite Setup
     Applicant navigates to the finances of the Robot application
 
 the user adds three material rows
-    the user clicks the button/link    jQuery=button:contains("Materials")
+    the user clicks the button/link    jQuery=h2:contains("Materials")
     the user should see the element    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field    css=#material-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    01
     the user moves focus to the element    jQuery=button:contains(Add another materials cost)
@@ -112,7 +112,7 @@ the user removes the materials rows
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
     Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
     Wait Until Element Is Not Visible Without Screenshots    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
-    the user clicks the button/link    jQuery=button:contains("Materials")
+    the user clicks the button/link    jQuery=h2:contains("Materials")
 
 the working days per year should be 232 by default
     the user should see the element    css=[name^="labour-labourDaysYearly"]

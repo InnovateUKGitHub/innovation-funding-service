@@ -48,30 +48,30 @@ Summary:Number of days remaining until assessment submission
 
 Summary shows questions as incomplete
     [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Incomplete
-    And the collapsible button should contain    jQuery=button:contains(Scope)    Incomplete
+    Then the collapsible button should contain    jQuery=h2:contains(1. Business opportunity)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(2. Potential market)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(3. Project exploitation)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(4. Economic benefit)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(5. Technical approach)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(6. Innovation)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(7. Risks)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(8. Project team)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(9. Funding)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(10. Adding value)    Incomplete
+    And the collapsible button should contain    jQuery=h2:contains(Scope)    Incomplete
 
 Summary: Questions should show without score
     [Documentation]    INFUND-550
-    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    N/A
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    N/A
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    N/A
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    N/A
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    N/A
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    N/A
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    N/A
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    N/A
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    N/A
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    N/A
+    Then the collapsible button should contain    jQuery=h2:contains(1. Business opportunity)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(2. Potential market)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(3. Project exploitation)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(4. Economic benefit)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(5. Technical approach)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(6. Innovation)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(7. Risks)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(8. Project team)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(9. Funding)    N/A
+    And the collapsible button should contain    jQuery=h2:contains(10. Adding value)    N/A
     [Teardown]    The user clicks the button/link    link=Back to your assessment overview
 
 Summary:Questions should show as complete
@@ -81,17 +81,17 @@ Summary:Questions should show as complete
     Given The user clicks the button/link    link=Intelligent Building
     And the user adds score and feedback for every question
     When the user clicks the button/link    link=Review and complete your assessment
-    Then the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Complete
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Complete
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Complete
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Complete
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Complete
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Complete
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Complete
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Complete
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Complete
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Complete
-    And the collapsible button should contain    jQuery=button:contains(Scope)    Complete
+    Then the collapsible button should contain    jQuery=h2:contains(1. Business opportunity)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(2. Potential market)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(3. Project exploitation)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(4. Economic benefit)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(5. Technical approach)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(6. Innovation)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(7. Risks)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(8. Project team)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(9. Funding)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(10. Adding value)    Complete
+    And the collapsible button should contain    jQuery=h2:contains(Scope)    Complete
 
 Summary:Questions should show the scores
     [Documentation]    INFUND-550
@@ -99,16 +99,16 @@ Summary:Questions should show the scores
     Then The user should see the text in the page    Total: 100/100
     And The user should see the text in the page    ${DEFAULT_ACADEMIC_GRANT_RATE_WITH_PERCENTAGE}
     And the table should show the correct scores
-    And the collapsible button should contain    jQuery=button:contains(1. Business opportunity)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(2. Potential market)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(3. Project exploitation)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(4. Economic benefit)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(5. Technical approach)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(6. Innovation)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(7. Risks)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(8. Project team)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(9. Funding)    Score: 10/10
-    And the collapsible button should contain    jQuery=button:contains(10. Adding value)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(1. Business opportunity)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(2. Potential market)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(3. Project exploitation)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(4. Economic benefit)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(5. Technical approach)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(6. Innovation)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(7. Risks)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(8. Project team)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(9. Funding)    Score: 10/10
+    And the collapsible button should contain    jQuery=h2:contains(10. Adding value)    Score: 10/10
 
 Summary:Overall scores section
     [Documentation]    INFUND-4648
@@ -118,27 +118,27 @@ Summary:Overall scores section
 
 Summary:Feedback should show in each section
     [Documentation]    INFUND-550
-    When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
+    When The user clicks the button/link    jQuery=h2:contains(1. Business opportunity)
     Then The user should see the text in the page    Testing Business opportunity feedback text
-    When The user clicks the button/link    jQuery=button:contains(2. Potential market)
+    When The user clicks the button/link    jQuery=h2:contains(2. Potential market)
     Then The user should see the text in the page    Testing Potential market feedback text
-    When The user clicks the button/link    jQuery=button:contains(3. Project exploitation)
+    When The user clicks the button/link    jQuery=h2:contains(3. Project exploitation)
     Then The user should see the text in the page    Testing Project exploitation feedback text
-    When The user clicks the button/link    jQuery=button:contains(4. Economic benefit)
+    When The user clicks the button/link    jQuery=h2:contains(4. Economic benefit)
     Then The user should see the text in the page    Testing Economic benefit feedback text
-    When The user clicks the button/link    jQuery=button:contains(5. Technical approach)
+    When The user clicks the button/link    jQuery=h2:contains(5. Technical approach)
     Then The user should see the text in the page    Testing Technical approach feedback text
-    When The user clicks the button/link    jQuery=button:contains(6. Innovation)
+    When The user clicks the button/link    jQuery=h2:contains(6. Innovation)
     Then The user should see the text in the page    Testing Innovation feedback text
-    When The user clicks the button/link    jQuery=button:contains(7. Risks)
+    When The user clicks the button/link    jQuery=h2:contains(7. Risks)
     Then The user should see the text in the page    Testing Risks feedback text
-    When The user clicks the button/link    jQuery=button:contains(8. Project team)
+    When The user clicks the button/link    jQuery=h2:contains(8. Project team)
     Then The user should see the text in the page    Testing Project team feedback text
-    When The user clicks the button/link    jQuery=button:contains(9. Funding)
+    When The user clicks the button/link    jQuery=h2:contains(9. Funding)
     Then The user should see the text in the page    Testing Funding feedback text
-    When The user clicks the button/link    jQuery=button:contains(10. Adding value)
+    When The user clicks the button/link    jQuery=h2:contains(10. Adding value)
     Then The user should see the text in the page    Testing Adding value feedback text
-    When The user clicks the button/link    jQuery=button:contains(Scope)
+    When The user clicks the button/link    jQuery=h2:contains(Scope)
     Then The user should see the text in the page    Testing scope feedback text
 
 Summary:Assessor should be able to re-edit before submit
@@ -149,7 +149,7 @@ Summary:Assessor should be able to re-edit before submit
     And the user enters text to a text field    css=.editor    This is a new feedback entry.
     And the user clicks the button/link    jQuery=a:contains(Back to your assessment overview)
     And the user clicks the button/link    jQuery=a:contains(Review and complete your assessment)
-    When The user clicks the button/link    jQuery=button:contains(1. Business opportunity)
+    When The user clicks the button/link    jQuery=h2:contains(1. Business opportunity)
     Then the user should see the text in the page    This is a new feedback entry.
     And the user should see the text in the page    8
 

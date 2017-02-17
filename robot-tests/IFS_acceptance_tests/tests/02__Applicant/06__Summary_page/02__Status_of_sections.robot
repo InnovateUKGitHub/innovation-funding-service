@@ -16,7 +16,7 @@ Status is updated after marking as complete
     When the user clicks the button/link    link=4. Economic benefit
     And the applicant adds some content and marks this section as complete
     And the user navigates to the summary page of the Robot test application
-    Then the user should see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
+    Then the user should see the element  jQuery=h3:contains("Economic benefit") *:contains("Complete")
 
 Status is updated after editing a section
     [Documentation]    INFUND-544
@@ -26,4 +26,4 @@ Status is updated after editing a section
     When the user clicks the button/link    link=4. Economic benefit
     And the applicant edits the "economic benefit" question
     And the user navigates to the summary page of the Robot test application
-    Then the user should not see the element  jQuery=button:contains("Economic benefit") *:contains("Complete")
+    Then the user should not see the element  jQuery=h3:contains("Economic benefit") *:contains("Complete")

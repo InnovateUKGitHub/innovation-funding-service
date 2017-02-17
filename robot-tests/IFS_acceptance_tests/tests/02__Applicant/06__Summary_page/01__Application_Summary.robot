@@ -24,14 +24,14 @@ All questions present
 Clicking the Scope button expands the section
     [Documentation]    INFUND-1075
     [Tags]
-    When the user clicks the button/link    jQuery=button:contains("Scope")
+    When the user clicks the button/link    jQuery=h3:contains("Scope")
     Then the Scope section should be expanded
-    [Teardown]    The user clicks the button/link    jQuery=button:contains("Scope")
+    [Teardown]    The user clicks the button/link    jQuery=h3:contains("Scope")
 
 Edit link navigates to the application form
     [Documentation]    INFUND-193
     [Tags]    HappyPath
-    Given the user clicks the button/link    jQuery=button:contains("Project summary")
+    Given the user clicks the button/link    jQuery=h3:contains("Project summary")
     When the user clicks the button/link    jQuery=#form-input-11 button:contains("Edit")
     Then the user redirects to the page    Please provide a short summary of your project    Project summary
     And The user enters text to a text field    css=#form-input-11 .editor    Test text 123
@@ -50,7 +50,7 @@ Mark as complete possible for questions with text
 Mark as complete not possible for empty questions
     [Documentation]    INFUND-3954
     Given The user navigates to the summary page of the Robot test application
-    And the user clicks the button/link    jQuery=button:contains("Technical approach")
+    And the user clicks the button/link    jQuery=h3:contains("Technical approach")
     When the user clicks the button/link    jQuery=#form-input-5 button:contains("Mark as complete")
     Then the user should see the element    jQuery=#form-input-5 button:contains("Mark as complete")
 
@@ -77,8 +77,8 @@ all the questions should be visible
     the user should see the element    css=.section-overview section:nth-of-type(3) .collapsible:nth-of-type(1)
 
 the Scope section should be expanded
-    the user should see the element    css=.section-overview > section:nth-of-type(1) .collapsible:nth-of-type(4) > h3 button[aria-expanded="true"]
+    the user should see the element    css=.section-overview > section:nth-of-type(1) .collapsible:nth-of-type(4) > h3[aria-expanded="true"]
     the user should see the element    css=.section-overview > section:nth-of-type(1) .collapsible:nth-of-type(4) > div[aria-hidden="false"]
 
 the Project summary question should be marked as complete
-    Element Should Contain    jQuery=button:contains("Project summary")    Complete
+    Element Should Contain    jQuery=h3:contains("Project summary")    Complete
