@@ -87,7 +87,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationOrderingOnCompletion() {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "percentageComplete", 0, 10);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "percentageComplete", 0, 10, "");
         assertTrue(result.isSuccess());
         ApplicationSummaryPageResource applicationSummaryPageResource = result.getSuccessObject();
         assertNotNull(applicationSummaryPageResource);
@@ -145,7 +145,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20, "");
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -162,7 +162,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionIdSortedId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "id", 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "id", 0, 20, "");
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -179,7 +179,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionIdSortedName() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "name", 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "name", 0, 20, "");
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -193,7 +193,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20);
+        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20, "");
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());

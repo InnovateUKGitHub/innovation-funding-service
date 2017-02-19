@@ -109,7 +109,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
         expectedSummaryPageResource.setContent(expectedSummaries);
 
-        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, 20, ""))
                 .thenReturn(restSuccess(expectedSummaryPageResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
                 .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
@@ -122,7 +122,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
 
-        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, 20, "");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
 
         assertEquals(COMPETITION_ID, model.getCompetitionId());
@@ -139,7 +139,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
         expectedSummaryPageResource.setContent(emptyList());
 
-        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, 20, ""))
                 .thenReturn(restSuccess(expectedSummaryPageResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
                 .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
@@ -149,7 +149,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andExpect(view().name("competition/all-applications"))
                 .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS&param1=abc&param2=def"));
 
-        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, 20, "");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 
@@ -184,7 +184,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
         expectedSummaryPageResource.setContent(expectedSummaries);
 
-        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, 20, ""))
                 .thenReturn(restSuccess(expectedSummaryPageResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
                 .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
@@ -197,7 +197,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
 
         SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
 
-        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, "");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
 
         assertEquals(COMPETITION_ID, model.getCompetitionId());
@@ -212,7 +212,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
         expectedSummaryPageResource.setContent(emptyList());
 
-        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, 20, ""))
                 .thenReturn(restSuccess(expectedSummaryPageResource));
         when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
                 .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
@@ -223,7 +223,7 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
                 .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS&param1=abc&param2=def"))
                 .andReturn();
 
-        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, 20, "");
         verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 }

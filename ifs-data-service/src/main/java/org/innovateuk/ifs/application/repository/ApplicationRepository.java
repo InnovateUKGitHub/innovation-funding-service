@@ -20,9 +20,9 @@ import org.springframework.data.repository.query.Param;
 public interface ApplicationRepository extends PagingAndSortingRepository<Application, Long> {
     List<Application> findByName(@Param("name") String name);
 
-	static final String COMP_FILTER = "SELECT a FROM Application a WHERE a.competition.id = :compId AND (str(a.id) LIKE :filter)";
+	static final String COMP_FILTER = "SELECT a FROM Application a WHERE a.competition.id = :compId AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
-	static final String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE a.competition.id = :compId AND (a.applicationStatus.id IN :statuses) AND (str(a.id) LIKE :filter)";
+	static final String COMP_STATUS_FILTER = "SELECT a FROM Application a WHERE a.competition.id = :compId AND (a.applicationStatus.id IN :statuses) AND (str(a.id) LIKE CONCAT('%', :filter, '%'))";
 
     @Override
     List<Application> findAll();
@@ -37,7 +37,7 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
     @Query(COMP_FILTER)
     List<Application> findByCompetitionIdAndIdLike(@Param("compId") Long competitionId, @Param("filter") String filter);
 	
-	Page<Application> findByCompetitionIdAndApplicationStatusIdIn(@Param("compId")Long competitionId, @Param("statuses") Collection<Long> applicationStatusIds, Pageable pageable);
+	Page<Application> findByCompetitionIdAndApplicationStatusIdIn(Long competitionId, Collection<Long> applicationStatusIds, Pageable pageable);
 
 	@Query(COMP_STATUS_FILTER)
 	Page<Application> findByCompetitionIdAndApplicationStatusIdInAndIdLike(@Param("compId") Long competitionId,

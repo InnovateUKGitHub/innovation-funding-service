@@ -29,7 +29,7 @@ public class AllApplicationsPageModelPopulator {
                 .getSuccessObjectOrThrowException();
 
         ApplicationSummaryPageResource applicationSummaryPageResource = applicationSummaryRestService
-                .getAllApplications(competitionId, sorting, page, 3, filter)
+                .getAllApplications(competitionId, sorting, page, 20, filter)
                 .getSuccessObjectOrThrowException();
 
         return new AllApplicationsViewModel(
@@ -47,8 +47,6 @@ public class AllApplicationsPageModelPopulator {
     }
 
     private List<AllApplicationsRowViewModel> getApplications(ApplicationSummaryPageResource applicationSummaryPageResource) {
-        // TODO: Implement sorting - INFUND-8054
-        // TODO: Implement filtering - INFUND-8010
 
         return simpleMap(
                 applicationSummaryPageResource.getContent(),

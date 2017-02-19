@@ -72,20 +72,18 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, String filter) {
 
-        String filterStr = "%" + filter + "%";
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr,pageable),
-                () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
+                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filter,pageable),
+                () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filter));
     }
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
             Long competitionId, String sortBy, int pageIndex, int pageSize, String filter) {
 
-        String filterStr = "%" + filter + "%";
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filter, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filter));
     }
 
     @Override
@@ -123,7 +121,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         result.setNumber(pageable.getPageNumber());
         result.setSize(pageable.getPageSize());
         result.setTotalElements(resultsList.size());
-        result.setTotalPages(resultsList.size() / pageable.getPageSize());
+        result.setTotalPages( (resultsList.size() + pageable.getPageSize() -1)  / pageable.getPageSize());
         return find(result, notFoundError(ApplicationSummaryPageResource.class));
     }
 

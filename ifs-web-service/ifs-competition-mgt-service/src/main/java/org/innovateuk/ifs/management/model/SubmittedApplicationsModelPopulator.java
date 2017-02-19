@@ -45,9 +45,6 @@ public class SubmittedApplicationsModelPopulator {
     }
 
     private List<SubmittedApplicationsRowViewModel> getApplications(ApplicationSummaryPageResource summaryPageResource) {
-        // TODO: Implement sorting - INFUND-8058
-        // TODO: Implement filtering - INFUND-8012
-
         return simpleMap(
                 summaryPageResource.getContent(),
                 applicationSummaryResource -> new SubmittedApplicationsRowViewModel(

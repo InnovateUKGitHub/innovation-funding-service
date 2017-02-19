@@ -18,7 +18,7 @@ public class ApplicationSummaryResourceLeadComparator extends DualFieldComparato
 		Long o1Id = resource1.getId();
 		Long o2Id = resource2.getId();
 		
-		return compare(o1Lead, o2Lead, o2Id, o1Id);
+		return compare(o1Lead, o2Lead, o1Id, o2Id);
 	}
 
 }

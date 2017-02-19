@@ -49,7 +49,7 @@
                             <div class="column-two-thirds">
                                 <label class="form-label" for="filterSearch">Search by application number</label>
                                 <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
-                                <a href="#">Clear all filters</a>
+                                <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
                             </div>
                             <div class="column-third">
                                 <button class="button">Filter</button>
