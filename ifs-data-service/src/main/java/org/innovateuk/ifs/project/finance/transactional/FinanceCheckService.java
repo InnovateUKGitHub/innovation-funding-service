@@ -33,9 +33,12 @@ public interface FinanceCheckService {
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheck.class, description = "Project finance users have the ability to view the current status of Finance Checks approvals" )
     ServiceResult<FinanceCheckProcessResource> getFinanceCheckApprovalStatus(Long projectId, Long organisationId);
 
-    @PreAuthorize("hasAuthority('project_finance')")
+    @PreAuthorize("hasAnyAuthority('project_finance')")
     @SecuredBySpring(value = "VIEW", securedType = FinanceCheckSummaryResource.class, description = "Project finance users have the ability to view a summary of finance checks status for all partners" )
     ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId);
+
+    @PreAuthorize("hasPermission(#projectId, 'READ_QUERY')")
+    ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId);
 
     @PostAuthorize("hasPermission(returnObject, 'READ_ELIGIBILITY')")
     ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);

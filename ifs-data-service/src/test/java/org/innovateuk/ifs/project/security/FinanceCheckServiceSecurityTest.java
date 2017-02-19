@@ -74,6 +74,17 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         );
     }
 
+    @Test
+    public void getQueryActionRequired(){
+        assertAccessDenied(
+                () -> classUnderTest.isQueryActionRequired(1L, 2L),
+                () -> {
+                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinanceQueriesForTheirOrganisation(isA(Long.class), isA(UserResource.class));
+                    verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinanceQueries(isA(Long.class), isA(UserResource.class));
+                }
+        );
+    }
+
     private void assertInternalRolesCanPerform(Runnable actionFn) {
         assertRolesCanPerform(actionFn, COMP_ADMIN, PROJECT_FINANCE);
     }
@@ -123,6 +134,11 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
             return null;
         }
 
