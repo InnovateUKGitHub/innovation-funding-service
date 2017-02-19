@@ -10,15 +10,14 @@
 
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
-            <h1 class="heading-xlarge">Your profile</h1>
+            <h1 class="heading-xlarge">Your details</h1>
 
-            <h2 class="heading-medium no-margin-bottom">Your details &nbsp; <small><a th:href="@{/profile/details/edit}"> Edit your details</a></small></h2>
+            <p>These details will be used for all accounts linked to your email address.</p>
 
             <h3 class="heading-small">Your name</h3>
             <p>
-                <th:block th:text="${model.title}" />
                 <th:block th:text="${model.firstName}" />
                 <th:block th:text="${model.lastName}" />
             </p>
@@ -45,6 +44,15 @@
             <p th:if="${model.phoneNumber}" th:text="${model.phoneNumber}" />
             <h3 class="heading-small">Email address</h3>
             <p th:text="${model.email}" />
+
+            <div class="grid-row extra-margin-top">
+                <div class="column-half">
+                    <a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>
+                </div>
+                <div class="column-half alignright">
+                    <a th:href="@{/profile/details/edit}" class="button-secondary">Edit</a>
+                </div>
+            </div>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

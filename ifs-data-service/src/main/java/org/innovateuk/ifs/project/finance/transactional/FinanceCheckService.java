@@ -42,4 +42,5 @@ public interface FinanceCheckService {
 
     @PostAuthorize("hasPermission(returnObject, 'READ_ELIGIBILITY')")
     ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId);
+
 }

@@ -10,7 +10,7 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" />
 
     <div class="page-title">
         <h1 class="heading-xlarge no-margin">Terms and conditions</h1>
@@ -156,6 +156,10 @@
 
     <h2 class="heading-large">14. Information Management Policy</h2>
     <p>See the <a href="https://www.gov.uk/government/organisations/innovate-uk/about/personal-information-charter">Information Management Policy</a> here.</p>
+
+    <div class="extra-margin-top">
+        <a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>
+    </div>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>

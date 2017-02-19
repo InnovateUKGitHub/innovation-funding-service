@@ -142,8 +142,8 @@ Collaborators should not be able to edit application details
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     And the user clicks the button/link    link=Application details
-    Then the user should see the element    css=#application_details-title[readonly]
-    And the user should see the element    css=#application_details-startdate_day[readonly]
+    Then the user should not see the element    css=input#application_details-title
+    And the user should not see the element    css=input#application_details-startdate_day
     And the user should not see the element    jQuery=button:contains("Mark as complete")
 
 The question should be reassigned to the lead applicant
@@ -253,7 +253,7 @@ Lead applicant should be able to remove the registered partner
     [Tags]
     [Setup]    log in as a different user    ${test_mailbox_one}+invite2@gmail.com  ${correct_password}
     Given the user clicks the button/link    link= Assign test
-    And the user clicks the button/link    link=view team members and add collaborators
+    And the user clicks the button/link    link=view and add participants to your application
     When the user clicks the button/link    jQuery=div:nth-child(6) a:contains("Remove")
     And the user clicks the button/link    jQuery=button:contains("Remove")
     Then the user should not see the element    link=Dennis Bergkamp

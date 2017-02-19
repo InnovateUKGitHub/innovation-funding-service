@@ -117,7 +117,7 @@ Navigation of the form sections
     When the applicant navigates to the next section
     Then the user should see the text in the page    To determine the level of funding you are eligible
     When the applicant navigates to the next section
-    Then the user should see the text in the page    Please enter the funding level
+    Then the user should see the text in the page    Enter your funding level
     When the applicant navigates to the next section
     Then the user should see the text in the page    This is the financial overview of all partners
 
