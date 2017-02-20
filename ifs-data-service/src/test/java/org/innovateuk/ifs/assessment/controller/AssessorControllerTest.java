@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.domain.User;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -117,6 +118,7 @@ public class AssessorControllerTest extends BaseControllerMockMVCTest<AssessorCo
 
 
 
+    @Ignore
     @Test
     public void registerAssessorByHash_emptyFields() throws Exception {
         UserRegistrationResource userRegistrationResource = newUserRegistrationResource()
