@@ -17,6 +17,6 @@ import java.util.List;
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
     List<ApplicationStatistics> findByCompetition(Long competitionId);
 
-    @Query("SELECT as FROM ApplicationStatistics as WHERE as.competition = :compId AND (str(as.id) LIKE CONCAT('%', :filter, '%'))")
+    @Query("SELECT a FROM ApplicationStatistics a WHERE a.competition = :compId AND (str(a.id) LIKE CONCAT('%', :filter, '%'))")
     Page<ApplicationStatistics> findByCompetition(@Param("compId") Long competitionId, @Param("filter") String filter, Pageable pageable);
 }

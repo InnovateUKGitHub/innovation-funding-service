@@ -49,7 +49,7 @@ public class ApplicationAssessmentManagementController {
         ApplicationCountSummaryPageResource applicationCounts = applicationCountSummaryRestService.getApplicationCountSummariesByCompetitionId(competitionId, page,20, filter)
                 .getSuccessObjectOrThrowException();
         String originQuery = buildOriginQueryString(ApplicationOverviewOrigin.MANAGE_APPLICATIONS, queryParams);
-        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, originQuery));
+        model.addAttribute("model", manageApplicationsPopulator.populateModel(competitionResource, applicationCounts, filter, originQuery));
         model.addAttribute("originQuery", originQuery);
 
         return "competition/manage-applications";
