@@ -9,7 +9,7 @@ public interface ThreadService<E, P> {
 
     ServiceResult<List<E>> findAll(Long contextClassPk);
 
-    ServiceResult<E> findOne(Long contextClassPk);
+    ServiceResult<E> findOne(Long threadId);
 
     ServiceResult<Long> create(E e);
 

@@ -197,6 +197,12 @@ public class ProjectRestServiceImpl extends BaseRestService implements ProjectRe
     }
 
     @Override
+    public RestResult<Void> removeSignedGrantOfferLetter(Long projectId) {
+        return deleteWithRestResult(projectRestURL + "/" + projectId + "/signed-grant-offer-letter");
+    }
+
+
+    @Override
     public RestResult<Optional<ByteArrayResource>> getAdditionalContractFile(Long projectId) {
         return getWithRestResult(projectRestURL + "/" + projectId + "/additional-contract", ByteArrayResource.class).toOptionalIfNotFound();
     }

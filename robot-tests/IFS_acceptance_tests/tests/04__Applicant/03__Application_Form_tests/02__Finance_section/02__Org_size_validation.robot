@@ -32,7 +32,7 @@ Funding section is now available
     [Documentation]    INFUND-6394
     [Tags]    HappyPath
     When the user clicks the button/link    link=Your funding
-    Then the user should see the text in the page    Please enter the funding level that you would like to apply for in this application
+    Then the user should see the text in the page    Enter your funding level
 
 
 Small org can't have more than 70% funding level
@@ -140,7 +140,8 @@ The user marks their organisation as
     the user selects the radio button    financePosition-organisationSize  ${org_size}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
     the user should not see the element  jQuery=.error-message
-    the user should see the text in the page    Each partner should submit their own project finances and funding rates
+    the user should see the text in the page    Please complete your project finances.
+
 
 the user completes the funding section with funding level
     [Arguments]    ${funding_level}

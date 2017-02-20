@@ -69,13 +69,13 @@ Key statistics for the Ready to Open Competitions
 
 *** Keywords ***
 Get the expected values for the open counts
-    The user clicks the button/link    jQuery=.button:contains(Invite assessors)
+    The user clicks the button/link    jQuery=a:contains(Invite assessors)
     ${Invited}=    Get text    css=div:nth-child(1) > div > span
     Set Test Variable    ${Invited}
     ${Accepted}=    Get text    css=div:nth-child(2) > div > span
     Set Test Variable    ${Accepted}
     The user clicks the button/link    link=Competition
-    The user clicks the button/link    jQuery=.button:contains(Applications)
+    The user clicks the button/link    jQuery=a:contains(Applications)
     The user clicks the button/link    jQuery=a:contains(All applications)
     ${Applications started}=    Get text    css=li:nth-child(2) > div > span
     Set Test Variable    ${Applications started}
@@ -101,7 +101,7 @@ the counts of the open competition should be correct
     Should Be Equal As Integers    ${APPLICATIONS_PER_ASSESSOR}    3
 
 Get the expected values for the Ready to open counts
-    The user clicks the button/link    jQuery=.button:contains(Invite assessors)
+    The user clicks the button/link    jQuery=a:contains(Invite assessors)
     ${Invited}=    Get text    css=div:nth-child(1) > div > span
     Set Test Variable    ${Invited}
     ${Accepted}=    Get text    css=div:nth-child(2) > div > span

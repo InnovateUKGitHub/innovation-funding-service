@@ -1,5 +1,8 @@
 package org.innovateuk.ifs.competition.publiccontent.resource;
 
+import java.util.Arrays;
+import java.util.Optional;
+
 /**
  * Enum to represent the competition setup sections displayed for public content.
  */
@@ -33,5 +36,9 @@ public enum PublicContentSectionType {
 
     public boolean isAllowEmptyContentGroups() {
         return allowEmptyContentGroups;
+    }
+
+    public static Optional<PublicContentSectionType> fromPath(String path) {
+        return Arrays.stream(values()).filter(sectionType -> sectionType.getPath().equals(path)).findAny();
     }
 }

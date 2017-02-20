@@ -96,6 +96,8 @@ public interface ProjectService {
 
     ServiceResult<Void> removeGrantOfferLetter(Long projectId);
 
+    ServiceResult<Void> removeSignedGrantOfferLetter(Long projectId);
+
     ServiceResult<Void> submitGrantOfferLetter(Long projectId);
 
     ProjectTeamStatusResource getProjectTeamStatus(Long projectId, Optional<Long> filterByUserId);

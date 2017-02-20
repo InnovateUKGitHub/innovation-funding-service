@@ -237,6 +237,19 @@ public class ProjectGrantOfferLetterControllerTest extends BaseControllerMockMVC
         verify(projectService).submitGrantOfferLetter(projectId);
     }
 
+    @Test
+    public void testRemoveSignedGrantOfferLetter() throws Exception {
+
+        when(projectService.removeSignedGrantOfferLetter(123L)).
+                thenReturn(serviceSuccess());
+
+        mockMvc.perform(
+                post("/project/123/offer").
+                        param("removeSignedGrantOfferLetterClicked", "")).
+                andExpect(status().is3xxRedirection()).
+                andExpect(view().name("redirect:/project/123/offer"));
+    }
+
     @Override
     protected ProjectGrantOfferLetterController supplyControllerUnderTest() {
         return new ProjectGrantOfferLetterController();

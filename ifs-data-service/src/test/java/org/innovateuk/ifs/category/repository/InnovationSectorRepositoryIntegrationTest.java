@@ -20,13 +20,8 @@ public class InnovationSectorRepositoryIntegrationTest extends BaseRepositoryInt
         this.repository = repository;
     }
 
-    @Autowired
-    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
-
-
     @Before
     public void setup() {
-        competitionCategoryLinkRepository.deleteAll();
         repository.deleteAll();
     }
 
