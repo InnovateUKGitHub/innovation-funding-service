@@ -21,19 +21,18 @@ echo "Deploying the $PROJECT Openshift PROJECTironment"
 
 function tailorAppInstance() {
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
+    sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
-    sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" shib-init/*.sh
 }
 
 function useContainerRegistry() {
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/*.yml
-    sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/init/*.yml
     sed -i.bak "s/imagePullPolicy: IfNotPresent/imagePullPolicy: Always/g" os-files-tmp/robot-tests/*.yml
 
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/*.yml
-    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/init/*.yml
+    sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/innovateuk/#g" os-files-tmp/shib/*.yml
     sed -i.bak "s# innovateuk/# ${INTERNAL_REGISTRY}/${PROJECT}/#g" os-files-tmp/robot-tests/*.yml
 
     docker tag innovateuk/data-service:1.0-SNAPSHOT \
@@ -48,8 +47,6 @@ function useContainerRegistry() {
         ${REGISTRY}/${PROJECT}/assessment-service:1.0-SNAPSHOT
     docker tag innovateuk/application-service:1.0-SNAPSHOT \
         ${REGISTRY}/${PROJECT}/application-service:1.0-SNAPSHOT
-    docker tag innovateuk/shib-init:1.0-SNAPSHOT \
-        ${REGISTRY}/${PROJECT}/shib-init:1.0-SNAPSHOT
 
     docker login -p $(oc whoami -t) -e unused -u unused ${REGISTRY}
 
@@ -59,11 +56,6 @@ function useContainerRegistry() {
     docker push ${REGISTRY}/${PROJECT}/competition-management-service:1.0-SNAPSHOT
     docker push ${REGISTRY}/${PROJECT}/assessment-service:1.0-SNAPSHOT
     docker push ${REGISTRY}/${PROJECT}/application-service:1.0-SNAPSHOT
-    docker push ${REGISTRY}/${PROJECT}/shib-init:1.0-SNAPSHOT
-}
-
-function buildShibInit() {
-    docker build -t ${PROJECT}/shib-init:1.0-SNAPSHOT shib-init
 }
 
 function deploy() {
@@ -77,6 +69,7 @@ function deploy() {
     fi
 
     oc create -f os-files-tmp/
+    oc create -f os-files-tmp/shib/
 }
 
 function blockUntilServiceIsUp() {
@@ -92,36 +85,39 @@ function blockUntilServiceIsUp() {
 }
 
 function shibInit() {
-    oc rsh $(oc get pods | grep ldap | awk '{ print $1 }') /usr/local/bin/ldap-delete-all-users.sh
-    oc create -f os-files-tmp/init/6-shib-init.yml
+     oc rsh $(oc get pods | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
 }
 
 function cleanUp() {
     rm -rf os-files-tmp
     rm -rf shibboleth
-    rm -rf shib-init
 }
 
 function cloneConfig() {
     cp -r os-files os-files-tmp
-    cp -r setup-files/scripts/openshift/shib-init shib-init
 }
+
+function createProject() {
+    until oc new-project $PROJECT
+    do
+      oc delete project $PROJECT || true
+      sleep 10
+    done
+}
+
+
+# Entry point
 
 cleanUp
 cloneConfig
 tailorAppInstance
-buildShibInit
-
-until oc new-project $PROJECT
-do
-  oc delete project $PROJECT || true
-  sleep 10
-done
+createProject
 
 if [[ ${TARGET} == "remote" ]]
 then
     useContainerRegistry
 fi
+
 deploy
 blockUntilServiceIsUp
 shibInit

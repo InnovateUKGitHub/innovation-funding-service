@@ -22,7 +22,7 @@ items:
             value: "8389"
           - name: LDAPSSLPORT
             value: "8636"
-          image: 172.30.80.28:5000/innovateuk/ifs-ldap:0.2.1
+          image: innovateuk/ifs-ldap:0.2.1
           name: ldap
           imagePullPolicy: IfNotPresent
           ports:
