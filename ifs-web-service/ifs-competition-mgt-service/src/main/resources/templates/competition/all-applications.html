@@ -75,18 +75,19 @@
                 </div>
 
                 <div class="grid-row sorting">
-                    <div class="column-two-thirds">
+                    <div class="column-half">
                         <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
                             <span class="heading-small">applications</span>
                         </p>
-
+                    </div>
+                    <div class="column-half alignright">
                         <label for="sort-by">Sort by</label>
                         <select id="sort-by" name="sort" class="js-auto-submit form-control">
                             <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
                             <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
                             <option value="percentageComplete" th:selected="${(model.sorting == 'percentageComplete')}">Percentage complete</option>
                         </select>
-                        <button type="submit" class="button button-secondary no-margin">Sort</button>
+                        <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
                     </div>
                 </div>
             </form>
