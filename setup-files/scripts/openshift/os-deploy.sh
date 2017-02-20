@@ -17,7 +17,7 @@ REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 INTERNAL_REGISTRY=172.30.80.28:5000
 
 
-echo "Deploying the $PROJECT Openshift PROJECTironment"
+echo "Deploying the $PROJECT Openshift project"
 
 function tailorAppInstance() {
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
