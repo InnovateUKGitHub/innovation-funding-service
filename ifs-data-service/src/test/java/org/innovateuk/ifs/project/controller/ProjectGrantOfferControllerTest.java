@@ -119,6 +119,17 @@ public class ProjectGrantOfferControllerTest extends BaseControllerMockMVCTest<P
                 andExpect(status().isNoContent());
     }
 
+    @Test
+    public void removeSignedGrantOfferLetterFile() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectGrantOfferServiceMock.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
+                andExpect(status().isNoContent());
+    }
+
     @Override
     protected ProjectGrantOfferController supplyControllerUnderTest() {
         return new ProjectGrantOfferController();
