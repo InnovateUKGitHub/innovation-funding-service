@@ -86,7 +86,7 @@ public class FormInputResponsePermissionRules {
 
         return (isLead || isCollaborator)
                 && checkIfAssignedToQuestion(questionStatuses, user)
-                && !checkIfQuestionIsMarked(questionStatuses);
+                && checkIfAnyIncompleteQuestionStatus(questionStatuses);
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
@@ -106,11 +106,9 @@ public class FormInputResponsePermissionRules {
         return isAssigned;
     }
 
-    private boolean checkIfQuestionIsMarked(List<QuestionStatus> questionStatuses) {
-        boolean isMarked = questionStatuses.stream()
-                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true));
-
-        return isMarked;
+    private boolean checkIfAnyIncompleteQuestionStatus(List<QuestionStatus> questionStatuses) {
+            return questionStatuses.stream()
+                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() == null || !questionStatus.getMarkedAsComplete());
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
