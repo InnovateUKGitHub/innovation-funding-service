@@ -325,7 +325,7 @@ Finance checks eligibility validations
     When the user clicks the button/link             jQuery=form section:nth-of-type(6) button[name=save-eligibility]
     Then the user should see the text in the page     This field cannot be left blank
     And the user reloads the page
-    When the user clicks the button/link             jQuery=form section:nth-of-type(7) button:contains("Other Costs")
+    When the user clicks the button/link             jQuery=form section:nth-of-type(7) button:contains("Other costs")
     And the user clicks the button/link              jQuery=form section:nth-of-type(7) a:contains("Edit")
     When the user clicks the button/link             jQuery=form section:nth-of-type(7) button[name=save-eligibility]
     Then the user should see the text in the page    This field cannot be left blank
@@ -850,7 +850,7 @@ Project finance user amends travel details in eligibility
     And the user should not see the element       jQuery=form section:nth-of-type(6) button[name=save-eligibility]
 
 Project finance user amends other costs details in eligibility
-    When the user clicks the button/link            jQuery=form section:nth-of-type(7) button:contains("Other Costs")
+    When the user clicks the button/link            jQuery=form section:nth-of-type(7) button:contains("Other costs")
     Then the user should see the element            jQuery=form section:nth-of-type(7) button span:contains("1%")
     And the user should see the element            jQuery=form section:nth-of-type(7) input[value*='1,100']
     When the user clicks the button/link            jQuery=form section:nth-of-type(7) a:contains("Edit")
