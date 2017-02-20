@@ -55,6 +55,14 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
     public boolean projectManagerCanUploadGrantOfferLetter(ProjectResource project, UserResource user) {
         return isProjectManager(project.getId(), user.getId());
     }
+
+    @PermissionRule(
+            value = "DELETE_SIGNED_GRANT_OFFER",
+            description = "Lead partner can delete signed grant offer letter")
+    public boolean leadPartnerCanDeleteSignedGrantOfferLetter(ProjectResource project, UserResource user) {
+        return isLeadPartner(project.getId(), user.getId());
+    }
+
     @PermissionRule(
             value = "SUBMIT_GRANT_OFFER_LETTER",
             description = "Project manager can submit the grant offer letter")

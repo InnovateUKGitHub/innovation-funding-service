@@ -215,6 +215,20 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
         });
     }
 
+    @Test
+    public void testDeleteSignedGrantOfferLetterFileEntry() {
+
+        final Long projectId = 1L;
+
+        ProjectResource project = newProjectResource().build();
+        when(projectLookupStrategy.getProjectResource(projectId)).thenReturn(project);
+
+        assertAccessDenied(() -> classUnderTest.removeSignedGrantOfferLetterFileEntry(projectId), () -> {
+            verify(projectGrantOfferPermissionRules).leadPartnerCanDeleteSignedGrantOfferLetter(project, getLoggedInUser());
+            verifyNoMoreInteractions(projectGrantOfferPermissionRules);
+        });
+    }
+
 
     @Override
     protected Class<? extends ProjectGrantOfferService> getClassUnderTest() {
@@ -290,6 +304,9 @@ public class ProjectGrantOfferServiceSecurityTest extends BaseServiceSecurityTes
 
         @Override
         public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) { return null; }
+
+        @Override
+        public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) { return null; }
 
     }
 }

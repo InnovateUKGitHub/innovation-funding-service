@@ -191,7 +191,7 @@ public class InitialDetailsSectionSaverTest {
         milestone.setId(10L);
         milestone.setType(MilestoneType.OPEN_DATE);
         milestone.setDate(LocalDateTime.of(2020, 12, 1, 0, 0));
-        milestone.setCompetition(1L);
+        milestone.setCompetitionId(1L);
         return milestone;
     }
 
