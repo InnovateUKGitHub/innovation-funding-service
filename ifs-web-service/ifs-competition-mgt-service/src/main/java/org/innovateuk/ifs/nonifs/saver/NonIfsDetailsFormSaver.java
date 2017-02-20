@@ -27,7 +27,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
  * Service to save {@link org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm}
  */
 @Service
-public class NonIfsDetailsSaver {
+public class NonIfsDetailsFormSaver {
 
     @Autowired
     private CompetitionService competitionService;

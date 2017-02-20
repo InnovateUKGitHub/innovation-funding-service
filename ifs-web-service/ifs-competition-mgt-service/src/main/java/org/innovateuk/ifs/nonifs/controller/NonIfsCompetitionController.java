@@ -7,7 +7,7 @@ import org.innovateuk.ifs.management.service.CompetitionDashboardSearchService;
 import org.innovateuk.ifs.nonifs.form.NonIfsDetailsForm;
 import org.innovateuk.ifs.nonifs.formpopulator.NonIfsDetailsFormPopulator;
 import org.innovateuk.ifs.nonifs.modelpopulator.NonIfsDetailsViewModelPopulator;
-import org.innovateuk.ifs.nonifs.saver.NonIfsDetailsSaver;
+import org.innovateuk.ifs.nonifs.saver.NonIfsDetailsFormSaver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -34,7 +34,7 @@ public class NonIfsCompetitionController {
     private CompetitionDashboardSearchService competitionDashboardSearchService;
 
     @Autowired
-    private NonIfsDetailsSaver nonIfsDetailsSaver;
+    private NonIfsDetailsFormSaver nonIfsDetailsFormSaver;
     @Autowired
     private NonIfsDetailsFormPopulator nonIfsDetailsFormPopulator;
     @Autowired
@@ -69,7 +69,7 @@ public class NonIfsCompetitionController {
         Supplier<String> successView = () -> "redirect:/competition/setup/public-content/" + competitionId;
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
-                () -> nonIfsDetailsSaver.save(form, competition));
+                () -> nonIfsDetailsFormSaver.save(form, competition));
 
     }
 
