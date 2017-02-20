@@ -3,11 +3,11 @@ package org.innovateuk.ifs.management.controller;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.application.service.ApplicationFundingDecisionService;
 import org.innovateuk.ifs.application.service.ApplicationSummaryService;
 import org.innovateuk.ifs.application.service.AssessorFeedbackService;
 import org.innovateuk.ifs.application.service.CompetitionService;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
 import org.junit.Before;
@@ -17,22 +17,21 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
+import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_PANEL;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -65,29 +64,10 @@ public class CompetitionManagementFundingControllerTest {
     @Before
     public void setupMockMvc() {
         mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
-    }
 
-
-    @Test
-    public void getByCompetitionIdForCompetitionFundersPanelNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
-
-        when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
-
-        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
-
-        mockMvc.perform(get("/competition/{competitionId}/funding?tab=notSubmitted", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "notSubmitted"))
-                .andExpect(model().attribute("activeSortField", "sortfield"));
-
-        verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-        verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+        LocalValidatorFactoryBean validator = new LocalValidatorFactoryBean();
+        validator.afterPropertiesSet();
+        ReflectionTestUtils.setField(controller, "validator", validator);
     }
 
     @Test
@@ -98,17 +78,16 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
 
-        mockMvc.perform(get("/competition/{competitionId}/funding?tab=submitted", COMPETITION_ID))
+        mockMvc.perform(get("/competition/{competitionId}/funding?tab=notSubmitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
                 .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "submitted"))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
 
-        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
 
@@ -191,7 +170,91 @@ public class CompetitionManagementFundingControllerTest {
 
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
-    @Before
+
+    @Test
+    public void applications_validSubmitFundingDecisionShouldResultInServiceCall() throws Exception {
+        String fundingDecision = "ON_HOLD";
+        List<Long> applicationIds = new ArrayList<>();
+        applicationIds.add(8L);
+        applicationIds.add(9L);
+        applicationIds.add(10L);
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+
+        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicationIds", "8")
+                .param("applicationIds", "9")
+                .param("applicationIds", "10")
+                .param("fundingDecision", fundingDecision))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-funders-panel"));
+
+        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds);
+    }
+
+    @Test
+    public void applications_invalidSubmitFundingDecisionShouldNotResultInServiceCall() throws Exception {
+        String fundingDecision = "ON_HOLD";
+        List<Long> applicationIds = new ArrayList<>();
+        applicationIds.add(8L);
+        applicationIds.add(9L);
+        applicationIds.add(10L);
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+
+        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicationIds", "8")
+                .param("applicationIds", "9")
+                .param("applicationIds", "10")
+                .param("fundingDecision", ""))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-funders-panel"));
+
+        verifyNoMoreInteractions(applicationFundingDecisionService);
+    }
+
+    @Test
+    public void applications_missingSubmitFundingDecisionShouldNotResultInServiceCall() throws Exception {
+        String fundingDecision = "ON_HOLD";
+        List<Long> applicationIds = new ArrayList<>();
+        applicationIds.add(8L);
+        applicationIds.add(9L);
+        applicationIds.add(10L);
+
+        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
+        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+        when(applicationFundingDecisionService.saveApplicationFundingDecisionData(COMPETITION_ID, fundingDecision, applicationIds)).thenReturn(ServiceResult.serviceSuccess());
+
+        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+
+        mockMvc.perform(post("/competition/{competitionId}/funding", COMPETITION_ID)
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("applicationIds", "8")
+                .param("applicationIds", "9")
+                .param("applicationIds", "10"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-funders-panel"));
+
+        verifyNoMoreInteractions(applicationFundingDecisionService);
+    }
+
+
     public void setup() {
 
         ApplicationSummaryPageResource applicationSummaries = new ApplicationSummaryPageResource();
@@ -206,82 +269,5 @@ public class CompetitionManagementFundingControllerTest {
         ApplicationSummaryResource app = new ApplicationSummaryResource();
         app.setId(id);
         return app;
-    }
-
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void saveFundingDecision() throws Exception {
-        String fundingDecisionChoice = "ON_HOLD";
-
-        Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
-        expectedDecisionMap.put(8L, FundingDecision.ON_HOLD);
-        expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
-
-        when(applicationFundingDecisionService.fundingDecisionForString(fundingDecisionChoice)).thenReturn(FundingDecision.ON_HOLD);
-
-        mockMvc.perform(
-                post("/competition/123/fundingdecisionsubmit")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("applicationIds", "8")
-                        .param("applicationIds", "9")
-                        .param("fundingDecisionChoice", fundingDecisionChoice)
-        )
-                .andExpect(redirectedUrl("/competition/123/funding"));
-
-        verify(applicationFundingDecisionService).fundingDecisionForString(fundingDecisionChoice);
-        //verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(123L, expectedDecisionMap);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void saveFundingDecisionUnsubmittedApplications() throws Exception {
-        String fundingDecisionChoice = "ON_HOLD";
-
-        List<Long> applicationIds = new ArrayList<>();
-        applicationIds.add(8L);
-        applicationIds.add(9L);
-
-        when(applicationFundingDecisionService.fundingDecisionForString(fundingDecisionChoice)).thenReturn(FundingDecision.ON_HOLD);
-
-        mockMvc.perform(
-                post("/competition/123/fundingdecisionsubmit")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("applicationIds", "6")
-                        .param("applicationIds", "7")
-                        .param("applicationIds", "8")
-                        .param("applicationIds", "9")
-                        .param("fundingDecisionChoice", fundingDecisionChoice)
-        )
-                .andExpect(redirectedUrl("/competition/123/applications"));
-
-        verify(applicationFundingDecisionService).fundingDecisionForString(fundingDecisionChoice);
-        verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(123L, FundingDecision.ON_HOLD.name(), applicationIds);
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test
-    public void saveFundingDecisionNonExistentFundingChoice() throws Exception {
-        String fundingDecisionChoice = "ON_HOLD";
-
-        Map<Long, FundingDecision> expectedDecisionMap = new HashMap<>();
-        expectedDecisionMap.put(8L, FundingDecision.ON_HOLD);
-        expectedDecisionMap.put(9L, FundingDecision.ON_HOLD);
-
-        when(applicationFundingDecisionService.fundingDecisionForString(fundingDecisionChoice)).thenReturn(FundingDecision.ON_HOLD);
-
-        mockMvc.perform(
-                post("/competition/123/fundingdecisionsubmit")
-                        .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                        .param("applicationIds", "6")
-                        .param("applicationIds", "7")
-                        .param("applicationIds", "8")
-                        .param("applicationIds", "9")
-                        .param("fundingDecisionChoice", fundingDecisionChoice)
-        )
-                .andExpect(redirectedUrl("/competition/123/applications"));
-
-        verify(applicationFundingDecisionService).fundingDecisionForString(fundingDecisionChoice);
-        //verify(applicationFundingDecisionService).saveApplicationFundingDecisionData(123L, expectedDecisionMap);
     }
 }

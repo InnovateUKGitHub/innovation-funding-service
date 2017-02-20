@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 
 import java.util.List;
@@ -16,11 +15,4 @@ public interface ApplicationFundingDecisionService {
 	 * @param applicationIds application ids that will have their funding decision changed
 	 */
 	ServiceResult<Void> saveApplicationFundingDecisionData(Long competitionId, String fundingDecision, List<Long> applicationIds);
-	
-	/**
-	 * returns the appropriate FundingDecision enum value for a String used in the decision form.
-	 * @param val either "Y", "N" or "-"
-	 * @return the appropriate FundingDecision enum value
-	 */
-	FundingDecision fundingDecisionForString(String val);
 }
