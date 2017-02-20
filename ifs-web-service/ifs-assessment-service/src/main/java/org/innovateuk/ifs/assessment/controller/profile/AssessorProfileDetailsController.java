@@ -72,7 +72,6 @@ public class AssessorProfileDetailsController {
 
         return validationHandler.failNowOrSucceedWith(failureView, () -> {
             UserProfileResource profileDetails = new UserProfileResource();
-            profileDetails.setTitle(form.getTitle());
             profileDetails.setFirstName(form.getFirstName());
             profileDetails.setLastName(form.getLastName());
             profileDetails.setEthnicity(form.getEthnicity());
@@ -96,7 +95,6 @@ public class AssessorProfileDetailsController {
     private String doViewEditYourDetails(UserResource loggedInUser, Model model, AssessorProfileEditDetailsForm form, BindingResult bindingResult) {
         if (!bindingResult.hasErrors()) {
             UserProfileResource profileDetails = userService.getUserProfile(loggedInUser.getId());
-            form.setTitle(profileDetails.getTitle());
             form.setFirstName(profileDetails.getFirstName());
             form.setLastName(profileDetails.getLastName());
             form.setGender(profileDetails.getGender());

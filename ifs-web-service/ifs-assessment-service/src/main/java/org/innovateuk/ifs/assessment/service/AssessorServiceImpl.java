@@ -19,7 +19,6 @@ public class AssessorServiceImpl implements AssessorService {
     @Override
     public ServiceResult<Void> createAssessorByInviteHash(String inviteHash, AssessorRegistrationForm registrationForm) {
         UserRegistrationResource userRegistrationResource = new UserRegistrationResource();
-        userRegistrationResource.setTitle(registrationForm.getTitle());
         userRegistrationResource.setFirstName(registrationForm.getFirstName());
         userRegistrationResource.setLastName(registrationForm.getLastName());
         userRegistrationResource.setPhoneNumber(registrationForm.getPhoneNumber());
