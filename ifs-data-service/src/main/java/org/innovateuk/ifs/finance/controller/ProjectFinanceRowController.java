@@ -71,14 +71,14 @@ public class ProjectFinanceRowController {
      */
     @PutMapping("/update/{id}")
     public RestResult<ValidationMessages> update(@PathVariable("id") final Long id, @RequestBody final FinanceRowItem newCostItem) {
-        RestResult<FinanceRowItem> updateResult = projectFinanceRowService.updateCost(id, newCostItem).toGetResponse();
-        if(updateResult.isFailure()){
-            return RestResult.restFailure(updateResult.getFailure());
-        }else{
-            FinanceRowItem costItem = updateResult.getSuccessObject();
-            ValidationMessages validationMessages = validationUtil.validateProjectCostItem(costItem);
-            return RestResult.restSuccess(validationMessages);
+        ValidationMessages validationMessages = validationUtil.validateProjectCostItem(newCostItem);
+        if(!validationMessages.hasErrors()){
+            RestResult<FinanceRowItem> updateResult = projectFinanceRowService.updateCost(id, newCostItem).toGetResponse();
+            if (updateResult.isFailure()) {
+                return RestResult.restFailure(updateResult.getFailure());
+            }
         }
+        return RestResult.restSuccess(validationMessages);
     }
 
     @DeleteMapping("/delete/{costId}")

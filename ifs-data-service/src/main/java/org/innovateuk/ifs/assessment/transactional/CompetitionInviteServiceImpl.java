@@ -29,7 +29,6 @@ import org.innovateuk.ifs.notifications.service.senders.NotificationSender;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
-import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.BusinessType;
@@ -37,8 +36,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -121,9 +118,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     private SystemNotificationSource systemNotificationSource;
 
     @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
     private LoggedInUserSupplier loggedInUserSupplier;
 
     @Value("${ifs.web.baseURL}")
@@ -144,7 +138,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             Notification notification = new Notification(systemNotificationSource, singletonList(recipient), Notifications.INVITE_ASSESSOR,
                     asMap("name", invite.getName(),
                             "competitionName", invite.getTarget().getName(),
-                            "innovationArea", invite.getInnovationAreaOrNull(),
                             "acceptsDate", invite.getTarget().getAssessorAcceptsDate().format(formatter),
                             "deadlineDate", invite.getTarget().getAssessorDeadlineDate().format(formatter),
                             "inviteUrl", format("%s/invite/competition/%s", webBaseUrl + WEB_CONTEXT, invite.getHash())));
@@ -216,8 +209,20 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
-        return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite ->
-                new AssessorCreatedInviteResource(competitionInvite.getName(), getInnovationAreasForInvite(competitionInvite), isUserCompliant(competitionInvite), competitionInvite.getEmail(), competitionInvite.getId())));
+        return serviceSuccess(simpleMap(competitionInviteRepository.getByCompetitionIdAndStatus(competitionId, CREATED), competitionInvite -> {
+            AssessorCreatedInviteResource assessorCreatedInvite = new AssessorCreatedInviteResource();
+            assessorCreatedInvite.setName(competitionInvite.getName());
+            assessorCreatedInvite.setInnovationAreas(getInnovationAreasForInvite(competitionInvite));
+            assessorCreatedInvite.setCompliant(isUserCompliant(competitionInvite));
+            assessorCreatedInvite.setEmail(competitionInvite.getEmail());
+            assessorCreatedInvite.setInviteId(competitionInvite.getId());
+
+            if (competitionInvite.getUser() != null) {
+                assessorCreatedInvite.setId(competitionInvite.getUser().getId());
+            }
+
+            return assessorCreatedInvite;
+        }));
     }
 
     @Override
@@ -240,6 +245,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                     assessorInviteOverview.setDetails(getDetails(participant));
 
                     if (participant.getUser() != null) {
+                        assessorInviteOverview.setId(participant.getUser().getId());
                         assessorInviteOverview.setBusinessType(getBusinessType(participant.getUser()));
                         Profile profile = profileRepository.findOne(participant.getUser().getProfileId());
                         assessorInviteOverview.setCompliant(profile.isCompliant(participant.getUser()));

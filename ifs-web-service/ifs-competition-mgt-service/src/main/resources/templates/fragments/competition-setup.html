@@ -62,14 +62,23 @@
     </div>
 </div>
 
+<!-- ======== Comp admin - sub header with back link ======= -->
+<div th:fragment="comp-setup-header-sub (linkTitle, linkClass, linkUrl)">
+    <div class="sub-header">
+        <nav>
+            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
+        </nav>
+    </div>
+</div>
+
 
 <!-- ======== Comp admin - remove assigned assessor modal ======= -->
 <div th:fragment="comp-setup-remove-assigned-assessor-modal">
     <div class="remove-assigned-assessor-modal" role="dialog" aria-hidden="true">
-        <div th:include="fragments/modals :: close-button" th:remove="tag" />
+        <th:block th:insert="fragments/modals :: close-button" />
 
         <form th:action="'#'" method="post" novalidate="novalidate">
-            <div th:include="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" th:remove="tag" />
+            <th:block th:insert="fragments/competition-setup :: comp-setup-remove-assigned-assessor-content" />
 
             <div class="alignright-button">
                 <button type="button" class="js-close buttonlink large">Cancel</button>
@@ -89,12 +98,3 @@
     <hr/>
 </div>
 
-
-<!-- ======== Comp admin - sub header with back link ======= -->
-<div th:fragment="comp-setup-header-sub (linkTitle, linkClass, linkUrl)">
-    <div class="sub-header">
-        <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
-        </nav>
-    </div>
-</div>

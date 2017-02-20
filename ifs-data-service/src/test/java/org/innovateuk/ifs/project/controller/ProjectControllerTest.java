@@ -10,6 +10,7 @@ import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder;
 import org.innovateuk.ifs.project.gol.resource.GOLState;
+import org.innovateuk.ifs.project.resource.ApprovalType;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -64,6 +65,8 @@ public class ProjectControllerTest extends BaseControllerMockMVCTest<ProjectCont
     private MonitoringOfficerResource monitoringOfficerResource;
 
     private RestDocumentationResultHandler document;
+
+
 
     @Before
     public void setUp() {

@@ -1137,12 +1137,16 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
     }
 
     private ServiceResult<Void> sendGrantOfferLetterSuccess(Project project) {
-        if (golWorkflowHandler.grantOfferLetterSent(project)) {
-            return serviceSuccess();
-        } else {
-            LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-            return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-        }
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterSent(project, user)) {
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
+        });
     }
 
     private ServiceResult<Void> notifyProjectIsLive(Long projectId) {
@@ -1185,19 +1189,33 @@ public class ProjectServiceImpl extends AbstractProjectServiceImpl implements Pr
         return getProject(projectId).andOnSuccess( project -> {
             if(golWorkflowHandler.isReadyToApprove(project)) {
                 if(ApprovalType.APPROVED == approvalType) {
-                    if(!golWorkflowHandler.approve(project)) {
-                        LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
-                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                    }
-                    if(!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
-                        LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
-                        return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
-                    }
-                    notifyProjectIsLive(projectId);
-                    return serviceSuccess();
+                    return approveGOL(project)
+                        .andOnSuccess(() -> {
+
+                            if (!projectWorkflowHandler.grantOfferLetterApproved(project, project.getProjectUsersWithRole(PROJECT_MANAGER).get(0))) {
+                                LOG.error(String.format(PROJECT_STATE_ERROR, project.getId()));
+                                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+                            }
+                            notifyProjectIsLive(projectId);
+                            return serviceSuccess();
+                        }
+                    );
                 }
             }
             return serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_NOT_READY_TO_APPROVE);
+        });
+    }
+
+    private ServiceResult<Void> approveGOL(Project project) {
+
+        return getCurrentlyLoggedInUser().andOnSuccess(user -> {
+
+            if (golWorkflowHandler.grantOfferLetterApproved(project, user)) {
+                return serviceSuccess();
+            } else {
+                LOG.error(String.format(GOL_STATE_ERROR, project.getId()));
+                return serviceFailure(CommonFailureKeys.GENERAL_UNEXPECTED_ERROR);
+            }
         });
     }
 

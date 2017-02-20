@@ -1,20 +1,39 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Edit your skills'" th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Edit your skills'" />
     </head>
 
     <body th:with="context='assessment'">
-        <div th:include="fragments/layout :: body-start" th:remove="tag"></div>
-        <div th:include="fragments/layout :: global-header" th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag"></div>
-            <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}" th:remove="tag"/>
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your skills',linkClass='link-back',linkUrl=@{/profile/skills}" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your skills</h1>
             </div>
+
+            <p>These innovation areas have been chosen as your current areas of expertise. They will influence the types
+                of competition you will be invited to assess. If you would like to amend them or add new ones please
+                contact a member of the Competitions team <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.
+            </p>
+
+            <h2 class="heading-medium no-margin-bottom">Innovation areas</h2>
+
+            <ul class="list list-bullet" th:unless="${#maps.isEmpty(model.innovationAreas)}">
+                <li th:each="innovationSectorEntry : ${model.innovationAreas}"
+                    th:with="innovationSector=${innovationSectorEntry.key},innovationAreas=${innovationSectorEntry.value}">
+                    <span th:text="${innovationSector}" th:remove="tag">health and life sciences</span>
+                    <ul class="list list-bullet">
+                        <li th:each="innovationArea: ${innovationAreas}" th:text="${innovationArea}">
+                            information and communications technology (ICT)
+                        </li>
+                    </ul>
+                </li>
+            </ul>
 
             <form th:action="@{/profile/skills/edit}" method="post" th:object="${form}" class="extra-margin">
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
@@ -26,7 +45,7 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('skillAreas')}? error">
                     <label class="form-label" th:for="skillAreas">
-                        <span class="heading-large">Skill areas</span>
+                        <span class="heading-medium">Skill areas</span>
                         <span th:if="${#fields.hasErrors('skillAreas')}" th:remove="tag">
                             <span class="error-message"  th:each="err : ${#fields.errors('skillAreas')}" th:text="${err}" />
                         </span>
@@ -47,7 +66,7 @@
                             rows="4"
                             th:field="*{skillAreas}"></textarea>
                         <div class="textarea-footer" th:with="skillAreas=*{skillAreas}">
-                            <div th:include="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, skillAreas)})" th:remove="tag" />
+                            <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=100, currentWordsLeft=${#ifsUtil.wordsRemaining(100, skillAreas)})" />
                         </div>
                     </div>
                 </div>
@@ -55,12 +74,12 @@
                 <div class="form-group" th:classappend="${#fields.hasErrors('assessorType')}? error">
                     <fieldset class="inline">
                         <legend>
-                            <span class="heading-large">Assessor type</span>
+                            <span class="heading-medium">Assessor type</span>
                             <span th:if="${#fields.hasErrors('assessorType')}" th:remove="tag">
                                 <span class="error-message"  th:each="err : ${#fields.errors('assessorType')}" th:text="${err}" />
                             </span>
                         </legend>
-                        <p class="form-hint">Please select your current area of work. If you are working in both please select the most dominant.</p>
+                        <p class="form-hint">Please select your current area of work. If you are working in both areas please select the most dominant.</p>
                         <label class="block-label selection-button-radio" th:each="type : ${T(org.innovateuk.ifs.user.resource.BusinessType).values()}">
                             <input th:field="*{assessorType}"
                                    th:value="${type}"
@@ -72,13 +91,14 @@
                     </fieldset>
                 </div>
 
-                <button class="button button-large extra-margin" type="submit">Save</button>
+                <button class="button button-large" type="submit">Save and return to assessor dashboard</button>
+                <a th:href="@{/profile/skills}">Cancel</a>
             </form>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag"></div>
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag"></div>
-        <div th:include="fragments/layout :: body-end" th:remove="tag"></div>
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

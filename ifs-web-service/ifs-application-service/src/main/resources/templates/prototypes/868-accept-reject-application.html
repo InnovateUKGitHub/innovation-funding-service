@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-dashboard">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
 
 
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to Technology inspired'}, ${'/prototypes/871-assessor-comp-dashboard'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-subheader(${'Back to Technology inspired'}, ${'/prototypes/871-assessor-comp-dashboard'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
@@ -60,7 +60,6 @@
         <fieldset>
             <legend class="visuallyhidden">Are you able to assess this application?</legend>
             <h2 class="heading-medium">Are you able to assess this application?</h2>
-            <p class="form-hint">If you are unsure if you can assess, select 'accept' to review the full application.</p>
 
             <a class="button large extra-margin" href="/prototypes/871-assessor-comp-dashboard?status=accept">Accept</a>
             <a role="button" tabindex="0" class="button button-warning large extra-margin" href="#" data-js-modal="modal-reject-assessment">Reject</a>
@@ -68,14 +67,14 @@
         </fieldset>
     </form>
 
-    <div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
+    <th:block th:insert="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

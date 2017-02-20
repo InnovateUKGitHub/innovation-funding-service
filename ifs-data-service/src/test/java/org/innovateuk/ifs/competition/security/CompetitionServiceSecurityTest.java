@@ -2,7 +2,6 @@ package org.innovateuk.ifs.competition.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResult;
@@ -142,9 +141,6 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public Competition addCategories(Competition competition) { return competition; }
-
-        @Override
         public ServiceResult<List<CompetitionResource>> findAll() {
             return serviceSuccess(newCompetitionResource().build(2));
         }
@@ -161,6 +157,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         @Override
         public ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions() {
+            return serviceSuccess(newCompetitionSearchResultItem().build(2));
+        }
+
+        @Override
+        public ServiceResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions() {
             return serviceSuccess(newCompetitionSearchResultItem().build(2));
         }
 

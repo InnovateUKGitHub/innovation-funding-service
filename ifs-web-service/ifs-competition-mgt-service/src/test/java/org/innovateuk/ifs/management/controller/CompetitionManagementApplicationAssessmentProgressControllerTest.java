@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResou
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentCreateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
-import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.management.model.ApplicationAssessmentProgressModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Test;
@@ -82,7 +81,8 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors", competitionId, applicationId))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("model", expectedModel))
-                .andExpect(model().attribute("originQuery", "?origin=APPLICATION_PROGRESS"))
+                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&applicationId=" + applicationId))
+                .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&applicationId=" + applicationId))
                 .andExpect(view().name("competition/application-progress"));
 
         InOrder inOrder = Mockito.inOrder(applicationAssessmentSummaryRestService);
@@ -101,24 +101,27 @@ public class CompetitionManagementApplicationAssessmentProgressControllerTest ex
         when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
         when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(emptyList()));
 
-        ApplicationAssessmentProgressViewModel expectedModel = new ApplicationAssessmentProgressViewModel(
-                applicationId,
-                "Progressive Machines",
-                competitionId,
-                "Connected digital additive manufacturing",
-                true,
-                "Liquid Dynamics",
-                asList("Acme Ltd.", "IO Systems"),
-                emptyList(),
-                emptyList(),
-                emptyList(),
-                emptyList()
-        );
-
         mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&param2=def", competitionId, applicationId))
                 .andExpect(status().isOk())
-                .andExpect(model().attribute("model", expectedModel))
-                .andExpect(model().attribute("originQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def"))
+                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
+                .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
+                .andExpect(view().name("competition/application-progress"));
+    }
+
+    @Test
+    public void applicationProgress_originCannotAppearTwice() throws Exception {
+        Long competitionId = 1L;
+        Long applicationId = 2L;
+
+        ApplicationAssessmentSummaryResource applicationAssessmentSummaryResource = setupApplicationAssessmentSummaryResource(competitionId, applicationId);
+
+        when(applicationAssessmentSummaryRestService.getApplicationAssessmentSummary(applicationId)).thenReturn(restSuccess(applicationAssessmentSummaryResource));
+        when(applicationAssessmentSummaryRestService.getAssessors(applicationId)).thenReturn(restSuccess(emptyList()));
+
+        mockMvc.perform(get("/competition/{competitionId}/application/{applicationId}/assessors?param1=abc&origin=ANOTHER_ORIGIN&param2=def", competitionId, applicationId))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("applicationOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
+                .andExpect(model().attribute("assessorProfileOriginQuery", "?origin=APPLICATION_PROGRESS&param1=abc&param2=def&applicationId=" + applicationId))
                 .andExpect(view().name("competition/application-progress"));
     }
 

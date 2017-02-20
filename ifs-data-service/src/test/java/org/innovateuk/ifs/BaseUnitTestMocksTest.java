@@ -25,7 +25,6 @@ import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.category.repository.*;
 import org.innovateuk.ifs.category.transactional.CategoryService;
-import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
@@ -66,6 +65,8 @@ import org.innovateuk.ifs.project.bankdetails.mapper.BankDetailsMapper;
 import org.innovateuk.ifs.project.bankdetails.repository.BankDetailsRepository;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.finance.repository.*;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceNotesService;
+import org.innovateuk.ifs.project.finance.service.ProjectFinanceQueriesService;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
@@ -88,12 +89,18 @@ import org.innovateuk.ifs.project.workflow.configuration.ProjectWorkflowHandler;
 import org.innovateuk.ifs.project.workflow.projectdetails.configuration.ProjectDetailsWorkflowHandler;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
+import org.innovateuk.ifs.threads.mapper.NoteMapper;
+import org.innovateuk.ifs.threads.mapper.PostMapper;
+import org.innovateuk.ifs.threads.mapper.QueryMapper;
+import org.innovateuk.ifs.threads.repository.NoteRepository;
+import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.mapper.*;
 import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
+import org.innovateuk.threads.resource.NoteResource;
 import org.junit.Before;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -373,6 +380,12 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
     protected AssessorFeedbackService assessorFeedbackServiceMock;
 
     @Mock
+    protected ProjectFinanceQueriesService projectFinanceQueriesService;
+
+    @Mock
+    protected ProjectFinanceNotesService projectFinanceNotesService;
+
+    @Mock
     protected ProjectService projectServiceMock;
 
     @Mock
@@ -422,12 +435,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ResearchCategoryMapper researchCategoryMapperMock;
-
-    @Mock
-    protected CompetitionCategoryLinkService competitionCategoryLinkServiceMock;
-
-    @Mock
-    protected CompetitionCategoryLinkRepository competitionCategoryLinkRepositoryMock;
 
     @Mock
     protected BankDetailsMapper bankDetailsMapperMock;
@@ -569,6 +576,23 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectFinanceRowMapper projectFinanceRowMapperMock;
+
+    @Mock
+    protected QueryRepository queryRepositoryMock;
+
+    @Mock
+    protected NoteRepository noteRepositoryMock;
+
+    @Mock
+    protected QueryMapper queryMapper;
+
+    @Mock
+    protected NoteMapper noteMapper;
+
+    @Mock
+    protected PostMapper postMapper;
+
+
 
     @Before
     public void setupMockInjection() {

@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle='Travel and subsistence rates'" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Travel and subsistence rates'" />
     </head>
 
     <body class="app-overview">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start" />
             <div th:include="fragments/layout :: header-sub"
-                 th:with="linkTitle='Back to assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}"
+                 th:with="linkTitle='Assessor dashboard',linkClass='link-back',linkUrl=@{/assessor/dashboard}"
                  th:remove="tag" />
 
             <h1 class="heading-xlarge">Travel and subsistence rates</h1>
@@ -56,11 +56,11 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td>London (Bed and Breakfast)</td>
+                            <td>London (bed and breakfast)</td>
                             <td class="numeric">&pound;170</td>
                         </tr>
                         <tr>
-                            <td>Elsewhere in the UK (Bed and Breakfast)</td>
+                            <td>Elsewhere in the UK (bed and breakfast)</td>
                             <td class="numeric">&pound;125</td>
                         </tr>
                     </tbody>
@@ -90,7 +90,7 @@
                             <td class="numeric">&pound;30</td>
                         </tr>
                         <tr>
-                            <td>Drinks. Maximum 3 drinks per day</td>
+                            <td>Non-alcoholic drinks. Maximum 3 drinks per day</td>
                             <td class="numeric">&pound;2 per drink</td>
                         </tr>
                     </tbody>
@@ -115,12 +115,16 @@
                     <strong>Please make sure your travel claims, receipts and tickets are all submitted.</strong>
                 </p>
 
+                <div class="extra-margin">
+                    <a th:href="@{/assessor/dashboard}" class="button">Return to assessor dashboard</a>
+                </div>
+
             </div>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

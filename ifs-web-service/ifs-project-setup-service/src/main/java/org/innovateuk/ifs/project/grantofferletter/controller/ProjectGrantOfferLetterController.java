@@ -100,6 +100,19 @@ public class ProjectGrantOfferLetterController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
+    @RequestMapping(params = "removeSignedGrantOfferLetterClicked", method = POST)
+    public String deleteSignedGrantOfferLetterFile(
+            @PathVariable("projectId") final Long projectId,
+            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
+            return projectService.removeSignedGrantOfferLetter(projectId);
+        });
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/grant-offer-letter", method = GET)
@@ -114,16 +127,14 @@ public class ProjectGrantOfferLetterController {
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
     @RequestMapping(value = "/signed-grant-offer-letter", method = GET)
     public
     @ResponseBody
     ResponseEntity<ByteArrayResource> downloadGrantOfferLetterFile(
             @PathVariable("projectId") final Long projectId) {
-
         final Optional<ByteArrayResource> content = projectService.getSignedGrantOfferLetterFile(projectId);
         final Optional<FileEntryResource> fileDetails = projectService.getSignedGrantOfferLetterFileDetails(projectId);
-
         return returnFileIfFoundOrThrowNotFoundException(projectId, content, fileDetails);
     }
 

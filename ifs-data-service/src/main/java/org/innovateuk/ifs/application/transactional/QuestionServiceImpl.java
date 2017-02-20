@@ -316,7 +316,7 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
     @Override
     public ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId) {
         return find(getAssessment(assessmentId), getQuestionSupplier(questionId)).andOnSuccess((assessment, question) -> {
-            if (question.getCompetition().getId().equals(assessment.getTarget().getCompetition().getId()) && question.getSection().getType() == GENERAL) {
+            if (question.getCompetition().getId().equals(assessment.getTarget().getCompetition().getId())) {
                 return serviceSuccess(questionMapper.mapToResource(question));
             }
             return serviceFailure(notFoundError(Question.class, questionId, assessmentId));

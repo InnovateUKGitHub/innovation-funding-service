@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Competition eligibility'}, ${'/prototypes/920-comp-eligibility'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -22,7 +22,7 @@
     </div>
 
 	<h2 class="heading-large no-margin-top">What we ask you &hellip;</h2>
-	
+
 	<p>The application has the following sections:</p>
 
 	<hr />
@@ -148,7 +148,7 @@
 
 	<h3 class="heading-medium">Your finances</h3>
 
-	<p>In this section all partner organisations participating in your project are required to enter their project costs into this section.  We require a detailed breakdown. This is to make sure  that they are eligible project costs  you can claim funding against. To be eligible, all costs must be incurred directly as a result of the project and must be in the following categories:</p> 
+	<p>In this section all partner organisations participating in your project are required to enter their project costs into this section.  We require a detailed breakdown. This is to make sure  that they are eligible project costs  you can claim funding against. To be eligible, all costs must be incurred directly as a result of the project and must be in the following categories:</p>
 
 	<ul class="list list-bullet">
 		<li>labour: staff costs paid through PAYE or equivalent records</li>
@@ -184,7 +184,7 @@
 
 
 
-	
+
 
 
 
@@ -193,10 +193,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

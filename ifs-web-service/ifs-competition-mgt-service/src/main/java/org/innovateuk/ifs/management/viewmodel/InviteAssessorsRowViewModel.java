@@ -12,14 +12,20 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
  */
 abstract class InviteAssessorsRowViewModel {
 
+    private Long id;
     private String name;
     private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;
 
-    protected InviteAssessorsRowViewModel(String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
+    protected InviteAssessorsRowViewModel(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
+        this.id = id;
         this.name = name;
         this.innovationAreas = innovationAreas;
         this.compliant = compliant;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {

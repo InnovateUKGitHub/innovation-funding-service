@@ -42,6 +42,7 @@ import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.OrganisationRepository;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
@@ -131,9 +132,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<FileAndContents> getSignedGrantOfferLetterFileAndContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
-
             FileEntry fileEntry = project.getSignedGrantOfferLetter();
-
             return getFileAndContentsResult(fileEntry);
         });
     }
@@ -158,9 +157,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<FileAndContents> getAdditionalContractFileAndContents(Long projectId) {
         return getProject(projectId).andOnSuccess(project -> {
-
             FileEntry fileEntry = project.getAdditionalContractFile();
-
             return getFileAndContentsResult(fileEntry);
         });
     }
@@ -235,24 +232,23 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
                                         andOnSuccessReturn(fileDetails -> linkGrantOfferLetterFileToProject(project, fileDetails, false)))));
     }
 
+    private boolean isProjectReadyForGrantOffer(Long projectId) {
+        Optional<Project> project = getProject(projectId).getOptionalSuccessObject();
+        ApprovalType spendProfileApproval = projectFinanceService.getSpendProfileStatusByProjectId(projectId).getSuccessObject();
+
+        return project.map(project1 -> ApprovalType.APPROVED.equals(spendProfileApproval) && ApprovalType.APPROVED.equals(project1.getOtherDocumentsApproved()) && project1.getGrantOfferLetter() == null).orElse(false);
+    }
+
     @Override
     public ServiceResult<Void> generateGrantOfferLetterIfReady(Long projectId) {
-        return projectFinanceService.getSpendProfileStatusByProjectId(projectId).andOnSuccess(approval -> {
-            if (approval == ApprovalType.APPROVED) {
-                return getProject(projectId).andOnSuccess(project -> {
-                    if (ApprovalType.APPROVED.equals(project.getOtherDocumentsApproved())) {
-                        FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
-                        return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
-                                .andOnSuccess(() -> serviceSuccess()).
-                                        andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
-                    } else {
-                        return serviceSuccess();
-                    }
-                });
-            } else {
-                return serviceSuccess();
-            }
-        });
+        if (isProjectReadyForGrantOffer(projectId)) {
+            FileEntryResource generatedGrantOfferLetterFileEntry = new FileEntryResource(null, DEFAULT_GOL_NAME, GOL_CONTENT_TYPE, DEFAULT_GOL_SIZE);
+            return generateGrantOfferLetter(projectId, generatedGrantOfferLetterFileEntry)
+                    .andOnSuccess(() -> serviceSuccess()).
+                            andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_UNABLE_TO_CONVERT_TO_PDF));
+        } else {
+            return serviceSuccess();
+        }
     }
 
     private final List<String> organisationsListWithLeadOnTopAndPartnersAlphabeticallyOrdered(List<String> organisationNames, Organisation leadOrganisation) {
@@ -354,11 +350,11 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     @Override
     public ServiceResult<Void> removeGrantOfferLetterFileEntry(Long projectId) {
         return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
-        .andOnSuccess(project ->
-                validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
-                        getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
-                                fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
-                                        removeGrantOfferLetterFileFromProject(project)))));
+                .andOnSuccess(project ->
+                        validateRemoveGrantOfferLetter(project).andOnSuccess(() ->
+                                getGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+                                        fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                                removeGrantOfferLetterFileFromProject(project)))));
     }
 
     private ServiceResult<Void> validateRemoveGrantOfferLetter(Project project) {
@@ -377,8 +373,31 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
 
     private void removeGrantOfferLetterFileFromProject(Project project) {
         validateProjectIsInSetup(project).andOnSuccess(() ->
-            project.setGrantOfferLetter(null));
+                project.setGrantOfferLetter(null));
+    }
+
+    @Override
+    public ServiceResult<Void> removeSignedGrantOfferLetterFileEntry(Long projectId) {
+        return getProject(projectId).andOnSuccess(this::validateProjectIsInSetup)
+                .andOnSuccess(project ->
+                        getSignedGrantOfferLetterFileEntry(project).andOnSuccess(fileEntry ->
+                                fileService.deleteFile(fileEntry.getId()).andOnSuccessReturnVoid(() ->
+                                        removeSignedGrantOfferLetterFileFromProject(project))));
+    }
+
+    private ServiceResult<FileEntry> getSignedGrantOfferLetterFileEntry(Project project) {
+        if (project.getSignedGrantOfferLetter() == null) {
+            return serviceFailure(notFoundError(FileEntry.class));
+        } else {
+            return serviceSuccess(project.getSignedGrantOfferLetter());
         }
+    }
+
+    private void removeSignedGrantOfferLetterFileFromProject(Project project) {
+        validateProjectIsInSetup(project).andOnSuccess(() ->
+                project.setSignedGrantOfferLetter(null));
+    }
+
 
 
     @Override
@@ -540,7 +559,7 @@ public class ProjectGrantOfferServiceImpl extends BaseTransactionalService imple
     }
 
     private ServiceResult<Project> validateProjectIsInSetup(final Project project) {
-        if(!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
+        if (!ProjectState.SETUP.equals(projectWorkflowHandler.getState(project))) {
             return serviceFailure(PROJECT_SETUP_ALREADY_COMPLETE);
         }
 

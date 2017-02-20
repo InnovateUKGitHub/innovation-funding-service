@@ -1,9 +1,7 @@
 package org.innovateuk.ifs.category.domain;
 
 import javax.persistence.*;
-
 import java.util.List;
-
 
 /**
  * An Innovation Sector. {@link InnovationSector}s contain a List of {@link InnovationArea}s.

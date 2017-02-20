@@ -80,7 +80,7 @@
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-applicant-page-title(subtitle, heading)">
   <h1 class="heading-xlarge">
-    <span class="heading-secondary" th:text="${(subtitle == null ? '194741: Technology inspired' : subtitle )}">COMP DETAILS</span>
+    <span class="heading-secondary" th:text="${(subtitle == null ? 'Technology inspired' : subtitle )}">COMP DETAILS</span>
     <th:block th:text="${heading}" />
   </h1>
 </div>
@@ -89,25 +89,25 @@
 <div th:fragment="prototype-project-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <div th:if="${subtitle == 'projectSetup'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'successful'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'successfulFeedback'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'unsuccessful'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'unsuccessfulFeedback'}" th:remove="tag">
-            <p class="subtitle no-margin">10294855: Mobile Phone Data for Logistics Analytics</p>
+            <p class="subtitle no-margin">Mobile Phone Data for Logistics Analytics</p>
         </div>
         <div th:if="${subtitle == 'notSubmitted'}" th:remove="tag">
-            <p class="subtitle no-margin">10295748: Additive manufacturing</p>
+            <p class="subtitle no-margin">Additive manufacturing</p>
         </div>
         <div th:if="${subtitle == 'noStatus'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
     </div>
@@ -579,7 +579,7 @@
 </div>
 
 <!-- =============================Appendix content question 8 jes============================== -->
-<div th:fragment="appendix-question8-jes" th:remove="tag" >
+<th:block th:fragment="appendix-question8-jes">
     <h3 class="heading-small no-margin">Upload a pdf copy of the Je-S form once you have a status of 'With Council'</h3>
     <details>
         <summary><span class="summary">How do I create my Je-S output?</span></summary>
@@ -590,7 +590,7 @@
           <p>Guidance for this section needs to be created</p>
         </div>
      </details>
-</div>
+</th:block>
 
 <!-- =============================Appendix content question 8 jes============================== -->
 <div th:fragment="appendix-academic-download" th:remove="tag" >
@@ -609,62 +609,59 @@
 
 
 <!-- ===================Finances elibility warning============================== -->
-<div th:fragment="appendix-upload(page, user, permission)">
+<th:block th:fragment="appendix-upload(page, user, permission)">
     <div th:class="${param.error} ? 'upload-section error' :upload-section">
 
-        <div th:if="${page == 'question-5'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question5" th:remove="tag" />
-        </div>
+        <th:block th:if="${page == 'question-5'}" th:insert="prototypes/fragments/applicant-view :: appendix-question5" />
 
-        <div th:if="${page == 'question-6'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question6" th:remove="tag" />
-        </div>
+        <th:block th:if="${page == 'question-6'}" th:insert="prototypes/fragments/applicant-view :: appendix-question6" />
 
-        <div th:if="${page == 'question-8'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question8" th:remove="tag" />
-        </div>
+        <th:block th:if="${page == 'question-8'}" th:insert="prototypes/fragments/applicant-view :: appendix-question8" />
 
-         <div th:if="${page == 'question-8-jes'}" th:remove="tag">
-            <div th:include="prototypes/fragments/applicant-view :: appendix-question8-jes" th:remove="tag" />
-        </div>
+        <th:block th:if="${page == 'question-8-jes'}" th:insert="prototypes/fragments/applicant-view :: appendix-question8-jes" />
 
-            <div th:if="${param.uploaded == null}" th:remove="tag">
-                <div th:if="${permission == 'assigned'}" th:remove="tag">
-                    <input type="file" name="file" id="file" class="inputfile" />
-                    <label for="file" class="button-secondary extra-margin">+ Upload</label>
-                </div>
-                <div th:if="${permission == 'not-assigned'}" th:remove="tag">
-                    <p class="uploaded-file">No file currently uploaded</p>
+        <th:block th:if="${param.uploaded == null}">
+            <div th:if="${permission == 'assigned'}" th:remove="tag">
+                <input type="file" name="file" id="file" class="inputfile" />
+                <label for="file" class="button-secondary extra-margin">+ Upload</label>
+            </div>
+            <div th:if="${permission == 'not-assigned'}" th:remove="tag">
+                <p class="uploaded-file">No file currently uploaded</p>
+            </div>
+        </th:block>
+
+        <div th:if="${param.uploaded != null}" th:remove="tag">
+            <div th:if="${param.uploaded[0] == 'yes'}">
+                <a href="#" class="uploaded-file">The-uploaded-file-example.pdf</a>
+                <div th:if="${user == 'lead'}" th:remove="tag">
+                    <div class="alignright"><a href="#">Remove file</a></div>
                 </div>
             </div>
 
-            <div th:if="${param.uploaded != null}" th:remove="tag">
-                <div th:if="${param.uploaded[0] == 'yes'}">
-                    <a href="#" class="uploaded-file">The-uploaded-file-example.pdf</a>
-                    <div th:if="${user == 'lead'}" th:remove="tag">
-                        <div class="alignright"><a href="#">Remove file</a></div>
-                    </div>
-                </div>
-
-                <div th:if="${param.uploaded[0] == 'no'}" th:remove="tag">
-                    <p class="uploaded-file">No file currently uploaded</p>
-                </div>
+            <div th:if="${param.uploaded[0] == 'no'}" th:remove="tag">
+                <p class="uploaded-file">No file currently uploaded</p>
             </div>
+        </div>
 
-            <p th:if="${param.error != null}">
+        <th:block th:if="${param.error != null}">
+            <p>
                 <ul class="list list-bullet">
-                    <li th:if="${param.size != null}">
-                        <strong>Please upload a file less than 1mb in size</strong>
-                    </li>
-                    <li th:if="${param.file != null}">
-                        <strong>Please upload a file in .pdf format only</strong>
-                    </li>
+                    <th:block th:if="${param.size != null}">
+                        <li>
+                            <strong>Please upload a file less than 1mb in size</strong>
+                        </li>
+                    </th:block>
+                    <th:block th:if="${param.file != null}">
+                        <li>
+                            <strong>Please upload a file in .pdf format only</strong>
+                        </li>
+                    </th:block>
                 </ul>
             </p>
+        </th:block>
 
-
-        </div>
-</div>
+    </div>
+</th:block>
 
 <!-- ========Applicant view - feedback score======= -->
 
@@ -677,7 +674,7 @@
 
 <!-- ========Applicant view - readonly application view======= -->
 <div th:fragment="prototype-readonly-application">
-    <div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
 
     <div th:if="${param.status != null} and ${param.status[0] == 'fundingPanel'} or ${param.status != null} and ${param.status[0] == 'assessorFeedback'}" th:remove="tag">
 
@@ -951,9 +948,9 @@
 
             <div class="question">
 
-                <div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+                <th:block th:insert="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" />
 
-                <div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+                <th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" />
             </div>
 
         </div>

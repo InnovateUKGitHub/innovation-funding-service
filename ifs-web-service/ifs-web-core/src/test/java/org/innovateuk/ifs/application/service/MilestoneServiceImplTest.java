@@ -43,7 +43,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
         assertEquals(MilestoneType.OPEN_DATE, foundMilestone.getType());
         assertEquals(milestoneDate, foundMilestone.getDate());
-        assertEquals(Long.valueOf(1L), foundMilestone.getCompetition());
+        assertEquals(Long.valueOf(1L), foundMilestone.getCompetitionId());
     }
 
     @Test
@@ -58,7 +58,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         assertEquals(Long.valueOf(2L), foundMilestone.getId());
         assertEquals(MilestoneType.BRIEFING_EVENT, foundMilestone.getType());
         assertEquals(milestoneDate, foundMilestone.getDate());
-        assertEquals(Long.valueOf(1L), foundMilestone.getCompetition());
+        assertEquals(Long.valueOf(1L), foundMilestone.getCompetitionId());
     }
 
     @Test
@@ -72,7 +72,7 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
         assertEquals(Long.valueOf(1L), foundMilestone.getId());
         assertEquals(MilestoneType.OPEN_DATE, foundMilestone.getType());
         assertEquals(milestoneDate, foundMilestone.getDate());
-        assertEquals(Long.valueOf(1L), foundMilestone.getCompetition());
+        assertEquals(Long.valueOf(1L), foundMilestone.getCompetitionId());
     }
 
     @Test

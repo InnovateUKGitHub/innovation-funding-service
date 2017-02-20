@@ -159,13 +159,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withAssessorDeadlineDate(deadlineDate)
                 .build();
 
-        InnovationArea innovationArea = newInnovationArea().withName("innovation area").build();
-
         CompetitionInvite invite = setUpCompetitionInvite(competition, email, name, CREATED, innovationArea, null);
 
         Map<String, Object> expectedNotificationArguments = asMap("name", name,
                 "competitionName", "my competition",
-                "innovationArea", innovationArea,
                 "acceptsDate", acceptsDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
                 "deadlineDate", deadlineDate.format(DateTimeFormatter.ofPattern("dd MMMM yyyy")),
                 "inviteUrl", format("%s/invite/competition/%s", "https://ifs-local-dev/assessment", invite.getHash()));
@@ -925,6 +922,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build();
 
         List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource()
+                .withId(compliantUser.getId(), nonCompliantUserNoSkills.getId(), nonCompliantUserNoAffiliations.getId(), nonCompliantUserNoContract.getId(), null)
                 .withInviteId(1L, 2L, 3L, 4L, 5L)
                 .withName("John Barnes", "Dave Smith", "Richard Turner", "Oliver Romero", "Christopher Soames")
                 .withInnovationAreas(innovationAreaList, emptyList(), emptyList(), emptyList(), innovationAreaList)
@@ -984,6 +982,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(3);
 
         List<AssessorInviteOverviewResource> expected = newAssessorInviteOverviewResource()
+                .withId(users.get(0).getId(), users.get(1).getId(), users.get(2).getId())
                 .withName("John Barnes", "Dave Smith", "Richard Turner")
                 .withBusinessType(BUSINESS, ACADEMIC, BUSINESS)
                 .withInnovationAreas(asList(innovationAreaResources.get(0)), asList(innovationAreaResources.get(1)), asList(innovationAreaResources.get(2)))
@@ -1503,6 +1502,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInvite(newCompetitionInvite()
                         .withStatus(OPENED)
                         .withInnovationArea(innovationArea)
+                        .withUser(newUser().build())
                 )
                 .build();
 
@@ -1534,6 +1534,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withInvite(newCompetitionInvite()
                         .withStatus(OPENED)
                         .withInnovationArea(innovationArea)
+                        .withUser(newUser().build())
                 )
                 .build();
 
