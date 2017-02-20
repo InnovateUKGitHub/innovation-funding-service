@@ -179,12 +179,22 @@ Publish public content: Publish once all sections are complete
     [Tags]  HappyPath
     Given the user should not see the text in the page  Last published
     When the user clicks the button/link                jQuery=button:contains("Publish public content")
-    Then the user should see the text in the page       Last published
+    Then the user should see the element                jQuery=small:contains("Last published")
     And the user should not see the element             jQuery=button:contains("Publish public content")
     When the user clicks the button/link                link=Competition information and search
     And the user clicks the button/link                 link=Edit
     Then the user should not see the element            jQuery=button:contains("Save and return")
     And the user should see the element                 jQuery=button:contains("Publish and return")
+
+The user is able to edit and publish again
+    [Documentation]  INFUND-6914
+    [Tags]
+    Given the user enters text to a text field  id=eligibility-summary  Some other summary
+    And the user clicks the button/link         jQuery=button:contains("Publish and return")
+    When the user should see all sections completed
+    Then the user should see the element        jQuery=small:contains("${today}")
+    When the user clicks the button/link        link=Return to setup overview
+    Then the user should see the element        JQuery=p:contains("${today}")
 
 *** Keywords ***
 Custom suite setup
@@ -196,6 +206,8 @@ Custom suite setup
     ${competitionId}=  get comp id from comp title  ${public_content_competition_name}
     ${public_content_overview}=    catenate    ${server}/management/competition/setup/public-content/${competitionId}
     Set suite variable  ${public_content_overview}
+    ${today} =  get today
+    set suite variable  ${today}
 
 User creates a new competition
     [Arguments]    ${competition_name}
@@ -291,3 +303,7 @@ the user visits
     the user should see the element  jQuery=h1:contains("${section}")
     the user should not see an error in the page
     the user clicks the button/link  link=Public content
+
+the user should see all sections completed
+    :FOR  ${i}  IN RANGE  1  8
+    \    the user should see the element  jQuery=li:nth-child(${i}) img.complete
