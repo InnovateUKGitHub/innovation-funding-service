@@ -20,19 +20,20 @@
     <th:block th:insert="prototypes/fragments/layout :: prototype-sub-header" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, ${'University of Bristol finances'})" />
 
-    <div class="hgroup" style="padding-top: 20px">
-		<p class="subtitle no-margin">Technology inspired - Application number: 12347353</p>
-		<h1 class="heading-xlarge no-margin-top">University of Bristol finances</h1>
-	</div>
+	<!--<div class="hgroup" style="padding-top: 20px">-->
+		<!--<p class="subtitle no-margin">Technology inspired</p>-->
+		<!--<h1 class="heading-xlarge no-margin-top">University of Bristol finances</h1>-->
+	<!--</div>-->
 
 
-    <h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
+	<h2 class="heading-medium no-margin">Provide your organisation's finances</h2>
 
 	<p>Only your organisation can see this level of detail. All members of your organisation can access and edit your finances. We recommend assigning completion of your finances to one member of your team.</p>
 
 
-	<th:block th:insert="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=partner" />
+	<th:block th:include="prototypes/fragments/academic-view :: prototype-academic-form" th:with="user=partner" />
 
 
 	<div class="alignright-button extra-margin">

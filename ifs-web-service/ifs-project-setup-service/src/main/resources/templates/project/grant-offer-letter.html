@@ -86,8 +86,7 @@
                 <!--/* file is uploaded */-->
                 <th:block th:if="${model.signedGrantOfferLetterFile}">
                     <a th:href="@{/project/{id}/offer/signed-grant-offer-letter(id=${model.projectId})}" class="uploaded-file" th:text="${model.signedGrantOfferLetterFile.filename}">The-uploaded-file-example.pdf</a>
-                    <!-- /* no controller for deleting the file just yet. Add this line with the proper name attribute when there is :)  */ -->
-                    <!-- /* <button name="removeSignedGrantOfferLetterClicked" class="button-secondary no-margin-right" type="submit">Remove</button> */ -->
+                    <button name="removeSignedGrantOfferLetterClicked" class="button-secondary no-margin-right" type="submit">Remove</button>
                 </th:block>
             </div>
 

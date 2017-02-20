@@ -7,7 +7,6 @@ import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -56,6 +55,25 @@ public class MilestoneControllerIntegrationTest extends BaseControllerIntegratio
         List<MilestoneResource> milestone = getMilestonesForCompetition(COMPETITION_ID_INVALID);
         assertTrue(milestone.isEmpty());
         assertNotNull(milestone);
+    }
+
+    @Test
+    public void testGetAllPublicMilestonesByCompetitionId() throws Exception {
+        loginSystemRegistrationUser();
+        RestResult<List<MilestoneResource>> milestoneResult = controller.getAllPublicMilestonesByCompetitionId(COMPETITION_ID_VALID);
+        assertTrue(milestoneResult.isSuccess());
+        List<MilestoneResource> milestone = milestoneResult.getSuccessObject();
+        assertNotNull(milestone);
+        assertEquals(3, milestone.size());
+    }
+
+    @Test
+    public void testEmptyGetAllPublicMilestonesByCompetitionId() throws Exception {
+        loginSystemRegistrationUser();
+        RestResult<List<MilestoneResource>> result = controller.getAllPublicMilestonesByCompetitionId(COMPETITION_ID_INVALID);
+        List<MilestoneResource> milestones = result.getSuccessObjectOrThrowException();
+        assertTrue(milestones.isEmpty());
+        assertNotNull(milestones);
     }
 
     @Test

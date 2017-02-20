@@ -29,7 +29,7 @@ public class OtherCostBuilder extends AbstractCostBuilder<OtherCost, OtherCostBu
     }
 
     public static OtherCostBuilder newOtherCost() {
-        return new OtherCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Other Cost "));
+        return new OtherCostBuilder(emptyList()).with(uniqueIds()).with(idBasedNames("Other cost "));
     }
 
     private OtherCostBuilder(List<BiConsumer<Integer, OtherCost>> multiActions) {
