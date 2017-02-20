@@ -45,7 +45,7 @@ External users do not have access to the Public content sections
 
 Competition information and search: server side validation
     [Documentation]    INFUND-6915
-    [Tags]
+    [Tags]  HappyPath
     [Setup]  log in as a different user    &{Comp_admin1_credentials}
     Given the internal user navigates to public content  ${public_content_competition_name}
     Then the user clicks the button/link   link=Competition information and search
