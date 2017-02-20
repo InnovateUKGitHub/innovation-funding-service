@@ -182,7 +182,12 @@ public class ApplicationController {
             model.addAttribute("assessorFeedback", assessorFeedbackViewModel);
         }
 
-        return "application-summary";
+        if (competition.getCompetitionStatus().isFeedbackReleased())  {
+            return "application-feedback-summary";
+        }
+        else {
+            return "application-summary";
+        }
     }
 
     @ProfileExecution
