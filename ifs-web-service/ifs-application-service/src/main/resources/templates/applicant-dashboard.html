@@ -67,6 +67,11 @@
                                         <li>Application number: <span th:text="${#numbers.formatInteger(app.id,8)}"></span></li>
                                         <li>Competition: <span th:text="${competitions.get(app.getId()).getName()}">COMPETITION NAME</span></li>
                                     </ul>
+                                    <th:block th:if="${applicationsAssigned?.contains(app.id)}">
+                                        <div class="action-required">
+                                            <strong>Sections are assigned to you</strong>
+                                        </div>
+                                    </th:block>
                                 </div>
                                 <div class="status">
                                     <div class="status-msg msg-deadline">
