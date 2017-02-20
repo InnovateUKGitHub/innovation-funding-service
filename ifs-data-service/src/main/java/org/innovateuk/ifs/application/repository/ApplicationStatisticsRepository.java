@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.application.repository;
 
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
@@ -12,4 +16,7 @@ import java.util.List;
  */
 public interface ApplicationStatisticsRepository extends PagingAndSortingRepository<ApplicationStatistics, Long> {
     List<ApplicationStatistics> findByCompetition(Long competitionId);
+
+    @Query("SELECT as FROM ApplicationStatistics as WHERE as.competition = :compId AND (str(as.id) LIKE CONCAT('%', :filter, '%'))")
+    Page<ApplicationStatistics> findByCompetition(@Param("compId") Long competitionId, @Param("filter") String filter, Pageable pageable);
 }

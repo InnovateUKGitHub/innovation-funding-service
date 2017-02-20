@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.management.viewmodel.ManageApplicationsRowViewModel;
@@ -17,10 +18,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 @Component
 public class ManageApplicationsModelPopulator {
 
-    public ManageApplicationsViewModel populateModel(CompetitionResource competition, List<ApplicationCountSummaryResource> applicationCounts) {
+    public ManageApplicationsViewModel populateModel(CompetitionResource competition, ApplicationCountSummaryPageResource applicationCounts, String origin) {
         ManageApplicationsViewModel model = new ManageApplicationsViewModel(
                 competition.getId(), competition.getName(),
-                simpleMap(applicationCounts, this::getRowViewModel),
+                simpleMap(applicationCounts.getContent(), this::getRowViewModel),
                 IN_ASSESSMENT.equals(competition.getCompetitionStatus()));
         return model;
     }
