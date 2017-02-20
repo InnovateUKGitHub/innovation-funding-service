@@ -6,7 +6,7 @@
         <th:block th:if="${model.currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FINANCE}">
             <div class="your-finances">
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
-                <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
+                <p>Please complete your project finances.</p>
 
                 <details class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                     <summary><span class="summary">Not requesting funding</span></summary>
