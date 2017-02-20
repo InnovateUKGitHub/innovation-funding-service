@@ -117,3 +117,15 @@ include::{snippets}/project/is-signed-grant-offer-letter-approved/http-response.
 
 ==== Curl Example
 include::{snippets}/project/is-signed-grant-offer-letter-approved/curl-request.adoc[]
+
+=== Remove Signed Grant Offer Letter
+
+==== Request
+include::{snippets}/project/remove-signed-grant-offer-letter-file/http-request.adoc[]
+include::{snippets}/project/remove-signed-grant-offer-letter-file/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/project/remove-signed-grant-offer-letter-file/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/project/remove-signed-grant-offer-letter-file/curl-request.adoc[]

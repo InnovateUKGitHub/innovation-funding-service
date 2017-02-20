@@ -20,16 +20,14 @@ import org.mockito.stubbing.Answer;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.MilestoneBuilder.newMilestone;
 import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServiceImpl>{
 	@InjectMocks
@@ -157,6 +155,19 @@ public class MilestoneServiceImplTest extends BaseServiceUnitTest<MilestoneServi
 		when(milestoneRepository.findAllByCompetitionId(1L)).thenReturn(milestones);
 
 		ServiceResult<List<MilestoneResource>> result = service.getAllMilestonesByCompetitionId(1L);
+
+		assertTrue(result.isSuccess());
+		assertNotNull(result);
+		assertEquals(3, milestones.size());
+	}
+
+	@Test
+	public void getAllPublicMilestones() {
+		List<Milestone> milestones = newMilestone().withType(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE).build(3);
+		when(milestoneRepository.findByCompetitionIdAndTypeIn(1L, asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE)))
+                .thenReturn(milestones);
+
+		ServiceResult<List<MilestoneResource>> result = service.getAllPublicMilestonesByCompetitionId(1L);
 
 		assertTrue(result.isSuccess());
 		assertNotNull(result);

@@ -5,7 +5,6 @@ import org.innovateuk.ifs.form.AddressForm;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.Title;
 import org.innovateuk.ifs.validator.constraints.FieldMatch;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
@@ -21,9 +20,6 @@ import javax.validation.constraints.Size;
  */
 @FieldMatch(first = "password", second = "retypedPassword", message = "{validation.standard.password.match}")
 public class AssessorRegistrationForm extends BaseBindingResultTarget {
-
-    @NotNull(message = "{validation.standard.title.selectionrequired}")
-    private Title title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
@@ -74,14 +70,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     })
     @Pattern(regexp = "([0-9\\ +-])+",  message= "{validation.standard.phonenumber.format}")
     private String phoneNumber;
-
-    public Title getTitle() {
-        return title;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -165,7 +153,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
         AssessorRegistrationForm that = (AssessorRegistrationForm) o;
 
         return new EqualsBuilder()
-                .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(password, that.password)
@@ -181,7 +168,6 @@ public class AssessorRegistrationForm extends BaseBindingResultTarget {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(title)
                 .append(firstName)
                 .append(lastName)
                 .append(password)

@@ -5,8 +5,11 @@ import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemRe
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.service.AssessorCountOptionsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.publiccontent.service.ContentGroupRestService;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -30,11 +33,19 @@ public class CompetitionServiceImpl implements CompetitionService {
     private PublicContentItemRestService publicContentItemRestService;
 
     @Autowired
+    private ContentGroupRestService contentGroupRestService;
+
+    @Autowired
     private AssessorCountOptionsRestService assessorCountOptionsRestService;
 
     @Override
     public CompetitionResource getById(Long competitionId){
         return competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public CompetitionResource getPublishedById(Long competitionId){
+        return competitionsRestService.getPublishedCompetitionById(competitionId).getSuccessObjectOrThrowException();
     }
 
     @Override
@@ -114,8 +125,18 @@ public class CompetitionServiceImpl implements CompetitionService {
     }
 
     @Override
-    public ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId) {
-        return publicContentItemRestService.getItemByCompetitionId(competitionId).toServiceResult();
+    public PublicContentItemResource getPublicContentOfCompetition(Long competitionId) {
+        return publicContentItemRestService.getItemByCompetitionId(competitionId).getSuccessObjectOrThrowException();
+    }
+
+    @Override
+    public ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId) {
+        return contentGroupRestService.getFile(contentGroupId).toServiceResult();
+    }
+
+    @Override
+    public ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId) {
+        return contentGroupRestService.getFileDetails(contentGroupId).toServiceResult();
     }
 
     @Override

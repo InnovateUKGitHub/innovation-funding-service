@@ -12,9 +12,14 @@ import java.util.List;
  * Service for operations around the usage and processing of Milestones
  */
 public interface MilestoneService {
+    @PreAuthorize("hasAnyAuthority('system_registrar')")
+    @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
+            description = "All users can get see the public milestones for the given competition")
+    ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(final Long id);
+
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value="READ", securedType=MilestoneResource.class,
-            description = "Only Comp Admins and project finance users can see all the milestones for the given comopetition")
+            description = "Only Comp Admins and project finance users can see all the milestones for the given competition")
     ServiceResult<List<MilestoneResource>> getAllMilestonesByCompetitionId(final Long id);
 
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")

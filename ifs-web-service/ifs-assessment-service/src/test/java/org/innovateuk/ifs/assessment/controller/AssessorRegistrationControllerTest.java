@@ -130,7 +130,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String postcode = "postcode";
 
         AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
-        expectedForm.setTitle(title);
         expectedForm.setFirstName(firstName);
         expectedForm.setLastName(lastName);
         expectedForm.setPhoneNumber(phoneNumber);
@@ -196,7 +195,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         String postcode = "postcode";
 
         AssessorRegistrationForm expectedForm = new AssessorRegistrationForm();
-        expectedForm.setTitle(title);
         expectedForm.setFirstName(firstName);
         expectedForm.setLastName(lastName);
         expectedForm.setPhoneNumber(phoneNumber);
@@ -283,7 +281,6 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         AssessorRegistrationForm form = (AssessorRegistrationForm) result.getModelAndView().getModel().get("form");
 
-        assertEquals(title, form.getTitle());
         assertEquals(phoneNumber, form.getPhoneNumber());
         assertEquals(gender, form.getGender());
         assertEquals(ethnicity, form.getEthnicity());

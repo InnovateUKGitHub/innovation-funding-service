@@ -78,7 +78,7 @@
 </th:block>
 
 <!--/* Box with summary about competition on left hand side */-->
-<div th:fragment="info-area" class="bold-small blue-block">
+<th:block th:fragment="info-area">
     <div th:switch="${competitionSummary.competitionStatus.name()}">
 
       <div th:case="'NOT_STARTED'" class="info-area boxed">
@@ -151,7 +151,7 @@
         &nbsp; <!--/* don't remove is for mainting layout when the info box is sticky/fixed */-->
     </div>
 
-</div>
+</th:block>
 
 <!-- Applications table -->
 <th:block th:fragment="applications-table(competition,results)">

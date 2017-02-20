@@ -3,6 +3,8 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -14,6 +16,8 @@ import java.util.List;
 @Service
 public interface CompetitionService {
     CompetitionResource getById(Long id);
+
+    CompetitionResource getPublishedById(Long id);
 
     CompetitionResource create();
 
@@ -43,7 +47,11 @@ public interface CompetitionService {
 
     void notifyAssessors(Long competitionId);
 
-    ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId);
+    PublicContentItemResource getPublicContentOfCompetition(Long competitionId);
+
+    ServiceResult<ByteArrayResource> downloadPublicContentAttachment(Long contentGroupId);
+
+    ServiceResult<FileEntryResource> getPublicContentFileDetails(Long contentGroupId);
 
     CompetitionResource createNonIfs();
 }
