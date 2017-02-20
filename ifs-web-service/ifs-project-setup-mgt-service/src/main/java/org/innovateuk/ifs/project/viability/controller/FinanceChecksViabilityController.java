@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.setup.finance.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -49,6 +50,9 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private ProjectFinanceService financeService;
+
+    @Autowired
+    private CompetitionSetupFinanceService competitionSetupFinanceService;
 
     @RequestMapping(method = GET)
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -143,7 +147,9 @@ public class FinanceChecksViabilityController {
         Integer contributionToProject = toZeroScaleInt(financesForOrganisation.getTotalContribution());
 
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
-        Integer turnover = null; // for this release, these will always be null
+
+        competitionSetupFinanceService.getByCompetitionId(project);
+        Integer turnover = financesForOrganisation; // for this release, these will always be null
         Integer headCount = null; // for this release, these will always be null
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
