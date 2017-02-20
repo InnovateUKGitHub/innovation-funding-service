@@ -200,6 +200,17 @@ public class ProjectSpendProfileController {
         return "project/spend-profile-confirm";
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SPEND_PROFILE_SECTION')")
+    @RequestMapping(value = "/incomplete", method = GET)
+    public String viewConfirmEditSpendProfilePage(@PathVariable("projectId") Long projectId,
+                                              @PathVariable("organisationId") Long organisationId,
+                                              Model model,
+                                              @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        ProjectSpendProfileViewModel viewModel = buildSpendProfileViewModel(projectId, organisationId, loggedInUser);
+        model.addAttribute("model", viewModel);
+        return "project/spend-profile-confirm-edits";
+    }
+
     private String doEditSpendProfile(Model model, SpendProfileForm form, Long organisationId, UserResource loggedInUser,
                                       ProjectResource project, SpendProfileTableResource spendProfileTableResource) {
 

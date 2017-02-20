@@ -101,6 +101,7 @@ The collapsible element will show a normal header when there is no javascript, w
 		float:right;
 	}
 	.collapsible-content {
+    @extend %contain-floats;
 		padding-bottom: 3em;
 	}
 
