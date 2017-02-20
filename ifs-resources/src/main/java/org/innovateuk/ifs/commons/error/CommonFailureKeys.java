@@ -141,6 +141,10 @@ public enum CommonFailureKeys implements ErrorTemplate {
     PUBLIC_CONTENT_IDS_INCONSISTENT(BAD_REQUEST),
 
     /**
+     * Non IFS competitions.
+     */
+    ONLY_NON_IFS_COMPETITION_VALID(BAD_REQUEST),
+    /**
      * Project Bank details
      */
     BANK_DETAILS_CAN_ONLY_BE_SUBMITTED_ONCE(BAD_REQUEST),

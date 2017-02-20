@@ -802,4 +802,5 @@ public final class CollectionFunctions {
     public static <S> boolean matchAll(Collection<S> collectionToMatch, Predicate<S> predicate){
         return collectionToMatch.stream().allMatch(predicate);
     }
+
 }
