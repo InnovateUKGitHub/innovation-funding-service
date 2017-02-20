@@ -325,11 +325,7 @@ Finance checks eligibility validations
     When the user clicks the button/link             jQuery=form section:nth-of-type(6) button[name=save-eligibility]
     Then the user should see the text in the page     This field cannot be left blank
     And the user reloads the page
-<<<<<<< HEAD:robot-tests/IFS_acceptance_tests/tests/05__Project_Setup/06__Finance_checks.robot
-    When the user clicks the button/link             jQuery=form section:nth-of-type(7) h3:contains("Other Costs")
-=======
-    When the user clicks the button/link             jQuery=form section:nth-of-type(7) button:contains("Other costs")
->>>>>>> development:robot-tests/IFS_acceptance_tests/tests/09__Project_setup/06__Finance_checks.robot
+    When the user clicks the button/link             jQuery=form section:nth-of-type(7) h3:contains("Other costs")
     And the user clicks the button/link              jQuery=form section:nth-of-type(7) a:contains("Edit")
     When the user clicks the button/link             jQuery=form section:nth-of-type(7) button[name=save-eligibility]
     Then the user should see the text in the page    This field cannot be left blank
@@ -854,13 +850,8 @@ Project finance user amends travel details in eligibility
     And the user should not see the element       jQuery=form section:nth-of-type(6) button[name=save-eligibility]
 
 Project finance user amends other costs details in eligibility
-<<<<<<< HEAD:robot-tests/IFS_acceptance_tests/tests/05__Project_Setup/06__Finance_checks.robot
-    When the user clicks the button/link            jQuery=form section:nth-of-type(7) h3:contains("Other Costs")
+    When the user clicks the button/link            jQuery=form section:nth-of-type(7) h3:contains("Other costs")
     Then the user should see the element            jQuery=form section:nth-of-type(7) h3 span:contains("1%")
-=======
-    When the user clicks the button/link            jQuery=form section:nth-of-type(7) button:contains("Other costs")
-    Then the user should see the element            jQuery=form section:nth-of-type(7) button span:contains("1%")
->>>>>>> development:robot-tests/IFS_acceptance_tests/tests/09__Project_setup/06__Finance_checks.robot
     And the user should see the element            jQuery=form section:nth-of-type(7) input[value*='1,100']
     When the user clicks the button/link            jQuery=form section:nth-of-type(7) a:contains("Edit")
     And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(1) td:nth-child(1) textarea  some other costs

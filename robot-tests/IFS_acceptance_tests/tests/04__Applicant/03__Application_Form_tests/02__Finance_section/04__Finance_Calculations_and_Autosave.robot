@@ -98,11 +98,7 @@ Other costs
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
     Then the user reloads the page
     Then Totals should be correct    id=section-total-15    £ 200    css=[data-mirror="#section-total-15"]    £ 200
-<<<<<<< HEAD:robot-tests/IFS_acceptance_tests/tests/02__Applicant/03__Application_Form_tests/02__Finance_section/04__Finance_Calculations_and_Autosave.robot
-    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Other Costs")
-=======
-    [Teardown]    the user clicks the button/link    jQuery=button:contains("Other costs")
->>>>>>> development:robot-tests/IFS_acceptance_tests/tests/04__Applicant/03__Application_Form_tests/02__Finance_section/04__Finance_Calculations_and_Autosave.robot
+    [Teardown]    the user clicks the button/link    jQuery=h2:contains("Other costs")
 
 *** Keywords ***
 the Applicant fills in the Labour costs for two rows
@@ -204,11 +200,7 @@ the Applicant fills the Travel fields
     the user moves focus to the element    jQuery=h2:contains("Travel and subsistence")
 
 the applicant adds one row for the other costs
-<<<<<<< HEAD:robot-tests/IFS_acceptance_tests/tests/02__Applicant/03__Application_Form_tests/02__Finance_section/04__Finance_Calculations_and_Autosave.robot
-    the user clicks the button/link    jQuery=h2:contains("Other Costs")
-=======
-    the user clicks the button/link    jQuery=button:contains("Other costs")
->>>>>>> development:robot-tests/IFS_acceptance_tests/tests/04__Applicant/03__Application_Form_tests/02__Finance_section/04__Finance_Calculations_and_Autosave.robot
+    the user clicks the button/link    jQuery=h2:contains("Other costs")
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    100
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    test
@@ -216,11 +208,7 @@ the applicant adds one row for the other costs
     the user should see the element    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(1) textarea    test
     the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    100
-<<<<<<< HEAD:robot-tests/IFS_acceptance_tests/tests/02__Applicant/03__Application_Form_tests/02__Finance_section/04__Finance_Calculations_and_Autosave.robot
-    the user moves focus to the element    jQuery=h2:contains("Other Costs")
-=======
-    the user moves focus to the element    jQuery=button:contains("Other costs")
->>>>>>> development:robot-tests/IFS_acceptance_tests/tests/04__Applicant/03__Application_Form_tests/02__Finance_section/04__Finance_Calculations_and_Autosave.robot
+    the user moves focus to the element    jQuery=h2:contains("Other costs")
 
 the total of the other funding should be correct
     the user should see the element    id=other-funding-total
