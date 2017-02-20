@@ -14,7 +14,6 @@ import javax.validation.constraints.Size;
  * Base class for user profile DTOs
  */
 public abstract class UserProfileBaseResource {
-    @NotNull(message = "{validation.standard.title.selectionrequired}")
     private Title title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
