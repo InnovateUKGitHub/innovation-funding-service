@@ -27,25 +27,6 @@
                 </div>
 
                 <h2 class="heading-medium">Your details</h2>
-                <div class="form-group" th:classappend="${#fields.hasErrors('title')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Title</span>
-                            <th:block th:if="${#fields.hasErrors('title')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('title')}" th:text="${err}" />
-                            </th:block>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="item : ${T(org.innovateuk.ifs.user.resource.Title).values()}">
-                            <input th:field="*{title}"
-                                   th:value="${item}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.title.selectionrequired}" />
-                            <th:block th:text="${item.displayName}" />
-                        </label>
-                    </fieldset>
-                </div>
-
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                     <label class="form-label" th:for="firstName">
                         <span class="form-label-bold">First name</span>

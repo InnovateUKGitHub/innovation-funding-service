@@ -80,7 +80,7 @@
 <!-- ===================Assessor Page title============================== -->
 <div th:fragment="prototype-applicant-page-title(subtitle, heading)">
   <h1 class="heading-xlarge">
-    <span class="heading-secondary" th:text="${(subtitle == null ? '194741: Technology inspired' : subtitle )}">COMP DETAILS</span>
+    <span class="heading-secondary" th:text="${(subtitle == null ? 'Technology inspired' : subtitle )}">COMP DETAILS</span>
     <th:block th:text="${heading}" />
   </h1>
 </div>
@@ -89,25 +89,25 @@
 <div th:fragment="prototype-project-page-title(subtitle, heading)">
     <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px">
         <div th:if="${subtitle == 'projectSetup'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'successful'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'successfulFeedback'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'unsuccessful'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <div th:if="${subtitle == 'unsuccessfulFeedback'}" th:remove="tag">
-            <p class="subtitle no-margin">10294855: Mobile Phone Data for Logistics Analytics</p>
+            <p class="subtitle no-margin">Mobile Phone Data for Logistics Analytics</p>
         </div>
         <div th:if="${subtitle == 'notSubmitted'}" th:remove="tag">
-            <p class="subtitle no-margin">10295748: Additive manufacturing</p>
+            <p class="subtitle no-margin">Additive manufacturing</p>
         </div>
         <div th:if="${subtitle == 'noStatus'}" th:remove="tag">
-            <p class="subtitle no-margin">10294856: Machine learning in robots</p>
+            <p class="subtitle no-margin">Machine learning in robots</p>
         </div>
         <h1 class="heading-xlarge no-margin" th:text="${heading}">Title here</h1>
     </div>
