@@ -165,7 +165,7 @@ the user fills in Other costs
     the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
     #focus                                 css=#section-total-15./   # commented as this section can be used and the values will differ with runs. Would like to romove it after review.
     #textfield should contain              css=#section-total-15  £ 50  #This is commented out because the value in the field differs in full run vs run only the suite.
-    the user clicks the button/link       jQuery=#form-input-20 h2§:contains("Other costs")
+    the user clicks the button/link       jQuery=#form-input-20 h2:contains("Other costs")
 
 the user removes prev costs if there are any
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=table[id="other-costs-table"] tr:contains("Remove")
