@@ -12,12 +12,21 @@
 
 
 <main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="fragments/layout :: main-content-start" />
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/2113-dashboard?status=successful'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-page-title(${'projectSetup'}, ${'Project setup status'})" />
+
+	<dl class="dl-left extra-margin-bottom">
+		<dd>Application number:</dd>
+		<dt>194741</dt>
+		<dd>Competition:</dd>
+		<dt>Connected digital additive manufacturing</dt>
+		<dd>Funding body:</dd>
+		<dt>Innovate UK</dt>
+	</dl>
 
 	<p class="form-hint" th:unless="${param.status != null and param.status[0] == 'setup-complete'}">You need to complete the following steps before this project can begin. All partners have individual steps to complete.</p>
 
