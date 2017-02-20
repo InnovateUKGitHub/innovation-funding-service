@@ -187,7 +187,7 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         Long projectId = 1L;
 
         allGlobalRoleUsers.forEach(user -> {
-            if (user.equals(projectFinanceUser())) {
+            if (allInternalUsers.contains(user)) {
                 assertTrue(rules.internalUsersCanSeeTheProjectFinanceQueries(projectId, user));
             } else {
                 assertFalse(rules.internalUsersCanSeeTheProjectFinanceQueries(projectId, user));
