@@ -73,7 +73,7 @@ public class ApplicationFundingDecisionServiceImplTest extends BaseServiceUnitTe
 		applicationIds.add(9L);
 
 		ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource();
-		List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(8L,9L).build(4);
+		List<ApplicationSummaryResource> applicationSummaryResources = newApplicationSummaryResource().withId(8L,9L).build(2);
 		applicationSummaryPageResource.setContent(applicationSummaryResources);
 
 		ServiceResult<Void> result = service.saveApplicationFundingDecisionData(1L, fundingDecisionChoice, applicationIds);

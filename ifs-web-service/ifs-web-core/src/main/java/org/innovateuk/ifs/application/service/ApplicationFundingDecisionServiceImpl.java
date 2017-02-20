@@ -54,7 +54,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 
 	public boolean isAllowedFundingDecision(String fundingDecisionString) {
 		Optional<FundingDecision> fundingDecision = fundingDecisionForString(fundingDecisionString);
-		if(!fundingDecision.isPresent() || fundingDecision.equals(FundingDecision.UNDECIDED)) {
+		if(!fundingDecision.isPresent() || fundingDecision.get().equals(FundingDecision.UNDECIDED)) {
 			return false;
 		}
 		else {
