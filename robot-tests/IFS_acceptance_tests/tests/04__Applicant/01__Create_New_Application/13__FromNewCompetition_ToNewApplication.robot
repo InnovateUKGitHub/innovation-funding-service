@@ -124,19 +124,9 @@ As next step the Applicant cannot see the turnover field
     Given Lead Applicant applies to the new created competition  ${compWITHGrowth}
     When the user clicks the button/link  link=Your finances
     And the user clicks the button/link   link=Your organisation
-    Then the user should view the project growth table
-    #Then the user should not see the text in the page  Turnover (£)
+    Then the user should not see the text in the page  Turnover (£)
     And the user should see the text in the page  Full time employees
     And the user should see the text in the page  How many full-time employees did you have on the project at the close of your last financial year?
-
-Applicant can view and edit project growth table
-    [Documentation]  INFUND-6395
-    [Tags]      Pending
-    Given Lead Applicant applies to the new created competition  ${compWITHGrowth}
-    When the user clicks the button/link  link=Your finances
-    And the user clicks the button/link   link=Your organisation
-    Then the user should view the project growth table
-    and the user can edit the project growth table
 
 Organisation server side validation when no
     [Documentation]  INFUND-6393
@@ -258,6 +248,20 @@ Mark Organisation as complete when yes
     When the user clicks the button/link              jQuery=button:contains("Mark as complete")
     Then the user should see the element              jQuery=img.complete[alt*="Your organisation"]
 
+Applicant can view and edit project growth table
+    [Documentation]  INFUND-6395
+    [Tags]
+    Given the user navigates to Your-finances page  ${compWITHGrowth}
+    #When the user clicks the button/link  link=Your finances
+    When the user clicks the button/link   link=Your organisation
+    Then the user should view the project growth table
+    and the user can edit the project growth table
+
+Non-lead applicant can view and edit project growth table
+    [Documentation]  INFUND-6395
+    [Tags]     Pending
+    given the user navigates to
+
 *** Keywords ***
 Custom Suite Setup
     ${day} =  get tomorrow day
@@ -333,16 +337,20 @@ the user selects medium organisation size
     the user clicks the button/link      jQuery=label[for="financePosition-organisationSize-MEDIUM"]  # Click it twice
 
 the user should view the project growth table
-    the user should see the text in the element     css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(1)    Section
-    the user should see the text in the element     css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(2)     Last financial year (£)
-    the user should see the text in the element     css=form-group tr:nth-of-type(1) td:nth-of-type(1) span    Annual turnover
-    the user should see the text in the element     css=input[id="input-1182"]    65000
-    the user should see the text in the element     css=form-group tr:nth-of-type(2) td:nth-of-type(1) span    Annual profits
-    the user should see the text in the element     css=input[id="input-1183"]    2000
-    the user should see the text in the element     css=form-group tr:nth-of-type(3) td:nth-of-type(1) span    Annual export
-    the user should see the text in the element     css=input[id="input-1184"]    3000
-    the user should see the text in the element     css=form-group tr:nth-of-type(4) td:nth-of-type(1) span    Research and development spend
-    the user should see the text in the element     css=input[id="input-1185"]    15000
+    the user should see the text in the element     css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(1)   Section
+    the user should see the text in the element     css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(2)   Last financial year (£)
+    the user should see the text in the element     jQuery=label[for="input-1182"]   Annual turnover
+    the user should see the element     jQuery=td input[value="65000"]
+    the user should see the text in the element     jQuery=label[for="input-1183"]   Annual profits
+    the user should see the element     jQuery=td input[value="2000"]
+    the user should see the text in the element     jQuery=label[for="input-1184"]   Annual export
+    the user should see the element     jQuery=td input[value="3000"]
+    the user should see the text in the element     jQuery=label[for="input-1185"]   Research and development spend
+    the user should see the element     jQuery=td input[value="15000"]
 
 the user can edit the project growth table
-    the user should see the element    edit your organisation
+    the user clicks the button/link   css=button.extra-margin.buttonlink
+    then the user selects the radio button    financePosition-organisationSize    SMALL
+    the user enters text to a text field   css=input[id="input-1182"]   4000
+    the user enters text to a text field   jQuery=td input[value="65000"]  5000
+
