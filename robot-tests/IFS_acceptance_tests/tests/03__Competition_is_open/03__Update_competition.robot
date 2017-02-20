@@ -26,6 +26,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 *** Test Cases ***
+# TODO refactore this file due to INFUND-7610
 User can update initial details of a competition before notify date
     [Documentation]    INFUND-6661
     [Setup]    The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
