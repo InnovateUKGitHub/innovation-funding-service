@@ -797,7 +797,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         long assessorId = 3L;
         int page = 1;
         int pageSize = 20;
-        long totalElements = 21;
+        int totalElements = 21;
         int totalPages = 2;
 
         List<InnovationAreaResource> innovationAreas = newInnovationAreaResource()
@@ -819,7 +819,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withSize(pageSize)
                 .withNumber(page)
                 .withTotalPages(totalPages)
-                .withTotalElements(totalElements)
+                .withTotalElements((long) totalElements)
                 .build();
 
         InnovationArea innovationArea = newInnovationArea()
@@ -847,19 +847,76 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .build(1);
 
         when(userRepositoryMock.countAllAvailableAssessorsByCompetition(competitionId)).thenReturn(totalElements);
-        when(userRepositoryMock.findAllAvailableAssessorsByCompetitionAndSortedPage(competitionId, 20, 40, Order.FIRST_NAME.getColumn(), "ASC"))
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetitionAndSortedPage(
+                competitionId, 20, 40, Order.FIRST_NAME.getColumn(), "ASC"
+        ))
                 .thenReturn(assessors);
         when(profileRepositoryMock.findOne(profile.getId())).thenReturn(profile);
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreas.get(0));
 
-        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, pageSize, Order.FIRST_NAME, ASC).getSuccessObjectOrThrowException();
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, pageSize, Order.FIRST_NAME, ASC).
+                getSuccessObjectOrThrowException();
 
         verify(userRepositoryMock).countAllAvailableAssessorsByCompetition(competitionId);
-        verify(userRepositoryMock).findAllAvailableAssessorsByCompetitionAndSortedPage(competitionId, 20, 40, Order.FIRST_NAME.getColumn(), "ASC");
+        verify(userRepositoryMock).findAllAvailableAssessorsByCompetitionAndSortedPage(
+                competitionId, 20, 40, Order.FIRST_NAME.getColumn(), "ASC"
+        );
         verify(profileRepositoryMock).findOne(profile.getId());
         verify(innovationAreaMapperMock).mapToResource(innovationArea);
 
         assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAvailableAssessors_evenElements() throws Exception {
+        long competitionId = 1L;
+        int page = 0;
+        int pageSize = 20;
+        int totalElements = 40;
+
+        List<User> assessors = emptyList();
+
+        when(userRepositoryMock.countAllAvailableAssessorsByCompetition(competitionId)).thenReturn(totalElements);
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetitionAndSortedPage(
+                competitionId, 0, 20, Order.FIRST_NAME.getColumn(), "ASC"
+        ))
+                .thenReturn(assessors);
+
+        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, page, pageSize, Order.FIRST_NAME, ASC)
+                .getSuccessObjectOrThrowException();
+
+        verify(userRepositoryMock).countAllAvailableAssessorsByCompetition(competitionId);
+        verify(userRepositoryMock).findAllAvailableAssessorsByCompetitionAndSortedPage(
+                competitionId, 0, 20, Order.FIRST_NAME.getColumn(), "ASC"
+        );
+
+        assertEquals(2, result.getTotalPages());
+    }
+
+    @Test
+    public void getAvailableAssessors_onePage() throws Exception {
+        long competitionId = 1L;
+        int page = 0;
+        int pageSize = 20;
+        int totalElements = 5;
+
+        List<User> assessors = emptyList();
+
+        when(userRepositoryMock.countAllAvailableAssessorsByCompetition(competitionId)).thenReturn(totalElements);
+        when(userRepositoryMock.findAllAvailableAssessorsByCompetitionAndSortedPage(
+                competitionId, 0, 20, Order.FIRST_NAME.getColumn(), "ASC"
+        ))
+                .thenReturn(assessors);
+
+        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, page, pageSize, Order.FIRST_NAME, ASC)
+                .getSuccessObjectOrThrowException();
+
+        verify(userRepositoryMock).countAllAvailableAssessorsByCompetition(competitionId);
+        verify(userRepositoryMock).findAllAvailableAssessorsByCompetitionAndSortedPage(
+                competitionId, 0, 20, Order.FIRST_NAME.getColumn(), "ASC"
+        );
+
+        assertEquals(1, result.getTotalPages());
     }
 
     @Test

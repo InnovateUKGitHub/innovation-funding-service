@@ -51,5 +51,5 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
                                                                    @Param("direction") String direction);
 
     @Query(value = "SELECT COUNT(*) " + AVAILABLE_ASSESSORS_QUERY, nativeQuery = true)
-    long countAllAvailableAssessorsByCompetition(@Param("competitionId") long competitionId);
+    int countAllAvailableAssessorsByCompetition(@Param("competitionId") long competitionId);
 }

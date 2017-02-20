@@ -194,11 +194,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                                                                               int pageSize,
                                                                               AvailableAssessorPageResource.Order orderBy,
                                                                               Sort.Direction direction) {
-        long totalAvailableAssessors = userRepository.countAllAvailableAssessorsByCompetition(competitionId);
+        int totalAvailableAssessors = userRepository.countAllAvailableAssessorsByCompetition(competitionId);
+        int totalPages = (totalAvailableAssessors + pageSize - 1) / pageSize;
 
         int pageStart = page * pageSize;
         int pageEnd = pageStart + pageSize;
-        int totalPages = (int) Math.ceil((double) totalAvailableAssessors / (double) pageSize);
 
         List<User> assessors = userRepository.findAllAvailableAssessorsByCompetitionAndSortedPage(
                 competitionId,
