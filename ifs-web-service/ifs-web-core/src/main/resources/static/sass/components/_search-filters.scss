@@ -1,13 +1,16 @@
+/*----- Search / filtering ----*/
+
 .search-filters{
+  padding: 20px;
   background: $panel-colour;
   margin-bottom: 40px;
-  padding: 20px;
 
   .form-control{
+    background: #fff;
     width: 100%;
   }
 
   button{
-    margin: 20px 0 0 0;
+    margin: 25px 0 0 0;
   }
 }
