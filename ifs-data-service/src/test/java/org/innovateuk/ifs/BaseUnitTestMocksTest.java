@@ -25,7 +25,6 @@ import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.category.repository.*;
 import org.innovateuk.ifs.category.transactional.CategoryService;
-import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
@@ -436,12 +435,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ResearchCategoryMapper researchCategoryMapperMock;
-
-    @Mock
-    protected CompetitionCategoryLinkService competitionCategoryLinkServiceMock;
-
-    @Mock
-    protected CompetitionCategoryLinkRepository competitionCategoryLinkRepositoryMock;
 
     @Mock
     protected BankDetailsMapper bankDetailsMapperMock;

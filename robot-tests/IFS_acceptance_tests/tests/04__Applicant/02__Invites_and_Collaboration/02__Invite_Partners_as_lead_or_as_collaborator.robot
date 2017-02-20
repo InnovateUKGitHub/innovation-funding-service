@@ -24,8 +24,8 @@ Application team page
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    And the user should see the text in the page    view team members and add collaborators
-    When the user clicks the button/link    link=view team members and add collaborators
+    And the user should see the text in the page    view and add participants to your application
+    When the user clicks the button/link    link=view and add participants to your application
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application.
     And the lead applicant should have the correct status
@@ -64,7 +64,7 @@ Pending partners visible in Application team page
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=view team members and add collaborators
+    When the user clicks the button/link    link=view and add participants to your application
     Then the status of the invited people should be correct in the application team page
     And The Lead organisation should be shown only one time
 
@@ -73,7 +73,7 @@ Pending partners visible in the Manage contributors page
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=view team members and add collaborators
+    When the user clicks the button/link    link=view and add participants to your application
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage contributors
     And the status of the people should be correct in the Manage contributors page
@@ -86,7 +86,7 @@ Business organisation (partner accepts invitation)
     ...    INFUND-2336
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -113,7 +113,7 @@ Partner can invite others to his own organisation
     [Tags]    Email
     When the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    And the user clicks the button/link    link=view team members and add collaborators
+    And the user clicks the button/link    link=view and add participants to your application
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user can invite another person to their own organisation
 
@@ -140,7 +140,7 @@ Lead should not be able to edit Partners
     Given guest user log-in    &{lead_applicant_credentials}
     And the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=view team members and add collaborators
+    When the user clicks the button/link    link=view and add participants to your application
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage contributors
     And the invited collaborators are not editable
@@ -152,7 +152,7 @@ Lead applicant invites a non registered user in the same organisation
     [Setup]    Delete the emails from both test mailboxes
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
-    When the user clicks the button/link    link=view team members and add collaborators
+    When the user clicks the button/link    link=view and add participants to your application
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     Then the user should see the text in the page    Manage contributors
     And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add another person")
@@ -167,12 +167,12 @@ Registered partner should not create new org but should follow the create accoun
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user should see the text in the page    Your organisation
     And the user should see the text in the page    Business organisation
-    And the user should see the element    link=email the application lead
+    And the user should see the element    link=email the lead applicant
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user fills the create account form    Roger    Axe
     And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg2@gmail.com    Please verify your email address    If you did not request an account with us
@@ -229,7 +229,7 @@ the user can see the updated company name throughout the application
     And the user should see the element    jQuery=h3:contains("Your funding")
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
-    When the user clicks the button/link    link=view team members and add collaborators
+    When the user clicks the button/link    link=view and add participants to your application
     Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the user can invite another person to their own organisation
@@ -253,7 +253,7 @@ log into smoke test application
     logout as user
     guest user log-in    ${test_mailbox_one}+${unique_email_number}@gmail.com    Passw0rd123
     the user clicks the button/link    link=IFS smoke test
-    the user clicks the button/link    link=view team members and add collaborators
+    the user clicks the button/link    link=view and add participants to your application
 
 The Lead organisation should be shown only one time
     Element Should not Contain    css=div:nth-child(7)    Steve Smith

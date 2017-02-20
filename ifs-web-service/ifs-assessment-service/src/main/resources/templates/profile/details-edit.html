@@ -10,7 +10,7 @@
 
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
-            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Back to your details',linkClass='link-back',linkUrl=@{/profile/details}" />
+            <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Your details',linkClass='link-back',linkUrl=@{/profile/details}" />
 
             <div class="hgroup">
                 <h1 class="heading-xlarge">Edit your details</h1>
@@ -27,25 +27,6 @@
                 </div>
 
                 <h2 class="heading-medium">Your details</h2>
-                <div class="form-group" th:classappend="${#fields.hasErrors('title')}? error">
-                    <fieldset>
-                        <legend>
-                            <span class="heading-small">Title</span>
-                            <th:block th:if="${#fields.hasErrors('title')}">
-                                <span class="error-message" th:each="err : ${#fields.errors('title')}" th:text="${err}" />
-                            </th:block>
-                        </legend>
-                        <label class="block-label selection-button-radio" th:each="item : ${T(org.innovateuk.ifs.user.resource.Title).values()}">
-                            <input th:field="*{title}"
-                                   th:value="${item}"
-                                   type="radio"
-                                   required="required"
-                                   th:attr="data-required-errormessage=#{validation.standard.title.selectionrequired}" />
-                            <th:block th:text="${item.displayName}" />
-                        </label>
-                    </fieldset>
-                </div>
-
                 <div th:class="${#fields.hasErrors('firstName')}? 'form-group error':'form-group'">
                     <label class="form-label" th:for="firstName">
                         <span class="form-label-bold">First name</span>
@@ -202,7 +183,7 @@
                 <div class="form-group extra-margin" th:classappend="${#fields.hasErrors('phoneNumber')}? error">
                     <label class="form-label" th:for="phoneNumber">
                         <span class="form-label-bold">Phone number</span>
-                        <span class="form-hint">We may use this to contact you about the application</span>
+                        <span class="form-hint">We may use this to contact you about the application.</span>
                         <th:block th:if="${#fields.hasErrors('phoneNumber')}">
                               <span class="error-message"  th:each="err : ${#fields.errors('phoneNumber')}" th:text="${err}" />
                         </th:block>
@@ -230,7 +211,8 @@
 
                 <p>To change your email address please contact Innovate UK: phone <strong>0300 321 4357</strong></p>
 
-                <button class="button button-large extra-margin" type="submit">Save changes</button>
+                <button class="button button-large" type="submit">Save and return to your details</button>
+                <a th:href="@{/profile/details}">Cancel</a>
             </form>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
