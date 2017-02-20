@@ -20,12 +20,8 @@ public class ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryInt
         this.repository = repository;
     }
 
-    @Autowired
-    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
-
     @Before
     public void setup() {
-        competitionCategoryLinkRepository.deleteAll(); // delete links to avoid fk constraint issues
         repository.deleteAll();
     }
 

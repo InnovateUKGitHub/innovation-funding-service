@@ -17,11 +17,11 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
 @Component
 @PermissionRules
-public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
+public class ProjectFinanceQueryPermissionRules  {
     @Autowired
     private ProjectFinanceRepository projectFinanceRepository;
 
-    @PermissionRule(value = "PF_CREATE", description = "Only ProjectFinance Users can create Queries")
+    @PermissionRule(value = "PF_CREATE", description = "Only Project Finance Users can create Queries")
     public boolean onlyProjectFinanceUsersCanCreateQueries(final QueryResource query, final UserResource user) {
         return isProjectFinanceUser(user) && queryHasOnePostWithAuthorBeingCurrentProjectFinance(query, user);
     }
@@ -35,7 +35,7 @@ public class ProjectFinanceQueryPermissionRules extends BasePermissionRules {
         return isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
     }
 
-    @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users or Project Finance users can add posts to a query")
+    @PermissionRule(value = "PF_ADD_POST", description = "Project Finance users or Finance Contact Users can add posts to a query")
     public boolean onlyProjectFinanceUsersOrFinanceContactAddPostToTheirQueries(final QueryResource query, final UserResource user) {
         return query.posts.isEmpty() ? isProjectFinanceUser(user) : isProjectFinanceUser(user) || isFinanceContact(user, query.contextClassPk);
     }

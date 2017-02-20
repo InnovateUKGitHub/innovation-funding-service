@@ -7,7 +7,6 @@ import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.Gender;
-import org.innovateuk.ifs.user.resource.Title;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -36,7 +35,6 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
     @Test
     public void createAssessorByInviteHash() throws Exception {
         String hash = "hash";
-        Title title = Title.Mr;
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
@@ -46,7 +44,6 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
         String password = "password";
 
         AssessorRegistrationForm form = new AssessorRegistrationForm();
-        form.setTitle(title);
         form.setFirstName(firstName);
         form.setLastName(lastName);
         form.setPhoneNumber(phoneNumber);
@@ -56,7 +53,6 @@ public class AssessorServiceImplTest extends BaseServiceUnitTest<AssessorService
         form.setPassword(password);
 
         UserRegistrationResource userRegistration = newUserRegistrationResource()
-                .withTitle(title)
                 .withFirstName(firstName)
                 .withLastName(lastName)
                 .withPhoneNumber(phoneNumber)
