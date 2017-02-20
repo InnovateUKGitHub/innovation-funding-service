@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 
-import org.innovateuk.ifs.application.resource.PageResource;
+import org.innovateuk.ifs.commons.resource.PageResource;
 
 import java.util.List;
 import java.util.stream.IntStream;

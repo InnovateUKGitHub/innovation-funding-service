@@ -135,6 +135,66 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
     }
 
     @Test
+    public void allApplicationsPagedSortedFiltered() throws Exception {
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] innovationAreas = {"Innovation Area 1", "Innovation Area 1", "Innovation Area 1"};
+        String[] statuses = {"Submitted", "Started", "Started"};
+        Integer[] percentages = {100, 70, 20};
+
+        List<AllApplicationsRowViewModel> expectedApplicationRows = asList(
+                new AllApplicationsRowViewModel(ids[0], titles[0], leads[0], innovationAreas[0], statuses[0], percentages[0]),
+                new AllApplicationsRowViewModel(ids[1], titles[1], leads[1], innovationAreas[1], statuses[1], percentages[1]),
+                new AllApplicationsRowViewModel(ids[2], titles[2], leads[2], innovationAreas[2], statuses[2], percentages[2])
+        );
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withInnovationArea(innovationAreas)
+                .withStatus(statuses)
+                .withCompletedPercentage(percentages)
+                .build(3);
+
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource(41, 3,expectedSummaries, 1, 20);
+
+
+        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "id", 1, 20, "filter"))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all?page=1&sort=id&filterSearch=filter", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/all-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS&page=1&sort=id&filterSearch=filter"))
+                .andReturn();
+
+        AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "id", 1, 20, "filter");
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsInProgress(), model.getApplicationsInProgress());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
+        assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
+        PaginationViewModel actualPagination = model.getPagination();
+        assertEquals(1,actualPagination.getCurrentPage());
+        assertEquals(20,actualPagination.getPageSize());
+        assertEquals(3, actualPagination.getTotalPages());
+        assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
+        assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
+        assertEquals("41 to 41", actualPagination.getPageNames().get(2).getTitle());
+        assertEquals("?origin=ALL_APPLICATIONS&sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
+        assertEquals(expectedApplicationRows, model.getApplications());
+    }
+
+    @Test
     public void allApplications_preservesQueryParams() throws Exception {
         ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
         expectedSummaryPageResource.setContent(emptyList());
@@ -204,6 +264,68 @@ public class CompetitionManagementApplicationsControllerTest extends BaseControl
         assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
         assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
         assertEquals(defaultExpectedCompetitionSummary.getAssessorDeadline(), model.getAssessmentDeadline());
+        assertEquals(expectedApplicationRows, model.getApplications());
+    }
+
+    @Test
+    public void submittedApplicationsPagedSortedFiltered() throws Exception {
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] innovationAreas = {"Innovation Area 1", "Innovation Area 1", "Innovation Area 1"};
+        Integer[] numberOfPartners = {5, 10, 12};
+        BigDecimal[] grantRequested = {BigDecimal.valueOf(1000), BigDecimal.valueOf(2000), BigDecimal.valueOf(3000)};
+        BigDecimal[] totalProjectCost = {BigDecimal.valueOf(5000), BigDecimal.valueOf(10000), BigDecimal.valueOf(15000)};
+        Long[] durations = {10L, 20L, 30L};
+
+        List<SubmittedApplicationsRowViewModel> expectedApplicationRows = asList(
+                new SubmittedApplicationsRowViewModel(ids[0], titles[0], leads[0], innovationAreas[0], numberOfPartners[0], grantRequested[0], totalProjectCost[0], durations[0]),
+                new SubmittedApplicationsRowViewModel(ids[1], titles[1], leads[1], innovationAreas[1], numberOfPartners[1], grantRequested[1], totalProjectCost[1], durations[1]),
+                new SubmittedApplicationsRowViewModel(ids[2], titles[2], leads[2], innovationAreas[2], numberOfPartners[2], grantRequested[2], totalProjectCost[2], durations[2])
+        );
+
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withInnovationArea(innovationAreas)
+                .withNumberOfPartners(numberOfPartners)
+                .withGrantRequested(grantRequested)
+                .withTotalProjectCost(totalProjectCost)
+                .withDuration(durations)
+                .build(3);
+
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource(50, 3,expectedSummaries, 1, 20);
+
+
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "id", 1, 20, "filter"))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/submitted?page=1&sort=id&filterSearch=filter", COMPETITION_ID))
+                .andExpect(status().isOk())
+                .andExpect(view().name("competition/submitted-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS&page=1&sort=id&filterSearch=filter"))
+                .andReturn();
+
+        SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "id", 1, 20, "filter");
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
+        assertEquals(defaultExpectedCompetitionSummary.getAssessorDeadline(), model.getAssessmentDeadline());
+        PaginationViewModel actualPagination = model.getPagination();
+        assertEquals(1,actualPagination.getCurrentPage());
+        assertEquals(20,actualPagination.getPageSize());
+        assertEquals(3, actualPagination.getTotalPages());
+        assertEquals("1 to 20", actualPagination.getPageNames().get(0).getTitle());
+        assertEquals("21 to 40", actualPagination.getPageNames().get(1).getTitle());
+        assertEquals("41 to 50", actualPagination.getPageNames().get(2).getTitle());
+        assertEquals("?origin=SUBMITTED_APPLICATIONS&sort=id&filterSearch=filter&page=2", actualPagination.getPageNames().get(2).getPath());
         assertEquals(expectedApplicationRows, model.getApplications());
     }
 

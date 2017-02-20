@@ -73,9 +73,6 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 
 	protected String addSort(String url, String sortField, Integer pageNumber, Integer pageSize, String filter) {
 		MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-		if (filter != null) {
-			params.put("filter", singletonList(filter));
-		}
 		if(pageNumber != null) {
 			params.put("page", singletonList(pageNumber.toString()));
 		}
@@ -84,6 +81,9 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		}
 		if(!StringUtils.isEmpty(sortField)){
 			params.put("sort", singletonList(sortField));
+		}
+		if (filter != null) {
+			params.put("filter", singletonList(filter));
 		}
 		return UriComponentsBuilder.fromPath(url).queryParams(params).build().toUriString();
 	}

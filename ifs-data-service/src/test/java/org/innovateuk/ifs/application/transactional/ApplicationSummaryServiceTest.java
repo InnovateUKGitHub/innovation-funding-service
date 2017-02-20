@@ -58,6 +58,25 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		assertTrue(result.isSuccess());
 		assertEquals(resource, result.getSuccessObject());
 	}
+
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void findByCompetitionNoFilterWillFilterByEmptyString() throws Exception {
+
+		Page<Application> page = mock(Page.class);
+		when(applicationRepositoryMock.findByCompetitionIdAndIdLike(eq(COMP_ID), eq(""), argThat(new PageableMatcher(6, 20, srt("id", ASC))))).thenReturn(page);
+
+		ApplicationSummaryPageResource resource = mock(ApplicationSummaryPageResource.class);
+		when(applicationSummaryPageMapper.mapToResource(page)).thenReturn(resource);
+
+		ServiceResult<ApplicationSummaryPageResource> result = applicationSummaryService.getApplicationSummariesByCompetitionId(COMP_ID, null, 6, 20, null);
+
+		assertTrue(result.isSuccess());
+		assertEquals(resource, result.getSuccessObject());
+	}
+
+
 	
 	@SuppressWarnings("unchecked")
 	@Test
