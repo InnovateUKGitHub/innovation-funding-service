@@ -7,11 +7,12 @@
 
 ### Requirements
 
-- [Node.js](https://nodejs.org/en/) >= 6.x;
+- [Node.js](https://nodejs.org/en/) >= 6.x
+- [Yarn](https://yarnpkg.com/en/docs/install) >= 0.x
 
 ### Installation
 
-1. Install global dependencies `npm install -g yarn gulp`
+1. Install global dependencies `npm install -g gulp`
 2. Run `yarn` from the directory level containing `package.json` (Should be found in `/ifs-web-service`)
 
 ### Build
