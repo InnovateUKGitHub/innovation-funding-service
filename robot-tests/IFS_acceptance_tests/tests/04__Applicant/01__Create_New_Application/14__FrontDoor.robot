@@ -43,7 +43,7 @@ Guest user can see the public information of a competition
     Then the user should see the element     jQuery=h1:contains("Home and industrial efficiency programme")
     And the user should see the element      jQuery=strong:contains("Competition opens") + span:contains("Friday 15 Apr 2016")
     And the user should see the element      jQuery=li:contains("Competition closes")
-    And the user should see the text in the page  Friday 9 September 2067 11:59pm
+    And the user should see the element      jQuery=li:contains("li:contains("Friday 9 September 2067 ")
     And the user should see the element      jQuery=.button:contains("Start or continue your application")
 
 Guest user can see the public Summary of the competition
