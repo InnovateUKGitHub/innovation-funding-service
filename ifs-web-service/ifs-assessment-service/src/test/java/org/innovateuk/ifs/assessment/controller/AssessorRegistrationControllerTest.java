@@ -173,7 +173,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("addressForm.selectedPostcode.postcode", postcode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(redirectedUrl(format("/invite-accept/competition/%s/accept", inviteHash)));
+                .andExpect(redirectedUrl(format("/registration/%s/register/account-created", inviteHash)));
 
         verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);
     }
@@ -440,5 +440,15 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attributeHasFieldErrorCode("form", "addressForm.postcodeOptions", "validation.standard.postcodeoptions.required"));
 
         verifyZeroInteractions(assessorService);
+    }
+
+    @Test
+    public void accountCreated() throws Exception {
+        String inviteHash = "hash";
+
+        mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("competitionInviteHash", inviteHash))
+                .andExpect(view().name("registration/account-created"));
     }
 }

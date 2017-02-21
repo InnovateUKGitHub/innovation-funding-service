@@ -108,7 +108,7 @@ public class AssessorRegistrationController {
     }
 
     @RequestMapping(value = "/{inviteHash}/register/account-created")
-    public String speedbump(Model model, @PathVariable("inviteHash") String inviteHash) {
+    public String accountCreated(Model model, @PathVariable("inviteHash") String inviteHash) {
         model.addAttribute("competitionInviteHash", inviteHash);
         return "registration/account-created";
     }
