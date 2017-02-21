@@ -355,6 +355,36 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing() {
+
+        Role assessorRole = newRole().withType(ASSESSOR).build();
+
+        Application application1 = newApplication().build();
+        when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
+
+        User application1Assessor1 = newUser().build();
+        User application1Assessor2 = newUser().build();
+
+        List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
+                withRole(assessorRole, assessorRole, assessorRole).
+                withUser(application1Assessor1, application1Assessor2).build(2);
+
+        List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
+
+        when(processRoleRepositoryMock.findByUserId(application1Assessor1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+        when(processRoleRepositoryMock.findByUserId(application1Assessor2.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+
+        ProcessRoleResource validResource = newProcessRoleResource().withApplication(application1.getId()).build();
+        ProcessRoleResource invalidResource = newProcessRoleResource().withApplication(10L).build();
+
+        assertTrue(rules.assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing(validResource, application1ConsortiumResources.get(0)));
+        assertFalse(rules.assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing(invalidResource, application1ConsortiumResources.get(0)));
+    }
+
+    @Test
     public void testUsersCanUpdateTheirOwnProfiles() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));

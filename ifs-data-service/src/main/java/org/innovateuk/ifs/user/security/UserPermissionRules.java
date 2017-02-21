@@ -150,6 +150,12 @@ public class UserPermissionRules {
         return processRole.getUser().equals(user.getId()) || isCompAdmin(user);
     }
 
+    @PermissionRule(value = "READ", description = "Assessors can view the process roles of members of individual Consortiums on the various Applications that they are assessing")
+    public boolean assessorsCanViewTheProcessRolesOfConsortiumUsersOnApplicationsTheyAreAssessing(ProcessRoleResource processRole, UserResource user) {
+        List<Application> applicationsThatThisUserIsAssessing = getApplicationsRelatedToUserByProcessRoles(user, assessorProcessRoleFilter);
+        return simpleMap(applicationsThatThisUserIsAssessing, Application::getId).contains(processRole.getApplicationId());
+    }
+
     @PermissionRule(value = "CHECK_USER_APPLICATION", description = "The user can check if they have an application for the competition")
     public boolean userCanCheckTheyHaveApplicationForCompetition(UserResource userToCheck, UserResource user) {
         return userToCheck.getId().equals(user.getId());
