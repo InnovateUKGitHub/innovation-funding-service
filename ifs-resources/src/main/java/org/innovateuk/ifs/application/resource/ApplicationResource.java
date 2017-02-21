@@ -73,6 +73,9 @@ public class ApplicationResource {
     @NotNull(message="{validation.application.research.category.required}")
     private Long researchCategoryId;
 
+    private Long innovationAreaId;
+    private boolean noInnovationAreaApplicable;
+
     public Long getId() {
         return id;
     }
@@ -300,4 +303,21 @@ public class ApplicationResource {
     public void setResearchCategoryId(Long researchCategoryId) {
         this.researchCategoryId = researchCategoryId;
     }
+
+    public Long getInnovationAreaId() {
+        return innovationAreaId;
+    }
+
+    public void setInnovationAreaId(Long innovationAreaId) {
+        this.innovationAreaId = innovationAreaId;
+    }
+
+    public boolean getNoInnovationAreaApplicable() {
+        return noInnovationAreaApplicable;
+    }
+
+    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
+        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
+    }
+
 }

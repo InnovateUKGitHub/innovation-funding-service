@@ -1,7 +1,5 @@
 package org.innovateuk.ifs.category.domain;
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.category.resource.CategoryType;
 
 import javax.persistence.*;
@@ -18,6 +16,7 @@ public abstract class Category {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String name;
+    private String description;
 
     // the type attribute is used by a spring data query
     @Column(name = "type", insertable = false, updatable = false)
@@ -57,24 +56,29 @@ public abstract class Category {
         this.name = name;
     }
 
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-
         if (o == null || getClass() != o.getClass()) return false;
 
         Category category = (Category) o;
 
-        return new EqualsBuilder()
-                .append(name, category.name)
-                .isEquals();
+        if (id != null ? !id.equals(category.id) : category.id != null) return false;
+        if (name != null ? !name.equals(category.name) : category.name != null) return false;
+        if (description != null ? !description.equals(category.description) : category.description != null)
+            return false;
+        if (type != category.type) return false;
+        return links != null ? links.equals(category.links) : category.links == null;
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(name)
-                .toHashCode();
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (name != null ? name.hashCode() : 0);
+        result = 31 * result + (description != null ? description.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        result = 31 * result + (links != null ? links.hashCode() : 0);
+        return result;
     }
-
 }

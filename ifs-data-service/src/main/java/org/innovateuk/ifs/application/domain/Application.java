@@ -3,7 +3,9 @@ package org.innovateuk.ifs.application.domain;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.domain.ApplicationInnovationAreaLink;
 import org.innovateuk.ifs.category.domain.ApplicationResearchCategoryLink;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.file.domain.FileEntry;
@@ -12,7 +14,6 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
-import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
@@ -77,6 +78,11 @@ public class Application implements ProcessActivity {
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ApplicationResearchCategoryLink> researchCategories = new HashSet<>();
+
+    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    private ApplicationInnovationAreaLink innovationArea;
+
+    private boolean noInnovationAreaApplicable;
 
     private Boolean stateAidAgreed;
 
@@ -313,5 +319,39 @@ public class Application implements ProcessActivity {
     public void addResearchCategory(ResearchCategory researchCategory) {
         researchCategories.clear();
         researchCategories.add(new ApplicationResearchCategoryLink(this, researchCategory));
+    }
+
+    public InnovationArea getInnovationArea() {
+        if(innovationArea!=null) {
+            return innovationArea.getCategory();
+        }
+        else {
+            return null;
+        }
+    }
+
+    public void setInnovationArea(InnovationArea newInnovationArea) {
+        if(newInnovationArea == null) {
+            innovationArea = null;
+        }
+        else {
+            if(this.noInnovationAreaApplicable) {
+                throw new IllegalStateException("InnovationArea not reconcilable with current value of noInnovationAreaApplies.");
+            }
+            innovationArea = new ApplicationInnovationAreaLink(this, newInnovationArea);
+        }
+    }
+
+    public boolean getNoInnovationAreaApplicable()
+    {
+        return noInnovationAreaApplicable;
+    }
+
+    public void setNoInnovationAreaApplicable(boolean noInnovationAreaApplicable) {
+        if(noInnovationAreaApplicable && innovationArea != null) {
+            throw new IllegalStateException("noInnovationAreaApplicable not reconcilable with current value of InnovationArea.");
+        }
+
+        this.noInnovationAreaApplicable = noInnovationAreaApplicable;
     }
 }

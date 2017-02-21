@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.mapper;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
@@ -23,7 +24,8 @@ import org.mapstruct.Mappings;
                 CompetitionMapper.class,
                 ApplicationInviteMapper.class,
                 FileEntryMapper.class,
-                ResearchCategoryMapper.class
+                ResearchCategoryMapper.class,
+                InnovationAreaMapper.class
         }
 )
 public abstract class ApplicationMapper extends BaseMapper<Application, ApplicationResource, Long> {
@@ -40,7 +42,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
             @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
             @Mapping(target = "applicationStatusConstant", ignore = true),
-            @Mapping(target = "researchCategoryId", ignore = true)
+            @Mapping(target = "researchCategoryId", ignore = true),
+            @Mapping(target = "innovationAreaId", ignore = true)
 
     })
     @Override
@@ -51,7 +54,8 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(target = "formInputResponses", ignore = true),
             @Mapping(target = "invites", ignore = true),
             @Mapping(target = "applicationFinances", ignore = true),
-            @Mapping(target = "processRoles", ignore = true)
+            @Mapping(target = "processRoles", ignore = true),
+            @Mapping(target = "innovationArea", ignore = true)
     })
     @Override
     public abstract Application mapToDomain(ApplicationResource resource);
