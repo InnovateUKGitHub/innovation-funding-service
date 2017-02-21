@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+
 /**
  * This RestController exposes CRUD operations to manage {@link ProjectFinanceRow} related data.
  */
@@ -35,13 +38,18 @@ public class ProjectFinanceRowController {
             @PathVariable("projectFinanceId") final Long projectFinanceId,
             @PathVariable("questionId") final Long questionId,
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
-        RestResult<FinanceRowItem> createResult = projectFinanceRowService.addCost(projectFinanceId, questionId, newCostItem).toPostCreateResponse();
-        if(createResult.isFailure()){
-            return RestResult.restFailure(createResult.getFailure());
-        }else{
-            FinanceRowItem costItem = createResult.getSuccessObject();
-            ValidationMessages validationMessages = validationUtil.validateProjectCostItem(costItem);
-            return RestResult.restSuccess(validationMessages, HttpStatus.CREATED);
+        ValidationMessages validationMessages = validationUtil.validateProjectCostItem(newCostItem);
+
+        if(validationMessages.hasErrors()){
+            return restSuccess(validationMessages, HttpStatus.OK);
+        } else {
+            RestResult<FinanceRowItem> createResult = projectFinanceRowService.addCost(projectFinanceId, questionId, newCostItem).toPostCreateResponse();
+            if (createResult.isFailure()) {
+                return restFailure(createResult.getFailure());
+            } else {
+                validationMessages.setObjectId(createResult.getSuccessObject().getId());
+                return restSuccess(validationMessages, HttpStatus.CREATED);
+            }
         }
     }
 
@@ -75,10 +83,10 @@ public class ProjectFinanceRowController {
         if(!validationMessages.hasErrors()){
             RestResult<FinanceRowItem> updateResult = projectFinanceRowService.updateCost(id, newCostItem).toGetResponse();
             if (updateResult.isFailure()) {
-                return RestResult.restFailure(updateResult.getFailure());
+                return restFailure(updateResult.getFailure());
             }
         }
-        return RestResult.restSuccess(validationMessages);
+        return restSuccess(validationMessages);
     }
 
     @DeleteMapping("/delete/{costId}")
