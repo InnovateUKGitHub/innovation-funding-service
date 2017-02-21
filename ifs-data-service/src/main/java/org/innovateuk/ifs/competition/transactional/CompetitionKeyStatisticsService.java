@@ -27,4 +27,9 @@ public interface CompetitionKeyStatisticsService {
     @SecuredBySpring(value = "READ", securedType = CompetitionInAssessmentKeyStatisticsResource.class,
             description = "Comp admins and execs can see competition statistics")
     ServiceResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatisticsByCompetition(long competitionId);
+
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "READ", securedType = CompetitionFundedKeyStatisticsResource.class,
+            description = "Comp admins and execs can see competition statistics")
+    ServiceResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId);
 }

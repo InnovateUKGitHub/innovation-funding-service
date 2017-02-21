@@ -36,5 +36,8 @@ public class CompetitionKeyStatisticsController {
     public RestResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getInAssessmentKeyStatisticsByCompetition(id).toGetResponse();
     }
-
+    @RequestMapping(value ="/funded",method = RequestMethod.GET)
+    public RestResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatistics(@PathVariable("id") long id) {
+        return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
+    }
 }
