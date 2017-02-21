@@ -9,6 +9,7 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.ChangedFinanceRowPair;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
@@ -86,7 +87,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
 
     @Override
     public FinanceViewModel getFinanceViewModel(Long projectId, List<QuestionResource> costsQuestions, Long userId, Form form, Long organisationId) {
-        FinanceViewModel financeViewModel = new ProjectFinanceViewModel();
+        ProjectFinanceViewModel financeViewModel = new ProjectFinanceViewModel();
         ProjectFinanceResource projectFinanceResource = getOrganisationFinances(projectId, costsQuestions, userId, organisationId);
 
         if (projectFinanceResource != null) {
@@ -98,6 +99,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationFinanceTotal(projectFinanceResource.getTotal());
             financeViewModel.setFinanceView("finance");
             addGrantClaim(financeViewModel, form, projectFinanceResource);
+            financeViewModel.setChanges(projectFinanceResource.getCostChanges());
         }
 
         return financeViewModel;
@@ -113,7 +115,7 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
         }
     }
 
-    protected ProjectFinanceResource getOrganisationFinances(Long projectId, List<QuestionResource> costsQuestions, Long userId, Long organisationId) {
+    private ProjectFinanceResource getOrganisationFinances(Long projectId, List<QuestionResource> costsQuestions, Long userId, Long organisationId) {
         ProjectFinanceResource projectFinanceResource = financeService.getProjectFinance(projectId, organisationId);
         if(projectFinanceResource == null) {
             financeService.addProjectFinance(userId, projectId);
@@ -122,20 +124,14 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
         }
 
         String organisationType = organisationService.getOrganisationById(organisationId).getOrganisationTypeName();
-
-        // TODO: INFUND-4834 Check if we need any condition checks here and add them (after merge of approval branch)
-        // CompetitionResource competition = competitionService.getById(application.getCompetition());
-        //if(!application.hasBeenSubmitted() && competition.isOpen()) {
-	        // add cost for each cost question
-	        for(QuestionResource question: costsQuestions) {
-	        	FinanceRowType costType = costTypeForQuestion(question);
-	        	if(costType != null) {
-		        	FinanceRowCostCategory category = projectFinanceResource.getFinanceOrganisationDetails(costType);
-		            FinanceRowItem costItem = financeHandler.getProjectFinanceFormHandler(organisationType).addCostWithoutPersisting(projectId, organisationId, question.getId());
-		        	category.addCost(costItem);
-	        	}
-	        }
-        //}
+        for(QuestionResource question: costsQuestions) {
+            FinanceRowType costType = costTypeForQuestion(question);
+            if(costType != null) {
+                FinanceRowCostCategory category = projectFinanceResource.getFinanceOrganisationDetails(costType);
+                FinanceRowItem costItem = financeHandler.getProjectFinanceFormHandler(organisationType).addCostWithoutPersisting(projectId, organisationId, question.getId());
+                category.addCost(costItem);
+            }
+        }
 
         return projectFinanceResource;
     }
