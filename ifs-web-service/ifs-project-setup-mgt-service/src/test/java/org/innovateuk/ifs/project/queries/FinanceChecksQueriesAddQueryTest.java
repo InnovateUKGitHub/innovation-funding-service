@@ -226,7 +226,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("query"));
-        assertEquals("The query is too long, please reduce it {0} words.", bindingResult.getFieldError("query").getDefaultMessage());
+        assertEquals("The query is too long, please reduce it to {0} words.", bindingResult.getFieldError("query").getDefaultMessage());
     }
 
     @Test

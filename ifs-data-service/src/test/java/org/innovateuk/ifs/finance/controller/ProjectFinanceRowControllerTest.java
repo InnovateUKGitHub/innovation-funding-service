@@ -31,6 +31,8 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
     @Test
     public void addShouldCreateNewCost() throws Exception{
 
+        when(validationUtil.validateProjectCostItem(any(FinanceRowItem.class))).thenReturn(new ValidationMessages());
+
         when(projectFinanceRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
         mockMvc.perform(post("/cost/project/add/{projectFinanceId}/{questionId}", "123", "456"))

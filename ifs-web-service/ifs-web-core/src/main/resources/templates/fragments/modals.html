@@ -373,15 +373,15 @@
     <div class="modal-accept-profile" role="dialog" aria-hidden="true">
       <th:block th:insert="fragments/modals :: close-button" />
         <div>
-            <h2 class="heading-medium no-margin">Approved by Innovation Lead</h2>
-            <p>The project spend profile has been approved and accepted by the Innovation Lead, by confirming the project manager will be notified of this decision via email.</p>
+            <h2 class="heading-medium no-margin">Approved by Innovate UK</h2>
+            <p>The project spend profile has been approved and accepted by Innovate UK. The Project Manager will be notified via email.</p>
             <hr />
             <form th:action="@{'/project/' + ${projectId} + '/spend-profile/approval/APPROVED'}" method="post">
                 <div class="column-half">
                     <button type="button" class="js-close buttonlink large">Cancel</button>
                 </div>
                 <div class="column-half alignright-button">
-                    <button class="button large" type="submit">Accept documents</button>
+                    <button class="button large" type="submit">Approve</button>
                 </div>
             </form>
         </div>
