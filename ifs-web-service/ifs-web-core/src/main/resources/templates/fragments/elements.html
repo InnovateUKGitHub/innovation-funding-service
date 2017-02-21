@@ -232,7 +232,7 @@
 
 <!-- global pagination -->
 <div th:fragment="general-pagination(pagination)" th:remove="tag">
-    <ul class="pagination">
+    <ul class="pagination" th:if="${pagination.totalPages > 1}">
         <li class="prev">
             <a href="#" th:href="${pagination.pageNames[pagination.currentPage - 1].path}" rel="prev" th:if="${pagination.hasPrevious}" title="Navigate to previous page">
                 <span class="pagination-label">Previous</span>
