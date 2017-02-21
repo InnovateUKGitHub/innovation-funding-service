@@ -84,7 +84,7 @@ function buildAndDeploy() {
     if [[ ${noDeploy} -eq 0 ]]
     then
         echo "=> Starting build and deploy script..."
-        ./gradlew -Pcloud=development cleanDeployServices -x test
+        ./gradlew -Pcloud=development initDB buildDocker -x test
     else
         coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi

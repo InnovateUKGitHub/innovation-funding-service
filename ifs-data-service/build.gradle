@@ -206,26 +206,19 @@ flywayMigrate.dependsOn processResources
 flywayClean.dependsOn processResources
 
 
-task cleanDeployServices() {
+task initDB() {
 
-    buildDocker.mustRunAfter clean
-    // ensures test schema is created for unit tests
-    buildDocker.mustRunAfter createTestSchema
-    flywayClean.mustRunAfter buildDocker
     flywayClean.mustRunAfter startMySql
     createTestSchema.mustRunAfter startMySql
     createSchema.mustRunAfter startMySql
     flywayMigrate.mustRunAfter flywayClean
 
     dependsOn clean
-    dependsOn buildDocker
     dependsOn startMySql
     dependsOn createTestSchema
     dependsOn createSchema
     dependsOn flywayClean
     dependsOn flywayMigrate
-
-
 
 }
 
