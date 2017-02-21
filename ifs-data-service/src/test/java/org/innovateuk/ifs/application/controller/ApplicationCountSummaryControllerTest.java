@@ -32,4 +32,22 @@ public class ApplicationCountSummaryControllerTest extends BaseControllerMockMVC
 
         verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, null);
     }
+
+    @Test
+    public void applicationCountSummariesByCompetitionIdFiltered() throws Exception {
+        Long competitionId = 1L;
+        int page = 2;
+        int pageSize = 3;
+        String filter = "filter";
+
+        ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
+
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, page, pageSize, filter)).thenReturn(serviceSuccess(pageResource));
+
+        mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}?page={page}&size={pageSize}&filter={filter}", competitionId, page, pageSize, filter))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(pageResource)));
+
+        verify(applicationCountSummaryServiceMock, only()).getApplicationCountSummariesByCompetitionId(competitionId, page, pageSize, filter);
+    }
 }
