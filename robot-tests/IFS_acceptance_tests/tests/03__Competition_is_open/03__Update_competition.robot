@@ -298,5 +298,6 @@ return the database to its previous status
 
 the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    ${status}  run keyword and return status without screenshots  Wait Until Element Is Visible Without Screenshots  jQuery=.button:contains("Save")
+    run keyword if  ${status} == 'FAIL'  the user clicks the button/link    jQuery=.button:contains("Save")
     the user closes the browser
