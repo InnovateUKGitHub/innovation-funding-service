@@ -21,7 +21,16 @@
     "node": "~6.9.2"
   },
   "standard": {
-    "globals": [ "jQuery", "IFS", "Cookies", "showdown", "md"]
+    "globals": [
+      "jQuery",
+      "IFS",
+      "Cookies",
+      "showdown",
+      "md"
+    ]
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "compass-importer": "^0.4.1"
+  }
 }
