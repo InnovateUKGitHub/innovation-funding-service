@@ -21,7 +21,7 @@ public abstract class ResearchCategoryMapper extends BaseMapper<ResearchCategory
 
     public abstract List<ResearchCategoryResource> mapToResource(List<ResearchCategory> researchCategories);
 
-    public Long mapInnovationAreaToId(ResearchCategory object) {
+    public Long mapResearchCategoryToId(ResearchCategory object) {
         if (object == null) {
             return null;
         }

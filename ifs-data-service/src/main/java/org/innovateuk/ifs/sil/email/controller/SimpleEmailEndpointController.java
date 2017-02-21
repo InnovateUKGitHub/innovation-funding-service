@@ -7,6 +7,7 @@ import org.innovateuk.ifs.sil.email.resource.SilEmailMessage;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -31,6 +32,7 @@ import static org.springframework.web.bind.annotation.RequestMethod.POST;
  */
 @RestController
 @RequestMapping("/silstub/sendmail")
+@Profile("local")
 public class SimpleEmailEndpointController {
 
     private static final Log LOG = LogFactory.getLog(SimpleEmailEndpointController.class);

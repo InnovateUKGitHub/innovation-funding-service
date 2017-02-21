@@ -162,6 +162,10 @@ include::competitionSetupQuestion.adoc[]
 == Competition Setup Finance
 include::competitionSetupFinance.adoc[]
 
+[[Milestone]]
+== Milestone
+include::milestone.adoc[]
+
 [[publicContent]]
 == Public Content
 include::publicContent.adoc[]
@@ -195,6 +199,7 @@ include::silstub.adoc[]
 include::project.adoc[]
 include::project-grant-offer.adoc[]
 include::bank-details.adoc[]
+include::project-finance-queries.adoc[]
 
 [[applicationCountSummary]]
 == ApplicationCountSummary

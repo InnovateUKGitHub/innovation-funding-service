@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.grantofferletter.controller;
 
-import org.innovateuk.ifs.commons.error.exception.ForbiddenActionException;
 import org.innovateuk.ifs.commons.error.exception.ObjectNotFoundException;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
@@ -101,6 +100,19 @@ public class ProjectGrantOfferLetterController {
         });
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_SIGNED_GRANT_OFFER_LETTER')")
+    @RequestMapping(params = "removeSignedGrantOfferLetterClicked", method = POST)
+    public String deleteSignedGrantOfferLetterFile(
+            @PathVariable("projectId") final Long projectId,
+            @ModelAttribute(FORM_ATTR) ProjectGrantOfferLetterForm form,
+            @SuppressWarnings("unused") BindingResult bindingResult,
+            ValidationHandler validationHandler,
+            Model model,
+            @ModelAttribute("loggedInUser") UserResource loggedInUser) {
+        return performActionOrBindErrorsToField(projectId, validationHandler, model, loggedInUser, "signedGrantOfferLetter", form, () -> {
+            return projectService.removeSignedGrantOfferLetter(projectId);
+        });
+    }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_GRANT_OFFER_LETTER_SECTION')")
     @RequestMapping(value = "/grant-offer-letter", method = GET)

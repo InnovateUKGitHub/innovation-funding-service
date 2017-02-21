@@ -15,5 +15,7 @@ public interface MilestoneRepository extends CrudRepository<Milestone, Long> {
 
     List<Milestone> findAllByCompetitionId(Long competitionId);
 
+    List<Milestone> findByCompetitionIdAndTypeIn(Long competitionId, List<MilestoneType> types);
+
     Milestone findByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 }
