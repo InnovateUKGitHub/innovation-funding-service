@@ -330,12 +330,12 @@ Finance checks eligibility validations
     Then the user should see the text in the page     This field cannot be left blank
     And the user clicks the button/link             jQuery=section:nth-of-type(6) button:contains("Travel and subsistence")
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other Costs")
+    When the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other costs")
     And the user clicks the button/link              jQuery=section:nth-of-type(7) a:contains("Edit")
     When the user clicks the button/link            jQuery=section:nth-of-type(7) button[name=add_cost]
     And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(2) td:nth-child(2) input  5000
     Then the user should see the text in the page    This field cannot be left blank
-    And the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other Costs")
+    And the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other costs")
     When the user clicks the button/link             link=Finance checks
   #  When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # TODO this is to be uncommented once the switch to new eligibility page is done with 4823
     And the user navigates to the page               ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # TODO to delete this when the new eligibility page is switched to
@@ -857,7 +857,7 @@ Project finance user amends travel details in eligibility
     And the user should not see the element       jQuery=section:nth-of-type(6) button[name=save-eligibility]
 
 Project finance user amends other costs details in eligibility
-    When the user clicks the button/link            jQuery=section:nth-of-type(7) button:contains("Other Costs")
+    When the user clicks the button/link            jQuery=section:nth-of-type(7) button:contains("Other costs")
     Then the user should see the element            jQuery=section:nth-of-type(7) button span:contains("1%")
     And the user should see the element            jQuery=section:nth-of-type(7) input[value*='1,100']
     When the user clicks the button/link            jQuery=section:nth-of-type(7) a:contains("Edit")
