@@ -12,7 +12,7 @@
 
 ### Installation
 
-1. Install global dependencies `npm install -g gulp`
+1. Install global dependencies `yarn global add gulp`
 2. Run `yarn` from the directory level containing `package.json` (Should be found in `/ifs-web-service`)
 
 ### Build
