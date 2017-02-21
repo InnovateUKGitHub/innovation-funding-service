@@ -9,6 +9,8 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.threads.attachments.domain.Attachment;
+import org.innovateuk.ifs.threads.attachments.service.AttachmentsService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,50 +25,35 @@ import static org.springframework.web.bind.annotation.RequestMethod.*;
 
 public abstract class AttachmentController {
 
-    private FileService fileService;
-    private FileEntryService fileEntryService;
-    private FileHttpHeadersValidator fileValidator;
+    AttachmentsService<Attachment> service;
 
-    public AttachmentController(FileService fileService, FileEntryService fileEntryService, FileHttpHeadersValidator fileValidator) {
-        this.fileService = fileService;
-        this.fileEntryService = fileEntryService;
-        this.fileValidator = fileValidator;
+    public AttachmentController(AttachmentsService<Attachment> service) {
+        this.service = service;
     }
 
-    @RequestMapping(value = "/{fileId}", method = GET, produces = "application/json")
-    public RestResult<FileEntryResource> find(@PathVariable("fileId") Long fileId) {
-        return fileEntryService.findOne(fileId).toGetResponse();
+    @RequestMapping(value = "/{attachmentId}", method = GET, produces = "application/json")
+    public RestResult<Attachment> find(@PathVariable("attachmentId") Long attachmentId) {
+        return service.findOne(attachmentId).toGetResponse();
     }
 
     @RequestMapping(value = "/upload", method = POST, produces = "application/json")
-    public RestResult<FileEntryResource> uploadFile(
+    public RestResult<Attachment> uploadFile(
             @RequestHeader(value = "Content-Type", required = false) String contentType,
             @RequestHeader(value = "Content-Length", required = false) String contentLength,
             @RequestParam(value = "filename", required = false) String originalFilename,
             HttpServletRequest request) {
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                        .andOnSuccess(created -> fileEntryService.findOne(created.getRight().getId())));
+        return service.upload(contentType, contentLength, originalFilename, request).toPostCreateResponse();
     }
 
-    @RequestMapping(value = "/{fileId}", method = DELETE, produces = "application/json")
-    public RestResult<Void> deleteFile(@PathVariable("fileId") Long fileId) {
-        return fileEntryService.removeFile(fileId).toDeleteResponse();
+    @RequestMapping(value = "/{attachmentId}", method = DELETE, produces = "application/json")
+    public RestResult<Void> deleteFile(@PathVariable("attachmentId") Long attachmentId) {
+        return service.delete(attachmentId).toDeleteResponse();
     }
 
-    @RequestMapping(value = "/download/{fileId}", method = GET, produces = "application/json")
+    @RequestMapping(value = "/download/{attachmentId}", method = GET, produces = "application/json")
     public
     @ResponseBody
-    ResponseEntity<Object> downloadFile(@PathVariable("fileId") Long fileId) throws IOException {
-        return handleFileDownload(() -> fileEntryService.findOne(fileId).andOnSuccess(f -> getFileAndContents(f)));
-    }
-
-
-    private ServiceResult<FileAndContents> getFileAndContents(FileEntryResource fileEntry) {
-        if (fileEntry == null) {
-            return serviceFailure(notFoundError(FileEntry.class));
-        }
-        return fileService.getFileByFileEntryId(fileEntry.getId())
-                .andOnSuccessReturn(inputStream -> new BasicFileAndContents(fileEntry, inputStream));
+    ResponseEntity<Object> downloadFile(@PathVariable("attachmentId") Long attachmentId) throws IOException {
+        return service.download(attachmentId);
     }
 }
