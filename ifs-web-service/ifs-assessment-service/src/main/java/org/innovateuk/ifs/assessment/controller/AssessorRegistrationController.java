@@ -103,8 +103,14 @@ public class AssessorRegistrationController {
             });
 
             return validationHandler.
-                    failNowOrSucceedWith(failureView, () -> format("redirect:/invite-accept/competition/%s/accept", inviteHash));
+                    failNowOrSucceedWith(failureView, () -> format("redirect:/registration/%s/register/account-created", inviteHash));
         });
+    }
+
+    @RequestMapping(value = "/{inviteHash}/register/account-created")
+    public String speedbump(Model model, @PathVariable("inviteHash") String inviteHash) {
+        model.addAttribute("competitionInviteHash", inviteHash);
+        return "registration/account-created";
     }
 
     @RequestMapping(value = "/{inviteHash}/register", params = "manual-address", method = RequestMethod.POST)
