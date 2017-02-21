@@ -2,11 +2,14 @@ package org.innovateuk.ifs.util;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.mock.web.MockHttpServletRequest;
+
+import javax.servlet.http.HttpServletRequest;
 
 import static java.lang.String.join;
 import static java.util.Collections.nCopies;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class ThymeleafUtilTest {
 
@@ -19,13 +22,13 @@ public class ThymeleafUtilTest {
 
     @Test
     public void uriWithQueryString() throws Exception {
-        final String requestURI = "/application/1/form";
+        final String servletPath = "/application/1/form";
         final String queryString = "test=true,newApplication=true";
-        final String expected = "~" + requestURI + "?" + queryString;
+        final String expected = servletPath + "?" + queryString;
 
-        final MockHttpServletRequest request = new MockHttpServletRequest(null, requestURI);
-        request.setQueryString(queryString);
-
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getServletPath()).thenReturn(servletPath);
+        when(request.getQueryString()).thenReturn(queryString);
         assertEquals(expected, thymeleafUtil.uriWithQueryString(request));
     }
 
@@ -36,11 +39,13 @@ public class ThymeleafUtilTest {
 
     @Test
     public void uriWithQueryString_noQueryString() throws Exception {
-        final String reqeuestURI = "/application/1/form";
+        final String servletPath = "/application/1/form";
 
-        final MockHttpServletRequest request = new MockHttpServletRequest(null, reqeuestURI);
+        final HttpServletRequest request = mock(HttpServletRequest.class);
+        when(request.getServletPath()).thenReturn(servletPath);
 
-        assertEquals("~" + reqeuestURI, thymeleafUtil.uriWithQueryString(request));
+
+        assertEquals(servletPath, thymeleafUtil.uriWithQueryString(request));
     }
 
     @Test
