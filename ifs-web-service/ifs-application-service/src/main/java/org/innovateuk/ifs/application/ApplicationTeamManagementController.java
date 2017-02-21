@@ -67,7 +67,8 @@ public class ApplicationTeamManagementController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    public static final String APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM = "application-contributors/update-remove-confirm";
+    public static final String APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM = "application-contributors/update-remove-confirm";
+    public static final String APPLICATION_CONTRIBUTORS_UPDATE = "application-contributors/edit-org";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
     private static final String INVITES_SEND = "invitesSend";
 
@@ -104,10 +105,10 @@ public class ApplicationTeamManagementController {
         model.addAttribute("leadOrganisation", leadOrganisation);
         model.addAttribute("selectedOrganisation", selectedOrganisation);
         model.addAttribute("organisationInvites", organisationInvites);
-        return "application-contributors/edit-org";
+        return APPLICATION_CONTRIBUTORS_UPDATE;
     }
 
-    @RequestMapping(value = "/organisation/{organisationId}/remove/{inviteId}/confirm", method = RequestMethod.GET)
+    @RequestMapping(value = "update/remove/{inviteId}/confirm", method = RequestMethod.GET)
     public String deleteContributorConfirmation(@PathVariable("applicationId") final Long applicationId,
                                                 @PathVariable("inviteId") final Long inviteId,
                                                 Model model) {
@@ -115,16 +116,15 @@ public class ApplicationTeamManagementController {
         model.addAttribute("inviteId", inviteId);
         model.addAttribute("removeContributorForm", new RemoveContributorsForm());
 
-        return APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM;
+        return APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM;
     }
 
-    @RequestMapping(value = "/organisation/{organisationId}/remove", method = RequestMethod.POST)
+    @RequestMapping(value = "update/remove", method = RequestMethod.POST)
     public String deleteContributor(@PathVariable("applicationId") Long applicationId,
-                                    @PathVariable("organisationId") Long organisationId,
                                     @Valid @ModelAttribute RemoveContributorsForm removeContributorsForm) {
         applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId());
 
-        return "redirect:/application/" + applicationId + "/organisation/" + organisationId + "/update";
+        return "redirect:/application/" + applicationId + "/contributors";
     }
 
     /**
@@ -132,6 +132,7 @@ public class ApplicationTeamManagementController {
      */
     @RequestMapping(value = "/organisation/{organisationId}/update", method = RequestMethod.POST)
     public String inviteContributors(@PathVariable("applicationId") final Long applicationId,
+                                     @PathVariable("organisationId") final Long organisationId,
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
                                      @RequestParam(name = "add_partner", required = false) String addPartner,
                                      @RequestParam(name = "remove_person", required = false) String organisationAndPerson,
@@ -185,9 +186,9 @@ public class ApplicationTeamManagementController {
         }
 
         if (newApplication != null) {
-            return String.format("redirect:/application/%d/contributors/invite/?newApplication", applicationId);
+            return String.format("redirect:/application/%d/organisation/%d/update/?newApplication", applicationId, organisationId);
         }
-        return String.format("redirect:/application/%d/contributors/invite", applicationId);
+        return String.format("redirect:/application/%d/organisation/%d/update", applicationId, organisationId);
     }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
