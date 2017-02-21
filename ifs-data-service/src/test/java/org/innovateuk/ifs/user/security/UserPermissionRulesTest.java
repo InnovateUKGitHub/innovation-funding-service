@@ -17,6 +17,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newAppli
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -319,6 +320,41 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
+    public void testConsortiumMembersCanViewTheProcessRolesOtherConsortiumMembers() {
+
+        Role leadRole = newRole().withType(LEADAPPLICANT).build();
+        Role collaboratorRole = newRole().withType(COLLABORATOR).build();
+
+        Application application1 = newApplication().build();
+        when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
+
+        User application1Lead1 = newUser().build();
+        User application1Lead2 = newUser().build();
+        User application1Lead3AndApplication2Collaborator2 = newUser().build();
+        User application1Collaborator1 = newUser().build();
+        User application1Collaborator2 = newUser().build();
+
+        List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
+                withRole(leadRole, leadRole, leadRole, collaboratorRole, collaboratorRole).
+                withUser(application1Lead1, application1Lead2, application1Lead3AndApplication2Collaborator2,
+                        application1Collaborator1, application1Collaborator2).build(2);
+
+        List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
+
+        when(processRoleRepositoryMock.findByUserId(application1Lead1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+        when(processRoleRepositoryMock.findByUserId(application1Lead2.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+
+        ProcessRoleResource validResource = newProcessRoleResource().withApplication(application1.getId()).build();
+        ProcessRoleResource invalidResource = newProcessRoleResource().withApplication(10L).build();
+
+        assertTrue(rules.consortiumMembersCanViewTheProcessRolesOfOtherConsortiumMembers(validResource, application1ConsortiumResources.get(0)));
+        assertFalse(rules.consortiumMembersCanViewTheProcessRolesOfOtherConsortiumMembers(invalidResource, application1ConsortiumResources.get(0)));
+    }
+
+    @Test
     public void testUsersCanUpdateTheirOwnProfiles() {
         UserResource user = newUserResource().build();
         assertTrue(rules.usersCanUpdateTheirOwnProfiles(user, user));
@@ -434,6 +470,42 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
         assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, compAdminUser()));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProcessRole() {
+        UserResource user = newUserResource().build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
+        assertTrue(rules.usersCanViewTheirOwnProcessRole(processRoleResource, user));
+    }
+
+    @Test
+    public void testUsersCanViewTheirOwnProcessRoleButNotAnotherUsersProcessRole() {
+        UserResource user1 = newUserResource().withId(1L).build();
+        UserResource user2 = newUserResource().withId(2L).build();
+
+        ProcessRoleResource anotherUsersprocessRoleResource = newProcessRoleResource().withUser(user2).build();
+        assertFalse(rules.usersAndCompAdminCanViewProcessRole(anotherUsersprocessRoleResource, user1));
+    }
+
+    @Test
+    public void testCompAdminCanViewUserProcessRole() {
+        UserResource user = newUserResource().build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
+        assertTrue(rules.usersAndCompAdminCanViewProcessRole(processRoleResource, compAdminUser()));
+    }
+
+    @Test
+    public void testUserCanCheckTheyHaveApplicationForCompetition() {
+        UserResource user = newUserResource().build();
+        assertTrue(rules.userCanCheckTheyHaveApplicationForCompetition(user, user));
+    }
+
+    @Test
+    public void testUserCanCheckTheyHaveApplicationForCompetitionButAttemptingToCheckAnotherUser() {
+        UserResource user = newUserResource().build();
+        UserResource anotherUser = newUserResource().build();
+        assertFalse(rules.userCanCheckTheyHaveApplicationForCompetition(user, anotherUser));
     }
 
     @Override

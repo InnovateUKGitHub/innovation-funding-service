@@ -133,6 +133,28 @@ public class UserPermissionRules {
         return profileStatus.getUser().equals(user.getId()) || isCompAdmin(user);
     }
 
+    @PermissionRule(value = "READ", description = "A user can read their own role")
+    public boolean usersCanViewTheirOwnProcessRole(ProcessRoleResource processRole, UserResource user) {
+        return user.getId().equals(processRole.getUser());
+    }
+
+    @PermissionRule(value = "READ", description = "Consortium members (Lead Applicants and Collaborators) can view the process role of others in their Consortium Teams on their various Applications")
+    public boolean consortiumMembersCanViewTheProcessRolesOfOtherConsortiumMembers(ProcessRoleResource processRole, UserResource user) {
+        List<Application> applicationsWhereThisUserIsInConsortium = getApplicationsRelatedToUserByProcessRoles(user, consortiumProcessRoleFilter);
+
+        return simpleMap(applicationsWhereThisUserIsInConsortium, Application::getId).contains(processRole.getApplicationId());
+    }
+
+    @PermissionRule(value = "READ", description = "The user, as well as Comp Admin can read the user's process role")
+    public boolean usersAndCompAdminCanViewProcessRole(ProcessRoleResource processRole, UserResource user) {
+        return processRole.getUser().equals(user.getId()) || isCompAdmin(user);
+    }
+
+    @PermissionRule(value = "CHECK_USER_APPLICATION", description = "The user can check if they have an application for the competition")
+    public boolean userCanCheckTheyHaveApplicationForCompetition(UserResource userToCheck, UserResource user) {
+        return userToCheck.getId().equals(user.getId());
+    }
+
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
         return simpleMap(applicableProcessRoles, processRole -> {
