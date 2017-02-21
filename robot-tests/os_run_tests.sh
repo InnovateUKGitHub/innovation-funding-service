@@ -137,41 +137,19 @@ function clearOldReports() {
 section "=> GETTING SCRIPT VARIABLES"
 
 #cd "$(dirname "$0")"
-scriptDir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
+scriptDir="/robot-tests"
 cd ${scriptDir}
-cd ..
 
-rootDir=`pwd`
-
-dataServiceCodeDir="${rootDir}/ifs-data-service"
-webServiceCodeDir="${rootDir}/ifs-web-service"
 webBase="<<SHIB-ADDRESS>>"
 
 uploadFileDir="${scriptDir}/upload_files"
-baseFileStorage="/tmp/uploads"
-storedFileFolder="${baseFileStorage}/ifs/"
-virusScanHoldingFolder="${baseFileStorage}/virus-scan-holding/"
-virusScanQuarantinedFolder="${baseFileStorage}/virus-scan-quarantined"
-virusScanScannedFolder="${baseFileStorage}/virus-scan-scanned"
 
-postcodeLookupKey=`sed '/^\#/d' ${dataServiceCodeDir}/docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
+
+postcodeLookupKey=`sed '/^\#/d' docker-build.gradle | grep 'ext.postcodeLookupKey'  | cut -d "=" -f2 | sed 's/"//g'`
 
 echo "scriptDir:                    ${scriptDir}"
-echo "rootDir:                      ${rootDir}"
-echo "dataServiceCodeDir:           ${dataServiceCodeDir}"
-echo "webServiceCodeDir:            ${webServiceCodeDir}"
 echo "webBase:                      ${webBase}"
 echo "uploadFileDir:                ${uploadFileDir}"
-echo
-echo "baseFileStorage:              ${baseFileStorage}"
-echo "virusScanHoldingFolder:       ${virusScanHoldingFolder}"
-echo "virusScanQuarantinedFolder:   ${virusScanQuarantinedFolder}"
-echo "virusScanScannedFolder:       ${virusScanScannedFolder}"
-
-echo
-coloredEcho "=> We are about to delete the above storage directories in Docker, make sure that they are right ones!" yellow
-echo
 
 if [ "${postcodeLookupKey}" = '' ]
 then

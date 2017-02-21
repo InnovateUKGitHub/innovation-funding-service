@@ -43,12 +43,16 @@ function fileFixtures() {
     ./robot-tests/openshift/addtestFiles.sh
 }
 
+function copyNecessaryFiles() {
+    cp -r ifs-data-service/docker-build.gradle robot-tests-tmp/docker-build.gradle
+}
 
 
 cleanUp
 rm -rf robot-tests/target && mkdir robot-tests/target
 fileFixtures
 tailorToAppInstance
+copyNecessaryFiles
 buildAndPushTestImages
 deployTests
 cleanUp

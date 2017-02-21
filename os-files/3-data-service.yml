@@ -66,7 +66,7 @@ items:
               path: /monitoring/health
               port: 8080
           name: data-service
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           lifecycle:
             postStart:
               exec:
