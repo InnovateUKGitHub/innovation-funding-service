@@ -9,7 +9,6 @@ import org.mapstruct.Mapper;
 @Mapper(config = GlobalMapperConfig.class)
 public abstract class CompetitionFunderMapper {
 
-
     public CompetitionFunderResource mapToResource(CompetitionFunder domain) {
         CompetitionFunderResource resource = new CompetitionFunderResource();
         resource.setFunder(domain.getFunder());

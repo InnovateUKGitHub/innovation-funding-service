@@ -73,6 +73,22 @@ public class ProjectGrantOfferControllerDocumentation extends BaseControllerMock
     }
 
     @Test
+    public void removeSignedGrantOfferLetterFile() throws Exception {
+
+        Long projectId = 123L;
+
+        when(projectGrantOfferServiceMock.removeSignedGrantOfferLetterFileEntry(projectId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(delete("/project/{projectId}/signed-grant-offer-letter", projectId)).
+                andExpect(status().isNoContent())
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which Signed Grant Offer Letter needs to be removed")
+                        )
+                ));
+    }
+
+    @Test
     public void addGeneratedGrantOfferLetter() throws Exception {
 
         Long projectId = 111L;
