@@ -11,6 +11,8 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 
@@ -154,7 +156,8 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getAvailableAssessors() {
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, 0, 10, Order.FIRST_NAME, ASC), COMP_ADMIN, PROJECT_FINANCE);
+        Pageable pageable = new PageRequest(0, 20);
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -240,7 +243,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, int pageSize, Order orderBy, Sort.Direction direction) {
+        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
             return null;
         }
 

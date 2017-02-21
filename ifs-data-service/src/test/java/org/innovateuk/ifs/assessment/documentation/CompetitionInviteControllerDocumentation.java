@@ -4,9 +4,11 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.controller.CompetitionInviteController;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource.Order;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Test;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
@@ -156,14 +158,15 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
 
-        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, 0, 20, Order.FIRST_NAME, ASC))
+        Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
+
+        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, pageable))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
         mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId)
                 .param("size", "20")
                 .param("page", "0")
-                .param("orderBy", "FIRST_NAME")
-                .param("direction", "ASC"))
+                .param("sort", "firstName,asc"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
@@ -172,14 +175,13 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                         requestParameters(
                                 parameterWithName("size").description("Maximum number of elements in a single page"),
                                 parameterWithName("page").description("Page number of the paginated data. Starts at 0."),
-                                parameterWithName("orderBy").description("The property that the paginated elements should be ordered by"),
-                                parameterWithName("direction").description("The direction to order the paginated elements in")
+                                parameterWithName("sort").description("The property to sort the elements on. For example `sort=firstName,asc`")
                         ),
                         responseFields(availableAssessorPageResourceFields)
                                 .andWithPrefix("content[].", availableAssessorResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, 0, 20, Order.FIRST_NAME, ASC);
+        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable);
     }
 
     @Test

@@ -1,17 +1,23 @@
 package org.innovateuk.ifs.user.repository;
 
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource.Order;
 import org.innovateuk.ifs.user.domain.Profile;
+import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
+import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -36,6 +42,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Autowired
     protected ProfileRepository profileRepository;
+
+    @Autowired
+    protected RoleRepository roleRepository;
 
     @Test
     public void findAll() {
@@ -115,22 +124,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findAllAvailableAssessorsByCompetitionByPage() {
-        List<User> users = repository.findAllAvailableAssessorsByCompetitionAndSortedPage(
-                4L,
-                0,
-                10,
-                Order.FIRST_NAME.getColumn(),
-                "ASC"
-        );
-        assertEquals(2, users.size());
-
-        List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
-        List<String> expectedEmail = asList("felix.wilson@gmail.com", "paul.plum@gmail.com");
-        assertTrue(emailAddresses.containsAll(expectedEmail));
-    }
-
-    @Test
     public void findByIdAndRolesName() throws Exception {
         Optional<User> user = repository.findByIdAndRolesName(3L, ASSESSOR.getName());
 
@@ -142,5 +135,66 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
 
         assertFalse(user.isPresent());
+    }
+
+    @Test
+    public void findByRolesNameAndIdNotIn() throws Exception {
+        assertEquals(2, repository.findByRoles_Name(ASSESSOR.getName()).size());
+
+        addTestAssessors();
+
+        assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
+
+        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
+
+        Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
+
+        Page<User> pagedUsers = repository.findByRolesNameAndIdNotIn(ASSESSOR.getName(), userIds, pageable);
+
+        assertEquals(4, pagedUsers.getTotalElements());
+        assertEquals(1, pagedUsers.getTotalPages());
+        assertEquals(0, pagedUsers.getNumber());
+        assertEquals(4, pagedUsers.getContent().size());
+        assertEquals("Andrew", pagedUsers.getContent().get(0).getFirstName());
+        assertEquals("James", pagedUsers.getContent().get(1).getFirstName());
+        assertEquals("Jessica", pagedUsers.getContent().get(2).getFirstName());
+        assertEquals("Victoria", pagedUsers.getContent().get(3).getFirstName());
+    }
+
+    @Test
+    public void findByRolesNameAndIdNotIn_nextPage() throws Exception {
+        assertEquals(2, repository.findByRoles_Name(ASSESSOR.getName()).size());
+
+        addTestAssessors();
+
+        assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
+
+        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
+
+        Pageable pageable = new PageRequest(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
+
+        Page<User> pagedUsers = repository.findByRolesNameAndIdNotIn(ASSESSOR.getName(), userIds, pageable);
+
+        assertEquals(4, pagedUsers.getTotalElements());
+        assertEquals(2, pagedUsers.getTotalPages());
+        assertEquals(2, pagedUsers.getContent().size());
+        assertEquals(1, pagedUsers.getNumber());
+        assertEquals("Jessica", pagedUsers.getContent().get(0).getFirstName());
+        assertEquals("Victoria", pagedUsers.getContent().get(1).getFirstName());
+    }
+
+    private void addTestAssessors() {
+        Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
+
+        List<User> users = newUser()
+                .withId()
+                .withUid("uid1", "uid2", "uid3", "uid4")
+                .withFirstName("Victoria", "James", "Jessica", "Andrew")
+                .withLastName("Beckham", "Blake", "Alba", "Marr")
+                .withRoles(singletonList(assessorRole))
+                .build(4);
+
+        repository.save(users);
+        flushAndClearSession();
     }
 }

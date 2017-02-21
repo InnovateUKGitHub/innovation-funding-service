@@ -7,6 +7,7 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
+import org.innovateuk.ifs.user.domain.User;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,11 +16,13 @@ import org.springframework.dao.DataIntegrityViolationException;
 import java.util.List;
 
 import static com.google.common.collect.ImmutableSet.of;
+import static java.time.LocalDateTime.now;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteBuilder.newCompetitionInvite;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -43,14 +46,14 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Before
     public void setup() {
-        competition = competitionRepository.save( newCompetition().withName("competition").build() );
-        innovationArea = innovationAreaRepository.save( newInnovationArea().withName("innovation area").build() );
+        competition = competitionRepository.save(newCompetition().withName("competition").build());
+        innovationArea = innovationAreaRepository.save(newInnovationArea().withName("innovation area").build());
     }
 
     @Test
     public void findAll() {
-        repository.save( new CompetitionInvite("name1", "tom@poly.io", "hash", competition, innovationArea)  );
-        repository.save( new CompetitionInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea)  );
+        repository.save(new CompetitionInvite("name1", "tom@poly.io", "hash", competition, innovationArea));
+        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "hash2", competition, innovationArea));
 
         Iterable<CompetitionInvite> invites = repository.findAll();
 
@@ -122,7 +125,7 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
                 .withStatus(CREATED, CREATED, OPENED, OPENED, SENT, SENT)
                 .build(6));
 
-        long count = repository.countByCompetitionIdAndStatusIn(competition.getId(), of(CREATED,OPENED));
+        long count = repository.countByCompetitionIdAndStatusIn(competition.getId(), of(CREATED, OPENED));
         assertEquals(2, count);
     }
 
@@ -145,7 +148,31 @@ public class CompetitionInviteRepositoryIntegrationTest extends BaseRepositoryIn
 
     @Test(expected = DataIntegrityViolationException.class)
     public void save_duplicateHash() {
-        repository.save( new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea)  );
-        repository.save( new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea)  );
+        repository.save(new CompetitionInvite("name1", "tom@poly.io", "sameHash", competition, innovationArea));
+        repository.save(new CompetitionInvite("name2", "tom@2poly.io", "sameHash", competition, innovationArea));
+    }
+
+    @Test
+    public void findUserIdsByCompetition() throws Exception {
+        List<Long> inviteIds = repository.findUserIdsByCompetition(competition.getId());
+
+        assertEquals(0, inviteIds.size());
+
+        List<User> users = newUser()
+                .withId(getPaulPlum().getId(), getFelixWilson().getId())
+                .withEmailAddress(getPaulPlum().getEmail(), getFelixWilson().getEmail())
+                .build(2);
+
+        saveInvite(competition, users.get(0));
+        saveInvite(competition, users.get(1));
+
+        List<Long> savedInviteIds = repository.findUserIdsByCompetition(competition.getId());
+
+        assertEquals(2, savedInviteIds.size());
+    }
+
+    private void saveInvite(Competition competition, User user) {
+        CompetitionInvite invite = new CompetitionInvite(user, CompetitionInvite.generateInviteHash(), competition);
+        repository.save(invite);
     }
 }

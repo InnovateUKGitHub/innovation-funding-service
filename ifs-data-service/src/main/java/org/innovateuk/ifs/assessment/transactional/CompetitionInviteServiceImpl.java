@@ -32,9 +32,11 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,9 +63,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.*;
 import static org.innovateuk.ifs.invite.domain.CompetitionParticipantRole.ASSESSOR;
 import static org.innovateuk.ifs.invite.domain.Invite.generateInviteHash;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.ACCEPTED;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.PENDING;
-import static org.innovateuk.ifs.invite.domain.ParticipantStatus.REJECTED;
+import static org.innovateuk.ifs.invite.domain.ParticipantStatus.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.mapWithIndex;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
@@ -189,26 +189,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId,
-                                                                              int page,
-                                                                              int pageSize,
-                                                                              AvailableAssessorPageResource.Order orderBy,
-                                                                              Sort.Direction direction) {
-        int totalAvailableAssessors = userRepository.countAllAvailableAssessorsByCompetition(competitionId);
-        int totalPages = (totalAvailableAssessors + pageSize - 1) / pageSize;
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
+        List<Long> createdInvites = competitionInviteRepository.findUserIdsByCompetition(competitionId);
+        Page<User> pagedAssessors = userRepository.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), createdInvites, pageable);
 
-        int pageStart = page * pageSize;
-        int pageEnd = pageStart + pageSize;
-
-        List<User> assessors = userRepository.findAllAvailableAssessorsByCompetitionAndSortedPage(
-                competitionId,
-                pageStart,
-                pageEnd,
-                orderBy.getColumn(),
-                direction.toString()
-        );
-
-        List<AvailableAssessorResource> availableAssessors = simpleMap(assessors, assessor -> {
+        List<AvailableAssessorResource> availableAssessors = simpleMap(pagedAssessors.getContent(), assessor -> {
             Profile profile = profileRepository.findOne(assessor.getProfileId());
 
             AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
@@ -223,15 +208,13 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             return availableAssessor;
         });
 
-        AvailableAssessorPageResource availableAssessorPage = new AvailableAssessorPageResource(
-                totalAvailableAssessors,
-                totalPages,
+        return serviceSuccess(new AvailableAssessorPageResource(
+                pagedAssessors.getTotalElements(),
+                pagedAssessors.getTotalPages(),
                 availableAssessors,
-                page,
-                pageSize
-        );
-
-        return serviceSuccess(availableAssessorPage);
+                pagedAssessors.getNumber(),
+                pagedAssessors.getSize()
+        ));
     }
 
     @Override
