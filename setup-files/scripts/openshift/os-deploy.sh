@@ -105,10 +105,23 @@ function createProject() {
     done
 }
 
+function checkRemoteConfig() {
+
+    if [  ! -f setup-files/scripts/openshift/ifs ]; then
+        echo "ifs certificate not found."; exit 1;
+    fi
+}
+
 
 # Entry point
 
 cleanUp
+
+if [[ ${TARGET} == "remote" ]]
+then
+    checkRemoteConfig
+fi
+
 cloneConfig
 tailorAppInstance
 createProject
