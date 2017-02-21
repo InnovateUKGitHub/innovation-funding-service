@@ -7,6 +7,7 @@ ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
+${frontDoor}  ${server}/competition/search
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    100,837
 ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}    70,586
