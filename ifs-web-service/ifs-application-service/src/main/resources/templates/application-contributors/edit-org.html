@@ -159,6 +159,7 @@
           </div>
         </form>
 
+        <!-- INFUND-7979 (lead applicant adds new partner org) -->
         <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
           <fieldset>
             <legend class="heading-medium">Organisation</legend>
@@ -169,6 +170,7 @@
           </fieldset>
         </th:block>
 
+        <!-- INFUND-7979 (lead applicant adds new partner org) -->
         <th:block th:if="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg'}">
 
           <fieldset class="table-display-stacked extra-margin-top">
@@ -252,6 +254,7 @@
         </div>
 
 
+        <!-- INFUND-7979 (lead applicant adds new partner org) -->
         <div class="modal-overlay js-close" aria-hidden="true"></div>
         <div class="modal-new-organisation" role="dialog" aria-hidden="true">
           <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
@@ -271,6 +274,7 @@
           </form>
         </div>
 
+        <!-- INFUND-7975 (lead applicant edits partner org) -->
         <div class="modal-delete-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
             <button class="js-close close" type="button" aria-label="Close Popup">X</button>
             <h2 class="heading-medium no-margin">Delete organisation</h2>
