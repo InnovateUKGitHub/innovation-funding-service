@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.config.IfsThymeleafExpressionObjectFactory;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 
-import static java.lang.String.format;
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.util.StringFunctions.countWords;
 
@@ -16,6 +18,7 @@ import static org.innovateuk.ifs.util.StringFunctions.countWords;
  * #ifsUtil is added to the evaluation context by {@link IfsThymeleafExpressionObjectFactory}.
  */
 public class ThymeleafUtil {
+    private static final Log LOG = LogFactory.getLog(ThymeleafUtil.class);
 
     /**
      * Combines the request URI with the query string where present.
@@ -27,7 +30,8 @@ public class ThymeleafUtil {
         if (request == null) {
             throw new IllegalArgumentException("Cannot determine request URI with query string for null request.");
         }
-        return request.getQueryString() == null ? "~" + request.getRequestURI() : format("~%s?%s", request.getRequestURI(), request.getQueryString());
+        LOG.debug("Creating URI for request " + request.getClass() + " with URI " + request.getRequestURI());
+        return UriComponentsBuilder.fromPath(request.getServletPath()).query(request.getQueryString()).build().normalize().toUriString();
     }
 
     /**

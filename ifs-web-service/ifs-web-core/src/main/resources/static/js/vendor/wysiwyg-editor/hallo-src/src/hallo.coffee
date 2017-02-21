@@ -338,7 +338,13 @@ http://hallojs.org
 
     _checkModified: (event) ->
       widget = event.data
-      widget.setModified() if widget.isModified()
+      switch event.type
+        # if it is a paste event we wait for 600 ms and trigger a change event to let the native right click paste event finish
+        # if we don't do this we have to do all kinds of nasty clipboard combination with current input
+        # a proper fix would be listenening to `input` events instead of change keyup and paste as hallo does by default
+        # however `input` is ie9+ http://caniuse.com/#search=input%20event
+        when "paste" then setTimeout (-> jQuery(widget.element).trigger "change"),600
+        else widget.setModified() if widget.isModified()
 
     _keys: (event) ->
       widget = event.data
