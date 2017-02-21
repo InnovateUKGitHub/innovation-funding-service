@@ -193,6 +193,7 @@ The user is able to edit and publish again
     And the user clicks the button/link         jQuery=button:contains("Publish and return")
     When the user should see all sections completed
     Then the user should see the element        jQuery=small:contains("${today}")
+    And the user should not see the element     jQuery=button:contains("Publish and return")
     When the user clicks the button/link        link=Return to setup overview
     Then the user should see the element        JQuery=p:contains("${today}")
 
