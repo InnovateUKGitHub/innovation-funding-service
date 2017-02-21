@@ -40,10 +40,12 @@ IFS.core.loadOrder = {
       IFS.core.debug.init()
     }
   },
-  //  this should be in a seperate project setup management area loader, however that nidyke doesn't contain any custom js therefore we load this here.
-  'eligibility-form': {
+  'finance': {
     init: function () {
       IFS.core.repeatableFinanceRows.init()
+    },
+    finalize: function () {
+      IFS.core.financeSpecifics.init()
     }
   }
 }

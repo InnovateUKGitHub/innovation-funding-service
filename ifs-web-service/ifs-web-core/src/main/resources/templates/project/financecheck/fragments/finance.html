@@ -233,7 +233,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total overhead costs</th>
-                                <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -251,7 +251,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="col">Total administration support cost</th>
-                                <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright"  th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -273,7 +273,7 @@
                             <tfoot>
                             <tr>
                                 <th scope="row">Total cost of overheads as calculated in the spreadsheet</th>
-                                <td class="alignright"  id="section-total-10" th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
+                                <td class="alignright"  th:text="'£ ' + ${#numbers.formatInteger(costCategory?.getTotal(),0, 'COMMA')}">£0</td>
                             </tr>
                             </tfoot>
                         </table>
@@ -332,7 +332,7 @@
                 <div class="form-group" id="overhead-none">
                     <h3 class="heading-medium">No overhead costs</h3>
                     <p>You are not currently applying for overhead costs</p>
-                    <input type="hidden" value="£ 0" data-calculation-rawvalue="0" id="section-total-10-labour-cost-none"/>
+                    <input type="hidden" value="£ 0" data-calculation-rawvalue="0" th:id="${'section-total-'+subSection.id+'-labour-cost-none'}" />
                 </div>
                 <div id="overhead-default-percentage">
                     <h3 class="heading-medium">20% of labour costs</h3>
@@ -346,7 +346,7 @@
                                class="form-control form-control-1-4 alignright"
                                readonly="readonly"
                                th:id="${'section-total-'+subSection.id+'-default'}"
-                               th:attr="data-calculation-fields='#section-total-9,0.2',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               th:attr="data-calculation-fields='#section-total-114,0.2',data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).DEFAULT_PERCENTAGE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'" />
                     </div>
@@ -385,7 +385,7 @@
                                class="form-control form-control-1-4 alignright"
                                readonly="readonly"
                                th:id="${'section-total-'+subSection.id+'-custom'}"
-                               th:attr="data-calculation-fields='#section-total-9,100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
+                               th:attr="data-calculation-fields='#section-total-'+subSection.id+',100,#'+${'cost-'+ type + '-'+overheadCosts?.id+'-customRate'},data-calculation-rawvalue=${overheadCosts?.getTotal()}"
                                data-calculation-operations="/,*"
                                th:value="${overheadRate.equals(T(org.innovateuk.ifs.finance.resource.cost.OverheadRateType).CUSTOM_RATE)} ? '£ ' + ${#numbers.formatDecimal(costCategory?.getTotal(),0, 'COMMA', 0, 'POINT')} : '£ 0'"/>
                     </div>
@@ -421,7 +421,7 @@
                         </div>
                     </div>
                     <div class="form-group alignright inline">
-                        <label th:for="${'section-total-'+subSection.id+'-total'}">
+                        <label th:for="${'section-total-'+subSection.id+'-calculate-formatted'}">
                             <span>Enter the total cost of overheads as calculated in the spreadsheet £</span>
                         </label>
                         <input type="text"
@@ -439,6 +439,10 @@
                     </div>
                 </div>
             </th:block>
+            <input type="hidden"
+                   th:id="${'section-percentage-'+subSection.id}"
+                   th:value="${costCategory.getTotal() != null ? #ifsUtil.calculatePercentage(costCategory.getTotal(),summaryModel.eligibilityOverview.totalCost) + '%' : 0}" />
+
         </th:block>
     </th:block>
 
