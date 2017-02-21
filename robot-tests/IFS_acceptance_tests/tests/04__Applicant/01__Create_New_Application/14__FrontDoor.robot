@@ -27,13 +27,19 @@ Guest user can see Competitions and their information
     And the user should see the element      jQuery=dt:contains("Opens") + dd:contains("15 April 2016")
     And the user should see the element      jQuery=dt:contains("Closes") + dd:contains("09 September 2067")
 
-Guest user can filter competitions by Keywords
-    [Documentation]  INFUND-6923
-    [Tags]  Pending
+#Guest user can filter competitions by Keywords, this is tested in file 05__Public_content.robot
 
 Guest user can filter competitions by Innovation area
     [Documentation]  INFUND-6923
-    [Tags]  Pending
+    [Tags]  HappyPath
+    [Setup]  the user navigates to the page  ${frontDoor}
+    When the user selects the option from the drop-down menu  Cyber Security  id=innovation-area
+    And the user clicks the button/link                       jQuery=button:contains("Update results")
+    Then the user should see the element                      jQuery=a:contains("Transforming big data")
+    And the user should not see the element                   jQuery=a:contains("Home and industrial efficiency programme")
+    When the user selects the option from the drop-down menu  Any  id=innovation-area
+    And the user clicks the button/link                       jQuery=button:contains("Update results")
+    Then the user should see the element                      jQuery=a:contains("Home and industrial efficiency programme")
 
 Guest user can see the public information of a competition
     [Documentation]  INFUND-6923
@@ -43,7 +49,7 @@ Guest user can see the public information of a competition
     Then the user should see the element     jQuery=h1:contains("Home and industrial efficiency programme")
     And the user should see the element      jQuery=strong:contains("Competition opens") + span:contains("Friday 15 Apr 2016")
     And the user should see the element      jQuery=li:contains("Competition closes")
-    And the user should see the element      jQuery=li:contains("li:contains("Friday 9 September 2067 ")
+    And the user should see the element      jQuery=li:contains("Friday 9 September 2067")
     And the user should see the element      jQuery=.button:contains("Start or continue your application")
 
 Guest user can see the public Summary of the competition
