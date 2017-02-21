@@ -2,11 +2,16 @@ package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.Role;
 import org.junit.Test;
+import org.mockito.ArgumentMatcher;
 import org.mockito.InOrder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -19,7 +24,11 @@ import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.resource.UserRoleType.APPLICANT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 /**
@@ -30,6 +39,30 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
     @Override
     protected ApplicationCountSummaryService supplyServiceUnderTest() {
         return new ApplicationCountSummaryServiceImpl();
+    }
+
+    private static class PageableMatcher extends ArgumentMatcher<Pageable> {
+        private int expectedPage;
+        private int expectedPageSize;
+
+        public PageableMatcher(int expectedPage, int expectedPageSize) {
+            this.expectedPage = expectedPage;
+            this.expectedPageSize = expectedPageSize;
+        }
+
+        @Override
+        public boolean matches(Object argument) {
+            Pageable arg = (Pageable) argument;
+            if (!(expectedPage == arg.getPageNumber())) {
+                return false;
+            }
+
+            if (!(expectedPageSize == arg.getPageSize())) {
+                return false;
+            }
+
+            return true;
+        }
     }
 
     @Test
@@ -60,28 +93,18 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
                 )
                 .build(2);
 
-        List<ApplicationCountSummaryResource> returnedResources = newApplicationCountSummaryResource()
-                .withId(3L, 4L)
-                .build(2);
+        Page<ApplicationStatistics> page = mock(Page.class);
+        when(page.getContent()).thenReturn(applicationStatistics);
 
-        List<ApplicationCountSummaryResource> expectedSummaryResources = newApplicationCountSummaryResource()
-                .withId(3L, 4L)
-                .withLeadOrganisation("Lead Org 1", "Lead Org 2")
-                .build(2);
+        ApplicationCountSummaryPageResource resource = mock(ApplicationCountSummaryPageResource.class);
 
-        when(applicationStatisticsRepositoryMock.findByCompetition(competitionId)).thenReturn(applicationStatistics);
+        when(applicationStatisticsRepositoryMock.findByCompetition(eq(competitionId),eq("filter"),argThat(new PageableMatcher(0,20)))).thenReturn(page);
         when(organisationRepositoryMock.findAll(asList(1L, 2L))).thenReturn(leadOrganisations);
-        when(applicationCountSummaryMapperMock.mapToResource(applicationStatistics.get(0))).thenReturn(returnedResources.get(0));
-        when(applicationCountSummaryMapperMock.mapToResource(applicationStatistics.get(1))).thenReturn(returnedResources.get(1));
+        when(applicationCountSummaryPageMapperMock.mapToResource(page, leadOrganisations)).thenReturn(resource);
 
-        List<ApplicationCountSummaryResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId).getSuccessObject();
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId,0,20, "filter");
 
-        InOrder inOrder = inOrder(applicationStatisticsRepositoryMock, applicationCountSummaryMapperMock, organisationRepositoryMock);
-        inOrder.verify(applicationStatisticsRepositoryMock).findByCompetition(competitionId);
-        inOrder.verify(organisationRepositoryMock).findAll(asList(1L, 2L));
-        inOrder.verify(applicationCountSummaryMapperMock).mapToResource(applicationStatistics.get(0));
-        inOrder.verify(applicationCountSummaryMapperMock).mapToResource(applicationStatistics.get(1));
-
-        assertEquals(expectedSummaryResources, result);
+        assertTrue(result.isSuccess());
+        assertEquals(resource, result.getSuccessObject());
     }
 }

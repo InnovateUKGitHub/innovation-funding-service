@@ -47,22 +47,6 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
 
         List<Organisation> organisations = organisationRepository.findAll(simpleMap(applicationStatistics.getContent(), ApplicationStatistics::getLeadOrganisationId));
 
-        return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(applicationCountSummaryPageMapper::mapToResource);
-
-        /* TODO Figure out how to get the organisation name mapped correctly.
-        ApplicationCountSummaryPageResource pagedStatistics = applicationCountSummaryPageMapper.mapToResource(applicationStatistics);
-        return serviceSuccess(simpleMap(applicationStatistics.getContent(), applicationStats -> {
-            ApplicationCountSummaryResource summaryResource = applicationCountSummaryMapper.mapToResource(applicationStats);
-            summaryResource.setLeadOrganisation(
-                    organisations.stream()
-                            .filter(organisation -> organisation.getId().equals(applicationStats.getLeadOrganisationId()))
-                            .findFirst()
-                            .map(Organisation::getName)
-                            .orElse("")
-            );
-
-            return summaryResource;
-        }));
-         */
+        return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats, organisations));
     }
 }

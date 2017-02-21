@@ -2,10 +2,14 @@ package org.innovateuk.ifs.application.documentation;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationCountSummaryController;
+import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.junit.Test;
 
+import java.util.Collections;
+
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourcesFields;
@@ -28,8 +32,10 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
     public void getApplicationCountSummariesByCompetitionId() throws Exception {
         Long competitionId = 1L;
         ApplicationCountSummaryResource applicationCountSummaryResource = applicationCountSummaryResourceBuilder.build();
+        ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
+        pageResource.setContent(singletonList(applicationCountSummaryResource));
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId)).thenReturn(serviceSuccess(asList(applicationCountSummaryResource)));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, null)).thenReturn(serviceSuccess(pageResource));
 
 
         mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}", competitionId))
@@ -40,6 +46,6 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                         ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId);
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, null);
     }
 }
