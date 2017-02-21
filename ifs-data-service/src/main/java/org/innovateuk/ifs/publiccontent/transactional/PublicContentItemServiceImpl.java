@@ -2,7 +2,7 @@ package org.innovateuk.ifs.publiccontent.transactional;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -26,10 +26,10 @@ import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -39,9 +39,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
-    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
 
     @Autowired
     private KeywordRepository keywordRepository;
@@ -119,9 +116,14 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         List<Long> competitionIds = new ArrayList<>();
 
         innovationAreaId.ifPresent(id -> {
-            competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(id).stream()
-                    .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
-                    .collect(Collectors.toList()));
+            InnovationArea innovationArea = innovationAreaRepository.findOne(id);
+
+            if (innovationArea != null) {
+                competitionIds.addAll(simpleMap(
+                        competitionRepository.findByInnovationSectorCategoryId(innovationArea.getSector().getId()),
+                        Competition::getId
+                ));
+            }
         });
 
         return competitionIds;

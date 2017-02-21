@@ -155,55 +155,30 @@
                             </div>
                         </li>
                     </ul>
-                    <h2 class="heading-large">Actions</h2>
-                    <div class="grid-row dashboard-actions">
-                        <div class="column-third">
-                            <a class="button button-block disabled" aria-disabled="true"
-                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN'}">Applications</a>
-                            <a class="button button-block"
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
-                               th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications</a>
-                        </div>
-                    </div>
-
-                    <div class="grid-row dashboard-actions">
-                        <div class="column-third">
-                            <a class="button button-block"
-                               th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite assessors</a>
-                        </div>
-                        <div class="column-third">
-                            <a class="button button-block disabled" aria-disabled="true"
-                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}">Manage applications</a>
-                            <a class="button button-block"
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}"
-                               th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Manage applications</a>
-                        </div>
-                        <div class="column-third">
-                            <a class="button button-block disabled" aria-disabled="true"
-                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED'}">View panel sheet</a>
-                            <a class="button button-block"
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED'}"
-                               href="#">View panel sheet</a>
-                        </div>
-                    </div>
-
-                    <div class="grid-row dashboard-actions">
-                        <div class="column-third">
-                            <a class="button button-block disabled" aria-disabled="true"
-                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}">Funding decision</a>
-                            <a class="button button-block"
-                               th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}"
-                               th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}">Funding decision</a>
-                        </div>
-                        <!--
-                        <div class="column-third">
-                            <a class="button" href="#">Manage funding notifications</a>
-                        </div>
-                        <div class="column-third">
-                            <a class="button" href="#">Release feedback</a>
-                        </div>
-                        -->
-                    </div>
+                    <h2 class="heading-medium">Competition navigation</h2>
+                    <ul class="link-list">
+                        <li>
+                            <a class="disabled" aria-disabled="true"
+                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN'}">Applications - All, submitted</a>
+                            <a th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN'}"
+                               th:href="@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}">Applications - All, submitted</a>
+                        </li>
+                        <li>
+                            <a th:href="@{/competition/{competitionId}/assessors(competitionId=${model.competitionId})}">Invite assessors to assess the competition</a>
+                        </li>
+                        <li>
+                            <a class="disabled" aria-disabled="true"
+                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}">Assessor management - assignment to applications</a>
+                            <a th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN'}"
+                               th:href="@{/assessment/competition/{competitionId}(competitionId=${model.competitionId})}">Assessor management - assignment to applications</a>
+                        </li>
+                        <li>
+                            <a class="disabled" aria-disabled="true"
+                               th:if="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}">Input and review funding decision</a>
+                            <a th:unless="${model.competitionStatus.name() == 'READY_TO_OPEN' or model.competitionStatus.name() == 'OPEN' or model.competitionStatus.name() == 'CLOSED' or model.competitionStatus.name() == 'IN_ASSESSMENT'}"
+                               th:href="@{/competition/{competitionId}/funding(competitionId=${model.competitionId})}">Input and review funding decision</a>
+                        </li>
+                    </ul>
                 </div>
                 <div class="column-third">
                     <h2 class="heading-medium no-margin-top">Competition milestones</h2>

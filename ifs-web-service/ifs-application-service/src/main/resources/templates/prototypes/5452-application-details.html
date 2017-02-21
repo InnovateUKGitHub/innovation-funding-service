@@ -61,13 +61,13 @@
           </div>
         </fieldset>
 
-        <fieldset>
-          <legend class="visuallyhidden">Type of research</legend>
-          <div class="message-alert extra-margin-bottom">
+        <!-- <fieldset>
+            <legend class="visuallyhidden">Type of research</legend>
+            <div class="message-alert extra-margin-bottom">
               <h2 class="heading-small no-margin">What type of research are you undertaking in this project? </h2>
               <p>The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.</p>
-          </div>
-          <div class="form-group">
+            </div>
+            <div class="form-group">
               <legend>
                   <span class="heading-medium">Research category</span>
                   <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" target="_blank">Innovate UK funding rules</a>.</span>
@@ -84,8 +84,25 @@
                   <input type="radio" value="experimental-development" required="required" id="experimental-development" name="researchArea" />
                   Experimental development
               </label>
-          </div>
-      </fieldset>
+            </div>
+        </fieldset> -->
+
+        <div class="extra-margin-bottom">
+            <h2 class="heading-medium no-margin">Research category </h2>
+            <p class="form-hint">The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.</p>
+
+            <th:block th:if="${param.researchCategoryGroup != null}">
+                <dl class="extra-margin-bottom">
+                    <dt>Chosen research category</dt>
+                    <dd th:text="${param.researchCategoryGroup[0]}"></dd>
+                </dl>
+                <a href="/prototypes/8398-research-category">Change your research category</a>
+            </th:block>
+
+            <th:block th:if="${param.researchCategoryGroup == null}">
+                <a href="/prototypes/8398-research-category">Choose your research category</a>
+            </th:block>
+        </div>
 
       <!-- <div class="form-group">
           <h2 class="heading-small no-margin">Lead organisation</h2>
@@ -112,7 +129,7 @@
 
     <div class="extra-margin-bottom">
       <h2 class="heading-medium">Innovation area</h2>
-      <p>This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.</p>
+      <p class="form-hint">This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.</p>
 
       <th:block th:if="${param.categoryGroup != null}">
         <dl class="extra-margin-bottom">
@@ -236,19 +253,8 @@
           </div>
         </th:block>
 
-        <button type="submit" data-js-modal="change-research-modal" class="button app-submit-btn extra-margin-top" name="submit-section" formaction="/prototypes/635-application-overview" th:unless="${param.status != null and param.status[0] == 'readOnly'}">Save and return to application overview</button>
+        <button type="submit" class="button app-submit-btn extra-margin-top" name="submit-section" formaction="/prototypes/635-application-overview" th:unless="${param.status != null and param.status[0] == 'readOnly'}">Save and return to application overview</button>
 
-        <div class="modal-overlay js-close" aria-hidden="true"></div>
-        <div class="change-research-modal warning-alert" role="dialog" aria-hidden="true">
-          <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
-          <h2 class="heading-medium no-margin">Changing research category will reset the funding level of this application</h2>
-          <p>All partner organisations that have supplied their funding information will have to review and mark the section as complete again.</p>
-          <hr>
-          <div>
-              <a href="/prototypes/635-application-overview" class="button">Continue</a>
-              <a href="#" class="js-close button-link-style">Cancel</a>
-          </div>
-        </div>
 
 
     </form>

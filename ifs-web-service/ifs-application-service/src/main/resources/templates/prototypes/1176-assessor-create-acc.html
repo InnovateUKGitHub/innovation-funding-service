@@ -60,7 +60,7 @@
 			<div class="form-group extra-margin-top" th:unless="${param.edit != null}">
 				<label class="form-label" for="postcode-check">
 					<span class="form-label-bold">Postcode</span>
-          <span class="form-hint">Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice</span>
+          <span class="form-hint">Please provide your postal address for our records.</span>
 				</label>
 				<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
 				<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
@@ -86,7 +86,7 @@
 			<div class="form-group extra-margin">
 				<label class="form-label" for="phone-number">
 					<span class="form-label-bold">Phone number</span>
-					<span class="form-hint">We may use this to contact you about the application</span>
+					<span class="form-hint">We may use this to contact you about the application.</span>
 				</label>
 				<input class="form-control" id="phone-number" name="phone-number" type="text" th:value="${(param.edit == null ? '':'01234 567891')}" />
 			</div>

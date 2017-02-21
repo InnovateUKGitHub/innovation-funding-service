@@ -15,9 +15,11 @@ public interface CompetitionsRestService {
     RestResult<List<CompetitionSearchResultItem>> findLiveCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findProjectSetupCompetitions();
     RestResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
+    RestResult<List<CompetitionSearchResultItem>> findNonIfsCompetitions();
     RestResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
     RestResult<CompetitionCountResource> countCompetitions();
     RestResult<CompetitionResource> getCompetitionById(Long competitionId);
+    RestResult<CompetitionResource> getPublishedCompetitionById(Long competitionId);
     RestResult<List<CompetitionTypeResource>> getCompetitionTypes();
     RestResult<Void> update(CompetitionResource competition);
     RestResult<CompetitionResource> create();
@@ -29,4 +31,5 @@ public interface CompetitionsRestService {
     RestResult<Void> returnToSetup(Long competitionId);
     RestResult<Void> closeAssessment(Long competitionId);
     RestResult<Void> notifyAssessors(Long competitionId);
+    RestResult<CompetitionResource> createNonIfs();
 }

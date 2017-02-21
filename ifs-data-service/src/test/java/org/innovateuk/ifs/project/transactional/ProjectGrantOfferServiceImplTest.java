@@ -494,6 +494,48 @@ public class ProjectGrantOfferServiceImplTest extends BaseServiceUnitTest<Projec
         verify(fileServiceMock, never()).deleteFile(existingGOLFile.getId());
     }
 
+    @Test
+    public void testRemoveSignedGrantOfferLetterFileEntry() {
+
+        UserResource internalUserResource = newUserResource().build();
+        User internalUser = newUser().withId(internalUserResource.getId()).build();
+        setLoggedInUser(internalUserResource);
+
+        FileEntry existingSignedGOLFile = newFileEntry().build();
+        project.setSignedGrantOfferLetter(existingSignedGOLFile);
+
+        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.SETUP);
+        when(fileServiceMock.deleteFile(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
+
+        ServiceResult<Void> result = service.removeSignedGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isSuccess());
+        assertNull(project.getSignedGrantOfferLetter());
+
+        verify(fileServiceMock).deleteFile(existingSignedGOLFile.getId());
+    }
+
+    @Test
+    public void testRemoveSignedGrantOfferLetterFileEntryProjectLive() {
+
+        UserResource internalUserResource = newUserResource().build();
+        User internalUser = newUser().withId(internalUserResource.getId()).build();
+        setLoggedInUser(internalUserResource);
+
+        FileEntry existingSignedGOLFile = newFileEntry().build();
+        project.setSignedGrantOfferLetter(existingSignedGOLFile);
+
+        when(userRepositoryMock.findOne(internalUserResource.getId())).thenReturn(internalUser);
+        when(projectWorkflowHandlerMock.getState(project)).thenReturn(ProjectState.LIVE);
+        when(fileServiceMock.deleteFile(existingSignedGOLFile.getId())).thenReturn(serviceSuccess(existingSignedGOLFile));
+
+        ServiceResult<Void> result = service.removeSignedGrantOfferLetterFileEntry(123L);
+
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(PROJECT_SETUP_ALREADY_COMPLETE));
+    }
+
     private final Organisation organisation(OrganisationTypeEnum type, String name) {
         return newOrganisation()
                 .withOrganisationType(type)
