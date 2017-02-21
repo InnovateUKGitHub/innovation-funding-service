@@ -140,6 +140,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) result.getModelAndView().getModel().get("model");
 
+        assertEquals(ASSESSMENT_ID, model.getAssessmentId());
         assertEquals(50, model.getDaysLeftPercentage());
         assertEquals(3, model.getDaysLeft());
         assertEquals(expectedCompetition, model.getCompetition());
@@ -269,6 +270,7 @@ public class AssessmentFeedbackControllerTest extends BaseControllerMockMVCTest<
 
         AssessmentFeedbackViewModel model = (AssessmentFeedbackViewModel) result.getModelAndView().getModel().get("model");
 
+        assertEquals(ASSESSMENT_ID, model.getAssessmentId());
         assertEquals(50, model.getDaysLeftPercentage());
         assertEquals(3, model.getDaysLeft());
         assertEquals(expectedCompetition, model.getCompetition());
