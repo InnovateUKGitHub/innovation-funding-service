@@ -26,6 +26,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 *** Test Cases ***
+# TODO refactore this file due to INFUND-7610
 User can update initial details of a competition before notify date
     [Documentation]    INFUND-6661
     [Setup]    The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
@@ -297,5 +298,6 @@ return the database to its previous status
 
 the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    ${status}  run keyword and return status without screenshots  Wait Until Element Is Visible Without Screenshots  jQuery=.button:contains("Save")
+    run keyword if  ${status} == 'FAIL'  the user clicks the button/link    jQuery=.button:contains("Save")
     the user closes the browser
