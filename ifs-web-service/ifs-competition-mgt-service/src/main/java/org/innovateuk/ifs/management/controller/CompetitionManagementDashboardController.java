@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +79,8 @@ public class CompetitionManagementDashboardController {
     @GetMapping(value="/dashboard/search")
     public String search(@RequestParam(name = "searchQuery") String searchQuery,
                            @RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page - 1));
+        final String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
+        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
         return TEMPLATE_PATH + "search";
     }
