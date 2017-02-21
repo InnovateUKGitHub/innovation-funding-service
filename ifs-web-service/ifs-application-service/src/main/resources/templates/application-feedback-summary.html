@@ -1,72 +1,141 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Summary'" />
-</head>
-<body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
-<th:block th:insert="fragments/modals :: modal-overlay" />
-<th:block th:if="${currentApplication.isOpen() and applicationReadyForSubmit}" th:include="fragments/modals ::modal-confirm-submit-application
-    (messageTitle='This is your final chance to make changes to the application.',
-     message='You will not be able to access the application after this point. Are you sure you want to submit?',
-     submitLink='/application/'+${currentApplication.getId()}+'/submit',
-     submitText='Yes, I want to submit my application',
-     cancelText='Cancel')" />
-<th:block th:insert="fragments/layout :: body-start" />
-<th:block th:insert="fragments/layout :: global-header" />
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Feedback overview'" />
+    </head>
 
-<main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start" />
+    <body th:with="context='applicant'" class="app-summary" th:classappend="${currentApplication.isOpen() ? 'is-open' : 'is-closed' }">
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
 
-    <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub"
-         th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
+            <th:block th:if="${currentApplication.isOpen() and currentCompetition.isOpen()}" th:include="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application Overview',linkClass='link-back',linkUrl=@{/application/{id}(id=${currentApplication.id})}"/>
 
-    <div class="page-title">
-        <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
-        <h1 th:if="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Summary</h1>
-        <h1 th:unless="${currentApplication.isOpen()}" class="heading-xlarge no-margin">Application Overview</h1>
-    </div>
+            <th:block th:insert="fragments/elements :: competition-closing-warning (competition=${currentCompetition})" />
 
-    <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
-
-    <p class="subtitle extra-margin" th:if="${currentApplication.isOpen()}">
-        Please review your application before final submission. Any highlighted sections are incomplete and need further information from you.
-    </p>
-
-    <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}" class="form-serialize-js section-overview">
-      <th:block th:insert="fragments/application :: application-summary (competitionIsOpen = ${currentCompetition.isOpen()}, assessorFeedbackDownloadLink=@{/application/{applicationId}/assessorFeedback(applicationId=${currentApplication.id})})" />
-    </form>
-
-    <div th:if="${!currentCompetition.isOpen() and !currentApplication.hasBeenSubmitted()}">
-        <div class="warning-alert">
-            This competition has already closed, you are no longer able to submit your application.
-        </div>
-    </div>
-    <div th:if="${currentCompetition.isOpen() and currentApplication.isOpen()}">
-        <hr/>
-
-        <th:block th:if="${userIsLeadApplicant}">
-            <div>
-                <span class="icon icon-information"></span>
-                <span> You will not be able to make changes to your application or resubmit after this point.</span>
+            <div class="page-title">
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
+                <h1 class="heading-xlarge no-margin">Feedback overview</h1>
             </div>
-            <div class="alignright-button">
-                <a th:if="${applicationReadyForSubmit}" id="submit-application-button" class="button large no-margin-right" data-js-modal="modal-confirm-submit-application"
-                   th:href="@{/application/{id}/confirm-submit(id=${currentApplication.getId()})}">Submit application</a>
-                <button disabled="disabled" class="button" th:unless="${applicationReadyForSubmit}">Submit application</button>
+
+            <th:block th:insert="fragments/elements :: competition-status-message (app=${currentApplication}, competition=${currentCompetition})" />
+
+            <!--/* TODO INFUND-8169
+            <h2 class="heading-medium">Overall scores</h2>
+            <table>
+                <tbody>
+                <tr>
+                    <th scope="row">Question</th>
+                    <th scope="col"><strong>Q1</strong></th>
+                    <th scope="col"><strong>Q2</strong></th>
+                    <th scope="col"><strong>Q3</strong></th>
+                    <th scope="col"><strong>Q4</strong></th>
+                    <th scope="col"><strong>Q5</strong></th>
+                    <th scope="col"><strong>Q6</strong></th>
+                    <th scope="col"><strong>Q7</strong></th>
+                    <th scope="col"><strong>Q8</strong></th>
+                    <th scope="col"><strong>Q9</strong></th>
+                    <th scope="col"><strong>Q10</strong></th>
+                </tr>
+                <tr>
+                    <th scope="row">Score</th>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                    <td>7</td>
+                </tr>
+                </tbody>
+            </table>
+            */-->
+
+            <h2 class="heading-medium no-margin-bottom">Application details</h2>
+            <p class="form-hint">Assessors do not provide scores on these sections of the application.</p>
+
+            <div class="boxed">
+                <div class="grid-row">
+                    <div class="column-half">
+                        <h3 class="heading-small">Project title</h3>
+                        <p>Machine learning in robots</p>
+
+                        <h3 class="heading-small">Lead organisation</h3>
+                        <p>Aptrans Ltd</p>
+
+                        <h3 class="heading-small">Partners</h3>
+                        <ul class="list list-bullet">
+                            <li>Biotech Corp</li>
+                            <li>University of Cardiff</li>
+                        </ul>
+                    </div>
+
+                    <div class="column-half">
+                        <h3 class="heading-small">Project timescales</h3>
+                        <p>Project start date: <br />4 November 2016</p>
+                        <p>Duration: <br />51 months</p>
+
+                        <h3 class="heading-small extra-margin">Total project cost</h3>
+                        <p>£203,567</p>
+                    </div>
+                </div>
             </div>
-        </th:block>
-        <th:block th:unless="${userIsLeadApplicant}">
-          <span class="icon icon-information"></span>
-          <span>All sections must be marked as complete before the application can be submitted. Only the lead applicant is able to submit the application.</span>
-        </th:block>
 
-    </div>
-    <th:block th:insert="fragments/layout :: main-content-end" />
-</main>
+            <ul class="list-overview extra-margin">
+                <li class="section-status">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h3 class="heading-small">Project summary</h3>
+                        </div>
+                        <div class="column-third">
+                            <p class="form-hint no-margin">No feedback provided</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="section-status">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h3 class="heading-small">Public description</h3>
+                        </div>
+                        <div class="column-third">
+                            <p class="form-hint no-margin">No feedback provided</p>
+                        </div>
+                    </div>
+                </li>
+                <li class="section-status">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h3 class="heading-small">Scope</h3>
+                        </div>
+                        <div class="column-third">
+                            In scope? 4/5 Yes
+                        </div>
+                    </div>
+                </li>
+            </ul>
 
-<th:block th:insert="fragments/layout :: footer" />
-<th:block th:insert="fragments/layout :: body-end" />
-</body>
+            <!--/* TODO INFUND-8168 & INFUND-8169
+            <h2 class="heading-medium no-margin-bottom">Application questions</h2>
+                <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
+
+            <h2 class="heading-medium">Finances</h2>
+
+            */-->
+
+            <!--/* TODO INFUND-8172
+            <h2 class="heading-medium">Your assessors' feedback</h2>
+
+            */-->
+
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
 </html>
