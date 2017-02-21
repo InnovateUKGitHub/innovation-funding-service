@@ -78,7 +78,6 @@ public class FormInputResponsePermissionRules {
 
         List<QuestionStatus> questionStatuses = getQuestionStatuses(response);
 
-
         // There is no question status yet, so only check for roles
         if (questionStatuses.isEmpty()) {
             return isLead || isCollaborator;
@@ -86,7 +85,17 @@ public class FormInputResponsePermissionRules {
 
         return (isLead || isCollaborator)
                 && checkIfAssignedToQuestion(questionStatuses, user)
-                && checkIfAnyIncompleteQuestionStatus(questionStatuses);
+                && checkQuestionStatuses(questionStatuses);
+
+    }
+
+    private boolean checkQuestionStatuses(List<QuestionStatus> questionStatuses) {
+        Question question = questionStatuses.get(0).getQuestion();
+        if (question.getMultipleStatuses()) {
+            return checkIfAnyIncompleteQuestionStatus(questionStatuses);
+        } else {
+            return !checkIfQuestionIsMarked(questionStatuses);
+        }
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
@@ -104,6 +113,13 @@ public class FormInputResponsePermissionRules {
                         || questionStatus.getAssignee().getUser().getId().equals(user.getId()));
 
         return isAssigned;
+    }
+
+    private boolean checkIfQuestionIsMarked(List<QuestionStatus> questionStatuses) {
+        boolean isMarked = questionStatuses.stream()
+                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true));
+
+        return isMarked;
     }
 
     private boolean checkIfAnyIncompleteQuestionStatus(List<QuestionStatus> questionStatuses) {
