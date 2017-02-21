@@ -12,8 +12,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
+import static java.util.stream.Collectors.toList;
 
 
 @Controller
@@ -21,6 +26,8 @@ import java.util.function.Supplier;
 @PreAuthorize("hasAuthority('comp_admin')")
 public class CompetitionManagementManageFundingApplicationsController {
 
+
+    private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
 
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
@@ -34,7 +41,7 @@ public class CompetitionManagementManageFundingApplicationsController {
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
                     model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
                     model.addAttribute("form", new SelectApplicationsForEmailForm());
-                    return "comp-mgt-manage-funding-applications";
+                    return MANAGE_FUNDING_APPLICATIONS_VIEW;
                 }
         );
 
@@ -46,22 +53,32 @@ public class CompetitionManagementManageFundingApplicationsController {
                                      @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
                                      BindingResult queryFormBindingResult,
                                      ValidationHandler queryFormValidationHandler,
-                                     @ModelAttribute @Valid SelectApplicationsForEmailForm ids,
+                                     @ModelAttribute("form") @Valid SelectApplicationsForEmailForm ids,
                                      BindingResult idsBindingResult,
-                                     ValidationHandler idsValidationHandler){
-        return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () ->
-            idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model), () ->
-                composeEmailRedirect(competitionId, ids)
-            )
+                                     ValidationHandler idsValidationHandler) {
+        return queryFormValidationHandler.failNowOrSucceedWith(queryFailureView(competitionId),  // Pass or fail JSR 303 on the query form
+                () -> idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model), // Pass or fail JSR 303 on the ids
+                        () -> {
+                            // Custom validation
+                            List<Long> applicationIds = ids.getIds().stream().map(this::toLongOrNull).filter(Objects::nonNull).collect(toList());
+                            if (applicationIds.isEmpty()) {
+                                idsBindingResult.rejectValue("ids", "validation.manage.funding.applications.no.application.selected");
+                            }
+                            return idsValidationHandler.failNowOrSucceedWith(idsFailureView(competitionId, query, model), // Pass or fail custom validation
+                                    () -> composeEmailRedirect(competitionId, applicationIds));
+                        }
+                )
         );
     }
 
-    private String composeEmailRedirect(long competitionId, SelectApplicationsForEmailForm ids){
-        return "redirect:/competition/" + competitionId + "/funding/send?application_ids=";
+
+    private String composeEmailRedirect(long competitionId, List<Long> ids) {
+        String idParameters = ids.stream().map(Object::toString).collect(Collectors.joining(","));
+        return "redirect:/competition/" + competitionId + "/funding/send?application_ids=" + idParameters;
     }
 
     private Supplier<String> queryFailureView(long competitionId) {
-        return  () -> "redirect:/competition/" + competitionId + "/funding";
+        return () -> "redirect:/competition/" + competitionId + "/funding";
     }
 
     private Supplier<String> idsFailureView(long competitionId, ManageFundingApplicationsQueryForm query, Model model) {
@@ -69,5 +86,17 @@ public class CompetitionManagementManageFundingApplicationsController {
             model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
             return "comp-mgt-manage-funding-applications";
         };
+    }
+
+    private Long toLongOrNull(String value) {
+        if (value != null)
+        {
+            try {
+              return Long.parseLong(value);
+            } catch (NumberFormatException e){
+                return null;
+            }
+        }
+        return null;
     }
 }
