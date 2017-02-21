@@ -2,7 +2,7 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator.application;
 
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competition.setup.finance.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.service.modelpopulator.CompetitionSetupSubsectionModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

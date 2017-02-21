@@ -5,7 +5,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competition.setup.finance.service.CompetitionSetupFinanceService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
