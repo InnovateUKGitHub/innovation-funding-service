@@ -118,6 +118,10 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
         this.id = id;
     }
 
+    public boolean isUser(Long userId) {
+        return this.user.hasId(userId);
+    }
+
     public boolean isPartner() {
         return getRole().isPartner();
     }
