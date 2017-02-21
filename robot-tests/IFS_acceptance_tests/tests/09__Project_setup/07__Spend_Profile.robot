@@ -135,7 +135,7 @@ Calculations in the spend profile table
     And the sum of tds equals the total    div.spend-profile-table    3    38    10000    # Materials
     And the sum of tds equals the total    div.spend-profile-table    5    38    10000    # Subcontracting
     And the sum of tds equals the total    div.spend-profile-table    6    38    10000    # Travel & subsistence
-    And the sum of tds equals the total    div.spend-profile-table    7    38    10000    # Other Costs
+    And the sum of tds equals the total    div.spend-profile-table    7    38    10000    # Other costs
 
 Lead Partner can see Spend profile summary
     [Documentation]    INFUND-3971
