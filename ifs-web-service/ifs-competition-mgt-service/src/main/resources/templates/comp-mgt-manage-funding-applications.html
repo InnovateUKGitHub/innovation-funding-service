@@ -16,9 +16,7 @@
                     th:text="${model.competitionName}"/></span>
         <span>Manage funding applications</span>
     </h1>
-
-    <form>
-
+    <form th:object="${form}" method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
         <div class="grid-row sorting sorting-controls">
             <div class="column-half">
                 <div class="form-group">
@@ -27,8 +25,7 @@
             </div>
 
             <div class="column-half alignright">
-                <input type="hidden" name="comp" value="panel" />
-                <button class="button button-notification extra-margin-top" disabled="disabled">Write and send email</button>
+                <button class="button button-notification extra-margin-top" type="submit">Write and send email</button>
             </div>
         </div>
 
@@ -46,10 +43,10 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each="applicationSummary : ${model.content}">
+                <tr th:each="applicationSummary, stat : ${model.content}">
                     <td class="form-group-cell">
-                        <label class="block-label selection-button-checkbox" th:for="'application-' + ${applicationSummary.id}">
-                            <input type="checkbox" class="app-row-select row-successful" th:name="'application-' + ${applicationSummary.id}" th:id="'application-' + ${applicationSummary.id}" aria-labelledby="select-applications-label" />
+                        <label class="block-label selection-button-checkbox" th:for="'application-id' + ${applicationSummary.id}">
+                            <input type="checkbox" class="app-row-select row-successful" th:field="*{ids[__${stat.index}__]}" th:value="${applicationSummary.id}" aria-labelledby="select-applications-label" th:id="'application-id' + ${applicationSummary.id}"/>
                             <small class="visibility-hidden">Select application</small>
                         </label>
                     </td>
@@ -78,7 +75,7 @@
 
             <div class="column-half alignright">
                 <input type="hidden" name="comp" value="panel" />
-                <button class="button button-notification extra-margin-top" disabled="disabled">Write and send email</button>
+                <button class="button button-notification extra-margin-top" type="submit">Write and send email</button>
             </div>
         </div>
 
