@@ -5,10 +5,10 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.GetMapping;
 
 /**
  * CompetitionKeyStatisticsController exposes the statistics for a {@link Competition}
@@ -24,7 +24,7 @@ public class CompetitionKeyStatisticsController {
     public RestResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getReadyToOpenKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @GetMapping(value ="/open",method)
+    @GetMapping(value ="/open")
     public RestResult<CompetitionOpenKeyStatisticsResource> getOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getOpenKeyStatisticsByCompetition(id).toGetResponse();
     }
