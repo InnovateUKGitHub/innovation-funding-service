@@ -9,11 +9,28 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ThreadRepository<T extends Thread> extends PagingAndSortingRepository<T, Long> {
-    static final String FIND_ONE_THAT_HOLDS_ATTACHMENT = "SELECT t from Thread t, Post p, Attachment a " +
-            "WHERE a.id = :attachmentId AND a.post_id = p.id AND p.thread_id = t.id";
-
     List<T> findAllByClassPkAndClassName(Long classPk, String className);
+
+    static final String FIND_ONE_THAT_HOLDS_ATTACHMENT =
+            "SELECT DISTINCT t from Thread t " +
+            "JOIN FETCH t.posts threadPost " +
+            "JOIN FETCH threadPost.attachments postAttachment " +
+            "WHERE postAttachment.id = :attachmentId";
 
     @Query(FIND_ONE_THAT_HOLDS_ATTACHMENT)
     List<T> findOneThatHoldsAttachment(@Param("attachmentId") Long attachmentId);
 }
+
+
+/*
+
+from Products p INNER JOIN p.productlanguages pl
+   where pl.languages.shortname ='eng'
+
+
+    "SELECT DISTINCT o " +
+    "FROM Organization o, User u " +
+    "JOIN o.roles oRole " +
+    "JOIN u.roles uRole " +
+    "WHERE oRole.id = uRole.id AND u.id = :uId")
+ */
