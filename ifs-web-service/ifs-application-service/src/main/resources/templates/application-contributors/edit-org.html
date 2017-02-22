@@ -34,133 +34,145 @@
                 individual before you can remove the first one.</p>
 
             <th:block th:if="${selectedOrganisation}">
-            <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" method="POST" class="contributorsForm">
+                <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" method="POST" class="contributorsForm">
 
-                <div class="error-summary" th:if="${#fields.hasErrors('*')}">
-                    <h2 class="heading-medium error-summary-heading">
-                        We are unable to send the invites out:
-                    </h2>
-                    <ul class="error-summary-list">
-                        <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
-                    </ul>
-                </div>
+                    <div class="error-summary" th:if="${#fields.hasErrors('*')}">
+                        <h2 class="heading-medium error-summary-heading">
+                            We are unable to send the invites out:
+                        </h2>
+                        <ul class="error-summary-list">
+                            <li th:each="err : ${#fields.errors('*')}" th:text="${err}"></li>
+                        </ul>
+                    </div>
 
-                <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
+                    <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
 
-                    <th:block th:if="${organisationInviteForm.organisationId == selectedOrganisation.id}">
-                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
-                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
+                        <th:block th:if="${organisationInviteForm.organisationId == selectedOrganisation.id}">
+                            <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
+                            <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
 
-                        <h2 class="heading-medium" th:text="${selectedOrganisation.name} + (${selectedOrganisation.id == leadOrganisation.id}? ', Lead organisation' : '')">Empire Ltd, Lead organisation</h2>
+                            <h2 class="heading-medium" th:text="${selectedOrganisation.name} + (${selectedOrganisation.id == leadOrganisation.id}? ', Lead organisation' : '')">Empire Ltd, Lead organisation</h2>
 
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th class="width-30-percent" scope="col">Applicant</th>
-                                    <th class="width-40-percent" scope="col">Email</th>
-                                    <th class="width-15-percent" scope="col">Status</th>
-                                    <th class="width-15-percent alignright" scope="col"><span class="visuallyhidden">Actions</span></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:if="${selectedOrganisation.id == leadOrganisation.id}">
-                                    <td th:text="${leadApplicant.name}">Steve Smith</td>
-                                    <td th:text="${leadApplicant.email}">steve.smith@empire.com</td>
-                                    <td>Lead</td>
-                                    <td class="alignright"></td>
-                                </tr>
-
-                                <th:block th:if="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}">
-                                    <tr th:each="invite, iteration: ${organisationInvites.get(organisationInviteForm.organisationInviteId).inviteResources}">
-                                        <td th:text="${invite.name}">Jessica Doe</td>
-                                        <td th:text="${invite.email}">jessica.doe@ludlow.co.uk</td>
-                                        <td>
-                                            <div th:remove="tag" th:if="${invite.status.name() == 'CREATED' || invite.status.name() == 'SENT'}">(pending)</div>
-                                        </td>
-                                        <td>test</td>
+                            <table class="table-overflow">
+                                <thead>
+                                    <tr>
+                                        <th class="width-30-percent" scope="col">Applicant</th>
+                                        <th class="width-40-percent" scope="col">Email</th>
+                                        <th class="width-15-percent" scope="col">Status</th>
+                                        <th class="width-15-percent alignright" scope="col"><span class="visuallyhidden">Actions</span></th>
                                     </tr>
-                                </th:block>
+                                </thead>
+                                <tbody>
+                                    <tr th:if="${selectedOrganisation.id == leadOrganisation.id}">
+                                        <td th:text="${leadApplicant.name}">Steve Smith</td>
+                                        <td th:text="${leadApplicant.email}">steve.smith@empire.com</td>
+                                        <td>Lead</td>
+                                        <td class="alignright"></td>
+                                    </tr>
 
-                                <tr th:each="user, userStats: ${organisationInviteForm.invites}">
-                                    <td th:class="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName') ? 'form-group error' : 'form-group'}" th:unless="${user.getInviteStatus() != null}">
-                                        <label th:for="'organisations'+${organisationStats.index}+'.invites'+${userStats.index}+'.personName'">
-                                            <span class="visuallyhidden">Name</span>
-                                            <th:block th:if="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}" th:remove="tag">
-                                                <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}" th:text="${err}">Please enter a name</span>
-                                            </th:block>
-                                        </label>
-                                        <input type="text" class="form-control width-full" placeholder="name" th:errorclass="field-error" th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName}" />
-                                    </td>
-                                    <td th:unless="${user.getInviteStatus() != null}" th:class="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email') ? 'form-group error' : 'form-group'}">
-                                        <label th:for="'organisations'+${organisationStats.index}+'.invites'+${userStats.index}+'.email'">
-                                            <span class="visuallyhidden">email</span>
-                                            <th:block th:if="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}" th:remove="tag">
-                                                <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}" th:text="${err}">Please enter an email</span>
-                                            </th:block>
-                                        </label>
-                                        <input type="email" class="form-control width-full" placeholder="name@company.co.uk" th:errorclass="field-error" th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email}" />
-                                    </td>
-                                    <td class="form-group " th:if="${user.getInviteStatus() != null}">
-                                        <span th:text="${user.personName}"></span>
-                                    </td>
-                                    <td class="form-group" th:if="${user.getInviteStatus() != null}">
-                                        <span th:text="${user.email}"></span>
-                                    </td>
-                                    <td></td>
-                                    <td class="alignright">
-                                        <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
-                                        <button class="remove-another-row buttonlink" type="submit" name="remove_person" th:value="${organisationStats.index + '_' + userStats.index}">Remove</button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    <th:block th:if="${organisationInviteForm.organisationInviteId != null} and ${organisationInvites?.get(organisationInviteForm.organisationInviteId)?.inviteResources?.size()}">
+                                        <tr th:each="invite, iteration: ${organisationInvites.get(organisationInviteForm.organisationInviteId).inviteResources}">
+                                            <td th:text="${invite.name}">Jessica Doe</td>
+                                            <td th:text="${invite.email}">jessica.doe@ludlow.co.uk</td>
+                                            <td>
+                                                <div th:remove="tag" th:if="${invite.status.name() == 'CREATED' || invite.status.name() == 'SENT'}">(pending)</div>
+                                            </td>
+                                            <td>test</td>
+                                        </tr>
+                                    </th:block>
+                                </tbody>
+                            </table>
 
-                        <p>
-                            <button th:if="${leadApplicant.id == authenticatedUser.id || organisationInviteForm.organisationId == authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add new applicant</button>
-                        </p>
+                            <!-- TODO this block should exclude the heading and table if no new applicants are being added -->
+                            <th:block th:if="${organisationInviteForm.invites} != 0">
+                                <h2 class="heading-medium">New applicant</h2>
+
+                                <table class="table-overflow">
+                                    <thead>
+                                        <tr>
+                                            <th class="width-30-percent">Applicant name</th>
+                                            <th class="width-55-percent">Email</th>
+                                            <th class="width-15-percent alignright" scope="col"><span class="visuallyhidden">Actions</span></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="user, userStats: ${organisationInviteForm.invites}">
+                                            <td th:class="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName') ? 'form-group error' : 'form-group'}" th:unless="${user.getInviteStatus() != null}">
+                                                <label th:for="'organisations'+${organisationStats.index}+'.invites'+${userStats.index}+'.personName'">
+                                                    <span class="visuallyhidden">Name</span>
+                                                    <th:block th:if="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}" th:remove="tag">
+                                                        <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName')}" th:text="${err}">Please enter a name</span>
+                                                    </th:block>
+                                                </label>
+                                                <input type="text" class="form-control width-full" placeholder="name" th:errorclass="field-error" th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].personName}" />
+                                            </td>
+                                            <td th:unless="${user.getInviteStatus() != null}" th:class="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email') ? 'form-group error' : 'form-group'}">
+                                                <label th:for="'organisations'+${organisationStats.index}+'.invites'+${userStats.index}+'.email'">
+                                                    <span class="visuallyhidden">email</span>
+                                                    <th:block th:if="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}" th:remove="tag">
+                                                        <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}" th:text="${err}">Please enter an email</span>
+                                                    </th:block>
+                                                </label>
+                                                <input type="email" class="form-control width-full" placeholder="name@company.co.uk" th:errorclass="field-error" th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email}" />
+                                            </td>
+                                            <td class="form-group " th:if="${user.getInviteStatus() != null}">
+                                                <span th:text="${user.personName}"></span>
+                                            </td>
+                                            <td class="form-group" th:if="${user.getInviteStatus() != null}">
+                                                <span th:text="${user.email}"></span>
+                                            </td>
+                                            <td></td>
+                                            <td class="alignright">
+                                                <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
+                                                <button class="remove-another-row buttonlink" type="submit" name="remove_person" th:value="${organisationStats.index + '_' + userStats.index}">Remove</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </th:block>
+
+                            <p>
+                                <button th:if="${leadApplicant.id == authenticatedUser.id || organisationInviteForm.organisationId == authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add new applicant</button>
+                            </p>
+                        </th:block>
                     </th:block>
-                </th:block>
-            </form>
+                </form>
             </th:block>
 
             <!-- INFUND-7979 (lead applicant adds new partner org) -->
             <th:block th:if="${leadApplicant.id == authenticatedUser.id and selectedOrganisation == null}">
-                <fieldset>
-                    <legend class="heading-medium">Organisation</legend>
+                <form action="#" method="POST">
                     <div class="form-group">
                         <label class="form-label-bold" for="new-org-name">Organisation name</label>
                         <input class="form-control width-full" id="new-org-name" type="text" />
                     </div>
-                </fieldset>
-            </th:block>
 
-            <!-- INFUND-7979 (lead applicant adds new partner org) -->
-            <th:block th:if="${leadApplicant.id == authenticatedUser.id and selectedOrganisation == null}">
-                <fieldset class="table-display-stacked extra-margin-top">
-                    <legend class="heading-medium">New applicant</legend>
-                    <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
-                        <thead>
-                            <tr>
-                                <th class="width-30-percent" id="new-applicant-name" scope="col">Applicant name</th>
-                                <th class="width-55-percent" id="new-applicant-email" scope="col">Email</th>
-                                <td class="width-15-percent alignright"></td>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>
-                                    <input type="text" id="applicant-name-1" name="applicant-name-1" aria-labelledby="new-applicant-name" required="required" class="form-control width-full">
-                                </td>
-                                <td>
-                                    <input type="text" id="applicant-email-1" name="applicant-emaile-1" aria-labelledby="new-applicant-email" required="required" class="form-control width-full">
-                                </td>
-                                <td class="alignright"><a href="#">Remove</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </fieldset>
+                    <fieldset class="extra-margin-top">
+                        <legend class="heading-medium">New applicant</legend>
+                        <table class="table-overflow">
+                            <thead>
+                                <tr>
+                                    <th class="width-30-percent" id="new-applicant-name" scope="col">Applicant name</th>
+                                    <th class="width-55-percent" id="new-applicant-email" scope="col">Email</th>
+                                    <td class="width-15-percent alignright"></td>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <input type="text" id="applicant-name-1" name="applicant-name-1" aria-labelledby="new-applicant-name" required="required" class="form-control width-full">
+                                    </td>
+                                    <td>
+                                        <input type="text" id="applicant-email-1" name="applicant-emaile-1" aria-labelledby="new-applicant-email" required="required" class="form-control width-full">
+                                    </td>
+                                    <td class="alignright"><a href="#">Remove</a></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </fieldset>
 
-                <p><a href="#">Add new applicant</a></p>
+                    <p><button class="add-another-row buttonlink" type="submit">Add new applicant</button></p>
+                </form>
             </th:block>
 
             <th:block th:if="${selectedOrganisation != null and authenticatedUser.id == leadApplicant.id}">
