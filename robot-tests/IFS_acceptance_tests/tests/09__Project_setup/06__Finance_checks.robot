@@ -464,8 +464,249 @@ Finance contact can view the new response
     And the user clicks the button/link    link=Finance checks
     Then the user should see the text in the page    this is a response to a response
 
+Link to notes from viability section
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given log in as a different user    &{internal_finance_credentials}
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(2)
+    And the user clicks the button/link    jQuery=.button:contains("Notes")
+    Then the user should see the text in the page    Use this section to make notes related to the finance checks
+    And the user should see the element    jQuery=.button:contains("Create a new note")
 
 
+Link to notes from eligibility section
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility
+    And the user clicks the button/link    jQuery=.button:contains("Notes")
+    Then the user should see the text in the page    Use this section to make notes related to the finance checks
+    And the user should see the element    jQuery=.button:contains("Create a new note")
+
+Link to notes from main finance checks summary page
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    And the user clicks the button/link    jQuery=table.table-progress tr:nth-child(1) td:nth-child(7)
+    Then the user should see the text in the page    Use this section to make notes related to the finance checks
+    And the user should see the element    jQuery=.button:contains("Create a new note")
+
+
+Large pdf uploads not allowed for notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user clicks the button/link    jQuery=.button:contains("Create a new note")
+    When the user uploads the file     name=attachment    ${too_large_pdf}
+    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    [Teardown]    the user goes back to the previous page ignoring form submission
+
+Non pdf uploads not allowed for notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user uploads the file      name=attachment    ${text_file}
+    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+
+
+Finance contact can upload a pdf file to notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Then the user uploads the file      name=attachment   ${valid_pdf}
+    And the user should see the text in the page    ${valid_pdf}
+
+Finance contact can remove the file from notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user clicks the button/link    name=removeAttachment
+    Then the user should not see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    And the user should not see an error in the page
+
+Finance contact can re-upload the file to notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user uploads the file    name=attachment    ${valid_pdf}
+    Then the user should see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+
+Finance contact can view the file in notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Given the user should see the element    link=${valid_pdf}
+    And the file has been scanned for viruses
+    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should not see an error in the page
+    [Teardown]    the user goes back to the previous page ignoring form submission
+
+Finance contact can upload more than one file to notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    Then the user uploads the file      name=attachment    ${valid_pdf}
+    And the user should see the element    jQuery=.extra-margin a:contains("testing.pdf"):nth-of-type(2)
+
+Finance contact can still view both files in notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(1)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page ignoring form submission
+    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(2)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page ignoring form submission
+
+
+Create new note server side validations
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Save note")
+    Then the user should see the text in the page    The title cannot be empty.
+    And the user should see the text in the page    The note cannot be empty.
+
+Create new note client side validations
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user enters text to a text field    id=noteTitle    this is a title
+    Then the user should not see the text in the page    The title cannot be empty.
+    When the user enters text to a text field    css=.editor    this is some note text
+    Then the user should not see the text in the page    The note should not be empty.
+
+
+Word count validations for notes
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    Then the user should see the text in the page    The note is too long, please reduce it 400 words.    # subject to change of course
+    When the user enters text to a text field    css=.editor    this is some note text
+    Then the user should not see the text in the page    The note is too long, please reduce it 400 words.    # subject to change of course
+
+New note can be cancelled
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains("Cancel")
+    Then the user should not see the text in the page    ${valid_pdf}
+    And the user should not see the element    id=noteTitle
+    And the user should not see the element    css=.editor
+
+
+Note can be re-entered
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Create a new note")
+    And the user enters text to a text field    id=noteTitle    this is a title
+    And the user enters text to a text field    css=.editor    this is some note text
+    And the user uploads the file    name=attachment    ${valid_pdf}
+    And the user uploads the file    name=attachment    ${valid_pdf}
+
+New note can be posted
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Save note")
+    Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+
+Note sections are no longer editable
+    [Documentation]    INFUND-4845
+    [Tags]
+    When the user should not see the element    css=.editor
+    And the user should not see the element    id=noteTitle
+
+
+Project finance user can comment on the note
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user should see the text in the page    this is a title
+    And the user should see the text in the page    this is some note text
+    And the user should see the element    id=post-new-comment
+
+Large pdf uploads not allowed for note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user clicks the button/link    id=post-new-comment
+    When the user uploads the file     name=attachment    ${too_large_pdf}
+    Then the user should see the text in the page    ${too_large_pdf_validation_error}
+    [Teardown]    the user goes back to the previous page ignoring form submission
+
+Non pdf uploads not allowed for note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user uploads the file      name=attachment    ${text_file}
+    Then the user should see the text in the page    ${wrong_filetype_validation_error}
+
+
+Finance contact can upload a pdf file to note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Then the user uploads the file      name=attachment   ${valid_pdf}
+    And the user should see the text in the page    ${valid_pdf}
+
+Finance contact can remove the file from note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user clicks the button/link    name=removeAttachment
+    Then the user should not see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+    And the user should not see an error in the page
+
+Finance contact can re-upload the file to note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user uploads the file    name=attachment    ${valid_pdf}
+    Then the user should see the element    jQuery=.extra-margin a:contains("${valid_pdf}")
+
+Finance contact can view the file in note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Given the user should see the element    link=${valid_pdf}
+    And the file has been scanned for viruses
+    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}")
+    Then the user should not see an error in the page
+    [Teardown]    the user goes back to the previous page ignoring form submission
+
+Finance contact can upload more than one file to note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    Then the user uploads the file      name=attachment    ${valid_pdf}
+    And the user should see the element    jQuery=.extra-margin a:contains("testing.pdf"):nth-of-type(2)
+
+Finance contact can still view both files in note comments
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(1)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page ignoring form submission
+    When the user clicks the button/link    jQuery=.extra-margin a:contains("${valid_pdf}"):nth-of-type(2)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page ignoring form submission
+
+
+Note comments server side validations
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Save comment")
+    Then the user should see the text in the page    The comment cannot be empty.
+
+
+Note comments client side validations
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user enters text to a text field    css=.editor    this is some comment text
+    And the user moves focus to the element    jQuery=.button:contains("Save comment")
+    Then the user should not see the text in the page    The comment cannot be empty.
+
+Word count validations for note comments
+    [Documentation]    INFUND-7756
+    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    And the user moves focus to the element    jQuery=.button:contains("Save comment")
+    Then the user should see the text in the page    The comment is too long, please reduce it 400 words.    # subject to change of course
+    And the user should see the text in the page    The comment is too long, please reduce it to 4,000 characters.
+    When the user enters text to a text field    css=.editor    this is some comment text
+    Then the user should not see the text in the page    The comment is too long, please reduce it 400 words.    # subject to change of course
+    And the user should not see the text in the page    The comment is too long, please reduce it to 4,000 characters.
+
+Note comment can be posted
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Save comment")
+
+Note comment section now becomes read-only
+    [Documentation]    INFUND-7756
+    [Tags]
+    When the user should not see the element    css=.editor
 
 
 Finance checks client-side validations
