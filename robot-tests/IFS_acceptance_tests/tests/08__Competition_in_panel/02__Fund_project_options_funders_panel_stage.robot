@@ -86,7 +86,7 @@ Successful applicants can see the assessment outcome on the dashboard page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{successful_applicant_credentials}
     When the user navigates to the page    ${server}
-    Then the user should see the text in the page    Projects in setup
+    Then the user should see the text in the page    Set up your project
     And the successful application shows in the project setup section
     And the successful application shows in the previous applications section
 
@@ -102,7 +102,7 @@ Unsuccessful applicants can see the assessment outcome on the dashboard page
     [Tags]
     [Setup]    Log in as a different user    &{unsuccessful_applicant_credentials}
     When the user navigates to the page    ${server}
-    Then the user should not see the text in the page    Projects in setup
+    Then the user should not see the text in the page    Set up your project
     And the unsuccessful application shows in the previous applications section
 
 Unsuccessful applicants can see the assessment outcome on the overview page

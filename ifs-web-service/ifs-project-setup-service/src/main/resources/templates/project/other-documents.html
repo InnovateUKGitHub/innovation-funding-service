@@ -37,8 +37,7 @@
     </div>
 
     <th:block th:if="${model.isShowLeadPartnerGuidanceInformation()}">
-        <p>As the Project Manager you must supply additional documents to support your grant
-            application.</p>
+        <p>The Project Manager must supply additional documents to support your grant application.</p>
         <p>These documents are:</p>
         <ul class="list list-bullet">
             <li>the collaboration agreement</li>
@@ -179,7 +178,7 @@
                 partner</p>
         </th:block>
     </div>
-    <p>The Project Manager must upload both documents for submission. We will contact the Project Manager if we have any queries.</p>
+    <p>Once the documents are uploaded they must be sent to Innovate UK.</p>
 
     <th:block th:if="${model.isShowSubmitDocumentsButton()}">
         <a th:href="@{/project/{id}/partner/documents/confirm(id=${model.getProjectId()})}" class="button extra-margin"

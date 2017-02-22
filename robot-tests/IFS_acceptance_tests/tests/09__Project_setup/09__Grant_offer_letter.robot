@@ -155,9 +155,8 @@ PM can view the grant offer letter page
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     Then the user should see the element     jQuery=li.require-action:last-of-type
     When the user clicks the button/link     link=Grant offer letter
-    Then the user should see the text in the page    The grant offer letter is provided by Innovate UK
+    Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.
     And the user should see the element    jQuery=label:contains(+ Upload)
-    And the user should not see the text in the page    This document is awaiting signature by the Project Manager
     And the user goes back to the previous page
     When the user clicks the button/link    link=status of my partners
     Then the user should see the text in the page    Project team status
@@ -170,9 +169,8 @@ Partners should not be able to send the Grant Offer
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     And the user clicks the button/link    link=Grant offer letter
     Then the user should not see the element    jQuery=label:contains(+ Upload)
-    And the user should not see the element    jQuery=.button:contains("Send signed offer letter")
-    Then the user goes back to the previous page
-    And the user should see the element    jQuery=li.waiting:nth-child(8)
+    And the user should not see the element    jQuery=.button:contains("Send to Innovate UK")
+
 
 Links to other sections in Project setup dependent on project details (applicable for Lead/ partner)
     [Documentation]    INFUND-4428
@@ -206,7 +204,7 @@ PM should be able upload a file and then access the Send button
     When the user uploads a file             signedGrantOfferLetter   ${valid_pdf}
     Then the user should see the text in the page    ${valid_pdf}
     When the user reloads the page
-    Then the user should see the element    jQuery=.button:contains("Send signed offer letter")
+    Then the user should see the element    jQuery=.button:contains("Send to Innovate UK")
     And the user clicks the button/link    link=Project setup status
     And the user should see the element    jQuery=li.require-action:nth-child(8)
     When the user clicks the button/link    link=status of my partners
@@ -303,7 +301,7 @@ PM can download the annex
 PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
-    When the user clicks the button/link    jQuery=.button:contains("Send signed offer letter")
+    When the user clicks the button/link    jQuery=.button:contains("Send to Innovate UK")
     Then the user clicks the button/link    jQuery=button:contains("Send to Innovate UK")
     And the user should not see an error in the page
     When the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}
@@ -508,4 +506,4 @@ proj finance approves the spend profiles
     the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_Competition_Id}/spend-profile/approval
     the user selects the checkbox      approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
-    the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Accept documents")
+    the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Approve")
