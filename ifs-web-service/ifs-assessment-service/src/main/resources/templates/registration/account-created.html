@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Assessor account created'" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Your account has been created'" />
     </head>
 
     <body th:with="context='assessment'" class="sign-in">
@@ -11,8 +11,8 @@
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
 
-            <div class="hgroup no-margin-top" style="padding-top: 20px; margin-bottom: 30px"> 
-                <h1 class="heading-large no-margin">Your account has been created</h1> 
+            <div class="page-title">
+                <h1 class="heading-xlarge">Your account has been created</h1>
             </div>
 
             <p>Before we can invite you to assess you will need to sign into your account to complete the following:</p>
