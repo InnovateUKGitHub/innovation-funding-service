@@ -51,6 +51,11 @@ public class ApplicationFinanceRow extends FinanceRow<ApplicationFinance> {
         return target;
     }
 
+    /**
+     * Used for comparing application and project finance rows.  Doesn't consider associated meta fields.
+     * @param another
+     * @return
+     */
     public boolean matches(ApplicationFinanceRow another){
         if (another == null) return false;
 

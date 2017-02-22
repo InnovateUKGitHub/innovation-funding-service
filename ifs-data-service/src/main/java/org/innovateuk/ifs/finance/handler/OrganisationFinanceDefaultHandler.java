@@ -6,21 +6,20 @@ import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.item.*;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRepository;
-import org.innovateuk.ifs.finance.repository.ApplicationFinanceRowRepository;
-import org.innovateuk.ifs.finance.repository.FinanceRowMetaFieldRepository;
-import org.innovateuk.ifs.finance.repository.ProjectFinanceRowRepository;
+import org.innovateuk.ifs.finance.repository.*;
 import org.innovateuk.ifs.finance.resource.category.*;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.innovateuk.ifs.form.domain.FormInput;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
 
+import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.OTHER_COSTS;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
@@ -49,6 +48,9 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Autowired
     private ApplicationFinanceRepository applicationFinanceRepository;
+
+    @Autowired
+    private ProjectFinanceRepository projectFinanceRepository;
 
     @Override
     public Iterable<ApplicationFinanceRow> initialiseCostType(ApplicationFinance applicationFinance, FinanceRowType costType){
@@ -96,8 +98,10 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectOrganisationFinanceChanges(Long projectFinanceId) {
-        List<ProjectFinanceRow> costs = projectFinanceRowRepository.findByTargetId(projectFinanceId);
-        List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> asApplicationCosts = toChangesList(costs);
+        ProjectFinance projectFinance = projectFinanceRepository.findOne(projectFinanceId);
+        List<ProjectFinanceRow> projectCosts = getProjectCosts(projectFinanceId);
+        List<ApplicationFinanceRow> applicationCosts = getApplicationCosts(projectFinance.getProject().getApplication().getId(), projectFinance.getOrganisation().getId());
+        List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> asApplicationCosts = toChangesList(applicationCosts, projectCosts);
         return getProjectCostChangesByType(asApplicationCosts);
     }
 
@@ -106,41 +110,6 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         costCategories = addCostsToCategories(costCategories, asApplicationCosts);
         costCategories = calculateTotals(costCategories);
         return costCategories;
-    }
-
-    private List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> toChangesList(List<ProjectFinanceRow> costs) {
-        return simpleMap(costs, cost -> {
-            Long applicationId = cost.getTarget().getProject().getApplication().getId();
-            Long organisationId = cost.getTarget().getOrganisation().getId();
-            ApplicationFinance applicationFinance =
-                    applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-            ApplicationFinanceRow applicationFinanceRow = applicationFinanceRowRepository.findOne(cost.getApplicationRowId());
-            return ImmutablePair.of(buildApplicationFinanceRow(applicationFinanceRow, applicationFinance), buildProjectFinanceRow(cost, applicationFinance));
-        });
-    }
-
-    private ApplicationFinanceRow buildApplicationFinanceRow(ApplicationFinanceRow cost, ApplicationFinance applicationFinance){
-        if(cost == null) {
-            return null;
-        }
-
-        ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
-                cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
-
-        applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
-        return applicationFinanceRow;
-    }
-
-    private ApplicationFinanceRow buildProjectFinanceRow(ProjectFinanceRow cost, ApplicationFinance applicationFinance){
-        if(cost == null) {
-            return null;
-        }
-
-        ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
-                cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
-
-        applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
-        return applicationFinanceRow;
     }
 
     private List<ApplicationFinanceRow> toApplicationFinanceRows(List<ProjectFinanceRow> costs) {
@@ -180,41 +149,9 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
         return costCategories;
     }
 
-    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectCostChangesByType(List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> costs) {
-
-        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs = new HashMap<>();
-
-        for(ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow> pair : costs) {
-            ApplicationFinanceRow applicationCost = pair.getLeft();
-            ApplicationFinanceRow projectCost = pair.getRight();
-            if(applicationCost != null && projectCost != null && !applicationCost.matches(projectCost)) {
-                FinanceRowType costType = FinanceRowType.fromType(applicationCost.getQuestion().getFormInputs().get(0).getType());
-                FinanceRowItem applicationFinanceRowItem = getApplicationCostItem(costType, applicationCost);
-                FinanceRowItem projectFinanceRowItem = getApplicationCostItem(costType, projectCost);
-
-                List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> listOfChangedRows = changedPairs.get(costType);
-                if(listOfChangedRows == null){
-                    listOfChangedRows = new ArrayList<>();
-                }
-
-                listOfChangedRows.add(ChangedFinanceRowPair.of(TypeOfChange.UPDATE, applicationFinanceRowItem, projectFinanceRowItem));
-
-                changedPairs.put(costType, listOfChangedRows);
-            }
-        }
-
-        return changedPairs;
-    }
-
     private Map<FinanceRowType, FinanceRowCostCategory> addCostsToCategories(Map<FinanceRowType, FinanceRowCostCategory> costCategories, List<ApplicationFinanceRow> costs) {
-        costs.stream().forEach(c -> addCostToCategory(costCategories, c));
+        costs.forEach(c -> addCostToCategory(costCategories, c));
         return costCategories;
-    }
-
-    private FinanceRowItem getApplicationCostItem(FinanceRowType financeRowType, ApplicationFinanceRow applicationCost){
-        FinanceRowHandler financeRowHandler = getCostHandler(financeRowType);
-        FinanceRowItem costItem = financeRowHandler.toCostItem(applicationCost);
-        return costItem;
     }
 
     /**
@@ -223,6 +160,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
      * @param cost ApplicationFinanceRow to be added
      */
     private Map<FinanceRowType, FinanceRowCostCategory> addCostToCategory(Map<FinanceRowType, FinanceRowCostCategory> costCategories, ApplicationFinanceRow cost) {
+        cost.getQuestion().getFormInputs().size();
         FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         FinanceRowHandler financeRowHandler = getCostHandler(costType);
         FinanceRowItem costItem = financeRowHandler.toCostItem(cost);
@@ -232,8 +170,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> calculateTotals(Map<FinanceRowType, FinanceRowCostCategory> costCategories) {
-        costCategories.values()
-                .forEach(cc -> cc.calculateTotal());
+        costCategories.values().forEach(FinanceRowCostCategory::calculateTotal);
         return calculateOverheadTotal(costCategories);
     }
 
@@ -281,6 +218,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     }
 
     private FinanceRowHandler getRowHandler(FinanceRow cost){
+        cost.getQuestion().getFormInputs().size();
         FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
         return getCostHandler(costType);
     }
@@ -288,8 +226,7 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     @Override
     public List<FinanceRowItem> costToCostItem(List<ApplicationFinanceRow> costs) {
         List<FinanceRowItem> costItems = new ArrayList<>();
-        costs.stream()
-                .forEach(cost -> costItems.add(costToCostItem(cost)));
+        costs.forEach(cost -> costItems.add(costToCostItem(cost)));
         return costItems;
     }
 
@@ -356,5 +293,144 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
             default:
                 return new DefaultCostCategory();
         }
+    }
+
+    private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> getProjectCostChangesByType(List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> costs) {
+
+        Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs = new HashMap<>();
+
+        for(ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow> pair : costs) {
+            ApplicationFinanceRow applicationCost = pair.getLeft();
+            ApplicationFinanceRow projectCost = pair.getRight();
+            FinanceRowType costType = getCostType(applicationCost, projectCost);
+
+            ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> updatedPair;
+            if(isNew(applicationCost)){
+                updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.ADD);
+            } else if(isRemoved(applicationCost, projectCost)){
+                updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.REMOVE);
+            } else if(isUpdate(applicationCost, projectCost)) {
+                updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.UPDATE);
+            } else {
+                continue;
+            }
+            changedPairs.put(costType, addNewOrUpdate(changedPairs, costType, updatedPair));
+        }
+
+        return changedPairs;
+    }
+
+    private FinanceRowType getCostType(FinanceRow applicationCost, FinanceRow projectCost){
+        FinanceRow availableRow = applicationCost != null ? applicationCost : (projectCost != null ? projectCost : null);
+        FinanceRowType costType = OTHER_COSTS;
+        if(availableRow != null) {
+            List<FormInput> formInputs = availableRow.getQuestion().getFormInputs();
+            if (formInputs.size() > 0) {
+                costType = FinanceRowType.fromType(formInputs.get(0).getType());
+            }
+        }
+        return costType;
+    }
+
+    private boolean isNew(ApplicationFinanceRow applicationCost){
+        return applicationCost == null;
+    }
+
+    private List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> addNewOrUpdate(Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changedPairs, FinanceRowType costType, ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> pair){
+        List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>> listOfChangedRows = changedPairs.get(costType);
+        if(listOfChangedRows == null){
+            listOfChangedRows = new ArrayList<>();
+        }
+        listOfChangedRows.add(pair);
+        return listOfChangedRows;
+    }
+
+    private boolean isUpdate(ApplicationFinanceRow applicationCost, ApplicationFinanceRow projectCost){
+        return (applicationCost != null && projectCost != null && !applicationCost.matches(projectCost));
+    }
+
+    private boolean isRemoved(ApplicationFinanceRow applicationCost, ApplicationFinanceRow projectCost){
+        return (applicationCost != null && projectCost == null);
+    }
+
+    private ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> buildPairWithTypeOfChange(ApplicationFinanceRow applicationCost, ApplicationFinanceRow projectCost, FinanceRowType costType, TypeOfChange typeOfChange){
+        FinanceRowItem applicationFinanceRowItem = applicationCost == null ? null : getApplicationCostItem(costType, applicationCost);
+        FinanceRowItem projectFinanceRowItem = projectCost == null ? null : getApplicationCostItem(costType, projectCost);
+        return ChangedFinanceRowPair.of(typeOfChange, applicationFinanceRowItem, projectFinanceRowItem);
+    }
+
+    private List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> toChangesList(List<ApplicationFinanceRow> applicationCosts, List<ProjectFinanceRow> projectCosts) {
+        List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> removals = getRemovedList(applicationCosts);
+        List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> updates = getUpdateList(projectCosts);
+        updates.addAll(removals);
+        return updates;
+    }
+
+    private List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> getUpdateList(List<ProjectFinanceRow> projectCosts){
+        return simpleMap(projectCosts, cost -> {
+            Long applicationId = cost.getTarget().getProject().getApplication().getId();
+            Long organisationId = cost.getTarget().getOrganisation().getId();
+            ApplicationFinance applicationFinance =
+                    applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+            ApplicationFinanceRow applicationFinanceRow = applicationFinanceRowRepository.findById(cost.getApplicationRowId());
+            return ImmutablePair.of(buildApplicationFinanceRow(applicationFinanceRow, applicationFinance), buildProjectFinanceRow(cost, applicationFinance));
+        });
+    }
+
+    private List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> getRemovedList(List<ApplicationFinanceRow> applicationCosts){
+        List<ImmutablePair<ApplicationFinanceRow, ApplicationFinanceRow>> removals = new ArrayList<>();
+
+        for(ApplicationFinanceRow cost : applicationCosts) {
+            Long applicationId = cost.getTarget().getApplication().getId();
+            Long organisationId = cost.getTarget().getOrganisation().getId();
+            ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+            ApplicationFinanceRow applicationFinanceRow = applicationFinanceRowRepository.findOne(cost.getId());
+            Optional<ProjectFinanceRow> projectFinanceRow = projectFinanceRowRepository.findOneByApplicationRowId(cost.getId());
+            if(!projectFinanceRow.isPresent()) {
+                removals.add(ImmutablePair.of(buildApplicationFinanceRow(applicationFinanceRow, applicationFinance), null));
+            }
+        }
+
+        return removals;
+    }
+
+    private ApplicationFinanceRow buildApplicationFinanceRow(ApplicationFinanceRow cost, ApplicationFinance applicationFinance){
+        if(cost == null) {
+            return null;
+        }
+
+        ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
+                cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+
+        applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
+        return applicationFinanceRow;
+    }
+
+    private ApplicationFinanceRow buildProjectFinanceRow(ProjectFinanceRow cost, ApplicationFinance applicationFinance){
+        if(cost == null) {
+            return null;
+        }
+
+        ApplicationFinanceRow applicationFinanceRow = new ApplicationFinanceRow(cost.getId(), cost.getName(), cost.getItem(), cost.getDescription(),
+                cost.getQuantity(), cost.getCost(), applicationFinance, cost.getQuestion());
+
+        applicationFinanceRow.setFinanceRowMetadata(cost.getFinanceRowMetadata());
+        return applicationFinanceRow;
+    }
+
+    private FinanceRowItem getApplicationCostItem(FinanceRowType financeRowType, ApplicationFinanceRow applicationCost){
+        FinanceRowHandler financeRowHandler = getCostHandler(financeRowType);
+        return financeRowHandler.toCostItem(applicationCost);
+    }
+
+    private List<ProjectFinanceRow> getProjectCosts(Long projectFinanceId){
+        List<ProjectFinanceRow> projectCosts = projectFinanceRowRepository.findByTargetId(projectFinanceId);
+        return projectCosts;
+    }
+
+    private List<ApplicationFinanceRow> getApplicationCosts(Long applicationId, Long organisationId){
+        ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
+        List<ApplicationFinanceRow> applicationCosts = applicationFinanceRowRepository.findByTargetId(applicationFinance.getId());
+        return applicationCosts;
     }
 }
