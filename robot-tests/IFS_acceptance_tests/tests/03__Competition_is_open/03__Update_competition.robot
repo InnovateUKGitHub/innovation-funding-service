@@ -26,37 +26,83 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 @{database}       pymysql    ${database_name}    ${database_user}    ${database_password}    ${database_host}    ${database_port}
 
 *** Test Cases ***
-User can update initial details of a competition before notify date
-    [Documentation]    INFUND-6661
-    [Setup]    The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
-    # TODO refactore this file due to INFUND-7610
-    Given the user clicks the button/link    link=View and update competition setup
-    And the user clicks the button/link    link=Initial details
-    And the user clicks the button/link    jQuery=.button:contains("Edit")
-    And the user should see that the element is disabled    id=openingDateDay
-    And the user should see that the element is disabled    id=openingDateMonth
-    And the user should see that the element is disabled    id=openingDateYear
-    And the user should see that the element is disabled    id=competitionTypeId
-    And the user should see that the element is disabled    id=innovationSectorCategoryId
-    And the user should see that the element is disabled    id=innovationAreaCategoryId-0
-    When the user selects the option from the drop-down menu    Peter Freeman    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
-    And the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should see the element    jQuery=.button:contains("Edit")
-    And The user should see the text in the page    Peter Freeman
-    And The user should see the text in the page    John Doe
 
-User cannot update initial details of a competition after notify date
-    [Documentation]    INFUND-6661
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
-    Given the user clicks the button/link    link=Initial details
-    Then the user should not see the element    jQuery=.button:contains("Edit")
-    And the user should not see the element    jQuery=.button:contains("Done")
 
-Funding Information is editable before open date
+Application details are editable before Open date
+    [Documentation]    INFUND-6937
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains(Upcoming)
+    And the user clicks the button/link    link=${ready_to_open_competition_name}
+    And the user clicks the button/link    jQuery=a:contains(and update competition setup)
+    And the user clicks the button/link    link=Application
+    Then the user should see the element    link=Application details
+    When the user clicks the button/link    link=Application details
+    Then the user should see the element    jQuery=.button:contains("Edit this question")
+    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    Then the user is able to change the value of the fields
+    [Teardown]    the user clicks the button/link    link=Application
+
+Project summary is editable before Open date
+    [Documentation]    INFUND-6938
+    [Tags]
+    Given The user clicks the button/link    link=Project summary
+    And the user should see the element    jquery=h1:contains("Project summary")
+    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords    100
+    And the user clicks the button/link    css=input.button.button-large
+
+Public description should be editable before Open date
+    [Documentation]    INFUND-6939
+    [Tags]
+    Given the user clicks the button/link    link=Public description
+    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords    100
+    And the user clicks the button/link    css=input.button.button-large
+
+Scope is editable before Open date
+    [Documentation]    INFUND-6940
+    [Tags]
+    Given The user clicks the button/link    link=Scope
+    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And The user enters text to a text field    id= question.maxWords    100
+    And the user clicks the button/link    css=input.button.button-large
+
+Assessed Questions are editable before open date
+    [Documentation]    INFUND-6936
+    [Tags]
+    Given the user clicks the button/link    link=Business opportunity
+    Then the user should see the element    jQuery=h1:contains("Business opportunity")
+    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And the user edits the assessed question information
+    And the user clicks the button/link    jQuery=.button[value="Save and close"]
+    And the user clicks the button/link    link=Business opportunity
+    And the user sees the correct assessed question information
+    And the user clicks the button/link    link = Return to application questions
+
+Finances are editable before open Date
+    [Documentation]    INFUND-6941
+    [Tags]
+    Given The user clicks the button/link    link=Finances
+    And the user should see the element    jquery=h1:contains("Application finances")
+    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
+    And the user clicks the button/link    jQuery=.button:contains("Save and close")
+    [Teardown]    the user clicks the button/link    link=Competition setup
+
+Eligibility is editable before Open date
+    [Documentation]    INFUND-6792
+    [Tags]
+    Given the user clicks the button/link    link=Eligibility
+    Then the user should see the element    jquery=h1:contains("Eligibility")
+    And The user clicks the button/link    jQuery=button:contains(Edit)
+    And the user selects the radio button    singleOrCollaborative    single
+    And The user clicks the button/link    jQuery=button:contains(Done)
+
+Funding Information is editable after open date
     [Documentation]    INFUND-7083
     [Tags]
-    [Setup]    The user navigates to the page    ${COMP_MANAGEMENT_UPDATE_COMP}
+    Given the user clicks the button/link    jQuery=a:contains(My dashboard)
+    And the user clicks the button/link   link=${open_competition_link}
+    And the user clicks the button/link    jQuery=a:contains(and update competition setup)
     When the user clicks the button/link    link=Funding information
     And the user should see the element    jquery=h1:contains("Funding information")
     And the user clicks the button/link    jQuery=.button:contains("Edit")
@@ -68,152 +114,34 @@ Funding Information is editable before open date
     And The user clicks the button/link    jQuery=.button:contains("Done")
     Then The user should see the element    jQuery=.button:contains("Edit")
     And The user should see the text in the page    Funders Edit test
-
-Application details are editable before Open date
-    [Documentation]    INFUND-6937
-    [Tags]
-    Given the user navigates to the page    ${CA_UpcomingComp}
-    Then the user can see the open date of the competition belongs to the future
-    When the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    And the user clicks the button/link    link=Application
-    Then the user should see the element    link=Application details
-    When the user clicks the button/link    link=Application details
-    Then the user should see the element    jQuery=.button:contains("Edit this question")
-    When the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    Then the user is able to change the value of the fields
-
-Assessed Questions are editable before open date
-    [Documentation]    INFUND-6936
-    [Tags]
-    Given the user navigates to the page    ${CA_UpcomingComp}
-    And the user can see the open date of the competition belongs to the future
-    When the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    And the user clicks the button/link    link=Application
-    And the user clicks the button/link    link=Business opportunity
-    Then the user should see the element    jQuery=h1:contains("Business opportunity")
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    And the user edits the assessed question information
-    And the user clicks the button/link    jQuery=.button[value="Save and close"]
-    And the user clicks the button/link    link=Business opportunity
-    And the user sees the correct assessed question information
-    And the user clicks the button/link    link = Return to application questions
+    [Teardown]    the user clicks the button/link    link=Competition setup
 
 Application details are not editable after Open date
     [Documentation]    INFUND-6937
-    ...    Trying this test case on Compd_id=1. Is an Open competition, so his Open date belongs to the past
     [Tags]
-    Given the user navigates to the page    ${CA_Live}
-    Then the user should see the element    jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
-    When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail
-    Then the user should not see the element    jQuery=.button:contains("Edit this question")
+    Given the user clicks the button/link    link=Application
+    And the user should not see the element    jQuery=.button:contains("Edit this question")
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/detail/edit
     Then the user should be redirected to the correct page without error checking    ${CA_Live}
+
 
 Assessed Questions are not editable after open date
     [Documentation]    INFUND-6936
     [Tags]
-    [Setup]
-    Given the user navigates to the page    ${CA_LIVE}
-    Then the user should see the element    jQuery=h2:contains('Open') ~ ul a:contains('Connected digital additive')
-    And the user navigates to the page    ${server}/management/competition/setup/1/section/application/
-    Given the user clicks the button/link    link=Business opportunity
-    Then the user should see the element    jquery=h1:contains("Business opportunity")
+    Given the user clicks the button/link   link=${open_competition_link_2}
+    And the user clicks the button/link    jQuery=a:contains(and update competition setup)
+    And the user clicks the button/link    link=Application
+    And the user clicks the button/link    link=Business opportunity
+    And the user should see the element    jquery=h1:contains("Business opportunity")
     And the user should not see the element    jquery=.button:contains("Edit")
     When the user navigates to the page    ${server}/management/competition/setup/1/section/application/question/690/edit
     Then the user should be redirected to the correct page without error checking    ${CA_Live}
 
-Project summary is editable before Open date
-    [Documentation]    INFUND-6938
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
-    Given the user clicks the button/link    link=Application
-    Then The user should see the text in the page    Project summary
-    And The user clicks the button/link    link=Project summary
-    And the user should see the element    jquery=h1:contains("Project summary")
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    And The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    css=input.button.button-large
-
-Public description should be editable before Open date
-    [Documentation]    INFUND-6939
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
-    Given The user clicks the button/link    link=Application
-    And The user should see the text in the page    Public description
-    When The user clicks the button/link    link=Public description
-    Then the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    And The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    css=input.button.button-large
-
-Scope is editable before Open date
-    [Documentation]    INFUND-6940
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
-    Given the user clicks the button/link    link=Application
-    When The user clicks the button/link    link=Scope
-    And the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    And The user enters text to a text field    id= question.maxWords    100
-    And the user clicks the button/link    css=input.button.button-large
-
-Finances are editable before open Date
-    [Documentation]    INFUND-6941
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
-    Given the user clicks the button/link    link=Application
-    When The user clicks the button/link    link=Finances
-    And the user should see the element    jquery=h1:contains("Application finances")
-    Then the user clicks the button/link    jQuery=.button:contains("Edit this question")
-    And the user clicks the button/link    jQuery=.button:contains("Save and close")
-
-Eligibility is editable before Open date
-    [Documentation]    INFUND-6792
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_READY_TO_OPEN}
-    Given the user clicks the button/link    link=Eligibility
-    Then the user should see the element    jquery=h1:contains("Eligibility")
-    And The user clicks the button/link    jQuery=button:contains(Edit)
-    And the user selects the radio button    singleOrCollaborative    single
-    And The user clicks the button/link    jQuery=button:contains(Done)
-
-Assessors page is editable before Notifications Date
-    [Documentation]    INFUND-6695
-    [Tags]    MySQL    HappyPath
-    [Setup]    Connect to Database    @{database}
-    Given log in as a different user    &{Comp_admin1_credentials}
-    And there is a future Notifications date
-    When the user navigates to the page    ${server}/management/competition/setup/1/section/assessors
-    Then the user should see the element    jQuery=.button:contains("Edit")
-    And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("3")
-    When the user clicks the button/link    jQuery=.button:contains("Edit")
-    Then the user selects the radio button    assessorCount    5
-    And the user should see the element    css=#assessorPay[readonly="readonly"]
-    When the user clicks the button/link    jQuery=.button:contains("Done")
-    Then the user should not see an error in the page
-    And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("5")
-    And the user should see the element    jQuery=.button:contains("Edit")
-    [Teardown]    return the database to its previous status
-
-Assessors page is not editable after Notifications Date
-    [Documentation]    INFUND-6695
-    [Tags]    Pending
-    # TODO Pending due to INFUND-7511
-
-Funding Information not editable after notifications date
-    [Documentation]    INFUND-7183
-    [Tags]
-    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
-    When The user clicks the button/link    link=Funding information
-    And the user should see the element    jquery=h1:contains("Funding information")
-    Then The user should not see the element    css = input
-    And The user should not see the element    jquery=.button:contains("Edit")
-    And The user should not see the element    jquery=.button:contains("Done")
-
 Eligibility is not editable when the competition is open
     [Documentation]    INFUND-6792
     [Tags]
-    [Setup]    The user navigates to the page    ${SERVER}/management/competition/setup/${NOT_EDITABLE_COMPETITION}
-    # Changing competition to ${NOT_EDITABLE_COMPETITION} as the orginal competition (live) does not have some of the questions
-    # required in order to view some of the pages - in this case the finance section with - is growth table include.
+    Given the user clicks the button/link   link=${open_competition_link_2}
+    And the user clicks the button/link    jQuery=a:contains(and update competition setup)
     And The user clicks the button/link    link=Eligibility
     And the user should see the element    jquery=h1:contains("Eligibility")
     And The user should not see the element    css = input
@@ -260,6 +188,66 @@ Finances are not editable when the Competition is open
     Then The user should not see the element    css = input
     And The user should not see the element    jquery=.button:contains("Edit")
     And The user should not see the element    jquery=.button:contains("Done")
+    [Teardown]    The user clicks the button/link    link = Return to application questions
+
+User can update initial details of a competition before notify date
+    [Documentation]    INFUND-6661
+    [Setup]    the user clicks the button/link    link=Competition setup
+    Given the user clicks the button/link    link=Initial details
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
+    And the user should see that the element is disabled    id=openingDateDay
+    And the user should see that the element is disabled    id=openingDateMonth
+    And the user should see that the element is disabled    id=openingDateYear
+    And the user should see that the element is disabled    id=competitionTypeId
+    And the user should see that the element is disabled    id=innovationSectorCategoryId
+    And the user should see that the element is disabled    id=innovationAreaCategoryId-0
+    When the user selects the option from the drop-down menu    Peter Freeman    id=leadTechnologistUserId
+    And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
+    And the user clicks the button/link    jQuery=.button:contains("Done")
+    Then the user should see the element    jQuery=.button:contains("Edit")
+    And The user should see the text in the page    Peter Freeman
+    And The user should see the text in the page    John Doe
+    [Teardown]    the user clicks the button/link    link=Competition setup
+
+Assessors page is editable before Notifications Date
+    [Documentation]    INFUND-6695
+    [Tags]    MySQL    HappyPath
+    [Setup]    Connect to Database    @{database}
+    Given the user clicks the button/link    link=Assessors
+    Then the user should see the element    jQuery=.button:contains("Edit")
+    And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("1")
+    When the user clicks the button/link    jQuery=.button:contains("Edit")
+    Then the user selects the radio button    assessorCount    5
+    And the user should see the element    css=#assessorPay[readonly="readonly"]
+    When the user clicks the button/link    jQuery=.button:contains("Done")
+    And the user should see the element    jQuery=dt:contains("How many assessors") + dd:contains("5")
+    And the user should see the element    jQuery=.button:contains("Edit")
+    [Teardown]    return the database to its previous status
+
+User cannot update initial details of a competition after notify date
+    [Documentation]    INFUND-6661
+    [Setup]    the user navigates to the page    ${COMP_MANAGEMENT_NOT_EDITABLE_COMP}
+    Given the user clicks the button/link    link=Initial details
+    Then the user should not see the element    jQuery=.button:contains("Edit")
+    And the user should not see the element    jQuery=.button:contains("Done")
+    [Teardown]  the user clicks the button/link    link=Competition setup
+
+Funding Information not editable after notifications date
+    [Documentation]    INFUND-7183
+    [Tags]
+    When The user clicks the button/link    link=Funding information
+    And the user should see the element    jquery=h1:contains("Funding information")
+    Then The user should not see the element    css = input
+    And The user should not see the element    jquery=.button:contains("Edit")
+    And The user should not see the element    jquery=.button:contains("Done")
+    [Teardown]    the user clicks the button/link    link=Competition setup
+
+Assessors page is not editable after Notifications Date
+    [Documentation]    INFUND-6695
+    [Tags]
+    Given the user clicks the button/link    link=Assessors
+    Then the user should not see the element    jQuery=.button:contains("Edit")
+    And the user should not see the element    jQuery=.button:contains("Done")
 
 *** Keywords ***
 the user can see the open date of the competition belongs to the future
