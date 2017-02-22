@@ -20,10 +20,10 @@ public interface ProjectFinanceQueriesAttachmentService extends AttachmentsServi
     ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request);
 
     @Override
-    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachments.resource.AttachmentResource', 'PF_QUERY_ATTACHMENT_DELETE')")
+    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_QUERY_ATTACHMENT_DELETE')")
     ServiceResult<Void> delete(Long attachmentId);
 
     @Override
-    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachments.resource.AttachmentResource', 'PF_QUERY_ATTACHMENT_DOWNLOAD')")
+    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_QUERY_ATTACHMENT_DOWNLOAD')")
     ResponseEntity<Object> download(Long attachmentId) throws IOException;
 }
