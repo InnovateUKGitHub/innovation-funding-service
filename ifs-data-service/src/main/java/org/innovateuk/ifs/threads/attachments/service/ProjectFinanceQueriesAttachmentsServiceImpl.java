@@ -76,7 +76,7 @@ public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinan
         return handleFileDownload(() -> findOne(attachmentId)
                 .andOnSuccessReturn(a -> mapper.mapToDomain(a))
                 .andOnSuccess(a -> fileEntryService.findOne(a.fileId())
-                        .andOnSuccess(fileEntry -> getFileAndContents(fileEntry))));
+                        .andOnSuccess(this::getFileAndContents)));
     }
 
 
