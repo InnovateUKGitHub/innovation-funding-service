@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.project.viability.controller;
 
+import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.competition.setup.finance.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
@@ -53,6 +55,9 @@ public class FinanceChecksViabilityController {
 
     @Autowired
     private CompetitionSetupFinanceService competitionSetupFinanceService;
+
+    @Autowired
+    private ApplicationService applicationService;
 
     @RequestMapping(method = GET)
     public String viewViability(@PathVariable("projectId") Long projectId,
@@ -148,9 +153,14 @@ public class FinanceChecksViabilityController {
 
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
 
-        competitionSetupFinanceService.getByCompetitionId(project);
-        Integer turnover = financesForOrganisation; // for this release, these will always be null
-        Integer headCount = null; // for this release, these will always be null
+        Long compId = applicationService.getById(projectService.getById(projectId).getApplication()).getCompetition();
+        ServiceResult<CompetitionSetupFinanceResource> competitionSetupFinanceResource =  competitionSetupFinanceService.getByCompetitionId(compId);
+        Long turnover = null;
+        Long headCount = null;
+        if (competitionSetupFinanceResource.isSuccess()) {
+            headCount = competitionSetupFinanceResource.getSuccessObject().getHeadcount();
+            turnover = competitionSetupFinanceResource.getSuccessObject().getTurnover();
+        }
         OrganisationSize organisationSize = organisation.getOrganisationSize();
 
         String approver = viability.getViabilityApprovalUserFirstName() + " " + viability.getViabilityApprovalUserLastName();

@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.competition.transactional;
 
 
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -49,17 +51,26 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     public ServiceResult<CompetitionSetupFinanceResource> getForCompetition(Long compId) {
         ServiceResult<Boolean> isIncludeGrowthTableResult = isIncludeGrowthTable(compId);
 
+        ServiceResult<Long> turnoverResult = getTurnover(compId);
+
+        ServiceResult<Long> headcountResult = getStaffCount(compId);
+
         ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceResResult = find(isIncludeGrowthTableResult, getCompetition(compId)).
                 andOnSuccess((isIncludeGrowthTable, competition) -> {
                     CompetitionSetupFinanceResource compSetupFinanceRes = new CompetitionSetupFinanceResource();
                     compSetupFinanceRes.setIncludeGrowthTable(isIncludeGrowthTable);
                     compSetupFinanceRes.setFullApplicationFinance(competition.isFullApplicationFinance());
                     compSetupFinanceRes.setCompetitionId(compId);
+                    if (turnoverResult.isSuccess()) {
+                        compSetupFinanceRes.setTurnover(turnoverResult.getSuccessObject());
+                    }
+                    if (headcountResult.isSuccess()) {
+                        compSetupFinanceRes.setHeadcount(headcountResult.getSuccessObject());
+                    }
                     return serviceSuccess(compSetupFinanceRes);
                 });
         return compSetupFinanceResResult;
     }
-
 
     private ServiceResult<Void> saveCountAndTurnover(CompetitionSetupFinanceResource compSetupFinanceRes) {
         Long compId = compSetupFinanceRes.getCompetitionId();
@@ -150,5 +161,39 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
 
     private ServiceResult<List<FormInput>> financeOverviewRow(Long competitionId) {
         return serviceSuccess(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW)));
+    }
+
+    private ServiceResult<Long> getStaffCount(Long competitionId) {
+        ServiceResult<FormInput> countInputResult = countInput(competitionId);
+        if (countInputResult.isSuccess() && countInputResult.getSuccessObject().getResponses() != null && !countInputResult.getSuccessObject().getResponses().isEmpty()) {
+            List<FormInputResponse> inputs = countInputResult.getSuccessObject().getResponses();
+            return ServiceResult.serviceSuccess(Long.parseLong(inputs.get(0).getValue()));
+        } else {
+            countInputResult = financeCount(competitionId);
+            if (countInputResult.isSuccess()) {
+                List<FormInputResponse> inputs = countInputResult.getSuccessObject().getResponses();
+                if (inputs != null && !inputs.isEmpty()) {
+                    return ServiceResult.serviceSuccess(Long.parseLong(inputs.get(0).getValue()));
+                }
+            }
+        }
+        return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
+    }
+
+    private ServiceResult<Long> getTurnover(Long competitionId) {
+        ServiceResult<FormInput> turnoverInputResult = turnoverInput(competitionId);
+        if (turnoverInputResult.isSuccess() && turnoverInputResult.getSuccessObject().getResponses() != null && !turnoverInputResult.getSuccessObject().getResponses().isEmpty()) {
+            List<FormInputResponse> inputs = turnoverInputResult.getSuccessObject().getResponses();
+            return ServiceResult.serviceSuccess(Long.parseLong(inputs.get(0).getValue()));
+        } else {
+            turnoverInputResult = financeYearEnd(competitionId);
+            if (turnoverInputResult.isSuccess()) {
+                List<FormInputResponse> inputs = turnoverInputResult.getSuccessObject().getResponses();
+                if (inputs != null && !inputs.isEmpty()) {
+                    return ServiceResult.serviceSuccess(Long.parseLong(inputs.get(0).getValue()));
+                }
+            }
+        }
+        return serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND);
     }
 }

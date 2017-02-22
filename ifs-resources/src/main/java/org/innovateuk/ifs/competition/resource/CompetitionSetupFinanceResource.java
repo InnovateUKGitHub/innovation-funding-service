@@ -10,6 +10,8 @@ public class CompetitionSetupFinanceResource {
     private Long competitionId;
     private boolean fullApplicationFinance;
     private boolean includeGrowthTable;
+    private Long turnover;
+    private Long headcount;
 
     public Long getCompetitionId() {
         return competitionId;
@@ -35,6 +37,22 @@ public class CompetitionSetupFinanceResource {
         this.includeGrowthTable = includeGrowthTable;
     }
 
+    public Long getTurnover() {
+        return turnover;
+    }
+
+    public void setTurnover(Long turnover) {
+        this.turnover = turnover;
+    }
+
+    public Long getHeadcount() {
+        return headcount;
+    }
+
+    public void setHeadcount(Long headcount) {
+        this.headcount = headcount;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -47,6 +65,8 @@ public class CompetitionSetupFinanceResource {
                 .append(fullApplicationFinance, that.fullApplicationFinance)
                 .append(includeGrowthTable, that.includeGrowthTable)
                 .append(competitionId, that.competitionId)
+                .append(turnover, that.turnover)
+                .append(headcount, that.headcount)
                 .isEquals();
     }
 
@@ -56,6 +76,8 @@ public class CompetitionSetupFinanceResource {
                 .append(competitionId)
                 .append(fullApplicationFinance)
                 .append(includeGrowthTable)
+                .append(turnover)
+                .append(headcount)
                 .toHashCode();
     }
 
@@ -66,6 +88,8 @@ public class CompetitionSetupFinanceResource {
                 "competitionId=" + competitionId +
                 ", fullApplicationFinance=" + fullApplicationFinance +
                 ", includeGrowthTable=" + includeGrowthTable +
+                ", turnover=" + turnover +
+                ", headcount=" + headcount +
                 '}';
     }
 }
