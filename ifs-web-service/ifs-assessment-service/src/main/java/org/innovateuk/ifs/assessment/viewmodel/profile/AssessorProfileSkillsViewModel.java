@@ -5,23 +5,19 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.user.resource.BusinessType;
 
 import java.util.List;
+import java.util.Map;
 
 /**
- * Holder of model attributes for the Assessor user skills view.
+ * Holder of model attributes for the Assessor skills view.
  */
-public class AssessorProfileSkillsViewModel {
-    private List<String> innovationAreas;
+public class AssessorProfileSkillsViewModel extends AssessorProfileBaseSkillsViewModel {
     private String skillAreas;
     private BusinessType assessorType;
 
-    public AssessorProfileSkillsViewModel(List<String> innovationAreas, String skillAreas, BusinessType assessorType) {
-        this.innovationAreas = innovationAreas;
+    public AssessorProfileSkillsViewModel(Map<String, List<String>> innovationAreas, String skillAreas, BusinessType assessorType) {
+        super(innovationAreas);
         this.skillAreas = skillAreas;
         this.assessorType = assessorType;
-    }
-
-    public List<String> getInnovationAreas() {
-        return innovationAreas;
     }
 
     public String getSkillAreas() {
@@ -45,7 +41,7 @@ public class AssessorProfileSkillsViewModel {
         AssessorProfileSkillsViewModel that = (AssessorProfileSkillsViewModel) o;
 
         return new EqualsBuilder()
-                .append(innovationAreas, that.innovationAreas)
+                .appendSuper(super.equals(o))
                 .append(skillAreas, that.skillAreas)
                 .append(assessorType, that.assessorType)
                 .isEquals();
@@ -54,7 +50,7 @@ public class AssessorProfileSkillsViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(innovationAreas)
+                .appendSuper(super.hashCode())
                 .append(skillAreas)
                 .append(assessorType)
                 .toHashCode();
