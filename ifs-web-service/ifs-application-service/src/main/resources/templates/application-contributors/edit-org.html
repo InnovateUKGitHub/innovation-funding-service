@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Update ${selectedOrganisation.name}|" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${selectedOrganisation != null ? 'Update ' + selectedOrganisation.name : 'Add organisation'}" />
         <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
     </head>
 
@@ -16,9 +16,10 @@
 
             <div class="page-title">
                 <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
-                <h1 class="heading-xlarge" th:text="'Update ' + ${selectedOrganisation.name}">Update Empire Ltd</h1>
+                <h1 class="heading-xlarge"  th:text="${selectedOrganisation != null ? 'Update ' + selectedOrganisation.name : 'Add organisation'}">Update Empire Ltd</h1>
             </div>
 
+            <th:block th:if="${selectedOrganisation}">
             <p th:if="${authenticatedUser.id == leadApplicant.id and selectedOrganisation.id == leadOrganisation.id}">From this page you are able to invite and remove contributors from the lead organisation. This organisation and the lead applicant cannot be removed from the application.</p>
 
             <!-- INFUND-7975 -->
@@ -26,11 +27,13 @@
 
             <!-- INFUND-7977 -->
             <p th:if="${authenticatedUser.id != leadApplicant.id}">From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners</p>
+            </th:block>
 
             <!-- INFUND-7979 -->
             <p th:if="${authenticatedUser.id != leadApplicant.id and selectedOrganisation == null}">Add applicants or organisations to your application. Before you can invite an organisation you will need to add at least one individual from that organisation. If an organisation only has one individual you wish to remove, you must add a replacement
                 individual before you can remove the first one.</p>
 
+            <th:block th:if="${selectedOrganisation}">
             <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" method="POST" class="contributorsForm">
 
                 <div class="error-summary" th:if="${#fields.hasErrors('*')}">
@@ -93,6 +96,7 @@
                                           <span class="visuallyhidden">email</span>
                                           <span th:if="${#fields.hasErrors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}" th:remove="tag">
                                               <span class="error-message"  th:each="err : ${#fields.errors('organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email')}" th:text="${err}" />
+                                          </span>
                                       </label>
                                             <input type="email" class="form-control width-full" placeholder="name@company.co.uk" th:errorclass="field-error" th:field="*{organisations[__${organisationStats.index}__].invites[__${userStats.index}__].email}" />
                                         </td>
@@ -118,9 +122,10 @@
                     </th:block>
                 </div>
             </form>
+            </th:block>
 
             <!-- INFUND-7979 (lead applicant adds new partner org) -->
-            <th:block th:if="${param.company != null and param.company[0] == 'newOrg'}">
+            <th:block th:if="${leadApplicant.id == authenticatedUser.id and selectedOrganisation == null}">
                 <fieldset>
                     <legend class="heading-medium">Organisation</legend>
                     <div class="form-group">
@@ -131,7 +136,7 @@
             </th:block>
 
             <!-- INFUND-7979 (lead applicant adds new partner org) -->
-            <th:block th:if="${param.action != null and param.action[0] == 'addApplicant' or param.company != null and param.company[0] == 'newOrg'}">
+            <th:block th:if="${leadApplicant.id == authenticatedUser.id and selectedOrganisation == null}">
                 <fieldset class="table-display-stacked extra-margin-top">
                     <legend class="heading-medium">New applicant</legend>
                     <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack">
@@ -150,7 +155,7 @@
                                 <td>
                                     <input type="text" id="applicant-email-1" name="applicant-emaile-1" aria-labelledby="new-applicant-email" required="required" class="form-control width-full">
                                 </td>
-                                <td class="alignright"><a th:href="@{'?company=' + ${param.company[0]} + ${(param.user != null and param.user[0] == 'nonLead' ? '&#38;user=' + param.user[0] : '' )}}">Remove</a></td>
+                                <td class="alignright"><a href="#">Remove</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -160,9 +165,9 @@
             </th:block>
 
 
-            <th:block th:unless="${authenticatedUser.id != leadApplicant.id}">
+            <th:block th:unless="${selectedOrganisation == null and authenticatedUser.id != leadApplicant.id}">
                 <!-- INFUND-7975 (lead applicant edits partner org) -->
-                <div class="alignright extra-margin-top" th:unless="${selectedOrganisation.id == leadOrganisation.id or selectedOrganisation == null}">
+                <div class="alignright extra-margin-top" th:unless="${selectedOrganisation == null or selectedOrganisation.id == leadOrganisation.id}">
                     <a href="/prototypes/635-application-overview" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
                     <hr />
                 </div>
@@ -170,8 +175,11 @@
                 <p class="extra-margin-top" th:unless="${selectedOrganisation == null}">Updating the organisation will notify applicants of changes to their position on the project.</p>
             </th:block>
 
+
             <p class="extra-margin-top">
+                <th:block th:unless="${selectedOrganisation == null}">
                 <a th:href="'/application/' + ${currentApplication.getId()} + '/organisation' + ${selectedOrganisation.id} + '/update'" th:attr="name='add_partner'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
+                </th:block>
 
                 <!-- INFUND-7979 (lead applicant adds new partner org) -->
                 <th:block th:if="${selectedOrganisation == null}">
@@ -180,7 +188,6 @@
 
                 <a href="#" class="button-link-style">Cancel</a>
             </p>
-
 
             <div class="modal-update-organisation" role="dialog" aria-hidden="true">
                 <th:block th:insert="fragments/modals :: close-button" />

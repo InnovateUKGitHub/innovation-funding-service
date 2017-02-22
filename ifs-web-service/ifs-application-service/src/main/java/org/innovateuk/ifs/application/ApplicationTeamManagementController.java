@@ -73,9 +73,9 @@ public class ApplicationTeamManagementController {
     private static final String INVITES_SEND = "invitesSend";
 
 
-    @RequestMapping(value = "/organisation/{organisationId}/update", method = RequestMethod.GET)
+    @RequestMapping(value = "/update", method = RequestMethod.GET)
     public String update(@PathVariable("applicationId") final Long applicationId,
-                         @PathVariable("organisationId") final Long organisationId,
+                         @RequestParam(name = "organisation", required = false) final Long organisationId,
                                      @ModelAttribute ContributorsForm contributorsForm,
                                      BindingResult bindingResult,
                                      HttpServletResponse response,
@@ -84,7 +84,6 @@ public class ApplicationTeamManagementController {
         UserResource user = userAuthenticationService.getAuthenticatedUser(request);
         ApplicationResource application = applicationService.getById(applicationId);
         CompetitionResource competition = competitionService.getById(application.getCompetition());
-        OrganisationResource selectedOrganisation = organisationService.getOrganisationById(organisationId);
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
@@ -103,8 +102,12 @@ public class ApplicationTeamManagementController {
         model.addAttribute("currentCompetition", competition);
         model.addAttribute("leadApplicant", leadApplicant);
         model.addAttribute("leadOrganisation", leadOrganisation);
-        model.addAttribute("selectedOrganisation", selectedOrganisation);
         model.addAttribute("organisationInvites", organisationInvites);
+        if (organisationId != null) {
+            OrganisationResource selectedOrganisation = organisationService.getOrganisationById(organisationId);
+            model.addAttribute("selectedOrganisation", selectedOrganisation);
+        }
+
         return APPLICATION_CONTRIBUTORS_UPDATE;
     }
 
@@ -130,9 +133,9 @@ public class ApplicationTeamManagementController {
     /**
      * Handle form POST, manage ContributorsForm object, save to cookie, and redirect to the GET handler.
      */
-    @RequestMapping(value = "/organisation/{organisationId}/update", method = RequestMethod.POST)
-    public String inviteContributors(@PathVariable("applicationId") final Long applicationId,
-                                     @PathVariable("organisationId") final Long organisationId,
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    public String inviteContributors(@PathVariable("applicationId") Long applicationId,
+                                     @RequestParam(name = "organisation", required = false) Long organisationId,
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
                                      @RequestParam(name = "add_partner", required = false) String addPartner,
                                      @RequestParam(name = "remove_person", required = false) String organisationAndPerson,
@@ -186,9 +189,9 @@ public class ApplicationTeamManagementController {
         }
 
         if (newApplication != null) {
-            return String.format("redirect:/application/%d/organisation/%d/update/?newApplication", applicationId, organisationId);
+            return String.format("redirect:/application/%d/update/?newApplication", applicationId);
         }
-        return String.format("redirect:/application/%d/organisation/%d/update", applicationId, organisationId);
+        return String.format("redirect:/application/%d/update?organisation=%d", applicationId, organisationId);
     }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {

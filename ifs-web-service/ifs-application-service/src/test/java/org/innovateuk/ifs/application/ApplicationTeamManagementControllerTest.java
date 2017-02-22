@@ -75,10 +75,10 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
         alternativeApplicationId = applicationId + 1;
         organisationId = organisations.get(0).getId();
         removeUrl = String.format("/application/%d/update/remove", applicationId);
-        redirectUrl = String.format("redirect:/application/%d/organisation/%s/update", applicationId, organisationId);
+        redirectUrl = String.format("redirect:/application/%d/update?organisation=%d", applicationId, organisationId);
         applicationRedirectUrl = String.format("redirect:/application/%d", applicationId);
         inviteOverviewRedirectUrl = String.format("redirect:/application/%d/contributors", applicationId);
-        updateUrl = String.format("/application/%d/organisation/%s/update", applicationId, organisationId);
+        updateUrl = String.format("/application/%d/update?organisation=%d", applicationId, organisationId);
         viewName = APPLICATION_CONTRIBUTORS_UPDATE;
     }
 
