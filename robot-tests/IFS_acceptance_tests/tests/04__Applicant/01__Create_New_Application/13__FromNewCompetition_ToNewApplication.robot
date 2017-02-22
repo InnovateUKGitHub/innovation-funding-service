@@ -287,18 +287,20 @@ Collaborator can accept the invitation
 
 Non-lead applicant can view and edit project growth table
     [Documentation]  INFUND-6395
-    [Tags]
+    [Tags]     HappyPath    Pending
+    # TODO Pending due to INFUND-8426
     Given the user clicks the button/link  jQuery=.button:contains("Sign in")
     When guest user log-in    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com  ${correct_password}
     And the user navigates to Your-finances page   ${compWITHGrowth}
     And the user clicks the button/link   link=Your organisation
     And the user selects medium organisation size
-    Then the user enters text to a text field         css=input[name$="month"]  12
-    And the user enters text to a text field          css=input[name$="year"]  2016
+    Then the user enters text to a text field     css=input[name$="month"]  12
+    And the user enters text to a text field     css=input[name$="year"]  2016
     And the user populates the project growth table
-    And the user enters text to a text field         jQuery=label:contains("employees") + input  4
-    When the user clicks the button/link              jQuery=button:contains("Mark as complete")
-    Then the user should see the element              jQuery=img.complete[alt*="Your organisation"]
+    And the user enters text to a text field    jQuery=label:contains("employees") + input  4
+    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
+    When the user clicks the button/link    link=Your organisation
     Then the user should view the project growth table
     And the user can edit the project growth table
 
