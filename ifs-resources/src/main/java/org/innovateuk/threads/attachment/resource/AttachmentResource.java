@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class AttachmentResource {
 
-    private final Long id;
-    private final String name;
-    private final String mediaType;
-    private final long sizeInBytes;
+    public final Long id;
+    public final String name;
+    public final String mediaType;
+    public final long sizeInBytes;
 
     @JsonCreator
     public AttachmentResource(@JsonProperty("id") Long id, @JsonProperty("name") String name,
