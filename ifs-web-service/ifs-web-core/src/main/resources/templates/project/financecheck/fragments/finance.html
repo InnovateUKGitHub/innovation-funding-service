@@ -1131,4 +1131,143 @@
             </tr>
         </th:block>
     </th:block>
+
+
+    <th:block th:fragment="project-finance-overview(overview)">
+        <h3 class="heading-medium">Overview</h3>
+        <table class="table-overview">
+            <thead>
+            <tr>
+                <th scope="col">Start date</th>
+                <th scope="col">Duration</th>
+                <th scope="col" class="numeric">Total project cost</th>
+                <th scope="col" class="numeric">Grant applied for</th>
+                <th scope="col" class="numeric">Other public sector funding</th>
+                <th scope="col" class="numeric">Total % grant</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td th:text="${#temporals.format(overview.projectStartDate, 'd MMM yyyy')}" />
+                <td th:text="${overview.durationInMonths+' months'}" />
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.totalProjectCost,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.grantAppliedFor,1,'COMMA')}" /></td>
+                <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(overview.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                <td th:text="${#numbers.formatInteger(overview.totalPercentageGrant,1,'NONE')+'%'}" class="numeric" />
+            </tr>
+            </tbody>
+        </table>
+    </th:block>
+
+    <th:block th:fragment="project-finance-summaries(summaries)">
+        <div class="form-group">
+            <div style="overflow: auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Partner</th>
+                        <th scope="col" class="numeric width-small">Total costs</th>
+                        <th scope="col" class="numeric width-small">
+                            % Grant
+                        </th>
+                        <th scope="col" class="numeric width-small-medium">
+                            Funding sought
+                        </th>
+                        <th scope="col" class="numeric width-medium">
+                            Other public sector funding
+                        </th>
+                        <th scope="col" class="numeric width-small-medium">
+                            Contribution to project
+                        </th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.totalCost,1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&nbsp;</strong></td>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.totalFundingSought,1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.totalOtherPublicSectorFunding,1,'COMMA')}" /></strong></td>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summaries.totalContributionToProject,1,'COMMA')}" /></strong></td>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+
+                    <th:block th:each="summary : ${summaries.financeCheckSummariesResources}">
+                    <tr >
+                        <th scope="col">
+                            <strong th:text="${summary.organisationName}">Organisation Name<br /></strong>
+                            <small th:text="${summary.isLeadOrganisation()} ? 'Lead Partner' : 'Partner'" ></small>
+                        </th>
+                        <td class="numeric"><strong>&pound; <th:block th:text="${#numbers.formatInteger(summary.financeCheckEligibilityResource.totalCost,1,'COMMA')}" /></strong></td>
+                        <td th:text="${#numbers.formatInteger(summary.financeCheckEligibilityResource.percentageGrant,1,'NONE')+'%'}" class="numeric" />
+                        <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summary.financeCheckEligibilityResource.fundingSought,1,'COMMA')}" /></td>
+                        <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summary.financeCheckEligibilityResource.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                        <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summary.financeCheckEligibilityResource.contributionToProject,1,'COMMA')}" /></td>
+                    </tr>
+                    </th:block>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="project-finance-cost-breakdown">
+        <div class="form-group">
+            <div style="overflow: auto;">
+                <table>
+                    <thead>
+                    <tr>
+                        <th scope="col">Partner</th>
+                        <th scope="col" class="numeric width-small">Total</th>
+                        <th scope="col" class="numeric width-small">
+                            Labour
+                        </th>
+                        <th scope="col" class="numeric width-small">
+                            Overheads
+                        </th>
+                        <th scope="col" class="numeric width-small">
+                            Materials
+                        </th>
+                        <th scope="col" class="numeric width-small">Capital usage</th>
+                        <th scope="col" class="numeric width-small">Subcontracting cost</th>
+                        <th scope="col" class="numeric width-small">Travel and subsistence</th>
+                        <th scope="col" class="numeric width-small">Other Costs</th>
+                    </tr>
+                    </thead>
+                    <tfoot>
+                    <tr>
+                        <th>Total</th>
+                        <td class="numeric"><strong>£450,983</strong></td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                        <td class="numeric">&nbsp;</td>
+                    </tr>
+                    </tfoot>
+                    <tbody>
+                    <tr>
+                        <th scope="col">
+                            Aptrans Ltd<br />
+                            <small>Lead partner<br />
+                                    <a href="/prototypes/5913-admin-view-partner-finances">Detailed finances</a>
+                            </small>
+                        </th>
+                            <td class="numeric"><strong>£257,033</strong></td>
+                            <td class="numeric">£126,207</td>
+                            <td class="numeric">£86,167</td>
+                            <td class="numeric">£44,659</td>
+                            <td class="numeric">£257,033</td>
+                            <td class="numeric">£126,207</td>
+                            <td class="numeric">£86,167</td>
+                            <td class="numeric">£44,659</td>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </th:block>
 </html>

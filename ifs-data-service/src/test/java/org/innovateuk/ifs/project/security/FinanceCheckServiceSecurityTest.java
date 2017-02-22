@@ -3,6 +3,7 @@ package org.innovateuk.ifs.project.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckOverviewResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckResource;
 import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummaryResource;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
@@ -119,6 +120,11 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
 
         @Override
         public ServiceResult<FinanceCheckSummaryResource> getFinanceCheckSummary(Long projectId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<FinanceCheckOverviewResource> getFinanceCheckOverview(Long projectId) {
             return null;
         }
 
