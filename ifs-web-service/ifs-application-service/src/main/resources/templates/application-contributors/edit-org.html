@@ -5,9 +5,10 @@
     </head>
 
     <body class="app-dashboard">
+        <th:block th:insert="fragments/modals :: modal-overlay" />
+        <th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" />
         <th:block th:insert="fragments/layout :: body-start" />
         <th:block th:insert="fragments/layout :: global-header" />
-        <th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" />
 
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start" />
@@ -162,7 +163,6 @@
                 <p><a href="#">Add new applicant</a></p>
             </th:block>
 
-
             <th:block th:if="${selectedOrganisation != null and authenticatedUser.id == leadApplicant.id}">
                 <!-- INFUND-7975 (lead applicant edits partner org) -->
                 <div class="alignright extra-margin-top" th:unless="${selectedOrganisation == null or selectedOrganisation.id == leadOrganisation.id}">
@@ -171,93 +171,28 @@
                 </div>
 
                 <p class="extra-margin-top" th:unless="${selectedOrganisation == null}">Updating the organisation will notify applicants of changes to their position on the project.</p>
+
+                <th:block th:insert="fragments/modals :: modal-delete-organisation" />
             </th:block>
 
+            <th:block th:unless="${selectedOrganisation == null}">
+                <p class="extra-margin-top">
+                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
+                    <a href="#" class="button button-clear">Cancel</a>
+                </p>
 
-            <p class="extra-margin-top">
-                <th:block th:unless="${selectedOrganisation == null}">
-                <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
-                </th:block>
-
-                <!-- INFUND-7979 (lead applicant adds new partner org) -->
-                <th:block th:if="${selectedOrganisation == null}">
-                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
-                </th:block>
-
-                <a href="#" class="button button-clear">Cancel</a>
-            </p>
-
-            <div class="modal-update-organisation" role="dialog" aria-hidden="true">
-                <th:block th:insert="fragments/modals :: close-button" />
-
-                <h2 class="heading-medium no-margin">Update organisation</h2>
-                <p>Invites will be sent to all new applicants.</p>
-                <p>You should not remove applicants without discussing this action with them first. They will not receive any notification about their removal.</p>
-                <hr/>
-
-                <div class="grid-row extra-margin">
-                    <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-collaborator-form">
-                        <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
-                            <th:block th:if="${selectedOrganisation!= null and organisationInviteForm.organisationId == selectedOrganisation.id}">
-                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
-                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
-
-
-                        <div class="column-half">
-                            <button type="button" class="js-close buttonlink large">Cancel</button>
-                        </div>
-                        <div class="column-half alignright-button">
-                            <button class="button large" name="save_contributors" value="save_contributors" type="submit">Update organisation</button>
-                        </div>
-                            </th:block>
-                        </th:block>
-                    </form>
-                </div>
-            </div>
+                <th:block th:insert="fragments/modals :: modal-update-organisation" />
+            </th:block>
 
             <!-- INFUND-7979 (lead applicant adds new partner org) -->
-            <div class="modal-overlay js-close" aria-hidden="true"></div>
-            <div class="modal-new-organisation" role="dialog" aria-hidden="true">
-                <a href="#" class="js-close close" aria-label="Close Popup">Close</a>
-                <h2 class="heading-medium no-margin">Add organisation and invite applicants</h2>
-                <p>All applicants that have been added to this organisation will be added at this point.</p>
-                <hr />
+            <th:block th:if="${selectedOrganisation == null}">
+                <p>
+                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
+                    <a href="#" class="button button-clear">Cancel</a>
+                </p>
 
-                <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-organisation-form">
-
-                            <div class="column-half">
-                                <button type="button" class="js-close buttonlink large">Cancel</button>
-                            </div>
-                            <div class="column-half alignright-button">
-                                <button class="button large" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
-                            </div>
-                </form>
-            </div>
-
-            <!-- INFUND-7975 (lead applicant edits partner org) -->
-            <div class="modal-delete-organisation" role="dialog" aria-hidden="true" style="margin-top: -153px;">
-                <button class="js-close close" type="button" aria-label="Close Popup">X</button>
-                <h2 class="heading-medium no-margin">Delete organisation</h2>
-                <p>Are you sure you wish to remove this organisation from the application. The innovate funding system will not inform collaborators of their removal, this action should be discussed with all applicants beforehand.</p>
-                <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
-                <hr />
-
-                <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-delete-organisation-form">
-                    <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
-                        <th:block th:if="${selectedOrganisation != null and organisationInviteForm.organisationId == selectedOrganisation.id}">
-                            <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
-                            <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
-
-                            <div class="column-half">
-                                <button type="button" class="js-close buttonlink large">Cancel</button>
-                            </div>
-                            <div class="column-half alignright-button">
-                                <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
-                            </div>
-                        </th:block>
-                    </th:block>
-                </form>
-            </div>
+                <th:block th:insert="fragments/modals :: modal-new-organisation" />
+            </th:block>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
