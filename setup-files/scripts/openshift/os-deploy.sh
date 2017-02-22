@@ -73,6 +73,8 @@ function deploy() {
     if [[ ${TARGET} == "production" ]]
     then
         oc create -f os-files-tmp/
+        oc create -f os-files-tmp/shib/5-shib.yml
+        oc create -f os-files-tmp/shib/56-idp.yml
     else
         oc create -f os-files-tmp/imap/
         oc create -f os-files-tmp/mysql/
