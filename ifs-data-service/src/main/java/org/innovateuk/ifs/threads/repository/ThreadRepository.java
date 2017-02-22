@@ -13,8 +13,8 @@ public interface ThreadRepository<T extends Thread> extends PagingAndSortingRepo
 
     static final String FIND_ONE_THAT_HOLDS_ATTACHMENT =
             "SELECT DISTINCT t from Thread t " +
-            "JOIN FETCH t.posts threadPost " +
-            "JOIN FETCH threadPost.attachments postAttachment " +
+            "JOIN t.posts threadPost " +
+            "JOIN threadPost.attachments postAttachment " +
             "WHERE postAttachment.id = :attachmentId";
 
     @Query(FIND_ONE_THAT_HOLDS_ATTACHMENT)
