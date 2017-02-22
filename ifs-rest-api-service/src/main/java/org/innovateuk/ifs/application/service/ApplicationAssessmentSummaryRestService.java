@@ -18,5 +18,5 @@ public interface ApplicationAssessmentSummaryRestService {
 
     RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId);
 
-    RestResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, Integer pageIndex, Integer pageSize);
+    RestResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, Integer pageIndex, Integer pageSize, Long filterInnovationArea);
 }

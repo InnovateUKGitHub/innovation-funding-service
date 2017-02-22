@@ -36,8 +36,8 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
     }
 
     @Override
-    public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, Integer pageIndex, Integer pageSize) {
-        String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/availableAssessors", null,pageIndex, pageSize, null, applicationId);
+    public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, Integer pageIndex, Integer pageSize, Long filterInnovationArea) {
+        String uriWithParams = buildUri(applicationAssessmentSummaryRestURL + "/{applicationId}/availableAssessors",pageIndex, pageSize, filterInnovationArea, applicationId);
         return getWithRestResult(uriWithParams, ApplicationAssessorPageResource.class);
     }
 
@@ -46,7 +46,7 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
         return getWithRestResult(format("%s/%s", applicationAssessmentSummaryRestURL, applicationId), ApplicationAssessmentSummaryResource.class);
     }
 
-    protected String buildUri(String url, String sortField, Integer pageNumber, Integer pageSize, String filter, Object... uriParameters) {
+    protected String buildUri(String url, Integer pageNumber, Integer pageSize, Long filterInnovationArea, Object... uriParameters) {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         if(pageNumber != null) {
             params.put("page", singletonList(pageNumber.toString()));
@@ -54,11 +54,8 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
         if(pageSize != null) {
             params.put("size", singletonList(pageSize.toString()));
         }
-        if(!StringUtils.isEmpty(sortField)){
-            params.put("sort", singletonList(sortField));
-        }
-        if (filter != null) {
-            params.put("filter", singletonList(filter));
+        if (filterInnovationArea != null) {
+            params.put("filterInnovationArea", singletonList(filterInnovationArea.toString()));
         }
         return UriComponentsBuilder.fromPath(url).queryParams(params).buildAndExpand(uriParameters).toUriString();
     }

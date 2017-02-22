@@ -40,8 +40,9 @@ public class ApplicationAssessmentSummaryController {
     @RequestMapping(value = "/{applicationId}/availableAssessors")
     public RestResult<ApplicationAssessorPageResource> getAvailableAssessors(@PathVariable("applicationId") Long applicationId,
                                                                              @RequestParam(value = "page", defaultValue = "0") int pageIndex,
-                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize) {
-        return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize).toGetResponse();
+                                                                             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+                                                                             @RequestParam(value = "filterInnovationArea", required = false) Long filterInnovationArea) {
+        return applicationAssessmentSummaryService.getAvailableAssessors(applicationId, pageIndex, pageSize, filterInnovationArea).toGetResponse();
     }
 
     @RequestMapping(value = "/{applicationId}", method = GET)
