@@ -41,14 +41,6 @@ public class Attachment {
         return id;
     }
 
-    public User uploader() {
-        return uploader;
-    }
-
-    public boolean isFile(Long fileId) {
-        return this.fileEntry.getId().equals(fileId);
-    }
-
     public boolean wasUploadedBy(Long userId) {
         return uploader.hasId(userId);
     }
