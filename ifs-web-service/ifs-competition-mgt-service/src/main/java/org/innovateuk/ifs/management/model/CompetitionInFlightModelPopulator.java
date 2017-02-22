@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.assessment.service.AssessmentRestService;
@@ -27,10 +28,17 @@ public class CompetitionInFlightModelPopulator {
     private AssessmentRestService assessmentRestService;
 
     @Autowired
+    private CompetitionService competitionService;
+
+    @Autowired
     private CompetitionKeyStatisticsRestService competitionKeyStatisticsRestService;
 
     @Autowired
     private MilestoneService milestoneService;
+
+    public CompetitionInFlightViewModel populateModel(Long competitionId) {
+        return populateModel(competitionService.getById(competitionId));
+    }
 
     public CompetitionInFlightViewModel populateModel(CompetitionResource competition) {
         List<MilestoneResource> milestones = milestoneService.getAllMilestonesByCompetitionId(competition.getId());
@@ -56,7 +64,7 @@ public class CompetitionInFlightModelPopulator {
             case FUNDERS_PANEL:
                 return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getFundedKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
             case ASSESSOR_FEEDBACK:
-                break;
+                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getFundedKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
         }
         return new CompetitionInFlightStatsViewModel();
     }

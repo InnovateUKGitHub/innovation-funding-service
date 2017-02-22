@@ -25,6 +25,8 @@
         </ul>
     </div>
 
+    <div th:replace="competition/key-statistics :: key-statistics(keyStatistics=${keyStatistics})" />
+
     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
         <div class="grid-row sorting sorting-controls">
             <div class="column-half">
