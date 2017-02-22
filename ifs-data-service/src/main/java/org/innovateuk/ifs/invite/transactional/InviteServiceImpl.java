@@ -545,12 +545,12 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         processRoles.forEach(processRole -> {
             List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndAssigneeIdOrAssignedById(applicationId, processRole.getId(), processRole.getId());
             if (!questionStatuses.isEmpty()) {
-                questionStatuses.forEach(questionStatus -> {
+                questionStatuses.forEach(questionStatus ->
                     questionStatus.setAssignee(
                             leadApplicantProcessRole,
                             leadApplicantProcessRole,
-                            LocalDateTime.now());
-                });
+                            LocalDateTime.now())
+                );
                 questionStatusRepository.save(questionStatuses);
             }
         });
