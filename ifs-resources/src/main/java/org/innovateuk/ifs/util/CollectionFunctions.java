@@ -806,6 +806,6 @@ public final class CollectionFunctions {
     }
 
     public static <T> List<T> nOf(int n, T t) {
-        return range(1, n).mapToObj(x -> t).collect(Collectors.toList());
+        return range(0, n).mapToObj(x -> t).collect(Collectors.toList());
     }
 }
