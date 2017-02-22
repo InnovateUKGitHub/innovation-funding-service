@@ -46,7 +46,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
     private static final Map<String, Sort> SORT_FIELD_TO_DB_SORT_FIELDS = new HashMap<String, Sort>() {{
         put("name", new Sort(ASC, new String[]{"name", "id"}));
         put("duration", new Sort(ASC, new String[]{"durationInMonths", "id"}));
-        put("percentageComplete", new Sort(DESC, new String[]{"completion", "id"}));
+        put("percentageComplete", new Sort(DESC, "completion").and(new Sort(ASC,"id")));
     }};
 
     // TODO These comparators are used to sort application after loading them in memory.
@@ -70,20 +70,20 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
 
 
     @Override
-    public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize) {
-
+    public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, String filter) {
+        String filterStr = (filter != null) ? filter.trim() : "";
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionId(competitionId, pageable),
-                () -> applicationRepository.findByCompetitionId(competitionId));
+                pageable -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr,pageable),
+                () -> applicationRepository.findByCompetitionIdAndIdLike(competitionId, filterStr));
     }
 
     @Override
     public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-            Long competitionId, String sortBy, int pageIndex, int pageSize) {
-
+            Long competitionId, String sortBy, int pageIndex, int pageSize, String filter) {
+        String filterStr = (filter != null) ? filter.trim() : "";
         return applicationSummaries(sortBy, pageIndex, pageSize,
-                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS, pageable),
-                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS));
+                pageable -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr, pageable),
+                () -> applicationRepository.findByCompetitionIdAndApplicationStatusIdInAndIdLike(competitionId, SUBMITTED_STATUS_IDS, filterStr));
     }
 
     @Override
@@ -121,7 +121,7 @@ public class ApplicationSummaryServiceImpl extends BaseTransactionalService impl
         result.setNumber(pageable.getPageNumber());
         result.setSize(pageable.getPageSize());
         result.setTotalElements(resultsList.size());
-        result.setTotalPages((resultsList.size() / pageable.getPageSize()) + 1);
+        result.setTotalPages( (resultsList.size() + pageable.getPageSize() -1)  / pageable.getPageSize());
         return find(result, notFoundError(ApplicationSummaryPageResource.class));
     }
 
