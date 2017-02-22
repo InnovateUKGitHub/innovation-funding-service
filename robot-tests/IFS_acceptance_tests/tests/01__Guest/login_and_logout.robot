@@ -32,7 +32,7 @@ Valid login as Applicant
     When the guest user enters the log in credentials    steve.smith@empire.com    Passw0rd
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
-    And the user should be redirected to the correct page    ${applicant_dashboard_url}
+    And the user should be redirected to the correct page    ${DASHBOARD_URL}
     [Teardown]    Logout as user
 
 Valid login as Collaborator
@@ -41,7 +41,7 @@ Valid login as Collaborator
     When the guest user enters the log in credentials    ${collaborator1_credentials["email"]}    ${collaborator1_credentials["password"]}
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
-    And the user should be redirected to the correct page    ${applicant_dashboard_url}
+    And the user should be redirected to the correct page    ${DASHBOARD_URL}
     [Teardown]    Logout as user
 
 Valid login as Assessor
@@ -66,7 +66,7 @@ Valid login with double role as Applicant
     Then The user should see an error    Please select a role.
     And the user selects the radio button    selectedRole    APPLICANT
     And The user clicks the button/link    jquery=button:contains("Continue")
-    Then the user should be redirected to the correct page    ${applicant_dashboard_url}
+    Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user should see the element    link=Sign out
     [Teardown]    Logout as user
 
@@ -140,7 +140,7 @@ Reset password user enters new psw
     When the guest user enters the log in credentials    ${test_mailbox_one}+changepsw@gmail.com    Passw0rdnew
     And the user clicks the button/link    css=button[name="_eventId_proceed"]
     Then the user should see the element    link=Sign out
-    And the user should be redirected to the correct page    ${applicant_dashboard_url}
+    And the user should be redirected to the correct page    ${DASHBOARD_URL}
     # TODO INFUND-5582
 
 *** Keywords ***

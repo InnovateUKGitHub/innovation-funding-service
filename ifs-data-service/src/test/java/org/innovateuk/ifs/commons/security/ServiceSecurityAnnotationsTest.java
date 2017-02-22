@@ -2,7 +2,6 @@ package org.innovateuk.ifs.commons.security;
 
 import au.com.bytecode.opencsv.CSVWriter;
 import org.innovateuk.ifs.commons.BaseIntegrationTest;
-//import org.innovateuk.ifs.commons.service.BaseRestService;
 import org.innovateuk.ifs.security.StatelessAuthenticationFilter;
 import org.junit.Test;
 import org.springframework.aop.framework.Advised;
@@ -20,17 +19,14 @@ import org.springframework.test.util.ReflectionTestUtils;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.*;
-
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
-import static org.hibernate.internal.util.collections.ArrayHelper.toList;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static org.junit.Assert.*;
 import static org.springframework.core.annotation.AnnotationUtils.findAnnotation;
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Tests around the Spring Security annotations on the Services and the Permission Rule framework as used by the CustomPermissionEvaluator
@@ -39,24 +35,21 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
     public static final String[] SIMPLE_CSV_HEADERS = {"Entity", "Action", "Rule description", "Particular business state where rule is enforced"};
     public static final String[] FULL_CSV_HEADERS = {"Entity", "Action", "Rule description", "Particular business state where rule is enforced", "Rule method", "Additional rule comments"};
-
-    @Autowired
-    private ApplicationContext context;
-
     List<Class<?>> excludedClasses
             = asList(
-                    UidAuthenticationService.class,
-                    StatelessAuthenticationFilter.class
-            );
-
+            UidAuthenticationService.class,
+            StatelessAuthenticationFilter.class
+    );
     List<Class<? extends Annotation>> securityAnnotations
             = asList(
-                PreAuthorize.class,
-                PreFilter.class,
-                PostAuthorize.class,
-                PostFilter.class,
-                NotSecured.class
-            );
+            PreAuthorize.class,
+            PreFilter.class,
+            PostAuthorize.class,
+            PostFilter.class,
+            NotSecured.class
+    );
+    @Autowired
+    private ApplicationContext context;
 
     @Test
     public void testServiceMethodsHaveSecurityAnnotations() throws Exception {
@@ -65,7 +58,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         // Assert that we actually have some services.
         assertNotNull(services);
         assertFalse(services.isEmpty());
-
+        
         // Find all the methods that should have a security annotation on and check they do.
         int totalMethodsChecked = 0;
         for (Object service : services) {
@@ -75,10 +68,9 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
                     if (!hasOneOf(method, securityAnnotations)) {
                         fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " does not have security annotations");
                     }
-                    if (needsSecuredBySpring(annotationValues(method, securityAnnotations)) &&  !hasOneOf(method, asList(SecuredBySpring.class))){
+                    if (needsSecuredBySpring(annotationValues(method, securityAnnotations)) && !hasOneOf(method, asList(SecuredBySpring.class))) {
                         fail("Method: " + method.getName() + " on class " + method.getDeclaringClass() + " needs to have a SecuredBySpring annotation");
-                    }
-                    else {
+                    } else {
                         List<String> annotationValues = annotationValues(method, securityAnnotations);
                         totalMethodsChecked++;
                     }
@@ -90,7 +82,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
         assertTrue("We should be checking at least one method for security annotations", totalMethodsChecked > 0);
     }
 
-    private boolean needsSecuredBySpring(List<String> values){
+    private boolean needsSecuredBySpring(List<String> values) {
         boolean needsSecuredBySpring = !simpleFilter(values, value ->
                 value.contains("Authority") ||
                         value.contains("Role") ||
@@ -116,7 +108,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
     /**
      * This test will generate a CSV of Permission Rules ordered by the Entities that they apply to.
-     *
+     * <p>
      * This is of the format "Entity", "Action", "Rule description"
      *
      * @throws Exception
@@ -165,7 +157,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
                 String ruleMethod = getMethodCallDescription(method);
                 String ruleComments = securityAnnotation.additionalComments();
                 String ruleState = securityAnnotation.particularBusinessState();
-                String[] securedMethodRow = new String[] {entity, action, ruleDescription, ruleState, ruleMethod, ruleComments};
+                String[] securedMethodRow = new String[]{entity, action, ruleDescription, ruleState, ruleMethod, ruleComments};
                 return securedMethodRow;
             });
         });
@@ -189,7 +181,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
                 String ruleDescription = notSecuredAnnotation.value(); //notSecuredAnnotation.description();
                 String ruleMethod = getMethodCallDescription(method);
                 String ruleComments = ""; //notSecuredAnnotation.additionalComments();
-                String[] nonSecuredMethodRow = new String[] {entity, action, ruleDescription, ruleMethod, ruleComments};
+                String[] nonSecuredMethodRow = new String[]{entity, action, ruleDescription, ruleMethod, ruleComments};
                 return nonSecuredMethodRow;
             });
         });
@@ -228,7 +220,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
 
                     final String finalClassName = cleanEntityName(clazz);
 
-                    permissionRuleRows.add(new String[] {
+                    permissionRuleRows.add(new String[]{
                             finalClassName,
                             actionName,
                             permissionRule.description(),
@@ -270,7 +262,9 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
             throw new RuntimeException(e);
         }
 
-    };
+    }
+
+    ;
 
     private boolean hasOneOf(Method method, List<Class<? extends Annotation>> annotations) {
         for (Class<? extends Annotation> clazz : annotations) {
@@ -295,8 +289,7 @@ public class ServiceSecurityAnnotationsTest extends BaseIntegrationTest {
     private Object unwrapProxy(Object services) {
         try {
             return unwrapProxies(asList(services)).get(0);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

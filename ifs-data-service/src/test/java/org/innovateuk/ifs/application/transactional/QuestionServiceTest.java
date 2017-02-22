@@ -7,7 +7,6 @@ import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -21,12 +20,16 @@ import org.mockito.Mock;
 import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionBuilder.newSection;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
-import static org.innovateuk.ifs.application.resource.SectionType.GENERAL;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -35,11 +38,6 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
-import static java.util.Arrays.asList;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.same;
@@ -96,7 +94,7 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 //        when(questionRepositoryMock.findOne(question.getId())).thenReturn(question);
 //        when(sectionService.getNextSection(any(SectionResource.class))).thenReturn(serviceSuccess(nextSectionResource));
 //        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityGreaterThanOrderByPriorityAsc(
-//                question.getCompetition().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
+//                question.getCompetitionId().getId(), question.getSection().getId(), question.getPriority())).thenReturn(nextQuestion);
 //        when(questionMapperMock.mapToResource(nextQuestion)).thenReturn(nextQuestionResource);
 //
 //        // Method under test
@@ -116,10 +114,10 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 //        when(sectionService.getPreviousSection(any(SectionResource.class)))
 //                .thenReturn(serviceSuccess(previousSectionResource));
 //        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdOrderByPriorityDesc(
-//                question.getCompetition().getId(), previousQuestion.getSection().getId()))
+//                question.getCompetitionId().getId(), previousQuestion.getSection().getId()))
 //                .thenReturn(previousQuestion);
 //        when(questionRepositoryMock.findFirstByCompetitionIdAndSectionIdAndPriorityLessThanOrderByPriorityDesc(
-//                question.getCompetition().getId(), question.getSection().getId(), question.getPriority()))
+//                question.getCompetitionId().getId(), question.getSection().getId(), question.getPriority()))
 //                .thenReturn(previousQuestion);
 //        when(questionMapperMock.mapToResource(previousQuestion)).thenReturn(previousQuestionResource);
 //
@@ -214,13 +212,8 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
                 .withApplication(application)
                 .build();
 
-        Section section = newSection()
-                .withSectionType(GENERAL)
-                .build();
-
         Question question = newQuestion()
                 .withCompetition(competition)
-                .withSection(section)
                 .build();
 
         QuestionResource questionResource = newQuestionResource().build();

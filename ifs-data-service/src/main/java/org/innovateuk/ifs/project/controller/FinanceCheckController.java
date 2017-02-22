@@ -48,7 +48,7 @@ public class FinanceCheckController {
         return financeCheckService.getFinanceCheckApprovalStatus(projectId, organisationId).toGetResponse();
     }
 
-    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.PATH)
+    @RequestMapping(value = "/{projectId}" + FinanceCheckURIs.PATH, method = GET)
     public RestResult<FinanceCheckSummaryResource> getFinanceCheckSummary(@PathVariable("projectId") Long projectId){
         return financeCheckService.getFinanceCheckSummary(projectId).toGetResponse();
     }
@@ -57,4 +57,5 @@ public class FinanceCheckController {
     public RestResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(@PathVariable("projectId") Long projectId, @PathVariable("organisationId") Long organisationId){
         return financeCheckService.getFinanceCheckEligibilityDetails(projectId, organisationId).toGetResponse();
     }
+
 }

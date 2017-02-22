@@ -253,6 +253,28 @@ public class ProjectGrantOfferPermissionRulesTest extends BasePermissionRulesTes
         assertFalse(rules.internalUsersCanApproveSignedGrantOfferLetter(project.getId(), user));
     }
 
+    @Test
+    public void testLeadPartnerCanDeleteSignedGrantOfferLetter() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserAsLeadPartner(project, user);
+
+        assertTrue(rules.leadPartnerCanDeleteSignedGrantOfferLetter(project, user));
+
+    }
+
+    @Test
+    public void testNonLeadPartnerCanDeleteSignedGrantOfferLetter() {
+        ProjectResource project = newProjectResource().build();
+        UserResource user = newUserResource().build();
+
+        setupUserNotAsLeadPartner(project, user);
+
+        assertFalse(rules.leadPartnerCanDeleteSignedGrantOfferLetter(project, user));
+
+    }
+
     @Override
     protected ProjectGrantOfferPermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectGrantOfferPermissionRules();

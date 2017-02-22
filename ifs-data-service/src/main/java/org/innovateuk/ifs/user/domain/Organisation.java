@@ -11,6 +11,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+
 /**
  * organisation defines database relations and a model to use client side and server side.
  */
@@ -22,6 +24,7 @@ public class Organisation {
     private Long id;
     private String name;
     private String companyHouseNumber; // might start with zero, so use a string.
+
     @Enumerated(EnumType.STRING)
     private OrganisationSize organisationSize;
 
@@ -44,9 +47,7 @@ public class Organisation {
     @OneToMany(mappedBy="organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
-    public Organisation() {
-    	// no-arg constructor
-    }
+    public Organisation() {}
 
     public Organisation(Long id, String name) {
         this.id = id;

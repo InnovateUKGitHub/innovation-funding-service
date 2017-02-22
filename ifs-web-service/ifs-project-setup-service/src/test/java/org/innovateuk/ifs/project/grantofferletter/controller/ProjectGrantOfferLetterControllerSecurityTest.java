@@ -22,7 +22,6 @@ public class ProjectGrantOfferLetterControllerSecurityTest extends BaseProjectSe
         assertSecured(() -> classUnderTest.confirmation(123L, null));
         assertSecured(() -> classUnderTest.downloadAdditionalContractFile(123L));
         assertSecured(() -> classUnderTest.downloadGeneratedGrantOfferLetterFile(123L));
-        assertSecured(() -> classUnderTest.downloadGrantOfferLetterFile(123L));
         assertSecured(() -> classUnderTest.submit(123L, null, null, null, null, null));
         assertSecured(() -> classUnderTest.uploadSignedGrantOfferLetterFile(123L, null, null, null, null, null));
     }

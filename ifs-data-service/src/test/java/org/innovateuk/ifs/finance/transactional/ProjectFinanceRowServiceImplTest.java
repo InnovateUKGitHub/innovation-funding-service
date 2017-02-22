@@ -176,7 +176,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationFinanceDefaultHandlerMock.costToCostItem(materialCost)).thenReturn(material);
         when(organisationFinanceDefaultHandlerMock.getCostHandler(FinanceRowType.MATERIALS)).thenReturn(new MaterialsHandler());
 
-        FinanceRowHandler financeRowHandler = service.getCostHandler(1L);
+        FinanceRowHandler financeRowHandler = service.getCostHandler(material);
         assertNotNull(financeRowHandler);
         assertTrue(financeRowHandler instanceof MaterialsHandler);
     }

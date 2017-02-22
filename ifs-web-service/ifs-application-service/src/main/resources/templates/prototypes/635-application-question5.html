@@ -1,33 +1,33 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-form">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/layout :: prototype-sub-header" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/layout :: prototype-sub-header" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, ${'Technical approach'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, ${'Technical approach'})" />
 
 <form action="#" method="post" class="form-serialize-js">
 	<div class="form-group extra-margin" id="0">
-		
+
 		<label class="form-label form-label-bold" for="1">5. What technical approach will you use and how will you manage your project?
 		</label>
-		
+
 		<div class="validation-messages">
-			
+
 		</div>
-		
+
 		<details role="group">
 		<summary role="button" aria-controls="details-content-0" tabindex="0" aria-expanded="false">
 		<span class="summary">What should I include in the business technical approach section?</span>
@@ -47,7 +47,7 @@
 		<div class="textarea-wrapped assigned-to-me word-count">
 			<div class="textarea-header" id="formInput[1]">
 				<div class="assignee  assigned-to-me ">
-			        This question is assigned to 
+			        This question is assigned to
 			        <strong>you</strong>
 			    </div>
 			</div>
@@ -57,7 +57,7 @@
 			</div>
 		</div>
 		<div class="textarea-footer">
-			
+
 			<div class="assign-container">
 				<small><span>Last updated: </span>
 					<span>
@@ -67,8 +67,8 @@
 					<span>you</span>
 				</small>
 			</div>
-		
-			
+
+
 			<span class="count-label">
 				<small>
 					<span class="count-message">Words remaining:</span>
@@ -87,15 +87,15 @@
 						<ul class="list list-bullet">
 							<li>
 								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_9">Pete Tom</button>
-								
+
 							</li>
 							<li>
 								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_5">Jessica Doe</button>
-								
+
 							</li>
 							<li>
 								<button type="submit" name="assign_question" class="buttonlink" formaction="#question-1" value="1_1">Steve Smith</button>
-								
+
 							</li>
 						</ul>
 					</div>
@@ -107,8 +107,8 @@
 
 		</div>
 
-		<div th:include="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})" th:remove="tag" />
-	
+		<th:block th:insert="prototypes/fragments/applicant-view :: appendix-upload(${'question-5'}, ${'lead'}, ${'assigned'})" />
+
 		<!-- if  readonly we show the edit form button-->
 	</div>
 </form>
@@ -132,10 +132,10 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>
