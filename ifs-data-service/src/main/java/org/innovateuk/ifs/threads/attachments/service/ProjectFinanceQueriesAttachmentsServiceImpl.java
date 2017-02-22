@@ -1,7 +1,6 @@
 package org.innovateuk.ifs.threads.attachments.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.file.domain.FileEntry;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.file.service.BasicFileAndContents;
 import org.innovateuk.ifs.file.service.FileAndContents;
@@ -10,7 +9,6 @@ import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.repository.PostAttachmentRepository;
-import org.innovateuk.ifs.user.domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -45,18 +43,15 @@ public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinan
 
     @Override
     public ServiceResult<Attachment> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request) {
-        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier) ->
-                fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                        .andOnSuccessReturn(created -> save(newAttachment(null, created.getRight())))); //TODO Nuno: add user
+        return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier)
+                -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
+                .andOnSuccess(created -> save(new Attachment(null, created.getRight())))).toServiceResult();
     }
 
     private ServiceResult<Attachment> save(Attachment attachment) {
         return ServiceResult.serviceSuccess(attachmentsRepository.save(attachment));
     }
 
-    private Attachment newAttachment(User uploader, FileEntry fileEntry) {
-        return new Attachment(uploader, fileEntry);
-    }
 
     @Override
     public ServiceResult<Void> delete(Long attachmentId) {
