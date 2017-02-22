@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.mapper.ApplicationAssessorMapper;
+import org.innovateuk.ifs.application.mapper.ApplicationAssessorPageMapper;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
-import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
@@ -21,6 +24,9 @@ import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.Collator;
@@ -41,7 +47,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMapSet;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 /**
- * Service for retrieving {@link ApplicationAssessmentSummaryResource}'s.
+ * Service for retrieving {@link ApplicationAssessmentSummaryResource}s.
  */
 @Service
 public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalService implements ApplicationAssessmentSummaryService {
@@ -61,11 +67,43 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     @Autowired
     private InnovationAreaMapper innovationAreaMapper;
 
+    @Autowired
+    ApplicationAssessorMapper applicationAssessorMapper;
+
+    @Autowired
+    ApplicationAssessorPageMapper applicationAssessorPageMapper;
+
     @Override
     public ServiceResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId) {
+
         return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
                 simpleMap(competitionParticipantRepository.getByCompetitionIdAndRoleAndStatus(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED),
-                        competitionParticipant -> getApplicationAssessor(competitionParticipant, applicationId))
+                        competitionParticipant -> {
+                            Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
+                            return applicationAssessorMapper.mapToResource(competitionParticipant, mostRecentAssessment);
+                        })
+        );
+    }
+
+    @Override
+    public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, int pageIndex, int pageSize) {
+
+        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application -> {
+                    Pageable pageable = new PageRequest(pageIndex, pageSize);
+                    Page<CompetitionParticipant> competitionParticipants = competitionParticipantRepository.findParticipantsWithoutAssessments(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED, applicationId, pageable);
+                    return applicationAssessorPageMapper.mapToResource(competitionParticipants);
+                }
+        );
+    }
+
+    @Override
+    public ServiceResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId) {
+        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
+                simpleMap(competitionParticipantRepository.findParticipantsWithAssessments(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED, applicationId),
+                        competitionParticipant -> {
+                            Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
+                            return applicationAssessorMapper.mapToResource(competitionParticipant, mostRecentAssessment);
+                        })
         );
     }
 
@@ -99,64 +137,7 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
                 .orElse("");
     }
 
-    private ApplicationAssessorResource getApplicationAssessor(CompetitionParticipant competitionParticipant, Long applicationId) {
-        Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
-
-        User user = competitionParticipant.getUser();
-        Optional<Profile> profile = ofNullable(profileRepository.findOne(user.getProfileId()));
-
-        Set<InnovationAreaResource> innovationAreas = simpleMapSet(profile.map(Profile::getInnovationAreas)
-                .orElse(emptySet()), innovationAreaMapper::mapToResource);
-
-        ApplicationAssessorResource applicationAssessorResource = new ApplicationAssessorResource();
-        applicationAssessorResource.setUserId(user.getId());
-        applicationAssessorResource.setFirstName(user.getFirstName());
-        applicationAssessorResource.setLastName(user.getLastName());
-        applicationAssessorResource.setBusinessType(profile.map(Profile::getBusinessType).orElse(null));
-        applicationAssessorResource.setInnovationAreas(innovationAreas);
-        applicationAssessorResource.setSkillAreas(profile.map(Profile::getSkillsAreas).orElse(null));
-        applicationAssessorResource.setAvailable(!mostRecentAssessment.isPresent());
-
-        mostRecentAssessment.ifPresent(assessment -> {
-            populateRejection(applicationAssessorResource, assessment);
-            applicationAssessorResource.setMostRecentAssessmentId(assessment.getId());
-            applicationAssessorResource.setMostRecentAssessmentState(assessment.getActivityState());
-        });
-
-        applicationAssessorResource.setTotalApplicationsCount(countAssignedApplications(user.getId()));
-        applicationAssessorResource.setAssignedCount(countAssignedApplicationsByCompetition(competitionParticipant));
-        applicationAssessorResource.setSubmittedCount(countSubmittedApplicationsByCompetition(competitionParticipant));
-
-        return applicationAssessorResource;
-    }
-
     private Optional<Assessment> getMostRecentAssessment(CompetitionParticipant competitionParticipant, Long applicationId) {
         return assessmentRepository.findFirstByParticipantUserIdAndTargetIdOrderByIdDesc(competitionParticipant.getUser().getId(), applicationId);
-    }
-
-    private void populateRejection(ApplicationAssessorResource applicationAssessorResource, Assessment assessment) {
-        if (assessment.getActivityState() == REJECTED) {
-            AssessmentRejectOutcome rejection = assessment.getRejection();
-            applicationAssessorResource.setRejectReason(rejection.getRejectReason());
-            applicationAssessorResource.setRejectComment(rejection.getRejectComment());
-        }
-    }
-
-    private long countAssignedApplications(Long userId) {
-        return assessmentRepository.countByParticipantUserIdAndActivityStateStateNotIn(userId, getBackingStates(of(REJECTED, WITHDRAWN)));
-    }
-
-    private long countAssignedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {
-        return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, complementOf(of(REJECTED, WITHDRAWN)));
-    }
-
-    private long countSubmittedApplicationsByCompetition(CompetitionParticipant competitionParticipant) {
-        return countAssessmentsByCompetitionParticipantInStates(competitionParticipant, of(SUBMITTED));
-    }
-
-    private long countAssessmentsByCompetitionParticipantInStates(CompetitionParticipant competitionParticipant, Set<AssessmentStates> states) {
-        return assessmentRepository.countByParticipantUserIdAndTargetCompetitionIdAndActivityStateStateIn(competitionParticipant.getUser().getId(),
-                competitionParticipant.getProcess().getId(),
-                getBackingStates(states));
     }
 }

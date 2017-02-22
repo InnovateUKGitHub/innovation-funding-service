@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 
@@ -15,4 +16,7 @@ public interface ApplicationAssessmentSummaryRestService {
 
     RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId);
 
+    RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId);
+
+    RestResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, Integer pageIndex, Integer pageSize);
 }

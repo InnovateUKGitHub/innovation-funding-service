@@ -42,8 +42,9 @@ public class CompetitionManagementApplicationAssessmentProgressController {
                                       @Valid @ModelAttribute(FORM_ATTR_NAME) AvailableAssessorsForm form,
                                       @SuppressWarnings("unused") BindingResult bindingResult,
                                       @PathVariable("applicationId") Long applicationId,
-                                      @RequestParam MultiValueMap<String, String> queryParams) {
-        return doProgressView(model, applicationId, form.getSortField(), queryParams);
+                                      @RequestParam MultiValueMap<String, String> queryParams,
+                                      @RequestParam(value = "page", defaultValue = "0") int page) {
+        return doProgressView(model, applicationId, form.getSortField(), queryParams, page);
     }
 
     @RequestMapping(path = "/assign/{assessorId}", method = RequestMethod.POST)
@@ -80,10 +81,10 @@ public class CompetitionManagementApplicationAssessmentProgressController {
         return "competition/application-progress-remove-confirm";
     }
 
-    private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort, MultiValueMap<String, String> queryParams) {
+    private String doProgressView(Model model, Long applicationId, AvailableAssessorsSortFieldType sort, MultiValueMap<String, String> queryParams, int page) {
         queryParams.add("applicationId", applicationId.toString());
 
-        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort));
+        model.addAttribute("model", applicationAssessmentProgressModelPopulator.populateModel(applicationId, sort, page));
         model.addAttribute("applicationOriginQuery", buildOriginQueryString(ApplicationOverviewOrigin.APPLICATION_PROGRESS, queryParams));
         model.addAttribute("assessorProfileOriginQuery", buildOriginQueryString(AssessorProfileOrigin.APPLICATION_PROGRESS, queryParams));
 

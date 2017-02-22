@@ -39,14 +39,12 @@ public class ApplicationAssessmentProgressModelPopulator {
                     new AbstractMap.SimpleEntry<>(SUBMITTED_APPLICATIONS, comparing(ApplicationAvailableAssessorsRowViewModel::getSubmittedApplications)))
                     .collect(Collectors.toMap((e) -> e.getKey(), (e) -> e.getValue())));
 
-    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, AvailableAssessorsSortFieldType sortSelection) {
+    public ApplicationAssessmentProgressViewModel populateModel(Long applicationId, AvailableAssessorsSortFieldType sortSelection, int page) {
         ApplicationAssessmentSummaryResource applicationAssessmentSummary = applicationAssessmentSummaryRestService
                 .getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
 
-        List<ApplicationAssessorResource> assessors = applicationAssessmentSummaryRestService.getAssessors(applicationId).getSuccessObjectOrThrowException();
-        Map<Boolean, List<ApplicationAssessorResource>> assessorsPartitionedByAvailable = assessors.stream().collect(partitioningBy(ApplicationAssessorResource::isAvailable));
-        List<ApplicationAssessorResource> notAvailableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.FALSE, Collections.emptyList());
-        List<ApplicationAssessorResource> availableAssessors = assessorsPartitionedByAvailable.getOrDefault(Boolean.TRUE, Collections.emptyList());
+        List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccessObjectOrThrowException();
+        List<ApplicationAssessorResource> availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20).getSuccessObjectOrThrowException().getContent();
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),
