@@ -1,9 +1,15 @@
 package org.innovateuk.ifs.threads.attachments.mapper;
 
 import org.innovateuk.ifs.commons.mapper.BaseMapper;
+import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
+import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.mapstruct.Mapper;
 
+@Mapper(
+        config = GlobalMapperConfig.class
+)
 public abstract class AttachmentMapper extends BaseMapper<Attachment, AttachmentResource, Long> {
 
     @Override

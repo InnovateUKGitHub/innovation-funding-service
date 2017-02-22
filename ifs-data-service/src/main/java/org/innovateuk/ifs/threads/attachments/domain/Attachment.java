@@ -19,7 +19,7 @@ public class Attachment {
     private User uploader;
 
     @OneToOne
-    @Column(nullable = false, unique = true)
+    @JoinColumn(nullable = false, unique = true)
     private FileEntry fileEntry;
 
     @CreatedDate

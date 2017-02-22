@@ -5,6 +5,7 @@ import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
+import org.innovateuk.ifs.threads.domain.Query;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
 import org.innovateuk.ifs.threads.repository.QueryRepository;
 import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
@@ -12,6 +13,8 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
@@ -59,7 +62,7 @@ public class QueriesAttachmentPermissionsRules {
     }
 
     private boolean userCanAccessQueryLinkedToTheAttachment(UserResource user, AttachmentResource attachment) {
-        return queryRepository.findOneThatHoldsAttachment(attachment.id)
+        return findQueryTheAttachmentIsLinkedTo(attachment)
                 .map(query -> projectFinanceQueryPermissionRules
                         .onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryMapper.mapToResource(query), user))
                 .orElse(false);
@@ -82,7 +85,11 @@ public class QueriesAttachmentPermissionsRules {
     }
 
     private boolean attachmentIsStillOrphan(AttachmentResource attachment) {
-        return ! queryRepository.findOneThatHoldsAttachment(attachment.id).isPresent();
+        return ! findQueryTheAttachmentIsLinkedTo(attachment).isPresent();
+    }
+
+    private Optional<Query> findQueryTheAttachmentIsLinkedTo(AttachmentResource attachment) {
+        return queryRepository.findOneThatHoldsAttachment(attachment.id).stream().findFirst();
     }
 
 }
