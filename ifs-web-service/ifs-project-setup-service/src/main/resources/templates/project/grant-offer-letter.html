@@ -41,19 +41,17 @@
             <p th:unless="${model.submitted}">The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
 
             <th:block th:unless="${model.submitted}">
-            <h2 class="heading-medium">Next steps</h2>
-            <p></p>
-            <ul class="list list-bullet">
-                <li>review grant offer letter and annex if provided</li>
-                <li>the Project Manager will need to sign the document</li>
-                <li>the signed grant offer letter should then be sent to Innovate UK</li>
-                <p></p>
-                <p>After the signed grant offer letter is received and approved by Innovate UK, project setup will be complete.</p>
-            </ul>
+                <h2 class="heading-medium">Next steps</h2>
+                <ul class="list list-bullet">
+                    <li>review grant offer letter and annex if provided</li>
+                    <li>the Project Manager will need to sign the document</li>
+                    <li>the signed grant offer letter should then be sent to Innovate UK</li>
+                    <br/>
+                    <p>After the signed grant offer letter is received and approved by Innovate UK, project setup will be complete.</p>
+                </ul>
             </th:block>
 
             <h2 class="heading-medium">Grant offer letter</h2>
-            <!--<p th:unless="${model.submitted}">The grant offer should be read and approved by all project members. It needs to be signed by your Project Manager and returned to Innovate UK.</p>-->
             <p th:unless="${model.submitted}">This document is awaiting signature by the Project Manager.</p>
 
             <th:block th:if="${model.isGrantOfferLetterSent()}">
