@@ -18,4 +18,4 @@ RUN sh -c 'touch /app.jar'
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
 
 HEALTHCHECK --interval=10s --timeout=3s \
-  CMD curl -f http://localhost:8080/monitoring/health || exit 1
+  CMD curl -f --connect-timeout 5 -m 5 http://localhost:8080/monitoring/health || exit 1
