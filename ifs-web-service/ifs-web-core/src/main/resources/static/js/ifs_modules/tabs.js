@@ -38,9 +38,8 @@ IFS.core.tabs = (function () {
 
       // Make each aria-controls correspond id of targeted section (re href)
       jQuery('[role="tablist"] a').each(function () {
-        jQuery(this).attr(
-          'aria-controls', jQuery(this).attr('href').substring(1)
-        )
+        var instance = jQuery(this)
+        instance.prop('aria-controls', instance.prop('href').substring(1))
       })
 
       // Make each section focusable and give it the tabpanel role
@@ -54,14 +53,18 @@ IFS.core.tabs = (function () {
       })
 
       jQuery(settings.tabContainer).each(function () {
-        // do we have a tab set in the query string?
+        // do we have a tab set in the hash?
         var defaultIndex = 0
-        if (jQuery(this).attr('id')) {
-          var parameter = IFS.core.tabs.getParameterByName(jQuery(this).attr('id'))
-          if (parameter !== null && parameter !== '') {
-            defaultIndex = parseInt(parameter) - 1
-          }
+        // if (jQuery(this).attr('id')) {
+        //   var parameter = IFS.core.tabs.getParameterByName(jQuery(this).attr('id'))
+        //   if (parameter !== null && parameter !== '') {
+        //     defaultIndex = parseInt(parameter) - 1
+        //   }
+        // }
+        if (location.hash && jQuery(this).children().find('#' + window.location.hash.substring(1))) {
+          defaultIndex = jQuery(this).find('#' + window.location.hash.substring(1)).index() - 1
         }
+
         // If we have a default index then set the right tab otherwise set it to 1
         jQuery(this).find('li').eq(defaultIndex).find('a').attr({
           'aria-selected': 'true',
@@ -75,56 +78,61 @@ IFS.core.tabs = (function () {
     },
     changeFocus: function (e, element) {
       // define current, previous and next (possible) tabs
-      var $original = jQuery(element)
-      var tabsLength = $original.parent().siblings().length ++
-      var $prev = $original.parent().index() === 0 ? $original.parent().siblings().eq(tabsLength - 1).children('[role="tab"]') : $original.parent().prev().children('[role="tab"]')
-      var $next = $original.parent().index() === tabsLength ? $original.parent().siblings().eq(0).children('[role="tab"]') : $original.parent().next().children('[role="tab"]')
-      var $target
+      var original = jQuery(element)
+      var originalParent = original.parent()
+      var tabsLength = originalParent.siblings().length ++
+      var prev = originalParent.index() === 0 ? originalParent.siblings().eq(tabsLength - 1).children('[role="tab"]') : originalParent.prev().children('[role="tab"]')
+      var next = originalParent.index() === tabsLength ? originalParent.siblings().eq(0).children('[role="tab"]') : originalParent.next().children('[role="tab"]')
+      var target
       // find the direction (prev or next)
       switch (e.keyCode) {
         case 37:
-          $target = $prev
+          target = prev
           break
         case 38:
           e.preventDefault()
-          $target = $prev
+          target = prev
           break
         case 39:
-          $target = $next
+          target = next
           break
         case 40:
           e.preventDefault()
-          $target = $next
+          target = next
           break
         default:
-          $target = false
+          target = false
           break
       }
 
-      if ($target.length) {
-        $original.attr({
+      if (target.length) {
+        original.attr({
           'tabindex': '-1',
           'aria-selected': null
         })
-        $target.attr({
+        target.attr({
           'tabindex': '0',
           'aria-selected': true
         }).focus()
       }
 
       // Hide panels
-      $original.parents(settings.tabContainer).find('[role="tabpanel"]').attr('aria-hidden', 'true')
+      original.parents(settings.tabContainer).find('[role="tabpanel"]').attr('aria-hidden', 'true')
 
       // Show panel which corresponds to target
-      $original.parents(settings.tabContainer).find('#' + jQuery(document.activeElement).attr('href').substring(1)).attr('aria-hidden', null)
+      original.parents(settings.tabContainer).find('#' + jQuery(document.activeElement).attr('href').substring(1)).attr('aria-hidden', null)
 
       // append id to query string
-      this.handleQueryString($target)
+      // this.handleQueryString(target)
     },
     handleClick: function (e, element) {
       e.preventDefault()
 
       var instance = jQuery(element)
+
+      // add hash to url not using default to avoid page scroll
+      // window.location.hash = instance.attr('href')
+      location.hash = 'test'
 
       // remove focusability [sic] and aria-selected
       instance.parents('[role="tablist"]').find('[role="tab"]').attr({
@@ -145,50 +153,50 @@ IFS.core.tabs = (function () {
       instance.parents(settings.tabContainer).find('#' + instance.attr('href').substring(1)).attr('aria-hidden', null)
 
       // append id to query string
-      this.handleQueryString(instance)
+      // this.handleQueryString(instance)
     },
-    handleQueryString: function (instance) {
-      var index = instance.parent().index()
-      var uniqueID = instance.parents('div').attr('id')
-      var oldURL = document.location
-      var newURL = this.updateQueryStringParameter(oldURL.toString(), uniqueID, index + 1)
-      var title = document.getElementsByTagName('title')[0].innerHTML
-      window.history.replaceState({}, title, newURL)
-    },
-    updateQueryStringParameter: function (uri, key, value) {
-      var re = new RegExp('([?&])' + key + '=.*?(&|#|$)', 'i')
-      if (value === undefined) {
-        if (uri.match(re)) {
-          return uri.replace(re, '$1$2')
-        } else {
-          return uri
-        }
-      } else {
-        if (uri.match(re)) {
-          return uri.replace(re, '$1' + key + '=' + value + '$2')
-        } else {
-          var hash = ''
-          if (uri.indexOf('#') !== -1) {
-            hash = uri.replace(/.*#/, '#')
-            uri = uri.replace(/#.*/, '')
-          }
-          var separator = uri.indexOf('?') !== -1 ? '&' : '?'
-          return uri + separator + key + '=' + value + hash
-        }
-      }
-    },
-    getParameterByName: function (name, url) {
-      if (!url) {
-        url = window.location.href
-      }
-      name = name.replace(/[[\]]/g, '$&')
-      // name = name.replace(/[\[\]]/g, '\\$&')
-      var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
-      var results = regex.exec(url)
-      if (!results) return null
-      if (!results[2]) return ''
-      return decodeURIComponent(results[2].replace(/\+/g, ' '))
-    },
+    // handleQueryString: function (instance) {
+    //   var index = instance.parent().index()
+    //   var uniqueID = instance.parents('div').attr('id')
+    //   var oldURL = document.location
+    //   var newURL = this.updateQueryStringParameter(oldURL.toString(), uniqueID, index + 1)
+    //   var title = document.getElementsByTagName('title')[0].innerHTML
+    //   window.history.replaceState({}, title, newURL)
+    // },
+    // updateQueryStringParameter: function (uri, key, value) {
+    //   var re = new RegExp('([?&])' + key + '=.*?(&|#|$)', 'i')
+    //   if (value === undefined) {
+    //     if (uri.match(re)) {
+    //       return uri.replace(re, '$1$2')
+    //     } else {
+    //       return uri
+    //     }
+    //   } else {
+    //     if (uri.match(re)) {
+    //       return uri.replace(re, '$1' + key + '=' + value + '$2')
+    //     } else {
+    //       var hash = ''
+    //       if (uri.indexOf('#') !== -1) {
+    //         hash = uri.replace(/.*#/, '#')
+    //         uri = uri.replace(/#.*/, '')
+    //       }
+    //       var separator = uri.indexOf('?') !== -1 ? '&' : '?'
+    //       return uri + separator + key + '=' + value + hash
+    //     }
+    //   }
+    // },
+    // getParameterByName: function (name, url) {
+    //   if (!url) {
+    //     url = window.location.href
+    //   }
+    //   name = name.replace(/[[\]]/g, '$&')
+    //   // name = name.replace(/[\[\]]/g, '\\$&')
+    //   var regex = new RegExp('[?&]' + name + '(=([^&#]*)|&|#|$)')
+    //   var results = regex.exec(url)
+    //   if (!results) return null
+    //   if (!results[2]) return ''
+    //   return decodeURIComponent(results[2].replace(/\+/g, ' '))
+    // },
     destroy: function () {
       // Unbind events
       jQuery('body').off('keydown', '[role="tab"]')

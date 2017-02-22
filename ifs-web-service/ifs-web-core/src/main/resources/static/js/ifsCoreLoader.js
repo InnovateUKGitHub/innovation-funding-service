@@ -40,7 +40,7 @@ IFS.core.loadOrder = {
       IFS.core.debug.init()
     }
   },
-  stateManaged: {
+  commonStateManaged: {
     mobile: function () {
       IFS.core.collapsible.init('tabs')
     },

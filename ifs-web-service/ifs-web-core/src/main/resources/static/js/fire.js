@@ -57,27 +57,31 @@ var UTIL = (function () {
       // now all the finalize statements first common, then classes
       UTIL.fire('common', 'finalize')
 
-      ssm.addState({
-        id: 'mobile',
-        query: '(max-width: 639px)',
-        onEnter: function () {
-          UTIL.fire('stateManaged', 'mobile')
-        },
-        onLeave: function () {
-          UTIL.fire('stateManaged', 'mobileLeave')
-        }
-      })
+      if (!window.matchMedia) {
+        return UTIL.fire('commonStateManaged', 'desktop')
+      } else {
+        ssm.addState({
+          id: 'mobile',
+          query: '(max-width: 639px)',
+          onEnter: function () {
+            UTIL.fire('commonStateManaged', 'mobile')
+          },
+          onLeave: function () {
+            UTIL.fire('commonStateManaged', 'mobileLeave')
+          }
+        })
 
-      ssm.addState({
-        id: 'desktop',
-        query: '(min-width: 640px)',
-        onEnter: function () {
-          UTIL.fire('stateManaged', 'desktop')
-        },
-        onLeave: function () {
-          UTIL.fire('stateManaged', 'desktopLeave')
-        }
-      })
+        ssm.addState({
+          id: 'desktop',
+          query: '(min-width: 640px)',
+          onEnter: function () {
+            UTIL.fire('commonStateManaged', 'desktop')
+          },
+          onLeave: function () {
+            UTIL.fire('commonStateManaged', 'desktopLeave')
+          }
+        })
+      }
 
       jQuery.each(classNames, function (i, classnm) {
         UTIL.fire(classnm, 'finalize')
