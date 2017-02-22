@@ -11,7 +11,6 @@ IFS.core.disableSubmitUntilChecked = (function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
       })
 
-
       jQuery('[' + s.checkBoxesAttribute + ']').each(function () {
         IFS.core.disableSubmitUntilChecked.checkButtonStates(this)
       })

@@ -179,61 +179,63 @@
    </table>
 
    <th:block th:if="${competition.competitionStatus.name() == 'IN_ASSESSMENT' or competition.competitionStatus.name() == 'FUNDERS_PANEL' or competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">
-	    <table th:if="${activeTab == 'submitted'}">
-	       <thead>
-	         <tr>
+        <table th:if="${activeTab == 'submitted'}">
+           <thead>
+             <tr>
                <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Select applications</th>
-	           <th scope="col">Application number</th>
-	           <th scope="col">Project title</th>
-	           <th scope="col">Lead</th>
-	           <th scope="col">No. of partners</th>
-	           <th scope="col">Grant requested (£)</th>
-	           <th scope="col">Total project cost (£)</th>
-	           <th scope="col">Duration (months)</th>
+               <th scope="col">Application number</th>
+               <th scope="col">Project title</th>
+               <th scope="col">Lead</th>
+               <th scope="col">No. of partners</th>
+               <th scope="col">Grant requested (£)</th>
+               <th scope="col">Total project cost (£)</th>
+               <th scope="col">Duration (months)</th>
                <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">Funding decision</th>
-	           <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">Funded</th>
-	         </tr>
-	       </thead>
-	       <tbody>
-	         <tr th:each="result : ${results.content}"  th:class="${competition.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
-               <td th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}"><label class="block-label selection-button-checkbox" for="app-row-1">
-                   <input type="checkbox" class="app-row-select" name="applicationIds" id="app-row-1" th:value="${result.id}" aria-labelledby="select-applications-label">
-                   <small class="visibility-hidden">Select application</small>
-               </label></td>
-	           <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
-	           <td th:text="${result.name}"></td>
-	           <td th:text="${result.lead}"></td>
-	           <td th:text="${result.numberOfPartners}"></td>
-	           <td th:text="${result.grantRequested}"></td>
-	           <td th:text="${result.totalProjectCost}"></td>
-	           <td th:text="${result.duration}"></td>
+               <th scope="col" id="fund-project-label" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}">Funded</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr th:each="result, index : ${results.content}" th:class="${competition.competitionStatus.name() == 'FUNDERS_PANEL' ? 'form-group' : ''}">
+               <td th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}">
+                   <label class="block-label selection-button-checkbox" th:for="${'app-row-'+index.count}">
+                       <input data-switches-button-status="[name=fundingDecision]" type="checkbox" name="applicationIds" th:id="${'app-row-'+index.count}" th:value="${result.id}" aria-labelledby="select-applications-label">
+                       <span class="invisible">Select application</span>
+                   </label>
+               </td>
+               <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id} + ${originQuery}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+               <td th:text="${result.name}"></td>
+               <td th:text="${result.lead}"></td>
+               <td th:text="${result.numberOfPartners}"></td>
+               <td th:text="${result.grantRequested}"></td>
+               <td th:text="${result.totalProjectCost}"></td>
+               <td th:text="${result.duration}"></td>
                  <td scope="col" th:if="${competition.competitionStatus.name() == 'FUNDERS_PANEL'}" th:text="${result.fundingDecision?.name}"/>
-	           <td scope="col" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" >
-	           		<th:block th:if="${result.isFunded()}">Yes</th:block>
-	           		<th:block th:unless="${result.isFunded()}">No</th:block>
-	           </td>
-	         </tr>
-	       </tbody>
-	     </table>
+               <td scope="col" th:if="${competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}" >
+               		<th:block th:if="${result.isFunded()}">Yes</th:block>
+               		<th:block th:unless="${result.isFunded()}">No</th:block>
+               </td>
+             </tr>
+           </tbody>
+         </table>
 
-	     <table th:if="${activeTab == 'notSubmitted'}">
-	       <thead>
-	         <tr>
-	           <th scope="col">Application number</th>
-	           <th scope="col">Project title</th>
-	           <th scope="col">Lead</th>
-	           <th scope="col">Percentage complete</th>
-	         </tr>
-	       </thead>
-	       <tbody>
-	         <tr th:each="result : ${results.content}">
-	           <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
-	           <td th:text="${result.name}"></td>
-	           <td th:text="${result.lead}"></td>
-	           <td th:text="${result.completedPercentage}"></td>
-	         </tr>
-	       </tbody>
-	     </table>
+         <table th:if="${activeTab == 'notSubmitted'}">
+           <thead>
+             <tr>
+               <th scope="col">Application number</th>
+               <th scope="col">Project title</th>
+               <th scope="col">Lead</th>
+               <th scope="col">Percentage complete</th>
+             </tr>
+           </thead>
+           <tbody>
+             <tr th:each="result : ${results.content}">
+               <td><a th:href="${'/management/competition/' + competition.competitionId + '/application/' + result.id}"  th:text="${#numbers.formatInteger(result.id,8)}"/></td>
+               <td th:text="${result.name}"></td>
+               <td th:text="${result.lead}"></td>
+               <td th:text="${result.completedPercentage}"></td>
+             </tr>
+           </tbody>
+         </table>
      </th:block>
 
 </th:block>
