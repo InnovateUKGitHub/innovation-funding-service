@@ -79,7 +79,7 @@ public class CompetitionManagementDashboardController {
     @GetMapping(value="/dashboard/search")
     public String search(@RequestParam(name = "searchQuery") String searchQuery,
                            @RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        final String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
+        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
         model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
         return TEMPLATE_PATH + "search";
