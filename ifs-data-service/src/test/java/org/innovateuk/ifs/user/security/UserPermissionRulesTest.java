@@ -2,6 +2,10 @@ package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.BasePermissionRulesTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
+import org.innovateuk.ifs.project.domain.ProjectUser;
+import org.innovateuk.ifs.user.builder.OrganisationBuilder;
+import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -14,6 +18,7 @@ import java.util.function.Function;
 import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
@@ -30,6 +35,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 
 /**
@@ -515,14 +521,73 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource user2 = newUserResource().withId(2L).build();
 
         ProcessRoleResource anotherUsersprocessRoleResource = newProcessRoleResource().withUser(user2).build();
-        assertFalse(rules.usersAndCompAdminCanViewProcessRole(anotherUsersprocessRoleResource, user1));
+        assertFalse(rules.usersAndCompAdminAndProjectFinanceCanViewProcessRole(anotherUsersprocessRoleResource, user1));
     }
 
     @Test
     public void testCompAdminCanViewUserProcessRole() {
         UserResource user = newUserResource().build();
         ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
-        assertTrue(rules.usersAndCompAdminCanViewProcessRole(processRoleResource, compAdminUser()));
+        assertTrue(rules.usersAndCompAdminAndProjectFinanceCanViewProcessRole(processRoleResource, compAdminUser()));
+    }
+
+    @Test
+    public void testProjectFinanceCanViewUserProcessRole() {
+        UserResource user = newUserResource().build();
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).build();
+        assertTrue(rules.usersAndCompAdminAndProjectFinanceCanViewProcessRole(processRoleResource, projectFinanceUser()));
+    }
+
+    @Test
+    public void testProjectManagersCanViewUserProcessRoleForTheirOrganisation() {
+        UserResource user = newUserResource().build();
+        Organisation organisation = OrganisationBuilder.newOrganisation().withId(1L).build();
+
+        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_MANAGER).build(3);
+
+        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
+
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
+        assertTrue(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
+    }
+
+    @Test
+    public void testProjectPartnersCanViewUserProcessRoleForTheirOrganisation() {
+        UserResource user = newUserResource().build();
+        Organisation organisation = OrganisationBuilder.newOrganisation().withId(1L).build();
+
+        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_PARTNER).build(3);
+
+        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
+
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
+        assertTrue(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
+    }
+
+    @Test
+    public void testProjectManagersCannotViewUserProcessRoleForNotForTheirOrganisation() {
+        UserResource user = newUserResource().build();
+        Organisation organisation = OrganisationBuilder.newOrganisation().withId(2L).build();
+
+        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_MANAGER).build(3);
+
+        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
+
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
+        assertFalse(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
+    }
+
+    @Test
+    public void testProjectPartnersCannotViewUserProcessRoleNoteForTheirOrganisation() {
+        UserResource user = newUserResource().build();
+        Organisation organisation = OrganisationBuilder.newOrganisation().withId(2L).build();
+
+        List<ProjectUser> projectUsers = newProjectUser().withOrganisation(organisation).withRole(ProjectParticipantRole.PROJECT_PARTNER).build(3);
+
+        when(projectUserRepositoryMock.findByUserId(anyLong())).thenReturn(projectUsers);
+
+        ProcessRoleResource processRoleResource = newProcessRoleResource().withUser(user).withOrganisation(1L).build();
+        assertFalse(rules.projectManagersAndPartnersCanViewTheProcessRolesWithTheSameOrganisation(processRoleResource, projectFinanceUser()));
     }
 
     @Test
@@ -537,6 +602,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         UserResource anotherUser = newUserResource().build();
         assertFalse(rules.userCanCheckTheyHaveApplicationForCompetition(user, anotherUser));
     }
+
 
     @Override
     protected UserPermissionRules supplyPermissionRulesUnderTest() {
