@@ -20,17 +20,3 @@ public interface ThreadRepository<T extends Thread> extends PagingAndSortingRepo
     @Query(FIND_ONE_THAT_HOLDS_ATTACHMENT)
     List<T> findOneThatHoldsAttachment(@Param("attachmentId") Long attachmentId);
 }
-
-
-/*
-
-from Products p INNER JOIN p.productlanguages pl
-   where pl.languages.shortname ='eng'
-
-
-    "SELECT DISTINCT o " +
-    "FROM Organization o, User u " +
-    "JOIN o.roles oRole " +
-    "JOIN u.roles uRole " +
-    "WHERE oRole.id = uRole.id AND u.id = :uId")
- */
