@@ -16,8 +16,7 @@ public interface ProjectFinanceQueriesAttachmentService extends AttachmentsServi
     ServiceResult<AttachmentResource> findOne(Long attachmentId);
 
     @Override
-    @PostFilter("hasPermission(filterObject, 'PF_ATTACHMENT_READ')")
-    @PreAuthorize("hasPermission('PF_QUERY_ATTACHMENT_UPLOAD')")
+    @PostFilter("hasPermission(filterObject, 'PF_ATTACHMENT_UPLOAD')")
     ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request);
 
     @Override
