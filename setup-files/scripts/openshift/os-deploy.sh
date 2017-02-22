@@ -74,6 +74,7 @@ function deploy() {
     then
         oc create -f os-files-tmp/
         oc create -f os-files-tmp/shib/5-shib.yml
+        oc create -f os-files-tmp/shib/55-ldap.yml
         oc create -f os-files-tmp/shib/56-idp.yml
     else
         oc create -f os-files-tmp/imap/
@@ -96,7 +97,7 @@ function blockUntilServiceIsUp() {
 }
 
 function shibInit() {
-     oc rsh $(oc get pods | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifs-database
+     oc rsh $(oc get pods | awk '/ldap/ { print $1 }') /usr/local/bin/ldap-sync-from-ifs-db.sh ifsprod.csfwpi01op01.eu-west-2.rds.amazonaws.com ifs ifs WYvnilpLIz4aImqYmrgHN/ajuUPQlpfyBvun9XwkvgI=
 }
 
 function cleanUp() {
