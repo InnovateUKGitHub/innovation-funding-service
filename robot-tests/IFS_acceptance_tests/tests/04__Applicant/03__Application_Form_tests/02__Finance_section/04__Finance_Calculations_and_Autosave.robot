@@ -38,8 +38,7 @@ Overhead costs
     [Tags]
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And the user clicks the button/link    jQuery=label:contains("20% of labour costs")
-    #Then admin costs total should be correct    id=section-total-10-default    £ 9,600
-    #TODO enable the disabled check as soon as the INFUND-7958
+    Then admin costs total should be correct    id=section-total-10-default    £ 9,600
     [Teardown]    the user clicks the button/link    jQuery=button:contains("Overhead costs")
 
 Materials
