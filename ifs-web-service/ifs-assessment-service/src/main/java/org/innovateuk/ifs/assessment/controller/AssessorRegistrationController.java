@@ -131,7 +131,7 @@ public class AssessorRegistrationController {
                 model.addAttribute("competitionInviteHash", inviteHash);
                 return "registration/account-created";
             }
-        }).getSuccessObject();
+        }).getSuccessObjectOrThrowException();
     }
 
     @RequestMapping(value = "/{inviteHash}/register", params = "manual-address", method = RequestMethod.POST)
