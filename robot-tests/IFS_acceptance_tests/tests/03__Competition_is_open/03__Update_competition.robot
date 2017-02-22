@@ -29,6 +29,7 @@ Resource          ../02__Competition_Setup/CompAdmin_Commons.robot
 User can update initial details of a competition before notify date
     [Documentation]    INFUND-6661
     [Setup]    The user clicks the button/link    link=${OPEN_COMPETITION_NAME}
+    # TODO refactore this file due to INFUND-7610
     Given the user clicks the button/link    link=View and update competition setup
     And the user clicks the button/link    link=Initial details
     And the user clicks the button/link    jQuery=.button:contains("Edit")
@@ -39,7 +40,7 @@ User can update initial details of a competition before notify date
     And the user should see that the element is disabled    id=innovationSectorCategoryId
     And the user should see that the element is disabled    id=innovationAreaCategoryId-0
     When the user selects the option from the drop-down menu    Peter Freeman    id=leadTechnologistUserId
-    And the user selects the option from the drop-down menu    John Doe   id=executiveUserId
+    And the user selects the option from the drop-down menu    John Doe    id=executiveUserId
     And the user clicks the button/link    jQuery=.button:contains("Done")
     Then the user should see the element    jQuery=.button:contains("Edit")
     And The user should see the text in the page    Peter Freeman
@@ -89,7 +90,7 @@ Assessed Questions are editable before open date
     When the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
     And the user clicks the button/link    link=Application
     And the user clicks the button/link    link=Business opportunity
-    Then the user should see the element   jQuery=h1:contains("Business opportunity")
+    Then the user should see the element    jQuery=h1:contains("Business opportunity")
     And the user clicks the button/link    jQuery=.button:contains("Edit this question")
     And the user edits the assessed question information
     And the user clicks the button/link    jQuery=.button[value="Save and close"]
@@ -294,8 +295,7 @@ there is a future Notifications date
 return the database to its previous status
     execute sql string    UPDATE `${database_name}`.`milestone` SET `DATE`=NULL WHERE `id`='6';
 
-
 the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
-    the user clicks the button/link    jQuery=.button:contains("Save")
+    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=.button:contains("Save")
     the user closes the browser

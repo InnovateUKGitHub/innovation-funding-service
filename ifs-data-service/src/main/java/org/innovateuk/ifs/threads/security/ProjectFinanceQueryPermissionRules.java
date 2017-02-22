@@ -42,7 +42,7 @@ public class ProjectFinanceQueryPermissionRules  {
 
     private boolean isFinanceContact(UserResource user, Long projectFinance) {
         return findProjectFinance(projectFinance)
-                .map(pf -> pf.getOrganisation().isFinanceContact(user.getId())).orElse(false);
+                .map(pf -> pf.isFinanceContact(user.getId())).orElse(false);
     }
 
     private Optional<ProjectFinance> findProjectFinance(Long id) {
