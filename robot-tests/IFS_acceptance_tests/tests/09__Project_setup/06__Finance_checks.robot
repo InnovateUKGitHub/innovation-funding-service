@@ -84,6 +84,341 @@ Status of the Eligibility column (workaround for private beta competition)
     When the user should see the element    link=Review
     Then the user should see that the element is disabled    jQuery=.generate-spend-profile-main-button
 
+Queries section is linked from eligibility and this selects eligibility on the query dropdown
+    [Documentation]    INFUND-4840
+    [Tags]
+    Given the user navigates to the page    page + eligibility
+    When the user clicks the button/link    jQuery=.button:contains("Queries")
+    Then the user should see the text in the page    queries
+    When the user clicks the button/link    link=post new query
+    Then the user should see the dropdown option selected    Eligibility    dropdown
+    [Teardown]    the user goes back to the previous page
+
+Queries section is linked from viability and this selects viability on the query dropdown
+    [Documentation]    INFUND-4840
+    [Tags]
+    Given the user clicks the button/link    link=viability for partner
+    When the user clicks the button/link    jQuery=.button:contains("Queries")
+    Then the user should see the text in the page    queries
+    When the user clicks the button/link    link=post new query
+    Then the user should see the dropdown option selected    Viability    dropdown
+    [Teardown]    the user goes back to the previous page
+
+
+Queries section is linked to from the main finance check sumamry page
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Queries")
+    Then the user should see the text in the page    queries
+
+Queries section contains finance contact name, email and telephone
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user should see the text in the page    Sarah Peacock
+    And the user should see the text in the page    74373688727
+    And the user should see the text in the page    ${test_mailbox_one}+fundsuccess@gmail.com
+
+Viability and eligibility sections both available
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user clicks the button/link    link=query
+    Then the user should see the option in the drop-down menu    Viability    dropdown
+    And the user should see the option in the drop-down menu    Eligibility    dropdown
+
+Post new query server side validations
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Post Query")
+    Then the user should see the text in the page    The title cannot be empty.
+    And the user should see the text in the page    The query cannot be empty.
+
+Post new query client side validations
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user enters text to a text field    id=queryTitle    this is a title
+    Then the user should not see the text in the page    The title cannot be empty.
+    When the user enters text to a text field    css=.editor    this is some query text
+    Then the user should not see the text in the page    The query should not be empty.
+
+
+Word and character count validations
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user enters text to a text field    id=queryTitle
+    Then the user should see the text in the page    too many characters!
+    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    Then the user should see the text in the page    too many words!
+    When the user enters text to a text field    id=queryTitle    this is a title
+    And the user enters text to a text field    css=.editor    this is some query text
+    Then the user should not see the text in the page    too many characters!
+    And the user should not see the text in the page    too many words!
+
+Large pdf uploads not allowed
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user uploads the file     name=uploadAttachment    ${too_large_pdf}
+    Then the user should get an error page    ${too_large_pdf_validation_error}
+
+Non pdf uploads not allowed
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user uploads the file      name=uploadAttachment    ${text_file}
+    Then the user should get an error page    ${wrong_filetype_validation_error}
+
+
+Project finance user can upload a pdf file
+    [Documentation]    INFUND-4840
+    [Tags]
+    Then the user uploads the file      name=uploadAttachment    ${valid_pdf}
+    And the user should see the text in the page    ${valid_pdf}
+
+Project finance user can view the file
+    [Documentation]    INFUND-4840
+    [Tags]
+    Given the user should see the element    link=${valid_pdf}
+    And the file has been scanned for viruses
+    When the user clicks the button/link    link=${valid_pdf}
+    Then the user should not see an error in the page
+    [Teardown]    The user goes back to the previous page
+
+
+Project finance user can upload more than one file
+    [Documentation]    INFUND-4840
+    [Tags]
+    Then the user uploads the file      name=uploadAttachment    ${valid_pdf}
+    And the user should see the element    jQuery=a:contains("testing.pdf"):nth-of-type(2)
+
+Project finance user can still view both files
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains("testing.pdf"):nth-of-type(1)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=a:contains("testing.pdf"):nth-of-type(2)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+
+New query can be posted
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Post Query")
+    Then the user should see the text in the page    Lee Bowman - Innovate UK (Finance team)
+
+
+Query sections are no longer editable
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user should not see the element    css=.editor
+
+Queries raised column updates to 'awaiting response'
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the element    link=Awaiting response    #TODO check the exact place here
+
+
+Finance contact receives an email when new query is posted
+    [Documentation]    INFUND-4841
+    [Tags]
+
+
+Finance contact can add another query
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Post a new query")
+    And the user enters text to a text field    id=queryTitle    another query title
+    And the user enters text to a text field    css=.editor    another query body
+    And the user clicks the button/link    jQuery=.button:contains("Post Query")
+    Then the user should not see an error in the page
+
+Queries show in reverse chronological order
+    [Documentation]    INFUND-4840
+    [Tags]
+    When the user should see the element    #TODO first element
+    And the user should see the element    #TODO second element
+
+Non finance contact cannot view query
+    [Documentation]    INFUND-4843
+    [Tags]
+    Given log in as a different user    not finance contact
+    When the user clicks the button/link    link=project name
+    Then the user should not see the element    link=Finance checks
+    And the user should not see the element    flag status for finance checks
+
+Finance checks section status updated for finance contact
+    [Documentation]    INFUND-4843
+    [Tags]
+    Given log in as a different user    finance contact
+    When the user clicks the button/link    link=project name
+    Then the user should see the element    link=Finance checks
+    And the user should see the element    flag status for finance checks
+
+
+Finance contact can view query
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user clicks the button/link    link=Finance checks
+    Then the user should see the text in the page    this is a title
+    And the user should see the text in the page    this is some query text
+
+
+Finance contact can view the project finance user's uploads
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(1)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(2)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+
+
+Queries show in reverse chronological order for finance contact
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user should see the element    #TODO first element
+    And the user should see the element    #TODO second element
+
+
+Response to query server side validations
+    [Documentation]    INFUND-4843
+    [Tags]
+    Given the user clicks the button/link    jQuery=.button:contains("Respond")
+    When the user clicks the button/link    jQuery=.button:contains("Post response")
+    Then the user should see the text in the page    The response cannot be empty.
+
+
+Response to query client side validations
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user enters text to a text field    css=.editor    this is some response text
+    And the user moves focus to the field    blah
+    Then the user should not see the text in the page    The response cannot be empty
+
+Word count validations
+    [Documentation]    INFUND-4843
+    When the user enters text to a text field    css=.editor    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Proin elementum condimentum ex, ut tempus nisi. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean sed pretium tellus. Vestibulum sollicitudin semper scelerisque. Sed tristique, erat in gravida gravida, felis tortor fermentum ligula, vitae gravida velit ipsum vel magna. Aenean in pharetra ex. Integer porttitor suscipit lectus eget ornare. Maecenas sed metus quis sem dapibus vestibulum vel vitae purus. Etiam sodales nisl at enim tempus, sed malesuada elit accumsan. Aliquam faucibus neque vitae commodo rhoncus. Sed orci sem, varius vitae justo quis, cursus porttitor lectus. Pellentesque eu nibh nunc. Duis laoreet enim et justo sagittis, at posuere lectus laoreet. Suspendisse rutrum odio id iaculis varius. Phasellus gravida, mi vel vehicula dignissim, lectus nunc eleifend justo, elementum lacinia enim tellus a nulla. Pellentesque consectetur sollicitudin ante, ac vehicula lorem laoreet laoreet. Fusce consequat libero mi. Quisque luctus risus neque, ut gravida quam tincidunt id. Aliquam id ante arcu. Nulla ut est ipsum. Praesent accumsan efficitur malesuada. Ut tempor auctor felis eu dapibus. Sed felis quam, aliquet sit amet urna nec, consectetur feugiat nibh. Nam id libero nec augue convallis euismod quis vitae nibh. Integer lectus velit, malesuada ut neque mollis, mattis euismod diam. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Etiam aliquet porta enim sit amet rhoncus. Curabitur ornare turpis eros, sodales hendrerit tellus rutrum a. Ut efficitur feugiat turpis, eu ultrices velit pharetra non. Curabitur condimentum lacus ac ligula auctor egestas. Aliquam feugiat tellus neque, a ornare tortor imperdiet at. Integer varius turpis eu mi efficitur, at imperdiet ex posuere. Suspendisse blandit, mi at mollis placerat, magna nibh malesuada nisi, ultrices semper augue enim sit amet nisi. Donec molestie tellus vitae risus interdum, nec finibus risus interdum. Integer purus justo, fermentum id urna eu, aliquam rutrum erat. Phasellus volutpat odio metus, sed interdum magna luctus ac. Nam ullamcorper maximus sapien vitae dapibus. Vivamus ullamcorper quis sapien et mattis. Aenean aliquam arcu lacus, vel mollis ligula ultrices nec. Sed cursus placerat tortor elementum tincidunt. Pellentesque at arcu ut felis euismod vestibulum pulvinar nec neque. Quisque ipsum purus, tincidunt quis iaculis eu, malesuada nec lectus. Vivamus tempor, enim quis vestibulum convallis, ex odio pharetra tellus, eget posuere justo ligula sit amet dolor. Cras scelerisque neque id porttitor semper. Sed ut ultrices lorem. Pellentesque sed libero a velit vestibulum fermentum id et velit. Vivamus turpis risus, venenatis ac quam nec, pulvinar fringilla libero. Donec eget vestibulum orci, id lacinia mi. Aenean sed lectus viverra est feugiat suscipit. Proin eget justo turpis. Nullam maximus fringilla sapien, at pharetra odio pretium ut. Cras imperdiet mauris at bibendum dapibus.
+    Then the user should see the text in the page    too many words!
+    When the user enters text to a text field    css=.editor    this is some response text
+    Then the user should not see the text in the page    too many words!
+
+
+Large pdf uploads not allowed
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user uploads the file     name=uploadAttachment    ${too_large_pdf}
+    Then the user should get an error page    ${too_large_pdf_validation_error}
+
+Non pdf uploads not allowed
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user uploads the file      name=uploadAttachment    ${text_file}
+    Then the user should get an error page    ${wrong_filetype_validation_error}
+
+
+Finance contact can upload a pdf file
+    [Documentation]    INFUND-4843
+    [Tags]
+    Then the user uploads the file      name=uploadAttachment   ${valid_pdf}
+    And the user should see the text in the page    ${valid_pdf}
+
+
+Finance contact can view the file
+    [Documentation]    INFUND-4843
+    [Tags]
+    Given the user should see the element    link=${valid_pdf}
+    And the file has been scanned for viruses
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(4)
+    Then the user should not see an error in the page
+    [Teardown]    The user goes back to the previous page
+
+Finance contact can upload more than one file
+    [Documentation]    INFUND-4843
+    [Tags]
+    Then the user uploads the file      name=uploadAttachment    ${valid_pdf}
+    And the user should see the element    jQuery=a:contains("testing.pdf"):nth-of-type(4)
+
+Finance contact can still view both files
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(3)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(4)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+
+
+Query response can be posted
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Post response")
+
+Query section now becomes read-only
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user should not see the element    css=.editor
+
+Finance checks section status changes to hourglass
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user clicks the button/link    link=Project setup status
+    then the user should see the element    flag status for finance checks
+
+Queries raised column updates to 'view'
+    [Documentation]    INFUND-4843
+    [Tags]
+    Given log in as a different user    project finance
+    When the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
+    Then the user should not see the element    link=Awaiting response
+    And the user should see the element    css=blah    View
+
+Project finance user can view the response
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user clicks the button/link    link=blah
+    Then the user should see the text in the page    this is some response text
+
+Project finance user can view the finance contact's uploaded files
+    [Documentation]    INFUND-4843
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(3)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+    When the user clicks the button/link    jQuery=a:contains("${valid_pdf}"):nth-of-type(4)
+    Then the user should not see an error in the page
+    And the user goes back to the previous page
+
+Project finance user can continue the conversation
+    [Documentation]    INFUND-7752
+    [Tags]
+    When the user clicks the button/link    jQuery=.button:contains("Respond")
+    And the user enters text to a text field    css=.editor    this is a response to a response
+    And the user clicks the button/link    jQuery=.button:contains("Post response")
+    Then the user should not see an error in the page
+    And the user should not see the element    css=.editor
+
+Finance contact receives an email when a new response is posted
+    [Documentation]    INFUND-7753
+    [Tags]
+
+Finance contact can view the new response
+    [Documentation]    INFUND-7752
+    [Tags]
+    Given log in as a different user    finance contact
+    When the user clicks the button/link    link=project link
+    And the user clicks the button/link    link=Finance checks
+    Then the user should see the text in the page    this is a response to a response
+
+
+
+
+
+
+
+
+
+
 
 Finance checks client-side validations
     [Documentation]    INFUND-5193
