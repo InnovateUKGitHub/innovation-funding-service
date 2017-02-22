@@ -69,7 +69,7 @@
                                             subsectionQuestions=(${model.subsectionQuestions}), subSectionQuestionFormInputs=(${model.subSectionQuestionFormInputs}),
                                             currentCompetition=(${model.application.currentCompetition}), hasFinanceSection=(${model.hasFinanceSection}),
                                             currentApplication=(${model.application.currentApplication}), userIsLeadApplicant=(${model.userIsLeadApplicant}),
-                                            subFinanceSection=${model.subFinanceSection}">
+                                            subFinanceSection=${model.subFinanceSection}, filename=${model.financeViewModel.filename}">
                                 <th:block th:if="${formInput.type.displayableQuestionType}">
                                     <div th:replace="question-type/types :: ${formInput.type.nameLower}" />
                                 </th:block>
