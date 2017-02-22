@@ -23,7 +23,8 @@ function tailorAppInstance() {
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
     sed -i.bak "s/<<SHIB-ADDRESS>>/$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
     sed -i.bak "s/<<SHIB-IDP-ADDRESS>>/auth-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/shib/*.yml
-    sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
+
+    sed -i.bak "s/<<IMAP-ADDRESS>>/imap-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/imap/*.yml
     sed -i.bak "s/<<ADMIN-ADDRESS>>/admin-$PROJECT.$ROUTE_DOMAIN/g" os-files-tmp/*.yml
 }
 
@@ -62,14 +63,22 @@ function deploy() {
     if [[ ${TARGET} == "local" ]]
     then
         oc adm policy add-scc-to-user anyuid -n $PROJECT -z default
-    else
+    elif [[ ${TARGET} == "remote" ]]
+    then
         chmod 600 setup-files/scripts/openshift/ifs
         ssh-add setup-files/scripts/openshift/ifs
         ssh -o UserKnownHostsFile=/dev/null -o StrictHostKeyChecking=no ec2-user@52.56.119.142 "oc adm policy add-scc-to-user anyuid -n $PROJECT -z default"
     fi
 
-    oc create -f os-files-tmp/
-    oc create -f os-files-tmp/shib/
+    if [[ ${TARGET} == "production" ]]
+    then
+        oc create -f os-files-tmp/
+    else
+        oc create -f os-files-tmp/imap/
+        oc create -f os-files-tmp/mysql/
+        oc create -f os-files-tmp/shib/
+        oc create -f os-files-tmp/
+    fi
 }
 
 function blockUntilServiceIsUp() {
@@ -114,7 +123,6 @@ function checkRemoteConfig() {
 
 
 # Entry point
-
 cleanUp
 
 if [[ ${TARGET} == "remote" ]]
@@ -126,7 +134,7 @@ cloneConfig
 tailorAppInstance
 createProject
 
-if [[ ${TARGET} == "remote" ]]
+if [[ (${TARGET} == "remote") ||  (${TARGET} == "production")]]
 then
     useContainerRegistry
 fi

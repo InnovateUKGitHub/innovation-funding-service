@@ -149,6 +149,11 @@ task osDeployLocal(type:Exec) {
     args = [openshiftEnv, "local"]
 }
 
+task osDeployProduction(type:Exec) {
+    executable = 'setup-files/scripts/openshift/os-deploy.sh'
+    args = [openshiftEnv, "production"]
+}
+
 task osTestRemote(type:Exec) {
     dependsOn robotTestsFilter
     executable = 'setup-files/scripts/openshift/os-test-remote.sh'
