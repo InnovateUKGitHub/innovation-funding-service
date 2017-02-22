@@ -238,4 +238,8 @@ public class User implements Serializable {
         this.affiliations.clear();
         this.affiliations.addAll(affiliations);
     }
+
+    public boolean hasId(Long id) {
+        return this.id.equals(id);
+    }
 }
