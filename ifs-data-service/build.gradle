@@ -213,7 +213,6 @@ task initDB() {
     createSchema.mustRunAfter startMySql
     flywayMigrate.mustRunAfter flywayClean
 
-    dependsOn clean
     dependsOn startMySql
     dependsOn createTestSchema
     dependsOn createSchema
