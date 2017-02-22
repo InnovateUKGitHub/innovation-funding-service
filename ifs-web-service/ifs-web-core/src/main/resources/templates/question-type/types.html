@@ -69,7 +69,7 @@
          readonly=${readonly} or
                 ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or
                 ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
-		 		(questionAssignee?.assignee==null and !userIsLeadApplicant)}">
+		 		(questionAssignee?.assignee==null and !userIsLeadApplicant and !subFinanceSection)}">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
 
         <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />
