@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.project.finance.security;
 
-import org.innovateuk.ifs.alert.resource.AlertResource;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
@@ -42,7 +41,7 @@ public class QueriesAttachmentPermissionsRules {
 
 
     @PermissionRule(value = "PF_QUERY_ATTACHMENT_UPLOAD", description = "Only Project Finance Users or Finance Contacts can upload attachments")
-    public boolean upload(final AlertResource alertResource, final UserResource user) {
+    public boolean upload(final AttachmentResource attachment, final UserResource user) {
         return isProjectFinanceUser(user) || isFinanceContactInAnyProject(user);
     }
 
@@ -85,7 +84,7 @@ public class QueriesAttachmentPermissionsRules {
     }
 
     private boolean attachmentIsStillOrphan(AttachmentResource attachment) {
-        return ! findQueryTheAttachmentIsLinkedTo(attachment).isPresent();
+        return !findQueryTheAttachmentIsLinkedTo(attachment).isPresent();
     }
 
     private Optional<Query> findQueryTheAttachmentIsLinkedTo(AttachmentResource attachment) {
