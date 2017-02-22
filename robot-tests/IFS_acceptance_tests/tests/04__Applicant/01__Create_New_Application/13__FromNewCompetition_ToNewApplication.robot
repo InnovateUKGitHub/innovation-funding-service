@@ -7,6 +7,7 @@ Documentation  INFUND-6390 As an Applicant I will be invited to add project cost
 ...
 ...            INFUND-6895 As an Lead Applicant I will be advised that changing my Research category after completing Funding level will reset the 'Funding level'
 Suite Setup    Custom Suite Setup
+Suite Teardown  the user closes the browser
 Force Tags     Applicant  CompAdmin
 Resource       ../../../resources/defaultResources.robot
 Resource       ../FinanceSection_Commons.robot
