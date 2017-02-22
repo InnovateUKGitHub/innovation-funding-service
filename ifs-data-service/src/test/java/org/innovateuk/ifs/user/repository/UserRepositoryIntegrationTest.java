@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.repository;
 
 import com.google.common.collect.Lists;
+import freemarker.template.utility.Collections12;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
@@ -15,12 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static freemarker.template.utility.Collections12.singletonList;
 import static java.util.Arrays.asList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
@@ -134,23 +131,32 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void findByIdAndRolesName() throws Exception {
-        Optional<User> user = repository.findByIdAndRolesName(3L, ASSESSOR.getName());
+        Optional<User> user = repository.findByIdAndRolesName(getPaulPlum().getId(), ASSESSOR.getName());
 
         assertTrue(user.isPresent());
     }
 
     @Test
     public void findByIdAndRolesName_wrongRole() throws Exception {
-        Optional<User> user = repository.findByIdAndRolesName(3L, COMP_ADMIN.getName());
+        Optional<User> user = repository.findByIdAndRolesName(getPaulPlum().getId(), COMP_ADMIN.getName());
 
         assertFalse(user.isPresent());
+    }
+
+    @Test
+    public void findByRolesName() throws Exception {
+        List<User> users = repository.findByRolesName(ASSESSOR.getName());
+
+        assertEquals(2, users.size());
+        assertEquals(getPaulPlum().getId(), users.get(0).getId());
+        assertEquals(getFelixWilson().getId(), users.get(1).getId());
     }
 
     @Test
     public void findByRolesNameAndIdNotIn() throws Exception {
         addTestAssessors();
 
-        assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
+        assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
 
         Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
 
@@ -172,7 +178,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     public void findByRolesNameAndIdNotIn_nextPage() throws Exception {
         addTestAssessors();
 
-        assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
+        assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
 
         Pageable pageable = new PageRequest(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
 
@@ -191,12 +197,33 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     public void findByRolesNameAndIdNotInAndProfileInnovationArea() throws Exception {
         addTestAssessors();
 
-        assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
+        assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
 
         Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
         Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
         Page<User> pagedUsers = repository.findByRolesNameAndIdNotInAndProfileInnovationArea(ASSESSOR.getName(), userIds, INNOVATION_AREA_ID, pageable);
+
+        assertEquals(4, pagedUsers.getTotalElements());
+        assertEquals(1, pagedUsers.getTotalPages());
+        assertEquals(4, pagedUsers.getContent().size());
+        assertEquals(0, pagedUsers.getNumber());
+        assertEquals("Andrew", pagedUsers.getContent().get(0).getFirstName());
+        assertEquals("James", pagedUsers.getContent().get(1).getFirstName());
+        assertEquals("Jessica", pagedUsers.getContent().get(2).getFirstName());
+        assertEquals("Victoria", pagedUsers.getContent().get(3).getFirstName());
+    }
+
+    @Test
+    public void findByRolesNameAndIdNotInAndProfileInnovationArea_noInnovationArea() throws Exception {
+        addTestAssessors();
+
+        assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
+
+        Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
+
+        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
+        Page<User> pagedUsers = repository.findByRolesNameAndIdNotInAndProfileInnovationArea(ASSESSOR.getName(), userIds, null, pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(1, pagedUsers.getTotalPages());
@@ -229,7 +256,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(singletonList(assessorRole))
+                .withRoles(Collections12.singletonList(assessorRole))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 

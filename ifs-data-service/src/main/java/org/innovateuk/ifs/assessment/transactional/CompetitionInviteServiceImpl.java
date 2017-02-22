@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.transactional;
 
+import com.jayway.jsonpath.Criteria;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
@@ -41,8 +42,10 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.CriteriaQuery;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -191,7 +194,26 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
         List<Long> createdInvites = competitionInviteRepository.findUserIdsByCompetition(competitionId);
-        Page<User> pagedAssessors = userRepository.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), createdInvites, pageable);
+
+        // Fix for if there are no assessors for this competition.
+        // A query with an empty `WHERE IN ()` will throw an SQL exception,
+        // so we should always have at least one ID to avoid this.
+        if (createdInvites.isEmpty()) {
+            createdInvites.add(-1L);
+        }
+
+        Page<User> pagedAssessors;
+
+        if (innovationArea.isPresent()) {
+            pagedAssessors = userRepository.findByRolesNameAndIdNotInAndProfileInnovationArea(
+                    UserRoleType.ASSESSOR.getName(),
+                    createdInvites,
+                    innovationArea.orElse(null),
+                    pageable
+            );
+        } else {
+            pagedAssessors = userRepository.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), createdInvites, pageable);
+        }
 
         List<AvailableAssessorResource> availableAssessors = simpleMap(pagedAssessors.getContent(), assessor -> {
             Profile profile = profileRepository.findOne(assessor.getProfileId());
@@ -216,6 +238,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
                 pagedAssessors.getSize()
         ));
     }
+
 
     @Override
     public ServiceResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId) {
