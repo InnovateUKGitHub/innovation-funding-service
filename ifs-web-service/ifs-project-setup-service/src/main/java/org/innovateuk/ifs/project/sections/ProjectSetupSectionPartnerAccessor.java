@@ -85,7 +85,7 @@ public class ProjectSetupSectionPartnerAccessor {
             return fail("Unable to access Finance Checks section until the Project Details section is complete");
         }
 
-        if (!isBankDetailsApprovedOrQueried(organisation)) {
+        if (!isBankDetailsApproved(organisation)) {
 
             return fail("Unable to access Finance Checks section until this Partner Organisation has had its " +
                     "Bank Details approved or queried");
@@ -106,7 +106,7 @@ public class ProjectSetupSectionPartnerAccessor {
             return fail("Unable to access Spend Profile section until the Project Details section is complete");
         }
 
-        if (!isBankDetailsApprovedOrQueried(organisation)) {
+        if (!isBankDetailsApproved(organisation)) {
 
             return fail("Unable to access Spend Profile section until this Organisation's Bank Details have been " +
                     "approved or queried");
@@ -154,12 +154,8 @@ public class ProjectSetupSectionPartnerAccessor {
         return projectSetupProgressChecker.isFinanceContactSubmitted(organisationResource);
     }
 
-    private boolean isBankDetailsApprovedOrQueried(OrganisationResource organisation) {
-
-        // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
+    private boolean isBankDetailsApproved(OrganisationResource organisation) {
         return projectSetupProgressChecker.isBankDetailsApproved(organisation);
-//        return projectSetupProgressChecker.isBankDetailsApproved(organisation) ||
-//                projectSetupProgressChecker.isBankDetailsQueried(organisation);
     }
 
     private SectionAccess fail(String message) {

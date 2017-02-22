@@ -142,7 +142,7 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
         return isPartner(projectId, user.getId());
     }
 
-    @PermissionRule(value = "READ_QUERY", description = "Internal users can see the project finances eligibility of their own project")
+    @PermissionRule(value = "READ_QUERY", description = "Internal users can see the project finances queries of any project")
     public boolean internalUsersCanSeeTheProjectFinanceQueries(final Long projectId, final UserResource user) {
         return isInternal(user);
     }
