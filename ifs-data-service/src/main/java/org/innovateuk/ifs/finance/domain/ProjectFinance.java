@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.finance.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.domain.Project;
@@ -13,6 +14,9 @@ import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import static java.util.Optional.ofNullable;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
 
 /**
  * Entity object similar to ApplicationFinance for storing values in finance_row tables which can be edited by
@@ -68,5 +72,10 @@ public class ProjectFinance extends Finance {
 
     public void setEligibilityStatus(EligibilityRagStatus eligibilityStatus) {
         this.eligibilityStatus = eligibilityStatus;
+    }
+
+    public boolean isFinanceContact(Long userId) {
+        return ofNullable(project.getExistingProjectUserWithRoleForOrganisation(PROJECT_FINANCE_CONTACT, getOrganisation()))
+                .map(pu -> pu.isUser(userId)).orElse(false);
     }
 }
