@@ -29,7 +29,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
 @Service
 @Transactional
-public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinanceQueriesAttachmentService {
+public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttachmentService {
     @Autowired
     private FileService fileService;
 

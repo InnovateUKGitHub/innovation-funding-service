@@ -9,7 +9,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-public interface ProjectFinanceQueriesAttachmentService extends AttachmentsService<AttachmentResource> {
+public interface ProjectFinanceAttachmentService extends AttachmentsService<AttachmentResource> {
 
     @Override
     @PostFilter("hasPermission(filterObject, 'PF_QUERY_ATTACHMENT_READ')")

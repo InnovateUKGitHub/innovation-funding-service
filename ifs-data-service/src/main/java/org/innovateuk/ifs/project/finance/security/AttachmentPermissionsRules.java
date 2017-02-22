@@ -23,7 +23,7 @@ import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
  */
 @Component
 @PermissionRules
-public class QueriesAttachmentPermissionsRules {
+public class AttachmentPermissionsRules {
     @Autowired
     private AttachmentMapper attachmentMapper;
 
