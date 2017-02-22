@@ -237,10 +237,7 @@ Mark Organisation as complete when yes
     And the user selects medium organisation size
     Then the user enters text to a text field         css=input[name$="month"]  12
     And the user enters text to a text field          css=input[name$="year"]  2016
-    Then the user enters value to field               Annual turnover  65000
-    And the user enters value to field                Annual profit  2000
-    And the user enters value to field                Annual export  3000
-    And the user enters value to field                Research and development spend  15000
+    And the user populates the project growth table
     When the user enters text to a text field         jQuery=label:contains("employees") + input  4
     # TODO pending due to INFUND-8107
     #    And the user clicks the button/link               jQuery=a:contains("Return to finances")
@@ -248,6 +245,65 @@ Mark Organisation as complete when yes
     #    Then the user should see the element              jQuery=td:contains("Research and development spend") + td input[value="15000"]
     When the user clicks the button/link              jQuery=button:contains("Mark as complete")
     Then the user should see the element              jQuery=img.complete[alt*="Your organisation"]
+
+Applicant can view and edit project growth table
+    [Documentation]  INFUND-6395
+    [Tags]     HappyPath
+    Given the user navigates to Your-finances page  ${compWITHGrowth}
+    When the user clicks the button/link   link=Your organisation
+    Then the user should view the project growth table
+    and the user can edit the project growth table
+
+Lead applicant invites a collaborator
+    [Documentation]
+    [Tags]     Email
+    Given the user navigates to the page    ${DASHBOARD_URL}
+    And the user clicks the button/link    link= ${compWITHGrowth}
+    And the user should see the text in the page    view and add participants to your application
+    When the user clicks the button/link    link=view and add participants to your application
+    Then the user should see the text in the page    Application team
+    And the user should see the text in the page    View and manage your contributors and partners in the application.
+    When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
+    When the applicant enters valid inputs
+    Then the user should see the text in the page    Application team
+    And the user should see the text in the page    Invites sent
+
+Collaborator can accept the invitation
+    [Documentation]
+    [Tags]     Email
+    [Setup]    The guest user opens the browser
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${compWITHGrowth}    participate in their application
+    And the user clicks the button/link    jQuery=.button:contains("Create")
+    And the user selects the radio button    organisationType    1
+    And the user clicks the button/link    jQuery=.button:contains("Continue")
+    And the user enters text to a text field    id=organisationSearchName    Nomensa
+    And the user clicks the button/link    id=org-search
+    And the user clicks the button/link    link=NOMENSA LTD
+    And the user selects the checkbox    address-same
+    And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
+    And the user clicks the button/link    jQuery=.button:contains("Save")
+    And the user fills the create account form    Adrian    Booth
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
+
+Non-lead applicant can view and edit project growth table
+    [Documentation]  INFUND-6395
+    [Tags]     HappyPath    Pending
+    # TODO Pending due to INFUND-8426
+    Given the user clicks the button/link  jQuery=.button:contains("Sign in")
+    When guest user log-in    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com  ${correct_password}
+    And the user navigates to Your-finances page   ${compWITHGrowth}
+    And the user clicks the button/link   link=Your organisation
+    And the user selects medium organisation size
+    Then the user enters text to a text field     css=input[name$="month"]  12
+    And the user enters text to a text field     css=input[name$="year"]  2016
+    And the user populates the project growth table
+    And the user enters text to a text field    jQuery=label:contains("employees") + input  4
+    When the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
+    When the user clicks the button/link    link=Your organisation
+    Then the user should view the project growth table
+    And the user can edit the project growth table
 
 *** Keywords ***
 Custom Suite Setup
@@ -322,3 +378,35 @@ the user should see an error message in the field
 the user selects medium organisation size
     the user clicks the button/link      jQuery=label[for="financePosition-organisationSize-MEDIUM"]
     the user clicks the button/link      jQuery=label[for="financePosition-organisationSize-MEDIUM"]  # Click it twice
+
+the user populates the project growth table
+    the user enters value to field     Annual turnover  65000
+    the user enters value to field     Annual profit  2000
+    the user enters value to field     Annual export  3000
+    the user enters value to field     Research and development spend  15000
+
+the user should view the project growth table
+    the user should see the text in the element     css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(1)   Section
+    the user should see the text in the element     css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(2)   Last financial year (£)
+    the user should see the text in the element     jQuery=label[for="input-1182"]   Annual turnover
+    the user should see the element     jQuery=td input[value="65000"]
+    the user should see the text in the element     jQuery=label[for="input-1183"]   Annual profits
+    the user should see the element     jQuery=td input[value="2000"]
+    the user should see the text in the element     jQuery=label[for="input-1184"]   Annual export
+    the user should see the element     jQuery=td input[value="3000"]
+    the user should see the text in the element     jQuery=label[for="input-1185"]   Research and development spend
+    the user should see the element     jQuery=td input[value="15000"]
+
+the user can edit the project growth table
+    the user clicks the button/link   css=button.extra-margin.buttonlink
+    then the user selects the radio button    financePosition-organisationSize    SMALL
+    the user enters text to a text field   css=input[id="input-1182"]   4000
+    the user enters text to a text field   jQuery=td input[value="65000"]  5000
+
+the applicant enters valid inputs
+    The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
+    The user enters text to a text field    name=organisations[1].organisationName    Fannie May
+    The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
+    The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+    focus    jquery=button:contains("Save changes")
+    The user clicks the button/link    jquery=button:contains("Save changes")

@@ -533,4 +533,4 @@ proj finance approves the spend profiles
     the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_Competition_Id}/spend-profile/approval
     the user selects the checkbox      approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
-    the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Accept documents")
+    the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Approve")

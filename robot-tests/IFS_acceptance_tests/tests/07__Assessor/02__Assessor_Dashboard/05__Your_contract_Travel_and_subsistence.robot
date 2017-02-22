@@ -37,6 +37,20 @@ Server-side validations
     When the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
     Then the user should see an error    Please agree to the terms and conditions.
 
+Cancel returns you back to the dashboard
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains(Cancel)
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("your contract")
+
+Back button takes you to the previous page
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link    link=Assessor dashboard
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("your contract")
+
 Terms and Conditions
     [Documentation]    INFUND-1481
     [Tags]

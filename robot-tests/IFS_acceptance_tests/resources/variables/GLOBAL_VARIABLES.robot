@@ -118,6 +118,7 @@ ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/com
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
 ${assessment_declaration_url}    ${server}/assessment/profile/declaration
 ${assessment_skills_url}    ${server}/assessment/profile/skills
+${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 
 # Database variables
