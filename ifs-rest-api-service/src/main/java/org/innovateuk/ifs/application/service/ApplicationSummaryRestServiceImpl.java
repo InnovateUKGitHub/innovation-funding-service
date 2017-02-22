@@ -43,6 +43,12 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/feedback-required";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
 	}
+
+	@Override
+	public RestResult<ApplicationSummaryPageResource> getApplicationsWithFundingDecisionByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/with-funding-decision";
+		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
+	}
 	
 	private RestResult<ApplicationSummaryPageResource> getApplicationSummaryPage(String url, Integer pageNumber, Integer pageSize, String sortField) {
 		
@@ -72,7 +78,9 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		String url = applicationRestUrl + "/download/downloadByCompetition/" + competitionId;
 		return getWithRestResult(url, ByteArrayResource.class);
 	}
-	
+
+
+
 	@Override
 	public RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId) {
 		return getWithRestResult(applicationSummaryRestUrl + "/getCompetitionSummary/" + competitionId, CompetitionSummaryResource.class);

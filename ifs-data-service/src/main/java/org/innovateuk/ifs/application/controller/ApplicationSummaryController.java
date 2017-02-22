@@ -72,4 +72,14 @@ public class ApplicationSummaryController {
         return applicationSummaryService.getFeedbackRequiredApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }
 
+    @RequestMapping("/findByCompetition/{competitionId}/with-funding-decision")
+    public RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(
+            @PathVariable("competitionId") long competitionId,
+            @RequestParam(value = "sort", required = false) String sortBy,
+            @RequestParam(value = "page", defaultValue = "0") int pageIndex,
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize
+    ) {
+        return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
+    }
+
 }

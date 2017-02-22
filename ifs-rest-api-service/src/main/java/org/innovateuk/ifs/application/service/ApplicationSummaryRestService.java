@@ -1,5 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
+import org.innovateuk.ifs.commons.error.ErrorHolder;
+import org.innovateuk.ifs.commons.service.BaseEitherBackedResult;
 import org.springframework.core.io.ByteArrayResource;
 
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
@@ -19,4 +21,6 @@ public interface ApplicationSummaryRestService {
     RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId);
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);
+
+    RestResult<ApplicationSummaryPageResource> getApplicationsWithFundingDecisionByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
 }
