@@ -42,8 +42,7 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(source = "competition.competitionStatus", target = "competitionStatus"),
             @Mapping(source = "applicationStatus.name", target = "applicationStatusName"),
             @Mapping(target = "applicationStatusConstant", ignore = true),
-            @Mapping(target = "researchCategoryId", ignore = true),
-            @Mapping(target = "innovationAreaId", ignore = true)
+            @Mapping(target = "researchCategoryId", ignore = true)
 
     })
     @Override
@@ -54,8 +53,7 @@ public abstract class ApplicationMapper extends BaseMapper<Application, Applicat
             @Mapping(target = "formInputResponses", ignore = true),
             @Mapping(target = "invites", ignore = true),
             @Mapping(target = "applicationFinances", ignore = true),
-            @Mapping(target = "processRoles", ignore = true),
-            @Mapping(target = "innovationArea", ignore = true)
+            @Mapping(target = "processRoles", ignore = true)
     })
     @Override
     public abstract Application mapToDomain(ApplicationResource resource);

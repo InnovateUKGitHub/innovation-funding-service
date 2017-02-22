@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.resource;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.innovateuk.ifs.commons.validation.constraints.FutureLocalDate;
@@ -73,7 +74,7 @@ public class ApplicationResource {
     @NotNull(message="{validation.application.research.category.required}")
     private Long researchCategoryId;
 
-    private Long innovationAreaId;
+    private InnovationAreaResource innovationArea;
     private boolean noInnovationAreaApplicable;
 
     public Long getId() {
@@ -304,12 +305,12 @@ public class ApplicationResource {
         this.researchCategoryId = researchCategoryId;
     }
 
-    public Long getInnovationAreaId() {
-        return innovationAreaId;
+    public InnovationAreaResource getInnovationArea() {
+        return innovationArea;
     }
 
-    public void setInnovationAreaId(Long innovationAreaId) {
-        this.innovationAreaId = innovationAreaId;
+    public void setInnovationArea(InnovationAreaResource innovationArea) {
+        this.innovationArea = innovationArea;
     }
 
     public boolean getNoInnovationAreaApplicable() {

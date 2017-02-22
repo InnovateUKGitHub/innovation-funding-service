@@ -13,24 +13,24 @@ import java.util.List;
  * Controller that exposes functionality for linking an {@link Application} to an {@link InnovationArea}.
  */
 @RestController
-@RequestMapping("/application")
+@RequestMapping("/applicationInnovationArea")
 public class ApplicationInnovationAreaController {
 
     @Autowired
     private ApplicationInnovationAreaService applicationInnovationAreaService;
 
     @PostMapping("/setInnovationArea/{applicationId}")
-    public RestResult<Void> setInnovationArea(@PathVariable("applicationId") final Long applicationId, @RequestBody Long innovationAreaId) {
-        return applicationInnovationAreaService.setInnovationArea(applicationId, innovationAreaId).toPostResponse();
+    public RestResult<Application> setInnovationArea(@PathVariable("applicationId") final Long applicationId, @RequestBody Long innovationAreaId) {
+        return applicationInnovationAreaService.setInnovationArea(applicationId, innovationAreaId).toGetResponse();
     }
 
-    @PostMapping("/setNoInnovationAreaApplies/{applicationId}")
-    public RestResult<Void> setNoInnovationAreaApplies(@PathVariable("applicationId") final Long applicationId) {
-        return applicationInnovationAreaService.setNoInnovationAreaApplies(applicationId).toPostResponse();
+    @PostMapping("/setNoInnovationAreaApplicable/{applicationId}")
+    public RestResult<Application> setNoInnovationAreaApplies(@PathVariable("applicationId") final Long applicationId) {
+        return applicationInnovationAreaService.setNoInnovationAreaApplies(applicationId).toGetResponse();
     }
 
     @GetMapping("/getAvailableInnovationAreas/{applicationId}")
-    public RestResult<List<InnovationArea>> getAvailableInnovationAreas(Long applicationId) {
+    public RestResult<List<InnovationArea>> getAvailableInnovationAreas(@PathVariable("applicationId") final Long applicationId) {
         return applicationInnovationAreaService.getAvailableInnovationAreas(applicationId).toGetResponse();
     }
 }

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,7 @@ import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 /**
  * Transactional service implementation for linking an {@link Application} to an {@link InnovationArea}.
  */
+@Service
 public class ApplicationInnovationAreaServiceImpl extends BaseTransactionalService implements ApplicationInnovationAreaService {
 
     @Autowired

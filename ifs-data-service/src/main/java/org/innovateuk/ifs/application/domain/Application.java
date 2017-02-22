@@ -79,7 +79,7 @@ public class Application implements ProcessActivity {
     @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<ApplicationResearchCategoryLink> researchCategories = new HashSet<>();
 
-    @OneToMany(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne(mappedBy = "application", cascade = CascadeType.ALL, orphanRemoval = true)
     private ApplicationInnovationAreaLink innovationArea;
 
     private boolean noInnovationAreaApplicable;
