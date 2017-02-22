@@ -165,10 +165,10 @@
             </th:block>
 
 
-            <th:block th:unless="${selectedOrganisation == null and authenticatedUser.id != leadApplicant.id}">
+            <th:block th:if="${selectedOrganisation != null and authenticatedUser.id == leadApplicant.id}">
                 <!-- INFUND-7975 (lead applicant edits partner org) -->
                 <div class="alignright extra-margin-top" th:unless="${selectedOrganisation == null or selectedOrganisation.id == leadOrganisation.id}">
-                    <a href="/prototypes/635-application-overview" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
+                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
                     <hr />
                 </div>
 
@@ -178,12 +178,12 @@
 
             <p class="extra-margin-top">
                 <th:block th:unless="${selectedOrganisation == null}">
-                <a th:href="'/application/' + ${currentApplication.getId()} + '/organisation' + ${selectedOrganisation.id} + '/update'" th:attr="name='add_partner'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
+                <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
                 </th:block>
 
                 <!-- INFUND-7979 (lead applicant adds new partner org) -->
                 <th:block th:if="${selectedOrganisation == null}">
-                    <a href="/prototypes/635-application-overview" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
+                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
                 </th:block>
 
                 <a href="#" class="button-link-style">Cancel</a>
@@ -199,12 +199,20 @@
 
                 <div class="grid-row extra-margin">
                     <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-collaborator-form">
+                        <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
+                            <th:block th:if="${selectedOrganisation!= null and organisationInviteForm.organisationId == selectedOrganisation.id}">
+                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
+                        <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
+
+
                         <div class="column-half">
                             <button type="button" class="js-close buttonlink large">Cancel</button>
                         </div>
                         <div class="column-half alignright-button">
-                            <button class="button large" name="add_partner" value="add_partner" type="submit">Update organisation</button>
+                            <button class="button large" name="save_contributors" value="save_contributors" type="submit">Update organisation</button>
                         </div>
+                            </th:block>
+                        </th:block>
                     </form>
                 </div>
             </div>
@@ -217,13 +225,14 @@
                 <p>All applicants that have been added to this organisation will be added at this point.</p>
                 <hr />
 
-                <form method="get" id="submit-remove-collaborator-form">
-                    <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
-                        <input type="hidden" name="status" th:value="${param.status[0]}" />
-                    </th:block>
+                <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-organisation-form">
 
-                    <button class="button" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Add organisation and invite applicants</button>
-                    <a href="#" class="js-close button-link-style">Cancel</a>
+                            <div class="column-half">
+                                <button type="button" class="js-close buttonlink large">Cancel</button>
+                            </div>
+                            <div class="column-half alignright-button">
+                                <button class="button large" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
+                            </div>
                 </form>
             </div>
 
@@ -235,9 +244,20 @@
                 <p>This will remove all collaborators, and they will no longer be able to access this application. It will also delete the organisations financial details, and any assigned questions will be returned to you as the lead applicant.</p>
                 <hr />
 
-                <form method="get">
-                    <button class="button large" name="publish" value="publish" type="submit" formaction="/prototypes/632-organisation-collaborator-overview">Delete organisation</button>
-                    <button class="js-close buttonlink large" type="button">Cancel</button>
+                <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-delete-organisation-form">
+                    <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
+                        <th:block th:if="${selectedOrganisation != null and organisationInviteForm.organisationId == selectedOrganisation.id}">
+                            <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
+                            <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
+
+                            <div class="column-half">
+                                <button type="button" class="js-close buttonlink large">Cancel</button>
+                            </div>
+                            <div class="column-half alignright-button">
+                                <button class="button large" name="remove_person" value="remove_person" type="submit">Delete organisation</button>
+                            </div>
+                        </th:block>
+                    </th:block>
                 </form>
             </div>
 
