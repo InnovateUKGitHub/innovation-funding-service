@@ -168,7 +168,7 @@
     color: $text-colour;
   }
 
-  &.positive {
+  .positive {
     strong {
       color: $button-colour;
     }
@@ -189,7 +189,7 @@
 
   }
 
-  &.negative {
+  .negative {
     .score > strong {
       color: $red;
     }
