@@ -20,13 +20,15 @@
             <h2 class="heading-medium">Overall scores</h2>
             <div class="table-overflow">
                 <table>
-                    <tbody>
+                    <thead>
                         <tr>
                             <th class="width-150" scope="row">Question</th>
                             <th th:each="question : ${model.questionsForScoreOverview}" scope="col">
                                 <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}">Q1</a>
                             </th>
                         </tr>
+                    </head>
+                    <tbody>
                         <tr>
                             <th class="width-150" scope="row">Score</th>
                             <td th:each="question : ${model.questionsForScoreOverview}">

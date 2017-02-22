@@ -24,36 +24,26 @@
 
             <!--/* TODO INFUND-8169
             <h2 class="heading-medium">Overall scores</h2>
-            <table>
-                <tbody>
-                <tr>
-                    <th scope="row">Question</th>
-                    <th scope="col"><strong>Q1</strong></th>
-                    <th scope="col"><strong>Q2</strong></th>
-                    <th scope="col"><strong>Q3</strong></th>
-                    <th scope="col"><strong>Q4</strong></th>
-                    <th scope="col"><strong>Q5</strong></th>
-                    <th scope="col"><strong>Q6</strong></th>
-                    <th scope="col"><strong>Q7</strong></th>
-                    <th scope="col"><strong>Q8</strong></th>
-                    <th scope="col"><strong>Q9</strong></th>
-                    <th scope="col"><strong>Q10</strong></th>
-                </tr>
-                <tr>
-                    <th scope="row">Score</th>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                    <td>7</td>
-                </tr>
-                </tbody>
-            </table>
+            <div class="table-overflow">
+                <table>
+                    <thead>
+                        <tr>
+                            <th class="width-150" scope="row">Question</th>
+                            <th th:each="question : ${model.questionsForScoreOverview}" scope="col">
+                                <a th:href="@{/{id}/question/{quid}(id=${model.assessmentId}, quid=${question.questionId})}" th:text="${question.displayLabelShort}">Q1</a>
+                            </th>
+                        </tr>
+                    </head>
+                    <tbody>
+                        <tr>
+                            <th class="width-150" scope="row">Score</th>
+                            <td th:each="question : ${model.questionsForScoreOverview}">
+                                <span th:text="${question.scoreGiven}" th:remove="tag" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             */-->
 
             <h2 class="heading-medium no-margin-bottom">Application details</h2>
@@ -121,16 +111,149 @@
 
             <!--/* TODO INFUND-8168 & INFUND-8169
             <h2 class="heading-medium no-margin-bottom">Application questions</h2>
-                <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
+            <p class="form-hint">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
+
+            <ul class="list-overview">
+                <li class="section-status">
+                    <div class="grid-row">
+                        <div class="column-two-thirds">
+                            <h3 class="heading-small">
+                                <a>1. Business opportunity</a>
+                            </h3>
+                        </div>
+                        <div>
+                            <div class="column-third">Average score 7 / 10</div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
+            <div class="grid-row extra-margin">
+                <div class="column-two-thirds">
+                    &nbsp;
+                </div>
+                <div class="column-third">
+                    <p>Average overall: <strong class="heading-">70%</strong></p>
+                </div>
+            </div>
 
             <h2 class="heading-medium">Finances</h2>
+            <p class="form-hint">These finances were submitted at the application stage.</p>
 
-            */-->
+            <div class="collapsible section-overview">
+                <h3 class="heading-small no-margin">Finance summaries</h3>
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Partner</th>
+                                <th scope="col" class="numeric width-small">Total costs</th>
+                                <th scope="col" class="numeric width-small">% Grant</th>
+                                <th scope="col" class="numeric width-small-medium">Funding sought</th>
+                                <th scope="col" class="numeric width-medium">Other public sector funding</th>
+                                <th scope="col" class="numeric width-small-medium">Contribution to project</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                                <td class="numeric">
+                                    <strong>&pound;280,000</strong>
+                                </td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Aptrans Ltd<br />
+                                    <small>Lead partner</small>
+                                </th>
+                                <td class="numeric">
+                                    <strong>&pound;100,000</strong>
+                                </td>
+                                <td class="numeric">70%</td>
+                                <td class="numeric">&pound;60,000</td>
+                                <td class="numeric">&pound;10,000</td>
+                                <td class="numeric">&pound;30,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="collapsible section-overview">
+                <h3 class="heading-small no-margin">Project cost breakdown</h3>
+                <div class="table-overflow">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col" class="width-large">Partner</th>
+                                <th scope="col" class="numeric width-small">Total</th>
+                                <th scope="col" class="numeric width-small">Labour</th>
+                                <th scope="col" class="numeric width-small">Overheads</th>
+                                <th scope="col" class="numeric width-small">Materials</th>
+                                <th scope="col" class="numeric width-small">Capital usage</th>
+                                <th scope="col" class="numeric width-small">Subcontracting cost</th>
+                                <th scope="col" class="numeric width-small">Travel and subsistence</th>
+                                <th scope="col" class="numeric width-small">Other Costs</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Total</th>
+                                <td class="numeric"><strong>£450,983</strong></td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                                <td class="numeric">&nbsp;</td>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr>
+                                <th scope="row">
+                                    Aptrans Ltd<br />
+                                    <small class="width-large">
+                                        Lead partner<br />
+                                        <a>Detailed finances</a>
+                                    </small>
+                                </th>
+                                <td class="numeric"><strong>£257,033</strong></td>
+                                <td class="numeric">£126,207</td>
+                                <td class="numeric">£86,167</td>
+                                <td class="numeric">£44,659</td>
+                                <td class="numeric">£257,033</td>
+                                <td class="numeric">£126,207</td>
+                                <td class="numeric">£86,167</td>
+                                <td class="numeric">£44,659</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>*/-->
 
             <!--/* TODO INFUND-8172
             <h2 class="heading-medium">Your assessors' feedback</h2>
-
-            */-->
+            <ul class="boxed-list">
+                <li>
+                    <h3 class="heading-small">Assessor 1</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
+                </li>
+            </ul>*/-->
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
