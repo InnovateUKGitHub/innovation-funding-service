@@ -8,6 +8,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.PostResource;
 import org.innovateuk.ifs.project.ProjectService;
@@ -133,10 +134,10 @@ public class FinanceChecksQueriesAddQueryController {
 
             ProjectFinanceResource projectFinance = projectFinanceService.getProjectFinance(projectId, organisationId);
 
-            List<FileEntryResource> attachmentResources = new ArrayList<>();
+            List<AttachmentResource> attachmentResources = new ArrayList<>();
             List<Long> attachments = loadAttachmentsFromCookie(request, projectId, organisationId);
             attachments.forEach(attachment -> {
-                ServiceResult<FileEntryResource> fileEntry = financeCheckService.getFileInfo(attachment);
+                ServiceResult<AttachmentResource> fileEntry = financeCheckService.getAttachment(attachment);
                 if (fileEntry.isSuccess()) {
                     attachmentResources.add(fileEntry.getSuccessObject());
                 }
@@ -180,9 +181,9 @@ public class FinanceChecksQueriesAddQueryController {
         return validationHandler.performActionOrBindErrorsToField("attachment", view, view, () -> {
             MultipartFile file = form.getAttachment();
 
-            ServiceResult<FileEntryResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
+            ServiceResult<AttachmentResource> result = financeCheckService.uploadFile(file.getContentType(), file.getSize(), file.getOriginalFilename(), getMultipartFileBytes(file));
             if(result.isSuccess()) {
-                attachments.add(result.getSuccessObject().getId());
+                attachments.add(result.getSuccessObject().id);
                 saveAttachmentsToCookie(response, attachments, projectId, organisationId);
             }
 
@@ -210,7 +211,7 @@ public class FinanceChecksQueriesAddQueryController {
             if (fileContent.isSuccess()) {
                 content = fileContent.getSuccessObject();
             }
-            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getFileInfo(attachmentId);
+            ServiceResult<FileEntryResource> fileInfo = financeCheckService.getAttachmentInfo(attachmentId);
             if (fileInfo.isSuccess()) {
                 fileDetails = Optional.of(fileInfo.getSuccessObject());
             }
@@ -273,9 +274,9 @@ public class FinanceChecksQueriesAddQueryController {
 
         Map<Long, String> attachmentLinks = new HashMap<>();
         attachmentFileIds.forEach(id -> {
-            ServiceResult<FileEntryResource> file = financeCheckService.getFileInfo(id);
+            ServiceResult<AttachmentResource> file = financeCheckService.getAttachment(id);
             if(file.isSuccess()) {
-                attachmentLinks.put(id, file.getSuccessObject().getName());
+                attachmentLinks.put(id, file.getSuccessObject().name);
             }
         });
 
