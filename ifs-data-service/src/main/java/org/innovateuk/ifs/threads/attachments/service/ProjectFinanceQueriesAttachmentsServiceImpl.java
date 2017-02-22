@@ -7,6 +7,7 @@ import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.attachments.repository.PostAttachmentRepository;
@@ -45,6 +46,9 @@ public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinan
     @Autowired
     private AttachmentMapper mapper;
 
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
     @Override
     public ServiceResult<AttachmentResource> findOne(Long attachmentId) {
         return find(attachmentsRepository.findOne(attachmentId), notFoundError(AttachmentResource.class, attachmentId))
@@ -55,7 +59,8 @@ public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinan
     public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request) {
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier)
                 -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                .andOnSuccess(created -> save(new Attachment(null, created.getRight())).andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
+                .andOnSuccess(created -> save(new Attachment(loggedInUserSupplier.get(), created.getRight()))
+                        .andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
     }
 
     private ServiceResult<Attachment> save(Attachment attachment) {
@@ -75,8 +80,7 @@ public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinan
     public ResponseEntity<Object> download(Long attachmentId) throws IOException {
         return handleFileDownload(() -> findOne(attachmentId)
                 .andOnSuccessReturn(a -> mapper.mapToDomain(a))
-                .andOnSuccess(a -> fileEntryService.findOne(a.fileId())
-                        .andOnSuccess(this::getFileAndContents)));
+                .andOnSuccess(a -> fileEntryService.findOne(a.fileId()).andOnSuccess(this::getFileAndContents)));
     }
 
 
