@@ -45,7 +45,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 	}
 
 	@Override
-	public RestResult<ApplicationSummaryPageResource> getApplicationsWithFundingDecisionByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
+	public RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
 		String baseUrl = applicationSummaryRestUrl + "/findByCompetition/" + competitionId + "/with-funding-decision";
 		return getApplicationSummaryPage(baseUrl, pageNumber, pageSize, sortField);
 	}

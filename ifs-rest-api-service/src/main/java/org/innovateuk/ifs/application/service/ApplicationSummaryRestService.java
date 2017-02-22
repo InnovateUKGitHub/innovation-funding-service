@@ -22,5 +22,5 @@ public interface ApplicationSummaryRestService {
 
     RestResult<ByteArrayResource> downloadByCompetition(long competitionId);
 
-    RestResult<ApplicationSummaryPageResource> getApplicationsWithFundingDecisionByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
+    RestResult<ApplicationSummaryPageResource> getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize);
 }

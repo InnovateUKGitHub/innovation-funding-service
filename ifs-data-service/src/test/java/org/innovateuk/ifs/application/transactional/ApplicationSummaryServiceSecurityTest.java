@@ -249,5 +249,10 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 				Long competitionId, String sortBy, int pageIndex, int pageSize) {
 			return null;
 		}
+
+		@Override
+		public ServiceResult<ApplicationSummaryPageResource> getWithFundingDecisionApplicationSummariesByCompetitionId(long competitionId, String sortBy, int pageIndex, int pageSize) {
+			return null;
+		}
 	}
 }

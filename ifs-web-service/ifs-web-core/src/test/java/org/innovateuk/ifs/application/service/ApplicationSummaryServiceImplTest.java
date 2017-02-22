@@ -82,4 +82,17 @@ public class ApplicationSummaryServiceImplTest {
 		
 		assertEquals(Long.valueOf(987L), result);
 	}
+
+
+
+
+	@Test
+	public void testGetApplicationsWithFundingDecisionByCompetitionId() {
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+		when(applicationSummaryRestService.getWithFundingDecisionApplications(Long.valueOf(123L), "sort", 0, 20)).thenReturn(restSuccess(resource));
+
+		ApplicationSummaryPageResource result = service.getWithFundingDecisionApplications(Long.valueOf(123L), "sort", 0, 20);
+
+		assertEquals(resource, result);
+	}
 }

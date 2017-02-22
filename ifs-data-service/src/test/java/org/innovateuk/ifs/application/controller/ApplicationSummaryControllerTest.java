@@ -129,4 +129,17 @@ public class ApplicationSummaryControllerTest extends BaseControllerMockMVCTest<
     	verify(applicationSummaryService).getFeedbackRequiredApplicationSummariesByCompetitionId(Long.valueOf(3), "id", 6, 20);
     }
 
+	@Test
+	public void searchWithFundingDecisionByCompetitionId() throws Exception {
+		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
+
+		when(applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20)).thenReturn(serviceSuccess(resource));
+
+		mockMvc.perform(get("/applicationSummary/findByCompetition/3/with-funding-decision?page=6"))
+				.andExpect(status().isOk())
+				.andExpect(content().json(objectMapper.writeValueAsString(resource)));
+
+		verify(applicationSummaryService).getWithFundingDecisionApplicationSummariesByCompetitionId(Long.valueOf(3), null, 6, 20);
+	}
+
 }

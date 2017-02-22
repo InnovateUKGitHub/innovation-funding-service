@@ -22,7 +22,7 @@ public class ManageFundingApplicationsModelPopulator {
     private CompetitionService competitionService;
 
     public ManageFundingApplicationViewModel populate(ManageFundingApplicationsQueryForm queryForm, long competitionId){
-        ApplicationSummaryPageResource results = applicationSummaryService.getApplicationsWithFundingDecisionByCompetitionId(competitionId, queryForm.getSortField(), queryForm.getPage(), DEFAULT_PAGE_SIZE);
+        ApplicationSummaryPageResource results = applicationSummaryService.getWithFundingDecisionApplications(competitionId, queryForm.getSortField(), queryForm.getPage(), DEFAULT_PAGE_SIZE);
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         return new ManageFundingApplicationViewModel(results, queryForm.getSortField(), queryForm.getSortField(), competitionId, competitionResource.getName());
     }
