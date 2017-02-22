@@ -15,24 +15,41 @@ import javax.validation.Valid;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
 
 @Controller
-@RequestMapping("/competition/{competitionId}/manage-funding-applications")
+@RequestMapping("/competition/{competitionId}")
 @PreAuthorize("hasAuthority('comp_admin')")
 public class CompetitionManagementManageFundingApplicationsController {
 
 
     private static final String MANAGE_FUNDING_APPLICATIONS_VIEW = "comp-mgt-manage-funding-applications";
+    private static final String MANAGE_FUNDING_SEND_VIEW = "comp-mgt-send-notifications";
+
 
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
 
-    @GetMapping
+    @GetMapping(value = "/funding/send")
+    public String sendNotifications(Model model,
+                               @PathVariable("competitionId") Long competitionId,
+                               @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
+                               @RequestParam("application_ids") List<Long> applicationIds,
+                               BindingResult bindingResult,
+                               ValidationHandler validationHandler) {
+        return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
+                    model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
+                    model.addAttribute("form", new SelectApplicationsForEmailForm());
+                    return MANAGE_FUNDING_SEND_VIEW;
+                }
+        );
+
+    }
+
+    @GetMapping(value = "/manage-funding-applications")
     public String applications(Model model,
                                @PathVariable("competitionId") Long competitionId,
                                @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
@@ -47,7 +64,7 @@ public class CompetitionManagementManageFundingApplicationsController {
 
     }
 
-    @PostMapping
+    @PostMapping(value = "/manage-funding-applications")
     public String selectApplications(Model model,
                                      @PathVariable("competitionId") Long competitionId,
                                      @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
