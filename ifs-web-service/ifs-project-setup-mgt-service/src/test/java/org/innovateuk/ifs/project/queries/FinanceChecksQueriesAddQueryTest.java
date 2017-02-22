@@ -18,7 +18,6 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
 import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -200,7 +199,6 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
     }
 
     @Test
-    @Ignore
     public void testSaveNewQueryTooManyWords() throws Exception {
 
         String tooManyWords = StringUtils.leftPad("a ", 802, "a ");
@@ -278,7 +276,7 @@ public class FinanceChecksQueriesAddQueryTest extends BaseControllerMockMVCTest<
         when(financeCheckServiceMock.deleteFile(1L)).thenReturn(ServiceResult.serviceSuccess());
 
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/new-query/cancel?query_section=Eligibility")
-                    .cookie(ck))
+                .cookie(ck))
                 .andExpect(redirectedUrlPattern("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query?query_section=Eligibility**"))
                 .andReturn();
 
