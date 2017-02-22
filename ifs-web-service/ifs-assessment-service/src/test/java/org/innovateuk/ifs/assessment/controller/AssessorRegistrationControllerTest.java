@@ -446,9 +446,40 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
     public void accountCreated() throws Exception {
         String inviteHash = "hash";
 
+        setLoggedInUser(null);
+        when(competitionInviteRestService.checkExistingUser(inviteHash)).thenReturn(restSuccess(true));
+
         mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
                 .andExpect(status().isOk())
                 .andExpect(model().attribute("competitionInviteHash", inviteHash))
                 .andExpect(view().name("registration/account-created"));
+
+        verify(competitionInviteRestService, only()).checkExistingUser(inviteHash);
+    }
+
+    @Test
+    public void accountCreated_loggedIn() throws Exception {
+        String inviteHash = "hash";
+
+        setLoggedInUser(assessor);
+
+        mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/invite/competition/%s", inviteHash)));
+
+        verifyZeroInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void accountCreated_accountNotCreated() throws Exception {
+        String inviteHash = "hash";
+
+        setLoggedInUser(null);
+        when(competitionInviteRestService.checkExistingUser(inviteHash)).thenReturn(restSuccess(false));
+
+        mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
+                .andExpect(redirectedUrl(format("/invite/competition/%s", inviteHash)));
+
+        verify(competitionInviteRestService, only()).checkExistingUser(inviteHash);
     }
 }

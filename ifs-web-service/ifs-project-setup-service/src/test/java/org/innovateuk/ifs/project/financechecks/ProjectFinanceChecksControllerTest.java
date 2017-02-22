@@ -38,6 +38,7 @@ import org.springframework.ui.Model;
 
 import javax.management.Query;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.util.Arrays.asList;
@@ -183,7 +184,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     }
 
     private QueryResource sampleQuery() {
-        return new QueryResource(null, null, null, null, null, false, null);
+        return new QueryResource(null, null, Collections.emptyList(), null, null, false, LocalDateTime.now());
     }
 
     @Test
