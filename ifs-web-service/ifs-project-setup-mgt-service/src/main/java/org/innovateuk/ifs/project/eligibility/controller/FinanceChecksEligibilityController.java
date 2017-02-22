@@ -100,9 +100,6 @@ public class FinanceChecksEligibilityController {
     @Autowired
     private ProjectFinanceRowService financeRowService;
 
-    @Autowired
-    private QuestionService questionService;
-
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
     @GetMapping
     public String viewEligibility(@PathVariable("projectId") Long projectId,
@@ -172,7 +169,7 @@ public class FinanceChecksEligibilityController {
         financeHandler.getProjectFinanceModelManager(organisationType).addCost(model, costItem, projectId, organisationId, user.getId(), questionId, costType);
 
         form.setBindingResult(bindingResult);
-        return String.format("finance/finance :: %s_row", costType.getType());
+        return String.format("project/financecheck/fragments/finance:: %s_row", costType.getType());
     }
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
@@ -193,8 +190,7 @@ public class FinanceChecksEligibilityController {
                                            BindingResult bindingResult,
                                            ValidationHandler validationHandler,
                                            Model model,
-                                           HttpServletRequest request,
-                                           HttpServletResponse response) {
+                                           HttpServletRequest request) {
         ProjectResource projectResource = projectService.getById(projectId);
         ApplicationResource applicationResource = applicationService.getById(projectResource.getApplication());
         OrganisationResource organisationResource = organisationService.getOrganisationById(organisationId);
