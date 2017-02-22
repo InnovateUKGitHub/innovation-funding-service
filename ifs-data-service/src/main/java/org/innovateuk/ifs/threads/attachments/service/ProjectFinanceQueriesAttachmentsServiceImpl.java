@@ -14,8 +14,10 @@ import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import java.io.IOException;
 
 import static java.util.Optional.ofNullable;
@@ -24,7 +26,8 @@ import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileD
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 
-
+@Service
+@Transactional
 public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinanceQueriesAttachmentService {
     @Autowired
     private FileService fileService;
