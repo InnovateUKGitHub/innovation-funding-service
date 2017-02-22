@@ -2,7 +2,9 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
 import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
 import org.innovateuk.ifs.application.populator.OpenProjectFinanceSectionModelPopulator;
@@ -16,6 +18,9 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.ProjectService;
@@ -41,12 +46,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.application.resource.SectionType.PROJECT_COST_FINANCES;
@@ -92,7 +95,10 @@ public class FinanceChecksEligibilityController {
     private CompetitionService competitionService;
 
     @Autowired
-    private ProjectFinanceService financeService;
+    private ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    private FinanceService applicationFinanceService;
 
     @Autowired
     private FinanceHandler financeHandler;
@@ -124,7 +130,7 @@ public class FinanceChecksEligibilityController {
 
         poulateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
 
-        EligibilityResource eligibility = financeService.getEligibility(project.getId(), organisation.getId());
+        EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
 
         if (eligibilityForm == null) {
             eligibilityForm = getEligibilityForm(eligibility);
@@ -295,13 +301,21 @@ public class FinanceChecksEligibilityController {
         return doSaveEligibility(competition, applicationResource, projectResource, allSections, user, isLeadPartnerOrganisation, organisationResource, Eligibility.REVIEW, eligibilityForm, form, validationHandler, successView, bindingResult, model);
     }
 
+    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION')")
+    @GetMapping("/changes")
+    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, Model model, @ModelAttribute("loggedInUser") UserResource loggedInUser){
+        ProjectResource project = projectService.getById(projectId);
+        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
+        return doViewEligibilityChanges(project, organisation, loggedInUser.getId(), model);
+    }
+
     private String doSaveEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadOrganisation, OrganisationResource organisation, Eligibility eligibility, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, ValidationHandler validationHandler, Supplier<String> successView, BindingResult bindingResult, Model model) {
 
         Supplier<String> failureView = () -> doViewEligibility(competition, application, project, allSections, user, isLeadOrganisation, organisation, model, eligibilityForm, form, bindingResult);
 
         EligibilityRagStatus statusToSend = getRagStatus(eligibilityForm);
 
-        ServiceResult<Void> saveEligibilityResult = financeService.saveEligibility(project.getId(), organisation.getId(), eligibility, statusToSend);
+        ServiceResult<Void> saveEligibilityResult = projectFinanceService.saveEligibility(project.getId(), organisation.getId(), eligibility, statusToSend);
 
         return validationHandler
                 .addAnyErrors(saveEligibilityResult)
@@ -335,5 +349,31 @@ public class FinanceChecksEligibilityController {
 
     private void addApplicationAndSectionsInternalWithOrgDetails(final ApplicationResource application, final CompetitionResource competition, final Long userId, Optional<SectionResource> section, Optional<Long> currentQuestionId, final Model model, final ApplicationForm form) {
         applicationModelPopulator.addApplicationAndSections(application, competition, userId, section, currentQuestionId, model, form);
+    }
+
+    private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = getProjectFinanceChangesViewModel(project, organisation, userId);
+        model.addAttribute("model", projectFinanceChangesViewModel);
+        return "project/financecheck/eligibility-changes";
+    }
+
+    private ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(ProjectResource project, OrganisationResource organisation, Long userId){
+        FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId());
+        ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(project.getId(), organisation.getId());
+        ApplicationFinanceResource appFinanceResource = applicationFinanceService.getApplicationFinanceDetails(userId, project.getApplication(), organisation.getId());
+        Map<FinanceRowType, BigDecimal> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
+        return new ProjectFinanceChangesViewModel(organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview, sectionDifferencesMap, projectFinanceResource.getCostChanges());
+    }
+
+    private Map<FinanceRowType, BigDecimal> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
+                                                                       Map<FinanceRowType, FinanceRowCostCategory> organisationProjectFinances){
+        Map<FinanceRowType, BigDecimal> sectionDifferencesMap = new LinkedHashMap<>();
+
+        for(FinanceRowType rowType : organisationProjectFinances.keySet()){
+            FinanceRowCostCategory financeRowProjectCostCategory = organisationProjectFinances.get(rowType);
+            FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
+            sectionDifferencesMap.put(rowType, financeRowAppCostCategory.getTotal().subtract(financeRowProjectCostCategory.getTotal()));
+        }
+        return sectionDifferencesMap;
     }
 }

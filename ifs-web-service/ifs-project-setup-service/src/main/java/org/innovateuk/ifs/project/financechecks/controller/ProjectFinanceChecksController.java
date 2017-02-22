@@ -2,6 +2,7 @@ package org.innovateuk.ifs.project.financechecks.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.view.ProjectFinanceOverviewModelManager;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceOverviewViewModel;
@@ -21,7 +22,10 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
 import org.innovateuk.ifs.project.finance.resource.Eligibility;
@@ -33,6 +37,7 @@ import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEli
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;
@@ -67,6 +72,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.AbstractMap;
 import java.util.ArrayList;
@@ -86,8 +92,6 @@ import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipa
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller will handle requests related to finance checks
@@ -112,6 +116,9 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     ProjectFinanceService projectFinanceService;
+
+    @Autowired
+    FinanceService applicationFinanceService;
 
     @Autowired
     FinanceCheckService financeCheckService;
@@ -139,12 +146,6 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     private ProjectFinanceOverviewModelManager projectFinanceOverviewModelManager;
-
-    @Autowired
-    private FinanceHandler financeHandler;
-
-    @Autowired
-    private QuestionService questionService;
 
     @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
     @GetMapping
@@ -385,21 +386,6 @@ public class ProjectFinanceChecksController {
         return doViewEligibility(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
     }
 
-    @PreAuthorize("hasPermission(#projectId, 'ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL')")
-    @GetMapping("/eligibility/changes")
-    public String viewExternalEligibilityChanges(@PathVariable("projectId") final Long projectId, @PathVariable("organisationId") final Long organisationId, @ModelAttribute(FORM_ATTR) ApplicationForm form, BindingResult bindingResult, Model model, HttpServletRequest request){
-        ProjectResource project = projectService.getById(projectId);
-        ApplicationResource application = applicationService.getById(project.getApplication());
-        OrganisationResource organisation = organisationService.getOrganisationById(organisationId);
-        OrganisationResource leadOrganisation = projectService.getLeadOrganisation(projectId);
-        boolean isLeadPartnerOrganisation = leadOrganisation.getId().equals(organisation.getId());
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        List<SectionResource> allSections = sectionService.getAllByCompetitionId(application.getCompetition());
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-
-        return doViewEligibilityChanges(competition, application, project, allSections, user, isLeadPartnerOrganisation, organisation, model, null, form, bindingResult);
-    }
-
     private ProjectFinanceChecksViewModel buildFinanceChecksLandingPage(final ProjectOrganisationCompositeId compositeId, List<Long> attachments, Long queryId) {
         ProjectResource projectResource = projectService.getById(compositeId.getProjectId());
         OrganisationResource organisationResource = organisationService.getOrganisationById(compositeId.getOrganisationId());
@@ -514,14 +500,6 @@ public class ProjectFinanceChecksController {
             }
         }
         return attachments;
-    }
-
-    private String doViewEligibilityChanges(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {
-        SectionResource section = simpleFilter(allSections, s -> s.getType().equals(PROJECT_COST_FINANCES)).get(0);
-        List<QuestionResource> costsQuestions = questionService.getQuestionsBySectionIdAndType(section.getId(), QuestionType.COST);
-        ProjectFinanceOverviewViewModel projectFinanceOverviewViewModel = (ProjectFinanceOverviewViewModel) projectFinanceOverviewModelManager.getFinanceDetailsViewModel(competition.getId(), project.getId());
-        ProjectFinanceViewModel projectFinanceViewModel = (ProjectFinanceViewModel) financeHandler.getProjectFinanceModelManager(organisation.getOrganisationTypeName()).getFinanceViewModel(project.getId(), costsQuestions, user.getId(), form, organisation.getId());
-        return "project/finance-changes";
     }
 
     private String doViewEligibility(CompetitionResource competition, ApplicationResource application, ProjectResource project, List<SectionResource> allSections, UserResource user, boolean isLeadPartnerOrganisation, OrganisationResource organisation, Model model, FinanceChecksEligibilityForm eligibilityForm, ApplicationForm form, BindingResult bindingResult) {

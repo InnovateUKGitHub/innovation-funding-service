@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Finance Checks'" />
+</head>
+<body th:with="context='project'" class="project spend-profile">
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
+
+<main id="content">
+    <th:block th:insert="fragments/layout :: main-content-start" />
+
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"  th:remove="tag"></div>
+
+
+    <div class="page-title">
+        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})"/>
+        <h1 class="heading-xlarge">Finance checks</h1>
+    </div>
+
+    <hr />
+
+    <th:block th:fragment="summary" th:with="summaryModel=${model.financeCheckEligibility}">
+        <h2 class="heading-medium">Finances Overview</h2>
+        <div class="table-overflow">
+            <table class="table-overview">
+                <thead>
+                <tr>
+                    <th scope="col">Total costs</th>
+                    <th scope="col" class="numeric">% Grant</th>
+                    <th scope="col" class="numeric">Funding sought</th>
+                    <th scope="col" class="numeric">Other public sector funding</th>
+                    <th scope="col" class="numeric">Contribution to project</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.totalCost,1,'COMMA')}" /></td>
+                    <td class="numeric" th:text="${#numbers.formatInteger(summaryModel.percentageGrant,1,'NONE')+'%'}" />
+                    <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.fundingSought,1,'COMMA')}" /></td>
+                    <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.otherPublicSectorFunding,1,'COMMA')}" /></td>
+                    <td class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(summaryModel.contributionToProject,1,'COMMA')}" /></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="section_changes" th:with="sectionDiffs=${model.sectionDifferences}">
+        <h2 class="heading-medium">Section changes</h2>
+        <div class="table-overflow">
+            <table class="table-overview">
+                <thead>
+                <tr>
+                    <th:block th:each="rowType : ${sectionDiffs.keySet()}">
+                        <th th:unless="${#strings.isEmpty(rowType.name)}" scope="col" class="numeric" th:text="${rowType.name}"></th>
+                    </th:block>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th:block th:each="rowType : ${sectionDiffs.keySet()}">
+                        <td th:unless="${#strings.isEmpty(rowType.name)}" class="numeric">&pound; <th:block th:text="${#numbers.formatInteger(sectionDiffs.get(rowType),1,'COMMA')}" /></td>
+                    </th:block>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+
+    <th:block th:fragment="row_changes">
+    </th:block>
+
+    <hr/>
+
+    <a class="button button-secondary" th:href="@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return to eligibility</a>
+
+    <th:block th:insert="fragments/layout :: main-content-end" />
+</main>
+
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
+
+</body>
+</html>

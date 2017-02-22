@@ -1,22 +1,30 @@
 package org.innovateuk.ifs.application.finance.view;
 
+import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.viewmodel.FinanceViewModel;
+import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceViewModel;
 import org.innovateuk.ifs.application.form.Form;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.QuestionService;
+import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.category.LabourCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.finance.ProjectFinanceService;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationTypeResource;
 import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.ui.Model;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Managing all the view attributes for the finances
@@ -75,7 +83,6 @@ public class DefaultProjectFinanceModelManager implements FinanceModelManager {
             financeViewModel.setOrganisationFinanceTotal(projectFinanceResource.getTotal());
             financeViewModel.setFinanceView("finance");
             addGrantClaim(financeViewModel, form, projectFinanceResource);
-            financeViewModel.setChanges(projectFinanceResource.getCostChanges());
         }
 
         return financeViewModel;

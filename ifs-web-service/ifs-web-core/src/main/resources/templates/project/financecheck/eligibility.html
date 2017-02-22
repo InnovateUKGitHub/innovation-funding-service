@@ -54,9 +54,27 @@
         </table>
     </div>
 
-    <h2 class="heading-medium">Finances overview</h2>
-    <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
-    <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
+    <th:block th:if="${summaryModel.isReadOnly()}">
+        <h2 class="heading-medium">Detailed finances</h2>
+        <p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
+        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+    </th:block>
+
+    <th:block th:unless="${summaryModel.isReadOnly()}">
+        <th:block th:unless="${summaryModel.isApproved()}">
+            <h2 class="heading-medium">Project finance overview</h2>
+            <p>These finances were initially submitted at the application stage. All saved changes to finances will be viewable by the applicants.</p>
+            <p>All potential changes must be discussed with the lead applicant. You can do this by raising queries through IFS.</p>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">Review all changes to project finances</a>
+        </th:block>
+
+        <th:block th:if="${summaryModel.isApproved()}">
+            <h2 class="heading-medium">Detailed finances</h2>
+            <p>These finances were submitted by the applicant during the application stage. They include all changes made during the eligibility checks.</p>
+            <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+        </th:block>
+    </th:block>
+
     <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
         <h3>
             <th:block th:text="${subSection.getName()}" />
