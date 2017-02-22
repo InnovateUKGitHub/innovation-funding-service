@@ -76,7 +76,7 @@ public class ApplicationSummaryServiceImplTest {
 	public void testFindRequiringFeedbackCountByCompetitionId() {
 		ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
 		resource.setTotalElements(987L);
-		when(applicationSummaryRestService.getFeedbackRequiredApplications(Long.valueOf(123L), null, 0, 1, "filter")).thenReturn(restSuccess(resource));
+		when(applicationSummaryRestService.getFeedbackRequiredApplications(Long.valueOf(123L), null, 0, 1, null)).thenReturn(restSuccess(resource));
 		
 		Long result = service.getApplicationsRequiringFeedbackCountByCompetitionId(Long.valueOf(123L));
 		
