@@ -476,9 +476,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
-        QueryResource query = new QueryResource();
-        query.awaitingResponse = true;
-        List<QueryResource> queries = Collections.singletonList(query);
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", true, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
         when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
@@ -502,9 +501,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
-        QueryResource query = new QueryResource();
-        query.awaitingResponse = false;
-        List<QueryResource> queries = Collections.singletonList(query);
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
         when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
@@ -528,9 +526,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         Organisation organisation = newOrganisation().
                 withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
         ProjectFinanceResource resource = newProjectFinanceResource().build();
-        QueryResource query = new QueryResource();
-        query.awaitingResponse = false;
-        List<QueryResource> queries = Collections.singletonList(query);
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
 
         when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
         when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));

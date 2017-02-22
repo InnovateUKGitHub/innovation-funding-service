@@ -74,17 +74,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         );
     }
 
-    @Test
-    public void getQueryActionRequired(){
-        assertAccessDenied(
-                () -> classUnderTest.isQueryActionRequired(1L, 2L),
-                () -> {
-                    verify(projectFinancePermissionRules).partnersCanSeeTheProjectFinanceQueriesForTheirOrganisation(isA(Long.class), isA(UserResource.class));
-                    verify(projectFinancePermissionRules).internalUsersCanSeeTheProjectFinanceQueries(isA(Long.class), isA(UserResource.class));
-                }
-        );
-    }
-
     private void assertRolesCanPerform(Runnable actionFn, UserRoleType... supportedRoles) {
         asList(UserRoleType.values()).forEach(role -> {
             RoleResource roleResource = newRoleResource().withType(role).build();
