@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.user.repository;
 
+import com.google.common.collect.Lists;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -27,9 +30,12 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.junit.Assert.*;
 
 public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<UserRepository> {
+
+    private final long INNOVATION_AREA_ID = 5L;
 
     @Override
     @Autowired
@@ -45,6 +51,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Autowired
     protected RoleRepository roleRepository;
+
+    @Autowired
+    protected InnovationAreaRepository innovationAreaRepository;
 
     @Test
     public void findAll() {
@@ -80,11 +89,11 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         loginSteveSmith();
 
         // Create a new user
-        User newUser = repository.save(new User("New", "User", "new@example.com", "","my-uid"));
+        User newUser = repository.save(new User("New", "User", "new@example.com", "", "my-uid"));
         Profile profile = newProfile()
-                .withId((Long)null)
+                .withId((Long) null)
                 .withAddress(newAddress()
-                        .withId((Long)null)
+                        .withId((Long) null)
                         .withAddressLine1("Electric Works")
                         .build())
                 .build();
@@ -94,7 +103,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
         // Fetch the list of users and assert that the count has increased and the new user is present in the list of expected users
         List<User> users = repository.findAll();
-        assertEquals((USER_COUNT+1), users.size());
+        assertEquals((USER_COUNT + 1), users.size());
         List<String> emailAddresses = users.stream().map(User::getEmail).collect(toList());
         List<String> expectedUsers = new ArrayList<>(ALL_USERS_EMAIL);
         expectedUsers.add("new@example.com");
@@ -139,8 +148,6 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void findByRolesNameAndIdNotIn() throws Exception {
-        assertEquals(2, repository.findByRoles_Name(ASSESSOR.getName()).size());
-
         addTestAssessors();
 
         assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
@@ -163,16 +170,13 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Test
     public void findByRolesNameAndIdNotIn_nextPage() throws Exception {
-        assertEquals(2, repository.findByRoles_Name(ASSESSOR.getName()).size());
-
         addTestAssessors();
 
         assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
 
-        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
-
         Pageable pageable = new PageRequest(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
 
+        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
         Page<User> pagedUsers = repository.findByRolesNameAndIdNotIn(ASSESSOR.getName(), userIds, pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
@@ -183,7 +187,41 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
         assertEquals("Victoria", pagedUsers.getContent().get(1).getFirstName());
     }
 
+    @Test
+    public void findByRolesNameAndIdNotInAndProfileInnovationArea() throws Exception {
+        addTestAssessors();
+
+        assertEquals(6, repository.findByRoles_Name(ASSESSOR.getName()).size());
+
+        Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
+
+        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
+        Page<User> pagedUsers = repository.findByRolesNameAndIdNotInAndProfileInnovationArea(ASSESSOR.getName(), userIds, INNOVATION_AREA_ID, pageable);
+
+        assertEquals(4, pagedUsers.getTotalElements());
+        assertEquals(1, pagedUsers.getTotalPages());
+        assertEquals(4, pagedUsers.getContent().size());
+        assertEquals(0, pagedUsers.getNumber());
+        assertEquals("Andrew", pagedUsers.getContent().get(0).getFirstName());
+        assertEquals("James", pagedUsers.getContent().get(1).getFirstName());
+        assertEquals("Jessica", pagedUsers.getContent().get(2).getFirstName());
+        assertEquals("Victoria", pagedUsers.getContent().get(3).getFirstName());
+    }
+
     private void addTestAssessors() {
+        loginSteveSmith();
+
+        InnovationArea innovationArea = innovationAreaRepository.findOne(INNOVATION_AREA_ID);
+
+        List<Profile> profiles = newProfile()
+                .withId()
+                .withInnovationArea(innovationArea)
+                .build(4);
+
+        List<Profile> savedProfiles = Lists.newArrayList(profileRepository.save(profiles));
+
+        Long[] profileIds = simpleMap(savedProfiles, Profile::getId).toArray(new Long[savedProfiles.size()]);
+
         Role assessorRole = roleRepository.findOneByName(ASSESSOR.getName());
 
         List<User> users = newUser()
@@ -192,6 +230,7 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
                 .withRoles(singletonList(assessorRole))
+                .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 
         repository.save(users);

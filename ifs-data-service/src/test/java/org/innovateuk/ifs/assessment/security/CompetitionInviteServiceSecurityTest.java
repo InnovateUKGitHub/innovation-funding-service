@@ -5,7 +5,6 @@ import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
-import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource.Order;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.user.security.UserPermissionRules;
@@ -13,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 
 import java.util.EnumSet;
@@ -31,7 +29,6 @@ import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 import static org.mockito.Mockito.*;
-import static org.springframework.data.domain.Sort.Direction.ASC;
 
 public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTest<CompetitionInviteService> {
 
@@ -156,8 +153,10 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
 
     @Test
     public void getAvailableAssessors() {
+        Optional<Long> innovationArea = Optional.of(1L);
         Pageable pageable = new PageRequest(0, 20);
-        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable), COMP_ADMIN, PROJECT_FINANCE);
+
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getAvailableAssessors(1L, pageable, innovationArea), COMP_ADMIN, PROJECT_FINANCE);
     }
 
     @Test
@@ -243,7 +242,7 @@ public class CompetitionInviteServiceSecurityTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
+        public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
             return null;
         }
 

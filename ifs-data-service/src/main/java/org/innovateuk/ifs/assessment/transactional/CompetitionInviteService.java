@@ -6,7 +6,6 @@ import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.access.method.P;
 import org.springframework.security.access.prepost.PreAuthorize;
 
@@ -58,7 +57,7 @@ public interface CompetitionInviteService {
     @SecuredBySpring(value = "READ_ASSESSORS_BY_COMPETITION",
             description = "Competition Administrators and Executives can retrieve available assessors by competition",
             additionalComments = "The service additionally checks if the assessor does not have an invite for the competition which is either Pending or Accepted")
-    ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable);
+    ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea);
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ_INVITES_BY_COMPETITION",

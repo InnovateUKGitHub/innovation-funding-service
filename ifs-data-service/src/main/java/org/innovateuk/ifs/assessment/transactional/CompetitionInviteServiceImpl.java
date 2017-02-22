@@ -189,7 +189,7 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
     }
 
     @Override
-    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable) {
+    public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
         List<Long> createdInvites = competitionInviteRepository.findUserIdsByCompetition(competitionId);
         Page<User> pagedAssessors = userRepository.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), createdInvites, pageable);
 

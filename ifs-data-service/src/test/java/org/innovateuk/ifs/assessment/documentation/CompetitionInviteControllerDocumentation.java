@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -157,31 +158,38 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
+        Optional<Long> innovationArea = Optional.of(4L);
 
         Pageable pageable = new PageRequest(0, 20, new Sort(ASC, "firstName"));
 
-        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, pageable))
+        when(competitionInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
                 .thenReturn(serviceSuccess(availableAssessorPageResourceBuilder.build()));
 
         mockMvc.perform(get("/competitioninvite/getAvailableAssessors/{competitionId}", competitionId)
                 .param("size", "20")
                 .param("page", "0")
-                .param("sort", "firstName,asc"))
+                .param("sort", "firstName,asc")
+                .param("innovationArea", "4"))
                 .andExpect(status().isOk())
                 .andDo(document("competitioninvite/{method-name}",
                         pathParameters(
                                 parameterWithName("competitionId").description("Id of the competition")
                         ),
                         requestParameters(
-                                parameterWithName("size").description("Maximum number of elements in a single page"),
-                                parameterWithName("page").description("Page number of the paginated data. Starts at 0."),
-                                parameterWithName("sort").description("The property to sort the elements on. For example `sort=firstName,asc`")
+                                parameterWithName("size").optional()
+                                        .description("Maximum number of elements in a single page. Defaults to 20."),
+                                parameterWithName("page").optional()
+                                        .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
+                                parameterWithName("sort").optional()
+                                        .description("The property to sort the elements on. For example `sort=firstName,asc`. Defaults to `firstName,asc`"),
+                                parameterWithName("innovationArea").optional()
+                                        .description("Innovation area ID to filter assessors by.")
                         ),
                         responseFields(availableAssessorPageResourceFields)
                                 .andWithPrefix("content[].", availableAssessorResourceFields)
                 ));
 
-        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable);
+        verify(competitionInviteServiceMock, only()).getAvailableAssessors(competitionId, pageable, innovationArea);
     }
 
     @Test

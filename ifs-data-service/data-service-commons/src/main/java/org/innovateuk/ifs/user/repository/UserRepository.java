@@ -4,6 +4,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
@@ -31,19 +32,22 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     User findOneByUid(@Param("uid") String uid);
 
-//            "FROM user " +
-//                    "   INNER JOIN user_role ON user.id = user_role.user_id " +
-//                    "   INNER JOIN role ON user_role.role_id = role.id " +
-//                    "   WHERE role.name = 'assessor' " +
-//                    "   AND user.id NOT IN (" +
-//                    "       SELECT user.id " +
-//                    "       FROM user " +
-//                    "           INNER JOIN competition_user ON competition_user.user_id = user.id " +
-//                    "           INNER JOIN invite ON invite.id = competition_user.invite_id " +
-//                    "           INNER JOIN participant_status ON competition_user.participant_status_id = participant_status.id " +
-//                    "       WHERE competition_user.competition_id = :competitionId " +
-//                    "           AND user.email = invite.email) " +
-//                    "   GROUP BY user.id";
+    Page<User> findByRolesName(String roleName, Pageable pageable);
 
     Page<User> findByRolesNameAndIdNotIn(String roleName, Collection<Long> userIds, Pageable pageable);
+
+    @Query("SELECT user " +
+            "FROM User user " +
+            "JOIN Profile profile ON profile.id = user.profileId " +
+            "JOIN profile.innovationAreas innovationAreas " +
+            "JOIN user.roles roles " +
+            "WHERE innovationAreas.category.id = :innovationArea " +
+            "AND user.id NOT IN :userIds " +
+            "AND roles.name = :roleName")
+    Page<User> findByRolesNameAndIdNotInAndProfileInnovationArea(@Param("roleName") String roleName,
+                                                                 @Param("userIds") Collection<Long> userIds,
+                                                                 @Param("innovationArea") long innovationArea,
+                                                                 Pageable pageable);
+
+
 }

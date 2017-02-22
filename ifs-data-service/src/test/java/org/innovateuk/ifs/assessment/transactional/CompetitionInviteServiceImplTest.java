@@ -844,6 +844,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withProfileId(profile.get(0).getId(), profile.get(1).getId())
                 .build(2);
 
+        Optional<Long> innovationAreaId = Optional.of(innovationArea.getId());
+
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
         List<Long> assessorsAlreadyAssessing = asList(1L, 2L, 3L);
@@ -856,7 +858,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(profileRepositoryMock.findOne(assessors.get(1).getProfileId())).thenReturn(profile.get(1));
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResources.get(0));
 
-        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable).getSuccessObjectOrThrowException();
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable, innovationAreaId).getSuccessObjectOrThrowException();
 
         verify(competitionInviteRepositoryMock).findUserIdsByCompetition(competitionId);
         verify(userRepositoryMock).findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), assessorsAlreadyAssessing, pageable);
@@ -877,6 +879,8 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         int page = 0;
         int pageSize = 20;
 
+        Optional<Long> innovationAreaId = Optional.of(innovationArea.getId());
+
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
@@ -884,7 +888,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         when(competitionInviteRepositoryMock.findUserIdsByCompetition(competitionId)).thenReturn(emptyList());
         when(userRepositoryMock.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), emptyList(), pageable)).thenReturn(assessorPage);
 
-        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable).getSuccessObjectOrThrowException();
+        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, innovationAreaId).getSuccessObjectOrThrowException();
 
         verify(competitionInviteRepositoryMock).findUserIdsByCompetition(competitionId);
         verify(userRepositoryMock).findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), emptyList(), pageable);
