@@ -8,7 +8,9 @@ import org.innovateuk.ifs.file.transactional.FileEntryService;
 import org.innovateuk.ifs.file.transactional.FileHttpHeadersValidator;
 import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
+import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.attachments.repository.PostAttachmentRepository;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileDownload;
 import static org.innovateuk.ifs.file.controller.FileControllerUtils.handleFileUpload;
@@ -36,16 +39,20 @@ public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinan
     @Qualifier("postAttachmentValidator")
     private FileHttpHeadersValidator fileValidator;
 
+    @Autowired
+    private AttachmentMapper mapper;
+
     @Override
-    public ServiceResult<Attachment> findOne(Long attachmentId) {
-        return find(attachmentsRepository.findOne(attachmentId), notFoundError(Attachment.class, attachmentId));
+    public ServiceResult<AttachmentResource> findOne(Long attachmentId) {
+        return find(attachmentsRepository.findOne(attachmentId), notFoundError(AttachmentResource.class, attachmentId))
+                .andOnSuccessReturn(mapper::mapToResource);
     }
 
     @Override
-    public ServiceResult<Attachment> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request) {
+    public ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request) {
         return handleFileUpload(contentType, contentLength, originalFilename, fileValidator, request, (fileAttributes, inputStreamSupplier)
                 -> fileService.createFile(fileAttributes.toFileEntryResource(), inputStreamSupplier)
-                .andOnSuccess(created -> save(new Attachment(null, created.getRight())))).toServiceResult();
+                .andOnSuccess(created -> save(new Attachment(null, created.getRight())).andOnSuccessReturn(mapper::mapToResource))).toServiceResult();
     }
 
     private ServiceResult<Attachment> save(Attachment attachment) {
@@ -55,15 +62,17 @@ public class ProjectFinanceQueriesAttachmentsServiceImpl implements ProjectFinan
 
     @Override
     public ServiceResult<Void> delete(Long attachmentId) {
-        return findOne(attachmentId)
-                .andOnSuccess(attachment -> fileService.deleteFile(attachment.fileEntry().getId())
-                        .andOnSuccessReturnVoid(c -> attachmentsRepository.delete(attachmentId)));
+        return ofNullable(mapper.mapIdToDomain(attachmentId))
+                .map(attachment -> fileService.deleteFile(attachment.fileId()))
+                .map(result -> result.andOnSuccessReturnVoid(deletedFile -> attachmentsRepository.delete(deletedFile.getId())))
+                .orElse(ServiceResult.serviceFailure(notFoundError(AttachmentResource.class, attachmentId)));
     }
 
     @Override
     public ResponseEntity<Object> download(Long attachmentId) throws IOException {
         return handleFileDownload(() -> findOne(attachmentId)
-                .andOnSuccess(a -> fileEntryService.findOne(a.fileEntry().getId())
+                .andOnSuccessReturn(a -> mapper.mapToDomain(a))
+                .andOnSuccess(a -> fileEntryService.findOne(a.fileId())
                         .andOnSuccess(fileEntry -> getFileAndContents(fileEntry))));
     }
 
