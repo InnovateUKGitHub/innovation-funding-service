@@ -47,18 +47,14 @@
 		</div>
 
 		<th:block th:unless="${param.status != null and param.status[0] == 'submitted' or param.status != null and param.status[0] == 'approved' or param.status != null and param.status[0] == 'submittedApproved'}">
-			<p>As the lead partner in this project you must supply additional documents to support your grant application.</p>
-
-			<p>These documents are:</p>
-
-			<ul class="list list-bullet">
-				<li>the collaboration agreement</li>
-				<li>the exploitation plan</li>
-			</ul>
-
-			<p>You should review these documents with the other partners in the project.</p>
-
-			<p>Further details on what is required from these documents is available below.</p>
+            <p>The Project Manager must supply additional documents to support your grant application.</p>
+            <p>These documents are:</p>
+            <ul class="list list-bullet">
+                <li>the collaboration agreement</li>
+                <li>the exploitation plan</li>
+            </ul>
+            <p>You should review these documents with the other partners in the project.</p>
+            <p>Further details on what is required from these documents is available below.</p>
 		</th:block>
 
 	</div>
@@ -193,7 +189,7 @@
 
 		<div th:if="${param.user != null and param.user[0] == 'nonLead'}">
 
-			<p>The Project Manager must upload both documents for submission. We will contact the Project Manager if we have any queries.</p>
+            <p>Once the documents are uploaded they must be sent to Innovate UK.</p>
 
 			<a href="#" class="button button-large disabled">Submit partner documents</a>
 

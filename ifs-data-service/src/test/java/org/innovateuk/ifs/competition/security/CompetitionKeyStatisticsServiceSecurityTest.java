@@ -37,6 +37,11 @@ public class CompetitionKeyStatisticsServiceSecurityTest extends BaseServiceSecu
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getInAssessmentKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
     }
 
+    @Test
+    public void getFundedKeyStatisticsByCompetition() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.getFundedKeyStatisticsByCompetition(1L), COMP_ADMIN, PROJECT_FINANCE);
+    }
+
     public static class TestCompetitionKeyStatisticsService implements CompetitionKeyStatisticsService {
         @Override
         public ServiceResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatisticsByCompetition(long competitionId) {

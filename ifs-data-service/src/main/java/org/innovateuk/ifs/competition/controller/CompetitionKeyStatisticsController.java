@@ -5,9 +5,9 @@ import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competition.transactional.CompetitionKeyStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -20,23 +20,23 @@ public class CompetitionKeyStatisticsController {
     @Autowired
     private CompetitionKeyStatisticsService competitionKeyStatisticsService;
 
-    @RequestMapping(value ="/readyToOpen",method = RequestMethod.GET)
+    @GetMapping(value ="/readyToOpen")
     public RestResult<CompetitionReadyToOpenKeyStatisticsResource> getReadyToOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getReadyToOpenKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @RequestMapping(value ="/open",method = RequestMethod.GET)
+    @GetMapping(value ="/open")
     public RestResult<CompetitionOpenKeyStatisticsResource> getOpenKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getOpenKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @RequestMapping(value ="/closed",method = RequestMethod.GET)
+    @GetMapping(value ="/closed")
     public RestResult<CompetitionClosedKeyStatisticsResource> getClosedKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getClosedKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @RequestMapping(value ="/inAssessment",method = RequestMethod.GET)
+    @GetMapping(value ="/inAssessment")
     public RestResult<CompetitionInAssessmentKeyStatisticsResource> getInAssessmentKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getInAssessmentKeyStatisticsByCompetition(id).toGetResponse();
     }
-    @RequestMapping(value ="/funded",method = RequestMethod.GET)
+    @GetMapping(value ="/funded")
     public RestResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatistics(@PathVariable("id") long id) {
         return competitionKeyStatisticsService.getFundedKeyStatisticsByCompetition(id).toGetResponse();
     }

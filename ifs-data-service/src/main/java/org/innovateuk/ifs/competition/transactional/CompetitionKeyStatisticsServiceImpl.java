@@ -103,9 +103,9 @@ public class CompetitionKeyStatisticsServiceImpl extends BaseTransactionalServic
         competitionFundedKeyStatisticsResource.setApplicationsSubmitted(applications.size());
         competitionFundedKeyStatisticsResource.setApplicationsFunded(getFundingDecisionCount(applications, FundingDecisionStatus.FUNDED));
         competitionFundedKeyStatisticsResource.setApplicationsNotFunded(getFundingDecisionCount(applications, FundingDecisionStatus.UNFUNDED));
-        competitionFundedKeyStatisticsResource.setApplicationsOnHold(0); // TODO
-        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(0); // TODO
-        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(0); // TODO
+        competitionFundedKeyStatisticsResource.setApplicationsOnHold(0); // TODO - awaiting Wouter's change - will be - getFundingDecisionCount(applications, FundingDecisionStatus.ON_HOLD)
+        competitionFundedKeyStatisticsResource.setApplicationsNotifiedOfDecision(0); // TODO - awaiting Rich's change
+        competitionFundedKeyStatisticsResource.setApplicationsAwaitingDecision(0); // TODO - awaiting Rich's change
         return serviceSuccess(competitionFundedKeyStatisticsResource);
     }
 

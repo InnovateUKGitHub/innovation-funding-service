@@ -89,7 +89,9 @@
 
         <div class="extra-margin-bottom">
             <h2 class="heading-medium no-margin">Research category </h2>
-            <p class="form-hint">The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.</p>
+            <p class="form-hint">The type of research affects the level of funding a business can receive under UK state
+                aid rules. Changing the research category will reset the funding level for all business
+                participants.</p>
 
             <th:block th:if="${param.researchCategoryGroup != null}">
                 <dl class="extra-margin-bottom">
@@ -129,7 +131,8 @@
 
     <div class="extra-margin-bottom">
       <h2 class="heading-medium">Innovation area</h2>
-      <p class="form-hint">This is the primary innovation area for your project. This will help Innovate UK select suitable assessors for your application.</p>
+        <p class="form-hint">This is the primary innovation area for your project. This will help Innovate UK select
+            suitable assessors for your application.</p>
 
       <th:block th:if="${param.categoryGroup != null}">
         <dl class="extra-margin-bottom">
@@ -253,7 +256,11 @@
           </div>
         </th:block>
 
-        <button type="submit" class="button app-submit-btn extra-margin-top" name="submit-section" formaction="/prototypes/635-application-overview" th:unless="${param.status != null and param.status[0] == 'readOnly'}">Save and return to application overview</button>
+        <button type="submit" class="button app-submit-btn extra-margin-top" name="submit-section"
+                formaction="/prototypes/635-application-overview"
+                th:unless="${param.status != null and param.status[0] == 'readOnly'}">Save and return to application
+            overview
+        </button>
 
 
 
