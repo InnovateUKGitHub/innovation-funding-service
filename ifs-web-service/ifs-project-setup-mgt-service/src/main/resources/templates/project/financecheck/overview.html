@@ -34,7 +34,7 @@
 
     <h3 class="heading-medium">Project cost breakdown</h3>
 
-    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown">
+    <th:block th:insert="project/financecheck/fragments/finance :: project-finance-cost-breakdown(breakdowns=${model.breakdown})">
 
 
 

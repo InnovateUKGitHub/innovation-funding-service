@@ -35,7 +35,7 @@
 
     <th:block th:insert="project/financecheck/fragments/finance :: project-finance-overview(overview=${model.financeCheckSummaryResource})" />
   <h3 class="heading-medium">Progress</h3>
-  <table class="table-progress">
+  <table class="table-progress extra-margin-bottom">
       <thead>
         <tr>
           <th scope="col">Organisation</th>
@@ -87,6 +87,8 @@
         </tr>
       </tbody>
   </table>
+
+    <a th:href="@{/project/{projectId}/finance-check-overview(projectId=${model.financeCheckSummaryResource.projectId})}">Project finance overview</a>
 
     <form method="POST" th:action="@{/project/{projectId}/finance-check/generate(projectId=${model.financeCheckSummaryResource.projectId})}" th:if="${model.showEnabledGenerateSpendProfilesButton or model.showDisabledGenerateSpendProfilesButton}">
         <h3 class="heading-medium">Generate spend profile</h3>

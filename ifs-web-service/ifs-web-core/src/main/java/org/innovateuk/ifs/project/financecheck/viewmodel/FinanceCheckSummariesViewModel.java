@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.project.financecheck.viewmodel;
 
-import org.innovateuk.ifs.project.finance.resource.FinanceCheckSummariesResource;
+import org.innovateuk.ifs.project.finance.resource.FinanceCheckEligibilityResource;
+import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -9,39 +10,41 @@ import java.util.List;
  * View model for the finance checks summaries table.
  */
 public class FinanceCheckSummariesViewModel {
-    private List<FinanceCheckSummariesResource> financeCheckSummariesResources;
-    private BigDecimal totalCost;
-    private BigDecimal totalFundingSought;
-    private BigDecimal totalOtherPublicSectorFunding;
-    private BigDecimal totalContributionToProject;
+    private List<FinanceCheckEligibilityResource> financeCheckSummariesResources;
+    private List<PartnerOrganisationResource> organisationResources;
 
     public FinanceCheckSummariesViewModel() {}
 
-    public FinanceCheckSummariesViewModel(List<FinanceCheckSummariesResource> financeCheckSummariesResources) {
+    public FinanceCheckSummariesViewModel(List<FinanceCheckEligibilityResource> financeCheckSummariesResources, List<PartnerOrganisationResource> partnerOrganisationResources) {
         this.financeCheckSummariesResources = financeCheckSummariesResources;
-        this.totalCost = financeCheckSummariesResources.stream().map(of -> of.getFinanceCheckEligibilityResource().getTotalCost()).reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.totalFundingSought = financeCheckSummariesResources.stream().map(of -> of.getFinanceCheckEligibilityResource().getFundingSought()).reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.totalOtherPublicSectorFunding = financeCheckSummariesResources.stream().map(of -> of.getFinanceCheckEligibilityResource().getOtherPublicSectorFunding()).reduce(BigDecimal.ZERO, BigDecimal::add);
-        this.totalContributionToProject = financeCheckSummariesResources.stream().map(of -> of.getFinanceCheckEligibilityResource().getContributionToProject()).reduce(BigDecimal.ZERO, BigDecimal::add);
+        this.organisationResources = partnerOrganisationResources;
     }
 
-    public List<FinanceCheckSummariesResource> getFinanceCheckSummariesResources() {
+    public List<FinanceCheckEligibilityResource> getFinanceCheckSummariesResources() {
         return financeCheckSummariesResources;
     }
 
+    public List<PartnerOrganisationResource> getOrganisationResources() {
+        return organisationResources;
+    }
+
     public BigDecimal getTotalCost() {
-        return totalCost;
+        return financeCheckSummariesResources.stream().map(FinanceCheckEligibilityResource::getTotalCost).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalFundingSought() {
-        return totalFundingSought;
+        return financeCheckSummariesResources.stream().map(FinanceCheckEligibilityResource::getFundingSought).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalOtherPublicSectorFunding() {
-        return totalOtherPublicSectorFunding;
+        return financeCheckSummariesResources.stream().map(FinanceCheckEligibilityResource::getOtherPublicSectorFunding).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public BigDecimal getTotalContributionToProject() {
-        return totalContributionToProject;
+        return financeCheckSummariesResources.stream().map(FinanceCheckEligibilityResource::getContributionToProject).reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public PartnerOrganisationResource getPartnerFromSummary(Long organisationId) {
+        return getOrganisationResources().stream().filter(org -> organisationId.equals(org.getOrganisation())).findFirst().orElse(new PartnerOrganisationResource());
     }
 }

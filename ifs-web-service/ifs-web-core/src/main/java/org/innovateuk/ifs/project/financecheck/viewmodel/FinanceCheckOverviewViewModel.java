@@ -6,12 +6,15 @@ package org.innovateuk.ifs.project.financecheck.viewmodel;
 public class FinanceCheckOverviewViewModel {
     private ProjectFinanceOverviewViewModel overview;
     private FinanceCheckSummariesViewModel summaries;
+    private ProjectFinanceCostBreakdownViewModel breakdown;
 
     public FinanceCheckOverviewViewModel() {}
 
-    public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel projectFinanceOverviewViewModel, FinanceCheckSummariesViewModel financeCheckSummaries) {
+    public FinanceCheckOverviewViewModel(ProjectFinanceOverviewViewModel projectFinanceOverviewViewModel, FinanceCheckSummariesViewModel financeCheckSummaries,
+                                         ProjectFinanceCostBreakdownViewModel projectCostsBreakdown) {
         this.overview = projectFinanceOverviewViewModel;
         this.summaries = financeCheckSummaries;
+        this.breakdown = projectCostsBreakdown;
     }
 
     public ProjectFinanceOverviewViewModel getOverview() {
@@ -28,5 +31,13 @@ public class FinanceCheckOverviewViewModel {
 
     public void setSummaries(FinanceCheckSummariesViewModel summaries) {
         this.summaries = summaries;
+    }
+
+    public ProjectFinanceCostBreakdownViewModel getBreakdown() {
+        return breakdown;
+    }
+
+    public void setBreakdown(ProjectFinanceCostBreakdownViewModel breakdown) {
+        this.breakdown = breakdown;
     }
 }
