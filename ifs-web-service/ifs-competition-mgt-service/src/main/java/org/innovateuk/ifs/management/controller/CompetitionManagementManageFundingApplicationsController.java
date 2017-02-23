@@ -1,9 +1,11 @@
 package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
+import org.innovateuk.ifs.competition.form.NotificationEmailsForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.model.SendNotificationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -33,6 +35,9 @@ public class CompetitionManagementManageFundingApplicationsController {
     @Autowired
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
 
+    @Autowired
+    private SendNotificationsModelPopulator sendNotificationsModelPopulator;
+
     @GetMapping(value = "/funding/send")
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
@@ -41,8 +46,8 @@ public class CompetitionManagementManageFundingApplicationsController {
                                BindingResult bindingResult,
                                ValidationHandler validationHandler) {
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
-                    model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
-                    model.addAttribute("form", new SelectApplicationsForEmailForm());
+                    model.addAttribute("model", sendNotificationsModelPopulator.populate(query, competitionId, applicationIds));
+                    model.addAttribute("form", new NotificationEmailsForm());
                     return MANAGE_FUNDING_SEND_VIEW;
                 }
         );
