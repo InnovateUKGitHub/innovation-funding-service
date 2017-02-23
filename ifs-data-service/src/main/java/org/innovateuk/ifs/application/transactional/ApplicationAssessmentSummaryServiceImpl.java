@@ -3,15 +3,11 @@ package org.innovateuk.ifs.application.transactional;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.mapper.ApplicationAssessorMapper;
 import org.innovateuk.ifs.application.mapper.ApplicationAssessorPageMapper;
-import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.mapper.InnovationAreaMapper;
-import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
@@ -19,7 +15,6 @@ import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
-import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -45,40 +40,16 @@ import static org.springframework.data.domain.Sort.Direction.ASC;
 public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalService implements ApplicationAssessmentSummaryService {
 
     @Autowired
-    private ApplicationRepository applicationRepository;
-
-    @Autowired
     private AssessmentRepository assessmentRepository;
 
     @Autowired
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    private ProfileRepository profileRepository;
-
-    @Autowired
-    private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
-    private InnovationAreaMapper innovationAreaMapper;
-
-    @Autowired
     ApplicationAssessorMapper applicationAssessorMapper;
 
     @Autowired
     ApplicationAssessorPageMapper applicationAssessorPageMapper;
-
-    @Override
-    public ServiceResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId) {
-
-        return find(applicationRepository.findOne(applicationId), notFoundError(Application.class, applicationId)).andOnSuccessReturn(application ->
-                simpleMap(competitionParticipantRepository.getByCompetitionIdAndRoleAndStatus(application.getCompetition().getId(), ASSESSOR, ParticipantStatus.ACCEPTED),
-                        competitionParticipant -> {
-                            Optional<Assessment> mostRecentAssessment = getMostRecentAssessment(competitionParticipant, applicationId);
-                            return applicationAssessorMapper.mapToResource(competitionParticipant, mostRecentAssessment);
-                        })
-        );
-    }
 
     @Override
     public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {

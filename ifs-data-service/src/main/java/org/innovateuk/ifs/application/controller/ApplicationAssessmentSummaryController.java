@@ -27,11 +27,6 @@ public class ApplicationAssessmentSummaryController {
     @Autowired
     private ApplicationAssessmentSummaryService applicationAssessmentSummaryService;
 
-    @RequestMapping(value = "/{applicationId}/assessors", method = GET)
-    public RestResult<List<ApplicationAssessorResource>> getAssessors(@PathVariable("applicationId") Long applicationId) {
-        return applicationAssessmentSummaryService.getAssessors(applicationId).toGetResponse();
-    }
-
     @RequestMapping(value = "/{applicationId}/assignedAssessors")
     public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(@PathVariable("applicationId") Long applicationId) {
         return applicationAssessmentSummaryService.getAssignedAssessors(applicationId).toGetResponse();

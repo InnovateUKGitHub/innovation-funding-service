@@ -12,8 +12,6 @@ import java.util.List;
  */
 public interface ApplicationAssessmentSummaryRestService {
 
-    RestResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId);
-
     RestResult<ApplicationAssessmentSummaryResource> getApplicationAssessmentSummary(Long applicationId);
 
     RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId);
