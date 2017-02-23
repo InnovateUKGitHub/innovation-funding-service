@@ -77,11 +77,14 @@
 
     <section class="collapsible" th:each="subSection, subSectionstats : ${subSections.get(currentSectionId)}" th:if="${subSections !=null}">
         <h3>
-            <th:block th:text="${subSection.getName()}" />
-            <span data-calculation-format="percentage"  data-calculation-operations="/,*" th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
+            <th:block th:text="${subSection.getName()}"/>
+            <span data-calculation-format="percentage" data-calculation-operations="/,*"
+                  th:attr="data-mirror='#section-percentage-'+${subSection.id},data-calculation-fields='100, #total-cost, #section-total-'+${subSection.id}"></span>
         </h3>
-        <div class="collapsible-content" th:with="viewmode=${summaryModel.isApproved()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
-            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"  enctype="multipart/form-data">
+        <div class="collapsible-content"
+             th:with="viewmode=${summaryModel.isApproved()} ? 'approved' : (${param.section != null} ? (${param.section[0]} == ${subSection.id} ? 'edit' : 'readonly') : 'readonly')">
+            <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" method="post" th:object="${form}"
+                  enctype="multipart/form-data">
                 <th:block th:each="question : ${subsectionQuestions.get(subSection.id)}">
                     <th:block th:each="formInput, status : ${subSectionQuestionFormInputs.get(question.id)}">
 
