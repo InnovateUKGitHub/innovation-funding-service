@@ -279,12 +279,13 @@
 </th:block>
 
 <!-- ===========================Form: Fileupload =========================== -->
-<div th:fragment="finance_upload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[jes-upload]')} ? error : ''"
+<div th:fragment="finance_upload" th:classappend="${#fields.hasErrors('formInput[jes-upload]')} ? error : ''"
      th:with="currentUser=${#authentication.getDetails()},validationId='formInput[\'jes-upload\']',
          noFileUploaded=${(#strings.isEmpty(filename))},
          name='jes-upload',
-         downloadURL='/application/'+ ${model.application.currentApplication.id} + '/form/' + ${applicationFinanceId} + '/finance-download',
+         downloadURL='/application/'+ ${model.application.currentApplication.id} + '/form/' + ${model.financeViewModel.applicationFinanceId} + '/finance-download',
          readonly=${(readonly or (question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)))}">
+
     <th:block th:insert="question-type/types :: fileupload" th:with="removeName='remove_finance_document'" />
 </div>
 </html>
