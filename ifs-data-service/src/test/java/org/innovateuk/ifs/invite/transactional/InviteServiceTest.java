@@ -1,7 +1,11 @@
 package org.innovateuk.ifs.invite.transactional;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.ApplicationInvite;
@@ -17,9 +21,6 @@ import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.HibernateValidator;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -32,9 +33,14 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
+import static org.innovateuk.ifs.application.builder.QuestionBuilder.newQuestion;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -48,11 +54,7 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;
@@ -318,13 +320,38 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         Application application = newApplication().build();
         ApplicationInvite applicationInvite = newApplicationInvite().withId(24521L).withUser(user).withApplication(application).build();
         List<ProcessRole> processRoles = newProcessRole().build(3);
+        ProcessRole manyMembersOfOrg = processRoles.get(0);
+        manyMembersOfOrg.setOrganisationId(1L);
+        ProcessRole otherMemberOfOrg = newProcessRole().build();
+        ProcessRole onlyMemberOfOrg = processRoles.get(1);
+        onlyMemberOfOrg.setOrganisationId(2L);
+        ProcessRole withoutQuestionStatus = processRoles.get(2);
+        withoutQuestionStatus.setOrganisationId(3L);
+        QuestionStatus singleStatusQuestion = new QuestionStatus(newQuestion().withMultipleStatuses(false).build(), null, onlyMemberOfOrg, true);
+        QuestionStatus multipleStatusQuestionLastMember = new QuestionStatus(newQuestion().withMultipleStatuses(true).build(), null, onlyMemberOfOrg, true);
+        QuestionStatus multipleStatusQuestionManyMember = new QuestionStatus(newQuestion().withMultipleStatuses(true).build(), null, manyMembersOfOrg, true);
 
         when(applicationInviteMapper.mapIdToDomain(applicationInvite.getId())).thenReturn(applicationInvite);
         when(processRoleRepositoryMock.findByUserAndApplicationId(any(User.class), any(Long.class))).thenReturn(processRoles);
-        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), any(Long.class))).thenReturn(emptyList());
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), eq(manyMembersOfOrg.getId()))).thenReturn(newArrayList(multipleStatusQuestionManyMember));
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), eq(onlyMemberOfOrg.getId()))).thenReturn(newArrayList(singleStatusQuestion, multipleStatusQuestionLastMember));
+        when(questionStatusRepositoryMock.findByApplicationIdAndMarkedAsCompleteById(any(Long.class), eq(withoutQuestionStatus.getId()))).thenReturn(newArrayList());
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(any(Long.class), eq(manyMembersOfOrg.getOrganisationId()))).thenReturn(newArrayList(manyMembersOfOrg, otherMemberOfOrg));
+        when(processRoleRepositoryMock.findByApplicationIdAndOrganisationId(any(Long.class), eq(onlyMemberOfOrg.getOrganisationId()))).thenReturn(newArrayList(onlyMemberOfOrg));
+
 
         ServiceResult<Void> applicationInviteResult = inviteService.removeApplicationInvite(applicationInvite.getId());
         assertTrue(applicationInviteResult.isSuccess());
+
+        //Single status should be completed by lead
+        assertThat(singleStatusQuestion.getMarkedAsCompleteBy(),  equalTo(applicationInvite.getTarget().getLeadApplicantProcessRole()));
+
+        //Verify last question status was deleted.
+        verify(questionStatusRepositoryMock).delete(multipleStatusQuestionLastMember);
+
+        //Verify many member question status is completed by other member.
+        assertThat(multipleStatusQuestionManyMember.getMarkedAsCompleteBy(), equalTo(otherMemberOfOrg));
+
 
         ServiceResult<Void> applicationInviteResultFailure = inviteService.removeApplicationInvite(11L);
         assertTrue(applicationInviteResultFailure.isFailure());
