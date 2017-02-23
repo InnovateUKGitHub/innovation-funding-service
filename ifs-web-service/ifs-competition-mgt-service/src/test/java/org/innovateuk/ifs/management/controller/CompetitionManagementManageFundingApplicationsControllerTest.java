@@ -5,11 +5,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.LambdaMatcher;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +21,10 @@ import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.http.MediaType;
 
+import java.util.Collections;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
@@ -44,6 +49,10 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
     @Spy
     private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
+    @InjectMocks
+    @Spy
+    private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
+
     @Test
     public void testApplications() throws Exception {
         long competitionId = 1l;
@@ -53,6 +62,7 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
         int totalPages = pageNumber + 2;
         int totalElements = totalPages * (pageNumber + 1);
         String filter = "";
+        long changesSinceLastNotify = 10;
         // Mock setup
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
@@ -61,19 +71,20 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
         when(applicationSummaryService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize)).thenReturn(applicationSummaryPageResource);
 
-
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
         when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatistics));
+        when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competitionId)).thenReturn(restSuccess(changesSinceLastNotify));
 
         // Expected values to match against
         ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, sortField, filter, competitionId, competitionResource.getName());
         CompetitionInFlightStatsViewModel keyStatisticsModel = new CompetitionInFlightStatsViewModel(keyStatistics);
+        CompetitionInFlightViewModel competitionInFlightViewModel = new CompetitionInFlightViewModel(competitionResource, emptyList(), changesSinceLastNotify, keyStatisticsModel);
         // Method under test
         mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-manage-funding-applications"))
                 .andExpect(model().attribute("model", manageFundingApplicationViewModelMatcher(model)))
-                .andExpect(model().attribute("keyStatistics", competitionInFlightStatsViewModelMatcher(keyStatisticsModel)));
+                .andExpect(model().attribute("keyStatistics", competitionInFlightStatsViewModelMatcher(competitionInFlightViewModel)));
     }
 
     @Test
@@ -99,14 +110,14 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
         });
     }
 
-    private Matcher<CompetitionInFlightStatsViewModel> competitionInFlightStatsViewModelMatcher(CompetitionInFlightStatsViewModel toMatch) {
+    private Matcher<CompetitionInFlightViewModel> competitionInFlightStatsViewModelMatcher(CompetitionInFlightViewModel toMatch) {
         return new LambdaMatcher<>(match -> {
-            assertEquals(toMatch.getStatOne(), match.getStatOne());
-            assertEquals(toMatch.getStatTwo(), match.getStatTwo());
-            assertEquals(toMatch.getStatThree(), match.getStatThree());
-            assertEquals(toMatch.getStatFour(), match.getStatFour());
-            assertEquals(toMatch.getStatFive(), match.getStatFive());
-            assertEquals(toMatch.getCanManageFundingNotifications(), match.getCanManageFundingNotifications());
+            assertEquals(toMatch.getKeyStatistics().getStatOne(), match.getKeyStatistics().getStatOne());
+            assertEquals(toMatch.getKeyStatistics().getStatTwo(), match.getKeyStatistics().getStatTwo());
+            assertEquals(toMatch.getKeyStatistics().getStatThree(), match.getKeyStatistics().getStatThree());
+            assertEquals(toMatch.getKeyStatistics().getStatFour(), match.getKeyStatistics().getStatFour());
+            assertEquals(toMatch.getKeyStatistics().getStatFive(), match.getKeyStatistics().getStatFive());
+            assertEquals(toMatch.getKeyStatistics().getCanManageFundingNotifications(), match.getKeyStatistics().getCanManageFundingNotifications());
             return true;
         });
     }

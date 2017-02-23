@@ -127,7 +127,8 @@
                                         th:disabled="${model.keyStatistics.canManageFundingNotifications == false}"
                                         th:formaction="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}"
                                         th:if="${model.competitionStatus.name() == 'FUNDERS_PANEL' || model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
-                                        class="button button-large">Manage funding notifications
+                                        class="button button-large"
+                                        formmethod="get">Manage funding notifications
                                 </button>
                                 <button type="submit"
                                         th:case="'RELEASE_FEEDBACK'"
