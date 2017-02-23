@@ -108,13 +108,28 @@ Academic partner finance section
 
 Academic partner can upload file for field J-es PDF
     [Documentation]    INFUND-7522
-    [Tags]    HappyPath    Pending
-    # Pending due to INFUND-8203
+    [Tags]    HappyPath
     Given the user navigates to Your-finances page     Providing sustainable childcare
     and the user clicks the button/link         link=Your funding
-    Then the user should see the element     jQuery=label[for="42"]
+    # Note the Jes form is already uploaded
+    Then the user should see the element     css=a.uploaded-file
+    When The user clicks the button/link       jQuery=button:contains("Remove")
+    then the user should see the element       jQuery=label[for="42"]
     and the user uploads the file   name=jes-upload   ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
+
+File upload mandatory for Academic parter to mark section as complete
+    [Documentation]    INFUND-8469
+    [Tags]    HappyPath    Pending
+    #TODO pending due to INFUND-8469
+    # This will also check the auto-save as we hvaen't marked finances as complete yet
+    Given the user navigates to Your-finances page      Providing sustainable childcare
+    and the user clicks the button/link          link=Your funding
+    and the user clicks the button/link       jQuery=button:contains("Remove")
+    When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
+    and the user clicks the button/link     jQuery=button:contains("Mark as complete")
+    then the user should see a field error     css=a.uploaded-file
+
 
 *** Keywords ***
 Custom Suite Setup
