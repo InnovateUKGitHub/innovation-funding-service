@@ -38,7 +38,6 @@ import java.util.stream.Collectors;
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.SUBMITTED;
 import static org.innovateuk.ifs.assessment.resource.AssessmentStates.WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
