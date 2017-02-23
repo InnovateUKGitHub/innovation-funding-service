@@ -770,7 +770,7 @@ the user adds travel data into row
 
 Project finance user amends labour details in eligibility
     When the user clicks the button/link            jQuery=section:nth-of-type(1) h3:contains("Labour")
-    Then the user should see the element            jQuery=section:nth-of-type(1) button span:contains("2%")
+    Then the user should see the element            jQuery=section:nth-of-type(1) h3 span:contains("2%")
     When the user clicks the button/link            jQuery=section:nth-of-type(1) a:contains("Edit")
     Then the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     When the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
@@ -806,7 +806,7 @@ Project finance user amends materials details in eligibility
 
 Project finance user amends capital usage details in eligibility
     When the user clicks the button/link            jQuery=section:nth-of-type(4) h3:contains("Capital usage")
-    Then the user should see the element            jQuery=section:nth-of-type(4) button span:contains("0%")
+    Then the user should see the element            jQuery=section:nth-of-type(4) h3 span:contains("0%")
     And the user should see the element            jQuery=section:nth-of-type(4) input[value*='552']
     When the user clicks the button/link            jQuery=section:nth-of-type(4) a:contains("Edit")
     And the user adds capital usage data into row   1  test  10600  500  50
@@ -824,7 +824,7 @@ Project finance user amends capital usage details in eligibility
 
 Project finance user amends subcontracting usage details in eligibility
     When the user clicks the button/link            jQuery=section:nth-of-type(5) h3:contains("Subcontracting costs")
-    Then the user should see the element            jQuery=section:nth-of-type(5) button span:contains("49%")
+    Then the user should see the element            jQuery=section:nth-of-type(5) h3 span:contains("49%")
     And the user should see the element            jQuery=section:nth-of-type(5) input[value*='90,000']
     When the user clicks the button/link            jQuery=section:nth-of-type(5) a:contains("Edit")
     And the user adds subcontracting data into row   1  test  10600
@@ -841,7 +841,7 @@ Project finance user amends subcontracting usage details in eligibility
 
 Project finance user amends travel details in eligibility
     Given the user clicks the button/link           jQuery=section:nth-of-type(6) h3:contains("Travel and subsistence")
-    Then the user should see the element            jQuery=section:nth-of-type(6) button span:contains("5%")
+    Then the user should see the element            jQuery=section:nth-of-type(6) h3 span:contains("5%")
     And the user should see the element            jQuery=section:nth-of-type(6) input[value*='5,970']
     When the user clicks the button/link            jQuery=section:nth-of-type(6) a:contains("Edit")
     And the user adds travel data into row          1  test  10  100
@@ -858,7 +858,7 @@ Project finance user amends travel details in eligibility
 
 Project finance user amends other costs details in eligibility
     When the user clicks the button/link            jQuery=section:nth-of-type(7) h3:contains("Other costs")
-    Then the user should see the element            jQuery=section:nth-of-type(7) button span:contains("1%")
+    Then the user should see the element            jQuery=section:nth-of-type(7) h3 span:contains("1%")
     And the user should see the element            jQuery=section:nth-of-type(7) input[value*='1,100']
     When the user clicks the button/link            jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(1) td:nth-child(1) textarea  some other costs
