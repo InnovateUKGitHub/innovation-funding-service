@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.form.ContributorsForm;
 import org.innovateuk.ifs.application.form.InviteeForm;
 import org.innovateuk.ifs.application.form.OrganisationInviteForm;
 import org.innovateuk.ifs.application.form.RemoveContributorsForm;
+import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -47,12 +48,11 @@ import java.util.stream.Collectors;
 @RequestMapping("/application/{applicationId}/contributors")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationContributorController{
-    public static final String APPLICATION_CONTRIBUTORS_DISPLAY = "application-contributors/display";
+    public static final String APPLICATION_CONTRIBUTORS_TEAM = "application-contributors/application-team";
     public static final String APPLICATION_CONTRIBUTORS_INVITE = "application-contributors/invite";
     public static final String APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM = "application-contributors/remove-confirm";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
     private static final String INVITES_SEND = "invitesSend";
-    private static final String INVITES_SAVED = "invitesSaved";
 
     @Autowired
     private InviteRestService inviteRestService;
@@ -70,43 +70,17 @@ public class ApplicationContributorController{
     private CookieFlashMessageFilter cookieFlashMessageFilter;
     @Autowired
     private CookieUtil cookieUtil;
+    @Autowired
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
 
     @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    @RequestMapping(value = "", method = RequestMethod.GET)
-    public String displayContributors(@PathVariable("applicationId") final Long applicationId, HttpServletRequest request, Model model) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
-        ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
-        OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
-        UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
-
-        List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
-        if(savedInvites.stream().noneMatch(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId()))){
-            // Lead organisation has no invites, add it to the list
-            savedInvites.add(0, new InviteOrganisationResource(0L, leadOrganisation.getName(), leadOrganisation.getId(), new ArrayList<ApplicationInviteResource>())); // make sure the lead organisation is also part of this list.
-        }else{
-            // lead organisation has invites, make sure its the first in the list.
-            Optional<InviteOrganisationResource> leadOrg = savedInvites.stream().filter(i -> i.getOrganisation() != null && i.getOrganisation().equals(leadOrganisation.getId())).findAny();
-            leadOrg.get().setId(0L);
-        }
-
-        Map<Long, InviteOrganisationResource> organisationInvites = new LinkedHashMap<>();
-        savedInvites.sort((o1, o2) -> o1.getId().compareTo(o2.getId()));
-        savedInvites.stream().forEachOrdered(a -> organisationInvites.put(a.getId(), a));
-
-        model.addAttribute("authenticatedUser", user);
-        model.addAttribute("userIsLead", user.getId().equals(leadApplicant.getId()));
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentCompetition", competition);
-        model.addAttribute("leadApplicant", leadApplicant);
-        model.addAttribute("leadOrganisation", leadOrganisation);
-        model.addAttribute("organisationInvites", organisationInvites.values());
-        model.addAttribute("removeContributorForm", new RemoveContributorsForm());
-        return APPLICATION_CONTRIBUTORS_DISPLAY;
+    @GetMapping
+    public String getApplicationTeam(Model model, @PathVariable("applicationId") long applicationId) {
+        model.addAttribute("model", applicationTeamModelPopulator.populateModel(applicationId));
+        return APPLICATION_CONTRIBUTORS_TEAM;
     }
 
     @RequestMapping(value = "/remove/{inviteId}/confirm", method = RequestMethod.GET)

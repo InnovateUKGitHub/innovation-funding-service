@@ -3,14 +3,20 @@ package org.innovateuk.ifs.application;
 import org.apache.commons.lang3.CharEncoding;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.form.ContributorsForm;
+import org.innovateuk.ifs.application.populator.ApplicationTeamModelPopulator;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamApplicantRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamOrganisationRowViewModel;
+import org.innovateuk.ifs.application.viewmodel.ApplicationTeamViewModel;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
+import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
+import org.mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -19,15 +25,21 @@ import org.springframework.validation.Validator;
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.innovateuk.ifs.application.ApplicationContributorController.*;
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
+import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
+import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.inOrder;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -43,6 +55,10 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     @Mock
     private CookieFlashMessageFilter cookieFlashMessageFilter;
 
+    @Spy
+    @InjectMocks
+    private ApplicationTeamModelPopulator applicationTeamModelPopulator;
+
     private Long applicationId;
     private Long alternativeApplicationId;
     private String redirectUrl;
@@ -51,7 +67,6 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     private String applicationRedirectUrl;
     private String inviteOverviewRedirectUrl;
     private String removeUrl;
-    private String contributorsUrl;
 
     @Override
     protected ApplicationContributorController supplyControllerUnderTest() {
@@ -75,7 +90,6 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         removeUrl = String.format("/application/%d/contributors/remove", applicationId);
         inviteUrl = String.format("/application/%d/contributors/invite", applicationId);
         redirectUrl = String.format("redirect:/application/%d/contributors/invite", applicationId);
-        contributorsUrl = String.format("/application/%d/contributors", applicationId);
         applicationRedirectUrl = String.format("redirect:/application/%d", applicationId);
         inviteOverviewRedirectUrl = String.format("redirect:/application/%d/contributors", applicationId);
         viewName = APPLICATION_CONTRIBUTORS_INVITE;
@@ -261,7 +275,6 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     }
 
 
-
     @Test
     public void testNonLeadCanInviteToTheirOwnOrganisation() throws Exception {
 
@@ -285,7 +298,6 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
         assertEquals("", getDecryptedCookieValue(result.getResponse().getCookies(), "contributor_invite_state"));
     }
-
 
 
     @Test
@@ -356,6 +368,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
     /**
      * When the last person is removed from a partner organisation, also remove the organisation.
+     *
      * @throws Exception
      */
     @Test
@@ -409,7 +422,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void whenCookieHasDifferingApplicationIdFromGetParameterItShouldBeIgnored() throws Exception {
-        Cookie cookie = new Cookie("contributor_invite_state", encryptor.encrypt(URLEncoder.encode("{\"applicationId\":"+alternativeApplicationId+",\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8)));
+        Cookie cookie = new Cookie("contributor_invite_state", encryptor.encrypt(URLEncoder.encode("{\"applicationId\":" + alternativeApplicationId + ",\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationNameConfirmed\":null,\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8)));
 
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
@@ -446,15 +459,70 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     }
 
     @Test
-    public void testDisplayContributors() throws Exception {
+    public void testGetApplicationTeam() throws Exception {
+        ApplicationResource applicationResource = newApplicationResource()
+                .withName("Application name")
+                .build();
 
-        this.setupUserInvite("name", "user@email.com", 3L);
+        List<ApplicationInviteResource> applicationInviteResourcesOrg1 = newApplicationInviteResource()
+                .withNameConfirmed("Steve Smith", "Paul Davidson")
+                .withName("Steve Smith", "Paul Davidson")
+                .withEmail("steve.smith@empire.com", "paul.davidson@empire.com")
+                .withStatus(OPENED, OPENED)
+                .build(2);
 
-        mockMvc.perform(
-                get(contributorsUrl)
-        )
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(view().name(APPLICATION_CONTRIBUTORS_DISPLAY));
+        List<ApplicationInviteResource> applicationInviteResourcesOrg2 = newApplicationInviteResource()
+                .withNameConfirmed("Jessica Doe", null)
+                .withName("Jess Doe", "Ryan Dell")
+                .withEmail("jessica.doe@ludlow.com", "ryan.dell@ludlow.com")
+                .withStatus(OPENED, InviteStatus.SENT)
+                .build(2);
+
+        List<ApplicationInviteResource> applicationInviteResourcesOrg3 = newApplicationInviteResource()
+                .withNameConfirmed("Paul Tom")
+                .withName("Paul Tom")
+                .withEmail("paul.tom@egg.com")
+                .withStatus(OPENED)
+                .build(1);
+
+        List<InviteOrganisationResource> inviteOrganisationResource = newInviteOrganisationResource()
+                .withOrganisationName("Sustainable Living", "Green Activity", "Forest Universe")
+                .withOrganisationNameConfirmed("The Sustainable Living Company Ltd", "Green Activity", "Forest Universe")
+                .withInviteResources(applicationInviteResourcesOrg1, applicationInviteResourcesOrg2, applicationInviteResourcesOrg3)
+                .build(3);
+
+        when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
+        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(restSuccess(inviteOrganisationResource));
+
+        List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
+                new ApplicationTeamOrganisationRowViewModel("The Sustainable Living Company Ltd", false, asList(
+                        new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", false, false),
+                        new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
+                )),
+                new ApplicationTeamOrganisationRowViewModel("Green Activity", false, asList(
+                        new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
+                        new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
+                )),
+                new ApplicationTeamOrganisationRowViewModel("Forest Universe", false, singletonList(
+                        new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
+                ))
+        );
+
+        ApplicationTeamViewModel expectedViewModel = new ApplicationTeamViewModel(
+                applicationResource.getId(),
+                "Application name",
+                expectedOrganisations
+        );
+
+        mockMvc.perform(get("/application/{applicationId}/contributors", applicationResource.getId()))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("model", expectedViewModel))
+                .andExpect(view().name(APPLICATION_CONTRIBUTORS_TEAM));
+
+        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verifyNoMoreInteractions();
     }
 
     private void loginNonLeadUser(String email) {
@@ -466,7 +534,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
         inviteOrgResource.setOrganisation(organisationId);
         inviteOrgResource.setId(1L);
-        inviteOrgResource.setInviteResources(Arrays.asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
+        inviteOrgResource.setInviteResources(asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
         List l = new ArrayList();
         l.add(inviteOrgResource);
         when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(l));
