@@ -344,7 +344,7 @@ public class InviteServiceTest extends BaseUnitTestMocksTest {
         assertTrue(applicationInviteResult.isSuccess());
 
         //Single status should be completed by lead
-        assertThat(singleStatusQuestion.getMarkedAsCompleteBy(),  equalTo(applicationInvite.getTarget().getLeadApplicantProcessRole()));
+        assertThat(singleStatusQuestion.getMarkedAsCompleteBy(), equalTo(applicationInvite.getTarget().getLeadApplicantProcessRole()));
 
         //Verify last question status was deleted.
         verify(questionStatusRepositoryMock).delete(multipleStatusQuestionLastMember);
