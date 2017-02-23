@@ -4,7 +4,7 @@ set -ex
 PROJECT=$1
 TARGET=$2
 
-if [[ ${TARGET} == "remote" ]]
+if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
 then
     HOST=prod.ifs-test-clusters.com
 else
@@ -137,7 +137,7 @@ cloneConfig
 tailorAppInstance
 createProject
 
-if [[ (${TARGET} == "remote") ||  (${TARGET} == "production")]]
+if [[ (${TARGET} == "remote") ||  (${TARGET} == "production") ]]
 then
     useContainerRegistry
 fi
