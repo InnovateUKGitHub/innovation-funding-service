@@ -18,7 +18,7 @@ import java.util.List;
  * Handles the labour costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class LabourCostHandler extends FinanceRowHandler {
+public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     private static final Log LOG = LogFactory.getLog(LabourCostHandler.class);
     public static final String COST_KEY = "labour";
     public static final Integer DEFAULT_WORKING_DAYS = 232;
@@ -34,23 +34,14 @@ public class LabourCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof LabourCost) {
-            LabourCost labourCostItem = (LabourCost) costItem;
-            cost = new ApplicationFinanceRow(labourCostItem.getId(), labourCostItem.getName(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
-        }
-        return cost;
+    public ApplicationFinanceRow toCost(LabourCost labourCostItem) {
+        return labourCostItem != null ? new ApplicationFinanceRow(labourCostItem.getId(), labourCostItem.getName(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null) : null;
+
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof LabourCost) {
-            LabourCost labourCostItem = (LabourCost) costItem;
-            cost = new ProjectFinanceRow(labourCostItem.getId(), labourCostItem.getName(), labourCostItem.getRole(), labourCostItem.getDescription(), labourCostItem.getLabourDays(), labourCostItem.getGrossAnnualSalary(), null, null);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(LabourCost costItem) {
+        return new ProjectFinanceRow(costItem.getId(), costItem.getName(), costItem.getRole(), costItem.getDescription(), costItem.getLabourDays(), costItem.getGrossAnnualSalary(), null, null);
     }
 
     @Override

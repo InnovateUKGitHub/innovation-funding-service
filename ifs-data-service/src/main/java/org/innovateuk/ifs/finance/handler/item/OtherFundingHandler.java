@@ -19,7 +19,7 @@ import java.util.List;
  * Handles the other funding, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class OtherFundingHandler extends FinanceRowHandler {
+public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     public static final String COST_KEY = "other-funding";
 
     @Autowired
@@ -31,21 +31,14 @@ public class OtherFundingHandler extends FinanceRowHandler {
         validator.validate(costItem, bindingResult);
     }
 
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof OtherFunding) {
-            cost = mapOtherFunding(costItem);
-        }
-        return cost;
+    @Override
+    public ApplicationFinanceRow toCost(OtherFunding otherFunding) {
+        return otherFunding != null ? mapOtherFunding(otherFunding) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof OtherFunding) {
-            cost = mapOtherFundingToProjectCost(costItem);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(OtherFunding otherFunding) {
+        return otherFunding != null ? mapOtherFundingToProjectCost(otherFunding) : null;
     }
 
     @Override
