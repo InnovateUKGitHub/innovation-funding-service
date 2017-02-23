@@ -71,8 +71,8 @@ public class ApplicationTeamModelPopulator {
 
     private List<ApplicationTeamOrganisationRowViewModel> appendLeadOrganisation(
             List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModels, OrganisationResource leadOrganisation) {
-        organisationRowViewModels.add(0, new ApplicationTeamOrganisationRowViewModel(leadOrganisation.getName(),
-                true, new ArrayList<>()));
+        organisationRowViewModels.add(0, new ApplicationTeamOrganisationRowViewModel(leadOrganisation.getId(),
+                leadOrganisation.getName(), true, new ArrayList<>()));
         return organisationRowViewModels;
     }
 
@@ -86,7 +86,7 @@ public class ApplicationTeamModelPopulator {
 
     private ApplicationTeamOrganisationRowViewModel getOrganisationViewModel(InviteOrganisationResource inviteOrganisationResource, long leadOrganisationId) {
         boolean lead = leadOrganisationId == inviteOrganisationResource.getOrganisation();
-        return new ApplicationTeamOrganisationRowViewModel(
+        return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
                 getOrganisationName(inviteOrganisationResource), lead, inviteOrganisationResource.getInviteResources()
                 .stream().map(this::getApplicantViewModel).collect(toList()));
     }

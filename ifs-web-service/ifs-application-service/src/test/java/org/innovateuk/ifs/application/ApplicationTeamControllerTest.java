@@ -21,6 +21,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 
 import java.util.List;
+import java.util.Map;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -82,14 +83,14 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 .withName("Ludlow", "EGGS", "Empire Ltd")
                 .build(3);
 
+        Map<String, OrganisationResource> organisationsMap = simpleToMap(organisations, OrganisationResource::getName);
+
         List<InviteOrganisationResource> inviteOrganisationResources = newInviteOrganisationResource()
                 .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())
                 .withOrganisationName(organisations.get(0).getName(), organisations.get(1).getName(), organisations.get(2).getName())
                 .withOrganisationNameConfirmed(organisations.get(0).getName(), organisations.get(1).getName(), organisations.get(2).getName())
                 .withInviteResources(applicationInviteResourcesOrg1, applicationInviteResourcesOrg2, applicationInviteResourcesOrg3)
                 .build(3);
-
-        OrganisationResource leadOrganisation = simpleToMap(organisations, OrganisationResource::getName).get("Empire Ltd");
 
         UserResource leadApplicant = newUserResource()
                 .withFirstName("Steve")
@@ -102,21 +103,21 @@ public class ApplicationTeamControllerTest extends BaseControllerMockMVCTest<App
                 .build();
 
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
-        when(applicationService.getLeadOrganisation(applicationResource.getId())).thenReturn(leadOrganisation);
+        when(applicationService.getLeadOrganisation(applicationResource.getId())).thenReturn(organisationsMap.get("Empire Ltd"));
         when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(restSuccess(inviteOrganisationResources));
         when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(leadApplicantProcessRole);
         when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
-                new ApplicationTeamOrganisationRowViewModel("Empire Ltd", true, asList(
+                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Empire Ltd").getId(), "Empire Ltd", true, asList(
                         new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 )),
-                new ApplicationTeamOrganisationRowViewModel("Ludlow", false, asList(
+                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("Ludlow").getId(), "Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
                 )),
-                new ApplicationTeamOrganisationRowViewModel("EGGS", false, singletonList(
+                new ApplicationTeamOrganisationRowViewModel(organisationsMap.get("EGGS").getId(), "EGGS", false, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ))
         );

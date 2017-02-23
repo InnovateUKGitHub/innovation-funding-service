@@ -10,14 +10,20 @@ import java.util.List;
  */
 public class ApplicationTeamOrganisationRowViewModel {
 
+    private long id;
     private String name;
     private boolean lead;
     private List<ApplicationTeamApplicantRowViewModel> applicants;
 
-    public ApplicationTeamOrganisationRowViewModel(String name, boolean lead, List<ApplicationTeamApplicantRowViewModel> applicants) {
+    public ApplicationTeamOrganisationRowViewModel(long id, String name, boolean lead, List<ApplicationTeamApplicantRowViewModel> applicants) {
+        this.id = id;
         this.name = name;
         this.lead = lead;
         this.applicants = applicants;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {
@@ -45,6 +51,7 @@ public class ApplicationTeamOrganisationRowViewModel {
         ApplicationTeamOrganisationRowViewModel that = (ApplicationTeamOrganisationRowViewModel) o;
 
         return new EqualsBuilder()
+                .append(id, that.id)
                 .append(lead, that.lead)
                 .append(name, that.name)
                 .append(applicants, that.applicants)
@@ -54,6 +61,7 @@ public class ApplicationTeamOrganisationRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(name)
                 .append(lead)
                 .append(applicants)
