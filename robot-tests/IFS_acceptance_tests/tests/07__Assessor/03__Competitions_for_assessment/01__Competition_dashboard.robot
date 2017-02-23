@@ -86,6 +86,9 @@ Reject an application for assessment
     When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=a:contains("Reject")
+    And the user clicks the button/link    jQuery=button:contains(Cancel)
+    And the user should not see the element    id=rejectComment
+    And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     Then the user should see an error    Please enter a reason.
     And the assessor fills all fields with valid inputs
