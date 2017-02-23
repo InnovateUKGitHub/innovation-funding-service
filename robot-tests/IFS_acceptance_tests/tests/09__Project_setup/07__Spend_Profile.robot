@@ -89,7 +89,7 @@ Project Finance generates the Spend Profile
     And the user clicks the button/link     jQuery=#generate-spend-profile-modal-button
     Then the user should see the element    jQuery=.success-alert p:contains("The finance checks have been approved and profiles generated.")
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).ok
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(4).ok
 
 
 Lead partner can view spend profile page
@@ -536,7 +536,7 @@ Project Finance is able to see Spend Profile approval page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{internal_finance_credentials}
     Given the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    And the user clicks the button/link      jQuery=#table-project-status tbody tr:nth-child(3) td.status.action:nth-child(6) a
+    And the user clicks the button/link      jQuery=#table-project-status tbody tr:nth-child(4) td.status.action:nth-child(6) a
     Then the user should be redirected to the correct page    ${server}/project-setup-management/project/${PS_SP_APPLICATION_PROJECT}/spend-profile/approval
     And the user should see the element    jQuery=#content div.grid-row div.column-third.alignright.extra-margin h2:contains("Spend profile")
     And the user should not see the element    jQuery=h2:contains("The spend profile has been approved")
@@ -546,7 +546,7 @@ Project Finance is able to see Spend Profile approval page
     Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv
     And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
     And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
-    When the user should see the text in the page    Approved by Innovation Lead
+    When the user should see the text in the page    Approved by Innovate UK
     Then the element should be disabled    jQuery=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
@@ -567,7 +567,7 @@ Comp Admin is able to see Spend Profile approval page
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
     When the user clicks the button/link    jQuery=button:contains("Approved")
-    Then the user should see the text in the page    Approved by Innovation Lead
+    Then the user should see the text in the page    Approved by Innovate UK
     When the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
 
@@ -591,14 +591,14 @@ Status updates correctly for internal user's table
     [Tags]    Experian    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(1).status.ok         # Project details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(2).status.ok         # MO
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(3).status.ok         # Bank details
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(4).status.ok         # Finance checks
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.action     # Spend Profile
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(6).status.ok         # Other Docs
-    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status            # GOL
-    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(1).status.ok         # Project details
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(2).status.ok         # MO
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(3).status.ok         # Bank details
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(4).status.ok         # Finance checks
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(5).status.action     # Spend Profile
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(6).status.ok         # Other Docs
+    And the user should see the element      jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(7).status            # GOL
+    And the user should not see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(7).status.waiting    # specifically checking regression issue INFUND-7119
 
 Project Finance is able to Reject Spend Profile
     [Documentation]    INFUND-2638, INFUND-5617
@@ -617,7 +617,7 @@ Status updates to a cross for the internal user's table
     [Documentation]    INFUND-6977
     [Tags]
     When the user navigates to the page      ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.rejected
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(5).status.rejected
 
 Lead partner can see that the spend profile has been rejected
     [Documentation]    INFUND-6977
@@ -704,11 +704,11 @@ Project Finance is able to Approve Spend Profile
     When the user selects the checkbox      approvedByLeadTechnologist
     Then the user should see the element    jQuery=button:contains("Approved")
     When the user clicks the button/link    jQuery=button:contains("Approved")
-    Then the user should see the text in the page  Approved by Innovation Lead
+    Then the user should see the text in the page  Approved by Innovate UK
     When the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Approved")
-    And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Accept documents")
+    And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Approve")
     And the user should see the text in the page    ${PS_SP_APPLICATION_TITLE}
     Then the user should not see the element      jQuery=h3:contains("The spend profile has been approved")
 
@@ -716,8 +716,8 @@ Status updates correctly for internal user's table after approval
     [Documentation]    INFUND-5543
     [Tags]
     When the user navigates to the page     ${server}/project-setup-management/competition/${PS_SP_Competition_Id}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(5).status.ok
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(3) td:nth-of-type(7).status.action   # GOL
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(5).status.ok
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(4) td:nth-of-type(7).status.action   # GOL
 
 Project Finance still has a link to the spend profile after approval
     [Documentation]    INFUND-6046

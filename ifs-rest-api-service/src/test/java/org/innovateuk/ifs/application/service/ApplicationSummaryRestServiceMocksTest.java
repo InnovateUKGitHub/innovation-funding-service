@@ -29,7 +29,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, null, null, null, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
 
     @Test
@@ -40,7 +40,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), "id", null, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -51,7 +51,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), "id", 6, null, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -62,7 +62,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), null, 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -73,7 +73,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(Long.valueOf(123L), "id", 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
 
     @Test
@@ -84,7 +84,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, null, 6, 20, "10");
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     @Test
     public void testFindByCompetitionWithFilterAndSort() {
@@ -94,7 +94,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getAllApplications(123L, "id", 6, 20, "10");
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -105,7 +105,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), null, 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -116,7 +116,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), "id", 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), null, 6, 20, "10");
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
 
     @Test
@@ -138,7 +138,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getSubmittedApplications(Long.valueOf(123L), "id", 6, 20, "10");
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
 
     @Test
@@ -149,7 +149,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getNonSubmittedApplications(Long.valueOf(123L), null, 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -160,7 +160,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getNonSubmittedApplications(Long.valueOf(123L), "id", 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -171,7 +171,7 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplications(Long.valueOf(123L), null, 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
     
     @Test
@@ -182,6 +182,6 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         RestResult<ApplicationSummaryPageResource> result = service.getFeedbackRequiredApplications(Long.valueOf(123L), "id", 6, 20, null);
 
         assertTrue(result.isSuccess());
-        Assert.assertEquals(responseBody, result.getSuccessObject());
+        assertEquals(responseBody, result.getSuccessObject());
     }
 }

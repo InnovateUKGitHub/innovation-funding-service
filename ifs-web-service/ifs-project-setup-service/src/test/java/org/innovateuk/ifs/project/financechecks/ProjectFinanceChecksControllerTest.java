@@ -36,11 +36,13 @@ import org.mockito.Spy;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
-import javax.management.Query;
 import java.time.LocalDate;
-import java.util.*;
+import java.time.LocalDateTime;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Optional;
 
-import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -183,7 +185,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
     }
 
     private QueryResource sampleQuery() {
-        return new QueryResource(null, null, null, null, null, false, null);
+        return new QueryResource(null, null, Collections.emptyList(), null, null, false, LocalDateTime.now());
     }
 
     @Test
