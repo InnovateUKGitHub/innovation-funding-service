@@ -51,7 +51,7 @@
                                 <a th:unless="${T(org.innovateuk.ifs.application.constant.ApplicationStatusConstants).CREATED.name == app.applicationStatusName}"
                                         th:href="@{/application/{id}(id=${app.getId()})}" th:text="((${app.name} == '') ? ${competitions.get(app.getId()).getName()}: ${app.name})"/>
                                 <a th:if="${T(org.innovateuk.ifs.application.constant.ApplicationStatusConstants).CREATED.name == app.applicationStatusName}"
-                                        th:href="@{/application/{id}/contributors/invite?newApplication(id=${app.getId()})}" th:text="((${app.name} == '') ? ${competitions.get(app.getId()).getName()}: ${app.name})"/>
+                                        th:href="@{/application/{id}/update?newApplication(id=${app.getId()})}" th:text="((${app.name} == '') ? ${competitions.get(app.getId()).getName()}: ${app.name})"/>
                             </h3>
                             <p class="form-hint">Application number: <span th:text="${#numbers.formatInteger(app.id,8)}"></span></p>
                             <p class="form-hint">Current progress: </p>

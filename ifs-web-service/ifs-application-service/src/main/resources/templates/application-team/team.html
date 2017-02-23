@@ -8,14 +8,6 @@
         <th:block th:insert="fragments/layout :: body-start"/>
         <th:block th:insert="fragments/layout :: global-header"/>
 
-        <!-- TODO when these two are removed, are they still needed? -->
-        <!--
-        <th:block th:insert="fragments/modals :: modal-overlay" th:if="${userIsLead}" />
-        <th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" th:if="${userIsLead}" />
-        -->
-
-        <!-- TODO does the endpoint /application/' + ${model.applicationId} + '/contributors/remove/' + ${invite.id} + '/confirm' need removing now? -->
-
         <main id="content">
             <th:block th:insert="fragments/layout :: main-content-start"/>
             <th:block th:insert="fragments/layout :: header-sub"
@@ -27,7 +19,7 @@
                 <h1 class="heading-xlarge">Application team</h1>
             </div>
 
-            <p>View and manage your contributors and partners in the application.If an individual is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
+            <p>View and manage your contributors and partners in the application. If an individual is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
 
             <p>To change the lead applicant for this application please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
 

@@ -82,7 +82,7 @@ ${ACCOUNT_CREATION_FORM_URL}    ${SERVER}/registration/register?organisationId=1
 ${ELIGIBILITY_INFO_URL}    ${SERVER}/competition/1/info/eligibility
 ${SPEED_BUMP_URL}    ${SERVER}/application/create-authenticated/1
 ${EDIT_PROFILE_URL}    ${SERVER}/profile/edit
-${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/contributors
+${APPLICATION_TEAM_URL}    ${SERVER}/application/${OPEN_COMPETITION_APPLICATION_1}/team
 ${COMP_MANAGEMENT_APPLICATIONS_LIST}    ${SERVER}/management/competition/${OPEN_COMPETITION}/applications
 ${COMP_MANAGEMENT_APPLICATION_1_OVERVIEW}    ${SERVER}/management/competition/${OPEN_COMPETITION}/application/${OPEN_COMPETITION_APPLICATION_1}
 ${COMP_MANAGEMENT_COMP_SETUP}    ${SERVER}/management/competition/setup/${COMP_SETUP_COMPETITION}
