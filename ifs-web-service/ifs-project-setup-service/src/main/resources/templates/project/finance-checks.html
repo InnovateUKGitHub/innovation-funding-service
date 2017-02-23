@@ -58,8 +58,8 @@
                 <p class="heading-small no-margin">
                     <th:block th:text="${post.username}">Created by user</th:block>
                     <small>
-                        <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}" />
-                        <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}" />
+                        <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"/>
+                        <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
                     </small>
                 </p>
                 <p data-md-to-html="" th:text="${post.body}"></p>
@@ -73,8 +73,8 @@
                     <p>
                         <strong th:text="${post.username}">Created by user</strong>
                         <small>
-                            <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}" />
-                            <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}" />
+                            <th:block th:text="${#temporals.format(post.createdOn, 'dd MMMM yyyy')}"/>
+                            <th:block th:text="${#strings.toLowerCase(#temporals.format(post.createdOn, 'hh:mma'))}"/>
                         </small>
                     </p>
                     <p data-md-to-html="" th:text="${post.body}"></p>
