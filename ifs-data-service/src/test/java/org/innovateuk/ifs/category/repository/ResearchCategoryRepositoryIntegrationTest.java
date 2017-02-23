@@ -12,8 +12,8 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.junit.Assert.assertEquals;
 
-public class
-ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ResearchCategoryRepository> {
+public class ResearchCategoryRepositoryIntegrationTest
+        extends BaseRepositoryIntegrationTest<ResearchCategoryRepository> {
 
     @Autowired
     @Override
