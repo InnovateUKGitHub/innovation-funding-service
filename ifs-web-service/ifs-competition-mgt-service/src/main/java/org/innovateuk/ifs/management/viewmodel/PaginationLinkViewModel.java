@@ -7,7 +7,7 @@ public class PaginationLinkViewModel {
     private String title;
 
     public PaginationLinkViewModel(int page, int pageSize, long totalElements, String rootPath) {
-        this.title = (1 + (page * pageSize)) + " to " + Math.min((1 + page) * pageSize, totalElements);
+        this.title = ((page * pageSize) + 1) + " to " + Math.min((page + 1) * pageSize, totalElements);
         this.path = UriComponentsBuilder.fromUriString(rootPath).replaceQueryParam("page", page).toUriString();
     }
 

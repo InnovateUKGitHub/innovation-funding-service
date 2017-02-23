@@ -61,7 +61,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		assertEquals(resource, result.getSuccessObject());
 	}
 
-
 	@SuppressWarnings("unchecked")
 	@Test
 	public void findByCompetitionNoFilterWillFilterByEmptyString() throws Exception {
@@ -77,8 +76,6 @@ public class ApplicationSummaryServiceTest extends BaseUnitTestMocksTest {
 		assertTrue(result.isSuccess());
 		assertEquals(resource, result.getSuccessObject());
 	}
-
-
 
 	@SuppressWarnings("unchecked")
 	@Test
