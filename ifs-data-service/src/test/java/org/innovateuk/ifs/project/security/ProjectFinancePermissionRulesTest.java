@@ -181,38 +181,6 @@ public class ProjectFinancePermissionRulesTest extends BasePermissionRulesTest<P
         assertFalse(rules.leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, user));
     }
 
-    @Test
-    public void testProjectFinanceUserCanViewAwaitingQueries() {
-
-        Long projectId = 1L;
-
-        allGlobalRoleUsers.forEach(user -> {
-            if (allInternalUsers.contains(user)) {
-                assertTrue(rules.internalUsersCanSeeTheProjectFinanceQueries(projectId, user));
-            } else {
-                assertFalse(rules.internalUsersCanSeeTheProjectFinanceQueries(projectId, user));
-            }
-        });
-    }
-
-    @Test
-    public void testProjectPartnerCanViewAwaitingQueries() {
-        UserResource user = newUserResource().build();
-        UserResource nonProjectUser = newUserResource().build();
-        Project linkedProject = newProject().build();
-
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER)).
-                thenReturn(newProjectUser().build(1));
-        when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(linkedProject.getId(), nonProjectUser.getId(), PROJECT_PARTNER)).
-                thenReturn(Collections.emptyList());
-
-        assertTrue(rules.partnersCanSeeTheProjectFinanceQueriesForTheirOrganisation(linkedProject.getId(), user));
-        assertFalse(rules.partnersCanSeeTheProjectFinanceQueriesForTheirOrganisation(linkedProject.getId(), nonProjectUser));
-
-        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), user.getId(), PROJECT_PARTNER);
-        verify(projectUserRepositoryMock).findByProjectIdAndUserIdAndRole(linkedProject.getId(), nonProjectUser.getId(), PROJECT_PARTNER);
-    }
-
     @Override
     protected ProjectFinancePermissionRules supplyPermissionRulesUnderTest() {
         return new ProjectFinancePermissionRules();
