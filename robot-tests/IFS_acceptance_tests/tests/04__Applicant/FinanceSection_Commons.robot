@@ -98,9 +98,11 @@ the user fills in the project costs
     the user selects the checkbox    agree-state-aid-page
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your project costs
+    the user has read only view once section is marked complete
+
+the user has read only view once section is marked complete
     the user should not see the element   css=input
     the user clicks the button/link     jQuery=button:contains("Return to finances")
-
 
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
@@ -185,8 +187,7 @@ the user fills in the organisation information
     the user selects the radio button  financePosition-organisationSize  financePosition-organisationSize-SMALL
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your organisation
-    the user should not see the element   css=input
-    the user clicks the button/link     jQuery=button:contains("Return to finances")
+    the user has read only view once section is marked complete
 
 the user checks Your Funding section
     [Arguments]  ${Application}
@@ -208,8 +209,7 @@ the user fills in the funding information
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
     the user clicks the button/link  link=Your funding
-    the user should not see the element   css=input
-    the user clicks the button/link     jQuery=button:contains("Return to finances")
+    the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.complete
