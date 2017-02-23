@@ -89,15 +89,15 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         FormInputResponse headcount = newFormInputResponse().withValue("1").build();
         FormInputResponse turnover = newFormInputResponse().withValue("2").build();
         // Turnover and count - these should be active in sync with each other.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withResponses(asList(headcount)).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withResponses(asList(turnover)).build();
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
 
         // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withResponses(asList(turnover)).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withResponses(asList(headcount)).build();
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
@@ -169,8 +169,8 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
     }
 
     @Test
-    public void test_GetForCompetitionTurnoverAndHeadCountAreFinancial() {
-        boolean isIncludeGrowthTable = true;
+    public void test_GetForCompetitionTurnoverAndHeadCountAreNotFinancial() {
+        boolean isIncludeGrowthTable = false;
         boolean isFullFinance = true;
         Long competitionId = 1L;
 
@@ -181,15 +181,15 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         FormInputResponse headcount = newFormInputResponse().withValue("1").build();
         FormInputResponse turnover = newFormInputResponse().withValue("2").build();
         // Turnover and count - these should be active in sync with each other.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withResponses(asList(headcount)).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withResponses(asList(turnover)).build();
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
 
         // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withResponses(asList(turnover)).withActive(isIncludeGrowthTable).build();
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
         List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withResponses(asList(headcount)).withActive(isIncludeGrowthTable).build();
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
