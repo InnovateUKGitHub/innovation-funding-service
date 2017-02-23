@@ -41,7 +41,6 @@ import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.profiling.ProfileExecution;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.user.service.ProcessRoleService;
@@ -115,6 +114,7 @@ public class ApplicationFormController {
     public static final String MARK_SECTION_AS_INCOMPLETE = "mark_section_as_incomplete";
     public static final String MARK_AS_INCOMPLETE = "mark_as_incomplete";
     public static final String NOT_REQUESTING_FUNDING = "not_requesting_funding";
+    public static final String ACADEMIC_FINANCE_REMOVE = "remove_finance_document";
     public static final String REQUESTING_FUNDING = "requesting_funding";
     public static final String UPLOAD_FILE = "upload_file";
     public static final String REMOVE_UPLOADED_FILE = "remove_uploaded_file";
@@ -377,7 +377,8 @@ public class ApplicationFormController {
                 request.getParameter(UPLOAD_FILE) != null ||
                 request.getParameter(EDIT_QUESTION) != null ||
                 request.getParameter(REQUESTING_FUNDING) != null ||
-                request.getParameter(NOT_REQUESTING_FUNDING) != null)) {
+                request.getParameter(NOT_REQUESTING_FUNDING) != null||
+                request.getParameter(ACADEMIC_FINANCE_REMOVE) != null)) {
             // user did a action, just display the same page.
             LOG.debug("redirect: " + request.getRequestURI());
             return "redirect:" + request.getRequestURI();
