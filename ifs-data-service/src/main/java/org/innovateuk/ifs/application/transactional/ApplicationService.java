@@ -92,4 +92,10 @@ public interface ApplicationService {
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<BigDecimal> getProgressPercentageBigDecimalByApplicationId(Long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<Long> getTurnoverByApplicationId(Long applicationId);
+
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
+    ServiceResult<Long> getHeadcountByApplicationId(Long applicationId);
 }

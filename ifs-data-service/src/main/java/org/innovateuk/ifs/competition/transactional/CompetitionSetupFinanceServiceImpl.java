@@ -7,6 +7,7 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,6 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 
-
 /**
  * Service implementation to deal with the finance part of competition setup.
  */
@@ -31,6 +31,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
 
     @Autowired
     private FormInputRepository formInputRepository;
+
 
     @Override
     public ServiceResult<Void> save(CompetitionSetupFinanceResource compSetupFinanceRes) {
@@ -54,21 +55,7 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
                     compSetupFinanceRes.setIncludeGrowthTable(isIncludeGrowthTable);
                     compSetupFinanceRes.setFullApplicationFinance(competition.isFullApplicationFinance());
                     compSetupFinanceRes.setCompetitionId(compId);
-                    ServiceResult<FormInput> turnOverResult;
-                    ServiceResult<FormInput> headCountResult;
-                    if (isIncludeGrowthTable) {
-                        turnOverResult = financeYearEnd(compId);
-                        headCountResult = financeCount(compId);
-                    } else {
-                        turnOverResult = turnoverInput(compId);
-                        headCountResult = countInput(compId);
-                    }
-                    if (turnOverResult.isSuccess() && turnOverResult.getSuccessObject().getResponses() != null && !turnOverResult.getSuccessObject().getResponses().isEmpty()) {
-                        compSetupFinanceRes.setTurnover(Long.parseLong(turnOverResult.getSuccessObject().getResponses().get(0).getValue()));
-                    }
-                    if (headCountResult.isSuccess() && headCountResult.getSuccessObject().getResponses() != null && !headCountResult.getSuccessObject().getResponses().isEmpty()) {
-                        compSetupFinanceRes.setHeadcount(Long.parseLong(headCountResult.getSuccessObject().getResponses().get(0).getValue()));
-                    }
+
                     return serviceSuccess(compSetupFinanceRes);
                 });
         return compSetupFinanceResResult;
@@ -163,5 +150,6 @@ public class CompetitionSetupFinanceServiceImpl extends BaseTransactionalService
     private ServiceResult<List<FormInput>> financeOverviewRow(Long competitionId) {
         return serviceSuccess(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW)));
     }
+
 
 }

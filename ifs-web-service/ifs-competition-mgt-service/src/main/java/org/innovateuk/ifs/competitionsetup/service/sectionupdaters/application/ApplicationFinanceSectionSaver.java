@@ -8,7 +8,7 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
-import org.innovateuk.ifs.competition.setup.finance.service.CompetitionSetupFinanceService;
+import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupFinanceService;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSectionSaver;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.CompetitionSetupSubsectionSaver;
 import org.springframework.beans.factory.annotation.Autowired;

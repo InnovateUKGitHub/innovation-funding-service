@@ -2,8 +2,8 @@ package org.innovateuk.ifs.project.viability.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupFinanceResource;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
@@ -145,11 +145,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectService.getById(project.getId())).thenReturn(project);
         when(applicationService.getById(456L)).thenReturn(app);
 
-        CompetitionSetupFinanceResource compSetupFinanceResource = new CompetitionSetupFinanceResource();
-        compSetupFinanceResource.setHeadcount(1L);
-        compSetupFinanceResource.setTurnover(2L);
-        ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceResourceResult = serviceSuccess(compSetupFinanceResource);
-        when(competitionSetupFinanceService.getByCompetitionId(123L)).thenReturn(compSetupFinanceResourceResult);
+        when(applicationService.getHeadcount(456L)).thenReturn(RestResult.restSuccess(1L));
+        when(applicationService.getTurnover(456L)).thenReturn(RestResult.restSuccess(2L));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), industrialOrganisation.getId())).
@@ -197,11 +194,8 @@ public class FinanceChecksViabilityControllerTest extends BaseControllerMockMVCT
         when(projectFinanceService.isCreditReportConfirmed(project.getId(), academicOrganisation.getId())).thenReturn(true);
 
         when(projectService.getById(project.getId())).thenReturn(project);
-        when(applicationService.getById(456L)).thenReturn(app);
-
-        CompetitionSetupFinanceResource compSetupFinanceResource = new CompetitionSetupFinanceResource();
-        ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceResourceResult = serviceSuccess(compSetupFinanceResource);
-        when(competitionSetupFinanceService.getByCompetitionId(123L)).thenReturn(compSetupFinanceResourceResult);
+        when(applicationService.getHeadcount(456L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
+        when(applicationService.getTurnover(456L)).thenReturn(RestResult.restFailure(CommonFailureKeys.GENERAL_SINGLE_ENTRY_EXPECTED));
 
         MvcResult result = mockMvc.perform(get("/project/{projectId}/finance-check/organisation/{organisationId}/viability",
                 project.getId(), academicOrganisation.getId())).

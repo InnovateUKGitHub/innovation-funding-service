@@ -10,6 +10,7 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
+import org.springframework.test.web.servlet.MvcResult;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -19,6 +20,7 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationDocs.applicationResourceFields;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -226,5 +228,36 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
                         ),
                         responseFields(applicationResourceFields)
                 ));
+    }
+
+    @Test
+    public void getTurnover() throws Exception{
+        Long applicationId = 1L;
+
+        when(applicationServiceMock.getTurnoverByApplicationId(applicationId)).thenReturn(serviceSuccess(2L));
+
+        MvcResult mvcResult = mockMvc.perform(get("/application/turnover/{applicationId}", applicationId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application for which the applicant's annual turnover is requested")
+                        )
+                )).andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("2"));
+    }
+
+    @Test
+    public void getHeadcount() throws Exception{
+        Long applicationId = 1L;
+
+
+        when(applicationServiceMock.getHeadcountByApplicationId(applicationId)).thenReturn(serviceSuccess(2L));
+
+        MvcResult mvcResult = mockMvc.perform(get("/application/headcount/{applicationId}", applicationId))
+                .andDo(this.document.snippets(
+                        pathParameters(
+                                parameterWithName("applicationId").description("Id of the application for which the applicant's staff headcount is requested")
+                        )
+                )).andReturn();
+        assertTrue(mvcResult.getResponse().getContentAsString().equals("2"));
     }
 }

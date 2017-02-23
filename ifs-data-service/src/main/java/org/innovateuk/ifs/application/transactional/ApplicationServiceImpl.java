@@ -29,6 +29,7 @@ import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
@@ -38,6 +39,7 @@ import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -49,6 +51,7 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -56,11 +59,13 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.FILES_UNABLE_TO_DELETE_FILE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL;
 import static org.innovateuk.ifs.user.resource.UserRoleType.LEADAPPLICANT;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
+import static org.innovateuk.ifs.util.EntityLookupCallbacks.getOnlyElementOrFail;
 import static org.innovateuk.ifs.util.MathFunctions.percentage;
 
 /**
@@ -86,8 +91,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
     @Autowired
-    private FormInputRepository formInputRepository;
-    @Autowired
     private QuestionService questionService;
     @Autowired
     private ApplicationFinanceHandler applicationFinanceHandler;
@@ -101,6 +104,8 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationMapper applicationMapper;
     @Autowired
     private ResearchCategoryMapper researchCategoryMapper;
+    @Autowired
+    protected FormInputRepository formInputRepository;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -468,6 +473,76 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return getApplication(applicationId).andOnSuccessReturn(this::progressPercentageForApplication);
     }
 
+    @Override
+    public ServiceResult<Long> getTurnoverByApplicationId(Long applicationId) {
+        Application app = applicationRepository.findOne(applicationId);
+        ServiceResult<Boolean> isIncludeGrowthTableResult = isIncludeGrowthTable(app.getCompetition().getId());
+        ServiceResult<Long> turnoverResult = find(isIncludeGrowthTableResult).
+                andOnSuccess((isIncludeGrowthTable) -> {
+                    Long turnover = null;
+                    ServiceResult<FormInputResponse> turnOverResult;
+                    if (isIncludeGrowthTable) {
+                        turnOverResult = financeTurnoverFromApplication(applicationId);
+                    } else {
+                        turnOverResult = turnoverInputFromApplication(applicationId);
+                    }
+                    if (turnOverResult.isSuccess()) {
+                        turnover = (Long.parseLong(turnOverResult.getSuccessObject().getValue()));
+                    }
+
+                    return serviceSuccess(turnover);
+                });
+        return turnoverResult;
+    }
+
+    @Override
+    public ServiceResult<Long> getHeadcountByApplicationId(Long applicationId) {
+
+        Application app = applicationRepository.findOne(applicationId);
+        ServiceResult<Boolean> isIncludeGrowthTableResult = isIncludeGrowthTable(app.getCompetition().getId());
+        ServiceResult<Long> turnoverResult = find(isIncludeGrowthTableResult).
+                andOnSuccess((isIncludeGrowthTable) -> {
+                    Long headcount = null;
+                    ServiceResult<FormInputResponse> turnOverResult;
+                    if (isIncludeGrowthTable) {
+                        turnOverResult = financeHeadcountFromApplication(applicationId);
+                    } else {
+                        turnOverResult = headcountInputFromApplication(applicationId);
+                    }
+                    if (turnOverResult.isSuccess()) {
+                        headcount = (Long.parseLong(turnOverResult.getSuccessObject().getValue()));
+                    }
+
+                    return serviceSuccess(headcount);
+                });
+        return turnoverResult;
+    }
+
+    private ServiceResult<FormInputResponse> headcountInputFromApplication(Long competitionId) {
+        return getOnlyForApplication(competitionId, STAFF_COUNT);
+    }
+
+    private ServiceResult<FormInputResponse> turnoverInputFromApplication(Long applicationId) {
+        return getOnlyForApplication(applicationId, STAFF_TURNOVER);
+    }
+
+    private ServiceResult<FormInputResponse> getOnlyForApplication(Long applicationId, FormInputType formInputType) {
+        Application app = applicationRepository.findOne(applicationId);
+        return getOnlyElementOrFail(formInputRepository.findByCompetitionIdAndTypeIn(app.getCompetition().getId(), asList(formInputType))).andOnSuccess( (formInput) -> {
+            List<FormInputResponse> all = formInputResponseRepository.findByApplicationIdAndFormInputId(applicationId, formInput.getId());
+            return getOnlyElementOrFail(all);
+        });
+    }
+
+    private ServiceResult<FormInputResponse> financeHeadcountFromApplication(Long applicationId) {
+        return getOnlyForApplication(applicationId, FINANCIAL_STAFF_COUNT);
+    }
+
+    private ServiceResult<FormInputResponse> financeTurnoverFromApplication(Long applicationId) {
+        return getOnlyForApplication(applicationId, FINANCIAL_YEAR_END);
+    }
+
+
     private BigDecimal progressPercentageForApplication(Application application) {
         List<Section> sections = application.getCompetition().getSections();
 
@@ -518,5 +593,69 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
             return CompetitionStatus.OPEN.equals(application.getCompetition().getCompetitionStatus());
         }
         return true;
+    }
+
+    private ServiceResult<FormInput> countInput(Long competitionId) {
+        return getOnlyForCompetition(competitionId, STAFF_COUNT);
+    }
+
+    private ServiceResult<FormInput> turnoverInput(Long competitionId) {
+        return getOnlyForCompetition(competitionId, STAFF_TURNOVER);
+    }
+
+    private ServiceResult<FormInput> getOnlyForCompetition(Long competitionId, FormInputType formInputType) {
+        List<FormInput> all = formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(formInputType));
+        return getOnlyElementOrFail(all);
+    }
+
+    private ServiceResult<FormInput> financeCount(Long competitionId) {
+        return getOnlyForCompetition(competitionId, FINANCIAL_STAFF_COUNT);
+    }
+
+    private ServiceResult<FormInput> financeYearEnd(Long competitionId) {
+        return getOnlyForCompetition(competitionId, FINANCIAL_YEAR_END);
+    }
+
+    private ServiceResult<List<FormInput>> financeOverviewRow(Long competitionId) {
+        return serviceSuccess(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW)));
+    }
+
+    private ServiceResult<Boolean> isIncludeGrowthTable(Long compId) {
+        ServiceResult<Boolean> isIncludeGrowthTableByCountAndTurnover = find(countInput(compId), turnoverInput(compId)).andOnSuccess(this::isIncludeGrowthTableByCountAndTurnover);
+        ServiceResult<Boolean> isIncludeGrowthTableByFinance = find(financeYearEnd(compId), financeOverviewRow(compId), financeCount(compId)).andOnSuccess(this::isIncludeGrowthTableByFinance);
+        ServiceResult<Boolean> isIncludeGrowthTable = find(isIncludeGrowthTableByCountAndTurnover, isIncludeGrowthTableByFinance).andOnSuccess(this::isIncludeGrowthTableByCountTurnoverAndFinance);
+        return isIncludeGrowthTable;
+    }
+
+    protected ServiceResult<Boolean> isIncludeGrowthTableByCountTurnoverAndFinance(boolean byCountAndTurnover, boolean byFinance) {
+        boolean isConsistent = byCountAndTurnover == byFinance;
+        if (isConsistent) {
+            return serviceSuccess(byCountAndTurnover);
+        } else {
+            return serviceFailure(new Error("include.growth.table.count.turnover.finance.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+
+    protected ServiceResult<Boolean> isIncludeGrowthTableByCountAndTurnover(FormInput count, FormInput turnover) {
+        boolean isConsistent = count.getActive() == turnover.getActive();
+        if (isConsistent) {
+            return serviceSuccess(!count.getActive());
+        } else {
+            return serviceFailure(new Error("include.growth.table.count.turnover.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    protected ServiceResult<Boolean> isIncludeGrowthTableByFinance(FormInput yearEnd, List<FormInput> overviewRows, FormInput count) {
+        // Check the active boolean is the same across all of the fields
+        List<Boolean> overviewRowsActive = simpleMap(overviewRows, FormInput::getActive);
+        boolean isConsistent =
+                (count.getActive() && yearEnd.getActive() && !overviewRowsActive.contains(false))
+                        || (!count.getActive() && !yearEnd.getActive() && !overviewRowsActive.contains(true));
+        if (isConsistent) {
+            return serviceSuccess(count.getActive());
+        } else {
+            return serviceFailure(new Error("include.growth.table.finance.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
+        }
     }
 }

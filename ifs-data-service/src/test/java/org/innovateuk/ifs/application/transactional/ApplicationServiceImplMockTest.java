@@ -37,6 +37,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.name;
 import static org.innovateuk.ifs.LambdaMatcher.lambdaMatches;
@@ -53,6 +55,7 @@ import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.form.builder.FormInputResponseBuilder.newFormInputResponse;
+import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.RoleBuilder.newRole;
@@ -67,12 +70,12 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link ApplicationServiceImpl}
  */
-public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
+public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationServiceImpl> {
 
     private Application openApplication;
 
     @Override
-    protected ApplicationService supplyServiceUnderTest() {
+    protected ApplicationServiceImpl supplyServiceUnderTest() {
         return new ApplicationServiceImpl();
     }
 
@@ -669,5 +672,319 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ApplicationResource created = service.createApplicationByApplicationNameForUserIdAndCompetitionId(applicationName, competitionId, userId).getSuccessObject();
         assertEquals(newApplication, created);
+    }
+
+    @Test
+    public void test_ErrorCountTurnover() {
+        // Should never happen but check that reasonable error codes get returned in the event that the database
+        // becomes inconsistent
+
+        // Turnover and count - these should always be in sync - but here we test when they are not.
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(true).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(false).build();
+
+        // Method under test
+        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByCountAndTurnover(staffCountFormInput, staffTurnoverFormInput);
+
+        // Assertions
+        assertTrue(shouldBeFailure.isFailure());
+        assertEquals(1, shouldBeFailure.getErrors().size());
+        assertEquals("include.growth.table.count.turnover.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
+    }
+
+
+    @Test
+    public void test_ErrorFinance() {
+        // Should never happen but check that reasonable error codes get returned in the event that the database
+        // becomes inconsistent
+
+        // Financial inputs - these should always be in sync - but here we test when they are not.
+        FormInput yearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(true).build();
+        List<FormInput> overviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(true, true, true, false /*Inconsistent*/).build(4);
+        FormInput count = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(true).build();
+
+        // Method under test
+        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByFinance(yearEnd, overviewRows, count);
+
+        // Assertions
+        assertTrue(shouldBeFailure.isFailure());
+        assertEquals(1, shouldBeFailure.getErrors().size());
+        assertEquals("include.growth.table.finance.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void test_ErrorCountTurnoverFinance() {
+        // Should never happen but check that reasonable error codes get returned in the event that the database
+        // becomes inconsistent
+
+        // Not consistent
+        boolean byFinance = false;
+        boolean byCountAndTurnover = true;
+        // Method under test
+        ServiceResult<Boolean> shouldBeFailure = service.isIncludeGrowthTableByCountTurnoverAndFinance(byFinance, byCountAndTurnover);
+
+        // Assertions
+        assertTrue(shouldBeFailure.isFailure());
+        assertEquals(1, shouldBeFailure.getErrors().size());
+        assertEquals("include.growth.table.count.turnover.finance.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
+    }
+
+    @Test
+    public void test_GetTurnoverNonFinancial() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long turnoverFormInputId = 678L;
+        boolean isIncludeGrowthTable = false;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInputResponse turnover = newFormInputResponse().withValue("2").build();
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(asList(turnover)).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(asList(turnover));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
+
+        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2L, result.getSuccessObject().longValue());
+    }
+
+    @Test
+    public void test_GetHeadcountNonFinancial() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long headcountFormInputId = 987L;
+        boolean isIncludeGrowthTable = false;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInputResponse headcount = newFormInputResponse().withValue("1").build();
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(headcountFormInputId).withResponses(asList(headcount)).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, headcountFormInputId)).thenReturn(asList(headcount));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withId(headcountFormInputId).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
+
+        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(1L, result.getSuccessObject().longValue());
+    }
+
+    @Test
+    public void test_GetTurnoverFinancial() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long turnoverFormInputId = 678L;
+        boolean isIncludeGrowthTable = true;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInputResponse turnover = newFormInputResponse().withValue("2").build();
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(asList(turnover)).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(asList(turnover));
+        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(2L, result.getSuccessObject().longValue());
+    }
+
+    @Test
+    public void test_GetHeadcountFinancial() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long headcountFormInputId = 987L;
+        boolean isIncludeGrowthTable = true;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInputResponse headcount = newFormInputResponse().withValue("1").build();
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(headcountFormInputId).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withId(headcountFormInputId).withResponses(asList(headcount)).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, headcountFormInputId)).thenReturn(asList(headcount));
+
+        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+
+        assertTrue(result.isSuccess());
+        assertEquals(1L, result.getSuccessObject().longValue());
+    }
+
+    @Test
+    public void test_GetHeadcountFinancialNoHeadcountResponse() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long headcountFormInputId = 987L;
+        boolean isIncludeGrowthTable = true;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInputResponse headcount = newFormInputResponse().withValue("1").build();
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(headcountFormInputId).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).withId(headcountFormInputId).withResponses(asList(headcount)).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, headcountFormInputId)).thenReturn(emptyList());
+
+        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+
+        assertTrue(result.isSuccess());
+        assertNull(result.getSuccessObject());
+    }
+
+    @Test
+    public void test_GetHeadcountFinancialNoHeadcountInput() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long headcountFormInputId = 987L;
+        boolean isIncludeGrowthTable = true;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withId(headcountFormInputId).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(emptyList());
+
+        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+
+        assertTrue(result.isFailure());
+    }
+
+    @Test
+    public void test_GetTurnoverFinancialNoTurnoverResponse() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long turnoverFormInputId = 678L;
+        boolean isIncludeGrowthTable = true;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInputResponse turnover = newFormInputResponse().withValue("2").build();
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).withResponses(asList(turnover)).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
+        when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, turnoverFormInputId)).thenReturn(emptyList());
+        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+
+        assertTrue(result.isSuccess());
+        assertNull(result.getSuccessObject());
+    }
+
+    @Test
+    public void test_GetTurnoverFinancialNoTurnoverInput() {
+        Long applicationId = 123L;
+        Long competitionId = 456L;
+        Long turnoverFormInputId = 678L;
+        boolean isIncludeGrowthTable = true;
+        Competition comp = new Competition();
+        comp.setId(competitionId);
+        Application app = new Application();
+        app.setId(applicationId);
+        app.setCompetition(comp);
+        when(applicationRepositoryMock.findOne(applicationId)).thenReturn(app);
+
+        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
+        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withId(turnoverFormInputId).build();
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
+
+        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).withId(turnoverFormInputId).build();
+        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
+        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(emptyList());
+        ServiceResult<Long> result = service.getTurnoverByApplicationId(applicationId);
+
+        assertTrue(result.isFailure());
     }
 }

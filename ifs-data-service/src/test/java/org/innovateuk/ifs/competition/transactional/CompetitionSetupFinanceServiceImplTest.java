@@ -109,8 +109,6 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         assertTrue(compSetupFinanceRes.isSuccess());
         assertEquals(isFullFinance, compSetupFinanceRes.getSuccessObject().isFullApplicationFinance());
         assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccessObject().isIncludeGrowthTable());
-        assertEquals(1L, compSetupFinanceRes.getSuccessObject().getHeadcount().longValue());
-        assertEquals(2L, compSetupFinanceRes.getSuccessObject().getTurnover().longValue());
     }
 
     @Test
@@ -168,75 +166,4 @@ public class CompetitionSetupFinanceServiceImplTest extends BaseServiceUnitTest<
         assertEquals("include.growth.table.count.turnover.finance.input.active.not.consistent", shouldBeFailure.getErrors().get(0).getErrorKey());
     }
 
-    @Test
-    public void test_GetForCompetitionTurnoverAndHeadCountAreNotFinancial() {
-        boolean isIncludeGrowthTable = false;
-        boolean isFullFinance = true;
-        Long competitionId = 1L;
-
-        // Set up a competition with consistent active form inputs
-        Competition c = newCompetition().with(id(competitionId)).withFullFinance(isFullFinance).build();
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
-
-        FormInputResponse headcount = newFormInputResponse().withValue("1").build();
-        FormInputResponse turnover = newFormInputResponse().withValue("2").build();
-        // Turnover and count - these should be active in sync with each other.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).withResponses(asList(headcount)).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).withResponses(asList(turnover)).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
-
-        // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
-        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
-
-        // Method under test
-        ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceRes = service.getForCompetition(competitionId);
-
-        // Assertions
-        assertTrue(compSetupFinanceRes.isSuccess());
-        assertEquals(isFullFinance, compSetupFinanceRes.getSuccessObject().isFullApplicationFinance());
-        assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccessObject().isIncludeGrowthTable());
-        assertEquals(1L, compSetupFinanceRes.getSuccessObject().getHeadcount().longValue());
-        assertEquals(2L, compSetupFinanceRes.getSuccessObject().getTurnover().longValue());
-    }
-
-    @Test
-    public void test_GetForCompetitionNoTurnoverOrHeadcount() {
-        boolean isIncludeGrowthTable = true;
-        boolean isFullFinance = true;
-        Long competitionId = 1L;
-
-        // Set up a competition with consistent active form inputs
-        Competition c = newCompetition().with(id(competitionId)).withFullFinance(isFullFinance).build();
-        when(competitionRepositoryMock.findOne(competitionId)).thenReturn(c);
-
-        // Turnover and count - these should be active in sync with each other.
-        FormInput staffCountFormInput = newFormInput().withType(STAFF_COUNT).withActive(!isIncludeGrowthTable).build();
-        FormInput staffTurnoverFormInput = newFormInput().withType(STAFF_TURNOVER).withActive(!isIncludeGrowthTable).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_TURNOVER))).thenReturn(asList(staffTurnoverFormInput));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(STAFF_COUNT))).thenReturn(asList(staffCountFormInput));
-
-        // Financial inputs - these should be active in sync with each other and opposite to turnover and count.
-        FormInput financialYearEnd = newFormInput().withType(FINANCIAL_YEAR_END).withActive(isIncludeGrowthTable).build();
-        List<FormInput> financialOverviewRows = newFormInput().withType(FINANCIAL_OVERVIEW_ROW).withActive(isIncludeGrowthTable).build(4);
-        FormInput financialCount = newFormInput().withType(FormInputType.FINANCIAL_STAFF_COUNT).withActive(isIncludeGrowthTable).build();
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_YEAR_END))).thenReturn(asList(financialYearEnd));
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
-        when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
-
-        // Method under test
-        ServiceResult<CompetitionSetupFinanceResource> compSetupFinanceRes = service.getForCompetition(competitionId);
-
-        // Assertions
-        assertTrue(compSetupFinanceRes.isSuccess());
-        assertEquals(isFullFinance, compSetupFinanceRes.getSuccessObject().isFullApplicationFinance());
-        assertEquals(isIncludeGrowthTable, compSetupFinanceRes.getSuccessObject().isIncludeGrowthTable());
-        assertEquals(null, compSetupFinanceRes.getSuccessObject().getHeadcount());
-        assertEquals(null, compSetupFinanceRes.getSuccessObject().getTurnover());
-    }
 }

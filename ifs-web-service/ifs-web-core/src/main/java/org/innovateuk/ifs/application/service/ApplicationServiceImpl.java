@@ -189,4 +189,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     public void removeCollaborator(Long applicationInviteId) {
         inviteRestService.removeApplicationInvite(applicationInviteId).getSuccessObjectOrThrowException();
     }
+
+    @Override
+    public RestResult<Long> getTurnover(Long applicationId) {
+        return applicationRestService.getTurnover(applicationId);
+    }
+
+    @Override
+    public RestResult<Long> getHeadcount(Long applicationId) {
+        return applicationRestService.getHeadcount(applicationId);
+    }
 }

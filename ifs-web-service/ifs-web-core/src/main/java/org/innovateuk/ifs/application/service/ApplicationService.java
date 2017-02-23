@@ -24,4 +24,6 @@ public interface ApplicationService {
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     OrganisationResource getLeadOrganisation(Long applicationId);
     void removeCollaborator(Long applicationInviteId);
+    RestResult<Long> getTurnover(Long applicationId);
+    RestResult<Long> getHeadcount(Long applicationId);
 }
