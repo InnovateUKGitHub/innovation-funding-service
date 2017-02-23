@@ -7,6 +7,7 @@ ${PROTOCOL}       https://
 ${SERVER}         ${PROTOCOL}${SERVER_BASE}
 ${RUNNING_ON_DEV}    ${EMPTY}
 ${LOGIN_URL}      ${SERVER}/
+${frontDoor}  ${server}/competition/search
 ${LOGGED_OUT_URL_FRAGMENT}    idp/profile/SAML2/Redirect/SSO
 ${DEFAULT_INDUSTRIAL_COSTS_WITH_COMMAS}    100,452
 ${DEFAULT_INDUSTRIAL_CONTRIBUTION_TO_PROJECT}    70,316
@@ -23,6 +24,7 @@ ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
 ${OPEN_COMPETITION}    1
 ${OPEN_COMPETITION_NAME}    Connected digital additive manufacturing
+${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
 ${OPEN_COMPETITION_APPLICATION_1}    9
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}    00000009
 ${OPEN_COMPETITION_APPLICATION_2}    12
@@ -39,6 +41,7 @@ ${FUNDERS_PANEL_COMPETITION_NAME}    Internet of Things
 ${NOT_EDITABLE_COMPETITION}     8
 ${FUNDERS_PANEL_APPLICATION_1}    63
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}    00000063
+${NOT_EDITABLE_COMPETITION}     7
 ${FUNDERS_PANEL_APPLICATION_1_TITLE}    Sensing & Control network using the lighting infrastructure
 ${FUNDERS_PANEL_APPLICATION_1_HEADER}    ${FUNDERS_PANEL_APPLICATION_1_NUMBER}: ${FUNDERS_PANEL_APPLICATION_1_TITLE}
 ${FUNDERS_PANEL_APPLICATION_2}    64
@@ -97,6 +100,7 @@ ${VIRTUAL_DISPLAY}    ${EMPTY}
 ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
+${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
 ${test_title}     test title
@@ -117,6 +121,7 @@ ${Assessor_application_dashboard}    ${server}/assessment/assessor/dashboard/com
 ${Assessment_overview_11}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_2}
 ${assessment_declaration_url}    ${server}/assessment/profile/declaration
 ${assessment_skills_url}    ${server}/assessment/profile/skills
+${assessment_details_url}    ${server}/assessment/profile/details
 ${Application_question_url_2}    ${server}/assessment/${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}/question/117
 
 # Database variables
