@@ -12,14 +12,14 @@ public class ChangedFinanceRowPair<L extends FinanceRowItem, R extends FinanceRo
 
     private TypeOfChange typeOfChange;
 
-    private FinanceRowItem applicationFinanceRowItem;
+    private FinanceRowItem submitted;
     
-    private FinanceRowItem projectFinanceRowItem;
+    private FinanceRowItem changed;
 
-    private ChangedFinanceRowPair(TypeOfChange typeOfChange, FinanceRowItem applicationFinanceRowItem, FinanceRowItem projectFinanceRowItem) {
+    private ChangedFinanceRowPair(TypeOfChange typeOfChange, FinanceRowItem submitted, FinanceRowItem changed) {
         this.typeOfChange = typeOfChange;
-        this.applicationFinanceRowItem= applicationFinanceRowItem;
-        this.projectFinanceRowItem = projectFinanceRowItem;
+        this.submitted = submitted;
+        this.changed = changed;
     }
 
     public ChangedFinanceRowPair() {
@@ -33,20 +33,20 @@ public class ChangedFinanceRowPair<L extends FinanceRowItem, R extends FinanceRo
         this.typeOfChange = typeOfChange;
     }
 
-    public FinanceRowItem getApplicationFinanceRowItem() {
-        return applicationFinanceRowItem;
+    public FinanceRowItem getSubmitted() {
+        return submitted;
     }
 
-    public void setApplicationFinanceRowItem(FinanceRowItem applicationFinanceRowItem) {
-        this.applicationFinanceRowItem = applicationFinanceRowItem;
+    public void setSubmitted(FinanceRowItem submitted) {
+        this.submitted = submitted;
     }
 
-    public FinanceRowItem getProjectFinanceRowItem() {
-        return projectFinanceRowItem;
+    public FinanceRowItem getChanged() {
+        return changed;
     }
 
-    public void setProjectFinanceRowItem(FinanceRowItem projectFinanceRowItem) {
-        this.projectFinanceRowItem = projectFinanceRowItem;
+    public void setChanged(FinanceRowItem changed) {
+        this.changed = changed;
     }
 
     public static ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> of(TypeOfChange typeOfChange, FinanceRowItem applicationFinanceRowItem, FinanceRowItem projectFinanceRowItem){

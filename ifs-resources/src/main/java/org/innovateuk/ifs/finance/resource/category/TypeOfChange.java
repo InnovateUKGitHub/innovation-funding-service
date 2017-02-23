@@ -1,8 +1,22 @@
 package org.innovateuk.ifs.finance.resource.category;
 
 /**
- * Created by rav on 20/02/2017.
+ * Enumn describing the type of change to a finance row / cost.
  */
 public enum TypeOfChange {
-    ADD, REMOVE, UPDATE, UNKNOWN
+    NEW("New"), REMOVE("Remove"), CHANGE("Change");
+
+    private String typeName;
+
+    TypeOfChange(String typeName) {
+        this.typeName = typeName;
+    }
+
+    public String getTypeName() {
+        return typeName;
+    }
+
+    public void setTypeName(String typeName) {
+        this.typeName = typeName;
+    }
 }
