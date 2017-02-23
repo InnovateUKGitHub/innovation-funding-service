@@ -9,7 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -33,20 +32,31 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
 
     User findOneByUid(String uid);
 
-    Page<User> findByRolesNameAndIdNotIn(String roleName, Collection<Long> userIds, Pageable pageable);
+    String USERS_WITH_COMPETITION_INVITE = "SELECT invite.user.id " +
+            "FROM CompetitionInvite invite " +
+            "WHERE invite.competition.id = :competitionId " +
+            "AND invite.user IS NOT NULL";
+
+    @Query("SELECT user " +
+            "FROM User user " +
+            "JOIN user.roles roles " +
+            "WHERE user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
+            "AND roles.name = 'assessor' "+
+            "GROUP BY user.id")
+    Page<User> findAssessorsByCompetition(@Param("competitionId") long competitionId, Pageable pageable);
 
     /**
      * We have to explicitly join {@link User} and Profile due to the relational mapping
      * on {@link User} being removed.
      * Fun fact: This join was not possible without using a cartesian product
      * before Hibernate 5.1 (nearly 12 years to implement).
-     *
+     * <p>
      * Unfortunately, due to this explicit join, we cannot leverage Spring JPAs {@link Specification}
      * as we have to use the {@link Query} annotation to create this query.
-     *
+     * <p>
      * We should try to be clever with how we write the query. Otherwise, we will have to have
      * multiple repository methods that have different parameters (and this will get out of hand quickly).
-     *
+     * <p>
      * TODO: Try to keep any other required filtering parameters in this query.
      */
     @Query("SELECT user " +
@@ -55,10 +65,11 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
             "JOIN profile.innovationAreas innovationAreas " +
             "JOIN user.roles roles " +
             "WHERE (innovationAreas.category.id = :innovationArea OR :innovationArea IS NULL) " +
-            "AND user.id NOT IN :userIds " +
-            "AND roles.name = :roleName")
-    Page<User> findByRolesNameAndIdNotInAndProfileInnovationArea(@Param("roleName") String roleName,
-                                                                 @Param("userIds") Collection<Long> userIds,
-                                                                 @Param("innovationArea") Long innovationArea,
-                                                                 Pageable pageable);
+            "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
+            "AND roles.name = 'assessor' "+
+            "GROUP BY user.id")
+
+    Page<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId,
+                                                           @Param("innovationArea") Long innovationArea,
+                                                           Pageable pageable);
 }

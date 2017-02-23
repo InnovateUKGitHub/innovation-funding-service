@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.assessment.transactional;
 
-import com.jayway.jsonpath.Criteria;
 import org.innovateuk.ifs.assessment.mapper.AssessorInviteToSendMapper;
 import org.innovateuk.ifs.assessment.mapper.CompetitionInviteMapper;
 import org.innovateuk.ifs.category.domain.Category;
@@ -33,7 +32,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -42,10 +40,8 @@ import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.CriteriaQuery;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -193,26 +189,16 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
-        List<Long> createdInvites = competitionInviteRepository.findUserIdsByCompetition(competitionId);
-
-        // Fix for if there are no assessors for this competition.
-        // A query with an empty `WHERE IN ()` will throw an SQL exception,
-        // so we should always have at least one ID to avoid this.
-        if (createdInvites.isEmpty()) {
-            createdInvites.add(-1L);
-        }
-
         Page<User> pagedAssessors;
 
         if (innovationArea.isPresent()) {
-            pagedAssessors = userRepository.findByRolesNameAndIdNotInAndProfileInnovationArea(
-                    UserRoleType.ASSESSOR.getName(),
-                    createdInvites,
+            pagedAssessors = userRepository.findAssessorsByCompetitionAndInnovationArea(
+                    competitionId,
                     innovationArea.orElse(null),
                     pageable
             );
         } else {
-            pagedAssessors = userRepository.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), createdInvites, pageable);
+            pagedAssessors = userRepository.findAssessorsByCompetition(competitionId, pageable);
         }
 
         List<AvailableAssessorResource> availableAssessors = simpleMap(pagedAssessors.getContent(), assessor -> {

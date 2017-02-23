@@ -2,9 +2,7 @@ package org.innovateuk.ifs.invite.repository;
 
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 import java.util.Set;
@@ -23,10 +21,4 @@ public interface CompetitionInviteRepository extends CrudRepository<CompetitionI
     CompetitionInvite getByHash(String hash);
 
     int countByCompetitionIdAndStatusIn(long competitionId, Set<InviteStatus> statuses);
-
-    @Query("SELECT invite.user.id " +
-            "FROM CompetitionInvite invite " +
-            "WHERE invite.competition.id = :competitionId " +
-            "AND invite.user IS NOT NULL")
-    List<Long> findUserIdsByCompetition(@Param("competitionId") long competitionId);
 }

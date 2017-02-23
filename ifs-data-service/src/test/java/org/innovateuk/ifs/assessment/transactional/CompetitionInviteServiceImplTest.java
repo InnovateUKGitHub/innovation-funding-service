@@ -845,16 +845,10 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
-        List<Long> assessorsAlreadyAssessing = asList(1L, 2L, 3L);
-
         Page<User> expectedPage = new PageImpl<>(assessors, pageable, 2L);
 
-        when(competitionInviteRepositoryMock.findUserIdsByCompetition(competitionId)).thenReturn(assessorsAlreadyAssessing);
-        when(userRepositoryMock.findByRolesNameAndIdNotInAndProfileInnovationArea(
-                UserRoleType.ASSESSOR.getName(), assessorsAlreadyAssessing, innovationArea.getId(), pageable)
-        )
+        when(userRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable))
                 .thenReturn(expectedPage);
-
         when(profileRepositoryMock.findOne(assessors.get(0).getProfileId())).thenReturn(profile.get(0));
         when(profileRepositoryMock.findOne(assessors.get(1).getProfileId())).thenReturn(profile.get(1));
         when(innovationAreaMapperMock.mapToResource(innovationArea)).thenReturn(innovationAreaResources.get(0));
@@ -862,10 +856,7 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, pageable, innovationAreaId)
                 .getSuccessObjectOrThrowException();
 
-        verify(competitionInviteRepositoryMock).findUserIdsByCompetition(competitionId);
-        verify(userRepositoryMock).findByRolesNameAndIdNotInAndProfileInnovationArea(
-                UserRoleType.ASSESSOR.getName(), assessorsAlreadyAssessing, innovationArea.getId(), pageable
-        );
+        verify(userRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationArea.getId(), pageable);
         verify(profileRepositoryMock).findOne(assessors.get(0).getProfileId());
         verify(profileRepositoryMock).findOne(assessors.get(1).getProfileId());
         verify(innovationAreaMapperMock, times(2)).mapToResource(innovationArea);
@@ -883,25 +874,18 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         int page = 0;
         int pageSize = 20;
         long innovationAreaId = 10L;
-        List<Long> userIds = asList(1L, 2L);
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(competitionInviteRepositoryMock.findUserIdsByCompetition(competitionId)).thenReturn(userIds);
-        when(userRepositoryMock.findByRolesNameAndIdNotInAndProfileInnovationArea(
-                UserRoleType.ASSESSOR.getName(), userIds, innovationAreaId, pageable)
-        )
+        when(userRepositoryMock.findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable))
                 .thenReturn(assessorPage);
 
         AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, Optional.of(innovationAreaId))
                 .getSuccessObjectOrThrowException();
 
-        verify(competitionInviteRepositoryMock).findUserIdsByCompetition(competitionId);
-        verify(userRepositoryMock).findByRolesNameAndIdNotInAndProfileInnovationArea(
-                UserRoleType.ASSESSOR.getName(), userIds, innovationAreaId, pageable
-        );
+        verify(userRepositoryMock).findAssessorsByCompetitionAndInnovationArea(competitionId, innovationAreaId, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());
@@ -915,48 +899,17 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
         long competitionId = 1L;
         int page = 0;
         int pageSize = 20;
-        List<Long> userIds = asList(1L, 2L);
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
 
         Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
 
-        when(competitionInviteRepositoryMock.findUserIdsByCompetition(competitionId)).thenReturn(userIds);
-        when(userRepositoryMock.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), userIds, pageable))
-                .thenReturn(assessorPage);
+        when(userRepositoryMock.findAssessorsByCompetition(competitionId, pageable)).thenReturn(assessorPage);
 
         AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, Optional.empty())
                 .getSuccessObjectOrThrowException();
 
-        verify(competitionInviteRepositoryMock).findUserIdsByCompetition(competitionId);
-        verify(userRepositoryMock).findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), userIds, pageable);
-
-        assertEquals(page, result.getNumber());
-        assertEquals(pageSize, result.getSize());
-        assertEquals(0, result.getTotalElements());
-        assertEquals(0, result.getTotalPages());
-        assertEquals(emptyList(), result.getContent());
-    }
-
-    @Test
-    public void getAvailableAssessors_noAssessorsInvitedYet() throws Exception {
-        long competitionId = 1L;
-        int page = 0;
-        int pageSize = 20;
-
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
-
-        Page<User> assessorPage = new PageImpl<>(emptyList(), pageable, 0);
-
-        when(competitionInviteRepositoryMock.findUserIdsByCompetition(competitionId)).thenReturn(new ArrayList<>());
-        when(userRepositoryMock.findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), singletonList(-1L), pageable))
-                .thenReturn(assessorPage);
-
-        AvailableAssessorPageResource result = service.getAvailableAssessors(competitionId, pageable, Optional.empty())
-                .getSuccessObjectOrThrowException();
-
-        verify(competitionInviteRepositoryMock).findUserIdsByCompetition(competitionId);
-        verify(userRepositoryMock).findByRolesNameAndIdNotIn(UserRoleType.ASSESSOR.getName(), singletonList(-1L), pageable);
+        verify(userRepositoryMock).findAssessorsByCompetition(competitionId, pageable);
 
         assertEquals(page, result.getNumber());
         assertEquals(pageSize, result.getSize());

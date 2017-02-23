@@ -1,10 +1,12 @@
 package org.innovateuk.ifs.user.repository;
 
 import com.google.common.collect.Lists;
-import freemarker.template.utility.Collections12;
 import org.innovateuk.ifs.BaseRepositoryIntegrationTest;
 import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.invite.domain.CompetitionInvite;
+import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
@@ -16,11 +18,16 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.address.builder.AddressBuilder.newAddress;
+import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.user.builder.ProfileBuilder.newProfile;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.resource.UserRoleType.ASSESSOR;
@@ -51,6 +58,9 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
 
     @Autowired
     protected InnovationAreaRepository innovationAreaRepository;
+
+    @Autowired
+    protected CompetitionInviteRepository competitionInviteRepository;
 
     @Test
     public void findAll() {
@@ -153,16 +163,23 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findByRolesNameAndIdNotIn() throws Exception {
+    public void findAssessorsByCompetition() throws Exception {
+        long competitionId = 1L;
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .build();
+
         addTestAssessors();
 
         assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
 
-        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
+        saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
+        saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
 
         Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
-        Page<User> pagedUsers = repository.findByRolesNameAndIdNotIn(ASSESSOR.getName(), userIds, pageable);
+        Page<User> pagedUsers = repository.findAssessorsByCompetition(competitionId, pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(1, pagedUsers.getTotalPages());
@@ -175,15 +192,23 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findByRolesNameAndIdNotIn_nextPage() throws Exception {
+    public void findAssessorsByCompetition_nextPage() throws Exception {
+        long competitionId = 1L;
+
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .build();
+
         addTestAssessors();
 
         assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
 
+        saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
+        saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
+
         Pageable pageable = new PageRequest(1, 2, new Sort(Sort.Direction.ASC, "firstName"));
 
-        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
-        Page<User> pagedUsers = repository.findByRolesNameAndIdNotIn(ASSESSOR.getName(), userIds, pageable);
+        Page<User> pagedUsers = repository.findAssessorsByCompetition(competitionId, pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(2, pagedUsers.getTotalPages());
@@ -194,15 +219,16 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findByRolesNameAndIdNotInAndProfileInnovationArea() throws Exception {
+    public void findAssessorsByCompetitionAndInnovationArea() throws Exception {
+        long competitionId = 1L;
+
         addTestAssessors();
 
         assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
 
         Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
-        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
-        Page<User> pagedUsers = repository.findByRolesNameAndIdNotInAndProfileInnovationArea(ASSESSOR.getName(), userIds, INNOVATION_AREA_ID, pageable);
+        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndInnovationArea(competitionId, INNOVATION_AREA_ID, pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(1, pagedUsers.getTotalPages());
@@ -215,15 +241,22 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
     }
 
     @Test
-    public void findByRolesNameAndIdNotInAndProfileInnovationArea_noInnovationArea() throws Exception {
+    public void findAssessorsByCompetitionAndInnovationArea_noInnovationArea() throws Exception {
+        long competitionId = 1L;
+        Competition competition = newCompetition()
+                .withId(competitionId)
+                .build();
+
         addTestAssessors();
 
         assertEquals(6, repository.findByRolesName(ASSESSOR.getName()).size());
 
         Pageable pageable = new PageRequest(0, 10, new Sort(Sort.Direction.ASC, "firstName"));
 
-        Collection<Long> userIds = asList(getPaulPlum().getId(), getFelixWilson().getId());
-        Page<User> pagedUsers = repository.findByRolesNameAndIdNotInAndProfileInnovationArea(ASSESSOR.getName(), userIds, null, pageable);
+        saveInvite(competition, userMapper.mapToDomain(getPaulPlum()));
+        saveInvite(competition, userMapper.mapToDomain(getFelixWilson()));
+
+        Page<User> pagedUsers = repository.findAssessorsByCompetitionAndInnovationArea(competitionId, null, pageable);
 
         assertEquals(4, pagedUsers.getTotalElements());
         assertEquals(1, pagedUsers.getTotalPages());
@@ -256,11 +289,16 @@ public class UserRepositoryIntegrationTest extends BaseRepositoryIntegrationTest
                 .withUid("uid1", "uid2", "uid3", "uid4")
                 .withFirstName("Victoria", "James", "Jessica", "Andrew")
                 .withLastName("Beckham", "Blake", "Alba", "Marr")
-                .withRoles(Collections12.singletonList(assessorRole))
+                .withRoles(singletonList(assessorRole))
                 .withProfileId(profileIds[0], profileIds[1], profileIds[2], profileIds[3])
                 .build(4);
 
         repository.save(users);
         flushAndClearSession();
+    }
+
+    private void saveInvite(Competition competition, User user) {
+        CompetitionInvite invite = new CompetitionInvite(user, CompetitionInvite.generateInviteHash(), competition);
+        competitionInviteRepository.save(invite);
     }
 }
