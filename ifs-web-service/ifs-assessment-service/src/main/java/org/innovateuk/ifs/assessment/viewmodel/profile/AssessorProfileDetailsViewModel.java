@@ -6,7 +6,7 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 /**
- * Holder of model attributes for the Assessor user details view.
+ * Holder of model attributes for the Assessor details view.
  */
 public class AssessorProfileDetailsViewModel {
     private Title title;

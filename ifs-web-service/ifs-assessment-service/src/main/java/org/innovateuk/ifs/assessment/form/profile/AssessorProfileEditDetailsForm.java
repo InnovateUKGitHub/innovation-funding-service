@@ -8,7 +8,6 @@ import org.innovateuk.ifs.user.resource.Gender;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.hibernate.validator.constraints.NotEmpty;
-import org.innovateuk.ifs.user.resource.Title;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -19,9 +18,6 @@ import javax.validation.constraints.Size;
  * Form field model to edit Assessor Profile Details
  */
 public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
-
-    @NotNull(message = "{validation.standard.title.selectionrequired}")
-    private Title title;
 
     @NotEmpty(message = "{validation.standard.firstname.required}")
     @Pattern(regexp = "[\\p{L} -]*", message = "{validation.standard.firstname.required}")
@@ -58,14 +54,6 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     })
     @Pattern(regexp = "([0-9\\ +-])+", message = "{validation.standard.phonenumber.format}")
     private String phoneNumber;
-
-    public Title getTitle() {
-        return title;
-    }
-
-    public void setTitle(Title title) {
-        this.title = title;
-    }
 
     public String getFirstName() {
         return firstName;
@@ -132,7 +120,6 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
         AssessorProfileEditDetailsForm that = (AssessorProfileEditDetailsForm) o;
 
         return new EqualsBuilder()
-                .append(title, that.title)
                 .append(firstName, that.firstName)
                 .append(lastName, that.lastName)
                 .append(gender, that.gender)
@@ -146,7 +133,6 @@ public class AssessorProfileEditDetailsForm extends BaseBindingResultTarget {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
-                .append(title)
                 .append(firstName)
                 .append(lastName)
                 .append(gender)

@@ -72,6 +72,9 @@ Existing assessor: Reject invitation from Dashboard
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
+    And the user clicks the button/link    jQuery=button:contains(Cancel)
+    And the user should not see the element    id=rejectComment
+    And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \\ a a a a \\ a a a a a a \\ a a a a a \\ a a a a \\ a a a a \\ a a a a a a a a a a a \\ a a \\ a a a a a a a a a a \\ a a a a a a a a a a a a a a a a a a a \\ a a a a a a a \\ a a a \\ a a \\ aa \\ a a a a a a a a a a a a a a \\ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see an error    The reason cannot be blank.
@@ -107,7 +110,7 @@ Existing assessor: Accept invitation from the invite link
     And the user should see the text in the page    You are invited to assess the competition '${IN_ASSESSMENT_COMPETITION_NAME}'.
     And the user should see the text in the page    Invitation to assess '${IN_ASSESSMENT_COMPETITION_NAME}'
     And the user should see the text in the page    12 January 2068 to 28 January 2068: Assessment period
-    And the user should see the text in the page    taking place at 15 April 2016.
+    And the user should see the text in the page    taking place at 12:00am on 15 April.
     And the user should see the text in the page    100 per application.
     When the user clicks the button/link    jQuery=.button:contains("Yes, create account")
     Then the user should see the text in the page    Your email address is linked to an existing account.
@@ -132,7 +135,7 @@ Upcoming competition should be visible
     And the assessor should see the correct date
     When The user clicks the button/link    link=Home and industrial efficiency programme
     And the user should see the text in the page    You have agreed to be an assessor for the upcoming competition 'Home and industrial efficiency programme'
-    And The user clicks the button/link    link=Back to assessor dashboard
+    And The user clicks the button/link    link=Assessor dashboard
     Then The user should see the text in the page    Upcoming competitions to assess
 
 The assessment period starts the comp moves to the comp for assessment
@@ -179,7 +182,7 @@ The Admin's invites overview should be updated for accepted invites
     [Tags]
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And The user clicks the button/link    jQuery=a:contains("Invite assessors")
+    And The user clicks the button/link    jQuery=a:contains("Invite assessors to assess the competition")
     And The user clicks the button/link    link=Overview
     And the user should see the element    jQuery=tr:nth-child(1) td:contains(Invite accepted)
 

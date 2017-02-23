@@ -84,6 +84,6 @@ public class ValidatorServiceImpl extends BaseTransactionalService implements Va
 
     @Override
     public FinanceRowHandler getProjectCostHandler(FinanceRowItem costItem) {
-        return projectFinanceRowService.getCostHandler(costItem.getId());
+        return projectFinanceRowService.getCostHandler(costItem);
     }
 }

@@ -20,6 +20,7 @@ public class ProjectSignedGrantOfferLetterControllerSecurityTest extends BasePro
     @Test
     public void testPublicMethods() {
         assertSecured(() -> classUnderTest.downloadGrantOfferLetterFile(123L));
+        assertSecured(() -> classUnderTest.deleteSignedGrantOfferLetterFile(123L, null, null, null, null, null));
     }
 
     @Override

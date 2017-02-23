@@ -2,6 +2,10 @@ package org.innovateuk.ifs.invite.transactional;
 
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.QuestionStatus;
 import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
@@ -32,10 +36,6 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.mapper.UserMapper;
 import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.validator.HibernateValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.method.P;
@@ -50,7 +50,9 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.google.common.collect.Lists.newArrayList;
-import static org.innovateuk.ifs.commons.error.CommonErrors.*;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
+import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_INVITE_INVALID;
 import static org.innovateuk.ifs.commons.error.Error.globalError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -60,7 +62,6 @@ import static org.innovateuk.ifs.notifications.resource.NotificationMedium.EMAIL
 import static org.innovateuk.ifs.user.resource.UserRoleType.COLLABORATOR;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.innovateuk.ifs.util.EntityLookupCallbacks.find;
-import static java.util.Collections.singletonList;
 import static org.springframework.http.HttpStatus.NOT_ACCEPTABLE;
 
 @Service
@@ -515,13 +516,30 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     private void setMarkedAsCompleteQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {
         processRoles.forEach(processRole -> {
             List<QuestionStatus> questionStatuses = questionStatusRepository.findByApplicationIdAndMarkedAsCompleteById(applicationId, processRole.getId());
+            List<QuestionStatus> toDelete = new ArrayList<>();
             if(!questionStatuses.isEmpty()) {
-                questionStatuses.forEach(questionStatus ->
-                        questionStatus.setMarkedAsCompleteBy(leadApplicantProcessRole)
-                );
+                questionStatuses.forEach(questionStatus -> {
+                    if (!questionStatus.getQuestion().getMultipleStatuses()) {
+                        questionStatus.setMarkedAsCompleteBy(leadApplicantProcessRole);
+                    } else {
+                        setMarkedAsCompleteForQuestionWithMultipleQuestions(applicationId, processRole, questionStatus, toDelete);
+                    }
+                });
+                questionStatuses.removeAll(toDelete);
                 questionStatusRepository.save(questionStatuses);
             }
         });
+    }
+
+    private void setMarkedAsCompleteForQuestionWithMultipleQuestions(Long applicationId, ProcessRole roleToRemove, QuestionStatus questionStatus, List<QuestionStatus> statusesToDelete) {
+        List<ProcessRole> rolesFromSameOrganisation = processRoleRepository.findByApplicationIdAndOrganisationId(applicationId, roleToRemove.getOrganisationId());
+        rolesFromSameOrganisation.remove(roleToRemove);
+        if (rolesFromSameOrganisation.isEmpty()) {
+            questionStatusRepository.delete(questionStatus);
+            statusesToDelete.add(questionStatus);
+        } else {
+            questionStatus.setMarkedAsCompleteBy(rolesFromSameOrganisation.get(0));
+        }
     }
 
     private void setAssignedQuestionStatusesToLeadApplicant(ProcessRole leadApplicantProcessRole, Long applicationId, List<ProcessRole> processRoles) {

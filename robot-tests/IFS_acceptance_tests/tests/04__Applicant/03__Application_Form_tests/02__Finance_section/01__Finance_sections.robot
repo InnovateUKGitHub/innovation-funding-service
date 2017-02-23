@@ -8,7 +8,7 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...
 ...               INFUND-2051: Remove the '0' in finance fields
 ...
-...               INFUND-2961: ‘Working Days Per Year’ in Labour Costs do not default to 232.
+...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
 ...
 ...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
 ...
@@ -80,7 +80,7 @@ User pressing back button should get the correct version of the page
     And the user clicks the button/link  link=Your project costs
     Given The user adds three material rows
     When the user navigates to another page
-    And the user should see the text in the page    Guide on eligible project costs and completing the finance form
+    And the user should be redirected to the correct page without the usual headers    ${project_guidance}
     And the user goes back to the previous page
     Then the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows

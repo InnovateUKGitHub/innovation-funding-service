@@ -5,7 +5,6 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.service.AssessmentService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessmentFeedbackViewModel;
@@ -24,11 +23,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Build the model for Assessment Feedback view.
@@ -44,9 +43,6 @@ public class AssessmentFeedbackModelPopulator {
 
     @Autowired
     private CompetitionService competitionService;
-
-    @Autowired
-    private QuestionService questionService;
 
     @Autowired
     private FormInputService formInputService;
@@ -78,11 +74,43 @@ public class AssessmentFeedbackModelPopulator {
             boolean applicantAppendixResponseExists = applicantAppendixResponse != null;
             if (applicantAppendixResponseExists) {
                 FileDetailsViewModel appendixDetails = new FileDetailsViewModel(applicantAppendixResponse.getFilename(), applicantAppendixResponse.getFilesizeBytes());
-                return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, true, appendixDetails, researchCategories);
+                return new AssessmentFeedbackViewModel(assessment.getId(),
+                        competition.getAssessmentDaysLeft(),
+                        competition.getAssessmentDaysLeftPercentage(),
+                        competition,
+                        application,
+                        question.getId(),
+                        question.getQuestionNumber(),
+                        question.getShortName(),
+                        question.getName(),
+                        question.getAssessorMaximumScore(),
+                        applicantResponseValue,
+                        assessmentFormInputs,
+                        scoreFormInputExists,
+                        scopeFormInputExists,
+                        true,
+                        appendixDetails,
+                        researchCategories
+                );
             }
         }
 
-        return new AssessmentFeedbackViewModel(competition.getAssessmentDaysLeft(), competition.getAssessmentDaysLeftPercentage(), competition, application, question.getId(), question.getQuestionNumber(), question.getShortName(), question.getName(), question.getAssessorMaximumScore(), applicantResponseValue, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, researchCategories);
+        return new AssessmentFeedbackViewModel(assessment.getId(),
+                competition.getAssessmentDaysLeft(),
+                competition.getAssessmentDaysLeftPercentage(),
+                competition,
+                application,
+                question.getId(),
+                question.getQuestionNumber(),
+                question.getShortName(),
+                question.getName(),
+                question.getAssessorMaximumScore(),
+                applicantResponseValue,
+                assessmentFormInputs,
+                scoreFormInputExists,
+                scopeFormInputExists,
+                researchCategories
+        );
     }
 
     private AssessmentResource getAssessment(Long assessmentId) {
@@ -95,10 +123,6 @@ public class AssessmentFeedbackModelPopulator {
 
     private CompetitionResource getCompetition(Long competitionId) {
         return competitionService.getById(competitionId);
-    }
-
-    private QuestionResource getQuestion(Long questionId) {
-        return questionService.getById(questionId);
     }
 
     private List<FormInputResource> getApplicationFormInputs(Long questionId) {
