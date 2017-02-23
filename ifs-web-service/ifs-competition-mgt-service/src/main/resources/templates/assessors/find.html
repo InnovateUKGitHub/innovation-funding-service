@@ -164,8 +164,11 @@
                                 <span class="no" th:unless="${assessor.compliant}">No</span>
                             </td>
                             <td class="alignright">
-                                <button class="button button-secondary" name="add" th:value="${assessor.email}" th:unless="${assessor.added}">Add<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
-                                <button class="button button-secondary" name="remove" th:value="${assessor.email}" th:if="${assessor.added}">Remove<span class="hidden" th:text="${assessor.name}"> John Barnes</span></button>
+                                <button class="button button-secondary" name="add"
+                                        th:value="${assessor.email}"
+                                        th:unless="${assessor.added}">
+                                    Add<span class="hidden" th:text="${assessor.name}"> John Barnes</span>
+                                </button>
                             </td>
                         </tr>
                         <tr th:if="${#lists.isEmpty(model.assessors)}">

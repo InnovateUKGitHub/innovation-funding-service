@@ -805,7 +805,6 @@ public class CompetitionInviteServiceImplTest extends BaseServiceUnitTest<Compet
                 .withCompliant(TRUE)
                 .withEmail("worth.email.test+assessor1@gmail.com", "felix.wilson@gmail.com")
                 .withBusinessType(BUSINESS, ACADEMIC)
-                .withAdded(FALSE)
                 .withInnovationAreas(innovationAreaResources)
                 .build(2);
 

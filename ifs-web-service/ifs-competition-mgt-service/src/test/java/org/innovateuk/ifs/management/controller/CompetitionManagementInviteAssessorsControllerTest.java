@@ -489,7 +489,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .withCompliant(TRUE, FALSE)
                 .withEmail("dave@email.com", "john@email.com")
                 .withBusinessType(BUSINESS, ACADEMIC)
-                .withAdded(TRUE, FALSE)
                 .build(2);
     }
 
@@ -551,7 +550,6 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
             assertEquals(availableAssessorResource.isCompliant(), availableAssessorRowViewModel.isCompliant());
             assertEquals(availableAssessorResource.getEmail(), availableAssessorRowViewModel.getEmail());
             assertEquals(availableAssessorResource.getBusinessType(), availableAssessorRowViewModel.getBusinessType());
-            assertEquals(availableAssessorResource.isAdded(), availableAssessorRowViewModel.isAdded());
         });
     }
 
