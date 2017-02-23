@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Optional;
+
 /**
  * ApplicationSummaryController exposes application summary data and operations through a REST API.
  * It is mainly used at present for getting summaries of applications for showing in the competition manager views.
@@ -32,7 +34,7 @@ public class ApplicationSummaryController {
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-            @RequestParam(value = "filter", required = false) String filter) {
+            @RequestParam(value = "filter", required = false) Optional<String> filter) {
         return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter).toGetResponse();
     }
 
@@ -47,7 +49,7 @@ public class ApplicationSummaryController {
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
             @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-            @RequestParam(value = "filter", required = false) String filter) {
+            @RequestParam(value = "filter", required = false) Optional<String> filter) {
         return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter).toGetResponse();
     }
 

@@ -5,6 +5,8 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.springframework.security.access.prepost.PreAuthorize;
 
+import java.util.Optional;
+
 public interface ApplicationSummaryService {
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
@@ -13,7 +15,7 @@ public interface ApplicationSummaryService {
 																						 String sortBy,
 																						 int pageIndex,
 																						 int pageSize,
-																						 String filter);
+																						 Optional<String> filter);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
 	@SecuredBySpring(value = "READ", description = "Comp Admins can see all submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)
@@ -21,7 +23,7 @@ public interface ApplicationSummaryService {
 																								  String sortBy,
 																								  int pageIndex,
 																								  int pageSize,
-																								  String filter);
+																								  Optional<String> filter);
 
 	@PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all not-yet submitted Application Summaries across the whole system", securedType = ApplicationSummaryPageResource.class)

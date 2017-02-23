@@ -24,7 +24,10 @@ import org.springframework.test.annotation.Rollback;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.commons.security.SecuritySetter.swapOutForUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
@@ -87,7 +90,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationOrderingOnCompletion() {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "percentageComplete", 0, 10, "");
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "percentageComplete", 0, 10, of(""));
         assertTrue(result.isSuccess());
         ApplicationSummaryPageResource applicationSummaryPageResource = result.getSuccessObject();
         assertNotNull(applicationSummaryPageResource);
@@ -145,7 +148,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -162,7 +165,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummaryiesByCompetitionIdFiltered() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20, "3");
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, null, 0, 20, of("3"));
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -179,7 +182,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionIdSortedId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "id", 0, 20, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "id", 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -196,7 +199,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByCompetitionIdSortedName() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "name", 0, 20, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getApplicationSummaryByCompetitionId(COMPETITION_ID, "name", 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
@@ -210,7 +213,7 @@ public class ApplicationSummaryControllerIntegrationTest extends BaseControllerI
 
     @Test
     public void testApplicationSummariesByClosedCompetitionId() throws Exception {
-        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20, null);
+        RestResult<ApplicationSummaryPageResource> result = controller.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, null, 0, 20, empty());
 
         assertTrue(result.isSuccess());
         assertEquals(0, result.getSuccessObject().getNumber());
