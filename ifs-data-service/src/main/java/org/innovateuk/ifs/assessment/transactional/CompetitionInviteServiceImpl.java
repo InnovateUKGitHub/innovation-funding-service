@@ -210,7 +210,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
             availableAssessor.setName(assessor.getName());
             availableAssessor.setBusinessType(profile.getBusinessType());
             availableAssessor.setCompliant(profile.isCompliant(assessor));
-            availableAssessor.setAdded(wasInviteCreated(assessor.getEmail(), competitionId));
             availableAssessor.setInnovationAreas(simpleMap(profile.getInnovationAreas(), innovationAreaMapper::mapToResource));
 
             return availableAssessor;
@@ -339,11 +338,6 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         }
 
         return details;
-    }
-
-    private boolean wasInviteCreated(String email, long competitionId) {
-        ServiceResult<CompetitionInvite> result = getByEmailAndCompetition(email, competitionId);
-        return result.isSuccess() ? result.getSuccessObject().getStatus() == CREATED : FALSE;
     }
 
     private ServiceResult<InnovationArea> getInnovationArea(long innovationCategoryId) {
