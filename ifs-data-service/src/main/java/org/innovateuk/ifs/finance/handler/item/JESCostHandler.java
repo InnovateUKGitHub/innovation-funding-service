@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 /***
  *  Handle conversion and validation of the AcademicCost and FinanceRowItem objects.
  */
-public class JESCostHandler extends FinanceRowHandler {
+public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
 
     @Override
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
@@ -24,23 +24,14 @@ public class JESCostHandler extends FinanceRowHandler {
     }
 
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof AcademicCost) {
-            AcademicCost academicCostItem = (AcademicCost) costItem;
-            cost = new ApplicationFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(), null, null, academicCostItem.getTotal(), null, null);
-        }
-        return cost;
+    public ApplicationFinanceRow toCost(AcademicCost academicCostItem) {
+        return academicCostItem != null ?
+                new ApplicationFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(),null, null, academicCostItem.getTotal(), null, null) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof AcademicCost) {
-            AcademicCost academicCostItem = (AcademicCost) costItem;
-            cost = new ProjectFinanceRow(academicCostItem.getId(), academicCostItem.getName(), academicCostItem.getItem(), null, null, academicCostItem.getTotal(), null, null);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(AcademicCost costItem) {
+        return new ProjectFinanceRow(costItem.getId(), costItem.getName(), costItem.getItem(), null, null, costItem.getTotal(), null, null);
     }
 
     @Override
