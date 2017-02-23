@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.testdata.builders;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.resource.QuestionApplicationCompositeId;
+import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResourceId;
@@ -13,9 +15,9 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 
+import static java.util.Collections.emptyList;
 import static org.innovateuk.ifs.testdata.builders.AcademicCostDataBuilder.newAcademicCostData;
 import static org.innovateuk.ifs.testdata.builders.IndustrialCostDataBuilder.newIndustrialCostData;
-import static java.util.Collections.emptyList;
 
 /**
  * Generates Application Finance data for an Organisation on an Application
@@ -75,6 +77,26 @@ public class ApplicationFinanceDataBuilder extends BaseDataBuilder<ApplicationFi
                     withCompetition(data.getCompetition());
 
             costBuilderFn.apply(baseFinanceBuilder).build();
+        });
+    }
+
+    public ApplicationFinanceDataBuilder markAsComplete(boolean markAsComplete) {
+        return doAsUser(data -> {
+            if (markAsComplete) {
+                List<QuestionResource> questions = questionService
+                        .findByCompetition(data.getCompetition().getId())
+                        .getSuccessObjectOrThrowException();
+
+                questions
+                        .stream()
+                        .filter(QuestionResource::hasMultipleStatuses)
+                        .forEach(q -> questionService.markAsComplete(
+                                new QuestionApplicationCompositeId(q.getId(), data.getApplication().getId()),
+                                processRoleRepository.findByUserIdAndApplicationId(
+                                        data.getUser().getId(),
+                                        data.getApplication().getId())
+                                        .getId()).getSuccessObjectOrThrowException());
+            }
         });
     }
 

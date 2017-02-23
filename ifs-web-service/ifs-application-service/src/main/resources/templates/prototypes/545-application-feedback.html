@@ -19,7 +19,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'10294855: Mobile Phone Data for Logistics Analytics'}, ${'Feedback overview'})" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'Mobile Phone Data for Logistics Analytics'}, ${'Feedback overview'})" />
 
 
 	<div th:if="${param.internal == null}" th:remove="tag">
@@ -27,8 +27,8 @@
 		<div th:if="${param.unsuccessful == null}" th:remove="tag">
 
 			<div class="success-alert">
-                <h2 class="heading-small no-margin">Congratulations, your application has been successful.</h2>
-		        <p>Average scores and written feedback from each assessor can be found below.</p>
+				<h2 class="heading-small no-margin">Congratulations, your application has been successful.</h2>
+				<p>Average scores and written feedback from each assessor can be found below.</p>
 		    </div>
 
 		</div>
