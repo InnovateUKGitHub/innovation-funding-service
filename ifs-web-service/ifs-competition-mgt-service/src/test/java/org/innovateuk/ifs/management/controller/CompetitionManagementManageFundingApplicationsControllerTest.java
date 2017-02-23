@@ -14,6 +14,7 @@ import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulat
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -63,6 +64,7 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
         int totalElements = totalPages * (pageNumber + 1);
         String filter = "";
         long changesSinceLastNotify = 10;
+        String queryParams = "";
         // Mock setup
         CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
         when(competitionService.getById(competitionId)).thenReturn(competitionResource);
@@ -76,7 +78,7 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
         when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competitionId)).thenReturn(restSuccess(changesSinceLastNotify));
 
         // Expected values to match against
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, sortField, filter, competitionId, competitionResource.getName());
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, filter, competitionId, competitionResource.getName());
         CompetitionInFlightStatsViewModel keyStatisticsModel = new CompetitionInFlightStatsViewModel(keyStatistics);
         CompetitionInFlightViewModel competitionInFlightViewModel = new CompetitionInFlightViewModel(competitionResource, emptyList(), changesSinceLastNotify, keyStatisticsModel);
         // Method under test
