@@ -359,7 +359,6 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .build();
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(DESC, "lastName"));
-
         Optional<Long> innovationArea = Optional.of(4L);
 
         when(competitionInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
@@ -393,8 +392,7 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .build();
 
         Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
-
-        Optional<Long> innovationArea = Optional.empty();
+        Optional<Long> innovationArea = empty();
 
         when(competitionInviteServiceMock.getAvailableAssessors(competitionId, pageable, innovationArea))
                 .thenReturn(serviceSuccess(expectedAvailableAssessorPageResource));
