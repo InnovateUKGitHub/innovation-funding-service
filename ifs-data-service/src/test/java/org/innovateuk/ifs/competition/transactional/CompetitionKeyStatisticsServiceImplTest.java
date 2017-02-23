@@ -1,13 +1,13 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
+import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.competition.resource.CompetitionClosedKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionInAssessmentKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionOpenKeyStatisticsResource;
-import org.innovateuk.ifs.competition.resource.CompetitionReadyToOpenKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
 import org.innovateuk.ifs.invite.domain.ParticipantStatus;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
@@ -19,6 +19,7 @@ import java.util.List;
 
 import static java.util.Collections.emptyList;
 import static java.util.EnumSet.of;
+import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.CREATED_AND_OPEN_STATUS_IDS;
 import static org.innovateuk.ifs.application.transactional.ApplicationSummaryServiceImpl.SUBMITTED_STATUS_IDS;
@@ -26,6 +27,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.CompetitionParticipantBuilder.newCompetitionParticipant;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.competition.builder.CompetitionClosedKeyStatisticsResourceBuilder.newCompetitionClosedKeyStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionInAssessmentKeyStatisticsResourceBuilder.newCompetitionInAssessmentKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionOpenKeyStatisticsResourceBuilder.newCompetitionOpenKeyStatisticsResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionReadyToOpenKeyStatisticsResourceBuilder.newCompetitionReadyToOpenKeyStatisticsResource;
@@ -176,5 +178,22 @@ public class CompetitionKeyStatisticsServiceImplTest extends BaseServiceUnitTest
 
         CompetitionInAssessmentKeyStatisticsResource response = service.getInAssessmentKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
         assertEquals(keyStatisticsResource, response);
+    }
+
+    @Test
+    public void getFundedKeyStatisticsByCompetition() throws Exception {
+        long competitionId = 1L;
+
+        List<Application> applications = newApplication().withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withFundingDecision(FundingDecisionStatus.FUNDED).build(2);
+
+        when(applicationRepositoryMock.findByCompetitionIdAndApplicationStatusIdIn(competitionId, SUBMITTED_STATUS_IDS)).thenReturn(applications);
+
+        CompetitionFundedKeyStatisticsResource response = service.getFundedKeyStatisticsByCompetition(competitionId).getSuccessObjectOrThrowException();
+        assertEquals(2, response.getApplicationsSubmitted());
+        assertEquals(2, response.getApplicationsFunded());
+        assertEquals(0, response.getApplicationsNotFunded());
+        assertEquals(0, response.getApplicationsOnHold());
+        assertEquals(0, response.getApplicationsNotifiedOfDecision());
+        assertEquals(0, response.getApplicationsAwaitingDecision());
     }
 }
