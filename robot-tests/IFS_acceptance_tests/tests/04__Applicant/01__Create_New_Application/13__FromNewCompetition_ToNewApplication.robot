@@ -272,7 +272,7 @@ Lead applicant invites a collaborator
 Collaborator can accept the invitation
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Invitation to collaborate in ${compWITHGrowth}    participate in their application
+    When the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    Invitation to collaborate in ${compWITHGrowth}    participate in their application
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user selects the radio button    organisationType    1
     And the user clicks the button/link    jQuery=.button:contains("Continue")
@@ -282,8 +282,8 @@ Collaborator can accept the invitation
     And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user fills the create account form    Adrian    Booth
-    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user fills the create account form    Adrian   Smith
+    And the user reads his email and clicks the link    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    Please verify your email address    If you did not request an account with us
     And the user should be redirected to the correct page    ${REGISTRATION_VERIFIED}
 
 Non-lead applicant can view and edit project growth table
@@ -291,11 +291,11 @@ Non-lead applicant can view and edit project growth table
     [Tags]    HappyPath    Pending
     # TODO Pending due to INFUND-8426
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${TEST_MAILBOX_ONE}+inviteorg1@gmail.com    ${correct_password}
+    When guest user log-in    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    ${correct_password}
     And the user navigates to Your-finances page    ${compWITHGrowth}
     And the user clicks the button/link    link=Your organisation
     And the user selects medium organisation size
-    Then the user enters text to a text field    css=input[name$="month"]    12
+    Then the user enters text to a text field    css=input[name$="month"]    12./
     And the user enters text to a text field    css=input[name$="year"]    2016
     And the user populates the project growth table
     And the user enters text to a text field    jQuery=label:contains("employees") + input    4
@@ -407,6 +407,6 @@ the applicant enters valid inputs
     The user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
     The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
-    The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
+    The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+invitepartner@gmail.com
     focus    jquery=button:contains("Save changes")
     The user clicks the button/link    jquery=button:contains("Save changes")
