@@ -13,37 +13,17 @@
              th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.shortName}" />
         </h3>
       </div>
-      <div class="column-third">
-        <th:block th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
-          <!--/* lead */-->
-          <th:block th:insert="question-type/form-elements :: assign-buttons" th:if="${userIsLeadApplicant}" />
-          <!--/* collabr */-->
-          <div class="assign-container" th:if="${!userIsLeadApplicant}">
-            <th:block th:insert="question-type/form-elements :: assigned-to" />
-          </div>
-        </th:block>
-      </div>
-      <span th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}"
-            class="action-required"><strong>Assigned to you</strong></span>
+      <th:block th:unless="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
+        <!--/* lead */-->
+        <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons"  />
+        <!--/* collabr */-->
+        <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to" />
+
+      </th:block>
+
       <div class="task-status-complete"
            th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}"><span>Completed</span></div>
 
-      <!--<img class="section-status complete"-->
-           <!--src="/images/field/field-done-right.png"-->
-           <!--th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-done-right.png')}"-->
-           <!--width="30"-->
-           <!--height="30"-->
-           <!--th:alt="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"-->
-           <!--th:title="'The &quot;'+${question.shortName}+'&quot; section is marked as done'"-->
-           <!--th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}" />-->
-      <!--<img class="section-status assigned"-->
-           <!--src="/images/field/field-assigned-right.png"-->
-           <!--th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/field/field-assigned-right.png')}"-->
-           <!--width="30"-->
-           <!--height="30"-->
-           <!--th:alt="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"-->
-           <!--th:title="'The &quot;'+${question.shortName}+'&quot; section is assigned to you'"-->
-           <!--th:if="${!(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) and ((currentUser.getId() == questionAssignee?.assigneeUserId) or ((questionAssignee?.assignee == null) and (leadApplicant?.getId() == currentUser.getId())))}"/>-->
     </li>
   </th:block>
 

@@ -35,7 +35,7 @@
               <div th:remove="tag" th:text="${#temporals.format(currentCompetition.endDate, 'EEEE d MMMM yyyy')}" />
             </dt>
           </dl>
-          <h2 class="heading-medium no-margin">Application progress</h2>
+          <h2 class="heading-medium no-margin-bottom">Application progress</h2>
           <div th:include="fragments/elements :: progress-indicator" th:with="percentage=${completedQuestionsPercentage},size='medium'" class="extra-margin" />
         </div>
         <div class="column-half">
