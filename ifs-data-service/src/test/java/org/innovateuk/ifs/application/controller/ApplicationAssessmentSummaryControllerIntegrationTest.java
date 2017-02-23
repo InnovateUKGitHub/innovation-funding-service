@@ -4,6 +4,7 @@ import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.application.resource.ApplicationAssessmentSummaryResource;
+import org.innovateuk.ifs.application.resource.ApplicationAssessorPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationAssessorResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -35,14 +36,26 @@ public class ApplicationAssessmentSummaryControllerIntegrationTest extends BaseC
     }
 
     @Test
-    public void getAssessors() throws Exception {
-        RestResult<List<ApplicationAssessorResource>> serviceResult = controller.getAssessors(1L);
+    public void getAvailableAssessors() throws Exception {
+        loginCompAdmin();
+        RestResult<ApplicationAssessorPageResource> serviceResult = controller.getAvailableAssessors(1L, 0, 20, null);
+        assertTrue(serviceResult.isSuccess());
+
+        ApplicationAssessorPageResource applicationAssessorResources = serviceResult.getSuccessObjectOrThrowException();
+
+        assertEquals(Collections.emptyList(), applicationAssessorResources.getContent());
+    }
+    @Test
+    public void getAssignedAssessors() throws Exception {
+        loginCompAdmin();
+        RestResult<List<ApplicationAssessorResource>> serviceResult = controller.getAssignedAssessors(1L);
         assertTrue(serviceResult.isSuccess());
 
         List<ApplicationAssessorResource> applicationAssessorResources = serviceResult.getSuccessObjectOrThrowException();
 
         assertEquals(Collections.emptyList(), applicationAssessorResources);
     }
+
 
     @Test
     public void getApplicationAssessmentSummary() throws Exception {

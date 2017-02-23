@@ -50,7 +50,7 @@ public class ApplicationAssessmentProgressModelPopulator {
                 .getApplicationAssessmentSummary(applicationId).getSuccessObjectOrThrowException();
 
         List<ApplicationAssessorResource> notAvailableAssessors = applicationAssessmentSummaryRestService.getAssignedAssessors(applicationId).getSuccessObjectOrThrowException();
-        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 1, filterInnovationArea).getSuccessObjectOrThrowException();
+        ApplicationAssessorPageResource availableAssessors = applicationAssessmentSummaryRestService.getAvailableAssessors(applicationId, page, 20, filterInnovationArea).getSuccessObjectOrThrowException();
 
         return new ApplicationAssessmentProgressViewModel(applicationAssessmentSummary.getId(),
                 applicationAssessmentSummary.getName(),

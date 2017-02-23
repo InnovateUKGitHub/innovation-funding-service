@@ -26,11 +26,6 @@ public class ApplicationAssessmentSummaryRestServiceImpl extends BaseRestService
     private String applicationAssessmentSummaryRestURL = "/applicationAssessmentSummary";
 
     @Override
-    public RestResult<List<ApplicationAssessorResource>> getAssessors(Long applicationId) {
-        return getWithRestResult(format("%s/%s/assessors", applicationAssessmentSummaryRestURL, applicationId), ParameterizedTypeReferences.applicationAssessorResourceListType());
-    }
-
-    @Override
     public RestResult<List<ApplicationAssessorResource>> getAssignedAssessors(Long applicationId) {
         return getWithRestResult(format("%s/%s/assignedAssessors", applicationAssessmentSummaryRestURL, applicationId), ParameterizedTypeReferences.applicationAssessorResourceListType());
     }
