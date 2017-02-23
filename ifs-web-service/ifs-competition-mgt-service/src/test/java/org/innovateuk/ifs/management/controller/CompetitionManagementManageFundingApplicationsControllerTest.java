@@ -69,7 +69,7 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
 
         List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(pageSize);
         ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
-        when(applicationSummaryService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize)).thenReturn(applicationSummaryPageResource);
+        when(applicationSummaryService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize, filter)).thenReturn(applicationSummaryPageResource);
 
         CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
         when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatistics));

@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.management.viewmodel;
 
 
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
 
@@ -16,14 +14,20 @@ public class ManageFundingApplicationViewModel {
     private String filter;
     private long competitionId;
     private String competitionName;
+    private PaginationViewModel pagination;
 
 
-    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, String sortField, String filter, long competitionId, String competitionName) {
+    public ManageFundingApplicationViewModel(ApplicationSummaryPageResource results, PaginationViewModel pagination, String sortField, String filter, long competitionId, String competitionName) {
         this.results = results;
         this.sortField = sortField;
         this.filter = filter;
         this.competitionId = competitionId;
         this.competitionName = competitionName;
+        this.pagination = pagination;
+    }
+
+    public PaginationViewModel getPagination() {
+        return pagination;
     }
 
     public ApplicationSummaryPageResource getResults() {

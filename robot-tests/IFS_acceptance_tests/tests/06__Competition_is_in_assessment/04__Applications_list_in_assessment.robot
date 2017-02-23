@@ -150,7 +150,7 @@ The calculations should be correct
 Both calculations in the page should show the same
     [Arguments]    ${SUMMARY_LOCATOR}
     ${APPLICATIONS_NUMBER_SUMMARY}=    get text    ${SUMMARY_LOCATOR}
-    ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-two-thirds span
+    ${APPLICATIONS_NUMBER_LIST}=    Get text    css=.column-half span
     Should Be Equal As Integers    ${APPLICATIONS_NUMBER_LIST}    ${APPLICATIONS_NUMBER_SUMMARY}
 
 the admin downloads the excel

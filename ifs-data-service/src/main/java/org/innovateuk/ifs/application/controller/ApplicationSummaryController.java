@@ -1,16 +1,17 @@
 package org.innovateuk.ifs.application.controller;
 
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
+import org.innovateuk.ifs.application.transactional.CompetitionSummaryService;
+import org.innovateuk.ifs.commons.rest.RestResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.transactional.ApplicationSummaryService;
-import org.innovateuk.ifs.application.transactional.CompetitionSummaryService;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import java.util.Optional;
 
 /**
  * ApplicationSummaryController exposes application summary data and operations through a REST API.
@@ -32,9 +33,9 @@ public class ApplicationSummaryController {
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
-            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize
-    ) {
-        return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(value = "filter", required = false) Optional<String> filter) {
+        return applicationSummaryService.getApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter).toGetResponse();
     }
 
     @RequestMapping("/getCompetitionSummary/{id}")
@@ -47,9 +48,9 @@ public class ApplicationSummaryController {
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
-            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize
-    ) {
-        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(value = "filter", required = false) Optional<String> filter) {
+        return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize, filter).toGetResponse();
     }
 
     @RequestMapping("/findByCompetition/{competitionId}/not-submitted")
@@ -77,7 +78,8 @@ public class ApplicationSummaryController {
             @PathVariable("competitionId") long competitionId,
             @RequestParam(value = "sort", required = false) String sortBy,
             @RequestParam(value = "page", defaultValue = "0") int pageIndex,
-            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize
+            @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
+            @RequestParam(value = "filter", required = false) Optional<String> filter
     ) {
         return applicationSummaryService.getWithFundingDecisionApplicationSummariesByCompetitionId(competitionId, sortBy, pageIndex, pageSize).toGetResponse();
     }

@@ -5,6 +5,9 @@ import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
 
@@ -14,14 +17,14 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
     @Test
     public void test_getApplicationSummariesByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getApplicationSummariesByCompetitionId(1L, null, 0, 20),
+                () -> classUnderTest.getApplicationSummariesByCompetitionId(1L, null, 0, 20, empty()),
                 PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
     public void test_getSubmittedApplicationSummariesByCompetitionId() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(
-                () -> classUnderTest.getSubmittedApplicationSummariesByCompetitionId(1L, null, 0, 20),
+                () -> classUnderTest.getSubmittedApplicationSummariesByCompetitionId(1L, null, 0, 20, empty()),
                 PROJECT_FINANCE, COMP_ADMIN);
     }
 
@@ -53,19 +56,17 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
     public static class TestApplicationSummaryService implements ApplicationSummaryService {
 
-        @Override
-        public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId,
-                                                                                                    String sortBy, int pageIndex, int pageSize) {
-            return null;
-        }
+		@Override
+		public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+			return null;
+		}
 
-        @Override
-        public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-                Long competitionId, String sortBy, int pageIndex, int pageSize) {
-            return null;
-        }
+		@Override
+		public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
+			return null;
+		}
 
-        @Override
+		@Override
         public ServiceResult<ApplicationSummaryPageResource> getNotSubmittedApplicationSummariesByCompetitionId(
                 Long competitionId, String sortBy, int pageIndex, int pageSize) {
             return null;
