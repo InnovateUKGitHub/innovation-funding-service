@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import org.apache.commons.lang3.StringUtils;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSearchResultItem;
@@ -78,7 +79,8 @@ public class CompetitionManagementDashboardController {
     @GetMapping(value="/dashboard/search")
     public String search(@RequestParam(name = "searchQuery") String searchQuery,
                            @RequestParam(name = "page", defaultValue = "1") int page, Model model) {
-        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(searchQuery, page - 1));
+        String trimmedSearchQuery = StringUtils.normalizeSpace(searchQuery);
+        model.addAttribute("results", competitionDashboardSearchService.searchCompetitions(trimmedSearchQuery, page - 1));
         model.addAttribute("searchQuery", searchQuery);
         return TEMPLATE_PATH + "search";
     }

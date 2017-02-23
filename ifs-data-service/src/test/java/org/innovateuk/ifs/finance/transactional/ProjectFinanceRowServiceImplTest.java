@@ -38,9 +38,7 @@ import static org.innovateuk.ifs.finance.builder.ProjectFinanceRowBuilder.newPro
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.project.builder.ProjectBuilder.newProject;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 
@@ -176,7 +174,7 @@ public class ProjectFinanceRowServiceImplTest extends BaseServiceUnitTest<Projec
         when(organisationFinanceDefaultHandlerMock.costToCostItem(materialCost)).thenReturn(material);
         when(organisationFinanceDefaultHandlerMock.getCostHandler(FinanceRowType.MATERIALS)).thenReturn(new MaterialsHandler());
 
-        FinanceRowHandler financeRowHandler = service.getCostHandler(1L);
+        FinanceRowHandler financeRowHandler = service.getCostHandler(material);
         assertNotNull(financeRowHandler);
         assertTrue(financeRowHandler instanceof MaterialsHandler);
     }
