@@ -117,7 +117,7 @@ Project Finance user can view academic Jes form
     # note that we are viewing the file above rather than the same project as the other tests in this suite due to INFUND-6724
     When the user clicks the button/link    css=a.eligibility-2
     Then the user should see the text in the page    Download Je-S form
-    When the user clicks the button/link    link=jes-form57.pdf
+    When the user clicks the button/link    link=jes-form93.pdf
     Then the user should not see an error in the page
     [Teardown]    the user navigates to the page    ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/finance-check
 
@@ -144,10 +144,10 @@ Project finance user can see the lead partner's information
     [Documentation]    INFUND-4825
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    £302,510
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(1)    £301,355
     When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(2)    30%
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £211,757
-    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £87,051
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £210,948
+    When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £86,704
     When the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(5)    £3,702
 
 Checking the approve viability checkbox enables RAG selection but not confirm viability button
@@ -290,11 +290,11 @@ Project finance user can see the lead partner's information about eligibility
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 200,903
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    30%
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 60,502
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 60,271
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,704
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 138,164
 
 
 Finance checks eligibility validations
@@ -393,8 +393,8 @@ Project finance user can see updated finance overview after lead changes to elig
     [Documentation]    INFUND-5508
     [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 322,786
-    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 92,593
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 307,072
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,878
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
 
@@ -411,11 +411,11 @@ Project finance user can see the partner's information about eligibility
     [Tags]
     # Note the below figures aren't calculated, but simply brought forward from user-entered input during the application phase
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(1)    36 months
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 201,674
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(2)    £ 200,903
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(3)    0%
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(4)    £ 0
     When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(5)    £ 2,468
-    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 199,206
+    When the user should see the text in the element    jQuery=.table-overview tbody tr:nth-child(1) td:nth-child(6)    £ 198,435
 
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
@@ -500,8 +500,8 @@ Project finance user can see updated finance overview after partner changes to e
     [Documentation]    INFUND-5508
     [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/
-    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 241,236
-    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 68,128
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 211,347
+    And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 59,161
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    28%
 
 Approve Eligibility: Collaborator partner organisation
@@ -593,8 +593,8 @@ Non finance contact can't view finance checks page
 *** Keywords ***
 the table row has expected values
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(2)    3 months
-    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 505,174
-    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 146,075
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(3)    £ 503,248
+    the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(4)    £ 145,497
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(5)    £ 6,170
     the user sees the text in the element    jQuery=.table-overview tbody td:nth-child(6)    29%
 
@@ -610,8 +610,8 @@ the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project se
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
-    the user selects the option from the drop-down menu    Yes    id=fund28
-    the user selects the option from the drop-down menu    No    id=fund29
+    the user selects the option from the drop-down menu    Yes    id=fund63
+    the user selects the option from the drop-down menu    No    id=fund64
     the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     the user clicks the button/link    name=publish
     the user navigates to the page    ${server}/management/competition/${FUNDERS_PANEL_COMPETITION}/funding
@@ -776,14 +776,14 @@ Project finance user amends labour details in eligibility
     When the user clicks the button/link            css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(5) button
     Then verify percentage and total                1  23%  59778
     When the user clicks the button/link            jQuery=form section:nth-of-type(1) button[name=save-eligibility]
-    Then verify total costs of project              £ 272,545
+    Then verify total costs of project              £ 257,600
     And the user should see the element             jQuery=form section:nth-of-type(1) a:contains("Edit")
     And the user should not see the element         jQuery=form section:nth-of-type(1) button[name=save-eligibility]
 
 
 Project finance user amends materials details in eligibility
     When the user clicks the button/link            jQuery=form section:nth-of-type(3) button:contains("Materials")
-    Then verify percentage and total                3  37%  100200
+    Then verify percentage and total                3  39%  100200
     When the user clicks the button/link            jQuery=form section:nth-of-type(3) a:contains("Edit")
     And the user adds data into materials row       1  test  10  100
     Then verify percentage and total                3  25%  51100
@@ -793,7 +793,7 @@ Project finance user amends materials details in eligibility
     When the user clicks the button/link            css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(5) button
     Then verify percentage and total                3  1%  2000
     When the user clicks the button/link            jQuery=form section:nth-of-type(3) button[name=save-eligibility]
-    Then verify total costs of project              £ 174,345
+    Then verify total costs of project              £ 159,400
     And the user should see the element            jQuery=form section:nth-of-type(1) a:contains("Edit")
     And the user should not see the element        jQuery=form section:nth-of-type(3) button[name=save-eligibility]
 
@@ -810,14 +810,14 @@ Project finance user amends capital usage details in eligibility
     When the user clicks the button/link            css=form section:nth-of-type(4) #capital_usage div:nth-child(2) button
     Then verify percentage and total                 4  6%  10100
     When the user clicks the button/link           jQuery=form section:nth-of-type(4) button[name=save-eligibility]
-    Then verify total costs of project             £ 183,893
+    Then verify total costs of project             £ 168,948
     And the user should see the element           jQuery=form section:nth-of-type(4) a:contains("Edit")
     And the user should not see the element       jQuery=form section:nth-of-type(4) button[name=save-eligibility]
 
 
 Project finance user amends subcontracting usage details in eligibility
     When the user clicks the button/link            jQuery=form section:nth-of-type(5) button:contains("Subcontracting costs")
-    Then the user should see the element            jQuery=form section:nth-of-type(5) button span:contains("49%")
+    Then the user should see the element            jQuery=form section:nth-of-type(5) button span:contains("53%")
     And the user should see the element            jQuery=form section:nth-of-type(5) input[value*='90,000']
     When the user clicks the button/link            jQuery=form section:nth-of-type(5) a:contains("Edit")
     And the user adds subcontracting data into row   1  test  10600
@@ -828,13 +828,13 @@ Project finance user amends subcontracting usage details in eligibility
     When the user clicks the button/link            css=form section:nth-of-type(5) #subcontracting div:nth-child(2) button
     Then verify percentage and total                 5  20%  20000
     When the user clicks the button/link           jQuery=form section:nth-of-type(5) button[name=save-eligibility]
-    Then verify total costs of project              £ 113,893
+    Then verify total costs of project              £ 98,948
     And the user should see the element           jQuery=form section:nth-of-type(5) a:contains("Edit")
     And the user should not see the element       jQuery=form section:nth-of-type(5) button[name=save-eligibility]
 
 Project finance user amends travel details in eligibility
     Given the user clicks the button/link           jQuery=form section:nth-of-type(6) button:contains("Travel and subsistence")
-    Then the user should see the element            jQuery=form section:nth-of-type(6) button span:contains("5%")
+    Then the user should see the element            jQuery=form section:nth-of-type(6) button span:contains("6%")
     And the user should see the element            jQuery=form section:nth-of-type(6) input[value*='5,970']
     When the user clicks the button/link            jQuery=form section:nth-of-type(6) a:contains("Edit")
     And the user adds travel data into row          1  test  10  100
@@ -845,7 +845,7 @@ Project finance user amends travel details in eligibility
     When the user clicks the button/link            css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(5) button
     Then verify percentage and total                 6  2%  2000
     When the user clicks the button/link           jQuery=form section:nth-of-type(6) button[name=save-eligibility]
-    Then verify total costs of project            £ 109,923
+    Then verify total costs of project            £ 94,978
     And the user should see the element           jQuery=form section:nth-of-type(6) a:contains("Edit")
     And the user should not see the element       jQuery=form section:nth-of-type(6) button[name=save-eligibility]
 
@@ -863,6 +863,6 @@ Project finance user amends other costs details in eligibility
     Then verify percentage and total                 7  11%  11300
     When the user should see the element           css=#other-costs-table tr:nth-of-type(2) td:nth-of-type(3) button
     When the user clicks the button/link           jQuery=form section:nth-of-type(7) button[name=save-eligibility]
-    Then verify total costs of project            £ 120,123
+    Then verify total costs of project            £ 105,178
     And the user should see the element           jQuery=form section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=form section:nth-of-type(7) button[name=save-eligibility]

@@ -50,7 +50,7 @@ GOL not generated before spend profiles have been approved
     [Documentation]    INFUND-6741
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
+    When the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
     Then the user should not see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
     And the user navigates to the page and gets a custom error message    ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send    ${403_error_message}
     [Teardown]    proj finance approves the spend profiles
@@ -61,21 +61,21 @@ Status updates correctly for internal user's table
     [Documentation]    INFUND-4049 ,INFUND-5543
     [Tags]    Experian
     [Setup]    log in as a different user   &{Comp_admin1_credentials}
-    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(1).status.ok       # Project details
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(2).status.ok       # MO
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(3).status.ok       # Bank details
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(4).status.ok       # Finance checks
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(5).status.ok       # Spend Profile
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(6).status.ok       # Other Docs
-    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action   # GOL
+    When the user navigates to the page     ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(1).status.ok       # Project details
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(2).status.ok       # MO
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(3).status.ok       # Bank details
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(4).status.ok       # Finance checks
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(5).status.ok       # Spend Profile
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(6).status.ok       # Other Docs
+    And the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.action   # GOL
 
 Project finance user selects the grant offer letter
     [Documentation]  INFUND-6377, INFUND-6048
     [Tags]  HappyPath
     [Setup]  log in as a different user     &{internal_finance_credentials}
-    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
+    Given the user navigates to the page    ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    When the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.action a
     Then the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element     jQuery=h2:contains("Grant offer letter")
     And the user should see the element     link=grant_offer_letter.pdf
@@ -145,8 +145,8 @@ Comp Admin user uploads new grant offer letter
     And the user clicks the button/link    jQuery=.modal-accept-send-gol .button:contains("Publish to project team")
     Then the user should not see the element  jQuery=.button:contains("Publish to project team")
     And the user should not see the element   jQuery=button.button-secondary:contains("Remove")
-    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.waiting   # GOL
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.waiting   # GOL
 
 PM can view the grant offer letter page
     [Documentation]    INFUND-4848, INFUND-6091
@@ -330,8 +330,8 @@ Internal Dashboard should be updated
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{Comp_admin1_credentials}
-    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
+    When the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Then the user should see the element     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.action
 
 Internal user can download the signed GOL
     [Documentation]    INFUND-6377
@@ -344,8 +344,8 @@ Internal user can download the signed GOL
 Comp Admin can accept the signed grant offer letter
     [Documentation]  INFUND-6377
     [Tags]
-    [Setup]  the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Given the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action a
+    [Setup]  the user navigates to the page  ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Given the user clicks the button/link    jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.action a
     Then the user navigates to the page      ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/grant-offer-letter/send
     And the user should see the element      jQuery=#content .button:contains("Accept signed grant offer letter")
     When the user clicks the button/link     jQuery=#content .button:contains("Accept signed grant offer letter")
@@ -357,15 +357,15 @@ Internal user accepts signed grant offer letter
     [Documentation]    INFUND-5998, INFUND-6377
     [Tags]    HappyPath
     [Setup]    log in as a different user    &{internal_finance_credentials}
-    Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.action
+    Given the user navigates to the page      ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    When the user clicks the button/link     jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.action
     Then the user should not see the text in the page  "Confirm receipt of signed grant offer letter"
     And the user clicks the button/link    jQuery=#content .button:contains("Accept signed grant offer letter")
     And the user clicks the button/link     jQuery=.modal-accept-signed-gol .button:contains("Accept signed grant offer letter")
     Then the user should see the element    jQuery=.success-alert h2:contains("The grant offer letter has been received and accepted.")
     And the user should not see the element     jQuery=#content .button:contains("Accept signed grant offer letter")
-    When the user navigates to the page       ${server}/project-setup-management/competition/${PS_GOL_APPLICATION_PROJECT}/status
-    Then the user should see the element  jQuery=#table-project-status tr:nth-of-type(5) td:nth-of-type(7).status.ok
+    When the user navigates to the page       ${server}/project-setup-management/competition/${PS_GOL_Competition_Id}/status
+    Then the user should see the element  jQuery=#table-project-status tr:nth-of-type(1) td:nth-of-type(7).status.ok
 
 Project manager's status should be updated
     [Documentation]   INFUND-5998, INFUND-6377
@@ -487,25 +487,25 @@ project finance approves Viability for
 
 all partners submit their Spend Profile
     log in as a different user         ${PS_GOL_APPLICATION_PARTNER_EMAIL}    Passw0rd
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Kazio_Id}/spend-profile
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Kazio_Id}/spend-profile
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
         And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_ACADEMIC_EMAIL}    Passw0rd
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Cogilith_Id}/spend-profile
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Cogilith_Id}/spend-profile
     When the user clicks the button/link    jQuery=a:contains("Submit to lead partner")
         And the user clicks the button/link    jQuery=.button:contains("Submit")
     log in as a different user         ${PS_GOL_APPLICATION_LEAD_PARTNER_EMAIL}    Passw0rd
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    link=${Gabtype_Name}
     the user clicks the button/link    jQuery=.button:contains("Mark as complete")
-    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_Competition_Id}/partner-organisation/${Gabtype_Id}/spend-profile
+    the user navigates to the page     ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/partner-organisation/${Gabtype_Id}/spend-profile
     the user clicks the button/link    jQuery=.button:contains("Review and send total project")
     the user clicks the button/link    jQuery=.button:contains("Send project spend profile")
     the user clicks the button/link    jQuery=.modal-confirm-spend-profile-totals .button[value="Send"]
 
 proj finance approves the spend profiles
     log in as a different user         &{internal_finance_credentials}
-    the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_Competition_Id}/spend-profile/approval
+    the user navigates to the page     ${server}/project-setup-management/project/${PS_GOL_APPLICATION_PROJECT}/spend-profile/approval
     the user selects the checkbox      approvedByLeadTechnologist
     the user clicks the button/link    jQuery=.button:contains("Approved")
     the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Accept documents")
