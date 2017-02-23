@@ -4,6 +4,7 @@ import org.innovateuk.ifs.competition.form.ManageFundingApplicationsQueryForm;
 import org.innovateuk.ifs.competition.form.SelectApplicationsForEmailForm;
 import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -34,7 +35,7 @@ public class CompetitionManagementManageFundingApplicationsController {
     private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
 
     @Autowired
-    private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
 
     @GetMapping
     public String applications(Model model,
@@ -44,7 +45,7 @@ public class CompetitionManagementManageFundingApplicationsController {
                                ValidationHandler validationHandler) {
         return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
                     model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
-                    model.addAttribute("keyStatistics", competitionInFlightModelPopulator.populateModel(competitionId));
+                    model.addAttribute("keyStatistics", competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionId));
                     model.addAttribute("form", new SelectApplicationsForEmailForm());
                     return MANAGE_FUNDING_APPLICATIONS_VIEW;
                 }
@@ -89,7 +90,7 @@ public class CompetitionManagementManageFundingApplicationsController {
     private Supplier<String> idsFailureView(long competitionId, ManageFundingApplicationsQueryForm query, Model model) {
         return () -> {
             model.addAttribute("model", manageFundingApplicationsModelPopulator.populate(query, competitionId));
-            model.addAttribute("keyStatistics", competitionInFlightModelPopulator.populateModel(competitionId));
+            model.addAttribute("keyStatistics", competitionInFlightStatsModelPopulator.populateStatsViewModel(competitionId));
             return "comp-mgt-manage-funding-applications";
         };
     }

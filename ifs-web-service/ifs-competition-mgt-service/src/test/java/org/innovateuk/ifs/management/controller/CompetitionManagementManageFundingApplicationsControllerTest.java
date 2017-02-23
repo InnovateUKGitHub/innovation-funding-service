@@ -1,0 +1,118 @@
+package org.innovateuk.ifs.management.controller;
+
+import org.hamcrest.Matcher;
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.LambdaMatcher;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.competition.resource.CompetitionFundedKeyStatisticsResource;
+import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
+import org.innovateuk.ifs.management.model.ManageFundingApplicationsModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
+import org.innovateuk.ifs.management.viewmodel.ManageFundingApplicationViewModel;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Spy;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.http.MediaType;
+
+import java.util.List;
+
+import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.competition.builder.CompetitionFundedKeyStatisticsResourceBuilder.newCompetitionFundedKeyStatisticsResource;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.ASSESSOR_FEEDBACK;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@RunWith(MockitoJUnitRunner.class)
+public class CompetitionManagementManageFundingApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementManageFundingApplicationsController> {
+
+
+    @InjectMocks
+    @Spy
+    private ManageFundingApplicationsModelPopulator manageFundingApplicationsModelPopulator;
+
+    @InjectMocks
+    @Spy
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
+
+    @Test
+    public void testApplications() throws Exception {
+        long competitionId = 1l;
+        int pageNumber = 0;
+        int pageSize = 20;
+        String sortField = "id";
+        int totalPages = pageNumber + 2;
+        int totalElements = totalPages * (pageNumber + 1);
+        String filter = "";
+        // Mock setup
+        CompetitionResource competitionResource = newCompetitionResource().withId(competitionId).withCompetitionStatus(ASSESSOR_FEEDBACK).withName("A competition").build();
+        when(competitionService.getById(competitionId)).thenReturn(competitionResource);
+
+        List<ApplicationSummaryResource> applications = newApplicationSummaryResource().with(uniqueIds()).build(pageSize);
+        ApplicationSummaryPageResource applicationSummaryPageResource = new ApplicationSummaryPageResource(totalElements, totalPages, applications, pageNumber, pageSize);
+        when(applicationSummaryService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize)).thenReturn(applicationSummaryPageResource);
+
+
+        CompetitionFundedKeyStatisticsResource keyStatistics = newCompetitionFundedKeyStatisticsResource().build();
+        when(competitionKeyStatisticsRestServiceMock.getFundedKeyStatisticsByCompetition(competitionId)).thenReturn(restSuccess(keyStatistics));
+
+        // Expected values to match against
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, sortField, filter, competitionId, competitionResource.getName());
+        CompetitionInFlightStatsViewModel keyStatisticsModel = new CompetitionInFlightStatsViewModel(keyStatistics);
+        // Method under test
+        mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", competitionId))
+                .andExpect(status().isOk())
+                .andExpect(view().name("comp-mgt-manage-funding-applications"))
+                .andExpect(model().attribute("model", manageFundingApplicationViewModelMatcher(model)))
+                .andExpect(model().attribute("keyStatistics", competitionInFlightStatsViewModelMatcher(keyStatisticsModel)));
+    }
+
+    @Test
+    public void testSelectApplications() throws Exception {
+        long competitionId = 1l;
+        mockMvc.perform(post("/competition/{competitionId}/manage-funding-applications", competitionId).
+                contentType(MediaType.APPLICATION_FORM_URLENCODED).
+                param("ids[0]", "18").
+        param("ids[3]", "21"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(view().name("redirect:/competition/1/funding/send?application_ids=18,21"));
+    }
+
+    private Matcher<ManageFundingApplicationViewModel> manageFundingApplicationViewModelMatcher(ManageFundingApplicationViewModel toMatch) {
+        return new LambdaMatcher<>(match -> {
+            assertEquals(toMatch.getFilter(), match.getFilter());
+            assertEquals(toMatch.getCompetitionName(), match.getCompetitionName());
+            assertEquals(toMatch.getSortField(), match.getSortField());
+            assertEquals(toMatch.getCompetitionId(), match.getCompetitionId());
+            assertEquals(toMatch.getResults().getSize(), match.getResults().getSize());
+            assertEquals(toMatch.getResults().getContent().get(0).getId(), match.getResults().getContent().get(0).getId());
+            return true;
+        });
+    }
+
+    private Matcher<CompetitionInFlightStatsViewModel> competitionInFlightStatsViewModelMatcher(CompetitionInFlightStatsViewModel toMatch) {
+        return new LambdaMatcher<>(match -> {
+            assertEquals(toMatch.getStatOne(), match.getStatOne());
+            assertEquals(toMatch.getStatTwo(), match.getStatTwo());
+            assertEquals(toMatch.getStatThree(), match.getStatThree());
+            assertEquals(toMatch.getStatFour(), match.getStatFour());
+            assertEquals(toMatch.getStatFive(), match.getStatFive());
+            assertEquals(toMatch.getCanManageFundingNotifications(), match.getCanManageFundingNotifications());
+            return true;
+        });
+    }
+
+    @Override
+    protected CompetitionManagementManageFundingApplicationsController supplyControllerUnderTest() {
+        return new CompetitionManagementManageFundingApplicationsController();
+    }
+}

@@ -219,6 +219,13 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 		});
 	}
 
+	@Test
+	public void test_getWithFundingDecisionApplicationSummariesByCompetitionId(){
+		testOnlyAUserWithOneOfTheGlobalRolesCan(
+				() -> classUnderTest.getWithFundingDecisionApplicationSummariesByCompetitionId(1L, null, 0, 20),
+				PROJECT_FINANCE, COMP_ADMIN);
+	}
+
 	@Override
 	protected Class<? extends ApplicationSummaryService> getClassUnderTest() {
 		return TestApplicationSummaryService.class;
