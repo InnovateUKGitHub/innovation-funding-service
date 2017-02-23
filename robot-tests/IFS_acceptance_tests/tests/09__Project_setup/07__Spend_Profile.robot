@@ -666,7 +666,7 @@ Industrial partner receives edit rights and can submit their spend profile
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.waiting:nth-of-type(5)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(2) td.status.ok:nth-of-type(5)
 
 Academic partner receives edit rights and can submit their spend profile
     [Documentation]    INFUND-6977
@@ -683,7 +683,7 @@ Academic partner receives edit rights and can submit their spend profile
     When the user goes back to the previous page
     And the user clicks the button/link    link=Project setup status
     And the user clicks the button/link    link=status of my partners
-    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.waiting:nth-of-type(5)
+    Then the user should see the element    jQuery=#table-project-status tr:nth-of-type(3) td.status.ok:nth-of-type(5)
 
 
 Lead partner can send the combined spend profile
