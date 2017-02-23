@@ -82,5 +82,7 @@ public class FinanceViewModel extends BaseFinanceViewModel {
         return null != organisationFinance;
     }
 
-    public String getFilename() { return null; }
+    public String getFilename() {
+        return null;
+    }
 }
