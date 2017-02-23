@@ -12,11 +12,16 @@ import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
+import org.innovateuk.ifs.user.resource.OrganisationResource;
+import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.*;
+import org.mockito.InOrder;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,7 +40,10 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.invite.builder.ApplicationInviteResourceBuilder.newApplicationInviteResource;
 import static org.innovateuk.ifs.invite.builder.InviteOrganisationResourceBuilder.newInviteOrganisationResource;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
+import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.isA;
@@ -465,45 +473,65 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
                 .build();
 
         List<ApplicationInviteResource> applicationInviteResourcesOrg1 = newApplicationInviteResource()
-                .withNameConfirmed("Steve Smith", "Paul Davidson")
-                .withName("Steve Smith", "Paul Davidson")
-                .withEmail("steve.smith@empire.com", "paul.davidson@empire.com")
-                .withStatus(OPENED, OPENED)
-                .build(2);
-
-        List<ApplicationInviteResource> applicationInviteResourcesOrg2 = newApplicationInviteResource()
                 .withNameConfirmed("Jessica Doe", null)
                 .withName("Jess Doe", "Ryan Dell")
                 .withEmail("jessica.doe@ludlow.com", "ryan.dell@ludlow.com")
                 .withStatus(OPENED, InviteStatus.SENT)
                 .build(2);
 
-        List<ApplicationInviteResource> applicationInviteResourcesOrg3 = newApplicationInviteResource()
+        List<ApplicationInviteResource> applicationInviteResourcesOrg2 = newApplicationInviteResource()
                 .withNameConfirmed("Paul Tom")
                 .withName("Paul Tom")
                 .withEmail("paul.tom@egg.com")
                 .withStatus(OPENED)
                 .build(1);
 
-        List<InviteOrganisationResource> inviteOrganisationResource = newInviteOrganisationResource()
-                .withOrganisationName("Sustainable Living", "Green Activity", "Forest Universe")
-                .withOrganisationNameConfirmed("The Sustainable Living Company Ltd", "Green Activity", "Forest Universe")
+        List<ApplicationInviteResource> applicationInviteResourcesOrg3 = newApplicationInviteResource()
+                .withNameConfirmed("Paul Davidson")
+                .withName("Paul Davidson")
+                .withEmail("paul.davidson@empire.com")
+                .withStatus(OPENED)
+                .build(1);
+
+        List<OrganisationResource> organisations = newOrganisationResource()
+                .withName("Ludlow", "EGGS", "Empire Ltd")
+                .build(3);
+
+        List<InviteOrganisationResource> inviteOrganisationResources = newInviteOrganisationResource()
+                .withOrganisation(organisations.get(0).getId(), organisations.get(1).getId(), organisations.get(2).getId())
+                .withOrganisationName(organisations.get(0).getName(), organisations.get(1).getName(), organisations.get(2).getName())
+                .withOrganisationNameConfirmed(organisations.get(0).getName(), organisations.get(1).getName(), organisations.get(2).getName())
                 .withInviteResources(applicationInviteResourcesOrg1, applicationInviteResourcesOrg2, applicationInviteResourcesOrg3)
                 .build(3);
 
+        OrganisationResource leadOrganisation = simpleToMap(organisations, OrganisationResource::getName).get("Empire Ltd");
+
+        UserResource leadApplicant = newUserResource()
+                .withFirstName("Steve")
+                .withLastName("Smith")
+                .withEmail("steve.smith@empire.com")
+                .build();
+
+        ProcessRoleResource leadApplicantProcessRole = newProcessRoleResource()
+                .withUser(leadApplicant)
+                .build();
+
         when(applicationService.getById(applicationResource.getId())).thenReturn(applicationResource);
-        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(restSuccess(inviteOrganisationResource));
+        when(applicationService.getLeadOrganisation(applicationResource.getId())).thenReturn(leadOrganisation);
+        when(inviteRestService.getInvitesByApplication(applicationResource.getId())).thenReturn(restSuccess(inviteOrganisationResources));
+        when(userService.getLeadApplicantProcessRoleOrNull(applicationResource)).thenReturn(leadApplicantProcessRole);
+        when(userService.findById(leadApplicant.getId())).thenReturn(leadApplicant);
 
         List<ApplicationTeamOrganisationRowViewModel> expectedOrganisations = asList(
-                new ApplicationTeamOrganisationRowViewModel("The Sustainable Living Company Ltd", false, asList(
-                        new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", false, false),
+                new ApplicationTeamOrganisationRowViewModel("Empire Ltd", true, asList(
+                        new ApplicationTeamApplicantRowViewModel("Steve Smith", "steve.smith@empire.com", true, false),
                         new ApplicationTeamApplicantRowViewModel("Paul Davidson", "paul.davidson@empire.com", false, false)
                 )),
-                new ApplicationTeamOrganisationRowViewModel("Green Activity", false, asList(
+                new ApplicationTeamOrganisationRowViewModel("Ludlow", false, asList(
                         new ApplicationTeamApplicantRowViewModel("Jessica Doe", "jessica.doe@ludlow.com", false, false),
                         new ApplicationTeamApplicantRowViewModel("Ryan Dell", "ryan.dell@ludlow.com", false, true)
                 )),
-                new ApplicationTeamOrganisationRowViewModel("Forest Universe", false, singletonList(
+                new ApplicationTeamOrganisationRowViewModel("EGGS", false, singletonList(
                         new ApplicationTeamApplicantRowViewModel("Paul Tom", "paul.tom@egg.com", false, false)
                 ))
         );
@@ -519,9 +547,12 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
                 .andExpect(model().attribute("model", expectedViewModel))
                 .andExpect(view().name(APPLICATION_CONTRIBUTORS_TEAM));
 
-        InOrder inOrder = inOrder(applicationService, inviteRestService);
+        InOrder inOrder = inOrder(applicationService, inviteRestService, userService);
         inOrder.verify(applicationService).getById(applicationResource.getId());
+        inOrder.verify(applicationService).getLeadOrganisation(applicationResource.getId());
         inOrder.verify(inviteRestService).getInvitesByApplication(applicationResource.getId());
+        inOrder.verify(userService).getLeadApplicantProcessRoleOrNull(applicationResource);
+        inOrder.verify(userService).findById(leadApplicant.getId());
         inOrder.verifyNoMoreInteractions();
     }
 
