@@ -124,7 +124,7 @@ public class FormInputResponsePermissionRules {
 
     private boolean checkIfAnyIncompleteQuestionStatus(List<QuestionStatus> questionStatuses) {
         return questionStatuses.stream()
-            .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() == null || !questionStatus.getMarkedAsComplete());
+                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() == null || !questionStatus.getMarkedAsComplete());
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
