@@ -140,14 +140,14 @@
 
         <th:block th:if="${param.company == null or param.company != null and param.company[0] == 'newOrg'}">
 
-          <p class="extra-margin-top">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
+          <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
 
           <p><a th:href="${'/prototypes/7661-edit-org?company=newOrg' + (param.status != null and param.status[0] == 'firstLoad' ? '&#38;status=firstLoad' : '')}">Add organisation</a></p>
 
         </th:block>
 
-        <p class="extra-margin-top">
-          <a href="/prototypes/635-application-overview" class="button" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">Return to application</a>
+        <p class="extra-margin">
+          <a href="/prototypes/635-application-overview" class="button-secondary" th:unless="${param.status != null and param.status[0] == 'firstLoad'}">Return to application overview</a>
 
           <th:block th:if="${param.status != null and param.status[0] == 'firstLoad'}">
             <a href="#" class="button">Begin application</a>
