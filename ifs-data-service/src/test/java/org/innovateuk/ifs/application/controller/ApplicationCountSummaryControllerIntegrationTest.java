@@ -8,7 +8,10 @@ import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.ofNullable;
 import static org.junit.Assert.assertEquals;
 
 public class ApplicationCountSummaryControllerIntegrationTest extends BaseControllerIntegrationTest<ApplicationCountSummaryController> {
@@ -23,7 +26,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
     public void applicationCountSummariesByCompetitionId() {
         Long competitionId = 1L;
         loginCompAdmin();
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionId(competitionId,0,3, null).getSuccessObject();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionId(competitionId,0,3, empty()).getSuccessObject();
 
         assertEquals(6, counts.getTotalElements());
         assertEquals(0, counts.getNumber());
@@ -37,7 +40,7 @@ public class ApplicationCountSummaryControllerIntegrationTest extends BaseContro
         Long competitionId = 1L;
         loginCompAdmin();
 
-        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionId(competitionId, 0, 6, "3").getSuccessObject();
+        ApplicationCountSummaryPageResource counts = controller.getApplicationCountSummariesByCompetitionId(competitionId, 0, 6, ofNullable("3")).getSuccessObject();
 
         assertEquals(1, counts.getTotalElements());
         assertEquals(0, counts.getNumber());

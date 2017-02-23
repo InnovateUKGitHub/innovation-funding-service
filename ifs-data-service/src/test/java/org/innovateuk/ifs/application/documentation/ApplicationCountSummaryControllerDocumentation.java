@@ -7,9 +7,11 @@ import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.junit.Test;
 
 import java.util.Collections;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourceBuilder;
 import static org.innovateuk.ifs.documentation.ApplicationCountDocs.applicationCountSummaryResourcesFields;
@@ -35,7 +37,7 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
         ApplicationCountSummaryPageResource pageResource = new ApplicationCountSummaryPageResource();
         pageResource.setContent(singletonList(applicationCountSummaryResource));
 
-        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, null)).thenReturn(serviceSuccess(pageResource));
+        when(applicationCountSummaryServiceMock.getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty())).thenReturn(serviceSuccess(pageResource));
 
 
         mockMvc.perform(get("/applicationCountSummary/findByCompetitionId/{competitionId}", competitionId))
@@ -46,6 +48,6 @@ public class ApplicationCountSummaryControllerDocumentation extends BaseControll
                         ),
                         responseFields(applicationCountSummaryResourcesFields)));
 
-        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, null);
+        verify(applicationCountSummaryServiceMock).getApplicationCountSummariesByCompetitionId(competitionId, 0, 20, empty());
     }
 }

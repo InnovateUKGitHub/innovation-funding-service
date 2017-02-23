@@ -18,6 +18,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -40,8 +41,9 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
     private ApplicationStatisticsRepository applicationStatisticsRepository;
 
     @Override
-    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, String filter) {
-        String filterStr = (filter != null) ? filter.trim() : "";
+    public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
+
+        String filterStr = filter.map(String::trim).orElse("");
         Pageable pageable = new PageRequest(pageIndex, pageSize);
         Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetition(competitionId, filterStr, pageable);
 

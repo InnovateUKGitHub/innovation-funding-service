@@ -7,6 +7,7 @@ import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.springframework.security.access.prepost.PreAuthorize;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Service for retrieving statistics about applications
@@ -15,6 +16,6 @@ public interface ApplicationCountSummaryService {
 
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     @SecuredBySpring(value = "READ", description = "Comp Admins can see all Application Summary counts accros the whole system", securedType = ApplicationCountSummaryResource.class)
-    ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, String filter);
+    ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, Optional<String> filter);
 }
 

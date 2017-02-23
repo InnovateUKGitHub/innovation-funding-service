@@ -7,7 +7,10 @@ import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
 
+import java.util.Optional;
+
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 
@@ -19,13 +22,13 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
     @Test
     public void testGetApplicationCountSummariesByCompetitionId() {
         setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(UserRoleType.COMP_ADMIN).build())).build());
-        classUnderTest.getApplicationCountSummariesByCompetitionId(1L, 0, 0, null);
+        classUnderTest.getApplicationCountSummariesByCompetitionId(1L, 0, 0, empty());
     }
 
     @Test(expected = AccessDeniedException.class)
     public void testGetApplicationCountSummariesByCompetitionId_notCompadmin() {
         setLoggedInUser(newUserResource().build());
-        classUnderTest.getApplicationCountSummariesByCompetitionId(1L, 0, 0, null);
+        classUnderTest.getApplicationCountSummariesByCompetitionId(1L, 0, 0, empty());
     }
 
     @Override
@@ -36,7 +39,7 @@ public class ApplicationCountSummaryServiceSecurityTest extends BaseServiceSecur
     public static class TestApplicationCountSummaryService implements ApplicationCountSummaryService {
 
         @Override
-        public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, String filter) {
+        public ServiceResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(Long competitionId, int pageIndex, int pageSize, Optional<String> filter) {
             return null;
         }
     }

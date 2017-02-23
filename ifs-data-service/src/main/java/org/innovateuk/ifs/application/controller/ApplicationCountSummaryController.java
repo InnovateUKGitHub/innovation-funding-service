@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Controller for exposing statistical data on applications
@@ -28,7 +29,7 @@ public class ApplicationCountSummaryController {
     public RestResult<ApplicationCountSummaryPageResource> getApplicationCountSummariesByCompetitionId(@PathVariable("competitionId") Long competitionId,
                                                                                                        @RequestParam(value = "page",defaultValue = "0") int pageIndex,
                                                                                                        @RequestParam(value = "size", defaultValue = DEFAULT_PAGE_SIZE) int pageSize,
-                                                                                                       @RequestParam(value = "filter", required = false) String filter) {
+                                                                                                       @RequestParam(value = "filter", required = false) Optional<String> filter) {
         return applicationCountSummaryService.getApplicationCountSummariesByCompetitionId(competitionId, pageIndex, pageSize, filter).toGetResponse();
     }
 }

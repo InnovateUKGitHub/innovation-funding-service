@@ -14,8 +14,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Arrays.asList;
+import static java.util.Optional.ofNullable;
 import static org.innovateuk.ifs.application.builder.ApplicationCountSummaryResourceBuilder.newApplicationCountSummaryResource;
 import static org.innovateuk.ifs.application.builder.ApplicationStatisticsBuilder.newApplicationStatistics;
 import static org.innovateuk.ifs.user.builder.OrganisationBuilder.newOrganisation;
@@ -102,7 +104,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         when(organisationRepositoryMock.findAll(asList(1L, 2L))).thenReturn(leadOrganisations);
         when(applicationCountSummaryPageMapperMock.mapToResource(page, leadOrganisations)).thenReturn(resource);
 
-        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId,0,20, "filter");
+        ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId,0,20, ofNullable("filter"));
 
         assertTrue(result.isSuccess());
         assertEquals(resource, result.getSuccessObject());
