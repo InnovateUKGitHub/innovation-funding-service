@@ -546,7 +546,7 @@ Project Finance is able to see Spend Profile approval page
     Then the user clicks the button/link             link=${Katz_Name}-spend-profile.csv
     And the user clicks the button/link    link=${Meembee_Name}-spend-profile.csv
     And the user clicks the button/link    link=${Zooveo_Name}-spend-profile.csv
-    When the user should see the text in the page    Approved by Innovation Lead
+    When the user should see the text in the page    Approved by Innovate UK
     Then the element should be disabled    jQuery=#accept-profile
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
@@ -567,7 +567,7 @@ Comp Admin is able to see Spend Profile approval page
     When the user selects the checkbox    approvedByLeadTechnologist
     Then the user should see the element    jQuery=#accept-profile
     When the user clicks the button/link    jQuery=button:contains("Approved")
-    Then the user should see the text in the page    Approved by Innovation Lead
+    Then the user should see the text in the page    Approved by Innovate UK
     When the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
 
@@ -704,11 +704,11 @@ Project Finance is able to Approve Spend Profile
     When the user selects the checkbox      approvedByLeadTechnologist
     Then the user should see the element    jQuery=button:contains("Approved")
     When the user clicks the button/link    jQuery=button:contains("Approved")
-    Then the user should see the text in the page  Approved by Innovation Lead
+    Then the user should see the text in the page  Approved by Innovate UK
     When the user clicks the button/link    jQuery=.modal-accept-profile button:contains("Cancel")
     Then the user should not see an error in the page
     When the user clicks the button/link    jQuery=button:contains("Approved")
-    And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Accept documents")
+    And the user clicks the button/link     jQuery=.modal-accept-profile button:contains("Approve")
     And the user should see the text in the page    ${PS_SP_APPLICATION_TITLE}
     Then the user should not see the element      jQuery=h3:contains("The spend profile has been approved")
 
