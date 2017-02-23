@@ -25,9 +25,7 @@ import static org.innovateuk.ifs.competition.resource.CompetitionStatus.FUNDERS_
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class CompetitionManagementFundingControllerTest {
@@ -65,7 +63,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         mockMvc.perform(get("/competition/{competitionId}/funding?tab=notSubmitted", COMPETITION_ID))
                 .andExpect(status().isOk())
@@ -75,7 +73,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(model().attribute("activeTab", "notSubmitted"))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
 
-        verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+        verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
 
@@ -87,7 +85,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE, null)).thenReturn(summary);
 
         mockMvc.perform(get("/competition/{competitionId}/funding?tab=submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
@@ -97,7 +95,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(model().attribute("activeTab", "submitted"))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
 
-        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
 
@@ -109,7 +107,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         mockMvc.perform(get("/competition/{competitionId}/funding?tab=notSubmitted", COMPETITION_ID))
                 .andExpect(status().isOk())
@@ -119,7 +117,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(model().attribute("activeTab", "notSubmitted"))
                 .andExpect(model().attribute("activeSortField", "sortfield"));
 
-        verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+        verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
 
@@ -131,7 +129,7 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
         when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
 
@@ -144,7 +142,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(model().attribute("activeSortField", "sortfield"))
                 .andExpect(model().attribute("canPublishAssessorFeedback", false));
 
-        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
+        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
         verify(assessorFeedbackService).feedbackUploaded(COMPETITION_ID);
     }
