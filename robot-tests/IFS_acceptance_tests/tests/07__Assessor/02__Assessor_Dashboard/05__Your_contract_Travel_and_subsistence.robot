@@ -21,7 +21,6 @@ Travel and Subsisdence
     When the user clicks the button/link    jQuery=a:contains("travel and subsistence rates")
     Then the user should see the text in the page    Day subsistence
     And the user should see the text in the page    24 hour / overnight subsistence
-    And the user should see the text in the page    Meals and refreshments
     And the user should see the text in the page    Public transport
     And the user should see the text in the page    Mileage rates
     And the user should see the text in the page    Please make sure your travel claims, receipts and tickets are all submitted.
@@ -73,4 +72,3 @@ Agreement Confirmation
     [Documentation]    INFUND-5628
     Then the user clicks the button/link    jQuery=a:contains("your contract")
     And the user should see the text in the page    You signed the contract on
-
