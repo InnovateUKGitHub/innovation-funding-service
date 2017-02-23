@@ -17,7 +17,7 @@ items:
           deploymentconfig: idp
       spec:
         containers:
-        - image: innovateuk/ifs-shib-idp:0.3.2
+        - image: innovateuk/ifs-shib-idp:0.4.1
           name: idp
           imagePullPolicy: IfNotPresent
           env:
