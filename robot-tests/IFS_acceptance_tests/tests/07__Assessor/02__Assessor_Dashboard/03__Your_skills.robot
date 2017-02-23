@@ -24,12 +24,26 @@ Client-side validations
     Given The user should see the text in the page    Complete your assessor account
     And The user should see the element    jQuery=.message-alert.extra-margin-bottom a:contains("your skills")    #this checks the alert message on the top od the page
     When the user clicks the button/link    jQuery=a:contains("your skills")
-    And The user should see the element    link=Edit
     When the user clicks the button/link    jQuery=a:contains("Edit")
+    And the user should see the text in the page    Innovation areas
     And the user enters multiple strings into a text field    id=skillAreas    w${SPACE}    101
     And the user clicks the button/link    jQuery=button:contains("Save")
     Then the user should see an error    Please select an assessor type.
     And the user should see an error    Maximum word count exceeded. Please reduce your word count to 100.
+
+Cancel button redirects to the read-only view without changes
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains(Cancel)
+    Then the user should be redirected to the correct page    ${assessment_skills_url}
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("Edit")
+
+Back button from edit page redirects to read only view
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link    link=Your skills
+    Then the user should be redirected to the correct page    ${assessment_skills_url}
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("Edit")
 
 Server-side validations
     [Documentation]    INFUND-5182
@@ -63,6 +77,13 @@ Your skills does not appear in dashboard alert
     [Tags]
     When the user clicks the button/link    link=Assessor dashboard
     Then The user should not see the element    jQuery=.message-alert a:contains('your skills')    #this checks the alert message on the top of the page
+    [Teardown]    the user clicks the button/link    link=your skills
+
+Return to assessor dashboard from skills page
+    [Documentation]    INFUND-8009
+    [Tags]
+    When the user clicks the button/link    jQuery=a:contains(Return to assessor dashboard)
+    Then the user should be redirected to the correct page     ${assessor_dashboard_url}
 
 *** Keywords ***
 The correct radio button should be selected

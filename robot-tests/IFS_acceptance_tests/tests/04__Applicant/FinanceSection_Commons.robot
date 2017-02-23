@@ -2,6 +2,7 @@
 Resource    ../../resources/defaultResources.robot
 
 *** Variables ***
+${project_guidance}    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
