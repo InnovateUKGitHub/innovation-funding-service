@@ -40,7 +40,7 @@ public class ProjectFinanceRowController {
             @RequestBody(required=false) final FinanceRowItem newCostItem) {
         ValidationMessages validationMessages = validationUtil.validateProjectCostItem(newCostItem);
 
-        if(validationMessages.hasErrors()){
+        if (validationMessages.hasErrors()) {
             return restSuccess(validationMessages, HttpStatus.OK);
         } else {
             RestResult<FinanceRowItem> createResult = projectFinanceRowService.addCost(projectFinanceId, questionId, newCostItem).toPostCreateResponse();
