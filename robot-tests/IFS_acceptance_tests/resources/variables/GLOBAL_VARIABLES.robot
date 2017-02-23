@@ -24,6 +24,7 @@ ${EMPIRE_LTD_ID}    22
 ${EMPIRE_LTD_NAME}    Empire Ltd
 ${OPEN_COMPETITION}    1
 ${OPEN_COMPETITION_NAME}    Connected digital additive manufacturing
+${OPEN_COMPETITION_NAME_2}    Home and industrial efficiency programme
 ${OPEN_COMPETITION_APPLICATION_1}    9
 ${OPEN_COMPETITION_APPLICATION_1_NUMBER}    00000009
 ${OPEN_COMPETITION_APPLICATION_2}    12
@@ -37,7 +38,7 @@ ${READY_TO_OPEN_COMPETITION_NAME}    Photonics for health
 ${COMP_SETUP_COMPETITION}    9
 ${FUNDERS_PANEL_COMPETITION}    5
 ${FUNDERS_PANEL_COMPETITION_NAME}    Internet of Things
-${NOT_EDITABLE_COMPETITION}     8
+${NOT_EDITABLE_COMPETITION}     7
 ${FUNDERS_PANEL_APPLICATION_1}    28
 ${FUNDERS_PANEL_APPLICATION_1_NUMBER}    00000028
 ${FUNDERS_PANEL_APPLICATION_1_TITLE}    Sensing & Control network using the lighting infrastructure
@@ -98,6 +99,7 @@ ${VIRTUAL_DISPLAY}    ${EMPTY}
 ${POSTCODE_LOOKUP_IMPLEMENTED}    ${EMPTY}
 ${COMP_ADMINISTRATOR_DASHBOARD}    ${SERVER}/management/dashboard
 ${OPEN_COMPETITION_LINK}    ${OPEN_COMPETITION_NAME}
+${OPEN_COMPETITION_LINK_2}    ${OPEN_COMPETITION_NAME_2}
 ${unsuccessful_login_message}    Your sign in was unsuccessful because of the following issue(s)
 ${application_name}    Submit test application
 ${test_title}     test title
