@@ -1,90 +1,77 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Details'"/>
-</head>
-<body th:with="context='applicant'" class="app-invite-display">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application team'"/>
+    </head>
 
-<th:block th:insert="fragments/layout :: body-start"/>
-<th:block th:insert="fragments/layout :: global-header"/>
+    <body th:with="context='applicant'">
+        <th:block th:insert="fragments/layout :: body-start"/>
+        <th:block th:insert="fragments/layout :: global-header"/>
 
-<!-- TODO when these two are removed, are they still needed? -->
-<!--
-<th:block th:insert="fragments/modals :: modal-overlay" th:if="${userIsLead}" />
-<th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" th:if="${userIsLead}" />
--->
+        <!-- TODO when these two are removed, are they still needed? -->
+        <!--
+        <th:block th:insert="fragments/modals :: modal-overlay" th:if="${userIsLead}" />
+        <th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" th:if="${userIsLead}" />
+        -->
 
-<!-- TODO does the endpoint /application/' + ${model.applicationId} + '/contributors/remove/' + ${invite.id} + '/confirm' need removing now? -->
+        <!-- TODO does the endpoint /application/' + ${model.applicationId} + '/contributors/remove/' + ${invite.id} + '/confirm' need removing now? -->
 
-<main id="content">
-    <th:block th:insert="fragments/layout :: main-content-start"/>
-    <th:block th:insert="fragments/layout :: header-sub"
-              th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/(applicationId=${model.applicationId})}"/>
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start"/>
+            <th:block th:insert="fragments/layout :: header-sub"
+                      th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{applicationId}/(applicationId=${model.applicationId})}"/>
 
-    <div class="page-title">
-        <th:block
-            th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})"/>
-        <h1 class="heading-xlarge">Application team</h1>
-    </div>
+            <div class="page-title">
+                <th:block
+                    th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})"/>
+                <h1 class="heading-xlarge">Application team</h1>
+            </div>
 
-    <p>View and manage your contributors and partners in the application.If an individual is ‘pending’ they have
-        not yet confirmed their role within this project. Click on a name to send this person an email.</p>
-    <p>To change the lead applicant for this application please email Innovate UK
-        <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
+            <p>View and manage your contributors and partners in the application.If an individual is ‘pending’ they have not yet confirmed their role within this project. Click on a name to send this person an email.</p>
 
-    <div class="table-display-stacked" th:each="organisation : ${model.organisations}">
-        <h2 class="heading-medium" th:text="|${organisation.name} Lead organisation|" th:if="${organisation.lead}">
-            Empire Ltd, Lead organisation
-        </h2>
-        <h2 class="heading-medium" th:text="${organisation.name}" th:unless="${organisation.lead}">Ludlow</h2>
+            <p>To change the lead applicant for this application please email Innovate UK <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a>.</p>
 
-        <!-- TODO are these prototype styles correct? -->
+            <th:block th:each="organisation : ${model.organisations}">
+                <h2 class="heading-medium">
+                    <th:block th:text="${organisation.lead} ? ${organisation.name} + ', Lead organisation' : ${organisation.name}"></th:block>
+                </h2>
 
-        <div class="tablesaw-bar tablesaw-mode-stack"></div>
-        <table class="tablesaw tablesaw-stack" data-tablesaw-mode="stack" id="tablesaw-8593">
-            <thead>
-            <tr>
-                <th class="width-30-percent">Applicant</th>
-                <th class="width-50-percent">Email</th>
-                <th>Status</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="applicant : ${organisation.applicants}">
-                <td>
-                    <span class="tablesaw-cell-content" th:text="${applicant.name}">Steve Smith</span></td>
-                <td>
-                    <span class="tablesaw-cell-content" th:text="${applicant.email}">steve.smith@empire.com</span></td>
-                <td>
-                    <span class="tablesaw-cell-content"
-                          th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">
-                        Lead
-                    </span>
-                </td>
-            </tr>
-            </tbody>
-        </table>
+                <table class="table-overflow">
+                    <thead>
+                        <tr>
+                            <th class="width-30-percent" scope="col">Applicant</th>
+                            <th class="width-50-percent" scope="col">Email</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="applicant : ${organisation.applicants}">
+                            <td th:text="${applicant.name}">Steve Smith</td>
+                            <td th:text="${applicant.email}">steve.smith@empire.com</td>
+                            <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-        <p>
-            <!-- TODO INFUND-7974 / INFUND-7975 Allow updating organisations -->
-            <a href="#" th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
-        </p>
-    </div>
+                <p>
+                    <!-- TODO INFUND-7974 / INFUND-7975 Allow updating organisations -->
+                    <a href="#" th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
+                </p>
+            </th:block>
 
-    <p class="extra-margin-top">Add any organisations participating with you on this project.
-        They are responsible for creating their own account and submitting their finances.</p>
-    <!-- TODO INFUND-7979 Add link to add new Partner organisation -->
-    <p><a href="#">Add partner organisation</a></p>
-    <p class="extra-margin-top">
-        <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button">
-            Return to application
-        </a>
-    </p>
+            <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
 
-    <th:block th:insert="fragments/layout :: main-content-end"/>
-</main>
+            <!-- TODO INFUND-7979 Add link to add new Partner organisation -->
+            <p><a href="#">Add partner organisation</a></p>
 
-<th:block th:insert="fragments/layout :: footer"/>
-<th:block th:insert="fragments/layout :: body-end"/>
-</body>
+            <p class="extra-margin">
+                <a th:href="@{/application/{applicationId}(applicationId=${model.applicationId})}" class="button-secondary">Return to application overview</a>
+            </p>
+
+            <th:block th:insert="fragments/layout :: main-content-end"/>
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer"/>
+        <th:block th:insert="fragments/layout :: body-end"/>
+    </body>
 </html>
