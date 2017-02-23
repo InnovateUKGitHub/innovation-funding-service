@@ -1,19 +1,19 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
 import au.com.bytecode.opencsv.CSVWriter;
-import org.innovateuk.ifs.commons.error.CommonFailureKeys;
-import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
-import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import com.google.common.collect.Lists;
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.LocalDateResource;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.repository.ProjectFinanceRepository;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
 import org.innovateuk.ifs.finance.resource.cost.AcademicCostCategoryGenerator;
-import org.innovateuk.ifs.finance.transactional.FinanceRowService;
+import org.innovateuk.ifs.finance.transactional.ProjectFinanceRowService;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.repository.CostCategoryRepository;
@@ -21,8 +21,12 @@ import org.innovateuk.ifs.project.finance.repository.CostCategoryTypeRepository;
 import org.innovateuk.ifs.project.finance.repository.FinanceCheckProcessRepository;
 import org.innovateuk.ifs.project.finance.repository.SpendProfileRepository;
 import org.innovateuk.ifs.project.finance.resource.*;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.EligibilityWorkflowHandler;
+import org.innovateuk.ifs.project.finance.workflow.financechecks.configuration.ViabilityWorkflowHandler;
+import org.innovateuk.ifs.project.repository.PartnerOrganisationRepository;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.transactional.ProjectGrantOfferService;
 import org.innovateuk.ifs.project.transactional.ProjectService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -41,6 +45,7 @@ import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
@@ -82,6 +87,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private OrganisationRepository organisationRepository;
 
     @Autowired
+    private PartnerOrganisationRepository partnerOrganisationRepository;
+
+    @Autowired
     private SpendProfileRepository spendProfileRepository;
 
     @Autowired
@@ -97,7 +105,13 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private ProjectFinanceRepository projectFinanceRepository;
 
     @Autowired
-    private FinanceRowService financeRowService;
+    private ProjectFinanceRowService financeRowService;
+
+    @Autowired
+    private ViabilityWorkflowHandler viabilityWorkflowHandler;
+
+    @Autowired
+    private EligibilityWorkflowHandler eligibilityWorkflowHandler;
 
     @Autowired
     private UserMapper userMapper;
@@ -109,7 +123,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private SpendProfileCostCategorySummaryStrategy spendProfileCostCategorySummaryStrategy;
 
     @Autowired
-    private ProjectGrantOfferService projectGrantOfferLetterService;
+    private ProjectGrantOfferService projectGrantOfferService;
 
     @Autowired
     private OrganisationFinanceDelegate organisationFinanceDelegate;
@@ -137,7 +151,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<Void> approveOrRejectSpendProfile(Long projectId, ApprovalType approvalType) {
         updateApprovalOfSpendProfile(projectId, approvalType);
-        return projectGrantOfferLetterService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
+        return projectGrantOfferService.generateGrantOfferLetterIfReady(projectId).andOnFailure(() -> serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
     }
 
     @Override
@@ -307,29 +321,39 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             }
 
             project.setSpendProfileSubmittedDate(LocalDateTime.now());
+            updateApprovalOfSpendProfile(projectId, ApprovalType.UNSET);
             return serviceSuccess();
         });
+    }
+
+    private ServiceResult<Void> rejectSpendProfileSubmission(Long projectId) {
+        return getProject(projectId).andOnSuccessReturnVoid(project -> project.setSpendProfileSubmittedDate(null));
     }
 
     @Override
     public ServiceResult<Void> saveCreditReport(Long projectId, Long organisationId, boolean reportPresent) {
 
-        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance ->
-               validateCreditReport(projectFinance).andOnSuccessReturnVoid(() -> {
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> validateCreditReport(partnerOrganisation))
+                .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                .andOnSuccessReturnVoid(projectFinance -> {
 
-           projectFinance.setCreditReportConfirmed(reportPresent);
-           projectFinanceRepository.save(projectFinance);
+                    projectFinance.setCreditReportConfirmed(reportPresent);
+                    projectFinanceRepository.save(projectFinance);
 
-       }));
+                });
     }
 
-    private ServiceResult<Void> validateCreditReport(ProjectFinance projectFinance) {
-        if (Viability.APPROVED == projectFinance.getViability()) {
-            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
-        } else {
-            return serviceSuccess();
-        }
+    private ServiceResult<Void> validateCreditReport(PartnerOrganisation partnerOrganisation) {
 
+        return getViabilityProcess(partnerOrganisation)
+        .andOnSuccess(viabilityProcess -> {
+                        if (ViabilityState.APPROVED == viabilityProcess.getActivityState()) {
+                            return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
+                        } else {
+                            return serviceSuccess();
+                        }
+                    });
     }
 
     @Override
@@ -340,27 +364,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     @Override
     public ServiceResult<List<ProjectFinanceResource>> getProjectFinances(Long projectId) {
         return financeRowService.financeChecksTotals(projectId);
-    }
-
-    @Override
-    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
-
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
-
-        return getProjectFinance(projectId, organisationId).andOnSuccessReturn(projectFinance ->
-                new ViabilityResource(projectFinance.getViability(), projectFinance.getViabilityStatus()));
-    }
-
-    @Override
-    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus){
-
-        Long projectId = projectOrganisationCompositeId.getProjectId();
-        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
-
-        return getProjectFinance(projectId, organisationId).andOnSuccess(projectFinance ->
-               validateViability(projectFinance, viability, viabilityStatus).andOnSuccess(() ->
-               saveViability(projectFinance, viability, viabilityStatus)));
     }
 
     private ServiceResult<Void> validateSpendProfileCanBeGenerated(Project project) {
@@ -384,39 +387,234 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<Void> validateViabilityApprovedOrNotApplicableForSpendProfileGenerate(Project project) {
 
-        List<ProjectFinance> finances = projectFinanceRepository.findByProjectId(project.getId());
+        List<PartnerOrganisation> partnerOrganisations = partnerOrganisationRepository.findByProjectId(project.getId());
 
-        Optional<ProjectFinance> existingReviewableFinance = simpleFindFirst(finances, finance ->
-                Viability.PENDING.equals(finance.getViability()) && !isUsingJesFinances(finance));
+        Optional<PartnerOrganisation> existingReviewablePartnerOrganisation = simpleFindFirst(partnerOrganisations, partnerOrganisation ->
+                        getViabilityProcess(partnerOrganisation)
+                .andOnSuccessReturn(viabilityProcess -> ViabilityState.REVIEW == viabilityProcess.getActivityState()).getSuccessObjectOrThrowException());
 
-        if (!existingReviewableFinance.isPresent()) {
+        if (!existingReviewablePartnerOrganisation.isPresent()) {
             return serviceSuccess();
         } else {
             return serviceFailure(SPEND_PROFILE_CANNOT_BE_GENERATED_UNTIL_ALL_VIABILITY_APPROVED);
         }
     }
 
-    private boolean isUsingJesFinances(ProjectFinance finance) {
-        return organisationFinanceDelegate.isUsingJesFinances(finance.getOrganisation().getOrganisationType().getName());
+    @Override
+    public ServiceResult<ViabilityResource> getViability(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation))
+                .andOnSuccess(viabilityProcess -> getProjectFinance(projectId, organisationId)
+                        .andOnSuccess(projectFinance -> buildViabilityResource(viabilityProcess, projectFinance))
+                );
     }
 
-    private ServiceResult<Void> validateViability(ProjectFinance projectFinanceInDB, Viability viability, ViabilityStatus viabilityStatus) {
+    private ServiceResult<ViabilityProcess> getViabilityProcess(PartnerOrganisation partnerOrganisation) {
 
-        if (Viability.APPROVED == projectFinanceInDB.getViability()) {
+        return serviceSuccess(viabilityWorkflowHandler.getProcess(partnerOrganisation));
+    }
+
+    private ServiceResult<ViabilityResource> buildViabilityResource(ViabilityProcess viabilityProcess, ProjectFinance projectFinance) {
+
+        ViabilityResource viabilityResource = new ViabilityResource(convertViabilityState(viabilityProcess.getActivityState()), projectFinance.getViabilityStatus());
+
+        if (viabilityProcess.getLastModified() != null) {
+            viabilityResource.setViabilityApprovalDate(LocalDateTime.ofInstant(viabilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+        }
+
+        setViabilityApprovalUser(viabilityResource, viabilityProcess.getInternalParticipant());
+
+        return serviceSuccess(viabilityResource);
+    }
+
+    private Viability convertViabilityState(ViabilityState viabilityState) {
+
+        Viability viability;
+
+        switch (viabilityState) {
+            case REVIEW:
+                viability = Viability.REVIEW;
+                break;
+            case NOT_APPLICABLE:
+                viability = Viability.NOT_APPLICABLE;
+                break;
+            case APPROVED:
+                viability = Viability.APPROVED;
+                break;
+            default:
+                viability = Viability.REVIEW;
+        }
+
+        return viability;
+
+    }
+
+    private void setViabilityApprovalUser(ViabilityResource viabilityResource, User viabilityApprovalUser) {
+
+        if (viabilityApprovalUser != null) {
+            viabilityResource.setViabilityApprovalUserFirstName(viabilityApprovalUser.getFirstName());
+            viabilityResource.setViabilityApprovalUserLastName(viabilityApprovalUser.getLastName());
+        }
+    }
+
+    @Override
+    public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation))
+                .andOnSuccess(eligibilityProcess -> getProjectFinance(projectId, organisationId)
+                        .andOnSuccess(projectFinance -> buildEligibilityResource(eligibilityProcess, projectFinance))
+                );
+    }
+
+    private ServiceResult<EligibilityProcess> getEligibilityProcess(PartnerOrganisation partnerOrganisation) {
+
+        return serviceSuccess(eligibilityWorkflowHandler.getProcess(partnerOrganisation));
+    }
+
+    private ServiceResult<EligibilityResource> buildEligibilityResource(EligibilityProcess eligibilityProcess, ProjectFinance projectFinance) {
+        EligibilityResource eligibilityResource = new EligibilityResource(convertEligibilityState(eligibilityProcess.getActivityState()), projectFinance.getEligibilityStatus());
+
+        if (eligibilityProcess.getLastModified() != null) {
+            eligibilityResource.setEligibilityApprovalDate(LocalDateTime.ofInstant(eligibilityProcess.getLastModified().toInstant(), ZoneId.systemDefault()).toLocalDate());
+        }
+
+        setEligibilityApprovalUser(eligibilityResource, eligibilityProcess.getInternalParticipant());
+
+        return serviceSuccess(eligibilityResource);
+    }
+
+    private Eligibility convertEligibilityState(EligibilityState eligibilityState) {
+
+        Eligibility eligibility;
+
+        switch (eligibilityState) {
+            case REVIEW:
+                eligibility = Eligibility.REVIEW;
+                break;
+            case NOT_APPLICABLE:
+                eligibility = Eligibility.NOT_APPLICABLE;
+                break;
+            case APPROVED:
+                eligibility = Eligibility.APPROVED;
+                break;
+            default:
+                eligibility = Eligibility.REVIEW;
+        }
+
+        return eligibility;
+
+    }
+
+    private void setEligibilityApprovalUser(EligibilityResource eligibilityResource, User eligibilityApprovalUser) {
+
+        if (eligibilityApprovalUser != null) {
+            eligibilityResource.setEligibilityApprovalUserFirstName(eligibilityApprovalUser.getFirstName());
+            eligibilityResource.setEligibilityApprovalUserLastName(eligibilityApprovalUser.getLastName());
+        }
+    }
+
+    @Override
+    public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> getViabilityProcess(partnerOrganisation)
+                        .andOnSuccess(viabilityProcess -> validateViability(viabilityProcess.getActivityState(), viability, viabilityRagStatus))
+                        .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                        .andOnSuccess(projectFinance -> triggerViabilityWorkflowEvent(partnerOrganisation, viability)
+                                .andOnSuccess(() -> saveViability(projectFinance, viabilityRagStatus))
+                        )
+                );
+    }
+
+    private ServiceResult<Void> validateViability(ViabilityState currentViabilityState, Viability viability, ViabilityRagStatus viabilityRagStatus) {
+
+        if (ViabilityState.APPROVED == currentViabilityState) {
             return serviceFailure(VIABILITY_HAS_ALREADY_BEEN_APPROVED);
         }
 
-        if (Viability.APPROVED == viability && ViabilityStatus.UNSET == viabilityStatus) {
+        if (Viability.APPROVED == viability && ViabilityRagStatus.UNSET == viabilityRagStatus) {
             return serviceFailure(VIABILITY_RAG_STATUS_MUST_BE_SET);
         }
 
         return serviceSuccess();
     }
 
-    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, Viability viability, ViabilityStatus viabilityStatus) {
+    private ServiceResult<Void> triggerViabilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Viability viability) {
 
-        projectFinance.setViability(viability);
-        projectFinance.setViabilityStatus(viabilityStatus);
+        if (Viability.APPROVED == viability) {
+
+            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
+                    viabilityWorkflowHandler.viabilityApproved(partnerOrganisation, currentUser));
+        } else {
+            return serviceSuccess();
+        }
+
+    }
+
+    private ServiceResult<Void> saveViability(ProjectFinance projectFinance, ViabilityRagStatus viabilityRagStatus) {
+
+        projectFinance.setViabilityStatus(viabilityRagStatus);
+
+        projectFinanceRepository.save(projectFinance);
+
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus){
+
+        Long projectId = projectOrganisationCompositeId.getProjectId();
+        Long organisationId = projectOrganisationCompositeId.getOrganisationId();
+
+        return getPartnerOrganisation(projectId, organisationId)
+                .andOnSuccess(partnerOrganisation -> getEligibilityProcess(partnerOrganisation)
+                        .andOnSuccess(eligibilityProcess -> validateEligibility(eligibilityProcess.getActivityState(), eligibility, eligibilityRagStatus))
+                        .andOnSuccess(() -> getProjectFinance(projectId, organisationId))
+                        .andOnSuccess(projectFinance -> triggerEligibilityWorkflowEvent(partnerOrganisation, eligibility)
+                                .andOnSuccess(() -> saveEligibility(projectFinance, eligibilityRagStatus))
+                        )
+                );
+    }
+
+    private ServiceResult<Void> validateEligibility(EligibilityState currentEligibilityState, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
+
+        if (EligibilityState.APPROVED == currentEligibilityState) {
+            return serviceFailure(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED);
+        }
+
+        if (Eligibility.APPROVED == eligibility && EligibilityRagStatus.UNSET == eligibilityRagStatus) {
+            return serviceFailure(ELIGIBILITY_RAG_STATUS_MUST_BE_SET);
+        }
+
+        return serviceSuccess();
+    }
+
+    private ServiceResult<Void> triggerEligibilityWorkflowEvent(PartnerOrganisation partnerOrganisation, Eligibility eligibility) {
+
+        if (Eligibility.APPROVED == eligibility) {
+
+            return getCurrentlyLoggedInUser().andOnSuccessReturnVoid(currentUser ->
+                    eligibilityWorkflowHandler.eligibilityApproved(partnerOrganisation, currentUser));
+        } else {
+            return serviceSuccess();
+        }
+
+    }
+
+    private ServiceResult<Void> saveEligibility(ProjectFinance projectFinance, EligibilityRagStatus eligibilityRagStatus) {
+
+        projectFinance.setEligibilityStatus(eligibilityRagStatus);
 
         projectFinanceRepository.save(projectFinance);
 
@@ -486,6 +684,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
     private void updateApprovalOfSpendProfile(Long projectId, ApprovalType approvalType) {
         List<SpendProfile> spendProfiles = spendProfileRepository.findByProjectId(projectId);
         spendProfiles.forEach(spendProfile -> spendProfile.setApproval(approvalType));
+        if(ApprovalType.REJECTED.equals(approvalType)) {
+            rejectSpendProfileSubmission(projectId);
+        }
 
         spendProfileRepository.save(spendProfiles);
     }
@@ -494,6 +695,7 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
         Map<Long, List<BigDecimal>> monthlyCostsPerCategoryMap = table.getMonthlyCostsPerCategoryMap();
         Map<Long, BigDecimal> eligibleCostPerCategoryMap = table.getEligibleCostPerCategoryMap();
+        Map<Long, CostCategoryResource> categories = table.getCostCategoryResourceMap();
 
         List<Error> categoriesWithIncorrectTotal = new ArrayList<>();
 
@@ -505,7 +707,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             BigDecimal expectedTotalCost = eligibleCostPerCategoryMap.get(category);
 
             if (actualTotalCost.compareTo(expectedTotalCost) == 1) {
-                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey()));
+                String categoryName = categories.get(category).getName();
+                //TODO INFUND-7502 could come up with a better way to send the name to the frontend
+                categoriesWithIncorrectTotal.add(fieldError(String.valueOf(category), actualTotalCost, SPEND_PROFILE_TOTAL_FOR_ALL_MONTHS_DOES_NOT_MATCH_ELIGIBLE_TOTAL_FOR_SPECIFIED_CATEGORY.getErrorKey(), categoryName));
             }
         }
 
@@ -589,15 +793,6 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
             return new Cost(cost.getTotal().setScale(0, ROUND_HALF_UP)).withCategory(cc);
         });
     }
-
-    private Supplier<ServiceResult<Project>> project(Long id) {
-        return () -> getProject(id);
-    }
-
-    private ServiceResult<Project> getProject(Long id) {
-        return find(projectRepository.findOne(id), notFoundError(Project.class, id));
-    }
-
 
     private List<SpendProfile> getSpendProfileByProjectId(Long projectId) {
         return spendProfileRepository.findByProjectId(projectId);
@@ -714,5 +909,9 @@ public class ProjectFinanceServiceImpl extends BaseTransactionalService implemen
 
     private ServiceResult<ProjectFinance> getProjectFinance(Long projectId, Long organisationId) {
         return find(projectFinanceRepository.findByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(ProjectFinance.class, projectId, organisationId));
+    }
+
+    private ServiceResult<PartnerOrganisation> getPartnerOrganisation(Long projectId, Long organisationId) {
+        return find(partnerOrganisationRepository.findOneByProjectIdAndOrganisationId(projectId, organisationId), notFoundError(PartnerOrganisation.class, projectId, organisationId));
     }
 }

@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.assessment.viewmodel;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.FileDetailsViewModel;
 import org.innovateuk.ifs.form.resource.FormInputResource;
@@ -31,13 +31,13 @@ public class AssessmentFeedbackViewModel {
     private boolean scopeFormInputExists;
     private boolean appendixExists;
     private FileDetailsViewModel appendixDetails;
-    private List<CategoryResource> researchCategories;
+    private List<ResearchCategoryResource> researchCategories;
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists, List<CategoryResource> researchCategories) {
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists, List<ResearchCategoryResource> researchCategories) {
         this(daysLeft, daysLeftPercentage, competition, application, questionId, questionNumber, questionShortName, questionName, maximumScore, applicantResponse, assessmentFormInputs, scoreFormInputExists, scopeFormInputExists, false, null, researchCategories);
     }
 
-    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists, boolean appendixExists, FileDetailsViewModel appendixDetails, List<CategoryResource> researchCategories) {
+    public AssessmentFeedbackViewModel(long daysLeft, long daysLeftPercentage, CompetitionResource competition, ApplicationResource application, Long questionId, String questionNumber, String questionShortName, String questionName, Integer maximumScore, String applicantResponse, List<FormInputResource> assessmentFormInputs, boolean scoreFormInputExists, boolean scopeFormInputExists, boolean appendixExists, FileDetailsViewModel appendixDetails, List<ResearchCategoryResource> researchCategories) {
         this.daysLeft = daysLeft;
         this.daysLeftPercentage = daysLeftPercentage;
         this.competition = competition;
@@ -120,7 +120,7 @@ public class AssessmentFeedbackViewModel {
         return format("View %s appendix", lowerCase(getQuestionShortName()));
     }
 
-    public List<CategoryResource> getResearchCategories() {
+    public List<ResearchCategoryResource> getResearchCategories() {
         return researchCategories;
     }
 }

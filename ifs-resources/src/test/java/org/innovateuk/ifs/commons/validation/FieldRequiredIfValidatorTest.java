@@ -1,25 +1,34 @@
 package org.innovateuk.ifs.commons.validation;
 
+import org.hibernate.validator.HibernateValidator;
 import org.innovateuk.ifs.commons.validation.constraints.FieldRequiredIf;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.stereotype.Controller;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.ConstraintViolation;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 public class FieldRequiredIfValidatorTest {
+
+    private LocalValidatorFactoryBean localValidatorFactory;
+
 
     private TestController controller = new TestController();
 
@@ -28,6 +37,10 @@ public class FieldRequiredIfValidatorTest {
     @Before
     public void setUp() throws Exception {
         mockMvc = standaloneSetup(controller).build();
+
+        localValidatorFactory = new LocalValidatorFactoryBean();
+        localValidatorFactory.setProviderClass(HibernateValidator.class);
+        localValidatorFactory.afterPropertiesSet();
     }
 
     @Test
@@ -153,6 +166,52 @@ public class FieldRequiredIfValidatorTest {
     }
 
     @Test
+    public void isValid_optionalFieldIsRequiredAndNull() throws Exception {
+        TestDTO testResource = new TestDTO();
+        testResource.setDogPossiblyHasName(true);
+
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(1, result.size());
+        assertEquals(result.stream().findFirst().get().getMessage(), "{validation.testform.dogname.required}");
+    }
+
+    @Test
+    public void isValid_optionalFieldIsRequiredAndNotPresent() throws Exception {
+        TestDTO testResource = new TestDTO();
+        testResource.setDogPossiblyHasName(true);
+        testResource.setPossibleDogName(Optional.empty());
+
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(1, result.size());
+        assertEquals(result.stream().findFirst().get().getMessage(), "{validation.testform.dogname.required}");
+    }
+
+    @Test
+    public void isValid_optionalFieldIsRequiredAndPresent() throws Exception {
+        TestDTO testResource = new TestDTO();
+        testResource.setDogPossiblyHasName(true);
+
+        String dogName = "test";
+        testResource.setPossibleDogName(Optional.of(dogName));
+
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(0, result.size());
+     }
+
+    @Test
+    public void isValid_optionalFieldIsNotRequiredAndNull() throws Exception {
+        TestDTO testResource = new TestDTO();
+        testResource.setDogPossiblyHasName(false);
+
+        Set<ConstraintViolation<TestDTO>> result = localValidatorFactory.validate(testResource);
+
+        assertEquals(0, result.size());
+     }
+
+    @Test
     public void isValid_fieldsAreNotRequired() throws Exception {
         mockMvc.perform(post("/")
                 .contentType(APPLICATION_FORM_URLENCODED)
@@ -177,6 +236,7 @@ public class FieldRequiredIfValidatorTest {
 
         private Boolean hasCats;
         private Integer catQuantity;
+
 
         public TestForm() {
         }
@@ -227,6 +287,30 @@ public class FieldRequiredIfValidatorTest {
 
         public void setCatQuantity(Integer catQuantity) {
             this.catQuantity = catQuantity;
+        }
+    }
+
+    @FieldRequiredIf(required = "possibleDogName", argument = "dogPossiblyHasName", predicate = true, message="{validation.testform.dogname.required}")
+    public static class TestDTO {
+        public TestDTO() {}
+
+        private Boolean dogPossiblyHasName;
+        private Optional<String> possibleDogName;
+
+        public Boolean getDogPossiblyHasName() {
+            return dogPossiblyHasName;
+        }
+
+        public void setDogPossiblyHasName(Boolean dogPossiblyHasName) {
+            this.dogPossiblyHasName = dogPossiblyHasName;
+        }
+
+        public Optional<String> getPossibleDogName() {
+            return possibleDogName;
+        }
+
+        public void setPossibleDogName(Optional<String> possibleDogName) {
+            this.possibleDogName = possibleDogName;
         }
     }
 

@@ -2,11 +2,14 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class NewUserStagedInviteResource extends StagedInviteResource {
 
+    @NotEmpty(message = "validation.newUserStagedInviteResource.name.required")
     private String name;
-    private long innovationCategoryId;
+
+    private long innovationAreaId;
 
     public NewUserStagedInviteResource() {
     }
@@ -14,7 +17,7 @@ public class NewUserStagedInviteResource extends StagedInviteResource {
     public NewUserStagedInviteResource(String email, long competitionId, String name, long innovationCategoryId) {
         super(email, competitionId);
         this.name = name;
-        this.innovationCategoryId = innovationCategoryId;
+        this.innovationAreaId = innovationCategoryId;
     }
 
     public String getName() {
@@ -25,12 +28,8 @@ public class NewUserStagedInviteResource extends StagedInviteResource {
         this.name = name;
     }
 
-    public long getInnovationCategoryId() {
-        return innovationCategoryId;
-    }
-
-    public void setInnovationCategoryId(long innovationCategoryId) {
-        this.innovationCategoryId = innovationCategoryId;
+    public long getInnovationAreaId() {
+        return innovationAreaId;
     }
 
     @Override
@@ -43,7 +42,7 @@ public class NewUserStagedInviteResource extends StagedInviteResource {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
-                .append(innovationCategoryId, that.innovationCategoryId)
+                .append(innovationAreaId, that.innovationAreaId)
                 .append(name, that.name)
                 .isEquals();
     }
@@ -53,7 +52,7 @@ public class NewUserStagedInviteResource extends StagedInviteResource {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
                 .append(name)
-                .append(innovationCategoryId)
+                .append(innovationAreaId)
                 .toHashCode();
     }
 }

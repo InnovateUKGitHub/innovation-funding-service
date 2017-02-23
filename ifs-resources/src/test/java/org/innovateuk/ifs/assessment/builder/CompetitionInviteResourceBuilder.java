@@ -2,6 +2,7 @@ package org.innovateuk.ifs.assessment.builder;
 
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions;
+import org.innovateuk.ifs.category.resource.CategoryResource;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
 import org.innovateuk.ifs.invite.resource.CompetitionInviteResource;
 
@@ -59,6 +60,10 @@ public class CompetitionInviteResourceBuilder extends BaseBuilder<CompetitionInv
 
     public CompetitionInviteResourceBuilder withStatus(InviteStatus... statuses) {
         return withArraySetFieldByReflection("status", statuses);
+    }
+
+    public CompetitionInviteResourceBuilder withInnovationArea(CategoryResource... innovationAreas) {
+        return withArraySetFieldByReflection("innovationArea", innovationAreas);
     }
 
     @Override

@@ -28,33 +28,48 @@ function section() {
     echo
 }
 
-function addTestFiles() {
-    section "=> CLEANING TEST FILE REPOSITORIES IN DOCKER CONTAINER"
+function clearDownFileRepository() {
+    echo "***********Deleting any uploaded files***************"
+    echo "storedFileFolder:   ${storedFileFolder}"
+    docker exec innovationfundingservice_data-service_1  rm -rf ${storedFileFolder}
 
-    echo "storedFileFolder:                 ${storedFileFolder}"
-    echo "virusScanHoldingFolder:           ${virusScanHoldingFolder}"
-    echo "virusScanQuarantinedFolder:       ${virusScanQuarantinedFolder}"
-    echo "virusScanScannedFolder:           ${virusScanScannedFolder}"
-    echo
+    echo "***********Deleting any holding for scan files***************"
+    echo "virusScanHoldingFolder: ${virusScanHoldingFolder}"
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanHoldingFolder}
 
-    echo "=> Deleting any uploaded files..."
-    docker exec innovationfundingservice_data_1 rm -rf ${storedFileFolder}
+    echo "***********Deleting any quarantined files***************"
+    echo "virusScanQuarantinedFolder: ${virusScanQuarantinedFolder}"
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanQuarantinedFolder}
 
-    echo "=> Deleting any holding for scan files..."
-    docker exec innovationfundingservice_data_1 rm -rf ${virusScanHoldingFolder}
+    echo "***********Deleting any scanned files***************"
+    echo "virusScanScannedFolder: ${virusScanScannedFolder}"
+    docker exec innovationfundingservice_data-service_1  rm -rf ${virusScanScannedFolder}
+}
 
-    echo "=> Deleting any quarantined files..."
-    docker exec innovationfundingservice_data_1 rm -rf ${virusScanQuarantinedFolder}
+function addTestFiles() { 
+    section "=> RESETTING FILE STORAGE STATE"
 
-    echo "=> Deleting any scanned files..."
-    docker exec innovationfundingservice_data_1 rm -rf ${virusScanScannedFolder}
+    clearDownFileRepository
+    echo "***********Adding test files***************"
+    docker cp ${uploadFileDir}/testing.pdf innovationfundingservice_data-service_1:/tmp/testing.pdf
 
-    section "=> ADDING TEST FILES INTO DOCKER CONTAINER"
+    echo "***********Making the quarantined directory ***************"
+    docker exec innovationfundingservice_data-service_1 mkdir -p ${virusScanQuarantinedFolder}
+    echo "***********Adding pretend quarantined file ***************"
+    docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${virusScanQuarantinedFolder}/8
 
-    echo "=> Making the quarantined directory..."
-    docker exec innovationfundingservice_data_1 mkdir -p ${virusScanQuarantinedFolder}
-    echo "=> Adding pretend quarantined file..."
-    docker cp ${uploadFileDir}/8 innovationfundingservice_data_1:${virusScanQuarantinedFolder}/8
+    echo "***********Adding standard file upload location ***********"
+    docker exec innovationfundingservice_data-service_1 mkdir -p ${storedFileFolder}/000000000_999999999/000000_999999/000_999
+
+    echo "***********Creating file entry for each db entry***********" 
+    max_file_entry_id=$(mysql ifs -uroot -ppassword -hifs-database -s -e 'select max(id) from file_entry;')
+    for i in `seq 1 ${max_file_entry_id}`;
+    do 
+      if [ "${i}" != "8" ]
+      then
+        docker exec innovationfundingservice_data-service_1 cp /tmp/testing.pdf ${storedFileFolder}/000000000_999999999/000000_999999/000_999/${i}
+      fi
+    done
 }
 
 function resetDB() {
@@ -66,15 +81,23 @@ function resetDB() {
 function buildAndDeploy() {
     section "=> BUILDING AND DEPLOYING APPLICATION"
     cd ${rootDir}
-    if [[ ${noDeploy} -eq 1 ]]
+    if [[ ${noDeploy} -eq 0 ]]
     then
-        coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
-        ./gradlew composeUp
-        return
-    else
         echo "=> Starting build and deploy script..."
-        ./gradlew cleanDeployServices -x test
+        ./gradlew -Pcloud=development cleanDeployServices -x test
+    else
+        coloredEcho "=> No Deploy flag used. Skipping build and deploy..." yellow
     fi
+
+    ./gradlew -Pcloud=development composeUp
+}
+
+function injectRobotParameters() {
+    section "=> INJECTING ENVIRONMENT BUILD PARAMETERS"
+    cd ${rootDir}
+    echo "=> Injecting environment specific build parameters..."
+        ./gradlew robotTestsFilter
+
 }
 
 function startSeleniumGrid() {
@@ -111,7 +134,7 @@ function stopSeleniumGrid() {
     section "=> STOPPING SELENIUM GRID"
 
     cd ${scriptDir}
-    docker-compose down -v --remove-orphans
+    docker-compose -f docker-compose-services.yml down -v --remove-orphans
 }
 
 function startPybot() {
@@ -125,6 +148,22 @@ function startPybot() {
       else
         local includeHappyPath=''
     fi
+    if [[ "$useBespokeIncludeTags" ]]
+      then
+        for includeTag in $bespokeIncludeTags; do
+            local includeBespokeTags+=' --include '${includeTag}
+        done
+      else
+        local includeBespokeTags=''
+    fi
+    if [[ "$useBespokeExcludeTags" ]]
+      then
+          for excludeTag in $bespokeExcludeTags; do
+              local excludeBespokeTags+=' --exclude '${excludeTag}
+          done
+      else
+        local excludeBespokeTags=''
+    fi
     if [[ ${emails} -eq 1 ]]
       then
         local emailsString='--exclude Email'
@@ -137,6 +176,7 @@ function startPybot() {
       local rerunString=''
     fi
 
+
     pybot --outputdir target/${targetDir} ${rerunString} --pythonpath IFS_acceptance_tests/libs \
     -v docker:1 \
     -v SERVER_BASE:${webBase} \
@@ -147,6 +187,8 @@ function startPybot() {
     -v BROWSER=chrome \
     -v REMOTE_URL:'http://ifs-local-dev:4444/wd/hub' \
     $includeHappyPath \
+    $includeBespokeTags \
+    $excludeBespokeTags \
     --exclude Failing --exclude Pending --exclude FailingForLocal --exclude PendingForLocal ${emailsString} --name ${targetDir} ${1} &
 }
 
@@ -163,6 +205,19 @@ function runTests() {
       done
     else
       startPybot ${testDirectory}
+    fi
+
+    if [[ $vnc -eq 1 ]]
+    then
+      local vncport="$(docker-compose -f docker-compose-services.yml port chrome 5900)"
+      vncport=${vncport:8:5}
+
+      if [ "$(uname)" == "Darwin" ];
+      then
+        open "vnc://root:secret@ifs-local-dev:"${vncport}
+      fi
+      echo "**********For remote desktop please use this url in your vnc client**********"
+        echo  "vnc://root:secret@ifs-local-dev:"${vncport}
     fi
 
     for job in `jobs -p`
@@ -238,6 +293,8 @@ fi
 
 unset opt
 unset testScrub
+unset useBespokeIncludeTag
+unset useBespokeExcludeTag
 
 quickTest=0
 emails=0
@@ -247,7 +304,7 @@ stopGrid=0
 noDeploy=0
 
 testDirectory='IFS_acceptance_tests/tests'
-while getopts ":p :q :h :t :e :r :c :n :d:" opt ; do
+while getopts ":p :q :h :t :r :c :n :w :d: :I: :E:" opt ; do
     case ${opt} in
         p)
             parallel=1
@@ -271,11 +328,22 @@ while getopts ":p :q :h :t :e :r :c :n :d:" opt ; do
             testDirectory="$OPTARG"
             parallel=0
         ;;
+        I)
+            useBespokeIncludeTags=1
+            bespokeIncludeTags+="$OPTARG "
+        ;;
+        E)
+            useBespokeExcludeTags=1
+            bespokeExcludeTags+="$OPTARG "
+        ;;
         c)
             stopGrid=1
         ;;
         n)
             noDeploy=1
+        ;;
+        w)
+          vnc=1
         ;;
         \?)
             coloredEcho "=> Invalid option: -$OPTARG" red >&2
@@ -296,6 +364,7 @@ while getopts ":p :q :h :t :e :r :c :n :d:" opt ; do
 done
 
 startSeleniumGrid
+injectRobotParameters
 
 if [[ ${rerunFailed} -eq 0 ]]
 then
@@ -305,7 +374,7 @@ fi
 if [[ ${quickTest} -eq 1 ]]
 then
     coloredEcho "=> Using quickTest: TRUE" blue
-
+    addTestFiles
     runTests
 elif [[ ${testScrub} ]]
 then

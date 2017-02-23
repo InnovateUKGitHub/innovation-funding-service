@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="comp-setup">
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+
+	<div th:if="${param.section == null}" th:include="prototypes/fragments/applicant-view :: prototype-subheader('Competition setup', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '/prototypes/2469-comp-setup?compStatus=ready' : '/prototypes/2469-comp-setup')})" th:remove="tag" />
+	<div th:unless="${param.section == null}" th:include="prototypes/fragments/applicant-view :: prototype-subheader('Public content', ${(param.compStatus != null and param.compStatus[0] == 'ready' ? '?compStatus=ready' : '?')})" th:remove="tag" />
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<th:block th:include="prototypes/fragments/comp-setup :: ${'prototype-section-'+ (param.section == null ? 'public-index' : param.section[0])}" th:remove="tag"/>
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+	<div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<!--<script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>-->
+<!--<script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>-->
+<script type="text/javascript">
+	// <![CDATA[
+	jQuery(document).ready(function(){
+
+		var completed = 0;
+
+		for(var i = 0; i < 7; i++) {
+			if(localStorage.getItem('section-' + i) === 'complete') {
+				if(jQuery('.task-list li').length) {
+					jQuery('.task-list li').eq(i).append('<div class="task-status-complete"><span>Completed</span></div>')
+					var newHref = jQuery('.task-list li').eq(i).find('a').attr('href').replace('edit', 'readOnly')
+					jQuery('.task-list li').eq(i).find('a').attr('href', newHref)
+					completed ++
+				}
+				jQuery('.prot-section-' + i + '-populated').show()
+				jQuery('.prot-section-' + i + '-empty').hide()
+//				localStorage.setItem('section-' + i, 'incomplete');
+			} else {
+				jQuery('.prot-section-' + i + '-populated').hide()
+				jQuery('.prot-section-' + i + '-empty').show()
+			}
+		}
+
+		jQuery('.prototype-save').on('click', function () {
+			if($(this).text() === 'Save and return') {
+				localStorage.setItem('section-' + $(this).data('index'), 'complete')
+			}
+
+		})
+
+		//Disable the publish button
+		if(completed < 7) {
+			jQuery('#prototype-publish-content').addClass('disabled')
+		} else {
+			jQuery('#prototype-publish-content').removeClass('disabled')
+		}
+	});
+	// ]]>
+</script>
+</body>
+</html>

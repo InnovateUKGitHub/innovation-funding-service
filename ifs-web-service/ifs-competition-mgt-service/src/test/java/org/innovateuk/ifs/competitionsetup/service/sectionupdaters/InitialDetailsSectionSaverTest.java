@@ -4,8 +4,7 @@ import com.google.common.collect.Lists;
 import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.MilestoneService;
-import org.innovateuk.ifs.category.builder.CategoryResourceBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
@@ -13,6 +12,7 @@ import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.InitialDetailsForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupMilestoneService;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -20,10 +20,12 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
+import java.util.*;
+import java.util.stream.Collectors;
+import static org.hamcrest.CoreMatchers.hasItems;
+import static org.hamcrest.Matchers.hasSize;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
@@ -69,11 +71,10 @@ public class InitialDetailsSectionSaverTest {
         competitionSetupForm.setOpeningDateYear(openingDate.getYear());
         competitionSetupForm.setLeadTechnologistUserId(leadTechnologistId);
         competitionSetupForm.setCompetitionTypeId(competitionTypeId);
-        competitionSetupForm.setInnovationAreaCategoryId(innovationAreaId);
         competitionSetupForm.setInnovationSectorCategoryId(innovationSectorId);
 
-        CategoryResource innovationArea = CategoryResourceBuilder.newCategoryResource().withId(innovationAreaId).build();
-        competitionSetupForm.setInnovationAreaCategoryId(innovationArea.getId());
+        InnovationAreaResource innovationArea = newInnovationAreaResource().withId(innovationAreaId).build();
+        competitionSetupForm.setInnovationAreaCategoryIds(Arrays.asList(innovationAreaId, 1L, 2L, 3L));
 
         List<MilestoneResource> milestones = new ArrayList<>();
         milestones.add(getMilestone());
@@ -87,7 +88,7 @@ public class InitialDetailsSectionSaverTest {
         competition.setSetupComplete(false);
 
         when(milestoneService.getAllMilestonesByCompetitionId(1L)).thenReturn(milestones);
-        when(categoryService.getCategoryByParentId(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
+        when(categoryService.getInnovationAreasBySector(innovationSectorId)).thenReturn(Lists.newArrayList(innovationArea));
         when(competitionService.initApplicationFormByCompetitionType(competition.getId(), competitionSetupForm.getCompetitionTypeId())).thenReturn(serviceSuccess());
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
@@ -97,7 +98,10 @@ public class InitialDetailsSectionSaverTest {
         assertEquals(competition.getExecutive(), executiveUserId);
         assertEquals(competition.getCompetitionType(), competitionTypeId);
         assertEquals(competition.getLeadTechnologist(), leadTechnologistId);
-        assertEquals(competition.getInnovationArea(), innovationAreaId);
+        // We don't care about the order of the innovation area ids, so compare as a set
+        Set<Long> expectedInnovationAreaIds = CollectionFunctions.asLinkedSet(innovationAreaId, 1L, 2L, 3L);
+        Set<Long> actualInnovationAreaIds = competition.getInnovationAreas().stream().collect(Collectors.toSet());
+        assertEquals(expectedInnovationAreaIds, actualInnovationAreaIds);
         assertEquals(competition.getInnovationSector(), innovationSectorId);
         assertEquals(openingDate, competition.getStartDate());
         assertEquals(competition.getCompetitionType(), competitionTypeId);
@@ -118,6 +122,22 @@ public class InitialDetailsSectionSaverTest {
         ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "openingDate", "20-10-2020", null);
 
         assertTrue(errors.isSuccess());
+        verify(competitionService).update(competition);
+    }
+
+    @Test
+    public void testAutoSaveInnovationAreaCategoryIds() {
+
+        CompetitionResource competition = newCompetitionResource().build();
+        competition.setInnovationAreas(Collections.singleton(999L));
+
+        when(competitionService.update(competition)).thenReturn(serviceSuccess());
+
+        ServiceResult<Void> errors = service.autoSaveSectionField(competition, null, "autosaveInnovationAreaIds", "1,2, 3", null);
+
+        assertTrue(errors.isSuccess());
+        assertThat(competition.getInnovationAreas(), hasItems(1L, 2L, 3L));
+        assertThat(competition.getInnovationAreas(), hasSize(3));
         verify(competitionService).update(competition);
     }
 

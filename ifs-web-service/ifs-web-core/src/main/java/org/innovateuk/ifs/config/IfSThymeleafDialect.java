@@ -1,39 +1,44 @@
 package org.innovateuk.ifs.config;
 
-import org.innovateuk.ifs.util.ThymeleafUtil;
-import org.thymeleaf.context.IProcessingContext;
 import org.thymeleaf.dialect.AbstractDialect;
-import org.thymeleaf.dialect.IExpressionEnhancingDialect;
+import org.thymeleaf.dialect.IExpressionObjectDialect;
+import org.thymeleaf.dialect.IProcessorDialect;
+import org.thymeleaf.expression.IExpressionObjectFactory;
 import org.thymeleaf.processor.IProcessor;
+import org.thymeleaf.templatemode.TemplateMode;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * Thymeleaf Dialect that registers new objects that can be used in OGNL or SpringEL expression evaluations like <tt>${#ifsUtil.doThis(obj)}</tt>
  */
-public class IfSThymeleafDialect extends AbstractDialect implements IExpressionEnhancingDialect {
+public class IfSThymeleafDialect extends AbstractDialect implements IExpressionObjectDialect, IProcessorDialect {
+
+    public IfSThymeleafDialect() {
+        super("ifs");
+    }
+
+    @Override
+    public IExpressionObjectFactory getExpressionObjectFactory() {
+        return new IfsThymeleafExpressionObjectFactory();
+    }
 
     @Override
     public String getPrefix() {
-        // currently no attribute or tag processors, so this value doesn't matter yet.
         return "ifs";
     }
 
     @Override
-    public Map<String, Object> getAdditionalExpressionObjects(IProcessingContext processingContext) {
-        final Map<String, Object> expressionObjects = new HashMap<>();
-        expressionObjects.put("ifsUtil", new ThymeleafUtil());
-        return expressionObjects;
+    public int getDialectProcessorPrecedence() {
+        return 0;
     }
 
     @Override
-    public Set<IProcessor> getProcessors() {
-        final Set<IProcessor> processors = new HashSet<>();
-        processors.add(new EnhancedUtextProcessor());
-        processors.add(new NonZeroValueProcessor());
+    public Set<IProcessor> getProcessors(String dialectPrefix) {
+        Set<IProcessor> processors = new HashSet<>();
+        processors.add(new EnhancedUtextProcessor(TemplateMode.HTML, dialectPrefix));
+        processors.add(new NonZeroValueProcessor(dialectPrefix));
         return processors;
     }
 }

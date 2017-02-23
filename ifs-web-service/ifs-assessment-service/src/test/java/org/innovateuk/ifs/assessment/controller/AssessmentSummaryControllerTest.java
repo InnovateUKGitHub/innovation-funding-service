@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.assessment.controller;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
@@ -13,8 +14,6 @@ import org.innovateuk.ifs.assessment.viewmodel.AssessmentSummaryViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
-import org.innovateuk.ifs.workflow.resource.ProcessOutcomeResource;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,22 +27,21 @@ import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
+import static java.time.LocalDateTime.now;
+import static java.util.Collections.emptyList;
+import static java.util.Collections.nCopies;
+import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
-import static org.innovateuk.ifs.assessment.builder.ProcessOutcomeResourceBuilder.newProcessOutcomeResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static java.lang.Boolean.FALSE;
-import static java.lang.Boolean.TRUE;
-import static java.time.LocalDateTime.now;
-import static java.util.Arrays.asList;
-import static java.util.Collections.nCopies;
-import static java.util.stream.Collectors.toList;
-import static java.util.stream.Stream.concat;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED;
@@ -90,7 +88,6 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .with(id(assessmentId))
                 .withApplication(applicationId)
                 .withCompetition(competitionId)
-                .withProcessOutcome(asList())
                 .build());
 
         application = newApplicationResource()
@@ -107,7 +104,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         when(competitionService.getById(competitionId)).thenReturn(competition);
 
         // The first question will have no form inputs, therefore no assessment required and should not appear in the summary
-        List<FormInputResource> formInputsForQuestion1 = asList();
+        List<FormInputResource> formInputsForQuestion1 = emptyList();
 
         // The second question will have 'application in scope' type amongst the form inputs meaning that the AssessmentSummaryQuestionViewModel.applicationInScope should get populated with any response to this input
         List<FormInputResource> formInputsForQuestion2 = newFormInputResource()
@@ -122,7 +119,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .withType(anotherTypeOfFormInput, FormInputType.ASSESSOR_SCORE, FormInputType.TEXTAREA)
                 .withQuestion(3L, 3L, 3L)
                 .build(3);
-        when(formInputService.findAssessmentInputsByCompetition(competitionId)).thenReturn(concat(concat(formInputsForQuestion1.stream(), formInputsForQuestion2.stream()), formInputsForQuestion3.stream()).collect(toList()));
+        when(formInputService.findAssessmentInputsByCompetition(competitionId)).thenReturn(combineLists(formInputsForQuestion1, formInputsForQuestion2, formInputsForQuestion3));
 
         // The fourth question will have form inputs without a complete set of responses meaning that it should be incomplete
         List<FormInputResource> formInputsForQuestion4 = newFormInputResource()
@@ -218,9 +215,8 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
     }
 
     @Test
-    public void getSummary_withExistingOutcome() throws Exception {
+    public void getSummary_withExistingFundingConfirmation() throws Exception {
         Long assessmentWithExistingOutcomeId = 99L;
-        Long latestProcessOutcomeId = 100L;
         String expectedFeedback = "feedback";
         String expectedComment = "comment";
 
@@ -228,19 +224,15 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
                 .with(id(assessmentWithExistingOutcomeId))
                 .withApplication(applicationId)
                 .withCompetition(competitionId)
-                .withProcessOutcome(asList(1L, 2L, 3L, latestProcessOutcomeId))
+                .withFundingDecision(newAssessmentFundingDecisionOutcomeResource()
+                        .withFundingConfirmation(true)
+                        .withFeedback(expectedFeedback)
+                        .withComment(expectedComment)
+                        .build())
                 .build());
 
-        ProcessOutcomeResource processOutcome = newProcessOutcomeResource()
-                .withOutcome("yes")
-                .withDescription(expectedFeedback)
-                .withComment(expectedComment)
-                .build();
-
-        when(processOutcomeService.getById(latestProcessOutcomeId)).thenReturn(processOutcome);
-
         AssessmentSummaryForm expectedForm = new AssessmentSummaryForm();
-        expectedForm.setFundingConfirmation(TRUE);
+        expectedForm.setFundingConfirmation(true);
         expectedForm.setFeedback(expectedFeedback);
         expectedForm.setComment(expectedComment);
 
@@ -261,21 +253,20 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save() throws Exception {
-        Boolean fundingConfirmation = TRUE;
         String feedback = String.join(" ", nCopies(100, "feedback"));
         String comment = String.join(" ", nCopies(100, "comment"));
 
-        when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, comment)).thenReturn(serviceSuccess());
+        when(assessmentService.recommend(assessmentId, true, feedback, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("fundingConfirmation", "true")
                 .param("feedback", feedback)
                 .param("comment", comment))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard/competition/" + competitionId));
 
-        verify(assessmentService).recommend(assessmentId, fundingConfirmation, feedback, comment);
+        verify(assessmentService).recommend(assessmentId, true, feedback, comment);
     }
 
     @Test
@@ -307,7 +298,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("fundingConfirmation"));
-        assertEquals("Please indicate your decision", bindingResult.getFieldError("fundingConfirmation").getDefaultMessage());
+        assertEquals("Please indicate your decision.", bindingResult.getFieldError("fundingConfirmation").getDefaultMessage());
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);
@@ -315,29 +306,27 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_noFeedbackAndFundingConfirmationIsTrue() throws Exception {
-        Boolean fundingConfirmation = TRUE;
         String comment = String.join(" ", nCopies(100, "comment"));
 
-        when(assessmentService.recommend(assessmentId, fundingConfirmation, null, comment)).thenReturn(serviceSuccess());
+        when(assessmentService.recommend(assessmentId, true, null, comment)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("fundingConfirmation", "true")
                 .param("comment", comment))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard/competition/" + competitionId));
 
-        verify(assessmentService).recommend(assessmentId, fundingConfirmation, null, comment);
+        verify(assessmentService).recommend(assessmentId, true, null, comment);
     }
 
     @Test
     public void save_noFeedbackAndFundingConfirmationIsFalse() throws Exception {
-        Boolean fundingConfirmation = FALSE;
         String comment = String.join(" ", nCopies(100, "comment"));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("fundingConfirmation", "false")
                 .param("comment", comment))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("form"))
@@ -349,7 +338,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         AssessmentSummaryForm form = (AssessmentSummaryForm) result.getModelAndView().getModel().get("form");
 
-        assertEquals(fundingConfirmation, form.getFundingConfirmation());
+        assertFalse(form.getFundingConfirmation());
         assertNull(form.getFeedback());
         assertEquals(comment, form.getComment());
 
@@ -359,7 +348,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(1, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("feedback"));
-        assertEquals("Please enter your feedback", bindingResult.getFieldError("feedback").getDefaultMessage());
+        assertEquals("Please enter your feedback.", bindingResult.getFieldError("feedback").getDefaultMessage());
 
         verify(assessmentService).getById(assessmentId);
         verifyNoMoreInteractions(assessmentService);
@@ -367,30 +356,28 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_noComment() throws Exception {
-        Boolean fundingConfirmation = TRUE;
         String feedback = String.join(" ", nCopies(100, "feedback"));
 
-        when(assessmentService.recommend(assessmentId, fundingConfirmation, feedback, null)).thenReturn(serviceSuccess());
+        when(assessmentService.recommend(assessmentId, true, feedback, null)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("fundingConfirmation", "true")
                 .param("feedback", feedback))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/assessor/dashboard/competition/" + competitionId));
 
-        verify(assessmentService).recommend(assessmentId, fundingConfirmation, feedback, null);
+        verify(assessmentService).recommend(assessmentId, true, feedback, null);
     }
 
     @Test
     public void save_exceedsCharacterSizeLimit() throws Exception {
-        Boolean fundingConfirmation = TRUE;
         String feedback = RandomStringUtils.random(5001);
         String comment = RandomStringUtils.random(5001);
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("fundingConfirmation", "true")
                 .param("feedback", feedback)
                 .param("comment", comment))
                 .andExpect(status().isOk())
@@ -404,7 +391,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         AssessmentSummaryForm form = (AssessmentSummaryForm) result.getModelAndView().getModel().get("form");
 
-        assertEquals(fundingConfirmation, form.getFundingConfirmation());
+        assertTrue(form.getFundingConfirmation());
         assertEquals(feedback, form.getFeedback());
         assertEquals(comment, form.getComment());
 
@@ -415,9 +402,9 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
         assertEquals(2, bindingResult.getFieldErrorCount());
         assertTrue(bindingResult.hasFieldErrors("feedback"));
         assertTrue(bindingResult.hasFieldErrors("comment"));
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("feedback").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("feedback").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("feedback").getArguments()[1]);
-        assertEquals("This field cannot contain more than {1} characters", bindingResult.getFieldError("comment").getDefaultMessage());
+        assertEquals("This field cannot contain more than {1} characters.", bindingResult.getFieldError("comment").getDefaultMessage());
         assertEquals(5000, bindingResult.getFieldError("comment").getArguments()[1]);
 
         verify(assessmentService).getById(assessmentId);
@@ -426,13 +413,12 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
     @Test
     public void save_exceedsWordLimit() throws Exception {
-        Boolean fundingConfirmation = TRUE;
         String feedback = String.join(" ", nCopies(101, "feedback"));
         String comment = String.join(" ", nCopies(101, "comment"));
 
         MvcResult result = mockMvc.perform(post("/{assessmentId}/summary", assessmentId)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("fundingConfirmation", fundingConfirmation.toString())
+                .param("fundingConfirmation", "true")
                 .param("feedback", feedback)
                 .param("comment", comment))
                 .andExpect(status().isOk())
@@ -446,7 +432,7 @@ public class AssessmentSummaryControllerTest extends BaseControllerMockMVCTest<A
 
         AssessmentSummaryForm form = (AssessmentSummaryForm) result.getModelAndView().getModel().get("form");
 
-        assertEquals(fundingConfirmation, form.getFundingConfirmation());
+        assertTrue(form.getFundingConfirmation());
         assertEquals(feedback, form.getFeedback());
         assertEquals(comment, form.getComment());
 

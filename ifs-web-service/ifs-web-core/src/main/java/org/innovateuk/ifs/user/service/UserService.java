@@ -19,9 +19,8 @@ public interface UserService {
     List<ProcessRoleResource> getLeadPartnerOrganisationProcessRoles(ApplicationResource applicationResource);
     RestResult<Void> verifyEmail(String hash);
     void resendEmailVerificationNotification(String email);
-
+    ServiceResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId);
     RestResult<UserResource> retrieveUserById(Long id);
-
     RestResult<Void> sendPasswordResetNotification(String email);
     RestResult<Void> checkPasswordResetHash(String hash);
     RestResult<Void> resetPassword(String hash, String password);
@@ -43,5 +42,5 @@ public interface UserService {
 	List<ProcessRoleResource> getOrganisationProcessRoles(ApplicationResource application, Long organisation);
     UserProfileResource getUserProfile(Long userId);
     ServiceResult<Void> updateUserProfile(Long userId, UserProfileResource userProfile);
-
+    Long getUserOrganisationId(Long userId, Long applicationId);
 }

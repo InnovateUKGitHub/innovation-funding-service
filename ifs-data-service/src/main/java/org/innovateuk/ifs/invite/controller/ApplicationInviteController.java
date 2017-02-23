@@ -72,5 +72,4 @@ public class ApplicationInviteController {
     public RestResult<UserResource> getUser( @PathVariable("hash") String hash) {
         return inviteService.getUserByInviteHash(hash).toGetResponse();
     }
-
 }

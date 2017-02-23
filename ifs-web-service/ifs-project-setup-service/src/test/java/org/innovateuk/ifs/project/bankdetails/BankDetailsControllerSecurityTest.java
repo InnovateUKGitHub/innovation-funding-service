@@ -25,7 +25,7 @@ public class BankDetailsControllerSecurityTest extends BaseProjectSetupControlle
 
     @Test
     public void testConfirmBankDetails() {
-        assertSecured(() -> classUnderTest.confirmBankDetails(null, null, null, 123L, null));
+        assertSecured(() -> classUnderTest.confirmBankDetails(null, null, null, null, 123L, null));
     }
 
     @Test

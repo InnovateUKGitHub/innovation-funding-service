@@ -7,7 +7,6 @@ import org.innovateuk.ifs.invite.resource.CompetitionParticipantRoleResource;
 import org.innovateuk.ifs.invite.resource.ParticipantStatusResource;
 import org.junit.Before;
 import org.junit.Test;
-import org.springframework.http.MediaType;
 import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
 
 import java.util.List;
@@ -50,8 +49,7 @@ public class CompetitionParticipantControllerDocumentation extends BaseControlle
 
         when(competitionParticipantServiceMock.getCompetitionParticipants(userId, role)).thenReturn(serviceSuccess(competitionParticipants));
 
-        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", userId, role, status)
-                .contentType(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get("/competitionparticipant/user/{userId}/role/{role}", userId, role, status))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(

@@ -7,6 +7,5 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
  */
 public interface CompetitionSetupSectionSaver extends CompetitionSetupSaver {
 
-	CompetitionSetupSection sectionToSave();
 	
 }

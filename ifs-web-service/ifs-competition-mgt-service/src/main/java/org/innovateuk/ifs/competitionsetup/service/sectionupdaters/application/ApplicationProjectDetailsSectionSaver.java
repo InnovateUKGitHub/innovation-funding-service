@@ -27,7 +27,7 @@ public class ApplicationProjectDetailsSectionSaver extends AbstractApplicationSe
 	}
 
     @Override
-    public CompetitionSetupSubsection sectionToSave() {
+    public CompetitionSetupSubsection subsectionToSave() {
         return PROJECT_DETAILS;
     }
 

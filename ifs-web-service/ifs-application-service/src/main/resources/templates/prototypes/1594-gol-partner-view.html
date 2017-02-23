@@ -12,7 +12,7 @@
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
 	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Project setup status'}, ${(param.status != null and param.status[0] == 'approved' ? '/prototypes/1588-project-status?stage=level5' : '/prototypes/1588-project-status?stage=level2')})" th:remove="tag" />
 
@@ -32,7 +32,7 @@
 		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.</p>
 		<h2 class="heading-medium">Next steps</h2>
 
-		<ul class="list-bullet">
+		<ul class="list list-bullet">
 			<li>review grant offer letter and annex if provided</li>
 			<li>the Project Manager will need to sign the document</li>
 			<li>the signed grant offer letter should then be sent to Innovate UK</li>
@@ -43,14 +43,13 @@
 
 	<th:block th:if="${param.user != null and param.user[0] == 'nonLead'}" th:unless="${param.status != null and param.status[0] == 'GOLSent' or param.status != null and param.status[0] == 'GOLAccepted'}">
 		<p>The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup. It is now awaiting signature by the lead applicant.</p>
-
-		<p>The unsigned grant offer letter is available for your records.</p>
+		<p>A copy of the unsigned grant offer letter is available for your records.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLSent'}">
-		<p>The signed grant offer letter has been received by Innovate UK, and is awaiting review.</p>
+		<p>We have received the signed grant offer letter and are currently reviewing this.</p>
 
-		<p>The unsigned grant offer letter is available for your records.</p>
+		<p>A copy of the unsigned grant offer letter is available for your records.</p>
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'GOLAccepted'}">
@@ -59,7 +58,7 @@
 			<p>Your signed grant offer letter has been received and accepted by Innovate UK</p>
 		</div>
 
-		<p>The grant offer letter is available for your record below.</p>
+		<p>The grant offer letter is available for your records below.</p>
 	</th:block>
 
 	<h2 class="heading-medium">Grant offer letter</h2>
@@ -89,10 +88,10 @@
 
 			<details>
 			    <summary><span class="summary">What are the requirements for upload?</span></summary>
-			    <div class="panel-indent">
+			    <div class="panel">
 			        <p>The uploaded signed grant offer letter agreement must:</p>
 
-			        <ul class="list-bullet">
+			        <ul class="list list-bullet">
 			        	<li>contain signed pages</li>
 			        	<li>be in a portable document format (pdf)</li>
 			        	<li>be legible at 100% magnification</li>
@@ -116,7 +115,7 @@
 		<div th:if="${param.status == null or param.status[0] == 'GOLRejected'}" th:remove="tag">
 
 			<div class="extra-margin">
-				<a href="#" data-js-modal="modal-send" class="button large">Submit</a>
+				<a href="#" data-js-modal="modal-send" class="button large">Send to Innovate UK</a>
 			</div>
 
 			<div class="modal-send" role="dialog" aria-hidden="true" style="margin-top: -174px;">

@@ -61,10 +61,6 @@ public class AddressLookupBaseController {
         return organisationAddressResource;
     }
 
-    boolean hasNonAddressErrors(BindingResult bindingResult){
-        return bindingResult.getFieldErrors().stream().filter(e -> (!e.getField().contains("addressForm"))).count() > 0;
-    }
-
     /**
      * Get the list of postcode options, with the entered postcode. Add those results to the form.
      */

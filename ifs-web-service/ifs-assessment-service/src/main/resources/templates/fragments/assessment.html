@@ -24,10 +24,18 @@
 
 
 <!-- ======== Assessment - sub header back to assessment overview ======= -->
-<div th:fragment="assessment-header-sub">
+<div th:fragment="assessment-header-sub (linkTitle, linkUrl, linkClass)">
     <div class="sub-header">
         <nav>
-            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass != null ? linkClass : ''}" th:href="${linkUrl}" th:text="${linkTitle}" />
+            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
+        </nav>
+    </div>
+</div>
+
+<div th:fragment="assessment-header-deadline-sub (linkTitle, linkUrl, linkClass, daysPercentage, daysLeft)">
+    <div class="sub-header">
+        <nav>
+            <a th:if="${linkTitle != null and linkUrl != null}" th:class="${linkClass} ?: ''" th:href="${linkUrl}" th:text="${linkTitle}" />
         </nav>
         <div class="deadline" th:if="${daysPercentage != null and daysLeft != null}">Days left to submit&nbsp;&nbsp;
             <div th:include="fragments/elements :: pie-small" th:with="daysPercentage=${daysPercentage},daysLeft=${daysLeft}" th:remove="tag" />
@@ -45,7 +53,7 @@
             <h3 class="heading-small">Lead organisation</h3>
             <p th:text="${leadOrganisation.name}" />
             <h3 class="heading-small">Partners</h3>
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}">
                     <span th:text="${organisation.getName()}"></span>
                 </li>
@@ -130,7 +138,7 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" data-required-errormessage="The reason cannot be blank" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control" th:attr="data-required-errormessage=#{validation.competitionrejectionresource.rejectReason.required}" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
                 <option th:each="reason : ${rejectionReasons}"
                         th:value="${reason.id}"
@@ -150,7 +158,7 @@
                       data-max_words="100"
                       data-maxwordslength="100"
                       data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                      data-maxlength-errormessage="This field cannot contain more than 5,000 characters"
+                      th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
                       th:errorclass="field-error"
                       rows="4"
                       th:field="*{rejectComment}"></textarea>
@@ -190,11 +198,15 @@
                     <span class="error-message"  th:each="err : ${#fields.errors('rejectReason')}" th:text="${err}" />
                 </span>
             </label>
-            <select class="form-control" data-required-errormessage="Please enter a reason" th:errorclass="field-error" required="required" th:field="*{rejectReason}">
+            <select class="form-control"
+                    th:attr="data-required-errormessage=#{validation.assessmentRejectOutcome.rejectReason.required}"
+                    th:errorclass="field-error"
+                    required="required"
+                    th:field="*{rejectReason}">
                 <option value="">Select a reason</option>
-                <option value="conflict-of-interest">Conflict of interest</option>
-                <option value="not-my-area-of-interest">Not my area of expertise</option>
-                <option value="too-many-assessments">Too many assessments</option>
+                <option th:each="reason : ${T(org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue).values()}"
+                        th:value="${reason}"
+                        th:text="${reason.displayLabel}">Conflict of interest</option>
             </select>
         </div>
         <div class="form-group word-count" th:classappend="${#fields.hasErrors('rejectComment')}? error">
@@ -210,7 +222,7 @@
                 data-max_words="100"
                 data-maxwordslength="100"
                 data-maxwordslength-errormessage="Maximum word count exceeded. Please reduce your word count to 100."
-                data-maxlength-errormessage="This field cannot contain more than 5,000 characters"
+                th:attr="data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
                 th:errorclass="field-error"
                 rows="4"
                 th:field="*{rejectComment}"></textarea>

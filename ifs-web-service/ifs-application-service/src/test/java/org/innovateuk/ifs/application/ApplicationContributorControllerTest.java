@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.application;
 
+import org.apache.commons.lang3.CharEncoding;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.form.ContributorsForm;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.apache.commons.lang3.CharEncoding;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +18,11 @@ import org.springframework.validation.Validator;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-import static org.innovateuk.ifs.application.ApplicationContributorController.APPLICATION_CONTRIBUTORS_INVITE;
-import static org.innovateuk.ifs.application.ApplicationContributorController.APPLICATION_CONTRIBUTORS_REMOVE_CONFIRM;
+import static org.innovateuk.ifs.application.ApplicationContributorController.*;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.assertEquals;
@@ -50,7 +51,7 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     private String applicationRedirectUrl;
     private String inviteOverviewRedirectUrl;
     private String removeUrl;
-
+    private String contributorsUrl;
 
     @Override
     protected ApplicationContributorController supplyControllerUnderTest() {
@@ -74,11 +75,10 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
         removeUrl = String.format("/application/%d/contributors/remove", applicationId);
         inviteUrl = String.format("/application/%d/contributors/invite", applicationId);
         redirectUrl = String.format("redirect:/application/%d/contributors/invite", applicationId);
+        contributorsUrl = String.format("/application/%d/contributors", applicationId);
         applicationRedirectUrl = String.format("redirect:/application/%d", applicationId);
         inviteOverviewRedirectUrl = String.format("redirect:/application/%d/contributors", applicationId);
         viewName = APPLICATION_CONTRIBUTORS_INVITE;
-
-
     }
 
     @Test
@@ -92,7 +92,6 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     public void testInviteContributorsCookie() throws Exception {
         Cookie cookie = new Cookie("contributor_invite_state", encryptor.encrypt(URLEncoder.encode("{\"applicationId\":1,\"organisations\":[{\"organisationName\":\"Empire Ltd\",\"organisationId\":3,\"organisationInviteId\":null,\"invites\":[{\"userId\":null,\"personName\":\"Nico Bijl\",\"email\":\"nico@worth.systems\",\"inviteStatus\":null}]}]}}", CharEncoding.UTF_8)));
 
-//        contributorsForm.getOrganisationMap()
         MvcResult mockResult = mockMvc.perform(get(inviteUrl).cookie(cookie))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name(viewName))
@@ -446,6 +445,18 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
                 .andExpect(model().attributeExists("removeContributorForm"));
     }
 
+    @Test
+    public void testDisplayContributors() throws Exception {
+
+        this.setupUserInvite("name", "user@email.com", 3L);
+
+        mockMvc.perform(
+                get(contributorsUrl)
+        )
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(view().name(APPLICATION_CONTRIBUTORS_DISPLAY));
+    }
+
     private void loginNonLeadUser(String email) {
         UserResource user = newUserResource().withId(2L).withFirstName("test").withLastName("name").withEmail(email).build();
         loginUser(user);
@@ -454,7 +465,10 @@ public class ApplicationContributorControllerTest extends BaseControllerMockMVCT
     private void setupUserInvite(String name, String email, Long organisationId) {
         InviteOrganisationResource inviteOrgResource = new InviteOrganisationResource();
         inviteOrgResource.setOrganisation(organisationId);
+        inviteOrgResource.setId(1L);
         inviteOrgResource.setInviteResources(Arrays.asList(new ApplicationInviteResource(null, name, email, null, null, null, null)));
-        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(Arrays.asList(inviteOrgResource)));
+        List l = new ArrayList();
+        l.add(inviteOrgResource);
+        when(inviteRestService.getInvitesByApplication(isA(Long.class))).thenReturn(restSuccess(l));
     }
 }

@@ -26,7 +26,6 @@ public class AssessorsFormPopulatorTest {
 	public void testPopulateForm() {
 		CompetitionResource competition = newCompetitionResource()
 				.withActivityCode("Activity Code")
-				.withInnovateBudget("Innovate Budget")
 				.withCompetitionCode("c123")
 				.withPafCode("p123")
 				.withBudgetCode("b123")

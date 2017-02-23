@@ -31,4 +31,8 @@ public class SectionPermissionRules extends BasePermissionRules {
         return isMemberOfProjectTeam(applicationResource.getId(), user);
     }
 
+    @PermissionRule(value = "MARK_SECTION_AS_NOT_REQUIRED", description = "Only member of project team can mark a section as not required")
+    public boolean onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(ApplicationResource applicationResource, UserResource user) {
+        return isMemberOfProjectTeam(applicationResource.getId(), user);
+    }
 }

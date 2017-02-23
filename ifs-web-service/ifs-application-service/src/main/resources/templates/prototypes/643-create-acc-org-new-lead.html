@@ -20,12 +20,12 @@
 	<h1 class="heading-large">Create your account</h1>
 
 	<!-- <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p> -->
-	
-	<div class="panel-indent">
+
+	<div class="panel">
 		<p>The profile that you are creating will be linked to the following organisation <br />
 		<strong>Nomensa</strong></p>
 	</div>
-	
+
 	<h2 class="heading-medium">Your details</h2>
 
 	<form>
@@ -58,7 +58,7 @@
 			<div class="form-group">
 				<label class="form-label" for="phone-number">
 					<span class="form-label-bold">Phone number</span>
-					<span class="form-hint">We may use this to contact you about the application</span> 
+					<span class="form-hint">We may use this to contact you about the application</span>
 				</label>
 				<input class="form-control" id="phone-number" name="phone-number" type="text" />
 			</div>
@@ -74,7 +74,7 @@
 					<span class="form-label-bold">Password</span>
 					<span class="form-hint">
 						Your password is case-sensitive and needs to:<br />
-						<ul class="list-bullet">
+						<ul class="list list-bullet">
 							<li>be between 10 and 30 characters long</li>
 							<li>contain at least 1 capital letter</li>
 							<li>contain at least 1 number</li>
@@ -82,17 +82,24 @@
 					</span>
 					<span class="form-hint">Your password can include spaces to make a phrase.
 </span>
+
+          <div style="display: inline-block; position: relative; width: 50%">
+            <input class="form-control width-full" id="password" name="password" type="password" />
+            <th:block th:if="${param.action != null and param.action[0] == 'toggle'}">
+              <a th:href="@{?action=password}" class="password-toggle" style="position: absolute; top: 0.36em; right: 0.3em;">Show</a>
+            </th:block>
+          </div>
+
 				</label>
-				<input class="form-control" id="password" name="password" type="password" />
 			</div>
-			<div class="form-group">
+			<div class="form-group" th:unless="${param.action != null and param.action[0] == 'toggle'}">
 				<label class="form-label" for="retype-password">
 					<span class="form-label-bold">Re-type password</span>
 				</label>
 				<input class="form-control" id="retype-password" name="retype-password" type="password" />
 			</div>
 			<div class="form-block">
-				<label class="block-label" for="terms-conditions">
+				<label class="block-label selection-button-checkbox" for="terms-conditions">
 					<input id="terms-conditions" type="checkbox" value="terms-conditions"/>
 					I agree to the <a href="#">terms and conditions</a>
 				</label>
@@ -108,5 +115,30 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	// <![CDATA[
+  jQuery(document).ready(function(){
+
+      jQuery('.password-toggle').on('click',function(e){
+        e.preventDefault();
+
+        var inputType = jQuery('#password').attr('type');
+
+        //alert(inputType);
+
+        if (inputType == 'password'){
+            jQuery('#password').attr('type', 'text');
+            jQuery(this).text('Hide');
+        }else{
+            jQuery('#password').attr('type', 'password');
+            jQuery(this).text('Show');
+        }
+
+      });
+
+
+  });
+  // ]]>
+</script>
 </body>
 </html>

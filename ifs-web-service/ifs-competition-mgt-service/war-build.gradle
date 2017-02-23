@@ -1,0 +1,21 @@
+apply plugin: 'war'
+
+war {
+    baseName = 'management'
+}
+
+
+task deployToTomcat(type: Copy) {
+    from war
+    into "$tomcatWebAppsDir"
+    rename '(.*).war', 'management.war'
+}
+
+task cleanDeploy() {
+    build.mustRunAfter clean
+    deployToTomcat.mustRunAfter build
+    dependsOn clean
+    dependsOn build
+    dependsOn deployToTomcat
+}
+

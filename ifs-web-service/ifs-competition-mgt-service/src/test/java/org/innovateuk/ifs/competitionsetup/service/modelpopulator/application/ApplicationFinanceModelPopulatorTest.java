@@ -4,7 +4,6 @@ import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
-import org.innovateuk.ifs.competitionsetup.form.application.ApplicationFinanceForm;
 import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +22,7 @@ import static org.junit.Assert.assertEquals;
 public class ApplicationFinanceModelPopulatorTest {
 
 	@InjectMocks
-	private ApplicationFinancesModelPopulator populator;
+	private ApplicationFinanceModelPopulator populator;
 
 	@Mock
 	private CompetitionService competitionService;
@@ -34,30 +33,27 @@ public class ApplicationFinanceModelPopulatorTest {
 	@Test
 	public void testSectionToPopulateModel() {
 		CompetitionSetupSubsection result = populator.sectionToPopulateModel();
-		
 		assertEquals(CompetitionSetupSubsection.FINANCES, result);
 	}
 	
 	@Test
 	public void testPopulateModel() {
-		Model model = new ExtendedModelMap();
-		CompetitionResource competitionResource = newCompetitionResource()
+		long competitionId = 8L;
+		CompetitionResource cr = newCompetitionResource()
 				.withCompetitionCode("code")
 				.withName("name")
-				.withId(8L)
+				.withId(competitionId)
 				.withResearchCategories(CollectionFunctions.asLinkedSet(2L, 3L))
+				.withCompetitionTypeName("programme")
 				.build();
-		competitionResource.setFullApplicationFinance(true);
-		competitionResource.setIncludeGrowthTable(false);
-		ApplicationFinanceForm form = new ApplicationFinanceForm();
-		form.setFullApplicationFinance(competitionResource.isFullApplicationFinance());
-		form.setIncludeGrowthTable(competitionResource.isIncludeGrowthTable());
 
-
-		populator.populateModel(model, competitionResource, Optional.empty());
+		Model model = new ExtendedModelMap();
+		// Method under test
+		populator.populateModel(model, cr, Optional.empty());
+		// Assertions
+		// First check that there is not more than we expect
 		assertEquals(2, model.asMap().size());
-		assertEquals(8L, model.asMap().get("competitionId"));
-		assertEquals(form.isFullApplicationFinance(), ((ApplicationFinanceForm)model.asMap().get("competitionSetupForm")).isFullApplicationFinance());
-		assertEquals(form.isIncludeGrowthTable(), ((ApplicationFinanceForm)model.asMap().get("competitionSetupForm")).isIncludeGrowthTable());
+		assertEquals(competitionId, model.asMap().get("competitionId"));
+		assertEquals(false, model.asMap().get("isSectorCompetition"));
 	}
 }

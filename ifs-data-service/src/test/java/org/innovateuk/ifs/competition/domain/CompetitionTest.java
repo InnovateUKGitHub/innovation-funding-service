@@ -10,13 +10,15 @@ import org.junit.Test;
 import org.mockito.Mock;
 
 import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static junit.framework.TestCase.assertFalse;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class CompetitionTest {
     private Competition competition;
@@ -37,7 +39,6 @@ public class CompetitionTest {
     private String budgetCode;
 
     private String activityCode;
-    private String innovateBudget;
     private String funder;
     private BigDecimal funderBudget;
 
@@ -55,7 +56,6 @@ public class CompetitionTest {
 
         budgetCode = "BudgetCode";
         activityCode = "ActivityCode";
-        innovateBudget = "Innovate Budget";
         funder = "Funder";
         funderBudget = new BigDecimal(0);
 
@@ -71,7 +71,6 @@ public class CompetitionTest {
 
         competition.setBudgetCode(budgetCode);
         competition.setActivityCode(activityCode);
-        competition.setInnovateBudget(innovateBudget);
         competition.setFunders(getTestFunders(competition));
     }
 
@@ -82,7 +81,7 @@ public class CompetitionTest {
         Funder1.setId(1L);
         Funder1.setCompetition(competition);
         Funder1.setFunder("Funder1");
-        Funder1.setFunderBudget(new BigDecimal(1));
+        Funder1.setFunderBudget(BigInteger.valueOf(1));
         Funder1.setCoFunder(false);
         returnList.add(Funder1);
 
@@ -91,7 +90,7 @@ public class CompetitionTest {
         coFunder1.setId(1L);
         coFunder1.setCompetition(competition);
         coFunder1.setFunder("CoFunder1");
-        coFunder1.setFunderBudget(new BigDecimal(1));
+        coFunder1.setFunderBudget(BigInteger.valueOf(1));
         coFunder1.setCoFunder(true);
         returnList.add(coFunder1);
 
@@ -99,7 +98,7 @@ public class CompetitionTest {
         coFunder2.setId(2L);
         coFunder2.setCompetition(competition);
         coFunder2.setFunder("CoFunder2");
-        coFunder2.setFunderBudget(new BigDecimal(2));
+        coFunder2.setFunderBudget(BigInteger.valueOf(2));
         coFunder1.setCoFunder(true);
         returnList.add(coFunder2);
 
@@ -117,23 +116,22 @@ public class CompetitionTest {
 
         assertEquals(competition.getBudgetCode(), budgetCode);
         assertEquals(competition.getActivityCode(), activityCode);
-        assertEquals(competition.getInnovateBudget(), innovateBudget);
         assertEquals(competition.getFunders().size(), getTestFunders(competition).size());
     }
 
     @Test
-    public void competitionStatusOpen(){
+    public void competitionStatusOpen() {
         assertEquals(OPEN, competition.getCompetitionStatus());
     }
 
     @Test
-    public void competitionStatusReadyToOpen(){
+    public void competitionStatusReadyToOpen() {
         competition.setStartDate(LocalDateTime.now().plusDays(1));
         assertEquals(READY_TO_OPEN, competition.getCompetitionStatus());
     }
 
     @Test
-    public void competitionClosingSoon(){
+    public void competitionClosingSoon() {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
@@ -142,7 +140,7 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionNotClosingSoon(){
+    public void competitionNotClosingSoon() {
         CompetitionResource competitionResource = new CompetitionResource();
         competitionResource.setCompetitionStatus(OPEN);
         competitionResource.setStartDate(LocalDateTime.now().minusDays(4));
@@ -151,24 +149,46 @@ public class CompetitionTest {
     }
 
     @Test
-    public void competitionStatusInAssessment(){
+    public void competitionStatusInAssessment() {
         competition.setEndDate(LocalDateTime.now().minusDays(1));
         competition.notifyAssessors(LocalDateTime.now().minusDays(1));
         competition.setFundersPanelDate(LocalDateTime.now().plusDays(1));
         assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
     }
-    
+
     @Test
-    public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent(){
+    public void competitionStatusInAssessment_notCompetitionClosed() throws Exception {
+        competition.setEndDate(LocalDateTime.now().minusDays(3));
+        competition.notifyAssessors(LocalDateTime.now().minusDays(2));
+        competition.closeAssessment(LocalDateTime.now().minusDays(1));
+
+        try {
+            competition.notifyAssessors(LocalDateTime.now());
+        } catch (IllegalStateException e) {
+            assertEquals("Tried to notify assessors when in competitionStatus=FUNDERS_PANEL. " +
+                    "Applications can only be distributed when competitionStatus=CLOSED", e.getMessage());
+        }
+    }
+
+    @Test
+    public void competitionStatusInAssessment_alreadyInAssessment() throws Exception {
+        competition.setEndDate(LocalDateTime.now().minusDays(3));
+        competition.notifyAssessors(LocalDateTime.now().minusDays(2));
+        competition.notifyAssessors(LocalDateTime.now().minusDays(1));
+        assertEquals(IN_ASSESSMENT, competition.getCompetitionStatus());
+    }
+
+    @Test
+    public void competitionStatusFundersPanelAsFundersPanelEndDateAbsent() {
         competition.setEndDate(LocalDateTime.now().minusDays(5));
         competition.notifyAssessors(LocalDateTime.now().minusDays(4));
         competition.closeAssessment(LocalDateTime.now().minusDays(3));
         competition.setFundersPanelDate(LocalDateTime.now().minusDays(2));
         assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
     }
-    
+
     @Test
-    public void competitionStatusFundersPanelAsFundersPanelEndDatePresentButInFuture(){
+    public void competitionStatusFundersPanelAsFundersPanelEndDatePresentButInFuture() {
         competition.setEndDate(LocalDateTime.now().minusDays(6));
         competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(5));
         competition.notifyAssessors(LocalDateTime.now().minusDays(4));
@@ -177,9 +197,9 @@ public class CompetitionTest {
         competition.setFundersPanelEndDate(LocalDateTime.now().plusDays(1));
         assertEquals(FUNDERS_PANEL, competition.getCompetitionStatus());
     }
-    
+
     @Test
-    public void competitionStatusAssessorFeedback(){
+    public void competitionStatusAssessorFeedback() {
         competition.setEndDate(LocalDateTime.now().minusDays(6));
         competition.setAssessorAcceptsDate(LocalDateTime.now().minusDays(5));
         competition.notifyAssessors(LocalDateTime.now().minusDays(4));

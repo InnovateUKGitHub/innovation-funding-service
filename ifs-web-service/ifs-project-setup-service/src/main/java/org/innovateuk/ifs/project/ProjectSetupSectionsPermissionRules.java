@@ -56,10 +56,10 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessBankDetailsSection);
     }
 
-    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION", description = "A partner can access the Bank Details " +
+    @PermissionRule(value = "ACCESS_FINANCE_CHECKS_SECTION_EXTERNAL", description = "A partner can access the Bank Details " +
             "section when their Companies House details are complete or not required, and the Project Details have been submitted")
     public boolean partnerCanAccessFinanceChecksSection(Long projectId, UserResource user) {
-        return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessFinanceChecksSection);
+            return isProjectFinanceContact(projectId, user) && doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessFinanceChecksSection);
     }
 
     @PermissionRule(value = "ACCESS_SPEND_PROFILE_SECTION", description = "A partner can access the Spend Profile " +
@@ -87,10 +87,12 @@ public class ProjectSetupSectionsPermissionRules {
         return doSectionCheck(projectId, user, ProjectSetupSectionPartnerAccessor::canAccessGrantOfferLetterSection);
     }
 
-    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "A project manager can access certain methods which are unavailable to others")
-    public boolean userIsProjectManager(Long projectId, UserResource user) {
-        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
-        return simpleFindFirst(projectUsers, pu -> user.getId().equals(pu.getUser()) && UserRoleType.PROJECT_MANAGER.getName().equals(pu.getRoleName())) != null;
+    @PermissionRule(value = "MARK_SPEND_PROFILE_INCOMPLETE", description = "All lead partners can mark partners spend profiles as incomplete")
+    public boolean userCanMarkSpendProfileIncomplete(Long projectId, UserResource user) {
+        List<ProjectUserResource> projectLeadPartners = projectService.getLeadPartners(projectId);
+        Optional<ProjectUserResource> returnedProjectUser = simpleFindFirst(projectLeadPartners, projectUserResource -> projectUserResource.getUser().equals(user.getId()));
+
+        return returnedProjectUser.isPresent();
     }
 
     private boolean doSectionCheck(Long projectId, UserResource user, BiFunction<ProjectSetupSectionPartnerAccessor, OrganisationResource, SectionAccess> sectionCheckFn) {
@@ -124,6 +126,14 @@ public class ProjectSetupSectionsPermissionRules {
             LOG.error("User " + user.getId() + " is not a Partner on an Organisation for Project " + projectId + ".  Denying access to Project Setup");
             return false;
         });
+    }
+
+    private boolean isProjectFinanceContact(Long projectId, UserResource user) {
+        List<ProjectUserResource> projectUsers = projectService.getProjectUsersForProject(projectId);
+
+        return simpleFindFirst(projectUsers, pu ->
+                user.getId().equals(pu.getUser()) && pu.isFinanceContact())
+                .isPresent();
     }
 
     class ProjectSetupSectionPartnerAccessorSupplier implements Function<ProjectTeamStatusResource, ProjectSetupSectionPartnerAccessor> {

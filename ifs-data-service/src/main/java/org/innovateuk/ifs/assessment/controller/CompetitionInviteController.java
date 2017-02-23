@@ -69,9 +69,25 @@ public class CompetitionInviteController {
         return competitionInviteService.getInvitationOverview(competitionId).toGetResponse();
     }
 
+    @RequestMapping(value ="/getInviteStatistics/{competitionId}", method = RequestMethod.GET)
+    public RestResult<CompetitionInviteStatisticsResource> getInviteStatistics(@PathVariable Long competitionId) {
+        return competitionInviteService.getInviteStatistics(competitionId).toGetResponse();
+    }
+
     @RequestMapping(value = "/inviteUser", method = RequestMethod.POST)
     public RestResult<CompetitionInviteResource> inviteUser(@Valid @RequestBody ExistingUserStagedInviteResource existingUserStagedInvite) {
         return competitionInviteService.inviteUser(existingUserStagedInvite).toPostWithBodyResponse();
+    }
+
+    @RequestMapping(value = "/inviteNewUser", method = RequestMethod.POST)
+    public RestResult<CompetitionInviteResource> inviteNewUser(@Valid @RequestBody NewUserStagedInviteResource newUserStagedInvite) {
+        return competitionInviteService.inviteUser(newUserStagedInvite).toPostWithBodyResponse();
+    }
+
+    @RequestMapping(value = "/inviteNewUsers/{competitionId}", method = RequestMethod.POST)
+    public RestResult<Void> inviteNewUsers(@Valid @RequestBody NewUserStagedInviteListResource newUserStagedInvites,
+                                           @PathVariable Long competitionId) {
+        return competitionInviteService.inviteNewUsers(newUserStagedInvites.getInvites(), competitionId).toPostWithBodyResponse();
     }
 
     @RequestMapping(value = "/deleteInvite", method = RequestMethod.DELETE)

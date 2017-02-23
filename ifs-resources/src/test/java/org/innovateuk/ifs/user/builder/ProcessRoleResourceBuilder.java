@@ -36,7 +36,7 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
     }
 
     public ProcessRoleResourceBuilder withApplication(final Long... applications) {
-        return withArray((application, processRoleResource) -> setField("application", application, processRoleResource), applications);
+        return withArray((application, processRoleResource) -> setField("applicationId", application, processRoleResource), applications);
     }
 
     public ProcessRoleResourceBuilder withUser(UserResource... users) {
@@ -55,6 +55,6 @@ public class ProcessRoleResourceBuilder extends BaseBuilder<ProcessRoleResource,
     }
 
     public ProcessRoleResourceBuilder withOrganisation(Long... organisations) {
-        return withArray((organisation, processRoleResource) -> setField("organisation", organisation, processRoleResource), organisations);
+        return withArray((organisation, processRoleResource) -> setField("organisationId", organisation, processRoleResource), organisations);
     }
 }

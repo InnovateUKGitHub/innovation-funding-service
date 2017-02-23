@@ -28,7 +28,7 @@ public class ApplicationDetailsFormPopulatorTest {
 	}
 				
 	@Test
-	public void testGetSectionFormDataInitialDetails() {
+	public void testPopulateFormDataApplicationDetails() {
 
 		boolean isResubmissionQuestion = true;
 		CompetitionResource competition = newCompetitionResource()

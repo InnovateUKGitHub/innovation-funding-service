@@ -5,15 +5,17 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.Disability.NOT_STATED;
 import static org.innovateuk.ifs.user.resource.Disability.YES;
 import static org.innovateuk.ifs.user.resource.Gender.FEMALE;
 import static org.innovateuk.ifs.user.resource.Gender.MALE;
+import static org.innovateuk.ifs.user.resource.Title.Miss;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
 import static org.innovateuk.ifs.user.resource.UserStatus.ACTIVE;
 import static org.innovateuk.ifs.user.resource.UserStatus.INACTIVE;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
 public class UserResourceBuilderTest {
@@ -21,7 +23,7 @@ public class UserResourceBuilderTest {
     @Test
     public void buildOne() {
         Long expectedId = 1L;
-        String expectedTitle = "Title";
+        Title expectedTitle = Mr;
         String expectedFirstName = "First";
         String expectedLastName = "Last";
         String expectedInviteName = "Invite Name";
@@ -30,8 +32,6 @@ public class UserResourceBuilderTest {
         UserStatus expectedStatus = ACTIVE;
         String expectedUid = "Uid";
         String expectedEmail = "test@test.com";
-        List<Long> expectedProcessRoles = asList(100L, 101L);
-        List<Long> expectedOrganisations = asList(200L, 201L);
         List<RoleResource> expectedRoles = newRoleResource().build(2);
         Gender expectedGender = FEMALE;
         Disability expectedDisability = NOT_STATED;
@@ -49,8 +49,6 @@ public class UserResourceBuilderTest {
                 .withStatus(expectedStatus)
                 .withUid(expectedUid)
                 .withEmail(expectedEmail)
-                .withProcessRoles(expectedProcessRoles)
-                .withOrganisations(expectedOrganisations)
                 .withRolesGlobal(expectedRoles)
                 .withGender(expectedGender)
                 .withDisability(expectedDisability)
@@ -68,8 +66,6 @@ public class UserResourceBuilderTest {
         assertEquals(expectedStatus, user.getStatus());
         assertEquals(expectedUid, user.getUid());
         assertEquals(expectedEmail, user.getEmail());
-        assertEquals(expectedProcessRoles, user.getProcessRoles());
-        assertEquals(expectedOrganisations, user.getOrganisations());
         assertEquals(expectedRoles, user.getRoles());
         assertEquals(expectedGender, user.getGender());
         assertEquals(expectedDisability, user.getDisability());
@@ -79,7 +75,7 @@ public class UserResourceBuilderTest {
     @Test
     public void buildMany() {
         Long[] expectedIds = {1L, 2L};
-        String[] expectedTitles = {"Miss", "Mr"};
+        Title[] expectedTitles = {Miss, Mr};
         String[] expectedFirstNames = {"First 1", "First 2"};
         String[] expectedLastNames = {"Last 1", "Last 2"};
         String[] expectedInviteNames = {"Invite Name 1", "Invite Name 2"};
@@ -88,8 +84,6 @@ public class UserResourceBuilderTest {
         UserStatus[] expectedStatuss = {ACTIVE, INACTIVE};
         String[] expectedUids = {"Uid1", "Uid2"};
         String[] expectedEmails = {"email1@test.com", "email2@test.com"};
-        List<List<Long>> expectedProcessRoles = asList(asList(100L, 101L), asList(102L, 103L));
-        List<List<Long>> expectedOrganisations = asList(asList(200L, 201L), asList(202L, 203L));
         List<List<RoleResource>> expectedRoles = asList(newRoleResource().build(2), newRoleResource().build(2));
         Gender[] expectedGenders = {FEMALE, MALE};
         Disability[] expectedDisabilities = {NOT_STATED, YES};
@@ -107,8 +101,6 @@ public class UserResourceBuilderTest {
                 .withStatus(expectedStatuss)
                 .withUid(expectedUids)
                 .withEmail(expectedEmails)
-                .withProcessRoles(expectedProcessRoles.get(0), expectedProcessRoles.get(1))
-                .withOrganisations(expectedOrganisations.get(0), expectedOrganisations.get(1))
                 .withRolesGlobal(expectedRoles.get(0), expectedRoles.get(1))
                 .withGender(expectedGenders)
                 .withDisability(expectedDisabilities)
@@ -128,13 +120,11 @@ public class UserResourceBuilderTest {
         assertEquals(expectedStatuss[0], first.getStatus());
         assertEquals(expectedUids[0], first.getUid());
         assertEquals(expectedEmails[0], first.getEmail());
-        assertEquals(expectedProcessRoles.get(0), first.getProcessRoles());
-        assertEquals(expectedOrganisations.get(0), first.getOrganisations());
         assertEquals(expectedRoles.get(0), first.getRoles());
         assertEquals(expectedGenders[0], first.getGender());
         assertEquals(expectedDisabilities[0], first.getDisability());
         assertEquals(expectedEthnicities[0], first.getEthnicity());
-        assertEquals(expectedProfiles[0], first.getProfile());
+        assertEquals(expectedProfiles[0], first.getProfileId());
 
         UserResource second = users.get(1);
 
@@ -148,13 +138,11 @@ public class UserResourceBuilderTest {
         assertEquals(expectedStatuss[1], second.getStatus());
         assertEquals(expectedUids[1], second.getUid());
         assertEquals(expectedEmails[1], second.getEmail());
-        assertEquals(expectedProcessRoles.get(1), second.getProcessRoles());
-        assertEquals(expectedOrganisations.get(1), second.getOrganisations());
         assertEquals(expectedRoles.get(1), second.getRoles());
         assertEquals(expectedGenders[1], second.getGender());
         assertEquals(expectedDisabilities[1], second.getDisability());
         assertEquals(expectedEthnicities[1], second.getEthnicity());
-        assertEquals(expectedProfiles[1], second.getProfile());
+        assertEquals(expectedProfiles[1], second.getProfileId());
     }
 
 }

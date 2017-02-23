@@ -181,17 +181,36 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
     @Override
     public ApplicationFinanceRow costItemToCost(FinanceRowItem costItem) {
+        return buildFinanceRowHandler(costItem).toCost(costItem);
+    }
+
+    @Override
+    public ProjectFinanceRow costItemToProjectCost(FinanceRowItem costItem) {
+        return buildFinanceRowHandler(costItem).toProjectCost(costItem);
+    }
+
+    private FinanceRowHandler buildFinanceRowHandler(FinanceRowItem costItem){
         FinanceRowHandler financeRowHandler = getCostHandler(costItem.getCostType());
         List<FinanceRowMetaField> financeRowMetaFields = financeRowMetaFieldRepository.findAll();
         financeRowHandler.setCostFields(financeRowMetaFields);
-        return financeRowHandler.toCost(costItem);
+        return financeRowHandler;
     }
 
     @Override
     public FinanceRowItem costToCostItem(ApplicationFinanceRow cost) {
-        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
-        FinanceRowHandler financeRowHandler = getCostHandler(costType);
+        FinanceRowHandler financeRowHandler = getRowHandler(cost);
         return financeRowHandler.toCostItem(cost);
+    }
+
+    @Override
+    public FinanceRowItem costToCostItem(ProjectFinanceRow cost) {
+        FinanceRowHandler financeRowHandler = getRowHandler(cost);
+        return financeRowHandler.toCostItem(cost);
+    }
+
+    private FinanceRowHandler getRowHandler(FinanceRow cost){
+        FinanceRowType costType = FinanceRowType.fromType(cost.getQuestion().getFormInputs().get(0).getType());
+        return getCostHandler(costType);
     }
 
     @Override

@@ -1,15 +1,11 @@
 *** Settings ***
 Documentation     INFUND-901: As a lead applicant I want to invite application contributors to collaborate with me on the application, so that they can contribute to the application in a collaborative competition
 ...
-...
 ...               INFUND-896: As a lead applicant i want to invite partner organisations to collaborate on line in my application, so that i can create the consortium needed to complete the proposed project
-...
 ...
 ...               INFUND-928: As a lead applicant i want a separate screen within the application form, so that i can invite/track partners/contributors throughout the application process
 ...
-...
 ...               INFUND-929: As a lead applicant i want to be able to have a separate screen, so that i can invite contributors to the application
-...
 ...
 ...               INFUND-1463: As a user with an invitation to collaborate on an application but not registered with IFS I want to be able to confirm my organisation so that I only have to create my account to work on the application
 ...
@@ -45,14 +41,12 @@ Valid invitation submit
     And the user should see the text in the page    Invites sent
 
 Pending partners visible in the Application details
-    [Documentation]    INFUND-2966
-    ...
-    ...    INFUND-2738
+    [Documentation]    INFUND-2966, INFUND-2738
     [Tags]    HappyPath
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Invite robot test application
     And the user clicks the button/link    link=Application details
-    Then pending partners should be visible in the page
+    Then the user should see the element   jQuery=ul.list-bullet > li > span:contains("Fannie May")
 
 Pending users visible in the assign list but not clickable
     [Documentation]    INFUND-928
@@ -72,7 +66,7 @@ Pending partners visible in Application team page
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     Then the status of the invited people should be correct in the application team page
-    The Lead organisation should show only one time
+    And The Lead organisation should be shown only one time
 
 Pending partners visible in the Manage contributors page
     [Documentation]    INFUND-928
@@ -81,7 +75,7 @@ Pending partners visible in the Manage contributors page
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage Contributors
+    Then the user should see the text in the page    Manage contributors
     And the status of the people should be correct in the Manage contributors page
     [Teardown]    Logout as user
 
@@ -99,7 +93,7 @@ Business organisation (partner accepts invitation)
     And the user enters text to a text field    id=organisationSearchName    Nomensa
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=NOMENSA LTD
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Adrian    Booth
@@ -109,8 +103,8 @@ Business organisation (partner accepts invitation)
 Partner should be able to log-in and see the new company name
     [Documentation]    INFUND-2083
     [Tags]    Email    HappyPath    SmokeTest
-    Given the user clicks the button/link    jQuery=.button:contains("Sign in")
-    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com    Passw0rd123
+    Given the user clicks the button/link  jQuery=.button:contains("Sign in")
+    When guest user log-in    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com  ${correct_password}
     Then the user should be redirected to the correct page    ${DASHBOARD_URL}
     And the user can see the updated company name throughout the application
 
@@ -148,14 +142,11 @@ Lead should not be able to edit Partners
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage Contributors
+    Then the user should see the text in the page    Manage contributors
     And the invited collaborators are not editable
 
 Lead applicant invites a non registered user in the same organisation
-    [Documentation]    INFUND-928
-    ...
-    ...    INFUND-1463
-    ...
+    [Documentation]    INFUND-928, INFUND-1463
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]
     [Setup]    Delete the emails from both test mailboxes
@@ -163,17 +154,16 @@ Lead applicant invites a non registered user in the same organisation
     And the user clicks the button/link    link=Invite robot test application
     When the user clicks the button/link    link=view team members and add collaborators
     When the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
-    Then the user should see the text in the page    Manage Contributors
+    Then the user should see the text in the page    Manage contributors
     And the user clicks the button/link    jQuery=li:nth-child(1) button:contains("Add another person")
     When the user adds new collaborator
-    And the user clicks the button/link    jquery=button:contains("Save Changes")
+    And the user clicks the button/link    jquery=button:contains("Save changes")
     Then the user should see the text in the page    Application team
     And the user should see the text in the page    View and manage your contributors and partners in the application
     [Teardown]    the user closes the browser
 
 Registered partner should not create new org but should follow the create account flow
     [Documentation]    INFUND-1463
-    ...
     ...    This test checks if the invited partner who are in the same organisation they can go directly to the create account and they don't have to create an organisation first.
     [Tags]    Email
     [Setup]    The guest user opens the browser
@@ -181,7 +171,7 @@ Registered partner should not create new org but should follow the create accoun
     And the user should see the text in the page    Join an application
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user should see the text in the page    Your organisation
-    And the user should see the text in the page    Business Organisation
+    And the user should see the text in the page    Business organisation
     And the user should see the element    link=email the application lead
     And the user clicks the button/link    jQuery=.button:contains("Continue")
     And the user fills the create account form    Roger    Axe
@@ -194,8 +184,8 @@ the applicant enters valid inputs
     The user enters text to a text field    name=organisations[1].organisationName    Fannie May
     The user enters text to a text field    name=organisations[1].invites[0].personName    Adrian Booth
     The user enters text to a text field    name=organisations[1].invites[0].email    ${test_mailbox_one}+inviteorg${unique_email_number}@gmail.com
-    focus    jquery=button:contains("Save Changes")
-    The user clicks the button/link    jquery=button:contains("Save Changes")
+    focus    jquery=button:contains("Save changes")
+    The user clicks the button/link    jquery=button:contains("Save changes")
 
 The lead applicant should have the correct status
     the user should see the element    css=#content h2.heading-medium
@@ -210,7 +200,7 @@ the user adds new collaborator
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(1) input    Roger Axe
     The user enters text to a text field    css=li:nth-child(1) tr:nth-of-type(2) td:nth-of-type(2) input    ${test_mailbox_one}+inviteorg2@gmail.com
     focus    jquery=li:nth-child(1) button:contains('Add another person')
-    sleep    300ms
+    wait for autosave
 
 The status of the invited people should be correct in the application team page
     the user should see the text in the page    Adrian Booth
@@ -234,11 +224,13 @@ the user can see the updated company name throughout the application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     And the user clicks the button/link    link=Your finances
-    the user should see the text in the page    NOMENSA LTD
+    And the user should see the element    link=Your project costs
+    And the user should see the element    link=Your organisation
+    And the user should see the element    jQuery=h3:contains("Your funding")
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=view team members and add collaborators
-    the user should see the text in the page    NOMENSA LTD
+    Then the user should see the element    jQuery=h2:contains("NOMENSA LTD")
 
 the user can invite another person to their own organisation
     ${OWN_ORG}=    Get WebElement    jQuery=li:has(input[value='NOMENSA LTD'])
@@ -249,16 +241,12 @@ the user can invite another person to their own organisation
 the user cannot invite another person to a different organisation
     the user should not see the element    jQuery=li:nth-child(1) button:contains("Add another person")
 
-pending partners should be visible in the page
-    the user should see the element    xpath=//span[contains(text(),"Fannie May")]//following::small
-    Element Should Contain    xpath=//span[contains(text(),"Fannie May")]//following::small    (pending)
-
 the user navigates to the next question
     The user clicks the button/link    css=.next .pagination-label
-    Run Keyword And Ignore Error    confirm action
+    Run Keyword And Ignore Error Without Screenshots    confirm action
 
 the user is on the invites and collaborators page
-    ${status}=    run keyword and ignore error    the user should see the element    jQuery=.button:contains("Invite new contributors")
+    ${status}=    Run Keyword And Ignore Error Without Screenshots    the user should see the element    jQuery=.button:contains("Invite new contributors")
     run keyword if    ${status}!=('PASS', None)    log into smoke test application
 
 log into smoke test application
@@ -267,5 +255,5 @@ log into smoke test application
     the user clicks the button/link    link=IFS smoke test
     the user clicks the button/link    link=view team members and add collaborators
 
-The Lead organisation should show only one time
+The Lead organisation should be shown only one time
     Element Should not Contain    css=div:nth-child(7)    Steve Smith

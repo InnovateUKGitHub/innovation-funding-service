@@ -1,8 +1,6 @@
 package org.innovateuk.ifs.invite.domain;
 
 import org.innovateuk.ifs.user.domain.User;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
@@ -48,25 +46,5 @@ public abstract class Participant<P extends ProcessActivity, I extends Invite<P,
         }
 
         this.status = newStatus;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        Participant<?, ?, ?> that = (Participant<?, ?, ?>) o;
-
-        return new EqualsBuilder()
-                .append(status, that.status)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(status)
-                .toHashCode();
     }
 }

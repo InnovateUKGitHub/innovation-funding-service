@@ -2,10 +2,10 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
-import org.innovateuk.ifs.application.model.ApplicationModelPopulator;
-import org.innovateuk.ifs.application.model.ApplicationOverviewModelPopulator;
-import org.innovateuk.ifs.application.model.ApplicationPrintPopulator;
-import org.innovateuk.ifs.application.model.ApplicationSectionAndQuestionModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationOverviewModelPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationPrintPopulator;
+import org.innovateuk.ifs.application.populator.ApplicationSectionAndQuestionModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
@@ -46,6 +46,7 @@ import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static org.innovateuk.ifs.file.builder.FileEntryResourceBuilder.newFileEntryResource;
+import static org.innovateuk.ifs.user.builder.ProcessRoleResourceBuilder.newProcessRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
@@ -259,15 +260,17 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         ApplicationResource app = applications.get(0);
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
@@ -289,18 +292,22 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(assessorFeedbackRestService.getAssessorFeedbackFileDetails(app.getId())).thenReturn(restSuccess(fileEntry));
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
+
         mockMvc.perform(get("/application/" + app.getId()+"/summary"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("application-summary"))
                 .andExpect(model().attribute("currentApplication", app))
                 .andExpect(model().attribute("currentCompetition",  competitionService.getById(app.getCompetition())))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
-                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));
+                .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)))
+                .andExpect(model().attribute("rsCategoryId", app.getResearchCategories().stream().findFirst().get().getId()));
     }
 
     @Test
@@ -371,6 +378,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
         when(applicationService.getById(app.getId())).thenReturn(app);
         when(questionService.getMarkedAsComplete(anyLong(), anyLong())).thenReturn(settable(new HashSet<>()));
 
+        ProcessRoleResource userApplicationRole = newProcessRoleResource().withApplication(app.getId()).withOrganisation(organisations.get(0).getId()).build();
+        when(userRestServiceMock.findProcessRole(loggedInUser.getId(), app.getId())).thenReturn(restSuccess(userApplicationRole));
+
         LOG.debug("Show dashboard for application: " + app.getId());
         mockMvc.perform(get("/application/" + app.getId() +"/section/"+ section.getId()))
                 .andExpect(status().isOk())
@@ -380,9 +390,9 @@ public class ApplicationControllerTest extends BaseControllerMockMVCTest<Applica
                 .andExpect(model().attribute("sections", collectedSections))
                 .andExpect(model().attribute("currentSectionId", section.getId()))
                 .andExpect(model().attribute("leadOrganisation", organisations.get(0)))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(organisations.size())))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(0))))
-                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(organisations.get(1))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasSize(application1Organisations.size())))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(0))))
+                .andExpect(model().attribute("applicationOrganisations", Matchers.hasItem(application1Organisations.get(1))))
                 .andExpect(model().attribute("responses", formInputsToFormInputResponses))
                 .andExpect(model().attribute("pendingAssignableUsers", Matchers.hasSize(0)))
                 .andExpect(model().attribute("pendingOrganisationNames", Matchers.hasSize(0)));

@@ -7,6 +7,6 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSubsection;
  */
 public interface CompetitionSetupSubsectionSaver extends CompetitionSetupSaver {
 
-	CompetitionSetupSubsection sectionToSave();
+	CompetitionSetupSubsection subsectionToSave();
 
 }

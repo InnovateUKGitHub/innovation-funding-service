@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.competition.transactional;
 
 import org.innovateuk.ifs.commons.security.NotSecured;
+import org.innovateuk.ifs.commons.security.SecuredBySpring;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionCountResource;
@@ -36,15 +37,19 @@ public interface CompetitionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<CompetitionSearchResultItem>> findUpcomingCompetitions();
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionSearchResult> searchCompetitions(String searchQuery, int page, int size);
 
+    @SecuredBySpring(value = "TODO", description = "TODO")
     @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
     ServiceResult<CompetitionCountResource> countCompetitions();
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "CLOSE_ASSESSMENT", description = "Comp Admins can change the competition state to Assessment Closed")
     ServiceResult<Void> closeAssessment(Long competitionId);
 
-    @PreAuthorize("hasAuthority('comp_admin')")
+    @PreAuthorize("hasAnyAuthority('comp_admin', 'project_finance')")
+    @SecuredBySpring(value = "NOTIFY_ASSESSORS", description = "Comp Admins can change the competition state to Assessors Notified")
     ServiceResult<Void> notifyAssessors(Long competitionId);
 }

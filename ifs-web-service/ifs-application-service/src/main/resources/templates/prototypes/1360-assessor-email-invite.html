@@ -92,21 +92,21 @@
 
 						<p style="margin: 0 0 1em 0;">Assessment period: <b>21 August to 13 September 2016</b></p>
 
-                        <p style="margin: 0 0 1em 0;">You will need to create a new account on our online Innovation Funding Service (IFS), even if you have an existing account with us. As part of your account creation you will need to:</p>
+            <!-- <p style="margin: 0 0 1em 0;">You will need to create a new account on our online Innovation Funding Service (IFS), even if you have an existing account with us. As part of your account creation you will need to:</p>
 
-                        <ul style="margin: 0 0 1em 0;">
-                            <li>agree to a contract</li>
-                            <li>complete a declaration of interests</li>
-                            <li>provide information about your skills areas</li>
-                        </ul>
+            <ul style="margin: 0 0 1em 0;">
+                <li>agree to a contract</li>
+                <li>complete a declaration of interests</li>
+                <li>provide information about your skills areas</li>
+            </ul>
 
-                        <p style="margin: 0 0 1em 0;">As this is a new service, you will need to provide this information again even if you have previously supplied these details.</p>
+            <p style="margin: 0 0 1em 0;">As this is a new service, you will need to provide this information again even if you have previously supplied these details.</p> -->
 
 						<p style="margin: 0 0 1em 0;">
 							<!--<a th:href="${(param.version != null and param.version[0] == 'v2' ? '/prototypes/865-assessor-comp-invite?version=v2': '/prototypes/865-assessor-comp-invite')}">Please visit our new online Innovation funding service to respond to this request</a>-->
-							Please visit the
-							<a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/865-assessor-comp-invite?version=v2': '/prototypes/865-assessor-comp-invite?version=v3')}">Innovation Funding Service</a>
-							<a th:unless="${(param.version != null)}" href="/prototypes/865-assessor-comp-invite" class="button button-large">Innovation Funding Service</a>
+							Please visit our new
+							<a th:if="${(param.version != null)}" th:href="${(param.version[0] == 'v2' ? '/prototypes/865-assessor-comp-invite?version=v2': '/prototypes/865-assessor-comp-invite?version=v3')}">online Innovation Funding Service</a>
+							<a th:unless="${(param.version != null)}" href="/prototypes/865-assessor-comp-invite" class="button button-large">online Innovation Funding Service</a>
 							to respond to this request.
 						</p>
 

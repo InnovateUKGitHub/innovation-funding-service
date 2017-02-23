@@ -32,6 +32,11 @@ public class FileEntryResourceBuilder extends BaseBuilder<FileEntryResource, Fil
         return with(resource -> resource.setName(name));
     }
 
+    public FileEntryResourceBuilder withId(Long id) {
+        return with(resource -> resource.setId(id));
+    }
+
+
     public FileEntryResourceBuilder withFilesizeBytes(long filesizeBytes) {
         return with(resource -> resource.setFilesizeBytes(filesizeBytes));
     }

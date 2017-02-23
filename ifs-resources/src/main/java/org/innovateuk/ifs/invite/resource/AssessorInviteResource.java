@@ -2,25 +2,37 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+
+import java.util.List;
 
 /**
  * Abstract DTO for fields common to assessor invite resources.
  */
-abstract class AssessorInviteResource {
+public abstract class AssessorInviteResource {
 
+    private Long id;
     private String name;
-    private CategoryResource innovationArea;
+    private List<InnovationAreaResource> innovationAreas;
     private boolean compliant;
 
 
     protected AssessorInviteResource() {
     }
 
-    protected AssessorInviteResource(String name, CategoryResource innovationArea, boolean compliant) {
+    protected AssessorInviteResource(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant) {
+        this.id = id;
         this.name = name;
-        this.innovationArea = innovationArea;
+        this.innovationAreas = innovationAreas;
         this.compliant = compliant;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -31,12 +43,12 @@ abstract class AssessorInviteResource {
         this.name = name;
     }
 
-    public CategoryResource getInnovationArea() {
-        return innovationArea;
+    public List<InnovationAreaResource> getInnovationAreas() {
+        return innovationAreas;
     }
 
-    public void setInnovationArea(CategoryResource innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setInnovationAreas(List<InnovationAreaResource> innovationAreas) {
+        this.innovationAreas = innovationAreas;
     }
 
     public boolean isCompliant() {
@@ -47,34 +59,28 @@ abstract class AssessorInviteResource {
         this.compliant = compliant;
     }
 
-    public String getInnovationAreaName() {
-        return this.getInnovationArea() == null ? null : this.getInnovationArea().getName();
-    }
-
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
+        if (this == o) return true;
 
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         AssessorInviteResource that = (AssessorInviteResource) o;
 
         return new EqualsBuilder()
                 .append(compliant, that.compliant)
+                .append(id, that.id)
                 .append(name, that.name)
-                .append(innovationArea, that.innovationArea)
+                .append(innovationAreas, that.innovationAreas)
                 .isEquals();
     }
 
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(name)
-                .append(innovationArea)
+                .append(innovationAreas)
                 .append(compliant)
                 .toHashCode();
     }

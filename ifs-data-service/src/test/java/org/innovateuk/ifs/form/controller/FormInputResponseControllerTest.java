@@ -52,7 +52,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
                 .accept(MediaType.APPLICATION_JSON)
         )
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(consortiumResponses)));
+                .andExpect(content().string(objectMapper.writeValueAsString(consortiumResponses)));
     }
 
     @Test
@@ -67,7 +67,7 @@ public class FormInputResponseControllerTest extends BaseControllerMockMVCTest<F
         when(formInputRepositoryMock.findOne(789L)).thenReturn(formInput);
         when(userRepositoryMock.findOne(123L)).thenReturn(user);
         when(applicationRepositoryMock.findOne(456L)).thenReturn(application);
-        when(processRoleRepositoryMock.findByUserAndApplication(user, application)).thenReturn(singletonList(applicantProcessRole));
+        when(processRoleRepositoryMock.findByUserAndApplicationId(user, application.getId())).thenReturn(singletonList(applicantProcessRole));
 
         String contentString = "{\"userId\":123,\"applicationId\":456,\"formInputId\":789,\"value\":\"\"}";
         mockMvc.perform(post("/forminputresponse/saveQuestionResponse/")

@@ -14,11 +14,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Optional;
 
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 
@@ -28,10 +28,10 @@ import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 @Service
 public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements CompetitionSetupSectionSaver {
 
-    private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
+	private static final Log LOG = LogFactory.getLog(AdditionalInfoSectionSaver.class);
 
-    @Autowired
-    private CompetitionService competitionService;
+	@Autowired
+	private CompetitionService competitionService;
 
 	@Override
 	public CompetitionSetupSection sectionToSave() {
@@ -39,16 +39,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
-		if(!sectionToSave().preventEdit(competition)) {
-			return updateCompetitionAdditionalInfo(competition, competitionSetupForm);
-		}
-		else {
-			return serviceFailure(asList(new Error("COMPETITION_NOT_EDITABLE", HttpStatus.BAD_REQUEST)));
-		}
-	}
-
-	private ServiceResult<Void> updateCompetitionAdditionalInfo(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		AdditionalInfoForm additionalInfoForm = (AdditionalInfoForm) competitionSetupForm;
 
 		setFieldsDisallowedFromChangeAfterSetupAndLive(competition, additionalInfoForm);
@@ -64,17 +55,15 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		return serviceSuccess();
 	}
 
+
 	private void setFieldsDisallowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
-		if(!competition.isSetupAndLive()) {
-			competition.setActivityCode(additionalInfoForm.getActivityCode());
-			competition.setInnovateBudget(additionalInfoForm.getInnovateBudget());
-			competition.setBudgetCode(additionalInfoForm.getBudgetCode());
-			competition.setPafCode(additionalInfoForm.getPafNumber());
-		}
+		//All fields set by saver are valid when live. Competition code cannot be set, but is not saved via this class.
 	}
 
 	private void setFieldsAllowedFromChangeAfterSetupAndLive(CompetitionResource competition, AdditionalInfoForm additionalInfoForm) {
-		additionalInfoForm.setCompetitionCode(competition.getCode());
+		competition.setBudgetCode(additionalInfoForm.getBudgetCode());
+		competition.setPafCode(additionalInfoForm.getPafNumber());
+		competition.setActivityCode(additionalInfoForm.getActivityCode());
 
 		competition.setFunders(new ArrayList());
 		additionalInfoForm.getFunders().forEach(funder -> {
@@ -125,7 +114,7 @@ public class AdditionalInfoSectionSaver extends AbstractSectionSaver implements 
 		if (fieldName.endsWith("funder")) {
 			funder.setFunder(value);
 		} else if(fieldName.endsWith("funderBudget")) {
-			funder.setFunderBudget(new BigDecimal(value));
+			funder.setFunderBudget(new BigInteger(value));
 		} else {
 			return serviceFailure(new Error("Field not found", HttpStatus.BAD_REQUEST));
 		}

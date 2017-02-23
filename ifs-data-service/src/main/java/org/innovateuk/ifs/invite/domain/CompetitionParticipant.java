@@ -96,6 +96,16 @@ public class CompetitionParticipant extends Participant<Competition, Competition
         return user;
     }
 
+    public void setUser(User user) {
+        if (user == null) {
+            throw new NullPointerException("user cannot be null");
+        }
+        if (this.user != null && !this.user.getId().equals(user.getId())) {
+            throw new IllegalStateException("Illegal attempt to reassign CompetitionParticipant.user");
+        }
+        this.user = user;
+    }
+
     public RejectionReason getRejectionReason() {
         return rejectionReason;
     }
@@ -127,13 +137,7 @@ public class CompetitionParticipant extends Participant<Competition, Competition
     }
 
     public CompetitionParticipant acceptAndAssignUser(User user) {
-        if (user == null) {
-            throw new NullPointerException("user cannot be null");
-        }
-        if (this.user != null && !this.user.getId().equals(user.getId())) {
-            throw new IllegalStateException("Illegal attempt to reassign CompetitionParticipant.user");
-        }
-        this.user = user;
+        setUser(user);
         return accept();
     }
 

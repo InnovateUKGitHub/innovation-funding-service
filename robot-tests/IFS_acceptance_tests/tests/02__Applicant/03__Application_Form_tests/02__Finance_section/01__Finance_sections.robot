@@ -9,44 +9,73 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...               INFUND-2051: Remove the '0' in finance fields
 ...
 ...               INFUND-2961: ‘Working Days Per Year’ in Labour Costs do not default to 232.
-Suite Setup       Run keywords    log in and create new application if there is not one already
-...               AND    Applicant navigates to the finances of the Robot application
+Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
 Resource          ../../../../resources/defaultResources.robot
+Resource          ../../FinanceSection_Commons.robot
 
 *** Test Cases ***
 Finance sub-sections
     [Documentation]    INFUND-192
     [Tags]    HappyPath
-    Then the Applicant should see all the "Your Finance" Sections
+    Then the user should see all the Your-Finances Sections
+
+Not requesting funding guidance
+    [Documentation]    INFUND-7093
+    [Tags]
+    Given the user should not see the funding guidance
+    When the user clicks the button/link                jQuery=summary span:contains("Not requesting funding")
+    Then the user should see the funding guidance
+    When the user clicks the button/link                jQuery=summary span:contains("Not requesting funding")
+    Then the user should not see the funding guidance
+
+Not requesting funding button
+    [Documentation]    INFUND-7093
+    [Tags]
+    When the user clicks the button/link                jQuery=summary span:contains("Not requesting funding")
+    And the user clicks the button/link                 jQuery=button:contains("Not requesting funding")
+    Then the user should see the funding guidance
+    And the user should see the element                 jQuery=button:contains("Requesting funding")
+    And the user should see the element                 jQuery=li:nth-of-type(2) span:contains("Not required")
+    And the user should see the element                 jQuery=li:nth-of-type(3) span:contains("Not required")
+
+Requesting funding button
+    [Documentation]    INFUND-7093
+    [Tags]
+    When the user clicks the button/link                jQuery=button:contains("Requesting funding")
+    Then the user should see the element                 jQuery=li:nth-of-type(2) img.assigned
+    And the user should not see the element             jQuery=li:nth-of-type(3) span:contains("Not required")
+    And the user should not see the element             jQuery=li:nth-of-type(3) img.complete
+    And the user should not see the funding guidance
 
 Organisation name visible in the Finance section
     [Documentation]    INFUND-1815
     [Tags]
+    When the user clicks the button/link             link=Your project costs
     Then the user should see the text in the page    Provide the project costs for 'Empire Ltd'
     And the user should see the text in the page    'Empire Ltd' Total project costs
 
-Guidance in the Your Finances section
+Guidance in the your project costs
     [Documentation]    INFUND-192
     [Tags]
-    When the user clicks the button/link    jQuery=button:contains("Labour")
-    And the user clicks the button/link    css=#collapsible-0 summary
+    [Setup]  Applicant navigates to the finances of the Robot application
+    Given the user clicks the button/link   link=Your project costs
+    When the user clicks the button/link    jQuery=#form-input-20 button:contains("Labour")
+    And the user clicks the button/link     css=#collapsible-0 summary
     Then the user should see the element    css=#details-content-0 p
+    And the user should see the element     jQuery=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(1) input[value=""]
 
 Working days per year should be 232
     [Documentation]    INFUND-2961
     Then the working days per year should be 232 by default
 
-Finance fields are empty
-    [Documentation]    INFUND-2051: Remove the '0' in finance fields
-    [Tags]    HappyPath
-    Then the Funding levels value should be empty
-
 User pressing back button should get the correct version of the page
     [Documentation]    INFUND-2695
     [Tags]
-    [Setup]    The user adds three material rows
+    [Setup]  Applicant navigates to the finances of the Robot application
+    And the user clicks the button/link  link=Your project costs
+    Given The user adds three material rows
     When the user navigates to another page
     And the user should see the text in the page    Guide on eligible project costs and completing the finance form
     And the user goes back to the previous page
@@ -54,14 +83,9 @@ User pressing back button should get the correct version of the page
     [Teardown]    the user removes the materials rows
 
 *** Keywords ***
-the Applicant should see all the "Your Finance" Sections
-    the user should see the element    css=.question section:nth-of-type(1) button
-    the user should see the element    css=.question section:nth-of-type(2) button
-    the user should see the element    css=.question section:nth-of-type(3) button
-    the user should see the element    css=.question section:nth-of-type(4) button
-    the user should see the element    css=.question section:nth-of-type(5) button
-    the user should see the element    css=.question section:nth-of-type(6) button
-    the user should see the element    css=.question section:nth-of-type(7) button
+Custom Suite Setup
+    log in and create new application if there is not one already
+    Applicant navigates to the finances of the Robot application
 
 the user adds three material rows
     the user clicks the button/link    jQuery=button:contains("Materials")
@@ -81,21 +105,14 @@ the user adds three material rows
 the user removes the materials rows
     [Documentation]    INFUND-2965
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
+    Wait Until Element Is Not Visible Without Screenshots    css=#material-costs-table tbody tr:nth-of-type(4) td:nth-of-type(2) input    10s
     the user moves focus to the element    jQuery=#material-costs-table button:contains("Remove")
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
+    Wait Until Element Is Not Visible Without Screenshots    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    10s
     the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    Run Keyword And Ignore Error    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
-    Wait Until Element Is Not Visible    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
+    Run Keyword And Ignore Error Without Screenshots    the user clicks the button/link    jQuery=#material-costs-table button:contains("Remove")
+    Wait Until Element Is Not Visible Without Screenshots    css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(2) input    10s
     the user clicks the button/link    jQuery=button:contains("Materials")
-
-the Funding levels value should be empty
-    the user should see the element    id=cost-financegrantclaim
-    ${input_value} =    Get Value    id=cost-financegrantclaim
-    log    ${input_value}
-    Should Not Be Equal As Strings    ${input_value}    0
-    Should Be Equal As Strings    ${input_value}    ${EMPTY}
 
 the working days per year should be 232 by default
     the user should see the element    css=[name^="labour-labourDaysYearly"]
@@ -104,4 +121,12 @@ the working days per year should be 232 by default
 
 the user navigates to another page
     the user clicks the button/link    link=Please refer to our guide to project costs for further information.
-    Run Keyword And Ignore Error    Confirm Action
+    Run Keyword And Ignore Error Without Screenshots    Confirm Action
+
+the user should see the funding guidance
+    [Documentation]    INFUND-7093
+    the user should see the element           jQuery=#details-content-0 p
+
+the user should not see the funding guidance
+    [Documentation]    INFUND-7093
+    the user should not see the element           jQuery=#details-content-0 p

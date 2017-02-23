@@ -24,7 +24,6 @@ public class AdditionalInfoFormPopulatorTest {
 	public void testGetSectionFormDataAdditionalInfo() {
 		CompetitionResource competition = newCompetitionResource()
 				.withActivityCode("Activity Code")
-				.withInnovateBudget("Innovate Budget")
 				.withCompetitionCode("c123")
 				.withPafCode("p123")
 				.withBudgetCode("b123")
@@ -36,7 +35,6 @@ public class AdditionalInfoFormPopulatorTest {
 		assertTrue(result instanceof AdditionalInfoForm);
         AdditionalInfoForm form = (AdditionalInfoForm) result;
 		assertEquals("Activity Code", form.getActivityCode());
-		assertEquals("Innovate Budget", form.getInnovateBudget());
 		assertEquals("c123", form.getCompetitionCode());
 		assertEquals("p123", form.getPafNumber());
 		assertEquals("b123", form.getBudgetCode());

@@ -47,6 +47,23 @@ public class FileValidationConfig {
     @Value("${ifs.data.service.file.storage.projectsetupgrantofferletter.valid.media.types}")
     private List<String> validMediaTypesForProjectSetupGrantOfferLetter;
 
+    @Value("${ifs.data.service.file.storage.overheadcalculation.max.filesize.bytes}")
+    private Long maxFilesizeBytesForOverheadCalculation;
+
+    @Value("${ifs.data.service.file.storage.overheadcalculation.valid.media.types}")
+    private List<String> validMediaTypesForOverheadCalculation;
+
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.valid.media.types}")
+    private List<String> validMediaTypesForProjectFinanceThreadsAttachments;
+
+    @Value("${ifs.data.service.file.storage.projectfinance.threadsattachments.max.filesize.bytes}")
+    private Long maxFilesizeBytesForProjectFinanceThreadsAttachments;
+
+    @Value("${ifs.data.service.file.storage.publiccontentattachment.max.filesize.bytes}")
+    private Long maxFilesizeBytesForPublicContentAttachment;
+
+    @Value("${ifs.data.service.file.storage.publiccontentattachment.valid.media.types}")
+    private List<String> validMediaTypesForPublicContentAttachment;
 
     @Bean(name = "formInputResponseFileValidator")
     public FileHttpHeadersValidator getFormInputResponseFileValidator() {
@@ -56,6 +73,11 @@ public class FileValidationConfig {
     @Bean(name = "applicationFinanceFileValidator")
     public FileHttpHeadersValidator getApplicationFinanceFileValidator() {
         return createFileValidator(validMediaTypesForApplicationFinance, maxFilesizeBytesForApplicationFinance);
+    }
+
+    @Bean(name = "overheadCalculationFileValidator")
+    public FileHttpHeadersValidator getOverheadCalculationFileValidator() {
+        return createFileValidator(validMediaTypesForOverheadCalculation, maxFilesizeBytesForOverheadCalculation);
     }
 
     @Bean(name = "assessorFeedbackFileValidator")
@@ -73,6 +95,15 @@ public class FileValidationConfig {
         return createFileValidator(validMediaTypesForProjectSetupGrantOfferLetter, maxFilesizeBytesForProjectSetupGrantOfferLetter);
     }
 
+    @Bean(name = "postAttachmentValidator")
+    public FileHttpHeadersValidator getPostAttachmentValidator() {
+        return createFileValidator(validMediaTypesForProjectFinanceThreadsAttachments, maxFilesizeBytesForProjectFinanceThreadsAttachments);
+    }
+
+    @Bean(name = "publicContentAttachmentValidator")
+    public FileHttpHeadersValidator getPublicContentAttachmentValidator() {
+        return createFileValidator(validMediaTypesForPublicContentAttachment, maxFilesizeBytesForPublicContentAttachment);
+    }
 
     private FileHttpHeadersValidator createFileValidator(List<String> validMediaTypes, Long maxFilesizeBytes) {
         List<MediaType> mediaTypes = simpleMap(validMediaTypes, MediaType::valueOf);

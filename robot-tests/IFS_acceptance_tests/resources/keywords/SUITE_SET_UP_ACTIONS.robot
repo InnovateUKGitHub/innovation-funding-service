@@ -4,19 +4,19 @@ Resource          ../defaultResources.robot
 *** Keywords ***
 log in and create new application if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Robot test application
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new application with the same user
 
 log in and create new application for collaboration if there is not one already
     Given Guest user log-in    &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Invite robot test application
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Invite robot test application
     Run Keyword If    '${status}' == 'FAIL'    Create new invite application with the same user
 
 Login new application invite academic
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     [Tags]    Email
     Given Guest user log-in    &{lead_applicant_credentials}
-    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error    Page Should Contain    Academic robot test application
+    ${STATUS}    ${VALUE}=    Run Keyword And Ignore Error Without Screenshots    Page Should Contain    Academic robot test application
     Run Keyword If    '${status}' == 'FAIL'    Run keywords    Create new academic application with the same user
     ...    AND    Delete the emails from both test mailboxes
     ...    AND    Invite and accept the invitation    ${recipient}    ${subject}    ${pattern}
@@ -36,7 +36,7 @@ create new account for submitting
     And the user enters text to a text field    id=organisationSearchName    Hive IT
     And the user clicks the button/link    jQuery=.button:contains("Search")
     And the user clicks the button/link    link=HIVE IT LIMITED
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters text to a text field    name=email    ${test_mailbox_one}+submittest@gmail.com
@@ -45,7 +45,7 @@ create new account for submitting
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
 
 the user marks every section but one as complete
-    Guest user log-in    ${submit_test_email}    Passw0rd123
+    Guest user log-in    ${submit_test_email}    ${correct_password}
     the user navigates to the page    ${server}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Project summary
@@ -66,10 +66,10 @@ the user marks every section but one as complete
 
 the user marks the section as complete
     [Arguments]    ${form-id}
-    Wait Until Element Is Visible    css=#form-input-${form-id} .editor
+    Wait Until Element Is Visible Without Screenshots    css=#form-input-${form-id} .editor
     Input Text    css=#form-input-${form-id} .editor    Entering text to allow valid mark as complete
     Mouse Out    css=#form-input-${form-id} .editor
-    sleep    200ms
+    wait for autosave
     the user clicks the button/link    name=mark_as_complete
     the user clicks the button/link    css=.next
 
@@ -131,8 +131,8 @@ Invite and accept the invitation
     Input Text    name=organisations[1].organisationName    Academic Test
     Input Text    name=organisations[1].invites[0].personName    Arsene Wenger
     Input Text    name=organisations[1].invites[0].email    ${test_mailbox_one}+academictest@gmail.com
-    focus    jquery=button:contains("Save Changes")
-    And the user clicks the button/link    jquery=button:contains("Save Changes")
+    focus    jquery=button:contains("Save changes")
+    And the user clicks the button/link    jquery=button:contains("Save changes")
     And the user closes the browser
     And the guest user opens the browser
     When the user reads his email and clicks the link    ${recipient}    ${subject}    ${pattern}
@@ -156,22 +156,17 @@ Invite and accept the invitation
     And the user fills the create account form    Arsene    Wenger
     And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    If you did not request an account with us
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
-
-Applicant navigates to the finances of the Robot application
-    Given the user navigates to the page    ${DASHBOARD_URL}
-    And the user clicks the button/link    link=Robot test application
-    And the user clicks the button/link    link=Your finances
+    And guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
 
 The user redirects to the page
     [Arguments]    ${TEXT1}    ${TEXT2}
-    Wait Until Keyword Succeeds    10    500ms    Page Should Contain    ${TEXT1}
+    Wait Until Keyword Succeeds Without Screenshots    10    500ms    Page Should Contain    ${TEXT1}
     Page Should Contain    ${TEXT2}
     Page Should Not Contain    error
     Page Should Not Contain    Page or resource not found
     Page Should Not Contain    You do not have the necessary permissions for your request
     # Header checking (INFUND-1892)
-    Wait Until Element Is Visible    id=global-header
+    Wait Until Element Is Visible Without Screenshots    id=global-header
     Page Should Contain    BETA
 
 The user navigates to the summary page of the Robot test application
@@ -182,28 +177,6 @@ The user navigates to the summary page of the Robot test application
 The user navigates to the overview page of the Robot test application
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Robot test application
-
-the user marks finances as complete
-    the user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
-    the user selects the radio button    financePosition-organisationSize    LARGE
-    the user enters text to a text field    id=cost-financegrantclaim    20
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
-
-the user marks the finances as complete
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
-    the user moves focus to the element    jQuery=button:contains("Mark all as complete")
-    the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
-
-Make the finances ready for mark as complete
-    Applicant navigates to the finances of the Robot application
-    the user selects the radio button    financePosition-organisationSize    SMALL
-    The user clicks the button/link    jQuery=#otherFundingShowHideToggle label:contains(No) input
 
 The user navigates to the academic application finances
     When the user navigates to the page    ${DASHBOARD_URL}
@@ -219,15 +192,7 @@ The user marks the academic application finances as incomplete
     When The user navigates to the academic application finances
     Focus    jQuery=button:contains("Edit")
     the user clicks the button/link    jQuery=button:contains("Edit")
-    Sleep    1s
-
-Create new application
-    Wait for autosave
-    go to    ${CREATE_APPLICATION_PAGE}
-    Input Text    id=application_name    Form test application
-    Click Element    css=#content > form > input
-    Page Should Not Contain    Page or resource not found
-    Page Should Not Contain    You do not have the necessary permissions for your request
+    wait for autosave
 
 invite a registered user
     [Arguments]    ${EMAIL_LEAD}    ${EMAIL_INVITED}
@@ -268,7 +233,7 @@ we create a new user
     The user enters text to a text field    id=organisationSearchName    Innovate
     The user clicks the button/link    id=org-search
     The user clicks the button/link    LINK=INNOVATE LTD
-    select Checkbox    address-same
+    The user selects the checkbox    address-same
     The user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     The user clicks the button/link    jQuery=.button:contains("Save")
     The user enters the details and clicks the create account    ${EMAIL_INVITED}
@@ -294,7 +259,7 @@ the user follows the flow to register their organisation
 
 the user enters the details and clicks the create account
     [Arguments]    ${REG_EMAIL}
-    Wait Until Page Contains Element    link=terms and conditions
+    Wait Until Page Contains Element Without Screenshots    link=terms and conditions
     Page Should Contain Element    xpath=//a[contains(@href, '/info/terms-and-conditions')]
     Input Text    id=firstName    Stuart
     Input Text    id=lastName    ANDERSON
@@ -305,18 +270,18 @@ the user enters the details and clicks the create account
     And the user selects the radio button    disability    disability2
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    Select Checkbox    termsAndConditions
+    the user selects the checkbox  termsAndConditions
     Submit Form
 
 the user fills the create account form
     [Arguments]    ${NAME}    ${LAST_NAME}
     Input Text    id=firstName    ${NAME}
     Input Text    id=lastName    ${LAST_NAME}
-    Input Text    id=phoneNumber    0612121212
+    the user selects the radio button  gender  gender2
+    the user selects the radio button  ethnicity  ethnicity2
+    the user selects the radio button  disability  disability2
+    Input Text        id=phoneNumber    0612121212
     Input Password    id=password    Passw0rd123
     Input Password    id=retypedPassword    Passw0rd123
-    And the user selects the radio button    gender    gender2
-    And the user selects the radio button    ethnicity    ethnicity2
-    And the user selects the radio button    disability    disability2
-    Select Checkbox    termsAndConditions
-    Submit Form
+    the user selects the checkbox  termsAndConditions
+    the user clicks the button/link  jQuery=.button:contains("Create account")

@@ -18,6 +18,12 @@
     </h1>
     <hr/>
 
+    <th:block th:if="${model.isShowApprovalMessage()}">
+        <div class="success-alert">
+            <p>The partner's finance viability has been approved by <span th:text="${model.getApproverName()}"/>, <span th:text="${#temporals.format(model.getApprovalDate(), 'd MMMM yyyy')}"/></p>
+        </div>
+    </th:block>
+
     <th:block th:object="${form}">
         <div class="error-summary" th:attr="aria-hidden=${!#fields.hasAnyErrors()}">
             <h2 class="heading-medium error-summary-heading">Unable to update viability.</h2>
@@ -32,7 +38,7 @@
       <thead>
         <tr>
           <th scope="col">Total costs</th>
-          <th scope="col" class="numeric">% grant</th>
+          <th scope="col" class="numeric">% Grant</th>
           <th scope="col" class="numeric">Total project cost</th>
           <th scope="col" class="numeric">Grant applied for</th>
           <th scope="col" class="numeric">Other public sector funding</th>
@@ -72,16 +78,20 @@
 
       <h2 class="heading-medium">Credit report</h2>
       <div class="form-group">
-        <label class="block-label" for="costs-reviewed">
+        <label class="block-label selection-button-checkbox" for="costs-reviewed">
           <input th:disabled="${model.isReadOnly()}" id="costs-reviewed" type="checkbox" th:field="*{creditReportConfirmed}" />A credit report has been used together with the viability information shown here. This information is kept in accordance with Innovate UK audit requirements.
         </label>
+      </div>
+      <div class="extra-margin">
+          <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.projectId},organisationId=${model.organisationId},query_section=${T(org.innovateuk.threads.resource.FinanceChecksSectionType).VIABILITY.name()})}" class="button button-secondary">Queries</a>
+          <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.projectId},organisationId=${model.organisationId})}" class="button button-secondary">Notes</a>
       </div>
       <th:block th:unless="${model.isReadOnly()}">
           <h2 class="heading-medium">Approve viability</h2>
           <p>Viability should be approved after making any necessary alterations. The supporting Mint report should also be uploaded.</p>
           <p>Make sure the partner has reviewed and understood any changes made to their finances before approval.</p>
           <div class="form-group">
-            <label class="block-label" for="project-viable" data-target="add-rag-rating">
+            <label class="block-label selection-button-checkbox" for="project-viable" data-target="add-rag-rating">
               <input  id="project-viable" type="checkbox" th:field="*{confirmViabilityChecked}" data-disable-button-until-checked="#confirm-button" /><th:block th:text="${model.organisationName}" /> is viable for this project
             </label>
           </div>

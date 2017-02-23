@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.Range;
 
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Form for the initial details competition setup section.
@@ -34,14 +35,16 @@ public class InitialDetailsForm extends CompetitionSetupForm {
     @NotNull(message = "{validation.initialdetailsform.innovationsectorcategoryid.required}")
     private Long innovationSectorCategoryId;
 
-    @NotNull(message = "{validation.initialdetailsform.innovationareacategoryid.required}")
-    private Long innovationAreaCategoryId;
+    @NotEmpty(message = "{validation.initialdetailsform.innovationareacategoryid.required}")
+    private List<Long> innovationAreaCategoryIds;
 
     @NotNull(message = "{validation.initialdetailsform.competitiontypeid.required}")
     private Long competitionTypeId;
 
     @NotNull(message = "{validation.initialdetailsform.leadtechnologistuserid.required}")
     private Long leadTechnologistUserId;
+
+    private String innovationAreaNamesFormatted;
 
     public Long getExecutiveUserId() {
         return executiveUserId;
@@ -99,12 +102,12 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.innovationSectorCategoryId = innovationSectorCategoryId;
     }
 
-    public Long getInnovationAreaCategoryId() {
-        return innovationAreaCategoryId;
+    public List<Long> getInnovationAreaCategoryIds() {
+        return innovationAreaCategoryIds;
     }
 
-    public void setInnovationAreaCategoryId(Long innovationAreaCategoryId) {
-        this.innovationAreaCategoryId = innovationAreaCategoryId;
+    public void setInnovationAreaCategoryIds(List<Long> innovationAreaCategoryIds) {
+        this.innovationAreaCategoryIds = innovationAreaCategoryIds;
     }
 
     public Long getCompetitionTypeId() {
@@ -123,4 +126,11 @@ public class InitialDetailsForm extends CompetitionSetupForm {
         this.leadTechnologistUserId = leadTechnologistUserId;
     }
 
+    public String getInnovationAreaNamesFormatted() {
+        return innovationAreaNamesFormatted;
+    }
+
+    public void setInnovationAreaNamesFormatted(String formattedNames) {
+        this.innovationAreaNamesFormatted = formattedNames;
+    }
 }

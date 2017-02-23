@@ -22,6 +22,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -50,6 +51,11 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
 
     private static final Long COMPETITION_ID = Long.valueOf(12);
     private static final String URL_PREFIX = "/competition/setup/"+COMPETITION_ID+"/section/application";
+    private static final CompetitionResource UNEDITABLE_COMPETITION = newCompetitionResource()
+            .withCompetitionStatus(CompetitionStatus.OPEN)
+            .withSetupComplete(true)
+            .withStartDate(LocalDateTime.now().minusDays(1))
+            .withFundersPanelDate(LocalDateTime.now().plusDays(1)).build();
 
     @Mock
     private CategoryService categoryService;
@@ -87,9 +93,19 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
     }
 
     @Test
+    public void testGetEditCompetitionFinanceRedirect() throws Exception {
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(UNEDITABLE_COMPETITION);
+
+        mockMvc.perform(get(URL_PREFIX + "/question/finance/edit"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard"));
+
+        verify(competitionService, never()).update(UNEDITABLE_COMPETITION);
+    }
+
+    @Test
     public void testPostEditCompetitionFinance() throws Exception {
         CompetitionResource competition = newCompetitionResource().withCompetitionStatus(CompetitionStatus.COMPETITION_SETUP).build();
-
         when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
         when(competitionSetupService.saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(FINANCES))).thenReturn(ServiceResult.serviceSuccess());
         final boolean fullApplicationFinance = true;
@@ -287,7 +303,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("guidanceRows[0].justification", "My justification"))
                 .andExpect(model().hasNoErrors())
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX));
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 
         verify(competitionSetupService).saveCompetitionSetupSubsection(isA(ApplicationQuestionForm.class),
                 eq(competition),
@@ -448,7 +464,7 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .param("question.guidanceRows[1].subject", "NO")
                 .param("question.guidanceRows[1].justification", "My justification"))
                 .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl(URL_PREFIX));
+                .andExpect(redirectedUrl(URL_PREFIX + "/landing-page"));
 
         verify(competitionSetupService).saveCompetitionSetupSubsection(any(CompetitionSetupForm.class), eq(competition), eq(APPLICATION_FORM), eq(PROJECT_DETAILS));
 
@@ -466,6 +482,18 @@ public class CompetitionSetupApplicationControllerTest extends BaseControllerMoc
                 .andExpect(model().attribute("editable", true));
 
         verify(competitionService, never()).update(competition);
+    }
+
+
+    @Test
+    public void testGetEditCompetitionApplicationDetailsRedirect() throws Exception {
+        when(competitionService.getById(COMPETITION_ID)).thenReturn(UNEDITABLE_COMPETITION);
+
+        mockMvc.perform(get(URL_PREFIX + "/detail/edit"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/dashboard"));
+
+        verify(competitionService, never()).update(UNEDITABLE_COMPETITION);
     }
 
     @Test

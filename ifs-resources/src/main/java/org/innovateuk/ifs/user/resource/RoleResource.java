@@ -12,25 +12,19 @@ public class RoleResource {
     private Long id;
     private String name;
     private String url;
-    private List<Long> processRoles = new ArrayList<>();
     private List<Long> users = new ArrayList<>();
 
     public RoleResource() {
     	// no-arg constructor
     }
 
-    public RoleResource(Long id, String name, List<ProcessRoleResource> processRoles) {
+    public RoleResource(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.processRoles = simpleMap(processRoles, ProcessRoleResource::getId);
     }
 
     protected Boolean canEqual(Object other) {
         return other instanceof RoleResource;
-    }
-
-    public List<Long> getProcessRoles() {
-        return processRoles;
     }
 
     public Long getId() {
@@ -47,10 +41,6 @@ public class RoleResource {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setProcessRoles(List<Long> processRoles) {
-        this.processRoles = processRoles;
     }
 
     public List<Long> getUsers() {
@@ -76,7 +66,6 @@ public class RoleResource {
         return new EqualsBuilder()
             .append(this.id, rhs.id)
             .append(this.name, rhs.name)
-            .append(this.processRoles, rhs.processRoles)
             .append(this.users, rhs.users)
             .isEquals();
     }
@@ -86,7 +75,6 @@ public class RoleResource {
         return new HashCodeBuilder()
             .append(id)
             .append(name)
-            .append(processRoles)
             .append(users)
             .toHashCode();
     }

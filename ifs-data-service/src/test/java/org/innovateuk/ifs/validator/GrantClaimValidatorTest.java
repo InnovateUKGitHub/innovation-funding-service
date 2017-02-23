@@ -208,6 +208,16 @@ public class GrantClaimValidatorTest {
         
         verifyNoErrors();
     }
+
+    @Test
+    public void testBusinessZeroClaimWithoutOrganisationSize() {
+        setUpOrgType(OrganisationTypeEnum.BUSINESS, null);
+        claim.setGrantClaimPercentage(0);
+
+        validator.validate(claim, bindingResult);
+
+        verifyNoErrors();
+    }
     
     @Test
     public void testAcademicMaxClaim() {

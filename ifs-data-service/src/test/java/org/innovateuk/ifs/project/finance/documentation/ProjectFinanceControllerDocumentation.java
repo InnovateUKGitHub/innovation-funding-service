@@ -11,9 +11,12 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.builder.SpendProfileResourceBuilder;
 import org.innovateuk.ifs.project.controller.ProjectFinanceController;
 import org.innovateuk.ifs.project.finance.domain.SpendProfile;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
@@ -38,6 +41,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.SPEND_PROFILE_CSV_GENERATION_FAILURE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.documentation.EligibilityDocs.eligibilityResourceFields;
 import static org.innovateuk.ifs.documentation.SpendProfileDocs.*;
 import static org.innovateuk.ifs.documentation.ViabilityDocs.viabilityResourceFields;
 import static org.innovateuk.ifs.finance.builder.DefaultCostCategoryBuilder.newDefaultCostCategory;
@@ -60,6 +64,7 @@ import static org.innovateuk.ifs.util.JsonMappingUtil.toJson;
 import static org.innovateuk.ifs.util.MapFunctions.asMap;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isA;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
@@ -104,7 +109,6 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         when(projectFinanceServiceMock.approveOrRejectSpendProfile(isA(Long.class), isA(ApprovalType.class)))
                 .thenReturn(serviceSuccess());
-
         mockMvc.perform(post("/project/{projectId}/spend-profile/approval/{approvalType}", 123L, ApprovalType.APPROVED))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
@@ -125,7 +129,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/spend-profile/approval", 123L))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(ApprovalType.APPROVED)))
+                .andExpect(content().string(objectMapper.writeValueAsString(ApprovalType.APPROVED)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the " +
@@ -152,7 +156,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-table", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(table)))
+                .andExpect(content().string(objectMapper.writeValueAsString(table)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
@@ -181,7 +185,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile-csv", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileCSVResource)))
+                .andExpect(content().string(objectMapper.writeValueAsString(spendProfileCSVResource)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
@@ -264,7 +268,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(spendProfileResource)))
+                .andExpect(content().string(objectMapper.writeValueAsString(spendProfileResource)))
                 .andDo(this.document.snippets(
                         pathParameters(
                                 parameterWithName("projectId").description("Id of the project for which the Spend Profile data is being retrieved"),
@@ -314,7 +318,7 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/spend-profile", projectId, organisationId)
                 .contentType(APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(table)))
+                .content(objectMapper.writeValueAsString(table)))
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
                         pathParameters(
@@ -376,7 +380,10 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityStatus.GREEN);
+        ViabilityResource expectedViabilityResource = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.GREEN);
+        expectedViabilityResource.setViabilityApprovalDate(LocalDate.now());
+        expectedViabilityResource.setViabilityApprovalUserFirstName("Lee");
+        expectedViabilityResource.setViabilityApprovalUserLastName("Bowman");
 
         when(projectFinanceServiceMock.getViability(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedViabilityResource));
 
@@ -398,13 +405,13 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
         Long projectId = 1L;
         Long organisationId = 2L;
         Viability viability = Viability.APPROVED;
-        ViabilityStatus viabilityStatus = ViabilityStatus.GREEN;
+        ViabilityRagStatus viabilityRagStatus = ViabilityRagStatus.GREEN;
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityStatus)).thenReturn(serviceSuccess());
+        when(projectFinanceServiceMock.saveViability(projectOrganisationCompositeId, viability, viabilityRagStatus)).thenReturn(serviceSuccess());
 
-        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityStatus}", projectId, organisationId, viability, viabilityStatus)
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/viability/{viability}/{viabilityRagStatus}", projectId, organisationId, viability, viabilityRagStatus)
         )
                 .andExpect(status().isOk())
                 .andDo(this.document.snippets(
@@ -412,7 +419,61 @@ public class ProjectFinanceControllerDocumentation extends BaseControllerMockMVC
                                 parameterWithName("projectId").description("Id of the project for which viability is being saved"),
                                 parameterWithName("organisationId").description("Organisation Id for which viability is being saved"),
                                 parameterWithName("viability").description("The viability being saved"),
-                                parameterWithName("viabilityStatus").description("The viability status being saved")
+                                parameterWithName("viabilityRagStatus").description("The viability RAG status being saved")
+                        )
+                ));
+    }
+
+    @Test
+    public void getEligibility() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        EligibilityResource expectedEligibilityResource = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+        expectedEligibilityResource.setEligibilityApprovalDate(LocalDate.now());
+        expectedEligibilityResource.setEligibilityApprovalUserFirstName("Lee");
+        expectedEligibilityResource.setEligibilityApprovalUserLastName("Bowman");
+
+        when(projectFinanceServiceMock.getEligibility(projectOrganisationCompositeId)).thenReturn(serviceSuccess(expectedEligibilityResource));
+
+        mockMvc.perform(get("/project/{projectId}/partner-organisation/{organisationId}/eligibility", projectId, organisationId))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedEligibilityResource)))
+                .andDo(document("project/partner-organisation/eligibility/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which eligibility is being retrieved"),
+                                parameterWithName("organisationId").description("Organisation Id for which eligibility is being retrieved")
+                        ),
+                        responseFields(eligibilityResourceFields)
+                        )
+                );
+    }
+
+    @Test
+    public void saveEligibility() throws Exception {
+
+        Long projectId = 1L;
+        Long organisationId = 2L;
+
+        Eligibility eligibility = Eligibility.APPROVED;
+        EligibilityRagStatus eligibilityRagStatus = EligibilityRagStatus.GREEN;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        when(projectFinanceServiceMock.saveEligibility(projectOrganisationCompositeId, eligibility, eligibilityRagStatus)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/project/{projectId}/partner-organisation/{organisationId}/eligibility/{eligibility}/{eligibilityRagStatus}", projectId, organisationId, eligibility, eligibilityRagStatus)
+        )
+                .andExpect(status().isOk())
+                .andDo(document("project/partner-organisation/eligibility/{method-name}",
+                        pathParameters(
+                                parameterWithName("projectId").description("Id of the project for which eligibility is being saved"),
+                                parameterWithName("organisationId").description("Organisation Id for which eligibility is being saved"),
+                                parameterWithName("eligibility").description("The eligibility being saved"),
+                                parameterWithName("eligibilityRagStatus").description("The eligibility RAG status being saved")
                         )
                 ));
     }

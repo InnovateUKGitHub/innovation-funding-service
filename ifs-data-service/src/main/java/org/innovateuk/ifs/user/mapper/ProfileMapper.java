@@ -4,13 +4,14 @@ import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.user.domain.Profile;
 import org.innovateuk.ifs.user.repository.ProfileRepository;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Mappings;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Mapper(
         componentModel = "spring",
         config = GlobalMapperConfig.class,
-        uses = {
-        }
+        uses = {}
 )
 public abstract class ProfileMapper {
 
@@ -18,6 +19,9 @@ public abstract class ProfileMapper {
     private ProfileRepository repository;
 
 
+    @Mappings({
+            @Mapping(target = "innovationAreas", ignore = true)
+    })
     public Profile mapIdToDomain(Long id) {
         if (id == null) {
             return null;

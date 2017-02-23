@@ -117,6 +117,7 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isFinanceContactSubmitted(organisation)
         );
@@ -134,8 +135,26 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
 
         verifyInteractions(
                 mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isOrganisationRequiringFunding(organisation),
                 mock -> mock.isCompaniesHouseDetailsComplete(organisation),
                 mock -> mock.isFinanceContactSubmitted(organisation)
+        );
+    }
+
+    @Test
+    public void testCheckAccessToBankDetailsSectionWhenNotRequired() {
+
+        when(projectSetupProgressCheckerMock.isOrganisationRequiringFunding(organisation)).thenReturn(false);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseSectionRequired(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
+        when(projectSetupProgressCheckerMock.isFinanceContactSubmitted(organisation)).thenReturn(true);
+
+        assertEquals(NOT_ACCESSIBLE, accessor.canAccessBankDetailsSection(organisation));
+
+        verifyInteractions(
+                mock -> mock.isCompaniesHouseSectionRequired(organisation),
+                mock -> mock.isCompaniesHouseDetailsComplete(organisation),
+                mock -> mock.isOrganisationRequiringFunding(organisation)
         );
     }
 
@@ -146,7 +165,6 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         when(projectSetupProgressCheckerMock.isCompaniesHouseDetailsComplete(organisation)).thenReturn(true);
         when(projectSetupProgressCheckerMock.isProjectDetailsSubmitted()).thenReturn(true);
 
-        // TODO DW - INFUND-4428 - reinstate when bank details are approvable or queryable
         // when(projectSetupProgressCheckerMock.isBankDetailsApproved(organisation)).thenReturn(true);
 
         assertEquals(ACCESSIBLE, accessor.canAccessFinanceChecksSection(organisation));
@@ -240,6 +258,8 @@ public class ProjectSetupSectionsPartnerAccessorTest extends BaseUnitTest {
         assertEquals(ACCESSIBLE, accessor.canAccessOtherDocumentsSection(organisation));
 
         verifyInteractions(mock -> mock.isLeadPartnerOrganisation(organisation));
+
+
     }
 
     @Test

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -23,7 +24,7 @@ public class IfsErrorController extends BasicErrorController {
     }
 
     @Override
-    public ModelAndView errorHtml(HttpServletRequest request) {
+    public ModelAndView errorHtml(HttpServletRequest request, HttpServletResponse response) {
         final Map<String, Object> errorAttributes = getErrorAttributes(request, false);
         final Object status = errorAttributes.get("status");
         if (status instanceof Integer){
@@ -35,6 +36,6 @@ public class IfsErrorController extends BasicErrorController {
                 return new ModelAndView(PAYLOAD_TOO_LARGE.toString());
             }
         }
-        return super.errorHtml(request);
+        return super.errorHtml(request,response);
     }
 }

@@ -2,26 +2,54 @@ package org.innovateuk.ifs.assessment.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
 import org.innovateuk.ifs.assessment.resource.*;
+import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
+import org.innovateuk.ifs.user.repository.UserRepository;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
-import static org.innovateuk.ifs.assessment.builder.ApplicationRejectionResourceBuilder.newApplicationRejectionResource;
-import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionResourceBuilder.newAssessmentFundingDecisionResource;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.ACCEPTED;
-import static org.innovateuk.ifs.assessment.resource.AssessmentStates.OPEN;
+import static java.lang.Boolean.TRUE;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
+import static org.innovateuk.ifs.assessment.builder.AssessmentRejectOutcomeResourceBuilder.newAssessmentRejectOutcomeResource;
+import static org.innovateuk.ifs.assessment.builder.AssessmentFundingDecisionOutcomeResourceBuilder.newAssessmentFundingDecisionOutcomeResource;
+import static org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue.CONFLICT_OF_INTEREST;
+import static org.innovateuk.ifs.assessment.resource.AssessmentStates.*;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.ASSESSMENT_WITHDRAWN;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION;
-import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 public class AssessmentControllerIntegrationTest extends BaseControllerIntegrationTest<AssessmentController> {
+
+    @Autowired
+    private AssessmentRepository assessmentRepository;
+
+    @Autowired
+    private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private ActivityStateRepository activityStateRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -35,20 +63,18 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findById() throws Exception {
-        Long assessmentId = 6L;
+        Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
         loginFelixWilson();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
-        assertEquals(assessmentId, assessmentResource.getId());
-        assertEquals(Long.valueOf(21L), assessmentResource.getProcessRole());
-        assertEquals(Long.valueOf(4L), assessmentResource.getApplication());
-        assertEquals(Long.valueOf(1L), assessmentResource.getCompetition());
-        assertEquals(emptyList(), assessmentResource.getProcessOutcomes());
+        AssessmentResource result = controller.findById(assessment.getId()).getSuccessObject();
+        assertNotNull(result);
+        assertEquals(assessment.getId(), result.getId());
+
     }
 
     @Test
     public void findById_notFound() throws Exception {
-        Long assessmentId = 999L;
+        long assessmentId = 999L;
 
         loginPaulPlum();
         RestResult<AssessmentResource> result = controller.findById(assessmentId);
@@ -58,12 +84,114 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
     @Test
     public void findById_notTheAssessmentOwner() throws Exception {
-        Long assessmentId = 5L;
+        Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
 
-        loginSteveSmith();
-        RestResult<AssessmentResource> result = controller.findById(assessmentId);
+        loginPaulPlum();
+        RestResult<AssessmentResource> result = controller.findById(assessment.getId());
         assertTrue(result.isFailure());
         assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void findAssignableById() throws Exception {
+        Assessment assessment = setUpAssessment(getPaulPlum(), PENDING);
+
+        loginPaulPlum();
+        AssessmentResource result = controller.findAssignableById(assessment.getId()).getSuccessObject();
+        assertNotNull(result);
+        assertEquals(assessment.getId(), result.getId());
+    }
+
+    @Test
+    public void findAssignableById_notFound() throws Exception {
+        long assessmentId = 999L;
+
+        loginPaulPlum();
+        RestResult<AssessmentResource> result = controller.findAssignableById(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Assessment.class, 999L)));
+    }
+
+    @Test
+    public void findAssignableById_notTheAssessmentOwner() throws Exception {
+        Assessment assessment = setUpAssessment(getFelixWilson(), PENDING);
+
+        loginSteveSmith();
+        RestResult<AssessmentResource> result = controller.findAssignableById(assessment.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void findAssignableById_notAssignable() throws Exception {
+        Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
+
+        loginFelixWilson();
+        RestResult<AssessmentResource> result = controller.findAssignableById(assessment.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void findAssignableById_withdrawn() throws Exception {
+        Assessment assessment = setUpAssessment(getFelixWilson(), WITHDRAWN);
+
+        loginFelixWilson();
+        RestResult<AssessmentResource> result = controller.findAssignableById(assessment.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(ASSESSMENT_WITHDRAWN, singletonList(assessment
+                .getId()))));
+    }
+
+    @Test
+    public void findRejectableById() throws Exception {
+        Assessment assessment = setUpAssessment(getFelixWilson(), OPEN);
+
+        loginFelixWilson();
+        AssessmentResource result = controller.findRejectableById(assessment.getId()).getSuccessObject();
+        assertNotNull(result);
+        assertEquals(assessment.getId(), result.getId());
+    }
+
+    @Test
+    public void findRejectableById_notFound() throws Exception {
+        long assessmentId = 999L;
+
+        loginPaulPlum();
+        RestResult<AssessmentResource> result = controller.findRejectableById(assessmentId);
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(notFoundError(Assessment.class, 999L)));
+    }
+
+    @Test
+    public void findRejectableById_notTheAssessmentOwner() throws Exception {
+        Assessment assessment = setUpAssessment(getFelixWilson(), PENDING);
+
+        loginSteveSmith();
+        RestResult<AssessmentResource> result = controller.findRejectableById(assessment.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void findRejectableById_notRejectable() throws Exception {
+        Assessment assessment = setUpAssessment(getFelixWilson(), SUBMITTED);
+
+        loginFelixWilson();
+        RestResult<AssessmentResource> result = controller.findRejectableById(assessment.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void findRejectableById_withdrawn() throws Exception {
+        Assessment assessment = setUpAssessment(getFelixWilson(), WITHDRAWN);
+
+        loginFelixWilson();
+        RestResult<AssessmentResource> result = controller.findRejectableById(assessment.getId());
+        assertTrue(result.isFailure());
+        assertTrue(result.getFailure().is(forbiddenError(ASSESSMENT_WITHDRAWN, singletonList(assessment
+                .getId()))));
     }
 
     @Test
@@ -76,6 +204,18 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         assertTrue(result.isSuccess());
         List<AssessmentResource> assessmentResources = result.getSuccessObjectOrThrowException();
         assertEquals(4, assessmentResources.size());
+    }
+
+    @Test
+    public void countByStateAndCompetition() throws Exception {
+        Long competitionId = 1L;
+
+        loginCompAdmin();
+        RestResult<Integer> result = controller.countByStateAndCompetition(CREATED, competitionId);
+
+        assertTrue(result.isSuccess());
+        long count = result.getSuccessObject();
+        assertEquals(1L, count);
     }
 
     @Test
@@ -95,13 +235,19 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
-        AssessmentFundingDecisionResource assessmentFundingDecision = newAssessmentFundingDecisionResource().build();
+        AssessmentFundingDecisionOutcomeResource assessmentFundingDecisionOutcomeResource =
+                newAssessmentFundingDecisionOutcomeResource()
+                .withFundingConfirmation(TRUE)
+                .withFeedback("Feedback")
+                .withComment("Comment")
+                .build();
 
-        RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecision);
+        RestResult<Void> result = controller.recommend(assessmentResource.getId(), assessmentFundingDecisionOutcomeResource);
         assertTrue(result.isSuccess());
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResult.getAssessmentState());
+        assertEquals(assessmentFundingDecisionOutcomeResource, assessmentResult.getFundingDecision());
     }
 
     @Test
@@ -112,13 +258,16 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
-        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource()
+                .withRejectReason(CONFLICT_OF_INTEREST)
+                .withRejectComment("comment")
+                .build();
 
-        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), applicationRejection);
+        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), assessmentRejectOutcomeResource);
         assertTrue(result.isSuccess());
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
-        assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
+        assertTrue(assessmentResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
     }
 
     @Test
@@ -129,16 +278,17 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
         assertEquals(OPEN, assessmentResource.getAssessmentState());
 
-        ApplicationRejectionResource applicationRejection = newApplicationRejectionResource().build();
+        AssessmentRejectOutcomeResource assessmentRejectOutcomeResource = newAssessmentRejectOutcomeResource().build();
 
-        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), applicationRejection);
+        RestResult<Void> result = controller.rejectInvitation(assessmentResource.getId(), assessmentRejectOutcomeResource);
         assertTrue(result.isSuccess());
 
         RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+
         assertEquals(assessmentResult.getErrors().get(0).getErrorKey(), GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION.getErrorKey());
 
         // Now reject the assessment again
-        assertTrue(controller.rejectInvitation(assessmentId, applicationRejection).isFailure());
+        assertTrue(controller.rejectInvitation(assessmentId, assessmentRejectOutcomeResource).isFailure());
     }
 
     @Test
@@ -147,7 +297,7 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
         Long processRole = 17L;
 
         loginPaulPlum();
-        AssessmentResource assessmentResource = controller.findById(assessmentId).getSuccessObject();
+        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
         assertEquals(AssessmentStates.PENDING, assessmentResource.getAssessmentState());
         assertEquals(processRole, assessmentResource.getProcessRole());
 
@@ -156,5 +306,55 @@ public class AssessmentControllerIntegrationTest extends BaseControllerIntegrati
 
         AssessmentResource assessmentResult = controller.findById(assessmentId).getSuccessObject();
         assertEquals(ACCEPTED, assessmentResult.getAssessmentState());
+    }
+
+    @Test
+    public void withdrawAssessment() throws Exception {
+        Long assessmentId = 4L;
+
+        loginPaulPlum();
+        AssessmentResource assessmentResource = controller.findAssignableById(assessmentId).getSuccessObject();
+        assertEquals(PENDING, assessmentResource.getAssessmentState());
+
+        loginCompAdmin();
+        RestResult<Void> result = controller.withdrawAssessment(assessmentResource.getId());
+        assertTrue(result.isSuccess());
+
+        loginPaulPlum();
+        RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+        assertTrue(assessmentResult.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+    }
+
+    @Test
+    public void withdrawCreatedAssessment() throws Exception {
+        Long assessmentId = 9L;
+
+        loginCompAdmin();
+        RestResult<AssessmentResource> assessmentResource = controller.findById(assessmentId);
+        assertTrue(assessmentResource.getFailure().is(forbiddenError(GENERAL_SPRING_SECURITY_FORBIDDEN_ACTION)));
+
+        RestResult<Void> result = controller.withdrawAssessment(assessmentId);
+        assertTrue(result.isSuccess());
+
+        RestResult<AssessmentResource> assessmentResult = controller.findById(assessmentId);
+        assertTrue(assessmentResult.getFailure().is(notFoundError(Assessment.class, assessmentId)));
+
+    }
+
+    private Assessment setUpAssessment(UserResource userResource, AssessmentStates state) {
+        User user = userRepository.findOne(userResource.getId());
+
+        ProcessRole processRole = processRoleRepository.save(newProcessRole()
+                .withUser(user)
+                .build());
+
+        ActivityState activityState = activityStateRepository.findOneByActivityTypeAndState(APPLICATION_ASSESSMENT,
+                state.getBackingState());
+
+        return assessmentRepository.save(newAssessment()
+                .with(id(null))
+                .withActivityState(activityState)
+                .withParticipant(processRole)
+                .build());
     }
 }

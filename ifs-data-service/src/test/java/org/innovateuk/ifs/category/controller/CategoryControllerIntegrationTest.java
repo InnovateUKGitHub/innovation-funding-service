@@ -1,10 +1,10 @@
 package org.innovateuk.ifs.category.controller;
 
 import org.innovateuk.ifs.BaseControllerIntegrationTest;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,8 @@ import java.util.List;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 @Rollback
 @Transactional
@@ -31,42 +32,50 @@ public class CategoryControllerIntegrationTest extends BaseControllerIntegration
         loginCompAdmin();
     }
 
-
     @Test
-    public void testGetCategoriesByTypeArea(){
-        RestResult<List<CategoryResource>> categoriesResult = controller.findByType(CategoryType.INNOVATION_AREA.getName());
+    public void findInnovationAreas() {
+        RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreas();
         assertTrue(categoriesResult.isSuccess());
-        List<CategoryResource> categories = categoriesResult.getSuccessObject();
+        List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(28));
-        assertThat(categories, everyItem(Matchers.hasProperty("type", equalTo(CategoryType.INNOVATION_AREA))));
+        assertThat(categories, everyItem(hasProperty("sector", notNullValue())));
     }
 
     @Test
-    public void testGetCategoriesByTypeSector(){
-        RestResult<List<CategoryResource>> categoriesResult = controller.findByType(CategoryType.INNOVATION_SECTOR.getName());
+    public void findInnovationSectors() {
+        RestResult<List<InnovationSectorResource>> categoriesResult = controller.findInnovationSectors();
         assertTrue(categoriesResult.isSuccess());
-        List<CategoryResource> categories = categoriesResult.getSuccessObject();
+        List<InnovationSectorResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(4));
-        assertThat(categories, everyItem(Matchers.hasProperty("type", equalTo(CategoryType.INNOVATION_SECTOR))));
+        assertThat(categories, everyItem(hasProperty("children", notNullValue())));
     }
 
     @Test
-    public void testGetCategoriesByParent(){
-        RestResult<List<CategoryResource>> categoriesResult = controller.findByParent(1L);
+    public void findResearchCategories() {
+        RestResult<List<ResearchCategoryResource>> categoriesResult = controller.findResearchCategories();
         assertTrue(categoriesResult.isSuccess());
-        List<CategoryResource> categories = categoriesResult.getSuccessObject();
+        List<ResearchCategoryResource> categories = categoriesResult.getSuccessObject();
+
+        assertThat(categories, hasSize(3));
+    }
+
+    @Test
+    public void findInnovationAreasBySector() {
+        RestResult<List<InnovationAreaResource>> categoriesResult = controller.findInnovationAreasBySector(1L);
+        assertTrue(categoriesResult.isSuccess());
+        List<InnovationAreaResource> categories = categoriesResult.getSuccessObject();
 
         assertThat(categories, hasSize(6));
-        assertThat(categories, everyItem(Matchers.hasProperty("parent", equalTo(1L))));
+        assertThat(categories, everyItem(hasProperty("sector", equalTo(1L))));
         assertThat(categories, containsInAnyOrder(asList(
-                Matchers.hasProperty("name", equalTo("Advanced Therapies")),
-                Matchers.hasProperty("name", equalTo("Precision Medicine")),
-                Matchers.hasProperty("name", equalTo("Medicines Technology")),
-                Matchers.hasProperty("name", equalTo("Bioscience")),
-                Matchers.hasProperty("name", equalTo("Agri Productivity")),
-                Matchers.hasProperty("name", equalTo("Enhanced Food Quality"))
+                hasProperty("name", equalTo("Advanced Therapies")),
+                hasProperty("name", equalTo("Precision Medicine")),
+                hasProperty("name", equalTo("Medicines Technology")),
+                hasProperty("name", equalTo("Bioscience")),
+                hasProperty("name", equalTo("Agri Productivity")),
+                hasProperty("name", equalTo("Enhanced Food Quality"))
         )));
     }
 }

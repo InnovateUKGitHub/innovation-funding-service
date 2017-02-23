@@ -1,13 +1,44 @@
-if (project.hasProperty("profile")) {
-    apply from: "${project.profile}-build.gradle"
-} else {
-    apply from: "docker-build.gradle"
+def targetBuild = hasProperty('profile') ? profile : 'docker';
+apply from: targetBuild+"-build.gradle";
+
+
+project(':ifs-web-service').bootRepackage {
+    onlyIf{ Task task -> false}
 }
 
-task cleanDeployServices{
-	println "interface for clean deploy services"
-}
+build.enabled = false
+jar.enabled=false
 
-task deployToTomcat() {
-    println "Interface for deployToTomcat task"
+task endpointDocumentation(type: Test) {
+    dependsOn "ifs-application-service:test"
+    dependsOn "ifs-assessment-service:test"
+    dependsOn "ifs-competition-mgt-service:test"
+    dependsOn "ifs-project-setup-mgt-service:test"
+    dependsOn "ifs-project-setup-service:test"
+
+    def combinedFilename = 'build/web-endpoints.csv'
+
+    def files = fileTree(dir: '.', include: '**/*-endpoints.csv', exclude: combinedFilename)
+    def lines = []
+    files.each {
+        it.eachLine { line ->
+            lines << line
+        }
+    }
+
+    def buildFolder = new File("build")
+    buildFolder.mkdirs()
+    def combinedFile = new File(combinedFilename)
+    if (combinedFile.exists()) {
+        combinedFile.delete()
+    }
+    combinedFile.append('"path", "method", "constraint", "rule", "description"\n')
+    combinedFile.append(
+        lines
+            .findAll {
+                it.startsWith('"/')
+            }
+            .sort()
+            .join("\n")
+    )
 }

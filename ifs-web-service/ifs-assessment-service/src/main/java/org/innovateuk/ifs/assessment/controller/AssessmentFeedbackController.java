@@ -19,10 +19,11 @@ import org.innovateuk.ifs.controller.ValidationHandler;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputService;
-import org.innovateuk.ifs.model.OrganisationDetailsModelPopulator;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +42,7 @@ import static java.util.stream.Collectors.toMap;
 
 @Controller
 @RequestMapping("/{assessmentId}")
+@PreAuthorize("hasAuthority('assessor')")
 public class AssessmentFeedbackController {
 
     private static final String FORM_ATTR_NAME = "form";

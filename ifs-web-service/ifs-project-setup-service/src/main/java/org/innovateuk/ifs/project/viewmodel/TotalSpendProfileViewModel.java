@@ -7,7 +7,7 @@ import org.innovateuk.ifs.project.model.SpendProfileSummaryModel;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 
 /**
- * View model for the review and submit project spend profile.
+ * View model for the review and send project spend profile.
  */
 public class TotalSpendProfileViewModel {
     private ProjectResource project;

@@ -1,17 +1,9 @@
 package org.innovateuk.ifs.security;
 
-import java.io.IOException;
-import java.util.regex.Pattern;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 import org.springframework.security.web.csrf.CsrfException;
@@ -19,6 +11,15 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
+
+import javax.annotation.PostConstruct;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.regex.Pattern;
 
 /**
  * <p>
@@ -58,8 +59,21 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
     @Autowired
     private CsrfTokenService tokenService;
 
-    private AccessDeniedHandler accessDeniedHandler = new AccessDeniedHandlerImpl();
-    private final RequestMatcher requireCsrfProtectionMatcher = new DefaultRequiresCsrfMatcher();
+    private boolean enableDevTools;
+
+    @Value("${ifsEnableDevTools:false}")
+    public void setEnableDevTools(boolean enableDevTools) {
+        this.enableDevTools = enableDevTools;
+    }
+
+    private AccessDeniedHandler accessDeniedHandler;
+    private RequestMatcher requireCsrfProtectionMatcher;
+
+    @PostConstruct
+    protected void init() {
+        accessDeniedHandler = new AccessDeniedHandlerImpl();
+        requireCsrfProtectionMatcher = new DefaultRequiresCsrfMatcher(enableDevTools);
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -117,17 +131,42 @@ final class CsrfStatelessFilter extends OncePerRequestFilter {
         return cookie;
     }
 
+    /**
+     * Set the AccessDeniedHandler for testing
+     */
     protected void setAccessDeniedHandler(AccessDeniedHandler accessDeniedHandler) {
         this.accessDeniedHandler = accessDeniedHandler;
     }
 
+    /**
+     * Initialise the matcher for testing
+     */
+    protected void initProtectionMatcher() {
+        requireCsrfProtectionMatcher = new DefaultRequiresCsrfMatcher(enableDevTools);
+    }
+
     private static final class DefaultRequiresCsrfMatcher implements RequestMatcher {
+
+        private boolean enableDevTools;
         private final Pattern allowedMethods = Pattern.compile("^(GET|HEAD|TRACE|OPTIONS)$");
 
+        /**
+         * @param enableDevTools Allow Spring Dev Tools to bypass the need for a CSRF token.  This is based on
+         *                       partially matching the request URL and is a potential security vulnerability,
+         *                       so only enable this on a local development environment.
+         */
+        public DefaultRequiresCsrfMatcher(boolean enableDevTools) {
+            this.enableDevTools = enableDevTools;
+        }
+
+        /**
+         * @return true if a CSRF token is required for the request method
+         */
         @Override
         public boolean matches(HttpServletRequest request) {
-            return !allowedMethods.matcher(request.getMethod()).matches();
-
+            boolean isAllowedMethod = allowedMethods.matcher(request.getMethod()).matches();
+            boolean isDevToolsEndpoint = request.getRequestURI().contains("/.~~spring-boot!~");
+            return !isAllowedMethod && !(isDevToolsEndpoint && enableDevTools);
         }
     }
 }

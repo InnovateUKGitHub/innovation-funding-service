@@ -5,7 +5,6 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.List;
 
 public class AssessmentResource {
     private Long id;
@@ -14,10 +13,12 @@ public class AssessmentResource {
     private Calendar lastModified;
     private LocalDate startDate;
     private LocalDate endDate;
-    private List<Long> processOutcomes;
+    private AssessmentFundingDecisionOutcomeResource fundingDecision;
+    private AssessmentRejectOutcomeResource rejection;
     private Long processRole;
     private Long internalParticipant;
     private Long application;
+    private String applicationName;
     private Long competition;
 
     public Long getId() {
@@ -68,12 +69,20 @@ public class AssessmentResource {
         this.endDate = endDate;
     }
 
-    public List<Long> getProcessOutcomes() {
-        return processOutcomes;
+    public AssessmentFundingDecisionOutcomeResource getFundingDecision() {
+        return fundingDecision;
     }
 
-    public void setProcessOutcomes(List<Long> processOutcomes) {
-        this.processOutcomes = processOutcomes;
+    public void setFundingDecision(AssessmentFundingDecisionOutcomeResource fundingDecision) {
+        this.fundingDecision = fundingDecision;
+    }
+
+    public AssessmentRejectOutcomeResource getRejection() {
+        return rejection;
+    }
+
+    public void setRejection(AssessmentRejectOutcomeResource rejection) {
+        this.rejection = rejection;
     }
 
     public Long getProcessRole() {
@@ -90,6 +99,14 @@ public class AssessmentResource {
 
     public void setApplication(Long application) {
         this.application = application;
+    }
+
+    public String getApplicationName() {
+        return applicationName;
+    }
+
+    public void setApplicationName(String applicationName) {
+        this.applicationName = applicationName;
     }
 
     public Long getCompetition() {
@@ -127,9 +144,12 @@ public class AssessmentResource {
                 .append(lastModified, that.lastModified)
                 .append(startDate, that.startDate)
                 .append(endDate, that.endDate)
-                .append(processOutcomes, that.processOutcomes)
+                .append(fundingDecision, that.fundingDecision)
+                .append(rejection, that.rejection)
                 .append(processRole, that.processRole)
+                .append(internalParticipant, that.internalParticipant)
                 .append(application, that.application)
+                .append(applicationName, that.applicationName)
                 .append(competition, that.competition)
                 .isEquals();
     }
@@ -143,9 +163,12 @@ public class AssessmentResource {
                 .append(lastModified)
                 .append(startDate)
                 .append(endDate)
-                .append(processOutcomes)
+                .append(fundingDecision)
+                .append(rejection)
                 .append(processRole)
+                .append(internalParticipant)
                 .append(application)
+                .append(applicationName)
                 .append(competition)
                 .toHashCode();
     }

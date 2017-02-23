@@ -20,12 +20,12 @@ public class PrototypeController {
     @RequestMapping
     public String getPrototypeIndex() {
         LOG.debug("Serving up prototype index page");
-        return "/prototypes/index";
+        return "prototypes/index";
     }
 
     @RequestMapping("/{templateName}")
     public String getPrototypePage(@PathVariable("templateName") String templateName) {
         LOG.debug("Serving up prototype template " + templateName);
-        return "/prototypes/" + templateName;
+        return "prototypes/" + templateName;
     }
 }

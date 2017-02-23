@@ -9,6 +9,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
+import static org.innovateuk.ifs.application.resource.SectionType.GENERAL;
+
 /**
  * Build the model for Assessment Feedback navigation view.
  */
@@ -30,11 +32,10 @@ public class AssessmentFeedbackNavigationModelPopulator {
     }
 
     private Optional<QuestionResource> getNextQuestion(final Long questionId) {
-        return questionService.getNextQuestion(questionId)
-                .filter(questionResource -> this.isAssessmentQuestion(questionResource));
+        return questionService.getNextQuestion(questionId).filter(this::isAssessmentQuestion);
     }
 
     private boolean isAssessmentQuestion(QuestionResource question) {
-        return sectionService.getById(question.getSection()).isDisplayInAssessmentApplicationSummary();
+        return sectionService.getById(question.getSection()).getType() == GENERAL;
     }
 }

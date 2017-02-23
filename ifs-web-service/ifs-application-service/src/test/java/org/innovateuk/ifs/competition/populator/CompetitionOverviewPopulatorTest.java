@@ -1,0 +1,87 @@
+package org.innovateuk.ifs.competition.populator;
+
+import org.innovateuk.ifs.category.service.CategoryRestService;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
+import org.innovateuk.ifs.competition.viewmodel.CompetitionOverviewViewModel;
+import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
+
+import java.time.LocalDateTime;
+
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
+import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
+import static org.junit.Assert.assertEquals;
+
+@RunWith(MockitoJUnitRunner.class)
+public class CompetitionOverviewPopulatorTest {
+
+    @InjectMocks
+    private CompetitionOverviewPopulator populator;
+
+    @Mock
+    private PublicContentItemRestServiceImpl publicContentItemRestService;
+
+    @Mock
+    private CategoryRestService categoryRestService;
+
+    final LocalDateTime openDate = LocalDateTime.of(2017,1,1,0,0);
+    final LocalDateTime closeDate = LocalDateTime.of(2017,1,1,0,0);
+    final String competitionTitle = "Title of competition";
+
+    @Test
+    public void populateViewModelTest_Default() throws Exception {
+        PublicContentResource publicContentResource = newPublicContentResource()
+                .withShortDescription("Short description")
+                .withCompetitionId(23523L)
+                .build();
+
+        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(publicContentResource));
+
+        assertEquals(publicContentResource.getShortDescription(), viewModel.getShortDescription());
+        assertEquals(publicContentResource.getCompetitionId(), viewModel.getCompetitionId());
+        assertEquals(openDate, viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
+        assertEquals(competitionTitle, viewModel.getCompetitionTitle());
+    }
+
+    @Test
+    public void populateViewModelTest_EmptyPublicContentResource() throws Exception {
+        PublicContentResource publicContentResource = newPublicContentResource().build();
+
+        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(publicContentResource));
+
+        assertEquals(null, viewModel.getShortDescription());
+        assertEquals(null, viewModel.getCompetitionId());
+        assertEquals(openDate, viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
+        assertEquals(competitionTitle, viewModel.getCompetitionTitle());
+    }
+
+    @Test
+    public void populateViewModelTest_NullPublicContentResource() throws Exception {
+        CompetitionOverviewViewModel viewModel = populator.populateViewModel(setupPublicContent(null));
+
+        assertEquals(null, viewModel.getShortDescription());
+        assertEquals(null, viewModel.getCompetitionId());
+        assertEquals(openDate, viewModel.getCompetitionOpenDate());
+        assertEquals(closeDate, viewModel.getCompetitionCloseDate());
+        assertEquals(competitionTitle, viewModel.getCompetitionTitle());
+    }
+
+
+    private PublicContentItemResource setupPublicContent(PublicContentResource publicContentResource) {
+        PublicContentItemResource publicContentItem = newPublicContentItemResource()
+                .withCompetitionOpenDate(openDate)
+                .withCompetitionCloseDate(closeDate)
+                .withCompetitionTitle(competitionTitle)
+                .withContentSection(publicContentResource)
+                .build();
+
+        return publicContentItem;
+    }
+}

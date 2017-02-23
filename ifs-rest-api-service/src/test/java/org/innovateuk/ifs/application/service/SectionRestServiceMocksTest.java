@@ -1,23 +1,21 @@
 package org.innovateuk.ifs.application.service;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-import java.util.*;
-import java.util.concurrent.Future;
-
+import org.innovateuk.ifs.BaseRestServiceUnitTest;
 import org.innovateuk.ifs.application.builder.SectionResourceBuilder;
+import org.innovateuk.ifs.application.resource.SectionResource;
+import org.innovateuk.ifs.application.resource.SectionType;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.junit.Test;
 import org.springframework.core.ParameterizedTypeReference;
-
-import org.innovateuk.ifs.BaseRestServiceUnitTest;
-import org.innovateuk.ifs.application.resource.SectionType;
-import org.innovateuk.ifs.application.resource.SectionResource;
 import org.springframework.http.HttpStatus;
+
+import java.util.*;
+import java.util.concurrent.Future;
+
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.junit.Assert.*;
 
 /**
  * Tests to check the ApplicationRestService's interaction with the RestTemplate and the processing of its results
@@ -44,6 +42,19 @@ public class SectionRestServiceMocksTest extends BaseRestServiceUnitTest<Section
         RestResult<List<ValidationMessages>> result = service.markAsComplete(sectionId, applicationId, markedAsCompleteById);
 
         assertEquals(messages, result.getSuccessObjectOrThrowException());
+    }
+
+    @Test
+    public void test_markAsNotRequired() {
+        Long sectionId = 123L;
+        Long applicationId = 234L;
+        Long markedAsCompleteById = 345L;
+        String expectedUrl = sectionRestUrl + "/markAsNotRequired/" + sectionId + "/" + applicationId + "/" + markedAsCompleteById;
+        setupPostWithRestResultExpectations(expectedUrl, HttpStatus.OK);
+
+        RestResult<Void> result = service.markAsNotRequired(sectionId, applicationId, markedAsCompleteById);
+
+        assertTrue(result.isSuccess());
     }
 
     @Test

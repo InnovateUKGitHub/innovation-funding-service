@@ -26,7 +26,7 @@ public interface FailingOrSucceedingResult<SuccessType, FailureType> extends Err
 
     FailingOrSucceedingResult<Void, FailureType> andOnSuccessReturnVoid(Runnable successHandler);
 
-    <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<FailingOrSucceedingResult<R, FailureType>> successHandler);
+    <R> FailingOrSucceedingResult<R, FailureType> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, FailureType>> successHandler);
 
     <R> FailingOrSucceedingResult<R, FailureType> andOnSuccessReturn(Supplier<R> successHandler);
 

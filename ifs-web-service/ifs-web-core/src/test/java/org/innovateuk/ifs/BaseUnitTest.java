@@ -13,19 +13,27 @@ import org.innovateuk.ifs.application.finance.service.FinanceService;
 import org.innovateuk.ifs.application.finance.view.*;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.application.service.*;
+import org.innovateuk.ifs.assessment.service.AssessorRestService;
+import org.innovateuk.ifs.assessment.service.AssessmentRestService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.bankdetails.BankDetailsService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.security.authentication.user.UserAuthentication;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
+import org.innovateuk.ifs.competition.service.CompetitionKeyStatisticsRestService;
 import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.innovateuk.ifs.contract.service.ContractService;
 import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
+import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
+import org.innovateuk.ifs.finance.resource.category.GrantClaimCategory;
+import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
+import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
 import org.innovateuk.ifs.finance.service.ApplicationFinanceRestService;
 import org.innovateuk.ifs.finance.service.FinanceRowRestService;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
+import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.form.service.FormInputResponseService;
 import org.innovateuk.ifs.form.service.FormInputService;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
@@ -34,8 +42,8 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.service.InviteOrganisationRestService;
 import org.innovateuk.ifs.invite.service.InviteRestService;
 import org.innovateuk.ifs.invite.service.RejectionReasonRestService;
-import org.innovateuk.ifs.model.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.organisation.service.OrganisationAddressRestService;
+import org.innovateuk.ifs.populator.OrganisationDetailsModelPopulator;
 import org.innovateuk.ifs.project.PartnerOrganisationService;
 import org.innovateuk.ifs.project.ProjectService;
 import org.innovateuk.ifs.project.bankdetails.service.BankDetailsRestService;
@@ -44,12 +52,8 @@ import org.innovateuk.ifs.project.financecheck.FinanceCheckService;
 import org.innovateuk.ifs.project.service.ProjectRestService;
 import org.innovateuk.ifs.project.status.ProjectStatusService;
 import org.innovateuk.ifs.user.resource.*;
-import org.innovateuk.ifs.user.service.OrganisationRestService;
-import org.innovateuk.ifs.user.service.OrganisationTypeRestService;
-import org.innovateuk.ifs.user.service.ProcessRoleService;
-import org.innovateuk.ifs.user.service.UserService;
+import org.innovateuk.ifs.user.service.*;
 import org.innovateuk.ifs.util.CookieUtil;
-import org.innovateuk.ifs.workflow.ProcessOutcomeService;
 import org.junit.Before;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -75,14 +79,14 @@ import java.util.stream.Collectors;
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static java.util.function.Function.identity;
 import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.ApplicationStatusResourceBuilder.newApplicationStatusResource;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.application.service.Futures.settable;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
@@ -98,6 +102,7 @@ import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResourc
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 import static org.mockito.Matchers.*;
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.when;
 
@@ -117,6 +122,8 @@ public class BaseUnitTest {
 
     protected final Log log = LogFactory.getLog(getClass());
 
+    @Mock
+    public ApplicationAssessmentSummaryRestService applicationAssessmentSummaryRestService;
     @Mock
     public ApplicationFinanceRestService applicationFinanceRestService;
     @Mock
@@ -160,8 +167,6 @@ public class BaseUnitTest {
     @Mock
     public OrganisationAddressRestService organisationAddressRestService;
     @Mock
-    public ProcessOutcomeService processOutcomeService;
-    @Mock
     public SectionService sectionService;
     @Mock
     public CompetitionService competitionService;
@@ -176,9 +181,11 @@ public class BaseUnitTest {
     @Mock
     public DefaultFinanceFormHandler defaultFinanceFormHandler;
     @Mock
+    public DefaultProjectFinanceModelManager defaultProjectFinanceModelManager;
+    @Mock
     public FinanceHandler financeHandler;
     @Mock
-    public FinanceOverviewModelManager financeOverviewModelManager;
+    public ApplicationFinanceOverviewModelManager applicationFinanceOverviewModelManager;
     @Mock
     public FinanceFormHandler financeFormHandler;
     @Mock
@@ -205,6 +212,20 @@ public class BaseUnitTest {
     public PartnerOrganisationService partnerOrganisationServiceMock;
     @Mock
     public CookieUtil cookieUtil;
+    @Mock
+    public CategoryService categoryServiceMock;
+    @Mock
+    public UserRestService userRestServiceMock;
+    @Mock
+    public AssessmentRestService assessmentRestService;
+    @Mock
+    public MilestoneService milestoneServiceMock;
+    @Mock
+    public AssessorRestService assessorRestService;
+    @Mock
+    public ApplicationSummaryRestService applicationSummaryRestService;
+    @Mock
+    public CompetitionKeyStatisticsRestService competitionKeyStatisticsRestServiceMock;
 
     @Spy
     @InjectMocks
@@ -240,18 +261,22 @@ public class BaseUnitTest {
     public List<ProcessRoleResource> application2ProcessRoles;
     public List<ProcessRoleResource> application3ProcessRoles;
     public List<ProcessRoleResource> application4ProcessRoles;
+    public List<ProcessRoleResource> application5ProcessRoles;
 
     public List<OrganisationResource> application1Organisations;
     public List<OrganisationResource> application2Organisations;
     public List<OrganisationResource> application3Organisations;
     public List<OrganisationResource> application4Organisations;
+    public List<OrganisationResource> application5Organisations;
 
 
     private Random randomGenerator;
     public OrganisationTypeResource businessOrganisationTypeResource;
     public OrganisationTypeResource researchOrganisationTypeResource;
+    public OrganisationTypeResource academicOrganisationTypeResource;
     public OrganisationTypeResource businessOrganisationType;
     public OrganisationTypeResource researchOrganisationType;
+    public OrganisationTypeResource academicOrganisationType;
     public ApplicationInviteResource invite;
     public ApplicationInviteResource acceptedInvite;
     public ApplicationInviteResource existingUserInvite;
@@ -333,14 +358,18 @@ public class BaseUnitTest {
 
         businessOrganisationTypeResource = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationTypeResource = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
+        academicOrganisationTypeResource = newOrganisationTypeResource().with(id(3L)).with(name("Academic")).build();
 
         // TODO DW - INFUND-1604 - remove when process roles are converted to DTOs
         businessOrganisationType = newOrganisationTypeResource().with(id(1L)).with(name("Business")).build();
         researchOrganisationType = newOrganisationTypeResource().with(id(2L)).with(name("Research")).build();
+        academicOrganisationType = newOrganisationTypeResource().with(id(3L)).with(name("Academic")).build();
 
         ArrayList<OrganisationTypeResource> organisationTypes = new ArrayList<>();
         organisationTypes.add(businessOrganisationTypeResource);
         organisationTypes.add(researchOrganisationTypeResource);
+        organisationTypes.add(academicOrganisationTypeResource);
+
         organisationTypes.add(new OrganisationTypeResource(3L, "Public Sector", null));
         organisationTypes.add(new OrganisationTypeResource(4L, "Charity", null));
         organisationTypes.add(new OrganisationTypeResource(5L, "University (HEI)", 2L));
@@ -353,7 +382,7 @@ public class BaseUnitTest {
         when(organisationTypeRestService.findOne(anyLong())).thenReturn(restSuccess(new OrganisationTypeResource(99L, "Unknown organisation type", null)));
         when(organisationTypeRestService.findOne(1L)).thenReturn(restSuccess(businessOrganisationTypeResource));
         when(organisationTypeRestService.findOne(2L)).thenReturn(restSuccess(researchOrganisationTypeResource));
-
+        when(organisationTypeRestService.findOne(3L)).thenReturn(restSuccess(academicOrganisationTypeResource));
     }
 
     public void loginDefaultUser(){
@@ -381,6 +410,7 @@ public class BaseUnitTest {
                 with(id(1L)).
                 with(name("Application details")).
                 withQuestions(simpleMap(singletonList(q01Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
         QuestionResource q10Resource = setupQuestionResource(10L, "How does your project align with the scope of this competition?", questionResourceBuilder);
@@ -389,6 +419,7 @@ public class BaseUnitTest {
                 with(id(2L)).
                 with(name("Scope (Gateway question)")).
                 withQuestions(simpleMap(singletonList(q10Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
         QuestionResource q20Resource = setupQuestionResource(20L, "1. What is the business opportunity that this project addresses?", questionResourceBuilder);
@@ -403,6 +434,7 @@ public class BaseUnitTest {
                 with(id(3L)).
                 with(name("Business proposition (Q1 - Q4)")).
                 withQuestions(simpleMap(asList(q20Resource, q21Resource, q22Resource, q23Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
 
@@ -418,16 +450,20 @@ public class BaseUnitTest {
                 with(id(4L)).
                 with(name("Project approach (Q5 - Q8)")).
                 withQuestions(simpleMap(asList(q30Resource, q31Resource, q32Resource, q33Resource), QuestionResource::getId)).
+                withType(SectionType.GENERAL).
                 build();
 
-        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).build();
-        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).build();
+        SectionResource sectionResource5 = sectionResourceBuilder.with(id(5L)).with(name("Funding (Q9 - Q10)")).withType(SectionType.GENERAL).build();
+        SectionResource sectionResource6 = sectionResourceBuilder.with(id(6L)).with(name("Finances")).withType(SectionType.GENERAL).build();
         SectionResource sectionResource7 = sectionResourceBuilder.with(id(7L)).with(name("Your finances")).withType(SectionType.FINANCE).build();
+        SectionResource sectionResource8 = sectionResourceBuilder.with(id(8L)).with(name("Your project costs")).withType(SectionType.PROJECT_COST_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource9 = sectionResourceBuilder.with(id(9L)).with(name("Your organisation")).withType(SectionType.ORGANISATION_FINANCES).withParentSection(sectionResource7.getId()).build();
+        SectionResource sectionResource10 = sectionResourceBuilder.with(id(10L)).with(name("Your funding")).withType(SectionType.FUNDING_FINANCES).withParentSection(sectionResource7.getId()).build();
 
         sectionResource6.setChildSections(Arrays.asList(sectionResource7.getId()));
+        sectionResource7.setChildSections(Arrays.asList(sectionResource8.getId(), sectionResource9.getId(), sectionResource10.getId()));
 
-
-        sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4, sectionResource5, sectionResource6, sectionResource7);
+        sectionResources = asList(sectionResource1, sectionResource2, sectionResource3, sectionResource4, sectionResource5, sectionResource6, sectionResource7, sectionResource8, sectionResource9, sectionResource10);
         sectionResources.forEach(s -> {
                     s.setQuestionGroup(false);
                     s.setChildSections(new ArrayList<>());
@@ -436,15 +472,15 @@ public class BaseUnitTest {
         );
         when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FINANCE)).thenReturn(Arrays.asList(sectionResource7));
         when(sectionService.getFinanceSection(1L)).thenReturn(sectionResource7);
-        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource6));
+        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.ORGANISATION_FINANCES)).thenReturn(Arrays.asList(sectionResource9));
+        when(sectionService.getSectionsForCompetitionByType(1L,SectionType.FUNDING_FINANCES)).thenReturn(Arrays.asList(sectionResource10));
 
         when(questionService.getQuestionsBySectionIdAndType(7L, QuestionType.COST)).thenReturn(Arrays.asList(q21Resource, q22Resource, q23Resource)) ;
+        when(questionService.getQuestionByCompetitionIdAndFormInputType(1L, FormInputType.APPLICATION_DETAILS)).thenReturn(restSuccess(q01Resource));
 
         ArrayList<QuestionResource> questionList = new ArrayList<>();
         for (SectionResource section : sectionResources) {
-            section.setQuestionGroup(false);
             List<Long> sectionQuestions = section.getQuestions();
-            section.setQuestionGroup(false);
             if(sectionQuestions != null){
                 Map<Long, QuestionResource> questionsMap =
                         sectionQuestions.stream().collect(
@@ -495,9 +531,9 @@ public class BaseUnitTest {
     }
 
     public void setupUserRoles() {
-        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName(), null);
+        RoleResource assessorRole = new RoleResource(3L, UserRole.ASSESSOR.getRoleName());
         assessorRole.setUrl("assessor/dashboard");
-        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName(), null);
+        RoleResource applicantRole = new RoleResource(4L, UserRole.APPLICANT.getRoleName());
         applicantRole.setUrl("applicant/dashboard");
         applicant.setRoles(singletonList(applicantRole));
         assessor.setRoles(singletonList(assessorRole));
@@ -514,10 +550,16 @@ public class BaseUnitTest {
         // Build the backing applications.
 
         List<ApplicationResource> applicationResources = asList(
-                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3)).withApplicationStatus(ApplicationStatusConstants.CREATED).build(),
-                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4)).withApplicationStatus(ApplicationStatusConstants.SUBMITTED).build(),
-                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5)).withApplicationStatus(ApplicationStatusConstants.APPROVED).build(),
-                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6)).withApplicationStatus(ApplicationStatusConstants.REJECTED).build()
+                newApplicationResource().with(id(1L)).with(name("Rovel Additive Manufacturing Process")).withStartDate(LocalDate.now().plusMonths(3))
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(2L)).with(name("Providing sustainable childcare")).withStartDate(LocalDate.now().plusMonths(4))
+                        .withApplicationStatus(ApplicationStatusConstants.SUBMITTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(3L)).with(name("Mobile Phone Data for Logistics Analytics")).withStartDate(LocalDate.now().plusMonths(5))
+                        .withApplicationStatus(ApplicationStatusConstants.APPROVED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(4L)).with(name("Using natural gas to heat homes")).withStartDate(LocalDate.now().plusMonths(6))
+                        .withApplicationStatus(ApplicationStatusConstants.REJECTED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build(),
+                newApplicationResource().with(id(5L)).with(name("Rovel Additive Manufacturing Process Ltd")).withStartDate(LocalDate.now().plusMonths(3))
+                        .withApplicationStatus(ApplicationStatusConstants.CREATED).withResearchCategories(newResearchCategoryResource().buildSet(1)).build()
         );
 
         Map<Long, ApplicationResource> idsToApplicationResources = applicationResources.stream().collect(toMap(a -> a.getId(), a -> a));
@@ -528,7 +570,9 @@ public class BaseUnitTest {
 
         OrganisationResource organisation1 = newOrganisationResource().withId(1L).withOrganisationType(businessOrganisationTypeResource.getId()).withName("Empire Ltd").build();
         OrganisationResource organisation2 = newOrganisationResource().withId(2L).withOrganisationType(researchOrganisationTypeResource.getId()).withName("Ludlow").build();
-        organisations = asList(organisation1, organisation2);
+        OrganisationResource organisation3 = newOrganisationResource().withId(3L).withOrganisationType(academicOrganisationTypeResource.getId()).withName("Ludlow Ltd").build();
+
+        organisations = asList(organisation1, organisation2, organisation3);
         Comparator<OrganisationResource> compareById = Comparator.comparingLong(OrganisationResource::getId);
         organisationSet = new TreeSet<>(compareById);
         organisationSet.addAll(organisations);
@@ -543,6 +587,7 @@ public class BaseUnitTest {
         ProcessRoleResource processRole8 = newProcessRoleResource().with(id(8L)).withApplication(applicationResources.get(0).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
         ProcessRoleResource processRole9 = newProcessRoleResource().with(id(9L)).withApplication(applicationResources.get(3).getId()).withUser(assessorUser).withRole(assessorRole).withOrganisation(organisation1.getId()).build();
         ProcessRoleResource processRole10 = newProcessRoleResource().with(id(10L)).withApplication(applicationResources.get(1).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation2.getId()).build();
+        ProcessRoleResource processRole11 = newProcessRoleResource().with(id(11L)).withApplication(applicationResources.get(4).getId()).withUser(applicantUser).withRole(role1).withOrganisation(organisation3.getId()).build();
 
         assessorProcessRoleResources = asList(processRole6, processRole7, processRole8, processRole9);
         processRoles = asList(processRole1,processRole2, processRole3, processRole4, processRole5, processRole6, processRole7, processRole8, processRole9);
@@ -551,22 +596,24 @@ public class BaseUnitTest {
         application2ProcessRoles = asList(processRole6, processRole10);
         application3ProcessRoles = asList(processRole3, processRole7);
         application4ProcessRoles = asList(processRole4, processRole9);
+        application5ProcessRoles = asList(processRole11);
 
         application1Organisations = asList(organisation1, organisation2);
         application2Organisations = asList(organisation1, organisation2);
         application3Organisations = asList(organisation1);
         application4Organisations = asList(organisation1);
+        application5Organisations = asList(organisation3);
 
         organisation1.setProcessRoles(simpleMap(asList(processRole1, processRole2, processRole3, processRole4, processRole7, processRole8, processRole8), ProcessRoleResource::getId));
         organisation2.setProcessRoles(simpleMap(singletonList(processRole5), ProcessRoleResource::getId));
+        organisation3.setProcessRoles(simpleMap(singletonList(processRole11), ProcessRoleResource::getId));
 
         applicationResources.get(0).setCompetition(competitionResource.getId());
         applicationResources.get(1).setCompetition(competitionResource.getId());
         applicationResources.get(2).setCompetition(competitionResource.getId());
         applicationResources.get(3).setCompetition(competitionResource.getId());
+        applicationResources.get(4).setCompetition(competitionResource.getId());
 
-        loggedInUser.setProcessRoles(asList(processRole1.getId(), processRole2.getId(),processRole3.getId(), processRole4.getId()));
-        users.get(0).setProcessRoles(asList(processRole5.getId()));
         applications = applicationResources;
 
         when(sectionService.filterParentSections(sectionResources)).thenReturn(sectionResources);
@@ -581,11 +628,13 @@ public class BaseUnitTest {
         when(processRoleService.findProcessRole(assessor.getId(), applicationResources.get(2).getId())).thenReturn(processRole7);
         when(processRoleService.findProcessRole(assessor.getId(), applicationResources.get(0).getId())).thenReturn(processRole8);
         when(processRoleService.findProcessRole(assessor.getId(), applicationResources.get(3).getId())).thenReturn(processRole9);
+        when(processRoleService.findProcessRole(applicant.getId(), applicationResources.get(4).getId())).thenReturn(processRole11);
 
         when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(0).getId())).thenReturn(application1ProcessRoles);
         when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(1).getId())).thenReturn(application2ProcessRoles);
         when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(2).getId())).thenReturn(application3ProcessRoles);
         when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(3).getId())).thenReturn(application4ProcessRoles);
+        when(processRoleService.findProcessRolesByApplicationId(applicationResources.get(4).getId())).thenReturn(application5ProcessRoles);
 
         Map<Long, Set<Long>> completedMap = new HashMap<>();
         completedMap.put(organisation1.getId(), new TreeSet<>());
@@ -594,21 +643,26 @@ public class BaseUnitTest {
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(1).getId())).thenReturn(completedMap);
         when(sectionService.getCompletedSectionsByOrganisation(applicationResources.get(2).getId())).thenReturn(completedMap);
 
-        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplication()))));
+        processRoles.forEach(pr -> when(applicationService.findByProcessRoleId(pr.getId())).thenReturn(restSuccess(idsToApplicationResources.get(pr.getApplicationId()))));
 
         when(applicationRestService.getApplicationsByUserId(loggedInUser.getId())).thenReturn(restSuccess(applications));
         when(applicationService.getById(applications.get(0).getId())).thenReturn(applications.get(0));
         when(applicationService.getById(applications.get(1).getId())).thenReturn(applications.get(1));
         when(applicationService.getById(applications.get(2).getId())).thenReturn(applications.get(2));
         when(applicationService.getById(applications.get(3).getId())).thenReturn(applications.get(3));
+        when(applicationService.getById(applications.get(4).getId())).thenReturn(applications.get(4));
+
         when(organisationService.getOrganisationById(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationByIdForAnonymousUserFlow(organisationSet.first().getId())).thenReturn(organisationSet.first());
         when(organisationService.getOrganisationType(loggedInUser.getId(), applications.get(0).getId())).thenReturn("Business");
+        when(organisationService.getOrganisationForUser(loggedInUser.getId(), application1ProcessRoles)).thenReturn(Optional.of(organisationSet.first()));
         when(userService.isLeadApplicant(loggedInUser.getId(), applications.get(0))).thenReturn(true);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(0))).thenReturn(processRole1);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(1))).thenReturn(processRole2);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(2))).thenReturn(processRole3);
         when(userService.getLeadApplicantProcessRoleOrNull(applications.get(3))).thenReturn(processRole4);
+        when(userService.getLeadApplicantProcessRoleOrNull(applications.get(4))).thenReturn(processRole11);
+
         when(userService.findById(loggedInUser.getId())).thenReturn(loggedInUser);
 
         processRoles.forEach(processRole -> when(processRoleService.getById(processRole.getId())).thenReturn(settable(processRole)));
@@ -641,6 +695,11 @@ public class BaseUnitTest {
     public void setupFinances() {
         ApplicationResource application = applications.get(0);
         applicationFinanceResource = new ApplicationFinanceResource(1L, application.getId(), organisations.get(0).getId(), OrganisationSize.LARGE);
+        Map<FinanceRowType, FinanceRowCostCategory> organisationFinances = new HashMap<>();
+        FinanceRowCostCategory costCategory = new GrantClaimCategory();
+        costCategory.addCost(new GrantClaim(1L, 50));
+        organisationFinances.put(FinanceRowType.FINANCE, costCategory);
+        applicationFinanceResource.setFinanceOrganisationDetails(organisationFinances);
         when(financeService.getApplicationFinanceDetails(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(financeService.getApplicationFinance(loggedInUser.getId(), application.getId())).thenReturn(applicationFinanceResource);
         when(applicationFinanceRestService.getResearchParticipationPercentage(anyLong())).thenReturn(restSuccess(0.0));

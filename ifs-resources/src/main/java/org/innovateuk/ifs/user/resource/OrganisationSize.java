@@ -5,9 +5,9 @@ package org.innovateuk.ifs.user.resource;
  * http://ec.europa.eu/growth/smes/business-friendly-environment/sme-definition/index_en.htm
  */
 public enum OrganisationSize {
-    SMALL("Micro / small - claim up to 70%", 70),
-    MEDIUM("Medium - claim up to 60%", 60),
-    LARGE("Large - claim up to 50%", 50);
+    SMALL("Micro / small: claim up to 70%", 70),
+    MEDIUM("Medium: claim up to 60%", 60),
+    LARGE("Large: claim up to 50%", 50);
 
     private final String name;
     private final int maxGrantClaimPercentage;

@@ -25,6 +25,7 @@ public interface UserRestService {
     RestResult<UserResource> findUserByEmail(String email);
     Future<RestResult<ProcessRoleResource[]>> findAssignableProcessRoles(Long applicationId);
     RestResult<List<UserResource>> findRelatedUsers(Long applicationId);
+    RestResult<Boolean> userHasApplicationForCompetition(Long userId, Long competitionId);
 
     Future<RestResult<ProcessRoleResource>> findProcessRoleById(Long processRoleId);
     RestResult<Void> verifyEmail(String hash);
@@ -39,7 +40,7 @@ public interface UserRestService {
                                                                 String phoneNumber, String gender, Long ethnicity, String disability, Long organisationId);
     RestResult<UserResource> updateDetails(Long id, String email, String firstName, String lastName, String title, String phoneNumber, String gender, Long ethnicity, String disability);
     RestResult<ProfileSkillsResource> getProfileSkills(Long userId);
-    RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsResource profileSkills);
+    RestResult<Void> updateProfileSkills(Long userId, ProfileSkillsEditResource profileSkills);
     RestResult<ProfileContractResource> getProfileContract(Long userId);
     RestResult<Void> updateProfileContract(Long userId);
     RestResult<List<AffiliationResource>> getUserAffiliations(Long userId);

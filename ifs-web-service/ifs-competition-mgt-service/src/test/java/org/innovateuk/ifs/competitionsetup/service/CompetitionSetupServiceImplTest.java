@@ -53,8 +53,6 @@ public class CompetitionSetupServiceImplTest {
 		CompetitionSetupSection section = CompetitionSetupSection.INITIAL_DETAILS;
 		
 		List<CompetitionSetupSection> completedSections = new ArrayList<>();
-		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(competition.getId())).thenReturn(completedSections);
-		
 		service.populateCompetitionSectionModelAttributes(model, competition, section);
 		
 		verifyCommonModelAttributes(model, competition, section, completedSections);
@@ -80,8 +78,7 @@ public class CompetitionSetupServiceImplTest {
 		CompetitionSetupSection section = CompetitionSetupSection.ELIGIBILITY;
 		
 		List<CompetitionSetupSection> completedSections = new ArrayList<>();
-		when(competitionService.getCompletedCompetitionSetupSectionStatusesByCompetitionId(8L)).thenReturn(completedSections);
-		
+
 		service.populateCompetitionSectionModelAttributes(model, competition, section);
 		
 		verifyCommonModelAttributes(model, competition, section, completedSections);
@@ -93,13 +90,12 @@ public class CompetitionSetupServiceImplTest {
 
 	private void verifyCommonModelAttributes(Model model, CompetitionResource competition,
 			CompetitionSetupSection section, List<CompetitionSetupSection> completedSections) {
-		assertEquals(11, model.asMap().size());
+		assertEquals(10, model.asMap().size());
 		assertEquals(Boolean.FALSE, model.asMap().get("isInitialComplete"));
 		assertEquals(Boolean.TRUE, model.asMap().get("editable"));
 		assertEquals(competition, model.asMap().get("competition"));
 		assertEquals(section, model.asMap().get("currentSection"));
 		assertArrayEquals(CompetitionSetupSection.values(), (Object[])model.asMap().get("allSections"));
-		assertEquals(completedSections, model.asMap().get("allCompletedSections"));
 		assertEquals("code: name", model.asMap().get("subTitle"));
 		assertEquals(Boolean.FALSE, model.asMap().get("preventEdit"));
 		assertEquals(Boolean.FALSE, model.asMap().get("isSetupAndLive"));

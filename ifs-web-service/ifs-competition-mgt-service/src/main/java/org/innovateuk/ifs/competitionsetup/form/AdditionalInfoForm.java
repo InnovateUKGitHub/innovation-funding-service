@@ -12,15 +12,12 @@ import java.util.List;
  */
 public class AdditionalInfoForm extends CompetitionSetupForm {
 
-    @Size(max = 255, message = "Activity code has a maximum length of 255 characters")
-    @NotEmpty(message = "Please enter an activity code")
+    @Size(max = 255, message = "{validation.additionalinfoform.activitycode.size}")
+    @NotEmpty(message = "{validation.additionalinfoform.activitycode.required}")
     private String activityCode;
 
-    @Size(max = 255, message = "{validation.additionalinfoform.innovatebudget.size}")
-    private String innovateBudget;
-
     @NotEmpty(message = "{validation.additionalinfoform.pafnumber.required}")
-     private String pafNumber;
+    private String pafNumber;
 
     @NotEmpty(message = "{validation.additionalinfoform.competitioncode.required}")
     private String competitionCode;
@@ -35,11 +32,11 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
     public AdditionalInfoForm() {
     }
 
-    public AdditionalInfoForm(String activityCode, String innovateBudget, String budgetCode, List<FunderRowForm> funders) {
+    public AdditionalInfoForm(String pafNumber, String activityCode, String budgetCode, List<FunderRowForm> funders) {
         this.activityCode = activityCode;
-        this.innovateBudget = innovateBudget;
         this.funders = funders;
         this.budgetCode = budgetCode;
+        this.pafNumber = pafNumber;
     }
 
     public String getActivityCode() {
@@ -48,14 +45,6 @@ public class AdditionalInfoForm extends CompetitionSetupForm {
 
     public void setActivityCode(String activityCode) {
         this.activityCode = activityCode;
-    }
-
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
     }
 
     public String getPafNumber() {

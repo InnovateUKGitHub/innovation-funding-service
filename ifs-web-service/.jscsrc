@@ -1,9 +1,0 @@
-{
-  "disallowMixedSpacesAndTabs": true,
-  "requireCamelCaseOrUpperCaseIdentifiers": true,
-  "requireSpacesInFunctionExpression" : {
-      "beforeOpeningCurlyBrace": true
-  },
-  "requireSpaceAfterComma": true,
-  "validateIndentation": 2
-}

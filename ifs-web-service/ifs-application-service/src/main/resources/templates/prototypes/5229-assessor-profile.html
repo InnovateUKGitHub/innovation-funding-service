@@ -20,29 +20,48 @@
 
 	<div th:include="prototypes/fragments/comp-admin :: prototype-comp-admin-page-title-subheading(${'0102468: Technology inspired'}, ${'Assessor profile'}, ${null})" th:remove="tag" />
 
-	<h1 class="heading-large" th:text="${param.name != null ? param.name[0] : 'John Smith'}">ASSESSOR NAME</h1>
+    <h2 class="heading-medium">Assessor details</h2>
 
-	<h2 class="heading-medium">Innovation area and skills</h2>
+    <h3 class="heading-small">Name</h3>
+    <p th:text="${param.name != null ? param.name[0] : 'John Smith'}">John Smith</p>
+
+    <h3 class="heading-small">Address</h3>
+    <p>
+        Nomensa <br />
+        King William House <br />
+        13 Queens Square <br />
+        Bristol <br />
+        BS3 1RF
+    </p>
+
+    <h3 class="heading-small">Phone number</h3>
+    <p>01234 567891</p>
+
+    <h3 class="heading-small">Email address</h3>
+    <p><a href="mailto:j.b@assessor.com">j.b@assessor.com</a></p>
+
+
+	<h2 class="heading-medium">Skills</h2>
 
 	<div id="prototype-innovation-areas">
 		<h3 class="heading-small">Innovation areas <small th:if="${param.user != null and param.user[0] == 'compExec'}"><a href="#" id="prototype-edit-innovation-areas">Edit innovation areas</a></small></h3>
-		<ul class="list-bullet">
+		<ul class="list list-bullet">
 			<li id="prototype-innovation-one">
-				<strong>Materials and manufacturing</strong>
-				<ul class="list-bullet">
-					<li>Digital sciences</li>
+				materials and manufacturing
+				<ul class="list list-bullet">
+					<li>digital sciences</li>
 				</ul>
 			</li>
 			<li>
-				<strong>Health and life sciences</strong>
-				<ul class="list-bullet">
-					<li>Information &amp; communications technology (ICT)</li>
+				health and life sciences
+				<ul class="list list-bullet">
+					<li>information and communications technology (ICT)</li>
 				</ul>
 			</li>
 			<li id="prototype-innovation-three">
-				<strong>Materials and manufacturing</strong>
-				<ul class="list-bullet">
-					<li>Earth observation</li>
+				materials and manufacturing
+				<ul class="list list-bullet">
+					<li>earth observation</li>
 				</ul>
 			</li>
 		</ul>
@@ -111,43 +130,12 @@
 
 	</div>
 
-	<h3 class="heading-small no-margin">Type</h3>
-	<ul class="list-bullet">
-		<li>Business</li>
-	</ul>
-
-	<h3 class="heading-small no-margin-bottom">Skills</h3>
+	<h3 class="heading-small no-margin-bottom">Skill areas</h3>
 	<p>Human computer interaction, Wearables, IoT</p>
-	
-	<h2 class="heading-medium">Assessor details</h2>
-	
-	<div class="grid-row">
-		
-		<div class="column-half">
 
-			<h3 class="heading-small no-margin-bottom">Email</h3>
-			<p><a href="mailto:j.b@assessor.com">j.b@assessor.com</a></p>
+	<h3 class="heading-small no-margin">Assessor type</h3>
+	<p>business</p>
 
-			<h3 class="heading-small no-margin-bottom">Phone</h3>
-			<p>01234 567891</p>
-
-			<h3 class="heading-small no-margin-bottom">Principal employer and role</h3>
-			<p>ASDF solutions <br /> CEO</p>
-
-		</div>
-		
-		<div class="column-half">
-			<h3 class="heading-small no-margin-bottom">Address</h3>
-			<p>
-				Nomensa <br />
-				King William House <br />
-				13 Queens Square <br />
-				Bristol <br />
-				BS3 1RF
-			</p>
-		</div>
-
-	</div>
 
 	<h2 class="heading-medium">Personal affiliations</h2>
 
@@ -161,7 +149,7 @@
 		<h2 class="heading-medium">Training <small><a th:href="@{'?status=updateTraining#update-training'}">Update training details</a></small></h2>
 
 		<dl class="standard-definition-list">
-			
+
 			<dt>Panel approved</dt>
 			<dd>Yes</dd>
 
@@ -177,7 +165,7 @@
 	</th:block>
 
 	<th:block th:if="${param.status != null and param.status[0] == 'updateTraining'}">
-	
+
 		<h2 class="heading-medium no-margin-bottom" id="update-training">Update training details</h2>
 
 		<form action="GET">
@@ -185,11 +173,11 @@
 			<div class="form-group">
 				<legend class="heading-small">Is the assessor panel approved?</legend>
 				<fieldset class="inline">
-					<label class="block-label" for="update-training-1">
+					<label class="block-label selection-button-radio" for="update-training-1">
 				    	<input id="update-training-1" name="update-training" value="Yes" type="radio" />
 				      	Yes
 				    </label>
-				    <label class="block-label" for="update-training-2">
+				    <label class="block-label selection-button-radio" for="update-training-2">
 				      	<input id="update-training-2" name="update-training" value="No" type="radio" />
 				      	No
 				    </label>
@@ -199,11 +187,11 @@
 			<div class="form-group">
 				<legend class="heading-small">Does the assessor require training?</legend>
 				<fieldset class="inline">
-					<label class="block-label" for="require-training-1">
+					<label class="block-label selection-button-radio" for="require-training-1">
 				    	<input id="require-training-1" name="require-training" value="Yes" type="radio" />
 				      	Yes
 				    </label>
-				    <label class="block-label" for="require-training-2">
+				    <label class="block-label selection-button-radio" for="require-training-2">
 				      	<input id="require-training-2" name="require-training" value="No" type="radio" />
 				      	No
 				    </label>
@@ -211,7 +199,7 @@
 			</div>
 
 			<div class="form-group">
-				
+
 				<label for="training-comments" class="form-label-bold">Comments</label>
 				<textarea name="training-comments" id="training-comments" cols="30" rows="6" class="width-full"></textarea>
 
@@ -225,7 +213,7 @@
 
 	</th:block>
 
-	
+
 
 	<h2 class="heading-medium">Assessment history</h2>
 

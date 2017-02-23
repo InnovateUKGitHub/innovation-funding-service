@@ -4,8 +4,7 @@ import org.innovateuk.ifs.BaseUnitTestMocksTest;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.domain.AssessorFormInputResponse;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
-import org.innovateuk.ifs.category.resource.CategoryResource;
-import org.innovateuk.ifs.category.resource.CategoryType;
+import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.junit.Before;
@@ -22,7 +21,7 @@ import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessm
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseBuilder.newAssessorFormInputResponse;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
-import static org.innovateuk.ifs.category.builder.CategoryResourceBuilder.newCategoryResource;
+import static org.innovateuk.ifs.category.builder.ResearchCategoryResourceBuilder.newResearchCategoryResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
@@ -383,14 +382,13 @@ public class AssessorFormInputResponseServiceImplTest extends BaseUnitTestMocksT
                 .withType(ASSESSOR_RESEARCH_CATEGORY)
                 .build();
 
-        CategoryResource categoryResource = newCategoryResource()
+        ResearchCategoryResource categoryResource = newResearchCategoryResource()
                 .withId(2L)
                 .withName("name")
-                .withType(CategoryType.RESEARCH_CATEGORY)
                 .build();
 
         when(formInputServiceMock.findFormInput(formInputId)).thenReturn(serviceSuccess(formInput));
-        when(categoryServiceMock.getByType(CategoryType.RESEARCH_CATEGORY)).thenReturn(serviceSuccess(Collections.singletonList(categoryResource)));
+        when(categoryServiceMock.getResearchCategories()).thenReturn(serviceSuccess(Collections.singletonList(categoryResource)));
         when(assessorFormInputResponseRepositoryMock.findByAssessmentIdAndFormInputId(assessmentId, formInputId)).thenReturn(existingAssessorFormInputResponse);
         when(assessorFormInputResponseMapperMock.mapToResource(same(existingAssessorFormInputResponse))).thenReturn(existingAssessorFormInputResponseResource);
 

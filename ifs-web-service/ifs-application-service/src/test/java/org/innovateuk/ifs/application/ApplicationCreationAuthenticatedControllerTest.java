@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application;
 
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.junit.Before;
@@ -65,11 +66,33 @@ public class ApplicationCreationAuthenticatedControllerTest extends BaseUnitTest
     }
 
     @Test
-    public void testGetRequest() throws Exception {
+    public void testGetRequestWithExistingApplication() throws Exception {
+        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(ServiceResult.serviceSuccess(true));
         mockMvc.perform(get("/application/create-authenticated/1"))
                 .andExpect(status().is2xxSuccessful())
                 .andExpect(view().name("create-application/confirm-new-application"));
+        verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
     }
+
+    @Test
+    public void testGetRequestWithoutExistingApplication() throws Exception {
+        ApplicationResource application = new ApplicationResource();
+        application.setId(99L);
+
+        when(applicationService.createApplication(anyLong(), anyLong(), eq(""))).thenReturn(application);
+        when(userService.userHasApplicationForCompetition(loggedInUser.getId(), 1L)).thenReturn(ServiceResult.serviceSuccess(false));
+
+        mockMvc.perform(get("/application/create-authenticated/1"))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/application/99/contributors/invite?newApplication"));
+
+        // application needs to be linked to current user
+        verify(userAuthenticationService, atLeastOnce()).getAuthenticatedUser(any());
+        // application needs to be created.
+        verify(applicationService, atLeastOnce()).createApplication(anyLong(), anyLong(), eq(""));
+        verify(userService).userHasApplicationForCompetition(loggedInUser.getId(), 1L);
+    }
+
 
 
     @Test

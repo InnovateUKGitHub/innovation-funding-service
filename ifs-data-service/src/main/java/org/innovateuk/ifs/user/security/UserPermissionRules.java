@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.user.security;
 
 import org.innovateuk.ifs.application.domain.Application;
+import org.innovateuk.ifs.application.repository.ApplicationRepository;
 import org.innovateuk.ifs.commons.security.PermissionRule;
 import org.innovateuk.ifs.commons.security.PermissionRules;
 import org.innovateuk.ifs.registration.resource.UserRegistrationResource;
@@ -14,10 +15,10 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.function.Predicate;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.*;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static java.util.Arrays.asList;
 
 /**
  * Permission rules that determines who can perform CRUD operations based around Users.
@@ -28,6 +29,9 @@ public class UserPermissionRules {
 
     @Autowired
     private ProcessRoleRepository processRoleRepository;
+
+    @Autowired
+    private ApplicationRepository applicationRepository;
 
     private static List<String> CONSORTIUM_ROLES = asList(LEADAPPLICANT.getName(), COLLABORATOR.getName());
 
@@ -55,15 +59,11 @@ public class UserPermissionRules {
         return userToView.getId().equals(user.getId());
     }
 
-    @PermissionRule(value = "READ", description = "Comp Admins can view everyone")
-    public boolean compAdminsCanViewEveryone(UserResource userToView, UserResource user) {
-        return isCompAdmin(user);
+    @PermissionRule(value = "READ", description = "Internal users can view everyone")
+    public boolean internalUsersCanViewEveryone(UserResource userToView, UserResource user) {
+        return isInternal(user);
     }
 
-    @PermissionRule(value = "READ", description = "Project finance users can view everyone")
-    public boolean projectFinanceUsersCanViewEveryone(UserResource userToView, UserResource user) {
-        return isProjectFinanceUser(user);
-    }
 
     @PermissionRule(value = "READ", description = "The System Registration user can view everyone")
     public boolean systemRegistrationUserCanViewEveryone(UserResource userToView, UserResource user) {
@@ -129,18 +129,19 @@ public class UserPermissionRules {
     }
 
     @PermissionRule(value = "READ", description = "The user, as well as Comp Admin and Exec can read the user's profile status")
-    public boolean usersAndCompAdminExecCanViewProfileStatus(UserProfileStatusResource profileStatus, UserResource user) {
-        return profileStatus.getUser().equals(user.getId()) || isCompAdmin(user) || isCompExec(user);
+    public boolean usersAndCompAdminCanViewProfileStatus(UserProfileStatusResource profileStatus, UserResource user) {
+        return profileStatus.getUser().equals(user.getId()) || isCompAdmin(user);
     }
 
     private List<Application> getApplicationsRelatedToUserByProcessRoles(UserResource user, Predicate<ProcessRole> processRoleFilter) {
         List<ProcessRole> applicableProcessRoles = getFilteredProcessRoles(user, processRoleFilter);
-        return simpleMap(applicableProcessRoles, ProcessRole::getApplication);
+        return simpleMap(applicableProcessRoles, processRole -> {
+            return applicationRepository.findOne(processRole.getApplicationId());
+        });
     }
 
     private List<ProcessRole> getFilteredProcessRoles(UserResource user, Predicate<ProcessRole> filter) {
-        List<Long> applicationRoles = user.getProcessRoles();
-        List<ProcessRole> processRoles = simpleMap(applicationRoles, processRoleRepository::findOne);
+        List<ProcessRole> processRoles = processRoleRepository.findByUserId(user.getId());
         return simpleFilter(processRoles, filter);
     }
 

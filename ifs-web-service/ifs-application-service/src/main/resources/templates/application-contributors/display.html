@@ -15,7 +15,7 @@
     <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Application overview',linkClass='link-back',linkUrl=@{/application/{id}/(id=${currentApplication.getId()})},currentApplication=${currentApplication}" th:remove="tag" />
 
     <div class="page-title">
-        <div th:include="fragments/elements :: application-title (application=${currentApplication})" th:remove="tag" />
+        <div th:include="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" th:remove="tag" />
         <h1 class="heading-xlarge">Application team</h1>
     </div>
 
@@ -24,10 +24,9 @@
 
     <div th:if="${organisationInvites.size() == 0}" th:remove="tag">
       <h2 class="heading-medium">
-        <span th:remove="tag" th:text="${leadOrganisation.name}"/>
-        <small>(Lead organisation)</small>
+          <th:block th:text="${leadOrganisation.name}"/><small>(Lead organisation)</small>
       </h2>
-      <ul class="list-bullet">
+      <ul class="list list-bullet">
         <li>
           <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
           <small>(Lead Applicant)</small>
@@ -49,7 +48,7 @@
             <small>(pending)</small>
           </div>
         </h2>
-        <ul class="list-bullet">
+        <ul class="list list-bullet">
             <li th:if="${organisationInviteResource.id == 0}">
               <a th:href="${'mailto:'+leadApplicant.email}" th:text="${leadApplicant.name}" />
               <small>(Lead Applicant)</small>

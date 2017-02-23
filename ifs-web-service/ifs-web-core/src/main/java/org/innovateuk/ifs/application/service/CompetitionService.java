@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
 import org.innovateuk.ifs.competition.resource.*;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +21,6 @@ public interface CompetitionService {
     List<CompetitionResource> getAllCompetitions();
 
     List<CompetitionResource> getAllCompetitionsNotInSetup();
-
-    List<CompetitionSetupSection> getCompletedCompetitionSetupSectionStatusesByCompetitionId(Long competitionId);
 
     List<CompetitionTypeResource> getAllCompetitionTypes();
 
@@ -54,4 +53,6 @@ public interface CompetitionService {
     void closeAssessment(Long competitionId);
 
     void notifyAssessors(Long competitionId);
+
+    ServiceResult<PublicContentItemResource> getPublicContentOfCompetition(Long competitionId);
 }

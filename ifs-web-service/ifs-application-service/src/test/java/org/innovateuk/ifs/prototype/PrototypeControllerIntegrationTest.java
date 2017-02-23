@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.prototype;
 
-import org.innovateuk.ifs.BaseWebIntegrationTest;
+import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -21,7 +21,7 @@ import static org.springframework.http.MediaType.TEXT_HTML_VALUE;
  */
 @Ignore("Ignored since fetching these pages invokes org.innovateuk.ifs.interceptors.AlertMessageHandlerInterceptor.addAlertMessages. Needs running ifs-data-service which is not deployed to the embedded Tomcat")
 @ActiveProfiles("prototypes")
-public class PrototypeControllerIntegrationTest extends BaseWebIntegrationTest {
+public class PrototypeControllerIntegrationTest extends BaseIntegrationTest {
 
     @Value("http://localhost:${local.server.port}")
     private String baseWebUrl;

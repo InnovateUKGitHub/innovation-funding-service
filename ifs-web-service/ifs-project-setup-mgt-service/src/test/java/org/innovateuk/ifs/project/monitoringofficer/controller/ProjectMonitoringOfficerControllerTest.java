@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.util.CollectionFunctions;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
@@ -26,10 +27,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.PROJECT_SETUP_MONITORING_OFFICER_CANNOT_BE_ASSIGNED_UNTIL_PROJECT_DETAILS_SUBMITTED;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -43,7 +45,6 @@ import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.PENDING;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_MANAGER;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -80,7 +81,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
             build();
 
     private CompetitionResource competition = newCompetitionResource().
-            withInnovationAreaName("Some Area").
+            withInnovationAreaNames(CollectionFunctions.asLinkedSet("Some Area", "Some other area")).
             build();
 
     private CompetitionSummaryResource competitionSummary = newCompetitionSummaryResource().build();
@@ -534,7 +535,7 @@ public class ProjectMonitoringOfficerControllerTest extends BaseControllerMockMV
         assertEquals(Long.valueOf(123), model.getProjectId());
         assertEquals("My Project", model.getProjectTitle());
         assertEquals(competitionSummary, model.getCompetitionSummary());
-        assertEquals("Some Area", competition.getInnovationAreaName());
+        assertEquals(competition.getInnovationAreaNames(), CollectionFunctions.asLinkedSet("Some Area", "Some other area"));
         assertEquals("Dave Smith", model.getProjectManagerName());
         assertEquals(asList("Line 1", "Line 3", "Line 4", "Line 5"), model.getPrimaryAddressLines());
         assertEquals(asList("Partner Org 1", "Partner Org 2"), model.getPartnerOrganisationNames());

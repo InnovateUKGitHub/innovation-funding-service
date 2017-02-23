@@ -16,7 +16,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -40,7 +40,7 @@ public class AdditionalInfoSectionSaverTest {
 	
 	@Test
 	public void testSaveCompetitionSetupSection() {
-		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("Activity", "Innovate", "BudgetCode", Collections.emptyList());
+		AdditionalInfoForm competitionSetupForm = new AdditionalInfoForm("PAF", "Activity", "BudgetCode", Collections.emptyList());
 
 		CompetitionResource competition = newCompetitionResource()
 				.withId(1L).build();
@@ -48,8 +48,8 @@ public class AdditionalInfoSectionSaverTest {
 		service.saveSection(competition, competitionSetupForm);
 
 		assertEquals("Activity", competition.getActivityCode());
-		assertEquals("Innovate", competition.getInnovateBudget());
 		assertEquals("BudgetCode", competition.getBudgetCode());
+		assertEquals("PAF", competition.getPafCode());
 
 		verify(competitionService).update(competition);
 	}
@@ -59,7 +59,7 @@ public class AdditionalInfoSectionSaverTest {
 		CompetitionResource competition = newCompetitionResource().build();
 		int expectedFunders = competition.getFunders().size() + 3;
 		int lastIndex = expectedFunders - 1;
-		String validBudget = "199122.02";
+		String validBudget = "199122";
 		AdditionalInfoForm form = new AdditionalInfoForm();
         when(competitionService.update(competition)).thenReturn(serviceSuccess());
 
@@ -68,7 +68,7 @@ public class AdditionalInfoSectionSaverTest {
 				"funder["+ lastIndex +"].funderBudget", validBudget, Optional.empty());
 
 		assertThat(competition.getFunders().size(), CoreMatchers.equalTo(expectedFunders));
-		assertThat(competition.getFunders().get(lastIndex).getFunderBudget(), CoreMatchers.equalTo(new BigDecimal(validBudget)));
+		assertThat(competition.getFunders().get(lastIndex).getFunderBudget(), CoreMatchers.equalTo(new BigInteger(validBudget)));
 		assertTrue(result.isSuccess());
 
 	}
@@ -130,11 +130,11 @@ public class AdditionalInfoSectionSaverTest {
 
 		CompetitionFunderResource funderResource1 = newCompetitionFunderResource()
 				.withFunder("Funder 1")
-				.withFunderBudget(new BigDecimal(1))
+				.withFunderBudget(BigInteger.valueOf(1))
 				.build();
 		CompetitionFunderResource funderResource2 = newCompetitionFunderResource()
 				.withFunder("Funder 2")
-				.withFunderBudget(new BigDecimal(2))
+				.withFunderBudget(BigInteger.valueOf(2))
 				.build();
 
 		List<FunderRowForm> newFunders = new ArrayList<>();
@@ -158,9 +158,9 @@ public class AdditionalInfoSectionSaverTest {
 		ArgumentCaptor<CompetitionResource> argumentCaptor = ArgumentCaptor.forClass(CompetitionResource.class);
 		verify(competitionService).update(argumentCaptor.capture());
 
-		assertEquals(oldPafCode, 		argumentCaptor.getValue().getPafCode());
-		assertEquals(oldActivityCode, 	argumentCaptor.getValue().getActivityCode());
-		assertEquals(oldBudgetCode, 	argumentCaptor.getValue().getBudgetCode());
+		assertEquals(newPafNumber, 		argumentCaptor.getValue().getPafCode());
+		assertEquals(newActivityCode, 	argumentCaptor.getValue().getActivityCode());
+		assertEquals(newBudgetCode, 	argumentCaptor.getValue().getBudgetCode());
 
 		CompetitionFunderResource createdFunderResource1 = argumentCaptor.getValue().getFunders().get(0);
 		CompetitionFunderResource createdFunderResource2 = argumentCaptor.getValue().getFunders().get(1);

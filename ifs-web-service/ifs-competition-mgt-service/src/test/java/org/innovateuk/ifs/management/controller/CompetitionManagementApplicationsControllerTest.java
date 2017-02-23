@@ -1,324 +1,229 @@
 package org.innovateuk.ifs.management.controller;
 
-import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-
-import java.time.LocalDateTime;
-
+import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
+import org.innovateuk.ifs.application.resource.ApplicationSummaryResource;
+import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
+import org.innovateuk.ifs.management.model.AllApplicationsPageModelPopulator;
+import org.innovateuk.ifs.management.model.ApplicationsMenuModelPopulator;
+import org.innovateuk.ifs.management.model.SubmittedApplicationsModelPopulator;
+import org.innovateuk.ifs.management.viewmodel.*;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.mockito.Spy;
+import org.springframework.test.web.servlet.MvcResult;
 
-import org.innovateuk.ifs.application.resource.ApplicationSummaryPageResource;
-import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
-import org.innovateuk.ifs.application.service.ApplicationSummaryService;
-import org.innovateuk.ifs.application.service.AssessorFeedbackService;
-import org.innovateuk.ifs.application.service.CompetitionService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.ApplicationSummarySortFieldService;
+import java.math.BigDecimal;
+import java.util.List;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CompetitionManagementApplicationsControllerTest {
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder.newApplicationSummaryResource;
+import static org.innovateuk.ifs.application.builder.CompetitionSummaryResourceBuilder.newCompetitionSummaryResource;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-    public static final Long COMPETITION_ID = Long.valueOf(123L);
-    
+public class CompetitionManagementApplicationsControllerTest extends BaseControllerMockMVCTest<CompetitionManagementApplicationsController> {
+
+    private long COMPETITION_ID = 1L;
+    private CompetitionSummaryResource defaultExpectedCompetitionSummary;
+
     @InjectMocks
-	private CompetitionManagementApplicationsController controller;
-	
-    @Mock
-    private ApplicationSummaryService applicationSummaryService;
-    
-    @Mock
-    private CompetitionService competitionService;
+    @Spy
+    private ApplicationsMenuModelPopulator applicationsMenuModelPopulator;
 
-    @Mock
-    private ApplicationSummarySortFieldService applicationSummarySortFieldService;
-    
-    @Mock
-    private AssessorFeedbackService assessorFeedbackService;
-    
-    private MockMvc mockMvc;
-    
+    @InjectMocks
+    @Spy
+    private AllApplicationsPageModelPopulator allApplicationsPageModelPopulator;
+
+    @InjectMocks
+    @Spy
+    private SubmittedApplicationsModelPopulator submittedApplicationsModelPopulator;
+
+    @Override
+    protected CompetitionManagementApplicationsController supplyControllerUnderTest() {
+        return new CompetitionManagementApplicationsController();
+    }
+
     @Before
-    public void setupMockMvc() {
-        mockMvc = MockMvcBuilders.standaloneSetup(controller).build();
+    public void setDefaults() {
+        defaultExpectedCompetitionSummary = newCompetitionSummaryResource()
+                .withId(COMPETITION_ID)
+                .withCompetitionName("Test Competition")
+                .withApplicationsInProgress(10)
+                .withApplicationsSubmitted(20)
+                .withIneligibleApplications(5)
+                .withAssesorsInvited(30)
+                .build();
     }
-    
+
     @Test
-    public void getByCompetitionIdForOpenCompetition() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(OPEN).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+    public void applicationsMenu() throws Exception {
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID)).thenReturn(restSuccess(defaultExpectedCompetitionSummary));
 
-        when(applicationSummarySortFieldService.sortFieldForOpenCompetition(null)).thenReturn("sortfield");
-        
-        ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-    	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(resource);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-open"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource))
-                .andExpect(model().attribute("activeSortField", "sortfield"))
-                .andExpect(model().attribute("activeTab", "allApplications"));
-    	
-    	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+                .andExpect(view().name("competition/applications-menu"))
+                .andReturn();
+
+        ApplicationsMenuViewModel model = (ApplicationsMenuViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService, only()).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsInProgress(), model.getApplicationsInProgress());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
+        assertEquals(defaultExpectedCompetitionSummary.getIneligibleApplications(), model.getIneligibleApplications());
+        assertEquals(defaultExpectedCompetitionSummary.getAssessorsInvited(), model.getAssessorsInvited());
     }
-    
+
     @Test
-    public void getByCompetitionIdForOpenCompetitionProvidingPage() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(OPEN).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+    public void allApplications() throws Exception {
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] innovationAreas = {"Innovation Area 1", "Innovation Area 1", "Innovation Area 1"};
+        String[] statuses = {"Submitted", "Started", "Started"};
+        Integer[] percentages = {100, 70, 20};
 
-        when(applicationSummarySortFieldService.sortFieldForOpenCompetition(null)).thenReturn("sortfield");
-        
-    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-    	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, "sortfield", 2, 20)).thenReturn(resource);
+        List<AllApplicationsRowViewModel> expectedApplicationRows = asList(
+                new AllApplicationsRowViewModel(ids[0], titles[0], leads[0], innovationAreas[0], statuses[0], percentages[0]),
+                new AllApplicationsRowViewModel(ids[1], titles[1], leads[1], innovationAreas[1], statuses[1], percentages[1]),
+                new AllApplicationsRowViewModel(ids[2], titles[2], leads[2], innovationAreas[2], statuses[2], percentages[2])
+        );
 
-    	mockMvc.perform(get("/competition/{competitionId}/applications?page=3", COMPETITION_ID))
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withInnovationArea(innovationAreas)
+                .withStatus(statuses)
+                .withCompletedPercentage(percentages)
+                .build(3);
+
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(expectedSummaries);
+
+        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/all", COMPETITION_ID))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-open"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource))
-                .andExpect(model().attribute("activeSortField", "sortfield"))
-                .andExpect(model().attribute("activeTab", "allApplications"));
-    	
-    	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, "sortfield", 2, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+                .andExpect(view().name("competition/all-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS"))
+                .andReturn();
+
+        AllApplicationsViewModel model = (AllApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsInProgress(), model.getApplicationsInProgress());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsStarted(), model.getApplicationsStarted());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
+        assertEquals(defaultExpectedCompetitionSummary.getTotalNumberOfApplications(), model.getTotalNumberOfApplications());
+        assertEquals(expectedApplicationRows, model.getApplications());
     }
-    
+
     @Test
-    public void getByCompetitionIdProvidingSort() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(OPEN).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+    public void allApplications_preservesQueryParams() throws Exception {
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(emptyList());
 
-        when(applicationSummarySortFieldService.sortFieldForOpenCompetition("lead")).thenReturn("properSort");
+        when(applicationSummaryRestService.getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
 
-    	ApplicationSummaryPageResource resource = new ApplicationSummaryPageResource();
-    	when(applicationSummaryService.findByCompetitionId(COMPETITION_ID, "properSort", 0, 20)).thenReturn(resource);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications?sort=lead", 123))
+        mockMvc.perform(get("/competition/{competitionId}/applications/all?param1=abc&param2=def", COMPETITION_ID))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-open"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", resource))
-                .andExpect(model().attribute("activeSortField", "properSort"))
-                .andExpect(model().attribute("activeTab", "allApplications"));
-    	
-    	verify(applicationSummaryService).findByCompetitionId(COMPETITION_ID, "properSort", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+                .andExpect(view().name("competition/all-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=ALL_APPLICATIONS&param1=abc&param2=def"));
+
+        verify(applicationSummaryRestService).getAllApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
-    
+
     @Test
-    public void getByCompetitionIdForCompetitionInAssessmentSubmittedIsDefault() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(IN_ASSESSMENT).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+    public void submittedApplications() throws Exception {
+        Long[] ids = {1L, 2L, 3L};
+        String[] titles = {"Title 1", "Title 2", "Title 3"};
+        String[] leads = {"Lead 1", "Lead 2", "Lead 3"};
+        String[] innovationAreas = {"Innovation Area 1", "Innovation Area 1", "Innovation Area 1"};
+        Integer[] numberOfPartners = {5, 10, 12};
+        BigDecimal[] grantRequested = {BigDecimal.valueOf(1000), BigDecimal.valueOf(2000), BigDecimal.valueOf(3000)};
+        BigDecimal[] totalProjectCost = {BigDecimal.valueOf(5000), BigDecimal.valueOf(10000), BigDecimal.valueOf(15000)};
+        Long[] durations = {10L, 20L, 30L};
 
-        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+        List<SubmittedApplicationsRowViewModel> expectedApplicationRows = asList(
+                new SubmittedApplicationsRowViewModel(ids[0], titles[0], leads[0], innovationAreas[0], numberOfPartners[0], grantRequested[0], totalProjectCost[0], durations[0]),
+                new SubmittedApplicationsRowViewModel(ids[1], titles[1], leads[1], innovationAreas[1], numberOfPartners[1], grantRequested[1], totalProjectCost[1], durations[1]),
+                new SubmittedApplicationsRowViewModel(ids[2], titles[2], leads[2], innovationAreas[2], numberOfPartners[2], grantRequested[2], totalProjectCost[2], durations[2])
+        );
 
-        ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
+        List<ApplicationSummaryResource> expectedSummaries = newApplicationSummaryResource()
+                .withId(ids)
+                .withName(titles)
+                .withLead(leads)
+                .withInnovationArea(innovationAreas)
+                .withNumberOfPartners(numberOfPartners)
+                .withGrantRequested(grantRequested)
+                .withTotalProjectCost(totalProjectCost)
+                .withDuration(durations)
+                .build(3);
 
-    	mockMvc.perform(get("/competition/{competitionId}/applications", COMPETITION_ID))
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(expectedSummaries);
+
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/applications/submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-in-assessment"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "submitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
+                .andExpect(view().name("competition/submitted-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS"))
+                .andReturn();
+
+        SubmittedApplicationsViewModel model = (SubmittedApplicationsViewModel) result.getModelAndView().getModel().get("model");
+
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
+
+        assertEquals(COMPETITION_ID, model.getCompetitionId());
+        assertEquals(defaultExpectedCompetitionSummary.getCompetitionName(), model.getCompetitionName());
+        assertEquals(defaultExpectedCompetitionSummary.getApplicationsSubmitted(), model.getApplicationsSubmitted());
+        assertEquals(defaultExpectedCompetitionSummary.getAssessorDeadline(), model.getAssessmentDeadline());
+        assertEquals(expectedApplicationRows, model.getApplications());
     }
-    
+
     @Test
-    public void getByCompetitionIdForCompetitionInAssessmentSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(IN_ASSESSMENT).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+    public void submittedApplications_preservesQueryParams() throws Exception {
+        ApplicationSummaryPageResource expectedSummaryPageResource = new ApplicationSummaryPageResource();
+        expectedSummaryPageResource.setContent(emptyList());
 
-        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
+        when(applicationSummaryRestService.getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE))
+                .thenReturn(restSuccess(expectedSummaryPageResource));
+        when(applicationSummaryRestService.getCompetitionSummary(COMPETITION_ID))
+                .thenReturn(restSuccess(defaultExpectedCompetitionSummary));
 
-    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=submitted", COMPETITION_ID))
+        mockMvc.perform(get("/competition/{competitionId}/applications/submitted?param1=abc&param2=def", COMPETITION_ID))
                 .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-in-assessment"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "submitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    }
-    
-    @Test
-    public void getByCompetitionIdForCompetitionInAssessmentNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(IN_ASSESSMENT).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
+                .andExpect(view().name("competition/submitted-applications"))
+                .andExpect(model().attribute("originQuery", "?origin=SUBMITTED_APPLICATIONS&param1=abc&param2=def"))
+                .andReturn();
 
-        when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
-
-    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=notSubmitted", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-in-assessment"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "notSubmitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	
-    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    }
-    
-    @Test
-    public void getByCompetitionIdForCompetitionFundersPanelNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
-
-        when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
-
-    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=notSubmitted", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "notSubmitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	
-    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    }
-    
-	@Test
-    public void getByCompetitionIdForCompetitionFundersPanelSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(FUNDERS_PANEL).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
-
-        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
-
-    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE)).thenReturn(summary);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=submitted", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-funders-panel"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "submitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    }
-    
-    @Test
-    public void getByCompetitionIdForCompetitionAssessorFeedbackNotSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
-
-        when(applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(null)).thenReturn("sortfield");
-
-    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=notSubmitted", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-assessor-feedback"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "notSubmitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"));
-    	
-    	verify(applicationSummaryService).getNotSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    }
-    
-    @Test
-    public void getByCompetitionIdForCompetitionAssessorFeedbackSubmittedRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
-
-        when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
-
-    	ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20)).thenReturn(summary);
-
-        when(assessorFeedbackService.feedbackUploaded(COMPETITION_ID)).thenReturn(false);
-
-    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=submitted", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-assessor-feedback"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("results", summary))
-                .andExpect(model().attribute("activeTab", "submitted"))
-    			.andExpect(model().attribute("activeSortField", "sortfield"))
-    			.andExpect(model().attribute("canPublishAssessorFeedback", false));
-    	
-    	verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20);
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    	verify(assessorFeedbackService).feedbackUploaded(COMPETITION_ID);
-    }
-    
-    @Test
-    public void getByCompetitionIdForCompetitionAssessorFeedbackOverviewRequested() throws Exception {
-        CompetitionSummaryResource competitionSummaryResource = newCompetitionSummaryResource().withId(COMPETITION_ID).withCompetitionStatus(ASSESSOR_FEEDBACK).build();
-        when(applicationSummaryService.getCompetitionSummaryByCompetitionId(COMPETITION_ID)).thenReturn(competitionSummaryResource);
-
-        when(applicationSummaryService.getApplicationsRequiringFeedbackCountByCompetitionId(COMPETITION_ID)).thenReturn(3L);
-
-        LocalDateTime now = LocalDateTime.now();
-        LocalDateTime assessmentStartDate = now.minusDays(7L);
-        LocalDateTime assessorDeadlineDate = now.plusDays(2L);
-        LocalDateTime fundersPanelDate = now.plusDays(3L);
-        
-        CompetitionResource competition = newCompetitionResource()
-        		.withAssessorAcceptsDate(assessmentStartDate)
-                .withAssessorDeadlineDate(assessorDeadlineDate)
-        		.withFundersPanelDate(fundersPanelDate)
-        		.build();
-        when(competitionService.getById(COMPETITION_ID)).thenReturn(competition);
-        
-    	mockMvc.perform(get("/competition/{competitionId}/applications?tab=overview", COMPETITION_ID))
-                .andExpect(status().isOk())
-                .andExpect(view().name("comp-mgt-assessor-feedback"))
-                .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
-                .andExpect(model().attribute("activeTab", "overview"))
-                .andExpect(model().attribute("applicationsRequiringFeedback", 3L))
-                .andExpect(model().attribute("assessmentEndDate", fundersPanelDate))
-                .andExpect(model().attribute("assessmentDaysLeft", 1L))
-                .andExpect(model().attribute("assessmentDaysLeftPercentage", 88L));
-    	
-    	verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
-    }
-    
-    @Test
-    public void getByCompetitionIdProvidingInvalidPage() throws Exception {
-    	
-    	mockMvc.perform(get("/competition/{competitionId}/applications?page=0", COMPETITION_ID))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/competition/123/applications"));
-    	
-    	verifyNoMoreInteractions(applicationSummaryService);
+        verify(applicationSummaryRestService).getSubmittedApplications(COMPETITION_ID, "", 0, Integer.MAX_VALUE);
+        verify(applicationSummaryRestService).getCompetitionSummary(COMPETITION_ID);
     }
 }

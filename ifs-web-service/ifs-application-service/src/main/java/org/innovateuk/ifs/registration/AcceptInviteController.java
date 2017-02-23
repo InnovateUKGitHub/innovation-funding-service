@@ -20,6 +20,7 @@ import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -38,6 +39,7 @@ import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
  * This class is use as an entry point to accept a invite, to a application.
  */
 @Controller
+@PreAuthorize("permitAll")
 public class AcceptInviteController extends BaseController {
     private static final Log LOG = LogFactory.getLog(AcceptInviteController.class);
 

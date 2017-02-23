@@ -1,26 +1,25 @@
 package org.innovateuk.ifs.application.transactional;
 
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-import static org.junit.Assert.fail;
+import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.user.resource.RoleResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.junit.Test;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-import org.springframework.security.access.AccessDeniedException;
-
-import org.innovateuk.ifs.BaseServiceSecurityTest;
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.innovateuk.ifs.user.resource.RoleResource;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.junit.Assert.*;
 
 public class ApplicationFundingServiceSecurityTest extends BaseServiceSecurityTest<ApplicationFundingService> {
 

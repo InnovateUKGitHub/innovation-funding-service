@@ -1,17 +1,17 @@
 package org.innovateuk.ifs.registration;
 
+import org.apache.commons.lang3.CharEncoding;
+import org.hamcrest.*;
 import org.innovateuk.ifs.BaseUnitTest;
 import org.innovateuk.ifs.address.resource.AddressResource;
 import org.innovateuk.ifs.address.service.AddressRestService;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.registration.form.OrganisationCreationForm;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.service.OrganisationSearchRestService;
-import org.apache.commons.lang3.CharEncoding;
-import org.hamcrest.Matchers;
-import org.innovateuk.ifs.invite.service.InviteServiceImpl;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,6 +24,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.validation.Validator;
+import org.springframework.web.util.UriUtils;
 
 import javax.servlet.http.Cookie;
 import java.net.URLEncoder;
@@ -33,8 +34,7 @@ import java.util.Arrays;
 import static org.innovateuk.ifs.BaseControllerMockMVCTest.setupMockMvc;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -230,15 +230,16 @@ public class OrganisationCreationControllerTest extends BaseUnitTest {
 
     @Test
     public void testFindBusinessSearchCompanyHouse() throws Exception {
-        String companyName = "BusinessName";
+        String companyName = "Business Name";
+        String searchString = "  Business   Name   ";
         Cookie cookie = mockMvc.perform(MockMvcRequestBuilders.post("/organisation/create/find-organisation")
                 .cookie(organisationTypeBusiness)
-                .param("organisationSearchName", companyName)
+                .param("organisationSearchName", searchString)
                 .param("search-organisation", "")
                 .header("referer", "/organisation/create/find-organisation/")
         )
                 .andExpect(MockMvcResultMatchers.status().is3xxRedirection())
-                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation?searchTerm=" + companyName))
+                .andExpect(MockMvcResultMatchers.view().name("redirect:/organisation/create/find-organisation?searchTerm=" + UriUtils.encodeQueryParam(searchString,"UTF-8")))
                 .andExpect(cookie().exists("organisationForm"))
                 .andReturn().getResponse().getCookie("organisationForm");
 

@@ -1,11 +1,14 @@
 package org.innovateuk.ifs.competition.transactional;
 
-import org.innovateuk.ifs.application.domain.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.application.domain.GuidanceRow;
+import org.innovateuk.ifs.application.domain.Question;
+import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.repository.GuidanceRowRepository;
 import org.innovateuk.ifs.application.repository.QuestionRepository;
 import org.innovateuk.ifs.category.resource.CategoryType;
-import org.innovateuk.ifs.category.transactional.CategoryLinkService;
+import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.AssessorCountOption;
@@ -20,10 +23,10 @@ import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.form.domain.FormInput;
+import org.innovateuk.ifs.form.domain.FormValidator;
 import org.innovateuk.ifs.form.repository.FormInputRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -33,10 +36,7 @@ import javax.persistence.PersistenceContext;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -45,7 +45,6 @@ import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NOT
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.COMPETITION_NO_TEMPLATE;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.transactional.CompetitionServiceImpl.COMPETITION_CLASS_NAME;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 
@@ -56,7 +55,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 public class CompetitionSetupServiceImpl extends BaseTransactionalService implements CompetitionSetupService {
     private static final Log LOG = LogFactory.getLog(CompetitionSetupServiceImpl.class);
     @Autowired
-    private CategoryLinkService categoryLinkService;
+    private CompetitionCategoryLinkService competitionCategoryLinkService;
     @Autowired
     private CompetitionService competitionService;
     @Autowired
@@ -75,6 +74,8 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     private GuidanceRowRepository guidanceRowRepository;
     @Autowired
     private FormInputRepository formInputRepository;
+    @Autowired
+    private PublicContentService publicContentService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -120,7 +121,7 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void saveCategories(CompetitionResource competitionResource) {
-        saveInnovationArea(competitionResource);
+        saveInnovationAreas(competitionResource);
         saveInnovationSector(competitionResource);
         saveResearchCategories(competitionResource);
     }
@@ -134,9 +135,9 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
         saveCategoryLink(competitionResource, sectorId, CategoryType.INNOVATION_SECTOR);
     }
 
-    private void saveInnovationArea(CompetitionResource competitionResource) {
-        Long areaId = competitionResource.getInnovationArea();
-        saveCategoryLink(competitionResource, areaId, CategoryType.INNOVATION_AREA);
+    private void saveInnovationAreas(CompetitionResource competitionResource) {
+        Set<Long> areaIds = competitionResource.getInnovationAreas();
+        saveCategoryLinks(competitionResource, areaIds, CategoryType.INNOVATION_AREA);
     }
 
     private void saveResearchCategories(CompetitionResource competitionResource) {
@@ -145,18 +146,20 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
     }
 
     private void saveCategoryLink(CompetitionResource competitionResource, Long categoryId, CategoryType categoryType) {
-        categoryLinkService.updateCategoryLink(categoryId, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
+        competitionCategoryLinkService.updateCategoryLink(categoryId, categoryType, competitionMapper.mapToDomain(competitionResource));
     }
 
     private void saveCategoryLinks(CompetitionResource competitionResource, Set<Long> categoryIds, CategoryType categoryType) {
-        categoryLinkService.updateCategoryLinks(categoryIds, categoryType, COMPETITION_CLASS_NAME, competitionResource.getId());
+        competitionCategoryLinkService.updateCategoryLinks(categoryIds, categoryType, competitionMapper.mapToDomain(competitionResource));
     }
 
     @Override
     public ServiceResult<CompetitionResource> create() {
         Competition competition = new Competition();
         competition.setSetupComplete(false);
-        return serviceSuccess(competitionMapper.mapToResource(competitionRepository.save(competition)));
+        Competition savedCompetition = competitionRepository.save(competition);
+        return publicContentService.initialiseByCompetitionId(savedCompetition.getId())
+                .andOnSuccessReturn(() -> competitionMapper.mapToResource(savedCompetition));
     }
 
     @Override
@@ -309,12 +312,15 @@ public class CompetitionSetupServiceImpl extends BaseTransactionalService implem
 
     private Function<FormInput, FormInput> createFormInput(Competition competition, Question question) {
         return (FormInput formInput) -> {
+            // Extract the validators into a new Set as the hibernate Set contains persistence information which alters
+            // the original FormValidator
+            Set<FormValidator> copy = new HashSet<>(formInput.getFormValidators());
             entityManager.detach(formInput);
             formInput.setCompetition(competition);
             formInput.setQuestion(question);
             formInput.setId(null);
+            formInput.setFormValidators(copy);
             formInputRepository.save(formInput);
-
             formInput.setGuidanceRows(createFormInputGuidanceRows(formInput, formInput.getGuidanceRows()));
             return formInput;
         };

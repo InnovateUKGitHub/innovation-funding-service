@@ -53,7 +53,7 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
 
     @Override
-    public <R> RestResult<R> andOnSuccess(Supplier<FailingOrSucceedingResult<R, RestFailure>> successHandler) {
+    public <R> RestResult<R> andOnSuccess(Supplier<? extends FailingOrSucceedingResult<R, RestFailure>> successHandler) {
         return (RestResult<R>) super.andOnSuccess(successHandler);
     }
 
@@ -179,6 +179,14 @@ public class RestResult<T> extends BaseEitherBackedResult<T, RestFailure> {
 
         if (restFailure.has(COMPETITION_INVITE_ALREADY_SENT)) {
             throw new InviteAlreadySentException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_CREATE_FAILED)) {
+            throw new ApplicationAssessorAssignException(error.getErrorKey(), error.getArguments());
+        }
+
+        if (restFailure.has(ASSESSMENT_WITHDRAWN)) {
+            throw new AssessmentWithdrawnException(error.getErrorKey(), error.getArguments());
         }
 
         throw new RuntimeException();

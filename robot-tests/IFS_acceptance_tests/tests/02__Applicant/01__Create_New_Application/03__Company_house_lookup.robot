@@ -58,7 +58,7 @@ Empty company name field
 Other characters
     [Documentation]    INFUND-2960
     [Tags]
-    When the user enters text to a text field    id=organisationSearchName    innovate\\
+    When the user enters text to a text field    id=organisationSearchName    innovate\\\\
     # Robot trims the backslash, if you want to use it it needs to be escaped.
     And the user clicks the button/link    id=org-search
     Then the user should see the text in the page    No results found.

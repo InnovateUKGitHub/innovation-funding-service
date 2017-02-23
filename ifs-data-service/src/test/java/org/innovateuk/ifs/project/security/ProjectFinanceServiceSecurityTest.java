@@ -3,9 +3,12 @@ package org.innovateuk.ifs.project.security;
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.ifs.project.finance.resource.Eligibility;
+import org.innovateuk.ifs.project.finance.resource.EligibilityRagStatus;
+import org.innovateuk.ifs.project.finance.resource.EligibilityResource;
 import org.innovateuk.ifs.project.finance.resource.Viability;
+import org.innovateuk.ifs.project.finance.resource.ViabilityRagStatus;
 import org.innovateuk.ifs.project.finance.resource.ViabilityResource;
-import org.innovateuk.ifs.project.finance.resource.ViabilityStatus;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.resource.*;
 import org.innovateuk.ifs.user.resource.RoleResource;
@@ -71,7 +74,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
                     verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -88,7 +91,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
                 () -> {
                     verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -106,7 +109,7 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
                     verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).projectManagerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -209,9 +212,38 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
 
-        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.RED),
+        assertAccessDenied(() -> classUnderTest.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.RED),
                 () -> {
                     verify(projectFinancePermissionRules).projectFinanceUserCanSaveViability(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testGetEligibility() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.getEligibility(projectOrganisationCompositeId),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectPartnersCanViewEligibility(projectOrganisationCompositeId, getLoggedInUser());
+                    verifyNoMoreInteractions(projectFinancePermissionRules);
+                });
+    }
+
+    @Test
+    public void testSaveEligibility() {
+        Long projectId = 1L;
+        Long organisationId = 1L;
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        assertAccessDenied(() -> classUnderTest.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.RED),
+                () -> {
+                    verify(projectFinancePermissionRules).projectFinanceUserCanSaveEligibility(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }
@@ -286,7 +318,17 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
         }
 
         @Override
-        public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityStatus viabilityStatus) {
+        public ServiceResult<Void> saveViability(ProjectOrganisationCompositeId projectOrganisationCompositeId, Viability viability, ViabilityRagStatus viabilityRagStatus) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<EligibilityResource> getEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> saveEligibility(ProjectOrganisationCompositeId projectOrganisationCompositeId, Eligibility eligibility, EligibilityRagStatus eligibilityRagStatus) {
             return null;
         }
 

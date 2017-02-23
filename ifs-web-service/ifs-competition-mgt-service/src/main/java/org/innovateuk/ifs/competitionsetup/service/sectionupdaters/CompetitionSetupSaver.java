@@ -2,6 +2,7 @@ package org.innovateuk.ifs.competitionsetup.service.sectionupdaters;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
+import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 
 import java.util.Optional;
@@ -15,6 +16,7 @@ public interface CompetitionSetupSaver {
 
 	boolean supportsForm(Class<? extends CompetitionSetupForm> clazz);
 
-	ServiceResult<Void>  saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
+	ServiceResult<Void> saveSection(CompetitionResource competitionResource, CompetitionSetupForm competitionSetupForm);
 
+	CompetitionSetupSection sectionToSave();
 }

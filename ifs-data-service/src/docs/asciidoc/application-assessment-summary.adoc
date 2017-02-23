@@ -1,0 +1,23 @@
+=== Get Assessors
+==== Request
+include::{snippets}/applicationassessmentsummary/get-assessors/http-request.adoc[]
+include::{snippets}/applicationassessmentsummary/get-assessors/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/applicationassessmentsummary/get-assessors/http-response.adoc[]
+include::{snippets}/applicationassessmentsummary/get-assessors/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/applicationassessmentsummary/get-assessors/curl-request.adoc[]
+
+=== Get ApplicationAssessmentSummary by Application Id
+==== Request
+include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/http-request.adoc[]
+include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/http-response.adoc[]
+include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/applicationassessmentsummary/get-application-assessment-summary/curl-request.adoc[]

@@ -1,59 +1,67 @@
 package org.innovateuk.ifs.category.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.hibernate.annotations.DiscriminatorOptions;
+
 import javax.persistence.*;
 
+/**
+ * Links an entity to a Category.
+ * @param <T> the type of entity
+ * @param <C> the type of Category to link to
+ */
 @Entity
-public class CategoryLink {
+@DiscriminatorColumn(name = "class_name")
+@DiscriminatorOptions(force = true)
+public abstract class CategoryLink<T, C extends Category> {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(targetEntity = Category.class)
     @JoinColumn(name="categoryId", referencedColumnName="id")
-    private Category category;
-    private String className;
-    private Long classPk;
+    private C category;
 
-    public CategoryLink() {
+    CategoryLink() {
+        // default constructor
     }
 
-    public CategoryLink(Category category, String className, Long classPk) {
+    protected CategoryLink(C category) {
+        if (category == null) {
+            throw new NullPointerException("category cannot be null");
+        }
         this.category = category;
-        this.className = className;
-        this.classPk = classPk;
     }
 
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Category getCategory() {
+    public C getCategory() {
         return category;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
+    public abstract T getEntity();
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+
+        if (o == null || getClass() != o.getClass()) return false;
+
+        CategoryLink<?,?> that = (CategoryLink<?,?>) o;
+
+        return new EqualsBuilder()
+                .append(category, that.category)
+                .isEquals();
     }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
-
-    public Long getClassPk() {
-        return classPk;
-    }
-
-    public void setClassPk(Long classPk) {
-        this.classPk = classPk;
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder(17, 37)
+                .append(category)
+                .toHashCode();
     }
 }
-
-

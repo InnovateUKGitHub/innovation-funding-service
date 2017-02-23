@@ -36,6 +36,9 @@ public interface SectionService {
                                                                   @P("applicationId") final Long id,
                                                                   Long markedAsCompleteById);
 
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_NOT_REQUIRED')")
+    ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById);
+
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'MARK_SECTION_AS_INCOMPLETE')")
     ServiceResult<Void> markSectionAsInComplete(Long sectionId,
                                                 @P("applicationId") final Long id,
@@ -70,4 +73,5 @@ public interface SectionService {
 
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<SectionResource>> getByCompetitionIdVisibleForAssessment(final Long competitionId);
+
 }

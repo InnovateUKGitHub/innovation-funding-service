@@ -1,3 +1,7 @@
+textarea {
+  border: 2px solid;
+}
+
 /*----- Search ----*/
 .form-search{
   position: relative;
@@ -81,6 +85,13 @@
   margin-bottom: 1.2em;
 }
 
+/*----- Form elements ----*/
+
+.form-date{
+  overflow: visible;
+  @extend .cf;
+}
+
 /*----- Setting widths of inputs ----*/
 
 input{
@@ -152,6 +163,7 @@ select.form-control{
   background: $grey-4;
   padding: 16px 16px 8px 16px;
   margin-top: 16px;
+  overflow: auto;
 
   &.error{
     @extend .warning-alert;
@@ -221,11 +233,12 @@ select.form-control{
   margin-bottom: 40px;
 
   .form-control{
+    background: #fff;
     width: 100%;
   }
 
   button{
-    margin: 20px 0 0 0;
+    margin: 25px 0 0 0;
   }
 }
 
@@ -241,4 +254,21 @@ select[disabled]{
   background: #f8f8f8 none repeat scroll 0 0;
   border: 1px solid #bfc1c3;
   color: #0b0c0c;
+}
+
+
+/*----- Form footer - containing 'Mark as complete' CTA  ----*/
+.form-footer{
+  @include core-16;
+  color: $secondary-text-colour;
+  background: $panel-colour;
+  padding: 0.5em 0;
+
+  @include media-down(mobile) {
+    .alignright{
+      text-align: left;
+      margin-top: 0.5em;
+    }
+  }
+
 }

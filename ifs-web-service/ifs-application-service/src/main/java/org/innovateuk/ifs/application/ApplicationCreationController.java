@@ -9,6 +9,7 @@ import org.innovateuk.ifs.registration.OrganisationCreationController;
 import org.innovateuk.ifs.registration.RegistrationController;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import static org.innovateuk.ifs.invite.service.InviteServiceImpl.INVITE_HASH;
  */
 @Controller
 @RequestMapping("/application/create")
+@PreAuthorize("permitAll")
 public class ApplicationCreationController {
     public static final String COMPETITION_ID = "competitionId";
     public static final String USER_ID = "userId";

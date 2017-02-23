@@ -1,19 +1,18 @@
 package org.innovateuk.ifs.competitionsetup.service.sectionupdaters.application;
 
+import org.apache.el.parser.ParseException;
 import org.innovateuk.ifs.commons.service.ServiceResult;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupQuestionResource;
-import org.innovateuk.ifs.competition.resource.GuidanceRowResource;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.competitionsetup.form.CompetitionSetupForm;
 import org.innovateuk.ifs.competitionsetup.form.application.AbstractApplicationQuestionForm;
 import org.innovateuk.ifs.competitionsetup.service.CompetitionSetupQuestionService;
 import org.innovateuk.ifs.competitionsetup.service.sectionupdaters.AbstractSectionSaver;
-import org.apache.el.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Optional;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
+import static org.innovateuk.ifs.competition.resource.CompetitionSetupSection.APPLICATION_FORM;
 
 
 public abstract class AbstractApplicationSectionSaver extends AbstractSectionSaver {
@@ -21,8 +20,14 @@ public abstract class AbstractApplicationSectionSaver extends AbstractSectionSav
     @Autowired
     private CompetitionSetupQuestionService competitionSetupQuestionService;
 
+    @Override
+    public CompetitionSetupSection sectionToSave() {
+        return APPLICATION_FORM;
+    }
+
+
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
         AbstractApplicationQuestionForm form = (AbstractApplicationQuestionForm) competitionSetupForm;
         mapGuidanceRows(form);
         return competitionSetupQuestionService.updateQuestion(form.getQuestion());

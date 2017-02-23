@@ -19,12 +19,12 @@
 
 	<h1 class="heading-large">Create your account</h1>
 
-	<div class="panel-indent">
+	<div class="panel">
 		<p>The profile that you are creating will be linked to the following organisation <br />
 		<strong>Nomensa</strong></p>
 	</div>
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'1972-project-email-verification'})" th:remove="tag" /> 
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-create-acc(${'1972-project-email-verification'})" th:remove="tag" />
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
@@ -32,6 +32,6 @@
 </main>
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" /> 
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
 </body>
 </html>

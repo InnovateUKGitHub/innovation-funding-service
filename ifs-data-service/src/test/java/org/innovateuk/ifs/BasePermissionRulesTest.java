@@ -47,6 +47,8 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected List<UserResource> allGlobalRoleUsers;
 
+    protected List<UserResource> allInternalUsers;
+
     protected RoleResource compAdminRole() {
         return getRoleResource(COMP_ADMIN);
     }
@@ -55,10 +57,6 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
 
     protected UserResource compAdminUser() {
         return getUserWithRole(COMP_ADMIN);
-    }
-
-    protected UserResource compExecUser() {
-        return getUserWithRole(COMP_EXEC);
     }
 
     protected UserResource projectFinanceUser() {
@@ -82,6 +80,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         allRoles = newRole().withType(UserRoleType.values()).build(UserRoleType.values().length);
         allRolesResources = allRoles.stream().map(role -> newRoleResource().withType(UserRoleType.fromName(role.getName())).build()).collect(toList());
         allGlobalRoleUsers = simpleMap(allRolesResources, role -> newUserResource().withRolesGlobal(singletonList(role)).build());
+        allInternalUsers = asList(compAdminUser(), projectFinanceUser());
 
         // Set up global role method mocks
         for (Role role : allRoles) {
@@ -143,8 +142,8 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     }
 
     protected void setUpUserNotAsProjectFinanceUser(ProjectResource project, UserResource user) {
-        List<RoleResource> projectFinanaceUser = emptyList();
-        user.setRoles(projectFinanaceUser);
+        List<RoleResource> projectFinanceUser = emptyList();
+        user.setRoles(projectFinanceUser);
     }
 
     protected void setupPartnerExpectations(ProjectResource project, UserResource user, boolean userIsPartner) {
@@ -154,6 +153,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
         when(projectUserRepositoryMock.findByProjectIdAndUserIdAndRole(project.getId(), user.getId(), PROJECT_PARTNER)).thenReturn(userIsPartner ? partnerProjectUser : emptyList());
     }
+
     protected void setupUserAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, true);
     }
@@ -161,6 +161,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
     protected void setupUserNotAsLeadPartner(ProjectResource project, UserResource user) {
         setupLeadPartnerExpectations(project, user, false);
     }
+
     private void setupLeadPartnerExpectations(ProjectResource project, UserResource user, boolean userIsLeadPartner) {
 
         org.innovateuk.ifs.application.domain.Application originalApplication = newApplication().build();
@@ -168,7 +169,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         Role leadApplicantRole = newRole().build();
         Role partnerRole = newRole().build();
         Organisation leadOrganisation = newOrganisation().build();
-        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisation(leadOrganisation).build();
+        ProcessRole leadApplicantProcessRole = newProcessRole().withOrganisationId(leadOrganisation.getId()).build();
 
         // find the lead organisation
         when(projectRepositoryMock.findOne(project.getId())).thenReturn(projectEntity);
@@ -176,7 +177,7 @@ public abstract class BasePermissionRulesTest<T> extends BaseUnitTestMocksTest {
         when(processRoleRepositoryMock.findOneByApplicationIdAndRoleId(projectEntity.getApplication().getId(), leadApplicantRole.getId())).thenReturn(leadApplicantProcessRole);
 
         // see if the user is a partner on the lead organisation
-        when(roleRepositoryMock.findOneByName(PARTNER.getName())).thenReturn(partnerRole);
+        when(organisationRepositoryMock.findOne(leadOrganisation.getId())).thenReturn(leadOrganisation);
         when(projectUserRepositoryMock.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(
                 project.getId(), user.getId(), leadOrganisation.getId(), PROJECT_PARTNER)).thenReturn(userIsLeadPartner ? newProjectUser().build() : null);
     }

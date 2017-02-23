@@ -1,5 +1,10 @@
 package org.innovateuk.ifs.testdata;
 
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.flywaydb.core.Flyway;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -25,11 +30,6 @@ import org.innovateuk.ifs.user.repository.UserRepository;
 import org.innovateuk.ifs.user.resource.*;
 import org.innovateuk.ifs.user.transactional.RegistrationService;
 import org.innovateuk.ifs.user.transactional.UserService;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.flywaydb.core.Flyway;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
@@ -53,6 +53,9 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
+import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate.UNIVERSITY_HEI;
 import static org.innovateuk.ifs.testdata.CsvUtils.*;
@@ -61,18 +64,18 @@ import static org.innovateuk.ifs.testdata.builders.AssessorDataBuilder.newAssess
 import static org.innovateuk.ifs.testdata.builders.AssessorInviteDataBuilder.newAssessorInviteData;
 import static org.innovateuk.ifs.testdata.builders.BaseDataBuilder.COMP_ADMIN_EMAIL;
 import static org.innovateuk.ifs.testdata.builders.CompetitionDataBuilder.newCompetitionData;
+import static org.innovateuk.ifs.testdata.builders.CompetitionFunderDataBuilder.newCompetitionFunderData;
 import static org.innovateuk.ifs.testdata.builders.ExternalUserDataBuilder.newExternalUserData;
 import static org.innovateuk.ifs.testdata.builders.InternalUserDataBuilder.newInternalUserData;
 import static org.innovateuk.ifs.testdata.builders.OrganisationDataBuilder.newOrganisationData;
 import static org.innovateuk.ifs.testdata.builders.ProjectDataBuilder.newProjectData;
+import static org.innovateuk.ifs.testdata.builders.PublicContentDateDataBuilder.newPublicContentDateDataBuilder;
+import static org.innovateuk.ifs.testdata.builders.PublicContentGroupDataBuilder.newPublicContentGroupDataBuilder;
 import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.isA;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -124,6 +127,9 @@ public class GenerateTestData extends BaseIntegrationTest {
     private BankDetailsService bankDetailsService;
 
     private CompetitionDataBuilder competitionDataBuilder;
+    private CompetitionFunderDataBuilder competitionFunderDataBuilder;
+    private PublicContentGroupDataBuilder publicContentGroupDataBuilder;
+    private PublicContentDateDataBuilder publicContentDateDataBuilder;
     private ExternalUserDataBuilder externalUserBuilder;
     private InternalUserDataBuilder internalUserBuilder;
     private OrganisationDataBuilder organisationBuilder;
@@ -138,6 +144,12 @@ public class GenerateTestData extends BaseIntegrationTest {
      * select "Competition", "Application", "Question", "Answer", "File upload", "Answered by", "Assigned to", "Marked as complete" UNION ALL select c.name, a.name, q.name, fir.value, fir.file_entry_id, updater.email, assignee.email, qs.marked_as_complete from competition c join application a on a.competition = c.id join question q on q.competition_id = c.id join form_input fi on fi.question_id = q.id join form_input_type fit on fi.form_input_type_id = fit.id left join form_input_response fir on fir.form_input_id = fi.id left join process_role updaterrole on updaterrole.id = fir.updated_by_id left join user updater on updater.id = updaterrole.user_id join question_status qs on qs.application_id = a.id and qs.question_id = q.id left join process_role assigneerole on assigneerole.id = qs.assignee_id left join user assignee on assignee.id = assigneerole.user_id where fit.title in ('textinput','textarea','date','fileupload','percentage') INTO OUTFILE '/var/lib/mysql-files/application-questions3.csv' FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n';
      */
     private static List<CompetitionLine> competitionLines;
+
+    private static List<CompetitionFunderLine> competitionFunderLines;
+
+    private static List<PublicContentGroupLine> publicContentGroupLines;
+
+    private static List<PublicContentDateLine> publicContentDateLines;
 
     private static List<ApplicationLine> applicationLines;
 
@@ -191,13 +203,16 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     @Before
     public void setup() throws Exception {
-         freshDb();
+        freshDb();
     }
 
     @BeforeClass
     public static void readCsvs() throws Exception {
         organisationLines = readOrganisations();
         competitionLines = readCompetitions();
+        competitionFunderLines = readCompetitionFunders();
+        publicContentGroupLines = readPublicContentGroups();
+        publicContentDateLines = readPublicContentDates();
         applicationLines = readApplications();
         inviteLines = readInvites();
         externalUserLines = readExternalUsers();
@@ -241,6 +256,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         ServiceLocator serviceLocator = new ServiceLocator(applicationContext);
 
         competitionDataBuilder = newCompetitionData(serviceLocator);
+        competitionFunderDataBuilder = newCompetitionFunderData(serviceLocator);
         externalUserBuilder = newExternalUserData(serviceLocator);
         internalUserBuilder = newInternalUserData(serviceLocator);
         organisationBuilder = newOrganisationData(serviceLocator);
@@ -248,6 +264,8 @@ public class GenerateTestData extends BaseIntegrationTest {
         assessorInviteUserBuilder = newAssessorInviteData(serviceLocator);
         assessmentDataBuilder = newAssessmentData(serviceLocator);
         projectDataBuilder = newProjectData(serviceLocator);
+        publicContentGroupDataBuilder = newPublicContentGroupDataBuilder(serviceLocator);
+        publicContentDateDataBuilder = newPublicContentDateDataBuilder(serviceLocator);
     }
 
     @Test
@@ -258,6 +276,9 @@ public class GenerateTestData extends BaseIntegrationTest {
         createInternalUsers();
         createExternalUsers();
         createCompetitions();
+        createCompetitionFunders();
+        createPublicContentGroups();
+        createPublicContentDates();
         createAssessors();
         createNonRegisteredAssessorInvites();
         createAssessments();
@@ -324,12 +345,12 @@ public class GenerateTestData extends BaseIntegrationTest {
                         builder.withApprovedFinanceChecks(line.organisationsWithApprovedFinanceChecks) : builder;
 
         assignProjectManagerIfNecessary.
-            andThen(setProjectAddressIfNecessary).
-            andThen(submitProjectDetailsIfNecessary).
-            andThen(setMonitoringOfficerIfNecessary).
-            andThen(selectFinanceContactsIfNecessary).
-            andThen(submitBankDetailsIfNecessary).
-            andThen(approveFinanceChecksIfNecessary).
+                andThen(setProjectAddressIfNecessary).
+                andThen(submitProjectDetailsIfNecessary).
+                andThen(setMonitoringOfficerIfNecessary).
+                andThen(selectFinanceContactsIfNecessary).
+                andThen(submitBankDetailsIfNecessary).
+                andThen(approveFinanceChecksIfNecessary).
                 apply(baseBuilder).
                 build();
 
@@ -354,10 +375,37 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private void createAssessment(AssessmentLine line) {
-        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.state).
-                build();
+        assessmentDataBuilder.withAssessmentData(line.assessorEmail, line.applicationName, line.rejectReason, line
+                .rejectComment, line.state).build();
     }
 
+    private void createCompetitionFunders() {
+        competitionFunderLines.forEach(this::createCompetitionFunder);
+    }
+
+    private void createPublicContentGroups() {
+        publicContentGroupLines.forEach(this::createPublicContentGroup);
+    }
+
+    private void createPublicContentDates() {
+        publicContentDateLines.forEach(this::createPublicContentDate);
+    }
+
+
+    private void createCompetitionFunder(CompetitionFunderLine line) {
+        competitionFunderDataBuilder.withCompetitionFunderData(line.competitionName, line.funder, line.funder_budget, line.co_funder)
+                .build();
+    }
+
+    private void createPublicContentGroup(PublicContentGroupLine line) {
+        publicContentGroupDataBuilder.withPublicContentGroup(line.competitionName, line.heading, line.content, line.section)
+                .build();
+    }
+
+    private void createPublicContentDate(PublicContentDateLine line) {
+        publicContentDateDataBuilder.withPublicContentDate(line.competitionName, line.date, line.content)
+                .build();
+    }
     private void createInternalUsers() {
         internalUserLines.forEach(line -> {
 
@@ -368,7 +416,7 @@ public class GenerateTestData extends BaseIntegrationTest {
                     createPreRegistrationEntry(line.emailAddress);
 
             if (line.emailVerified) {
-                createUser(baseBuilder, line, !asList(COMP_TECHNOLOGIST, COMP_EXEC).contains(role));
+                createUser(baseBuilder, line, !COMP_TECHNOLOGIST.equals(role));
             } else {
                 baseBuilder.build();
             }
@@ -440,9 +488,9 @@ public class GenerateTestData extends BaseIntegrationTest {
                             : builder;
 
             UnaryOperator<ResponseDataBuilder> uploadFilesIfNecessary = builder ->
-                !line.filesUploaded.isEmpty() ?
-                    builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
-                    builder;
+                    !line.filesUploaded.isEmpty() ?
+                            builder.withAssignee(answeringUser).withFileUploads(line.filesUploaded, answeringUser) :
+                            builder;
 
             UnaryOperator<ResponseDataBuilder> assignIfNecessary = builder ->
                     !isBlank(line.assignedTo) ? builder.withAssignee(line.assignedTo) : builder;
@@ -492,7 +540,7 @@ public class GenerateTestData extends BaseIntegrationTest {
 
         List<Triple<String, String, OrganisationTypeEnum>> organisations = simpleMap(applicants, email -> {
             UserResource user = retrieveUserByEmail(email);
-            OrganisationResource organisation = retrieveOrganisationById(user.getOrganisations().get(0));
+            OrganisationResource organisation = retrieveOrganisationByUserId(user.getId());
             return Triple.of(user.getEmail(), organisation.getName(), OrganisationTypeEnum.getFromId(organisation.getOrganisationType()));
         });
 
@@ -554,25 +602,41 @@ public class GenerateTestData extends BaseIntegrationTest {
     private IndustrialCostDataBuilder addFinanceRow(IndustrialCostDataBuilder builder, ApplicationFinanceRow financeRow) {
 
         switch (financeRow.category) {
-            case "Working days per year": return builder.withWorkingDaysPerYear(Integer.valueOf(financeRow.metadata.get(0)));
-            case "Grant claim": return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
-            case "Organisation size": return builder.withOrganisationSize(OrganisationSize.valueOf(financeRow.metadata.get(0).toUpperCase()));
-            case "Labour": return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
-            case "Overheads": switch (financeRow.metadata.get(0).toLowerCase()) {
-                case "custom": return builder.withAdministrationSupportCostsCustomRate(Integer.valueOf(financeRow.metadata.get(1)));
-                case "default": return builder.withAdministrationSupportCostsDefaultRate();
-                case "none": return builder.withAdministrationSupportCostsNone();
-                default: throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
-            }
-            case "Materials": return builder.withMaterials(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
-            case "Capital usage": return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(4)),
-                    financeRow.metadata.get(0), Boolean.parseBoolean(financeRow.metadata.get(1)),
-                    bd(financeRow.metadata.get(2)), bd(financeRow.metadata.get(3)), Integer.valueOf(financeRow.metadata.get(5)));
-            case "Subcontracting": return builder.withSubcontractingCost(financeRow.metadata.get(0), financeRow.metadata.get(1), financeRow.metadata.get(2), bd(financeRow.metadata.get(3)));
-            case "Travel and subsistence": return builder.withTravelAndSubsistence(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), bd(financeRow.metadata.get(2)));
-            case "Other costs": return builder.withOtherCosts(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)));
-            case "Other funding": return builder.withOtherFunding(financeRow.metadata.get(0), LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN), bd(financeRow.metadata.get(2)));
-            default: throw new RuntimeException("Unknown category " + financeRow.category);
+            case "Working days per year":
+                return builder.withWorkingDaysPerYear(Integer.valueOf(financeRow.metadata.get(0)));
+            case "Grant claim":
+                return builder.withGrantClaim(Integer.valueOf(financeRow.metadata.get(0)));
+            case "Organisation size":
+                return builder.withOrganisationSize(OrganisationSize.valueOf(financeRow.metadata.get(0).toUpperCase()));
+            case "Labour":
+                return builder.withLabourEntry(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+            case "Overheads":
+                switch (financeRow.metadata.get(0).toLowerCase()) {
+                    case "custom":
+                        return builder.withAdministrationSupportCostsCustomRate(Integer.valueOf(financeRow.metadata.get(1)));
+                    case "default":
+                        return builder.withAdministrationSupportCostsDefaultRate();
+                    case "none":
+                        return builder.withAdministrationSupportCostsNone();
+                    default:
+                        throw new RuntimeException("Unknown rate type " + financeRow.metadata.get(0).toLowerCase());
+                }
+            case "Materials":
+                return builder.withMaterials(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)), Integer.valueOf(financeRow.metadata.get(2)));
+            case "Capital usage":
+                return builder.withCapitalUsage(Integer.valueOf(financeRow.metadata.get(4)),
+                        financeRow.metadata.get(0), Boolean.parseBoolean(financeRow.metadata.get(1)),
+                        bd(financeRow.metadata.get(2)), bd(financeRow.metadata.get(3)), Integer.valueOf(financeRow.metadata.get(5)));
+            case "Subcontracting":
+                return builder.withSubcontractingCost(financeRow.metadata.get(0), financeRow.metadata.get(1), financeRow.metadata.get(2), bd(financeRow.metadata.get(3)));
+            case "Travel and subsistence":
+                return builder.withTravelAndSubsistence(financeRow.metadata.get(0), Integer.valueOf(financeRow.metadata.get(1)), bd(financeRow.metadata.get(2)));
+            case "Other costs":
+                return builder.withOtherCosts(financeRow.metadata.get(0), bd(financeRow.metadata.get(1)));
+            case "Other funding":
+                return builder.withOtherFunding(financeRow.metadata.get(0), LocalDate.parse(financeRow.metadata.get(1), DATE_PATTERN), bd(financeRow.metadata.get(2)));
+            default:
+                throw new RuntimeException("Unknown category " + financeRow.category);
         }
     }
 
@@ -623,27 +687,42 @@ public class GenerateTestData extends BaseIntegrationTest {
     }
 
     private CompetitionDataBuilder competitionBuilderWithBasicInformation(CsvUtils.CompetitionLine line, Optional<Long> existingCompetitionId) {
-
         CompetitionDataBuilder basicInformation =
                 existingCompetitionId.map(id -> competitionDataBuilder.
                         withExistingCompetition(1L).
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
-                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive)
+                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
+                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords)
+                        .withNewMilestones()
+
                 ).orElse(competitionDataBuilder.
                         createCompetition().
                         withBasicData(line.name, line.description, line.type, line.innovationArea,
-                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive).
+                                line.innovationSector, line.researchCategory, line.leadTechnologist, line.compExecutive,
+                                line.budgetCode, line.pafCode, line.code, line.activityCode, line.assessorCount, line.assessorPay,
+                                line.multiStream, line.collaborationLevel, line.leadApplicantType, line.researchRatio, line.resubmission).
+                        withPublicContent(line.published, line.shortDescription, line.fundingRange, line.eligibilitySummary,
+                                line.competitionDescription, line.fundingType, line.projectSize, line.keywords).
                         withApplicationFormFromTemplate().
                         withNewMilestones()).
-                withOpenDate(line.openDate).
-                withSubmissionDate(line.submissionDate).
-                withFundersPanelDate(line.fundersPanelDate).
-                withFundersPanelEndDate(line.fundersPanelEndDate).
-                withAssessorBriefingDate(line.assessorBriefingDate).
-                withAssessorAcceptsDate(line.assessorAcceptsDate).
-                withAssessorsNotifiedDate(line.assessorsNotifiedDate).
-                withAssessorEndDate(line.assessorEndDate).
-                withAssessmentClosedDate(line.assessmentClosedDate);
+                        withOpenDate(line.openDate).
+                        withBriefingDate(line.briefingDate).
+                        withSubmissionDate(line.submissionDate).
+                        withAllocateAssesorsDate(line.allocateAssessorDate).
+                        withAssessorBriefingDate(line.assessorBriefingDate).
+                        withAssessorAcceptsDate(line.assessorAcceptsDate).
+                        withAssessorsNotifiedDate(line.assessorsNotifiedDate).
+                        withAssessorEndDate(line.assessorEndDate).
+                        withAssessmentClosedDate(line.assessmentClosedDate).
+                        withLineDrawDate(line.drawLineDate).
+                        withAsessmentPanelDate(line.assessmentPanelDate).
+                        withPanelDate(line.panelDate).
+                        withFundersPanelDate(line.fundersPanelDate).
+                        withFundersPanelEndDate(line.fundersPanelEndDate).
+                        withReleaseFeedbackDate(line.releaseFeedback);
 
         return line.setupComplete ? basicInformation.withSetupComplete() : basicInformation;
     }
@@ -651,7 +730,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private void freshDb() throws Exception {
         try {
             cleanAndMigrateDatabaseWithPatches(locations.split(","));
-        } catch (Exception e){
+        } catch (Exception e) {
             fail("Exception thrown migrating with script directories: " + locations.split(",") + e.getMessage());
         }
     }
@@ -659,8 +738,7 @@ public class GenerateTestData extends BaseIntegrationTest {
     private Object unwrapProxy(Object services) {
         try {
             return unwrapProxies(asList(services)).get(0);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -681,7 +759,7 @@ public class GenerateTestData extends BaseIntegrationTest {
         return unwrappedProxies;
     }
 
-    private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations){
+    private void cleanAndMigrateDatabaseWithPatches(String[] patchLocations) {
         Flyway f = new Flyway();
         f.setDataSource(databaseUrl, databaseUser, databasePassword);
         f.setLocations(patchLocations);
@@ -699,6 +777,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     protected OrganisationResource retrieveOrganisationById(Long id) {
         return doAs(systemRegistrar(), () -> organisationService.findById(id).getSuccessObjectOrThrowException());
+    }
+
+    protected OrganisationResource retrieveOrganisationByUserId(Long id) {
+        return doAs(systemRegistrar(), () -> organisationService.getPrimaryForUser(id).getSuccessObjectOrThrowException());
     }
 
     protected UserResource systemRegistrar() {
@@ -735,34 +817,90 @@ public class GenerateTestData extends BaseIntegrationTest {
         AssessorDataBuilder builder = assessorUserBuilder;
 
         Optional<User> existingUser = userRepository.findByEmail(line.emailAddress);
+        Optional<User> sentBy = userRepository.findByEmail("john.doe@innovateuk.test");
+        Optional<LocalDateTime> sentOn = Optional.of(LocalDateTime.now());
 
         for (InviteLine invite : assessorInvitesForThisAssessor) {
-            builder = builder.withInviteToAssessCompetition(invite.targetName, invite.email,
-                    invite.name, invite.hash, existingUser, invite.innovationAreaName);
+            builder = builder.withInviteToAssessCompetition(
+                    invite.targetName,
+                    invite.email,
+                    invite.name,
+                    invite.hash,
+                    invite.status,
+                    existingUser,
+                    invite.innovationAreaName,
+                    sentBy,
+                    sentOn
+            );
         }
 
         String inviteHash = !isBlank(line.hash) ? line.hash : UUID.randomUUID().toString();
+        String innovationArea = !line.innovationAreas.isEmpty() ? line.innovationAreas.get(0) : "";
 
-        AssessorDataBuilder baseBuilder = builder.
-                withInviteToAssessCompetition(line.competitionName, line.emailAddress, line.firstName + " " + line.lastName, inviteHash, existingUser, null);
+        AssessorDataBuilder baseBuilder = builder.withInviteToAssessCompetition(
+                line.competitionName,
+                line.emailAddress,
+                line.firstName + " " + line.lastName,
+                inviteHash,
+                line.inviteStatus,
+                existingUser,
+                innovationArea,
+                sentBy,
+                sentOn
+        );
 
         if (!existingUser.isPresent()) {
-            baseBuilder = baseBuilder.registerUser(line.firstName, line.lastName, line.emailAddress, line.phoneNumber,
-                    line.ethnicity, line.gender, line.disability, inviteHash);
+            baseBuilder = baseBuilder.registerUser(
+                    line.firstName,
+                    line.lastName,
+                    line.emailAddress,
+                    line.phoneNumber,
+                    line.ethnicity,
+                    line.gender,
+                    line.disability,
+                    inviteHash
+            );
         } else {
             baseBuilder = baseBuilder.addAssessorRole();
         }
 
-        if (InviteStatus.OPENED.equals(line.inviteStatus)) {
-            baseBuilder.acceptInvite(inviteHash).build();
-        } else {
-            baseBuilder.build();
+        baseBuilder = baseBuilder.addSkills(line.skillAreas, line.businessType, line.innovationAreas);
+        baseBuilder = baseBuilder.addAffiliations(
+                line.principalEmployer,
+                line.role,
+                line.professionalAffiliations,
+                line.appointments,
+                line.financialInterests,
+                line.familyAffiliations,
+                line.familyFinancialInterests
+        );
+
+        if (line.contractSigned) {
+            baseBuilder = baseBuilder.addContractSigned();
         }
+
+        if (!line.rejectionReason.isEmpty()) {
+            baseBuilder = baseBuilder.rejectInvite(inviteHash, line.rejectionReason, line.rejectionComment);
+        } else if (InviteStatus.OPENED.equals(line.inviteStatus)) {
+            baseBuilder = baseBuilder.acceptInvite(inviteHash);
+        }
+
+        baseBuilder.build();
     }
 
     private void createAssessorInvite(AssessorInviteDataBuilder assessorInviteUserBuilder, InviteLine line) {
-        assessorInviteUserBuilder.withInviteToAssessCompetition(line.targetName, line.email, line.name, line.hash,
-                userRepository.findByEmail(line.email), line.innovationAreaName).build();
+        assessorInviteUserBuilder.withInviteToAssessCompetition(
+                line.targetName,
+                line.email,
+                line.name,
+                line.hash,
+                line.status,
+                userRepository.findByEmail(line.email),
+                line.innovationAreaName,
+                userRepository.findByEmail(line.sentByEmail),
+                Optional.of(line.sentOn)
+        ).
+                build();
     }
 
     private <T extends BaseUserData, S extends BaseUserDataBuilder<T, S>> void createUser(S baseBuilder, CsvUtils.UserLine line, boolean createViaRegistration) {
@@ -803,8 +941,10 @@ public class GenerateTestData extends BaseIntegrationTest {
 
     private OrganisationTypeEnum lookupOrganisationType(String organisationType) {
         switch (organisationType) {
-            case UNIVERSITY_HEI : return OrganisationTypeEnum.ACADEMIC;
-            default : return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
+            case UNIVERSITY_HEI:
+                return OrganisationTypeEnum.ACADEMIC;
+            default:
+                return OrganisationTypeEnum.valueOf(organisationType.toUpperCase().replace(" ", "_"));
         }
     }
 

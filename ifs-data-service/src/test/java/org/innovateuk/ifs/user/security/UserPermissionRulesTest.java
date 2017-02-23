@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.List;
 import java.util.function.Function;
 
+import static freemarker.template.utility.Collections12.singletonList;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.registration.builder.UserRegistrationResourceBuilder.newUserRegistrationResource;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
@@ -25,7 +27,6 @@ import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResourc
 import static org.innovateuk.ifs.user.resource.UserRoleType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -49,26 +50,13 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     }
 
     @Test
-    public void testCompAdminsCanViewEveryone() {
+    public void testInternalUsersCanViewEveryone() {
         allGlobalRoleUsers.forEach(user -> {
             allGlobalRoleUsers.forEach(otherUser -> {
-                if (user.equals(compAdminUser())) {
-                    assertTrue(rules.compAdminsCanViewEveryone(otherUser, user));
+                if (allInternalUsers.contains(user)) {
+                    assertTrue(rules.internalUsersCanViewEveryone(otherUser, user));
                 } else {
-                    assertFalse(rules.compAdminsCanViewEveryone(otherUser, user));
-                }
-            });
-        });
-    }
-
-    @Test
-    public void testProjectFinanceUserCanViewEveryone() {
-        allGlobalRoleUsers.forEach(user -> {
-            allGlobalRoleUsers.forEach(otherUser -> {
-                if (user.equals(projectFinanceUser())) {
-                    assertTrue(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
-                } else {
-                    assertFalse(rules.projectFinanceUsersCanViewEveryone(otherUser, user));
+                    assertFalse(rules.internalUsersCanViewEveryone(otherUser, user));
                 }
             });
         });
@@ -153,6 +141,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Role collaboratorRole = newRole().withType(COLLABORATOR).build();
 
         Application application1 = newApplication().build();
+        when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
 
         User application1Lead1 = newUser().build();
         User application1Lead2 = newUser().build();
@@ -161,30 +150,46 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         User application1Collaborator2 = newUser().build();
 
         List<ProcessRole> application1ConsortiumRoles = newProcessRole().withApplication(application1).
-                withRole(leadRole, leadRole, collaboratorRole, collaboratorRole).
+                withRole(leadRole, leadRole, leadRole, collaboratorRole, collaboratorRole).
                 withUser(application1Lead1, application1Lead2, application1Lead3AndApplication2Collaborator2,
                         application1Collaborator1, application1Collaborator2).
                 build(5);
 
+        List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
+        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
+
+        when(processRoleRepositoryMock.findByUserId(application1Lead1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(0)));
+        when(processRoleRepositoryMock.findByUserId(application1Lead2.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(1)));
+        when(processRoleRepositoryMock.findByUserId(application1Collaborator1.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(3)));
+        when(processRoleRepositoryMock.findByUserId(application1Collaborator2.getId())).
+                thenReturn(singletonList(application1ConsortiumRoles.get(4)));
+
         Application application2 = newApplication().build();
+        when(applicationRepositoryMock.findOne(application2.getId())).thenReturn(application2);
 
         User application2Lead = newUser().build();
         User application2Collaborator1 = newUser().build();
 
         List<ProcessRole> application2ConsortiumRoles = newProcessRole().withApplication(application2).
                 withRole(leadRole, collaboratorRole, collaboratorRole).
-                withUser(application2Lead, application2Collaborator1, application1Lead3AndApplication2Collaborator2).build(3);
-
-        List<User> application1Consortium = simpleMap(application1ConsortiumRoles, ProcessRole::getUser);
-        List<UserResource> application1ConsortiumResources = simpleMap(application1Consortium, userResourceForUser());
+                withUser(application2Lead, application2Collaborator1, application1Lead3AndApplication2Collaborator2).
+                build(3);
 
         List<User> application2Consortium = simpleMap(application2ConsortiumRoles, ProcessRole::getUser);
         List<UserResource> application2ConsortiumResources = simpleMap(application2Consortium, userResourceForUser());
 
-        combineLists(application1ConsortiumRoles, application2ConsortiumRoles).forEach(role -> {
-            when(processRoleRepositoryMock.findOne(role.getId())).thenReturn(role);
-        });
+        when(processRoleRepositoryMock.findByUserId(application2Lead.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(0)));
+        when(processRoleRepositoryMock.findByUserId(application2Collaborator1.getId())).
+                thenReturn(singletonList(application2ConsortiumRoles.get(1)));
 
+        // user common to both applications
+        when(processRoleRepositoryMock.findByUserId(application1Lead3AndApplication2Collaborator2.getId())).
+                thenReturn(asList(application1ConsortiumRoles.get(2),application2ConsortiumRoles.get(2)));
+        
         // assert that all members of the application 1 consortium can see all other consortium members
         application1ConsortiumResources.forEach(user -> {
             application1ConsortiumResources.forEach(otherUser -> {
@@ -260,21 +265,45 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
         Application application2 = newApplication().build();
         Application application3 = newApplication().build();
 
+        when(applicationRepositoryMock.findOne(application1.getId())).thenReturn(application1);
+        when(applicationRepositoryMock.findOne(application2.getId())).thenReturn(application2);
+        when(applicationRepositoryMock.findOne(application3.getId())).thenReturn(application3);
+
         User application1Lead = newUser().build();
         User application2Collaborator = newUser().build();
         User application3Lead = newUser().build();
         User assessorForApplications1And2 = newUser().build();
 
-        ProcessRole application1LeadProcessRole = newProcessRole().withApplication(application1).withRole(leadRole).withUser(application1Lead).build();
-        ProcessRole application2CollaboratorProcessRole = newProcessRole().withApplication(application2).withRole(collaboratorRole).withUser(application2Collaborator).build();
-        ProcessRole application3LeadProcessRole = newProcessRole().withApplication(application3).withRole(leadRole).withUser(application3Lead).build();
+        ProcessRole application1LeadProcessRole = newProcessRole().
+                withApplication(application1).
+                withRole(leadRole).
+                withUser(application1Lead).
+                build();
+        ProcessRole application2CollaboratorProcessRole = newProcessRole().
+                withApplication(application2).
+                withRole(collaboratorRole).
+                withUser(application2Collaborator).
+                build();
+        ProcessRole application3LeadProcessRole = newProcessRole().
+                withApplication(application3).
+                withRole(leadRole).
+                withUser(application3Lead).
+                build();
 
-        List<ProcessRole> assessorProcessRole = newProcessRole().withApplication(application1, application2).withRole(assessorRole, assessorRole).
-                withUser(assessorForApplications1And2, assessorForApplications1And2).build(2);
+        List<ProcessRole> assessorProcessRoles = newProcessRole().
+                withApplication(application1, application2).
+                withRole(assessorRole, assessorRole).
+                withUser(assessorForApplications1And2, assessorForApplications1And2).
+                build(2);
 
-        combineLists(assessorProcessRole, application1LeadProcessRole, application2CollaboratorProcessRole, application3LeadProcessRole).forEach(role -> {
-            when(processRoleRepositoryMock.findOne(role.getId())).thenReturn(role);
-        });
+        when(processRoleRepositoryMock.findByUserId(application1Lead.getId())).
+                thenReturn(singletonList(application1LeadProcessRole));
+        when(processRoleRepositoryMock.findByUserId(application2Collaborator.getId())).
+                thenReturn(singletonList(application2CollaboratorProcessRole));
+        when(processRoleRepositoryMock.findByUserId(application3Lead.getId())).
+                thenReturn(singletonList(application3LeadProcessRole));
+        when(processRoleRepositoryMock.findByUserId(assessorForApplications1And2.getId())).
+                thenReturn(assessorProcessRoles);
 
         UserResource application1LeadResource = userResourceForUser().apply(application1Lead);
         UserResource application2CollaboratorResource = userResourceForUser().apply(application2Collaborator);
@@ -311,20 +340,20 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     @Test
     public void testUsersCanViewTheirOwnProfileSkills() {
         UserResource user = newUserResource().build();
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource()
                 .withUser(user.getId())
                 .build();
-        assertTrue(rules.usersCanViewTheirOwnProfileSkills(profileSkills, user));
+        assertTrue(rules.usersCanViewTheirOwnProfileSkills(profileSkillsResource, user));
     }
 
     @Test
     public void testUsersCanViewTheirOwnProfileSkillsButAttemptingToViewAnotherUsersProfileSkills() {
         UserResource user = newUserResource().build();
         UserResource anotherUser = newUserResource().build();
-        ProfileSkillsResource profileSkills = newProfileSkillsResource()
+        ProfileSkillsResource profileSkillsResource = newProfileSkillsResource()
                 .withUser(user.getId())
                 .build();
-        assertFalse(rules.usersCanViewTheirOwnProfileSkills(profileSkills, anotherUser));
+        assertFalse(rules.usersCanViewTheirOwnProfileSkills(profileSkillsResource, anotherUser));
     }
 
     @Test
@@ -390,28 +419,21 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
     public void testUsersCanViewTheirOwnProfileStatus() {
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
-        assertTrue(rules.usersAndCompAdminExecCanViewProfileStatus(userProfileStatus, user));
+        assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, user));
     }
 
     @Test
     public void testUsersCanViewTheirOwnProfileStatusButNotAnotherUsersProfileStatus() {
         UserResource user = newUserResource().withId(1L).build();
         UserProfileStatusResource anotherUsersProfileStatus = newUserProfileStatusResource().withUser(2L).build();
-        assertFalse(rules.usersAndCompAdminExecCanViewProfileStatus(anotherUsersProfileStatus, user));
+        assertFalse(rules.usersAndCompAdminCanViewProfileStatus(anotherUsersProfileStatus, user));
     }
 
     @Test
     public void testCompAdminCanViewUserProfileStatus() {
         UserResource user = newUserResource().build();
         UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
-        assertTrue(rules.usersAndCompAdminExecCanViewProfileStatus(userProfileStatus, compAdminUser()));
-    }
-
-    @Test
-    public void testCompExecCanViewUserProfileStatus() {
-        UserResource user = newUserResource().build();
-        UserProfileStatusResource userProfileStatus = newUserProfileStatusResource().withUser(user.getId()).build();
-        assertTrue(rules.usersAndCompAdminExecCanViewProfileStatus(userProfileStatus, compExecUser()));
+        assertTrue(rules.usersAndCompAdminCanViewProfileStatus(userProfileStatus, compAdminUser()));
     }
 
     @Override
@@ -421,8 +443,7 @@ public class UserPermissionRulesTest extends BasePermissionRulesTest<UserPermiss
 
     private Function<User, UserResource> userResourceForUser() {
         return user -> {
-            List<Long> processRoleIds = simpleMap(user.getProcessRoles(), ProcessRole::getId);
-            return newUserResource().withId(user.getId()).withProcessRoles(processRoleIds).build();
+            return newUserResource().withId(user.getId()).build();
         };
     }
 }

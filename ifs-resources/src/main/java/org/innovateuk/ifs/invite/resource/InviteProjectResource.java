@@ -21,6 +21,7 @@ public class InviteProjectResource extends InviteResource {
     private String projectName;
     private String hash;
     private InviteStatus status;
+    private Long leadOrganisationId;
     private String leadOrganisation;
     private String organisationName;
     private String leadApplicant;
@@ -95,6 +96,14 @@ public class InviteProjectResource extends InviteResource {
 
     public void setStatus(InviteStatus status) { this.status = status; }
 
+    public Long getLeadOrganisationId() {
+        return leadOrganisationId;
+    }
+
+    public void setLeadOrganisationId(Long leadOrganisationId) {
+        this.leadOrganisationId = leadOrganisationId;
+    }
+
     public String getLeadOrganisation() {
         return leadOrganisation;
     }
@@ -147,7 +156,7 @@ public class InviteProjectResource extends InviteResource {
                 .append(projectName, that.projectName)
                 .append(hash, that.hash)
                 .append(status, that.status)
-                .append(leadOrganisation, that.leadOrganisation)
+                .append(leadOrganisationId, that.leadOrganisationId)
                 .append(organisationName, that.organisationName)
                 .append(leadApplicant, that.leadApplicant)
                 .append(competitionName, that.competitionName)
@@ -168,7 +177,7 @@ public class InviteProjectResource extends InviteResource {
                 .append(projectName)
                 .append(hash)
                 .append(status)
-                .append(leadOrganisation)
+                .append(leadOrganisationId)
                 .append(organisationName)
                 .append(leadApplicant)
                 .append(competitionName)
@@ -189,7 +198,7 @@ public class InviteProjectResource extends InviteResource {
                 .append("projectName", projectName)
                 .append("hash", hash)
                 .append("status", status)
-                .append("leadOrganisation", leadOrganisation)
+                .append("leadOrganisationId", leadOrganisationId)
                 .append("organisationName", organisationName)
                 .append("leadApplicant", leadApplicant)
                 .append("competitionName", competitionName)

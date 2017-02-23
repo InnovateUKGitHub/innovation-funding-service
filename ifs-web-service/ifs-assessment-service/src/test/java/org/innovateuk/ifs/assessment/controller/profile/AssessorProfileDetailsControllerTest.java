@@ -20,12 +20,14 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.Validator;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -110,7 +112,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", profileDetails.getTitle())
+                .param("title", profileDetails.getTitle().name())
                 .param("firstName", profileDetails.getFirstName())
                 .param("lastName", profileDetails.getLastName())
                 .param("phoneNumber", profileDetails.getPhoneNumber())
@@ -139,7 +141,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
     @Test
     public void submitDetails_changeDetails() throws Exception {
-        String title = "Mrs";
+        Title title = Mrs;
         String firstName = "Felicia";
         String lastName = "Wilkinson";
         String phoneNumber = "87654321";
@@ -175,7 +177,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
@@ -215,7 +217,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
 
         MvcResult result = mockMvc.perform(post("/profile/details/edit")
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", profileDetails.getTitle())
+                .param("title", profileDetails.getTitle().name())
                 .param("firstName", "")
                 .param("lastName", "")
                 .param("phoneNumber", profileDetails.getPhoneNumber())
@@ -244,13 +246,13 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertEquals(2, bindingResult.getFieldErrorCount("lastName"));
 
         assertTrue(bindingResult.getFieldErrors("firstName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your first name should have at least {2} characters")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your first name should have at least {2} characters.")));
         assertTrue(bindingResult.getFieldErrors("firstName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a first name")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a first name.")));
         assertTrue(bindingResult.getFieldErrors("lastName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your last name should have at least {2} characters")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Your last name should have at least {2} characters.")));
         assertTrue(bindingResult.getFieldErrors("lastName").stream()
-                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a last name")));
+                .anyMatch(error -> error.getDefaultMessage().equalsIgnoreCase("Please enter a last name.")));
     }
 
     @Test
@@ -283,16 +285,16 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
         assertTrue(bindingResult.hasErrors());
         assertEquals(0, bindingResult.getGlobalErrorCount());
         assertEquals(10, bindingResult.getFieldErrorCount());
-        assertEquals("Please select a title", bindingResult.getFieldError("title").getDefaultMessage());
-        assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
-        assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
-        assertEquals("Please enter a phone number", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
-        assertEquals("Please select a gender", bindingResult.getFieldError("gender").getDefaultMessage());
-        assertEquals("Please select an ethnicity", bindingResult.getFieldError("ethnicity").getDefaultMessage());
-        assertEquals("Please select a disability", bindingResult.getFieldError("disability").getDefaultMessage());
-        assertEquals("The address cannot be blank", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
-        assertEquals("The town cannot be blank", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
-        assertEquals("The postcode cannot be blank", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
+        assertEquals("Please select a title.", bindingResult.getFieldError("title").getDefaultMessage());
+        assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
+        assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
+        assertEquals("Please enter a phone number.", bindingResult.getFieldError("phoneNumber").getDefaultMessage());
+        assertEquals("Please select a gender.", bindingResult.getFieldError("gender").getDefaultMessage());
+        assertEquals("Please select an ethnicity.", bindingResult.getFieldError("ethnicity").getDefaultMessage());
+        assertEquals("Please select a disability.", bindingResult.getFieldError("disability").getDefaultMessage());
+        assertEquals("The address cannot be blank.", bindingResult.getFieldError("addressForm.addressLine1").getDefaultMessage());
+        assertEquals("The town cannot be blank.", bindingResult.getFieldError("addressForm.town").getDefaultMessage());
+        assertEquals("The postcode cannot be blank.", bindingResult.getFieldError("addressForm.postcode").getDefaultMessage());
     }
 
     private UserResource buildTestUser() {
@@ -308,7 +310,7 @@ public class AssessorProfileDetailsControllerTest extends BaseControllerMockMVCT
                 .build();
 
         return newUserProfileResource()
-                .withTitle("Mr")
+                .withTitle(Mr)
                 .withFirstName("Felix")
                 .withLastName("Wilson")
                 .withPhoneNumber("12345678")

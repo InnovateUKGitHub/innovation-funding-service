@@ -16,6 +16,7 @@ import org.innovateuk.ifs.invite.service.EthnicityRestService;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.EthnicityResource;
 import org.innovateuk.ifs.user.resource.Gender;
+import org.innovateuk.ifs.user.resource.Title;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +33,8 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import java.util.List;
 
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
@@ -39,8 +42,6 @@ import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.user.builder.EthnicityResourceBuilder.newEthnicityResource;
-import static java.lang.String.format;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -104,7 +105,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         CompetitionInviteResource competitionInviteResource = newCompetitionInviteResource().withEmail("test@test.com").build();
 
         when(competitionInviteRestService.getInvite("hash")).thenReturn(RestResult.restSuccess(competitionInviteResource));
-        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(asList(newEthnicityResource())));
+        when(ethnicityRestService.findAllActive()).thenReturn(RestResult.restSuccess(newEthnicityResource().build(1)));
         AssessorRegistrationViewModel expectedViewModel = new AssessorRegistrationViewModel("hash", "test@test.com");
 
         mockMvc.perform(get("/registration/{inviteHash}/register", "hash"))
@@ -115,7 +116,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails() throws Exception {
-        String title = "Mr";
+        Title title = Title.Mr;
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
@@ -159,7 +160,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
@@ -181,7 +182,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_weakPassword() throws Exception {
-        String title = "Mr";
+        Title title = Title.Mr;
         String firstName = "Felix";
         String lastName = "Wilson";
         String phoneNumber = "12345678";
@@ -226,7 +227,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("firstName", firstName)
                 .param("lastName", lastName)
                 .param("phoneNumber", phoneNumber)
@@ -249,7 +250,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
     @Test
     public void submitYourDetails_Incomplete() throws Exception {
-        String title = "Mr";
+        Title title = Title.Mr;
         String phoneNumber = "12345678";
         Gender gender = Gender.MALE;
         EthnicityResource ethnicity = newEthnicityResource().withId(1L).build();
@@ -264,7 +265,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
 
         MvcResult result = mockMvc.perform(post("/registration/{inviteHash}/register", inviteHash)
                 .contentType(APPLICATION_FORM_URLENCODED)
-                .param("title", title)
+                .param("title", title.name())
                 .param("phoneNumber", phoneNumber)
                 .param("gender", gender.name())
                 .param("ethnicity", ethnicity.getId().toString())
@@ -298,8 +299,8 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
         assertTrue(bindingResult.hasFieldErrors("firstName"));
         assertTrue(bindingResult.hasFieldErrors("lastName"));
         assertTrue(bindingResult.hasFieldErrors("addressForm.postcodeInput"));
-        assertEquals("Please enter a first name", bindingResult.getFieldError("firstName").getDefaultMessage());
-        assertEquals("Please enter a last name", bindingResult.getFieldError("lastName").getDefaultMessage());
+        assertEquals("Please enter a first name.", bindingResult.getFieldError("firstName").getDefaultMessage());
+        assertEquals("Please enter a last name.", bindingResult.getFieldError("lastName").getDefaultMessage());
         assertEquals("validation.standard.postcodesearch.required", bindingResult.getFieldError("addressForm.postcodeInput").getCode());
     }
 

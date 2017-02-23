@@ -3,11 +3,28 @@
 
 //variables
 
+$is-ie: false !default;
 
-@import "compass/css3/transition";
+@mixin media-down($size: false, $max-width: false, $min-width: false) {
+    @if $is-ie == false {
+        @if $size == mobile {
+            @media (max-width: 640px) {
+                @content;
+            }
+        }
 
-@import "layout/layout";
-@import "layout/grid";
+        @else if $size == tablet {
+            @media (max-width: 800px) {
+                @content;
+            }
+        }
+    }
+}
+
+@import 'compass/css3/transition';
+@import 'layout/gdsUpgrade';
+@import 'layout/layout';
+@import 'layout/grid';
 
 /*
 #Nomensa/Worth Elements
@@ -15,38 +32,40 @@
 ##1. List elements
 */
 
-@import "components/boxed-list";
-@import "components/navigation-list";
-@import "components/collapsible-sections";
-@import "components/list-overview";
-@import "components/progress-list";
-@import "components/highlight-panel";
-@import "components/pie-charts";
-@import "components/progress-indicator";
-@import "components/event-alert";
-@import "components/message-alerts";
-@import "components/forms";
-@import "layout/small";
-@import "components/pagination";
-@import "components/assign-team";
-@import "components/statusses";
-@import "components/search-filters";
+@import 'components/boxed-list';
+@import 'components/navigation-list';
+@import 'components/collapsible-sections';
+@import 'components/list-overview';
+@import 'components/progress-list';
+@import 'components/highlight-panel';
+@import 'components/pie-charts';
+@import 'components/progress-indicator';
+@import 'components/event-alert';
+@import 'components/message-alerts';
+@import 'components/forms';
+@import 'layout/small';
+@import 'components/pagination';
+@import 'components/assign-team';
+@import 'components/statusses';
+@import 'components/search-filters';
+@import 'components/timeline-status';
+@import 'components/link-list';
 
 /*
 ##11. Modals
 */
-@import "components/modal";
+@import 'components/modal';
 
 /*
 ##12. Competition deadlines
 */
-@import "components/competition-deadline";
+@import 'components/competition-deadline';
 
 //Modifiers
-@import "layout/a11y";
-@import "components/modifiers";
+@import 'layout/a11y';
+@import 'components/modifiers';
 
 //to be documented
-@import "components/wysiwyg";
-@import "components/user-feedback";
-@import "components/invites";
+@import 'components/wysiwyg';
+@import 'components/user-feedback';
+@import 'components/invites';

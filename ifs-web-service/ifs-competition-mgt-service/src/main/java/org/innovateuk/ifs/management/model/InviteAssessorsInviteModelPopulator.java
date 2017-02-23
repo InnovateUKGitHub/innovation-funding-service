@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.category.resource.InnovationSectorResource;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AssessorCreatedInviteResource;
 import org.innovateuk.ifs.management.viewmodel.InviteAssessorsInviteViewModel;
@@ -21,10 +23,14 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
+    @Autowired
+    private CategoryService categoryService;
+
     @Override
     public InviteAssessorsInviteViewModel populateModel(CompetitionResource competition) {
         InviteAssessorsInviteViewModel model = super.populateModel(competition);
         model.setAssessors(getAssessors(competition));
+        model.setInnovationSectorOptions(getInnovationSectors());
         return model;
     }
 
@@ -35,8 +41,20 @@ public class InviteAssessorsInviteModelPopulator extends InviteAssessorsModelPop
                 .collect(toList());
     }
 
+    private List<InnovationSectorResource> getInnovationSectors() {
+        return categoryService.getInnovationSectors();
+    }
+
+
     private InvitedAssessorRowViewModel getRowViewModel(AssessorCreatedInviteResource assessorCreatedInviteResource) {
-        return new InvitedAssessorRowViewModel(assessorCreatedInviteResource.getName(), assessorCreatedInviteResource.getInnovationAreaName(), assessorCreatedInviteResource.isCompliant(), assessorCreatedInviteResource.getEmail(), assessorCreatedInviteResource.getInviteId());
+        return new InvitedAssessorRowViewModel(
+                assessorCreatedInviteResource.getId(),
+                assessorCreatedInviteResource.getName(),
+                assessorCreatedInviteResource.getInnovationAreas(),
+                assessorCreatedInviteResource.isCompliant(),
+                assessorCreatedInviteResource.getEmail(),
+                assessorCreatedInviteResource.getInviteId()
+        );
     }
 
     @Override

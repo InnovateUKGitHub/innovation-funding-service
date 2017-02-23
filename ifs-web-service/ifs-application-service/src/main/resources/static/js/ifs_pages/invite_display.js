@@ -1,19 +1,16 @@
-IFS.application.inviteDisplay = (function() {
-  "use strict";
-  var s; // private alias to settings
-
+IFS.application.inviteDisplay = (function () {
+  'use strict'
   return {
-    settings : {
+    settings: {
     },
-    init : function() {
-      s = this.settings;
-      jQuery('[data-js-modal="modal-submit-remove-collaborator"]').click(function() {
-        IFS.application.inviteDisplay.assignInviteIdOnClickRemove(this);
-      });
+    init: function () {
+      jQuery('[data-js-modal="modal-submit-remove-collaborator"]').click(function () {
+        IFS.application.inviteDisplay.assignInviteIdOnClickRemove(this)
+      })
     },
-    assignInviteIdOnClickRemove : function(element) {
-      var inviteId = jQuery(element).data('invite-id');
-      jQuery('input[name="applicationInviteId"]').val(inviteId);
+    assignInviteIdOnClickRemove: function (element) {
+      var inviteId = jQuery(element).data('invite-id')
+      jQuery('input[name="applicationInviteId"]').val(inviteId)
     }
-  };
-})();
+  }
+})()

@@ -3,6 +3,8 @@ package org.innovateuk.ifs.competition.resource;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
+import java.util.Set;
+
 /**
  * A summary of competition information displayed during competition search
  */
@@ -10,7 +12,7 @@ public class CompetitionSearchResultItem {
 
     private Long id;
     private String name;
-    private String innovationAreaName;
+    private Set<String> innovationAreaNames;
     private Integer numberOfApplications;
     private String startDateDisplay;
     private CompetitionStatus competitionStatus;
@@ -21,12 +23,12 @@ public class CompetitionSearchResultItem {
     CompetitionSearchResultItem() {
     }
 
-    public CompetitionSearchResultItem(Long id, String name, String innovationAreaName, Integer numberOfApplications,
+    public CompetitionSearchResultItem(Long id, String name, Set<String> innovationAreaNames, Integer numberOfApplications,
                                        String startDateDisplay, CompetitionStatus competitionStatus,
                                        String competitionTypeName, Integer projectsCount) {
         this.id = id;
         this.name = name;
-        this.innovationAreaName = innovationAreaName;
+        this.innovationAreaNames = innovationAreaNames;
         this.numberOfApplications = numberOfApplications;
         this.startDateDisplay = startDateDisplay;
         this.competitionStatus = competitionStatus;
@@ -42,12 +44,12 @@ public class CompetitionSearchResultItem {
         this.id = id;
     }
 
-    public String getInnovationAreaName() {
-        return innovationAreaName;
+    public Set<String> getInnovationAreaNames() {
+        return innovationAreaNames;
     }
 
-    public void setInnovationAreaName(String innovationAreaName) {
-        this.innovationAreaName = innovationAreaName;
+    public void setInnovationAreaNames(Set<String> innovationAreaNames) {
+        this.innovationAreaNames = innovationAreaNames;
     }
 
     public Integer getNumberOfApplications() {
@@ -108,7 +110,7 @@ public class CompetitionSearchResultItem {
 
         return new EqualsBuilder()
                 .append(id, that.id)
-                .append(innovationAreaName, that.innovationAreaName)
+                .append(innovationAreaNames, that.innovationAreaNames)
                 .append(numberOfApplications, that.numberOfApplications)
                 .append(startDateDisplay, that.startDateDisplay)
                 .append(competitionStatus, that.competitionStatus)
@@ -120,7 +122,7 @@ public class CompetitionSearchResultItem {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(id)
-                .append(innovationAreaName)
+                .append(innovationAreaNames)
                 .append(numberOfApplications)
                 .append(startDateDisplay)
                 .append(competitionStatus)

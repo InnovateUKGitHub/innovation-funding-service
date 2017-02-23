@@ -4,10 +4,12 @@ import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.error.ErrorHolder;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 import static org.innovateuk.ifs.controller.ErrorToObjectErrorConverterFactory.*;
@@ -60,8 +62,20 @@ public class ValidationHandler {
      * @return
      */
     public String failNowOrSucceedWith(Supplier<String> failureHandler, Supplier<String> successHandler) {
+        return failNowOrSucceedWithFilter(e -> true, failureHandler, successHandler);
+    }
 
-        if (hasErrors()) {
+    /**
+     * Similar to failNowOrSucceedWith, but allows skipping an individual field from validation check.
+     * Useful when we have custom validation for certain fields for example but not for everything.
+     * Not a great name for the method but best I can come up with right now.
+     * @param predicate
+     * @param failureHandler
+     * @param successHandler
+     * @return
+     */
+    public String failNowOrSucceedWithFilter(Predicate<FieldError> predicate, Supplier<String> failureHandler, Supplier<String> successHandler){
+        if (hasErrors(predicate)) {
 
             if (bindingResultTarget != null) {
                 bindingResultTarget.setBindingResult(bindingResult);
@@ -76,6 +90,12 @@ public class ValidationHandler {
 
     public boolean hasErrors() {
         return bindingResult.hasErrors();
+    }
+
+    public boolean hasErrors(Predicate<FieldError> predicate) {
+        long totalFieldErrorCount = bindingResult.getFieldErrorCount();
+        long filteredFieldErrorCount = bindingResult.getFieldErrors().stream().filter(predicate).count();
+        return (bindingResult.getAllErrors().size() > (totalFieldErrorCount - filteredFieldErrorCount)) || filteredFieldErrorCount > 0;
     }
 
     public List<? extends ObjectError> getAllErrors() {

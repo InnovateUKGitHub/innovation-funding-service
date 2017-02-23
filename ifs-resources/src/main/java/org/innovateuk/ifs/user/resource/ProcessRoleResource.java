@@ -6,10 +6,10 @@ public class ProcessRoleResource {
     private Long id;
     private Long user;
     private String userName;
-    private Long application;
+    private Long applicationId;
     private Long role;
     private String roleName;
-    private Long organisation;
+    private Long organisationId;
 
     public ProcessRoleResource(){
     	// no-arg constructor
@@ -19,10 +19,10 @@ public class ProcessRoleResource {
         this.id = id;
         this.user = user.getId();
         this.userName = user.getName();
-        this.application = application.getId();
+        this.applicationId = application.getId();
         this.role = role.getId();
         this.roleName = role.getName();
-        this.organisation = organisation.getId();
+        this.organisationId = organisation.getId();
     }
 
     public Long getId(){return id;}
@@ -43,12 +43,12 @@ public class ProcessRoleResource {
         return roleName;
     }
 
-    public Long getOrganisation() {
-        return organisation;
+    public Long getOrganisationId() {
+        return organisationId;
     }
 
-    public Long getApplication() {
-        return this.application;
+    public Long getApplicationId() {
+        return this.applicationId;
     }
 
     public void setUser(Long user) {
@@ -59,8 +59,8 @@ public class ProcessRoleResource {
         this.userName = userName;
     }
 
-    public void setApplication(Long application) {
-        this.application = application;
+    public void setApplicationId(Long applicationId) {
+        this.applicationId = applicationId;
     }
 
     public void setRole(Long role) {
@@ -71,8 +71,8 @@ public class ProcessRoleResource {
         this.roleName = roleName;
     }
 
-    public void setOrganisation(Long organisation) {
-        this.organisation = organisation;
+    public void setOrganisationId(Long organisationId) {
+        this.organisationId = organisationId;
     }
 
     public void setId(Long id) {

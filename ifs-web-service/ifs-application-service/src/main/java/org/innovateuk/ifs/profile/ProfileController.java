@@ -16,6 +16,7 @@ import org.innovateuk.ifs.user.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,7 +32,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.innovateuk.ifs.util.ProfileUtil.getAddress;
-import static org.innovateuk.ifs.util.ProfileUtil.getUserOrganisationId;
 
 /**
  * This controller will handle all requests that are related to a user profile.
@@ -39,6 +39,7 @@ import static org.innovateuk.ifs.util.ProfileUtil.getUserOrganisationId;
 
 @Controller
 @RequestMapping("/profile")
+@PreAuthorize("hasAuthority('applicant')")
 public class ProfileController {
     private static final Log LOG = LogFactory.getLog(ProfileController.class);
 
@@ -58,7 +59,7 @@ public class ProfileController {
     @RequestMapping(value = "/view", method = RequestMethod.GET)
     public String viewUserProfile(Model model, HttpServletRequest request) {
         final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(getUserOrganisationId(userResource));
+        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
 
         model.addAttribute("model", new UserDetailsViewModel(userResource, organisationResource, ethnicityRestService.findAllActive().getSuccessObjectOrThrowException()));
         model.addAttribute("userIsLoggedIn", userIsLoggedIn(request));
@@ -66,9 +67,9 @@ public class ProfileController {
     }
 
     private void populateUserDetailsForm(Model model, HttpServletRequest request){
-        final UserResource user = userAuthenticationService.getAuthenticatedUser(request);
-        final OrganisationResource organisationResource = organisationService.getOrganisationById(getUserOrganisationId(user));
-        UserDetailsForm userDetailsForm = buildUserDetailsForm(user, organisationResource);
+        final UserResource userResource = userAuthenticationService.getAuthenticatedUser(request);
+        final OrganisationResource organisationResource = organisationService.getOrganisationForUser(userResource.getId());
+        UserDetailsForm userDetailsForm = buildUserDetailsForm(userResource, organisationResource);
         setFormActionURL(userDetailsForm);
         model.addAttribute("userDetailsForm", userDetailsForm);
     }
@@ -78,7 +79,7 @@ public class ProfileController {
         form.setEmail(user.getEmail());
         form.setFirstName(user.getFirstName());
         form.setLastName(user.getLastName());
-        form.setTitle(user.getTitle());
+        form.setTitle(user.getTitle() != null ? user.getTitle().name() : null);
         form.setPhoneNumber(user.getPhoneNumber());
         form.setEthnicity(user.getEthnicity() != null ? user.getEthnicity().toString() : null);
         form.setGender(user.getGender() != null ? user.getGender().name() : null);

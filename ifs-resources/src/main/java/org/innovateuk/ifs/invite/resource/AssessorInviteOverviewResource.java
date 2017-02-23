@@ -2,23 +2,33 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.innovateuk.ifs.user.resource.BusinessType;
 
 /**
  * DTO for the overview of an assessor invite.
  */
 public class AssessorInviteOverviewResource extends AssessorInviteResource {
 
-    private String status;
+    private BusinessType businessType;
+    private ParticipantStatusResource status;
     private String details;
 
     public AssessorInviteOverviewResource() {
     }
 
-    public String getStatus() {
+    public BusinessType getBusinessType() {
+        return businessType;
+    }
+
+    public void setBusinessType(BusinessType businessType) {
+        this.businessType = businessType;
+    }
+
+    public ParticipantStatusResource getStatus() {
         return status;
     }
 
-    public void setStatus(String status) {
+    public void setStatus(ParticipantStatusResource status) {
         this.status = status;
     }
 
@@ -44,6 +54,7 @@ public class AssessorInviteOverviewResource extends AssessorInviteResource {
 
         return new EqualsBuilder()
                 .appendSuper(super.equals(o))
+                .append(businessType, that.businessType)
                 .append(status, that.status)
                 .append(details, that.details)
                 .isEquals();
@@ -53,6 +64,7 @@ public class AssessorInviteOverviewResource extends AssessorInviteResource {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .appendSuper(super.hashCode())
+                .append(businessType)
                 .append(status)
                 .append(details)
                 .toHashCode();

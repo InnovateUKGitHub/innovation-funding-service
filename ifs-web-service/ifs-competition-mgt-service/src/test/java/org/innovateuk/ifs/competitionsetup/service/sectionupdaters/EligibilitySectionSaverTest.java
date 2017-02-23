@@ -19,10 +19,10 @@ import java.util.Set;
 
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static java.util.Arrays.asList;
 
 @RunWith(MockitoJUnitRunner.class)
 public class EligibilitySectionSaverTest {

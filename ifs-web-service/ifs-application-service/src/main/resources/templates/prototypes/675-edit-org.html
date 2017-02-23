@@ -40,10 +40,10 @@
 	<fieldset>
 		<legend class="visuallyhidden">Operating address</legend>
 		<div class="form-block">
-			<label class="block-label" for="address-same">
+			<label class="block-label selection-button-checkbox" for="address-same">
 				<input id="address-same" type="checkbox" value="address-same"/>
 				The operating address is the same as the registered company address
-			</label> 
+			</label>
 		</div>
 	</fieldset>
 
@@ -101,8 +101,8 @@
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
 <script type="text/javascript">
-	
-	jQuery('input#address-same').on('click',function(e){ 
+
+	jQuery('input#address-same').on('click',function(e){
 		//e.preventDefault();
 		if ( jQuery(this).is(':checked') ) {
 			jQuery("#manual-company-input").hide();
@@ -112,20 +112,20 @@
 
 	});
 
-	jQuery('#manual-company-trigger').on('click',function(e){ 
+	jQuery('#manual-company-trigger').on('click',function(e){
 		e.preventDefault();
 		jQuery("#manual-company-input").show();
 		jQuery("#org-results").hide();
 
 	});
 
-	jQuery('#postcode-lookup').on('click',function(e){ 
+	jQuery('#postcode-lookup').on('click',function(e){
 		e.preventDefault();
 		jQuery("#select-address-block").show();
 
 	});
 
-	jQuery('#select-address').on('change',function(e){ 
+	jQuery('#select-address').on('change',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#street").val("King William House");
@@ -135,7 +135,7 @@
 
 	});
 
-	jQuery('#enter-address-manually').on('click',function(e){ 
+	jQuery('#enter-address-manually').on('click',function(e){
 		e.preventDefault();
 		jQuery("#address-details").show();
 		jQuery("#select-address-block").hide();

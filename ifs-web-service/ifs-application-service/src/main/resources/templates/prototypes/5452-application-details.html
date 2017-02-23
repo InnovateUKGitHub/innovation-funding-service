@@ -18,7 +18,7 @@
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Innovate UK, Technology inspired - Application number: 12347353'}, 'Application details')" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Application details')" th:remove="tag" />
 
 	<form>
         <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
@@ -26,31 +26,62 @@
             <div class="question" id="form-input-9">
                 <div class="form-group">
                     <label class="form-label form-label-bold" for="application_details-title">
-                        <span>Project title</span>
+                        <span class="heading-medium">Project title</span>
                         <span class="form-hint">Enter the full title of your project</span>
                     </label>
                     <input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
                 </div>
                 <fieldset>
+
+                    <legend>
+                        <span class="heading-medium">Estimated timescales</span>
+                    </legend>
+                    <h2 class="heading-small">Project start date</h2>
+                    <p class="form-hint" id="project-start-hint">For example: 31 12 2015</p>
+
+                    <div class="form-date">
+                      <div class="form-group form-group-day">
+                        <label class="form-label-bold" for="application_details-startdate_day">Day</label>
+                        <input class="form-control" id="application_details-startdate_day" name="project-start-day" type="number" pattern="[0-9]*" min="0" max="31" aria-describedby="project-start-hint" />
+                      </div>
+
+                      <div class="form-group form-group-month">
+                        <label class="form-label-bold" for="application_details-startdate_month">Month</label>
+                        <input class="form-control" id="application_details-startdate_month" name="project-start-month" type="number" pattern="[0-9]*" min="0" max="12" aria-describedby="project-start-hint" />
+                      </div>
+
+                      <div class="form-group form-group-year">
+                        <label class="form-label-bold" for="application_details-startdate_year">Year</label>
+                        <input class="form-control" id="application_details-startdate_year" name="project-start-year" type="number" pattern="[0-9]*" min="2016" max="2050" />
+                      </div>
+                    </div>
+
+                    <div class="form-group form-group-month">
+                        <label class="form-label-bold" for="application_details-duration">Duration in months</label>
+                        <input class="form-control width-small" id="application_details-duration" name="application.durationInMonths" type="number" pattern="[0-9]*" min="0" value="51" />
+                    </div>
+
+                </fieldset>
+                <fieldset>
+                    <div class="message-alert extra-margin-bottom">
+                        <h2 class="heading-small no-margin">Research area determines funding</h2>
+                        <p>The research area is used to calculate the funding for all collaborators in the application.</p>
+                        <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
+                    </div>
                     <div class="form-group">
                         <legend>
-                            <span class="form-label form-label-bold">Research area</span>
+                            <span class="heading-medium">Research area</span>
                             <span class="form-hint">Please confirm the research area for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
                         </legend>
-                        <div class="message-alert extra-margin-bottom">
-                            <h2 class="heading-small no-margin">Research area determines funding</h2>
-                            <p>The research area is used to calculate the funding for all collaborators in the application.</p>
-                            <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
-                        </div>
-                        <label data-target="resubmission-details" class="block-label selected" for="feasibility-studies">
+                        <label data-target="resubmission-details" class="block-label selected selection-button-radio" for="feasibility-studies">
                             <input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
                             Feasibility studies
                         </label>
-                        <label class="block-label" for="industrial-research">
+                        <label class="block-label selection-button-radio" for="industrial-research">
                             <input type="radio" value="industrial-research" required="required" id="industrial-research" name="researchArea" />
                             Industrial research
                         </label>
-                        <label class="block-label" for="experimental-development">
+                        <label class="block-label selection-button-radio" for="experimental-development">
                             <input type="radio" value="experimental-development" required="required" id="experimental-development" name="researchArea" />
                             Experimental development
                         </label>
@@ -59,14 +90,14 @@
                 <fieldset>
                     <div class="form-group">
                         <legend>
-                            <span class="form-label form-label-bold">Is this application a resubmission of a previous application?</span>
+                            <span class="heading-medium">Is this application a resubmission of a previous application?</span>
                             <span class="form-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
                         </legend>
-                        <label data-target="resubmission-details" class="block-label" for="resubmission-yes">
+                        <label data-target="resubmission-details" class="block-label selection-button-radio" for="resubmission-yes">
                             <input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
                             Yes
                         </label>
-                        <label class="block-label selected" for="resubmission-no">
+                        <label class="block-label selection-button-radio selected" for="resubmission-no">
                             <input type="radio" value="false" required="required" id="resubmission-no" checked="checked" name="application.resubmission" />
                             No
                         </label>
@@ -89,45 +120,7 @@
                         <input class="form-control width-full" type="text" id="application_details-previousapplicationtitle" name="application.previousApplicationTitle" value="" />
                     </div>
                 </div>
-                <fieldset>
-                    <div class="form-group">
-                        <legend>
-                            <span class="form-label form-label-bold">Estimated timescales</span>
-                            <span>Project start date</span>
-                            <span class="form-hint">For example: 31 12 2015</span>
-                        </legend>
-                        <div class="date-group" data-future-date="" data-field-group-name="application.startDate" data-field-group-id="application_details-startdate">
-                            <input type="hidden" name="application.startDate" id="application_details-startdate" value="application.startDate" />
-                            <div class="day">
-                                <label class="form-label" for="application_details-startdate_day">
-                                    <div>Day</div>
-                                </label>
-                                <input class="form-control width-extra-small null " type="number" placeholder="DD" id="application_details-startdate_day" name="application.startDate.dayOfMonth" min="1" max="31" />
-                            </div>
-                            <div class="month">
-                                <label class="form-label" for="application_details-startdate_month">
-                                    <div>Month</div>
-                                </label>
-                                <input class="form-control width-extra-small null " type="number" placeholder="MM" id="application_details-startdate_month" name="application.startDate.monthValue" min="1" max="12" />
-                            </div>
-                            <div class="year">
-                                <label class="form-label" for="application_details-startdate_year">
-                                    <div>Year</div>
-                                </label>
-                                <input class="form-control width-extra-small null " type="number" placeholder="YYYY" id="application_details-startdate_year" name="application.startDate.year" />
-                            </div>
-                        </div>
-                        <br />
-                    </div>
-                    <div class="form-group">
-                        <div class="form-group">
-                            <label class="form-label" for="application_details-duration">
-                                <div>Duration in months</div>
-                            </label>
-                            <input class="form-control width-extra-small null" type="number" id="application_details-duration" name="application.durationInMonths" value="51" />
-                        </div>
-                    </div>
-                </fieldset>
+
 
                 <div class="form-group">
                     <h2 class="heading-small no-margin">Lead organisation</h2>
@@ -135,7 +128,7 @@
                 </div>
                 <div class="form-group">
                     <h2 class="heading-small no-margin">Partners</h2>
-                    <ul class="list-bullet">
+                    <ul class="list list-bullet">
                         <li>
                             <span>Ludlow</span>
                         </li>

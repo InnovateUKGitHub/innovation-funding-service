@@ -5,8 +5,11 @@ import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.application.domain.Section;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
+import org.innovateuk.ifs.category.domain.InnovationSector;
+import org.innovateuk.ifs.category.domain.ResearchCategory;
 import org.innovateuk.ifs.competition.resource.*;
+import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.invite.domain.ProcessActivity;
 import org.innovateuk.ifs.user.domain.User;
@@ -27,33 +30,33 @@ import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 @Entity
 public class Competition implements ProcessActivity {
 
-	@Transient
-	private DateProvider dateProvider = new DateProvider();
+    @Transient
+    private DateProvider dateProvider = new DateProvider();
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy="competition")
+    @OneToMany(mappedBy = "competition")
     private List<Application> applications = new ArrayList<>();
 
-    @OneToMany(mappedBy="competition")
+    @OneToMany(mappedBy = "competition")
     private List<Question> questions = new ArrayList<>();
 
-    @OneToMany(mappedBy="competition")
+    @OneToMany(mappedBy = "competition")
     private List<CompetitionFunder> funders = new ArrayList<>();
 
-    @OneToMany(mappedBy="competition")
+    @OneToMany(mappedBy = "competition")
     @OrderBy("priority ASC")
     private List<Section> sections = new ArrayList<>();
 
     private String name;
 
-    @Column( length = 5000 )
+    @Column(length = 5000)
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="competitionTypeId", referencedColumnName="id")
+    @JoinColumn(name = "competitionTypeId", referencedColumnName = "id")
     private CompetitionType competitionType;
 
     private Integer assessorCount;
@@ -64,11 +67,11 @@ public class Competition implements ProcessActivity {
     private List<Milestone> milestones = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="executiveUserId", referencedColumnName="id")
+    @JoinColumn(name = "executiveUserId", referencedColumnName = "id")
     private User executive;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="leadTechnologistUserId", referencedColumnName="id")
+    @JoinColumn(name = "leadTechnologistUserId", referencedColumnName = "id")
     private User leadTechnologist;
 
     @OneToOne(mappedBy = "template")
@@ -82,14 +85,13 @@ public class Competition implements ProcessActivity {
     private Integer academicGrantPercentage;
 
     @Transient
-    private Category innovationSector;
+    private InnovationSector innovationSector;
     @Transient
-    private Category innovationArea;
+    private Set<InnovationArea> innovationAreas;
     @Transient
-    private Set<Category> researchCategories;
+    private Set<ResearchCategory> researchCategories;
 
     private String activityCode;
-    private String innovateBudget;
 
     private boolean multiStream;
     private Boolean resubmission;
@@ -101,15 +103,13 @@ public class Competition implements ProcessActivity {
     private LeadApplicantType leadApplicantType;
 
     @ElementCollection
-    @JoinTable(name="competition_setup_status", joinColumns=@JoinColumn(name="competition_id"))
+    @JoinTable(name = "competition_setup_status", joinColumns = @JoinColumn(name = "competition_id"))
     @MapKeyEnumerated(EnumType.STRING)
-    @MapKeyColumn (name="section")
-    @Column(name="status")
+    @MapKeyColumn(name = "section")
+    @Column(name = "status")
     private Map<CompetitionSetupSection, Boolean> sectionSetupStatus = new HashMap<>();
 
     private boolean fullApplicationFinance = true;
-    private boolean includeGrowthTable = true;
-
     private Boolean setupComplete;
 
     private boolean useResubmissionQuestion = true;
@@ -143,7 +143,7 @@ public class Competition implements ProcessActivity {
 
     public CompetitionStatus getCompetitionStatus() {
         if (setupComplete) {
-            if ( !isMilestoneReached(OPEN_DATE)) {
+            if (!isMilestoneReached(OPEN_DATE)) {
                 return READY_TO_OPEN;
             } else if (!isMilestoneReached(SUBMISSION_DATE)) {
                 return OPEN;
@@ -153,8 +153,7 @@ public class Competition implements ProcessActivity {
                 return IN_ASSESSMENT;
             } else if (!isMilestoneReached(MilestoneType.NOTIFICATIONS)) {
                 return CompetitionStatus.FUNDERS_PANEL;
-            } else if (!isMilestoneReached(MilestoneType.ASSESSOR_DEADLINE)) {
-                // TODO INFUND-6304 change to use the RELEASE_FEEDBACK Milestone
+            } else if (!isMilestoneReached(MilestoneType.RELEASE_FEEDBACK)) {
                 return ASSESSOR_FEEDBACK;
             } else {
                 return PROJECT_SETUP;
@@ -173,8 +172,8 @@ public class Competition implements ProcessActivity {
     }
 
 
-    public void addApplication(Application... apps){
-        if(applications == null){
+    public void addApplication(Application... apps) {
+        if (applications == null) {
             applications = new ArrayList<>();
         }
         this.applications.addAll(Arrays.asList(apps));
@@ -200,7 +199,7 @@ public class Competition implements ProcessActivity {
         this.setupComplete = setupComplete;
     }
 
-	public void setSections(List<Section> sections) {
+    public void setSections(List<Section> sections) {
         this.sections = sections;
     }
 
@@ -213,11 +212,12 @@ public class Competition implements ProcessActivity {
     }
 
     @JsonIgnore
-    public long getDaysLeft(){
+    public long getDaysLeft() {
         return getDaysBetween(LocalDateTime.now(), this.getEndDate());
     }
+
     @JsonIgnore
-    public long getTotalDays(){
+    public long getTotalDays() {
         return getDaysBetween(this.getStartDate(), this.getEndDate());
     }
 
@@ -225,12 +225,16 @@ public class Competition implements ProcessActivity {
     public long getStartDateToEndDatePercentage() {
         return getDaysLeftPercentage(getDaysLeft(), getTotalDays());
     }
+
     @JsonIgnore
     public List<Application> getApplications() {
         return applications;
     }
+
     @JsonIgnore
-    public List<Question> getQuestions(){return questions;}
+    public List<Question> getQuestions() {
+        return questions;
+    }
 
     public void setName(String name) {
         this.name = name;
@@ -245,11 +249,11 @@ public class Competition implements ProcessActivity {
     }
 
     public void setEndDate(LocalDateTime endDate) {
-    	setMilestoneDate(SUBMISSION_DATE, endDate);
+        setMilestoneDate(SUBMISSION_DATE, endDate);
     }
 
     public LocalDateTime getStartDate() {
-    	return getMilestoneDate(OPEN_DATE).orElse(null);
+        return getMilestoneDate(OPEN_DATE).orElse(null);
     }
 
     public void setStartDate(LocalDateTime startDate) {
@@ -257,19 +261,27 @@ public class Competition implements ProcessActivity {
     }
 
     public LocalDateTime getAssessorAcceptsDate() {
-    	return getMilestoneDate(ASSESSOR_ACCEPTS).orElse(null);
+        return getMilestoneDate(ASSESSOR_ACCEPTS).orElse(null);
     }
 
-    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate){
-    	setMilestoneDate(ASSESSOR_ACCEPTS, assessorAcceptsDate);
+    public void setAssessorAcceptsDate(LocalDateTime assessorAcceptsDate) {
+        setMilestoneDate(ASSESSOR_ACCEPTS, assessorAcceptsDate);
     }
 
     public LocalDateTime getAssessorDeadlineDate() {
         return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
     }
 
-    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate){
+    public void setAssessorDeadlineDate(LocalDateTime assessorDeadlineDate) {
         setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorDeadlineDate);
+    }
+
+    public LocalDateTime getReleaseFeedbackDate() {
+        return getMilestoneDate(MilestoneType.RELEASE_FEEDBACK).orElse(null);
+    }
+
+    public void setReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+        setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, releaseFeedbackDate);
     }
 
     public LocalDateTime getFundersPanelDate() {
@@ -281,21 +293,22 @@ public class Competition implements ProcessActivity {
     }
 
     public LocalDateTime getAssessorFeedbackDate() {
-    	return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
+        return getMilestoneDate(MilestoneType.ASSESSOR_DEADLINE).orElse(null);
     }
 
     public void setAssessorFeedbackDate(LocalDateTime assessorFeedbackDate) {
-    	setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorFeedbackDate);
+        setMilestoneDate(MilestoneType.ASSESSOR_DEADLINE, assessorFeedbackDate);
     }
+
     public LocalDateTime getFundersPanelEndDate() {
-    	return getMilestoneDate(MilestoneType.NOTIFICATIONS).orElse(null);
-	}
+        return getMilestoneDate(MilestoneType.NOTIFICATIONS).orElse(null);
+    }
 
     public void setFundersPanelEndDate(LocalDateTime fundersPanelEndDate) {
-    	setMilestoneDate(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
-	}
+        setMilestoneDate(MilestoneType.NOTIFICATIONS, fundersPanelEndDate);
+    }
 
-	public LocalDateTime getAssessorBriefingDate() {
+    public LocalDateTime getAssessorBriefingDate() {
         return getMilestoneDate(MilestoneType.ASSESSOR_BRIEFING).orElse(null);
     }
 
@@ -308,13 +321,13 @@ public class Competition implements ProcessActivity {
             Milestone m = new Milestone();
             m.setType(milestoneType);
             m.setCompetition(this);
-			milestones.add(m);
+            milestones.add(m);
             return m;
-		});
+        });
         milestone.setDate(dateTime);
-	}
+    }
 
-	private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
+    private Optional<Milestone> getMilestone(MilestoneType milestoneType) {
         return milestones.stream().filter(m -> m.getType() == milestoneType).findAny();
     }
 
@@ -328,18 +341,18 @@ public class Competition implements ProcessActivity {
     }
 
     private Optional<LocalDateTime> getMilestoneDate(MilestoneType milestoneType) {
-         return getMilestone(milestoneType).map(Milestone::getDate);
-	}
+        return getMilestone(milestoneType).map(Milestone::getDate);
+    }
 
     private long getDaysBetween(LocalDateTime dateA, LocalDateTime dateB) {
         return ChronoUnit.DAYS.between(dateA, dateB);
     }
 
-    private long getDaysLeftPercentage(long daysLeft, long totalDays ) {
-        if(daysLeft <= 0){
+    private long getDaysLeftPercentage(long daysLeft, long totalDays) {
+        if (daysLeft <= 0) {
             return 100;
         }
-        double deadlineProgress = 100-( ( (double)daysLeft/(double)totalDays )* 100);
+        double deadlineProgress = 100 - (((double) daysLeft / (double) totalDays) * 100);
         return (long) deadlineProgress;
     }
 
@@ -363,14 +376,14 @@ public class Competition implements ProcessActivity {
         this.id = id;
     }
 
-	protected void setDateProvider(DateProvider dateProvider) {
-		this.dateProvider = dateProvider;
-	}
+    protected void setDateProvider(DateProvider dateProvider) {
+        this.dateProvider = dateProvider;
+    }
 
     protected static class DateProvider {
-    	public LocalDateTime provideDate() {
-    		return LocalDateTime.now();
-    	}
+        public LocalDateTime provideDate() {
+            return LocalDateTime.now();
+        }
     }
 
     public User getExecutive() {
@@ -421,29 +434,29 @@ public class Competition implements ProcessActivity {
         this.competitionType = competitionType;
     }
 
-    public Category getInnovationSector() {
+    public InnovationSector getInnovationSector() {
         return innovationSector;
     }
 
-    public void setInnovationSector(Category innovationSector) {
+    public void setInnovationSector(InnovationSector innovationSector) {
         this.innovationSector = innovationSector;
     }
 
-    public Category getInnovationArea() {
-        return innovationArea;
+    public Set<InnovationArea> getInnovationAreas() {
+        return innovationAreas;
     }
 
-    public void setInnovationArea(Category innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setInnovationAreas(Set<InnovationArea> innovationAreas) {
+        this.innovationAreas = innovationAreas;
     }
 
-    public Set<Category> getResearchCategories() {
-		return researchCategories;
-	}
+    public Set<ResearchCategory> getResearchCategories() {
+        return researchCategories;
+    }
 
-    public void setResearchCategories(Set<Category> researchCategories) {
-		this.researchCategories = researchCategories;
-	}
+    public void setResearchCategories(Set<ResearchCategory> researchCategories) {
+        this.researchCategories = researchCategories;
+    }
 
     public List<Milestone> getMilestones() {
         return milestones;
@@ -454,12 +467,12 @@ public class Competition implements ProcessActivity {
     }
 
     public boolean isMultiStream() {
-		return multiStream;
-	}
+        return multiStream;
+    }
 
     public void setMultiStream(boolean multiStream) {
-		this.multiStream = multiStream;
-	}
+        this.multiStream = multiStream;
+    }
 
     public Boolean getResubmission() {
         return resubmission;
@@ -470,32 +483,32 @@ public class Competition implements ProcessActivity {
     }
 
     public String getStreamName() {
-		return streamName;
-	}
+        return streamName;
+    }
 
     public void setStreamName(String streamName) {
-		this.streamName = streamName;
-	}
+        this.streamName = streamName;
+    }
 
     public CollaborationLevel getCollaborationLevel() {
-		return collaborationLevel;
-	}
+        return collaborationLevel;
+    }
 
     public void setCollaborationLevel(CollaborationLevel collaborationLevel) {
-		this.collaborationLevel = collaborationLevel;
-	}
+        this.collaborationLevel = collaborationLevel;
+    }
 
     public LeadApplicantType getLeadApplicantType() {
-		return leadApplicantType;
-	}
+        return leadApplicantType;
+    }
 
     public void setLeadApplicantType(LeadApplicantType leadApplicantType) {
-		this.leadApplicantType = leadApplicantType;
-	}
+        this.leadApplicantType = leadApplicantType;
+    }
 
     public Map<CompetitionSetupSection, Boolean> getSectionSetupStatus() {
-		return sectionSetupStatus;
-	}
+        return sectionSetupStatus;
+    }
 
     public String getActivityCode() {
         return activityCode;
@@ -503,14 +516,6 @@ public class Competition implements ProcessActivity {
 
     public void setActivityCode(String activityCode) {
         this.activityCode = activityCode;
-    }
-
-    public String getInnovateBudget() {
-        return innovateBudget;
-    }
-
-    public void setInnovateBudget(String innovateBudget) {
-        this.innovateBudget = innovateBudget;
     }
 
     public List<CompetitionFunder> getFunders() {
@@ -538,14 +543,6 @@ public class Competition implements ProcessActivity {
 
     public void setFullApplicationFinance(boolean fullApplicationFinance) {
         this.fullApplicationFinance = fullApplicationFinance;
-    }
-
-    public boolean isIncludeGrowthTable() {
-        return includeGrowthTable;
-    }
-
-    public void setIncludeGrowthTable(boolean includeGrowthTable) {
-        this.includeGrowthTable = includeGrowthTable;
     }
 
     public Integer getAssessorCount() {
@@ -580,8 +577,11 @@ public class Competition implements ProcessActivity {
         this.useResubmissionQuestion = useResubmissionQuestion;
     }
 
-
     public void notifyAssessors(LocalDateTime date) {
+        if (getCompetitionStatus() == CompetitionStatus.IN_ASSESSMENT) {
+            return;
+        }
+
         if (getCompetitionStatus() != CompetitionStatus.CLOSED) {
             throw new IllegalStateException("Tried to notify assessors when in competitionStatus=" +
                     getCompetitionStatus() + ". Applications can only be distributed when competitionStatus=" +

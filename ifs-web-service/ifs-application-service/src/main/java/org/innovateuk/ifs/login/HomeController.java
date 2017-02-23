@@ -8,6 +8,7 @@ import org.innovateuk.ifs.login.model.RoleSelectionModelPopulator;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.util.CookieUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -33,6 +34,7 @@ import static org.springframework.util.StringUtils.hasText;
  * So we don't have a public homepage, the login page is the homepage.
  */
 @Controller
+@PreAuthorize("permitAll")
 public class HomeController {
 
     @Autowired
@@ -100,7 +102,7 @@ public class HomeController {
 
     private String doViewRoleSelection(Model model) {
         model.addAttribute("model", roleSelectionModelPopulator.populateModel());
-        return "/login/dual-user-choice";
+        return "login/dual-user-choice";
     }
 
     private String redirectToChosenDashboard(UserResource user, String role) {

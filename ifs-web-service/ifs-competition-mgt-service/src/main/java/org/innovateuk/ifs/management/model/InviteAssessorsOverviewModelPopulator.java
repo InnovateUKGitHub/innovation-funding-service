@@ -36,7 +36,14 @@ public class InviteAssessorsOverviewModelPopulator extends InviteAssessorsModelP
     }
 
     private OverviewAssessorRowViewModel getRowViewModel(AssessorInviteOverviewResource assessorInviteOverviewResource) {
-        return new OverviewAssessorRowViewModel(assessorInviteOverviewResource.getName(), assessorInviteOverviewResource.getInnovationAreaName(), assessorInviteOverviewResource.isCompliant(), assessorInviteOverviewResource.getStatus(), assessorInviteOverviewResource.getDetails());
+        return new OverviewAssessorRowViewModel(
+                assessorInviteOverviewResource.getId(),
+                assessorInviteOverviewResource.getName(),
+                assessorInviteOverviewResource.getInnovationAreas(),
+                assessorInviteOverviewResource.isCompliant(),
+                assessorInviteOverviewResource.getBusinessType(),
+                assessorInviteOverviewResource.getStatus(),
+                assessorInviteOverviewResource.getDetails());
     }
 
     @Override

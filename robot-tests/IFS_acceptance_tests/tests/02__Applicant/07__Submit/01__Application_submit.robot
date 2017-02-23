@@ -1,24 +1,20 @@
 *** Settings ***
-Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission.
-...
+Documentation     -INFUND-172: As a lead applicant and I am on the application summary, I can submit the application, so I can verify it that it is ready for submission
 ...
 ...               -INFUND-185: As an applicant, on the application summary and pressing the submit application button, it should give me a message that I can no longer alter the application.
-...
 ...
 ...               -INFUND-927 As a lead partner i want the system to show me when all questions and sections (partner finances) are complete on the finance summary, so that i know i can submit the application
 ...
 ...               -INFUND-1137 As an applicant I want to be shown confirmation information when I submit my application submission so I can confirm this has been sent and I can be given guidance for the next stages
 ...
-...
 ...               INFUND-1887 As the Service Delivery Manager, I want to send an email notification to an applicant once they have successfully submitted a completed application so they have confidence their application has been received by Innovate UK
 ...
 ...               INFUND-3107 When clicking the "X", the form submits and doesn't cancel the action when using a modal popup
 ...
-...
 ...               INFUND-1786 As a lead applicant I would like view the submitting an application terms and conditions page so that I know what I am agreeing to
 Suite Setup       new account complete all but one
 Suite Teardown    TestTeardown User closes the browser
-Force Tags        Applicant
+Force Tags        Applicant  Pending
 Resource          ../../../resources/defaultResources.robot
 
 *** Variables ***
@@ -54,7 +50,7 @@ Submit flow (complete application)
     [Tags]    HappyPath    Email    SmokeTest
     [Setup]    Delete the emails from both test mailboxes
     Given log in as a different user    ${submit_test_email}    Passw0rd123
-    Given the user navigates to the page    ${SERVER}
+    And the user navigates to the page    ${SERVER}
     And the user clicks the button/link    link=${application_name}
     When the user clicks the button/link    link=Review and submit
     And the user should be redirected to the correct page    summary
@@ -100,7 +96,7 @@ the user marks the first section as incomplete
     The user clicks the button/link    name=mark_as_incomplete
 
 the applicant clicks the submit button and the clicks cancel in the submit modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jquery=button:contains("Cancel")
 
@@ -119,32 +115,24 @@ the submit button should be disabled
     Element Should Be Disabled    jQuery=button:contains("Submit application")
 
 the applicant accepts the terms and conditions
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
+    the user selects the checkbox    agree-terms-page
+    the user selects the checkbox    agree-state-aid-page
 
 The user marks the finances as complete
     the user navigates to the page    ${DASHBOARD_URL}
     the user clicks the button/link    link=${application_name}
     the user clicks the button/link    link=Your finances
-    the user selects the checkbox    id=agree-terms-page
-    the user selects the checkbox    id=agree-state-aid-page
+    the user selects the checkbox    agree-terms-page
+    the user selects the checkbox    agree-state-aid-page
     the user moves focus to the element    jQuery=button:contains("Mark all as complete")
     the user clicks the button/link    jQuery=button:contains("Mark all as complete")
-    Sleep    1s
 
 the applicant marks the first section as complete
-    the user clicks the button/link    link=Application Overview
-    the user clicks the button/link    link=Application details
-    Clear Element Text    id=application_details-startdate_day
-    The user enters text to a text field    id=application_details-startdate_day    18
-    Clear Element Text    id=application_details-startdate_year
-    The user enters text to a text field    id=application_details-startdate_year    2018
-    Clear Element Text    id=application_details-startdate_month
-    The user enters text to a text field    id=application_details-startdate_month    11
-    the user clicks the button/link    jQuery=label:contains(No) input
-    the user clicks the button/link    name=mark_as_complete
+    Given the user navigates to the page  ${DASHBOARD_URL}
+    the user clicks the button/link    link=${application_name}
+    the applicant completes the application details
 
 the applicant clicks the submit and then clicks the "close button" in the modal
-    Wait Until Element Is Enabled    jQuery=.button:contains("Submit application")
+    Wait Until Element Is Enabled Without Screenshots    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=.button:contains("Submit application")
     the user clicks the button/link    jQuery=button:contains("X")

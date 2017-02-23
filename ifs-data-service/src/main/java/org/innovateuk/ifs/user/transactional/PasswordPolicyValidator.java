@@ -119,8 +119,7 @@ public class PasswordPolicyValidator {
         ExclusionRule containsLastName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 4, true, user -> singletonList(user.getLastName()));
         ExclusionRule containsFullName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_FIRST_OR_LAST_NAME, 5, true, user -> asList(user.getFirstName(), user.getLastName()));
         ExclusionRule containsOrganisationName = new ExclusionRule(PASSWORD_MUST_NOT_CONTAIN_ORGANISATION_NAME, 4, false, user -> {
-            List<Long> organisationIds = user.getOrganisations();
-            List<Organisation> organisations = simpleMap(organisationIds, organisationRepository::findOne);
+            List<Organisation> organisations = organisationRepository.findByUsersId(user.getId());
             return simpleMap(organisations, Organisation::getName);
         });
 

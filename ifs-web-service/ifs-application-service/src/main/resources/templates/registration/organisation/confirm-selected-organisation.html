@@ -27,7 +27,7 @@
             <legend class="visuallyhidden">Operating address</legend>
             <div  th:class="${#fields.hasErrors('*{useSearchResultAddress}')} ? 'form-block error' : 'form-block'">
                 <span class="error-message" th:if="${#fields.hasErrors('*{useSearchResultAddress}')}" th:errors="*{useSearchResultAddress}" />
-                <label class="block-label" for="address-same" data-target="manual-company-input"
+                <label class="block-label selection-button-checkbox" for="address-same" data-target="manual-company-input"
                        data-target-inverted="true">
                     <input id="address-same" th:field="*{useSearchResultAddress}" type="checkbox" value="yes"/>
                     The registered address is the same as the operating address

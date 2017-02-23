@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @FieldRequiredIf(required = "assessmentGuidanceTitle", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
+@FieldRequiredIf(required = "assessmentMaxWords", argument = "writtenFeedback", predicate = true, message = "{validation.field.must.not.be.blank}")
 @FieldRequiredIf(required = "scoreTotal", argument = "scored", predicate = true, message = "{validation.field.must.not.be.blank}")
 public class CompetitionSetupQuestionResource {
     private Long questionId;
@@ -32,13 +33,14 @@ public class CompetitionSetupQuestionResource {
     @NotBlank
     private String guidance;
 
-    @Min(1)
-    @NotNull(message="{validation.field.must.not.be.blank}")
+    @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
+    @NotNull(message = "{validation.field.must.not.be.blank}")
     private Integer maxWords;
     private Boolean appendix;
 
     private String assessmentGuidanceTitle;
     private String assessmentGuidance;
+    @Min(value = 1, message = "{validation.applicationquestionform.maxwords.min}")
     private Integer assessmentMaxWords;
 
     private Boolean scored;

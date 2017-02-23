@@ -9,13 +9,14 @@ import org.junit.Test;
 import org.springframework.http.HttpStatus;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
-import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
-
-import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static java.util.Arrays.asList;
+import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
+import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.junit.Assert.*;
 
 /**
@@ -102,7 +103,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     @Test
     public void test_findLiveCompetitions() {
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/live", competitionSearchResultItemListType(), returnedResponse);
 
@@ -115,7 +116,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void test_findProjectSetupCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", singleton(""), 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/projectSetup", competitionSearchResultItemListType(), returnedResponse);
 
@@ -128,7 +129,7 @@ public class CompetitionRestServiceMocksTest extends BaseRestServiceUnitTest<Com
     public void test_findUpcomingCompetitions() {
 
         List<CompetitionSearchResultItem> returnedResponse =
-                singletonList(new CompetitionSearchResultItem(1L, "Name", "", 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
+                singletonList(new CompetitionSearchResultItem(1L, "Name", Collections.EMPTY_SET, 0, "", CompetitionStatus.OPEN, "Comp Type", 0));
 
         setupGetWithRestResultExpectations(competitionsRestURL + "/upcoming", competitionSearchResultItemListType(), returnedResponse);
 

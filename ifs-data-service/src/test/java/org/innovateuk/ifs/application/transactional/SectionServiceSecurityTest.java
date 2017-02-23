@@ -65,6 +65,18 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
     }
 
     @Test
+    public void testPermissionForMarkSectionAsNotRequired() {
+        Long sectionId = 1L;
+        Long applicationId = 2L;
+        Long markedAsCompleteById = 3L;
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.markSectionAsNotRequired(sectionId, applicationId, markedAsCompleteById),
+                () -> verify(sectionPermissionRules).onlyMemberOfProjectTeamCanMarkSectionAsNotRequired(isA(ApplicationResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
     public void testPermissionForGetByCompetitionIdVisibleForAssessment() {
         classUnderTest.getByCompetitionIdVisibleForAssessment(1L);
         verify(sectionPermissionRules, times(ARRAY_SIZE_FOR_POST_FILTER_TESTS)).userCanReadSection(isA(SectionResource.class), isA(UserResource.class));
@@ -100,6 +112,11 @@ public class SectionServiceSecurityTest extends BaseServiceSecurityTest<SectionS
 
         @Override
         public ServiceResult<List<ValidationMessages>> markSectionAsComplete(Long sectionId, Long applicationId, Long markedAsCompleteById) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> markSectionAsNotRequired(Long sectionId, Long applicationId, Long markedAsCompleteById) {
             return null;
         }
 

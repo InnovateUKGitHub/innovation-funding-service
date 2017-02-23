@@ -24,19 +24,7 @@ public class ProfileUtil {
         return getAddress(organisation, OrganisationAddressType.REGISTERED);
     }
 
-    public static Long getUserOrganisationId(final UserResource userResource) {
-        if(!userResource.getOrganisations().isEmpty()) {
-            Long organisationId = userResource.getOrganisations().get(0);
-            return organisationId;
-        } else {
-            LOG.warn("No organisation associated with user" + userResource.getId());
-            return null;
-        }
-    }
-
     private static Optional<OrganisationAddressResource> getAddress(final OrganisationResource organisation, final OrganisationAddressType addressType) {
         return organisation.getAddresses().stream().filter(a -> addressType.equals(OrganisationAddressType.valueOf(a.getAddressType().getName()))).findFirst();
     }
-
-
 }

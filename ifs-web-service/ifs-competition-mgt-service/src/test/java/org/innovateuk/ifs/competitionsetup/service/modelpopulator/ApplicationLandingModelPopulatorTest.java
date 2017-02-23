@@ -2,9 +2,6 @@ package org.innovateuk.ifs.competitionsetup.service.modelpopulator;
 
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
-import org.innovateuk.ifs.application.resource.SectionType;
-import org.innovateuk.ifs.application.service.CategoryService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.QuestionService;
 import org.innovateuk.ifs.application.service.SectionService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -23,13 +20,12 @@ import org.springframework.ui.Model;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.application.builder.SectionResourceBuilder.newSectionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputResourceBuilder.newFormInputResource;
-import static org.codehaus.groovy.runtime.InvokerHelper.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
@@ -38,12 +34,6 @@ public class ApplicationLandingModelPopulatorTest {
 
 	@InjectMocks
 	private ApplicationLandingModelPopulator populator;
-
-	@Mock
-	private CategoryService categoryService;
-	
-	@Mock
-	private CompetitionService competitionService;
 
 	@Mock
 	private QuestionService questionService;
@@ -77,12 +67,9 @@ public class ApplicationLandingModelPopulatorTest {
 		List<QuestionResource> questionResources = asList(newQuestionResource().withId(questionId).build());
 		when(questionService.findByCompetition(competition.getId())).thenReturn(questionResources);
 
-		List<SectionResource> generalSections = sections.stream().filter(sectionResource -> sectionResource.getType() == SectionType.GENERAL).collect(Collectors.toList());
-		List<SectionResource> parentSections = generalSections.stream().filter(sectionResource -> sectionResource.getParentSection() == null).collect(Collectors.toList());
-
-		List<FormInputResource> formInputResources = asList(newFormInputResource().withScope(FormInputScope.APPLICATION));
+		List<FormInputResource> formInputResources = newFormInputResource().withScope(FormInputScope.APPLICATION).build(1);
 		when(formInputService.findApplicationInputsByQuestion(questionId)).thenReturn(formInputResources);
-		List<FormInputResource> formInputResourcesAssessment = asList(newFormInputResource().withScope(FormInputScope.ASSESSMENT));
+		List<FormInputResource> formInputResourcesAssessment = newFormInputResource().withScope(FormInputScope.ASSESSMENT).build(1);
 		when(formInputService.findAssessmentInputsByQuestion(questionId)).thenReturn(formInputResourcesAssessment);
 
 		populator.populateModel(model, competition);

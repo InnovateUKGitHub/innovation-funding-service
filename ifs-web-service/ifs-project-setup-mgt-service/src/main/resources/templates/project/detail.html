@@ -14,7 +14,7 @@
 <main id="content">
     <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
 
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Competition dashboard',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"  th:remove="tag"></div>
+    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{id}/status (id=${model.competitionId})}"  th:remove="tag"></div>
 
     <div class="page-title">
         <div th:include="fragments/elements :: project-title (projectId=${model.project.application}, projectName=${model.project.name})" th:remove="tag" />
@@ -52,7 +52,7 @@
             </tr>
             <tr>
                 <td>
-                    Project manager
+                    Project Manager
                 </td>
                 <td id="project-manager" th:if="${model.projectManager != null}" th:text="${model.projectManager?.userName}">John Smith</td>
                 <td id="no-project-manager" th:if="${model.projectManager == null}">Not yet completed</td>

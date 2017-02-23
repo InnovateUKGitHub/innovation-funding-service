@@ -140,3 +140,9 @@ located somewhere else).
     Running `teardown.sh` followed by running `setup.sh` is recommended (aka try again).
     
  - If the build is failing (e.g. on Flyway migrations), have you run the `hosts-helper.sh` before the `setup.sh`? Are you using the old `Docker Machine` setup and your commands are still being evaluated in the VM?
+ 
+ - If you are on OS X and still see ERROR 2002 (HY000) issue above.  And if the scripts continue to check for local .sock file,
+   it could be because mysql is trying to open a socket assuming it to be on local machine.  To stop this, you need to force
+   mysql to use a TCP connection.  One easy way to do this was to use a host with ip address and port number explicitly.
+   A script called setup_with_hardcoded_host.sh has been added to docker-native directory with this change.  Instead of using 
+   setup.sh, try to use this script instead and see if this solves your problem.  There maybe better ways to solve this, but this worked for me.

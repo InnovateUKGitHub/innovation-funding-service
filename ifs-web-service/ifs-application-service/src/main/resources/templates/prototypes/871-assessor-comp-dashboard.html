@@ -26,13 +26,13 @@
                 <li><strong>Competition:</strong> Technology Inspired (CRD3359)</li>
                 <li><strong>Innovation Lead:</strong> Mike Biddle</li>
                 <li><strong>Funding body:</strong> Innovate UK</li>
-                <li><strong>Accept applications deadline:</strong> midday (12.00pm) Wednesday 20 April 2016</li>
-                <li><strong>Submit applications deadline:</strong> midday (12.00pm) Monday 25 April 2016</li>
+                <li><strong>Please accept or reject assigned applications by:</strong> 12:00pm Wednesday 20 April 2016</li>
+                <li><strong>Please submit completed assessments by:</strong> 12:00pm Monday 25 April 2016</li>
             </ul>
 
         </div>
         <div class="column-third">
-            <ul class="list-bullet">
+            <ul class="list list-bullet">
                 <li><a href="#">competition brief</a></li>
                 <li><a href="#">assessor briefing materials</a></li>
             </ul>
@@ -58,5 +58,26 @@
 
 <div th:include="fragments/layout :: footer" th:remove="tag" />
 <div th:include="fragments/layout :: body-end" th:remove="tag" />
+<script type="text/javascript">
+	// <![CDATA[
+  jQuery(document).ready(function(){
+
+    jQuery('.selection-button-checkbox input').attr('type','checkbox').on('click',function(e){
+      // update selected rows
+
+      if (jQuery(this).is(':checked')) {
+        jQuery('#formSubmitAssessmentButton').prop('disabled', false);
+      }else{
+        jQuery('#formSubmitAssessmentButton').prop('disabled', true);
+      }
+
+
+
+    });
+
+  });
+
+	// ]]>
+</script>
 </body>
 </html>

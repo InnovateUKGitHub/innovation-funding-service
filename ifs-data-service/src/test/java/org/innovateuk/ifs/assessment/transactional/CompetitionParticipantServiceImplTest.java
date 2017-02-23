@@ -99,7 +99,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         when(competitionParticipantRepositoryMock.getByUserIdAndRole(userId, ASSESSOR)).thenReturn(competitionParticipants);
         when(competitionParticipantMapperMock.mapToResource(same(competitionParticipant))).thenReturn(expected);
         when(competitionParticipantRoleMapperMock.mapToDomain(CompetitionParticipantRoleResource.ASSESSOR)).thenReturn(ASSESSOR);
-        when(assessmentRepositoryMock.findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
+        when(assessmentRepositoryMock.findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId)).thenReturn(assessments);
 
         ServiceResult<List<CompetitionParticipantResource>> competitionParticipantServiceResult =
                 competitionParticipantService.getCompetitionParticipants(assessorId, CompetitionParticipantRoleResource.ASSESSOR);
@@ -114,7 +114,7 @@ public class CompetitionParticipantServiceImplTest extends BaseUnitTestMocksTest
         inOrder.verify(competitionParticipantRoleMapperMock, calls(1)).mapToDomain(any(CompetitionParticipantRoleResource.class));
         inOrder.verify(competitionParticipantRepositoryMock, calls(1)).getByUserIdAndRole(assessorId, ASSESSOR);
         inOrder.verify(competitionParticipantMapperMock, calls(1)).mapToResource(any(CompetitionParticipant.class));
-        inOrder.verify(assessmentRepositoryMock, calls(1)).findByParticipantUserIdAndParticipantApplicationCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
+        inOrder.verify(assessmentRepositoryMock, calls(1)).findByParticipantUserIdAndTargetCompetitionIdOrderByActivityStateStateAscIdAsc(userId, competitionId);
         inOrder.verifyNoMoreInteractions();
     }
 

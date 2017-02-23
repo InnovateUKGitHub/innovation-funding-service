@@ -10,10 +10,10 @@
 
         <main id="content">
             <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-            <div th:include="fragments/assessment :: assessment-header-sub" th:with="linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft}" th:remove="tag" />
+            <div th:include="fragments/assessment :: assessment-header-deadline-sub (linkTitle='Back to your assessment overview',linkClass='link-back',linkUrl=@{${navigation.overviewUrl}},daysPercentage=${model.daysLeftPercentage},daysLeft=${model.daysLeft})" th:remove="tag" />
 
             <div class="page-title">
-                <div th:include="fragments/elements :: application-title (application=${model.application})" th:remove="tag" />
+                <div th:include="fragments/elements :: application-title (applicationId=${model.application.id},applicationName=${model.application.applicationDisplayName})" th:remove="tag" />
                 <h1 class="heading-xlarge" th:text="${model.questionShortName}" />
             </div>
 
@@ -29,7 +29,7 @@
                         <span th:text="${model.questionName}" th:remove="tag" />
                     </h2>
 
-                    <p th:text="${model.applicantResponse}" />
+                    <p th:text="${model.applicantResponse}" data-md-to-html="">This is the applicant response.</p>
                 </div>
 
                 <div th:if="${model.appendixExists}">

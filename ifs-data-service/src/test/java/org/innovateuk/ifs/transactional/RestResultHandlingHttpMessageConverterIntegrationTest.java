@@ -2,7 +2,7 @@ package org.innovateuk.ifs.transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import org.innovateuk.ifs.application.service.ApplicationRestService;
-import org.innovateuk.ifs.commons.BaseWebIntegrationTest;
+import org.innovateuk.ifs.commons.BaseIntegrationTest;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -14,8 +14,6 @@ import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -37,19 +35,14 @@ import static org.springframework.http.HttpStatus.OK;
  * RestResults from Controllers and convert them into the "body" of the RestResult, and that it can take failing RestResults
  * and convert them into {@link RestErrorResponse} objects.
  */
-public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseWebIntegrationTest {
+public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseIntegrationTest {
 
-    @Value("${ifs.data.service.rest.baseURL}")
-    private String dataUrl;
-
-
-//    @Autowired
-//    public ApplicationRestService applicationRestService;
 
     @Test
     public void testSuccessRestResultHandledAsTheBodyOfTheRestResult() {
 
         RestTemplate restTemplate = new RestTemplate();
+        String dataUrl = "http://localhost:" + port;
 
         final long applicationId = 1L;
         try {
@@ -68,7 +61,7 @@ public class RestResultHandlingHttpMessageConverterIntegrationTest extends BaseW
 
         RestTemplate restTemplate = new RestTemplate();
         try {
-            String url = dataUrl + "/application/9999";
+            String url = "http://localhost:" + port + "/application/9999";
             restTemplate.exchange(url, GET, leadApplicantHeadersEntity(), String.class);
             fail("Should have had a Not Found on the server side, as a non-existent id was specified");
         } catch (HttpClientErrorException | HttpServerErrorException e) {

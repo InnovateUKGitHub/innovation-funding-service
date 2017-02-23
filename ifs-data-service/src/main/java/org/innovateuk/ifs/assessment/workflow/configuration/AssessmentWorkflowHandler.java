@@ -2,19 +2,17 @@ package org.innovateuk.ifs.assessment.workflow.configuration;
 
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.repository.ApplicationRepository;
+import org.innovateuk.ifs.assessment.domain.AssessmentRejectOutcome;
 import org.innovateuk.ifs.assessment.domain.Assessment;
+import org.innovateuk.ifs.assessment.domain.AssessmentFundingDecisionOutcome;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.resource.ApplicationRejectionResource;
-import org.innovateuk.ifs.assessment.resource.AssessmentFundingDecisionResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentOutcomes;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.repository.ProcessRoleRepository;
 import org.innovateuk.ifs.workflow.BaseWorkflowEventHandler;
 import org.innovateuk.ifs.workflow.domain.ActivityType;
-import org.innovateuk.ifs.workflow.domain.ProcessOutcome;
 import org.innovateuk.ifs.workflow.repository.ProcessRepository;
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.repository.CrudRepository;
@@ -25,7 +23,6 @@ import org.springframework.stereotype.Component;
 
 import static org.innovateuk.ifs.assessment.resource.AssessmentOutcomes.*;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static java.util.Optional.ofNullable;
 
 /**
  * {@code AssessmentWorkflowService} is the entry point for triggering the workflow.
@@ -53,24 +50,32 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
         return new Assessment(target, participant);
     }
 
-    public boolean rejectInvitation(Assessment assessment, ApplicationRejectionResource applicationRejection) {
-        return fireEvent(assessmentEventWithOutcome(assessment, rejectInvitationOutcome(applicationRejection), REJECT), assessment);
+    public boolean rejectInvitation(Assessment assessment, AssessmentRejectOutcome assessmentRejectOutcome) {
+        return fireEvent(rejectMessage(assessment, assessmentRejectOutcome), assessment);
     }
 
     public boolean acceptInvitation(Assessment assessment) {
-        return fireEvent(assessmentEvent(assessment, ACCEPT), assessment);
+        return fireEvent(assessmentMessage(assessment, ACCEPT), assessment);
     }
 
     public boolean feedback(Assessment assessment) {
-        return fireEvent(assessmentEvent(assessment, FEEDBACK), assessment);
+        return fireEvent(assessmentMessage(assessment, FEEDBACK), assessment);
     }
 
-    public boolean fundingDecision(Assessment assessment, AssessmentFundingDecisionResource assessmentFundingDecision) {
-        return fireEvent(assessmentEventWithOutcome(assessment, fundingDecisionOutcome(assessmentFundingDecision), FUNDING_DECISION), assessment);
+    public boolean fundingDecision(Assessment assessment, AssessmentFundingDecisionOutcome fundingDecision) {
+        return fireEvent(fundingDecisionMessage(assessment, fundingDecision), assessment);
+    }
+
+    public boolean withdraw(Assessment assessment) {
+        return fireEvent(assessmentMessage(assessment, WITHDRAW), assessment);
     }
 
     public boolean submit(Assessment assessment) {
-        return fireEvent(assessmentEvent(assessment, SUBMIT), assessment);
+        return fireEvent(assessmentMessage(assessment, SUBMIT), assessment);
+    }
+
+    public boolean notify(Assessment assessment) {
+        return fireEvent(assessmentMessage(assessment, NOTIFY), assessment);
     }
 
     @Override
@@ -100,34 +105,22 @@ public class AssessmentWorkflowHandler extends BaseWorkflowEventHandler<Assessme
 
     @Override
     protected Assessment getOrCreateProcess(Message<AssessmentOutcomes> message) {
-        return (Assessment) message.getHeaders().get("assessment");
+        return (Assessment) message.getHeaders().get("target");
     }
 
-    private MessageBuilder<AssessmentOutcomes> assessmentEventWithOutcome(Assessment assessment, ProcessOutcome processOutcome, AssessmentOutcomes event) {
+    private MessageBuilder<AssessmentOutcomes> fundingDecisionMessage(Assessment assessment, AssessmentFundingDecisionOutcome fundingDecision) {
+        return assessmentMessage(assessment, FUNDING_DECISION)
+                .setHeader("fundingDecision", fundingDecision);
+    }
+
+    private MessageBuilder<AssessmentOutcomes> rejectMessage(Assessment assessment, AssessmentRejectOutcome rejection) {
+        return assessmentMessage(assessment, REJECT)
+                .setHeader("rejection", rejection);
+    }
+
+    private MessageBuilder<AssessmentOutcomes> assessmentMessage(Assessment assessment, AssessmentOutcomes event) {
         return MessageBuilder
                 .withPayload(event)
-                .setHeader("assessment", assessment)
-                .setHeader("processOutcome", processOutcome);
-    }
-
-    private MessageBuilder<AssessmentOutcomes> assessmentEvent(Assessment assessment, AssessmentOutcomes event) {
-        return MessageBuilder
-                .withPayload(event)
-                .setHeader("assessment", assessment);
-    }
-
-    private ProcessOutcome rejectInvitationOutcome(ApplicationRejectionResource applicationRejection) {
-        ProcessOutcome processOutcome = new ProcessOutcome();
-        processOutcome.setDescription(applicationRejection.getRejectReason());
-        processOutcome.setComment(applicationRejection.getRejectComment());
-        return processOutcome;
-    }
-
-    private ProcessOutcome fundingDecisionOutcome(AssessmentFundingDecisionResource assessmentFundingDecision) {
-        ProcessOutcome processOutcome = new ProcessOutcome();
-        processOutcome.setOutcome(ofNullable(assessmentFundingDecision.getFundingConfirmation()).map(BooleanUtils::toStringYesNo).orElse(null));
-        processOutcome.setDescription(assessmentFundingDecision.getFeedback());
-        processOutcome.setComment(assessmentFundingDecision.getComment());
-        return processOutcome;
+                .setHeader("target", assessment);
     }
 }

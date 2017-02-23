@@ -29,11 +29,22 @@ public class ProjectDetailsViewModel {
     private ProjectUserResource projectManager;
     private boolean submissionAllowed;
     private boolean isFinanceContactSubmitted;
+    private boolean readOnlyView;
 
     private Map<Long, ProjectUserResource> financeContactsByOrganisationId;
     private boolean userLeadPartner;
 
-    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser, List<Long> usersPartnerOrganisations, List<OrganisationResource> partnerOrganisations, ApplicationResource app, List<ProjectUserResource> projectUsers, CompetitionResource competition, boolean userIsLeadPartner, boolean projectDetailsSubmitted, ProjectUserResource projectManager, boolean submissionAllowed) {
+    public ProjectDetailsViewModel(ProjectResource project, UserResource currentUser,
+                                   List<Long> usersPartnerOrganisations,
+                                   List<OrganisationResource> partnerOrganisations,
+                                   ApplicationResource app,
+                                   List<ProjectUserResource> projectUsers,
+                                   CompetitionResource competition,
+                                   boolean userIsLeadPartner,
+                                   boolean projectDetailsSubmitted,
+                                   ProjectUserResource projectManager,
+                                   boolean submissionAllowed,
+                                   boolean readOnlyView) {
         this.project = project;
         this.currentUser = currentUser;
         this.usersPartnerOrganisations = usersPartnerOrganisations;
@@ -43,6 +54,7 @@ public class ProjectDetailsViewModel {
         this.projectDetailsSubmitted = projectDetailsSubmitted;
         this.projectManager = projectManager;
         this.submissionAllowed = submissionAllowed;
+        this.readOnlyView = readOnlyView;
 
         List<ProjectUserResource> financeRoles = simpleFilter(projectUsers, ProjectUserResource::isFinanceContact);
         this.financeContactsByOrganisationId = simpleToMap(financeRoles, ProjectUserResource::getOrganisation, Function.identity());
@@ -85,6 +97,8 @@ public class ProjectDetailsViewModel {
     public boolean isUserPartnerInOrganisation(Long organisationId) {
         return usersPartnerOrganisations.contains(organisationId);
     }
+
+    public boolean isReadOnly() { return readOnlyView; }
 
     public boolean isProjectDetailsSubmitted() {
         return projectDetailsSubmitted;

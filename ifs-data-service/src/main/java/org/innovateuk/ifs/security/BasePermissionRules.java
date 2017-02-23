@@ -3,7 +3,6 @@ package org.innovateuk.ifs.security;
 import java.util.List;
 
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.assessment.repository.ProcessOutcomeRepository;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.domain.ProjectUser;
 import org.innovateuk.ifs.project.repository.ProjectRepository;
@@ -50,9 +49,6 @@ public abstract class BasePermissionRules {
     protected UserRepository userRepository;
 
     @Autowired
-    protected ProcessOutcomeRepository processOutcomeRepository;
-
-    @Autowired
     protected AssessmentRepository assessmentRepository;
 
     protected boolean isMemberOfProjectTeam(long applicationId, UserResource user) {
@@ -92,7 +88,7 @@ public abstract class BasePermissionRules {
         Project project = projectRepository.findOne(projectId);
         Role leadApplicantRole = roleRepository.findOneByName(LEADAPPLICANT.getName());
         ProcessRole leadApplicantProcessRole = processRoleRepository.findOneByApplicationIdAndRoleId(project.getApplication().getId(), leadApplicantRole.getId());
-        Organisation leadOrganisation = leadApplicantProcessRole.getOrganisation();
+        Organisation leadOrganisation = organisationRepository.findOne(leadApplicantProcessRole.getOrganisationId());
 
         ProjectUser partnerProjectUser = projectUserRepository.findOneByProjectIdAndUserIdAndOrganisationIdAndRole(projectId, userId, leadOrganisation.getId(), PROJECT_PARTNER);
         return partnerProjectUser != null;

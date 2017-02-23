@@ -1,16 +1,20 @@
 package org.innovateuk.ifs.project.finance.transactional;
 
+import org.apache.commons.lang3.time.DateUtils;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.ProjectFinance;
+import org.innovateuk.ifs.project.builder.PartnerOrganisationBuilder;
 import org.innovateuk.ifs.project.builder.ProjectBuilder;
+import org.innovateuk.ifs.project.domain.PartnerOrganisation;
 import org.innovateuk.ifs.project.domain.Project;
 import org.innovateuk.ifs.project.finance.domain.*;
 import org.innovateuk.ifs.project.finance.resource.*;
 import org.innovateuk.ifs.project.resource.*;
+import org.innovateuk.ifs.project.util.DateUtil;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.OrganisationType;
 import org.innovateuk.ifs.user.domain.User;
@@ -18,6 +22,7 @@ import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.innovateuk.ifs.workflow.domain.ActivityState;
+import org.innovateuk.ifs.workflow.domain.ActivityType;
 import org.innovateuk.ifs.workflow.resource.State;
 import org.junit.Assert;
 import org.junit.Test;
@@ -37,7 +42,6 @@ import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.finance.domain.builder.ProjectFinanceBuilder.newProjectFinance;
 import static org.innovateuk.ifs.finance.resource.cost.FinanceRowType.*;
 import static org.innovateuk.ifs.project.builder.CostCategoryBuilder.newCostCategory;
 import static org.innovateuk.ifs.project.builder.CostCategoryGroupBuilder.newCostCategoryGroup;
@@ -143,13 +147,17 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
                         singletonList(new SpendProfileCostCategorySummary(type2Cat1, new BigDecimal("300.66"), project.getDurationInMonths())),
                         costCategoryType2)));
 
-        when(projectFinanceRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                newProjectFinance().
-                        withViability(Viability.APPROVED, Viability.APPROVED).
-                        withOrganisation(organisation1, organisation2).
-                        build(2));
+        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
+        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(isA(String.class))).thenReturn(false);
+        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
+                asList(partnerOrganisation1, partnerOrganisation2));
+
+        ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+        ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(viabilityProcess1);
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(viabilityProcess2);
 
         List<Cost> expectedOrganisation1EligibleCosts = asList(
                 new Cost("100").withCategory(type1Cat1),
@@ -249,13 +257,18 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(projectFinanceRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                newProjectFinance().
-                        withViability(Viability.APPROVED, Viability.PENDING).
-                        withOrganisation(organisation1, organisation2).
-                        build(2));
+        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
+        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(isA(String.class))).thenReturn(false);
+        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
+                asList(partnerOrganisation1, partnerOrganisation2));
+
+        ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+        ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
+
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(viabilityProcess1);
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(viabilityProcess2);
+
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isFailure());
@@ -266,7 +279,7 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGenerateSpendProfileAndNotAllViabilityApprovedButAcademicSoNotApplicable() {
+    public void testGenerateSpendProfileWhenAllViabilityApprovedButAcademicViabilityNotApplicable() {
 
         GenerateSpendProfileData generateSpendProfileData = new GenerateSpendProfileData().build();
 
@@ -276,14 +289,17 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
 
         setupGenerateSpendProfilesExpectations(generateSpendProfileData, project, organisation1, organisation2);
 
-        when(projectFinanceRepositoryMock.findByProjectId(project.getId())).thenReturn(
-                newProjectFinance().
-                        withViability(Viability.APPROVED, Viability.PENDING).
-                        withOrganisation(organisation1, organisation2).
-                        build(2));
+        PartnerOrganisation partnerOrganisation1 = newPartnerOrganisation().build();
+        PartnerOrganisation partnerOrganisation2 = newPartnerOrganisation().build();
 
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation1.getOrganisationType().getName())).thenReturn(false);
-        when(organisationFinanceDelegateMock.isUsingJesFinances(organisation2.getOrganisationType().getName())).thenReturn(true);
+        when(partnerOrganisationRepositoryMock.findByProjectId(project.getId())).thenReturn(
+                asList(partnerOrganisation1, partnerOrganisation2));
+
+        ViabilityProcess viabilityProcess1 = new ViabilityProcess((User)null, partnerOrganisation1, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+        ViabilityProcess viabilityProcess2 = new ViabilityProcess((User)null, partnerOrganisation2, new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.NOT_APPLICABLE.getBackingState()));
+
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation1)).thenReturn(viabilityProcess1);
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisation2)).thenReturn(viabilityProcess2);
 
         ServiceResult<Void> generateResult = service.generateSpendProfile(projectId);
         assertTrue(generateResult.isSuccess());
@@ -418,8 +434,11 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     public void rejectSpendProfile() {
         Long projectId = 4234L;
         List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
+        Project project = newProject().withId(projectId).withDuration(3L).withTargetStartDate(LocalDate.of(2018, 3, 1)).withSpendProfileSubmittedDate(LocalDateTime.now()).build();
+
 
         when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceSuccess());
+        when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
 
         ServiceResult<Void> resultNew = service.approveOrRejectSpendProfile(projectId, ApprovalType.REJECTED);
 
@@ -427,26 +446,10 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
         spendProfileList.forEach(spendProfile ->
                 assertEquals(ApprovalType.REJECTED, spendProfile.getApproval())
         );
+        assertTrue(project.getSpendProfileSubmittedDate() == null);
+
         verify(spendProfileRepositoryMock).save(spendProfileList);
     }
-
-    @Test
-    public void approveSpendProfileGenerateGolFails() {
-        Long projectId = 49544L;
-        List<SpendProfile> spendProfileList = getSpendProfilesAndSetWhenSpendProfileRepositoryMock(projectId);
-
-        when(projectGrantOfferServiceMock.generateGrantOfferLetterIfReady(projectId)).thenReturn(serviceFailure(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
-
-        ServiceResult<Void> result = service.approveOrRejectSpendProfile(projectId, ApprovalType.APPROVED);
-
-        assertTrue(result.isFailure());
-        assertTrue(result.getFailure().is(CommonFailureKeys.GRANT_OFFER_LETTER_GENERATION_FAILURE));
-        spendProfileList.forEach(spendProfile ->
-                assertEquals(ApprovalType.APPROVED, spendProfile.getApproval())
-        );
-        verify(spendProfileRepositoryMock).save(spendProfileList);
-    }
-
 
     @Test
     public void saveSpendProfileWhenValidationFails() {
@@ -691,90 +694,463 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     }
 
     @Test
-    public void testGetViabilitySuccess() {
+    public void testGetViabilityWhenPartnerOrganisationDoesNotExist() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setViability(Viability.APPROVED);
-        projectFinanceInDB.setViabilityStatus(ViabilityStatus.GREEN);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isFailure());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+    }
+
+    @Test
+    public void testGetViabilityWhenViabilityStateIsReviewInDB() {
+
+        setUpGetViabilityMocking(ViabilityState.REVIEW, ViabilityRagStatus.RED, null, null);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
         ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.APPROVED, result.getSuccessObject().getViability());
-        assertEquals(ViabilityStatus.GREEN, result.getSuccessObject().getViabilityStatus());
+        ViabilityResource returnedViabilityResource = result.getSuccessObject();
+
+        assertGetViabilityResults(returnedViabilityResource, Viability.REVIEW, ViabilityRagStatus.RED,
+                null, null, null);
+    }
+
+    @Test
+    public void testGetViabilityWhenViabilityStateIsNotApplicableInDB() {
+
+        setUpGetViabilityMocking(ViabilityState.NOT_APPLICABLE, ViabilityRagStatus.AMBER, null, null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        ViabilityResource returnedViabilityResource = result.getSuccessObject();
+
+        assertGetViabilityResults(returnedViabilityResource, Viability.NOT_APPLICABLE, ViabilityRagStatus.AMBER,
+                null, null, null);
+    }
+
+    @Test
+    public void testGetViabilityWhenViabilityStateIsApproved() {
+
+        Long userId = 7L;
+
+        User user = newUser()
+                .withId(userId)
+                .withFirstName("Lee")
+                .withLastName("Bowman")
+                .build();
+
+        setUpGetViabilityMocking(ViabilityState.APPROVED, ViabilityRagStatus.GREEN, user, LocalDate.now());
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<ViabilityResource> result = service.getViability(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        ViabilityResource returnedViabilityResource = result.getSuccessObject();
+
+        assertGetViabilityResults(returnedViabilityResource, Viability.APPROVED, ViabilityRagStatus.GREEN,
+                "Lee", "Bowman", LocalDate.now());
+    }
+
+    private void setUpGetViabilityMocking(ViabilityState viabilityStateInDB, ViabilityRagStatus viabilityRagStatusInDB,
+                                          User viabilityApprovalUser, LocalDate viabilityApprovalDate) {
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+
+        ViabilityProcess viabilityProcess = new ViabilityProcess(viabilityApprovalUser, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, viabilityStateInDB.getBackingState()));
+        if (viabilityApprovalDate != null) {
+            viabilityProcess.setLastModified(DateUtils.toCalendar(DateUtil.asDate(viabilityApprovalDate)));
+        }
+
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setViabilityStatus(viabilityRagStatusInDB);
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+    }
+
+    private void assertGetViabilityResults(ViabilityResource returnedViabilityResource, Viability expectedViability, ViabilityRagStatus expectedViabilityRagStatus,
+                                           String expectedViabilityApprovalUserFirstName, String expectedViabilityApprovalUserLastName,
+                                           LocalDate expectedViabilityApprovalDate) {
+
+        assertEquals(expectedViability, returnedViabilityResource.getViability());
+        assertEquals(expectedViabilityRagStatus, returnedViabilityResource.getViabilityRagStatus());
+
+        assertEquals(expectedViabilityApprovalUserFirstName, returnedViabilityResource.getViabilityApprovalUserFirstName());
+        assertEquals(expectedViabilityApprovalUserLastName, returnedViabilityResource.getViabilityApprovalUserLastName());
+        assertEquals(expectedViabilityApprovalDate, returnedViabilityResource.getViabilityApprovalDate());
+    }
+
+    @Test
+    public void testGetEligibilityWhenPartnerOrganisationDoesNotExist() {
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isFailure());
+        assertEquals(GENERAL_NOT_FOUND.getErrorKey(), result.getErrors().get(0).getErrorKey());
+
+    }
+
+    @Test
+    public void testGetEligibilityWhenEligibilityIsReviewInDB() {
+
+        setGetEligibilityMocking(EligibilityState.REVIEW, EligibilityRagStatus.RED, null, null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+
+        assertGetEligibilityResults(returnedEligibilityResource, Eligibility.REVIEW, EligibilityRagStatus.RED,
+                null, null, null);
+
+    }
+
+    @Test
+    public void testGetEligibilityWhenEligibilityIsNotApplicableInDB() {
+
+        setGetEligibilityMocking(EligibilityState.NOT_APPLICABLE, EligibilityRagStatus.AMBER, null, null);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+
+        assertGetEligibilityResults(returnedEligibilityResource, Eligibility.NOT_APPLICABLE, EligibilityRagStatus.AMBER,
+                null, null, null);
+
+    }
+
+    @Test
+    public void testGetEligibilityWhenEligibilityIsApprovedInDB() {
+
+        Long userId = 7L;
+
+        User user = newUser()
+                .withId(userId)
+                .withFirstName("Lee")
+                .withLastName("Bowman")
+                .build();
+
+        setGetEligibilityMocking(EligibilityState.APPROVED, EligibilityRagStatus.GREEN, user, LocalDate.now());
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<EligibilityResource> result = service.getEligibility(projectOrganisationCompositeId);
+
+        assertTrue(result.isSuccess());
+
+        EligibilityResource returnedEligibilityResource = result.getSuccessObject();
+
+        assertGetEligibilityResults(returnedEligibilityResource, Eligibility.APPROVED, EligibilityRagStatus.GREEN,
+                "Lee", "Bowman", LocalDate.now());
+
+    }
+
+    private void setGetEligibilityMocking(EligibilityState eligibilityStateInDB, EligibilityRagStatus eligibilityRagStatusInDB,
+                                          User eligibilityApprovalUser, LocalDate eligibilityApprovalDate) {
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+
+        EligibilityProcess eligibilityProcess = new EligibilityProcess(eligibilityApprovalUser, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_ELIGIBILITY, eligibilityStateInDB.getBackingState()));
+        if (eligibilityApprovalDate != null) {
+            eligibilityProcess.setLastModified(DateUtils.toCalendar(DateUtil.asDate(eligibilityApprovalDate)));
+        }
+
+        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        projectFinanceInDB.setEligibilityStatus(eligibilityRagStatusInDB);
+
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+    }
+
+    private void assertGetEligibilityResults(EligibilityResource returnedEligibilityResource, Eligibility expectedEligibility,
+                                             EligibilityRagStatus expectedEligibilityRagStatus,
+                                             String expectedEligibilityApprovalUserFirstName, String expectedEligibilityApprovalUserLastName,
+                                             LocalDate expectedEligibilityApprovalDate) {
+
+        assertEquals(expectedEligibility, returnedEligibilityResource.getEligibility());
+        assertEquals(expectedEligibilityRagStatus, returnedEligibilityResource.getEligibilityRagStatus());
+
+        assertEquals(expectedEligibilityApprovalUserFirstName, returnedEligibilityResource.getEligibilityApprovalUserFirstName());
+        assertEquals(expectedEligibilityApprovalUserLastName, returnedEligibilityResource.getEligibilityApprovalUserLastName());
+        assertEquals(expectedEligibilityApprovalDate, returnedEligibilityResource.getEligibilityApprovalDate());
 
     }
 
     @Test
     public void testSaveViabilityWhenViabilityAlreadyApproved() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setViability(Viability.APPROVED);
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.APPROVED);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.AMBER);
 
         assertTrue(result.isFailure());
 
         assertTrue(result.getFailure().is(VIABILITY_HAS_ALREADY_BEEN_APPROVED));
 
         verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
 
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityStatusIsUnset() {
+    public void testSaveViabilityWhenViabilityRagStatusIsUnset() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.UNSET);
 
         assertTrue(result.isFailure());
 
         assertTrue(result.getFailure().is(VIABILITY_RAG_STATUS_MUST_BE_SET));
 
         verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
 
     }
 
     @Test
-    public void testSaveViabilityWhenViabilityStatusIsUnsetButViabilityAlsoNotApproved() {
+    public void testSaveViabilityWhenViabilityRagStatusIsUnsetButViabilityAlsoNotApproved() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
 
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.PENDING, ViabilityStatus.UNSET);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.UNSET);
 
-        assertEquals(Viability.PENDING, projectFinanceInDB.getViability());
-        assertEquals(ViabilityStatus.UNSET, projectFinanceInDB.getViabilityStatus());
+        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
     }
 
     @Test
-    public void testSaveViabilitySuccess() {
+    public void testSaveViabilityWhenViabilityRagStatusIsSetButViabilityNotApproved() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.REVIEW, ViabilityRagStatus.AMBER);
+
+        assertTrue(result.isSuccess());
+
+        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER);
+
+        verify(viabilityWorkflowHandlerMock, never()).viabilityApproved(partnerOrganisationInDB, user);
+    }
+
+    @Test
+    public void testSaveViabilityWhenViabilityApproved() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveViabilityMocking(user, partnerOrganisationInDB, ViabilityState.REVIEW);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityRagStatus.AMBER);
+
+        assertTrue(result.isSuccess());
+
+        assertSaveViabilityResults(projectFinanceInDB, ViabilityRagStatus.AMBER);
+
+        // Ensure the workflow is called with the correct target and participant
+        verify(viabilityWorkflowHandlerMock).viabilityApproved(partnerOrganisationInDB, user);
+
+    }
+
+    private ProjectFinance setUpSaveViabilityMocking(User user, PartnerOrganisation partnerOrganisationInDB, ViabilityState viabilityStateInDB) {
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+
+        ViabilityProcess viabilityProcess = new ViabilityProcess(user, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, viabilityStateInDB.getBackingState()));
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
 
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        return projectFinanceInDB;
+
+    }
+
+    private void assertSaveViabilityResults(ProjectFinance projectFinanceInDB, ViabilityRagStatus expectedViabilityRagStatus) {
+
+        assertEquals(expectedViabilityRagStatus, projectFinanceInDB.getViabilityStatus());
+
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+    }
+
+    @Test
+    public void testSaveEligibilityWhenEligibilityAlreadyApproved() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.APPROVED);
+
         ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
-        ServiceResult<Void> result = service.saveViability(projectOrganisationCompositeId, Viability.APPROVED, ViabilityStatus.AMBER);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.AMBER);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(ELIGIBILITY_HAS_ALREADY_BEEN_APPROVED));
+
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+    }
+
+    @Test
+    public void testSaveEligibilityWhenEligibilityApprovedButStatusIsUnset() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.UNSET);
+
+        assertTrue(result.isFailure());
+
+        assertTrue(result.getFailure().is(ELIGIBILITY_RAG_STATUS_MUST_BE_SET));
+
+        verify(projectFinanceRepositoryMock, never()).save(projectFinanceInDB);
+        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+    }
+
+    @Test
+    public void testSaveEligibilityWhenEligibilityNotApprovedAndStatusIsUnset() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
         assertTrue(result.isSuccess());
 
-        assertEquals(Viability.APPROVED, projectFinanceInDB.getViability());
-        assertEquals(ViabilityStatus.AMBER, projectFinanceInDB.getViabilityStatus());
-        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
+        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.UNSET);
 
+        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+    }
+
+    @Test
+    public void testSaveEligibilityWhenEligibilityNotApprovedAndStatusIsSet() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.REVIEW, EligibilityRagStatus.AMBER);
+
+        assertTrue(result.isSuccess());
+
+        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.AMBER);
+
+        verify(eligibilityWorkflowHandlerMock, never()).eligibilityApproved(partnerOrganisationInDB, user);
+
+    }
+
+    @Test
+    public void testSaveEligibilityWhenEligibilityApprovedAndStatusIsSet() {
+
+        Long userId = 7L;
+        User user = newUser().withId(userId).build();
+
+        setLoggedInUser(newUserResource().withId(user.getId()).build());
+        when(userRepositoryMock.findOne(user.getId())).thenReturn(user);
+
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        ProjectFinance projectFinanceInDB = setUpSaveEligibilityMocking(partnerOrganisationInDB, user, EligibilityState.REVIEW);
+
+        ProjectOrganisationCompositeId projectOrganisationCompositeId = new ProjectOrganisationCompositeId(projectId, organisationId);
+        ServiceResult<Void> result = service.saveEligibility(projectOrganisationCompositeId, Eligibility.APPROVED, EligibilityRagStatus.GREEN);
+
+        assertTrue(result.isSuccess());
+
+        assertSaveEligibilityResults(projectFinanceInDB, EligibilityRagStatus.GREEN);
+
+        // Ensure the workflow is called with the correct target and participant
+        verify(eligibilityWorkflowHandlerMock).eligibilityApproved(partnerOrganisationInDB, user);
+    }
+
+    private ProjectFinance setUpSaveEligibilityMocking(PartnerOrganisation partnerOrganisationInDB, User user, EligibilityState eligibilityStateInDB) {
+
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+
+        EligibilityProcess eligibilityProcess = new EligibilityProcess(user, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_ELIGIBILITY, eligibilityStateInDB.getBackingState()));
+        when(eligibilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(eligibilityProcess);
+
+        ProjectFinance projectFinanceInDB = new ProjectFinance();
+        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+
+        return projectFinanceInDB;
+    }
+
+    private void assertSaveEligibilityResults(ProjectFinance projectFinanceInDB, EligibilityRagStatus expectedEligibilityRagStatus) {
+
+        assertEquals(expectedEligibilityRagStatus, projectFinanceInDB.getEligibilityStatus());
+
+        verify(projectFinanceRepositoryMock).save(projectFinanceInDB);
     }
 
     @Test
@@ -794,6 +1170,13 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void testSaveCreditSuccess() {
 
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
+
+        ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.REVIEW.getBackingState()));
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
+
         ProjectFinance projectFinanceInDB = new ProjectFinance();
         when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
 
@@ -809,10 +1192,12 @@ public class ProjectFinanceServiceImplTest extends BaseServiceUnitTest<ProjectFi
     @Test
     public void testSaveCreditFailsBecauseViabilityIsAlreadyApproved() {
 
-        ProjectFinance projectFinanceInDB = new ProjectFinance();
-        projectFinanceInDB.setViability(Viability.APPROVED);
+        PartnerOrganisation partnerOrganisationInDB = PartnerOrganisationBuilder.newPartnerOrganisation().build();
+        when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(partnerOrganisationInDB);
 
-        when(projectFinanceRepositoryMock.findByProjectIdAndOrganisationId(projectId, organisationId)).thenReturn(projectFinanceInDB);
+        ViabilityProcess viabilityProcess = new ViabilityProcess((User) null, partnerOrganisationInDB,
+                new ActivityState(ActivityType.PROJECT_SETUP_VIABILITY, ViabilityState.APPROVED.getBackingState()));
+        when(viabilityWorkflowHandlerMock.getProcess(partnerOrganisationInDB)).thenReturn(viabilityProcess);
 
         ServiceResult<Void> result = service.saveCreditReport(projectId, organisationId, true);
 

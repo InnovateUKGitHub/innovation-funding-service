@@ -1,29 +1,31 @@
 package org.innovateuk.ifs.assessment.domain;
 
-import org.innovateuk.ifs.category.domain.Category;
+import org.innovateuk.ifs.category.domain.InnovationArea;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.invite.domain.CompetitionInvite;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.innovateuk.ifs.category.builder.CategoryBuilder.newCategory;
-import static org.innovateuk.ifs.category.resource.CategoryType.INNOVATION_AREA;
+import java.time.LocalDateTime;
+
+import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.OPENED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.CREATED;
 import static org.innovateuk.ifs.invite.constant.InviteStatus.SENT;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.junit.Assert.assertEquals;
 
 public class CompetitionInviteTest {
 
     private CompetitionInvite invite;
     private Competition competition;
-    private Category innovationArea;
+    private InnovationArea innovationArea;
 
     @Before
     public void setup() {
         competition = newCompetition().build();
-        innovationArea = newCategory().withType(INNOVATION_AREA).build();
+        innovationArea = newInnovationArea().build();
         invite = new CompetitionInvite("invite name", "email", "hash", competition, innovationArea);
     }
 
@@ -38,19 +40,31 @@ public class CompetitionInviteTest {
 
     @Test
     public void send() {
-        invite.send();
+        invite.send(newUser().build(), LocalDateTime.now());
         assertEquals(SENT, invite.getStatus());
     }
 
     @Test(expected = IllegalStateException.class)
     public void send_sent() {
-        invite.send().send();
+        invite
+                .send(newUser().build(), LocalDateTime.now())
+                .send(newUser().build(), LocalDateTime.now());
         assertEquals(SENT, invite.getStatus());
     }
 
     @Test(expected = IllegalStateException.class)
     public void send_opened() {
-        invite.open().send();
+        invite.open().send(newUser().build(), LocalDateTime.now());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void sent_nullBy() {
+        invite.send(null, LocalDateTime.now());
+    }
+
+    @Test(expected = NullPointerException.class)
+    public void sent_nullOn() {
+        invite.send(newUser().build(), null);
     }
 
     @Test
@@ -62,7 +76,7 @@ public class CompetitionInviteTest {
 
     @Test
     public void open_sent() {
-        invite.send().open();
+        invite.send(newUser().build(), LocalDateTime.now()).open();
         assertEquals(OPENED, invite.getStatus());
     }
 

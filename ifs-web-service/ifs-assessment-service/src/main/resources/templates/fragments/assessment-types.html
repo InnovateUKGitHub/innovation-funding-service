@@ -32,7 +32,7 @@
             <summary>
                 <span class="summary" th:text="${field.guidanceTitle}" />
             </summary>
-            <div class="panel-indent">
+            <div class="panel">
                 <p th:if="${field.guidanceAnswer}" th:text="${field.guidanceAnswer}" />
                 <table th:unless="${#lists.isEmpty(field.guidanceRows)}">
                     <tr th:each="guidance : ${field.guidanceRows}">
@@ -47,7 +47,7 @@
             <textarea data-editor="md"
                       maxlength="5000"
                       th:field="*{formInput[__${field.id}__]}"
-                      th:attr="data-max_words=${field.wordCount},data-maxwordslength=${field.wordCount},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+field.wordCount+'.'},data-maxlength-errormessage=${'This field cannot contain more than 5,000 characters'}"
+                      th:attr="data-max_words=${field.wordCount},data-maxwordslength=${field.wordCount},data-maxwordslength-errormessage=${'Maximum word count exceeded. Please reduce your word count to '+field.wordCount+'.'},data-maxlength-errormessage=#{validation.field.too.many.characters(null,'5000')}"
                       th:id="'form-textarea-'+${field.id}"></textarea>
             <div class="textarea-footer" th:with="content=*{formInput[__${field.id}__]}">
                 <div th:include="question-type/form-elements :: form-word-count (maxWords=${field.wordCount}, currentWordsLeft=${#ifsUtil.wordsRemaining(field.wordCount, content)})" th:remove="tag" />
@@ -61,10 +61,17 @@
 <div th:fragment="assessor_score (field)">
     <div class="form-group">
         <label class="form-label form-label-bold" for="assessor-question-score">Question score</label>
-        <select class="form-control width-medium" th:field="*{formInput[__${field.id}__]}" id="assessor-question-score">
+        <select class="form-control width-medium"
+                aria-describedby="info"
+                id="assessor-question-score"
+                th:field="*{formInput[__${field.id}__]}">
             <option value="">Set score</option>
             <option th:value="${val}" th:text="${val}" th:each="val : ${#numbers.sequence(1,model.maximumScore)}" />
-        </select> / <span th:text="${model.maximumScore}" th:remove="tag" />
+        </select>
+        / <span id="aria-desc-assessor-question-score">
+            <span class="visually-hidden">out of</span>
+            <th:block th:text="${model.maximumScore}">10</th:block>
+        </span>
     </div>
 </div>
 
@@ -75,7 +82,7 @@
     <fieldset class="inline">
         <legend class="visuallyhidden">Is this application in scope?</legend>
         <div class="form-group">
-            <label class="block-label" th:each="option : ${ { true, false } }">
+            <label class="block-label selection-button-radio" th:each="option : ${ { true, false } }">
                 <input th:field="*{formInput[__${field.id}__]}" th:value="${option}" type="radio" />
                 <span th:text="${option ? 'Yes' : 'No'}" th:remove="tag" />
             </label>

@@ -99,7 +99,7 @@ public class CompetitionSetupApplicationController {
     public String editApplicationFinances(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        return getFinancePage(model, competitionResource, true, null);
+        return ifUserCanAccessEditPage(competitionResource, () -> getFinancePage(model, competitionResource, true, null));
     }
 
     @RequestMapping(value = "/question/finance/edit", method = RequestMethod.POST)
@@ -131,7 +131,7 @@ public class CompetitionSetupApplicationController {
                                           @PathVariable("questionId") Long questionId,
                                           Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        return getQuestionPage(model, competitionResource, questionId, true, null);
+        return ifUserCanAccessEditPage(competitionResource, () -> getQuestionPage(model, competitionResource, questionId, true, null));
     }
 
     @RequestMapping(value = "/question", method = RequestMethod.POST, params = "question.type=ASSESSED_QUESTION")
@@ -144,7 +144,7 @@ public class CompetitionSetupApplicationController {
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
-        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, QUESTIONS));
@@ -161,7 +161,7 @@ public class CompetitionSetupApplicationController {
 
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         Supplier<String> failureView = () -> getQuestionPage(model, competitionResource, competitionSetupForm.getQuestion().getQuestionId(), true, competitionSetupForm);
-        Supplier<String> successView = () -> "redirect:/competition/setup/" + competitionId + "/section/application";
+        Supplier<String> successView = () -> String.format(APPLICATION_LANDING_REDIRECT, competitionId);
 
         return validationHandler.performActionOrBindErrorsToField("", failureView, successView,
                 () -> competitionSetupService.saveCompetitionSetupSubsection(competitionSetupForm, competitionResource, APPLICATION_FORM, PROJECT_DETAILS));
@@ -180,7 +180,8 @@ public class CompetitionSetupApplicationController {
     public String getEditApplicationDetails(@PathVariable(COMPETITION_ID_KEY) Long competitionId,
                                             Model model) {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
-        return getDetailsPage(model, competitionResource, true, null);
+        return ifUserCanAccessEditPage(competitionResource, () ->  getDetailsPage(model, competitionResource, true, null));
+
     }
 
     @RequestMapping(value = "/detail/edit", method = RequestMethod.POST)
@@ -256,5 +257,14 @@ public class CompetitionSetupApplicationController {
         model.addAttribute(COMPETITION_NAME_KEY, competition.getName());
         model.addAttribute(COMPETITION_SETUP_FORM_KEY, competitionSetupForm);
         model.addAttribute("editable", isEditable);
+    }
+
+    private String ifUserCanAccessEditPage(CompetitionResource competition, Supplier<String> successAction) {
+        if(CompetitionSetupSection.APPLICATION_FORM.preventEdit(competition)) {
+            LOG.error(String.format("Competition with id %1$d cannot edit section %2$s: ", competition.getId(), CompetitionSetupSection.APPLICATION_FORM));
+            return "redirect:/dashboard";
+        } else {
+            return successAction.get();
+        }
     }
 }

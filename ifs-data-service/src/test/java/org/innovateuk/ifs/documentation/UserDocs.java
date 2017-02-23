@@ -21,13 +21,11 @@ public class UserDocs {
             fieldWithPath("email").description("e-mail address of the user"),
             fieldWithPath("password").description("password of the user"),
             fieldWithPath("status").description("status of the user"),
-            fieldWithPath("organisations").description("organisations that the user is associated with"),
-            fieldWithPath("processRoles").description("process roles defining the relationship between the user and applications, organisations and roles"),
             fieldWithPath("roles").description("roles that the user is associated with"),
             fieldWithPath("gender").description("gender of the user"),
             fieldWithPath("disability").description("disability of the user"),
             fieldWithPath("ethnicity").description("ethnic group of the user"),
-            fieldWithPath("profile").description("profile of the user")
+            fieldWithPath("profileId").description("profile ID of the user")
     };
 
 }

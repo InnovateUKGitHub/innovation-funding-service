@@ -8,7 +8,11 @@ public class ApplicationSummarySortFieldService {
 	public String sortFieldForOpenCompetition(String sort) {
     	return activeSortField(sort, "percentageComplete", "id", "lead", "name", "leadApplicant");
 	}
-    
+
+	public String sortFieldForClosedCompetition(String sort) {
+		return activeSortField(sort, "percentageComplete", "id", "lead", "name", "leadApplicant");
+	}
+
 	public String sortFieldForSubmittedApplications(String sort) {
 		return activeSortField(sort,  "id", "lead", "name", "numberOfPartners", "grantRequested", "totalProjectCost", "duration");
 	}

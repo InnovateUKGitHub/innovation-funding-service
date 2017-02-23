@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.model;
 
-import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.assessment.service.CompetitionParticipantRestService;
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardActiveCompetitionViewModel;
+import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardPendingInviteViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardUpcomingCompetitionViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.AssessorDashboardViewModel;
 import org.innovateuk.ifs.assessment.viewmodel.profile.AssessorProfileStatusViewModel;
@@ -49,6 +49,7 @@ public class AssessorDashboardModelPopulator {
 
     private List<AssessorDashboardActiveCompetitionViewModel> getActiveCompetitions(List<CompetitionParticipantResource> participantResourceList) {
         return participantResourceList.stream()
+                .filter(CompetitionParticipantResource::isAccepted)
                 .filter(CompetitionParticipantResource::isInAssessment)
                 .map(cpr -> new AssessorDashboardActiveCompetitionViewModel(
                         cpr.getCompetitionId(),
@@ -64,6 +65,7 @@ public class AssessorDashboardModelPopulator {
 
     private List<AssessorDashboardUpcomingCompetitionViewModel> getUpcomingCompetitions(List<CompetitionParticipantResource> participantResources) {
         return participantResources.stream()
+                .filter(CompetitionParticipantResource::isAccepted)
                 .filter(CompetitionParticipantResource::isAnUpcomingAssessment)
                 .map(p -> new AssessorDashboardUpcomingCompetitionViewModel(
                         p.getCompetitionId(),

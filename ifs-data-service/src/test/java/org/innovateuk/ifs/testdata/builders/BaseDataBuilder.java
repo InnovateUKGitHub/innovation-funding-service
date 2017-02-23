@@ -11,10 +11,16 @@ import org.innovateuk.ifs.application.transactional.ApplicationService;
 import org.innovateuk.ifs.application.transactional.QuestionService;
 import org.innovateuk.ifs.application.transactional.SectionService;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
+import org.innovateuk.ifs.assessment.transactional.AssessmentService;
 import org.innovateuk.ifs.assessment.transactional.AssessorService;
 import org.innovateuk.ifs.assessment.transactional.CompetitionInviteService;
+import org.innovateuk.ifs.assessment.workflow.configuration.AssessmentWorkflowHandler;
 import org.innovateuk.ifs.category.repository.CategoryRepository;
+import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
+import org.innovateuk.ifs.category.repository.InnovationSectorRepository;
+import org.innovateuk.ifs.category.repository.ResearchCategoryRepository;
 import org.innovateuk.ifs.competition.domain.Competition;
+import org.innovateuk.ifs.competition.repository.CompetitionFunderRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionRepository;
 import org.innovateuk.ifs.competition.repository.CompetitionTypeRepository;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
@@ -31,12 +37,17 @@ import org.innovateuk.ifs.invite.repository.ApplicationInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionInviteRepository;
 import org.innovateuk.ifs.invite.repository.CompetitionParticipantRepository;
 import org.innovateuk.ifs.invite.transactional.InviteService;
+import org.innovateuk.ifs.invite.transactional.RejectionReasonService;
 import org.innovateuk.ifs.organisation.transactional.OrganisationService;
 import org.innovateuk.ifs.project.bankdetails.transactional.BankDetailsService;
 import org.innovateuk.ifs.project.finance.transactional.FinanceCheckService;
 import org.innovateuk.ifs.project.finance.transactional.ProjectFinanceService;
 import org.innovateuk.ifs.project.repository.ProjectUserRepository;
 import org.innovateuk.ifs.project.transactional.ProjectService;
+import org.innovateuk.ifs.publiccontent.repository.ContentEventRepository;
+import org.innovateuk.ifs.publiccontent.repository.ContentGroupRepository;
+import org.innovateuk.ifs.publiccontent.repository.PublicContentRepository;
+import org.innovateuk.ifs.publiccontent.transactional.PublicContentService;
 import org.innovateuk.ifs.token.repository.TokenRepository;
 import org.innovateuk.ifs.token.transactional.TokenService;
 import org.innovateuk.ifs.user.domain.Organisation;
@@ -45,10 +56,7 @@ import org.innovateuk.ifs.user.repository.*;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.innovateuk.ifs.user.resource.UserResource;
-import org.innovateuk.ifs.user.transactional.RegistrationService;
-import org.innovateuk.ifs.user.transactional.RoleService;
-import org.innovateuk.ifs.user.transactional.UserService;
-import org.innovateuk.ifs.user.transactional.UsersRolesService;
+import org.innovateuk.ifs.user.transactional.*;
 import org.innovateuk.ifs.workflow.repository.ActivityStateRepository;
 
 import java.util.List;
@@ -73,13 +81,22 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     public static final String INNOVATE_UK_ORG_NAME = "Innovate UK";
 
     protected ServiceLocator serviceLocator;
+    protected BaseUserService baseUserService;
     protected UserService userService;
     protected CompetitionService competitionService;
     protected CompetitionTypeRepository competitionTypeRepository;
     protected CategoryRepository categoryRepository;
+    protected InnovationAreaRepository innovationAreaRepository;
+    protected InnovationSectorRepository innovationSectorRepository;
+    protected ResearchCategoryRepository researchCategoryRepository;
     protected CompetitionSetupService competitionSetupService;
+    protected PublicContentService publicContentService;
+    protected PublicContentRepository publicContentRepository;
+    protected ContentGroupRepository contentGroupRepository;
+    protected ContentEventRepository contentEventRepository;
     protected OrganisationService organisationService;
     protected UserRepository userRepository;
+    protected ProfileRepository profileRepository;
     protected RegistrationService registrationService;
     protected RoleRepository roleRepository;
     protected OrganisationRepository organisationRepository;
@@ -104,11 +121,14 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected RoleService roleService;
     protected CompetitionInviteRepository competitionInviteRepository;
     protected CompetitionRepository competitionRepository;
+    protected CompetitionFunderRepository competitionFunderRepository;
     protected AssessorService assessorService;
     protected CompetitionParticipantRepository competitionParticipantRepository;
     protected CompetitionInviteService competitionInviteService;
     protected TestService testService;
     protected AssessmentRepository assessmentRepository;
+    protected AssessmentService assessmentService;
+    protected AssessmentWorkflowHandler assessmentWorkflowHandler;
     protected ProcessRoleRepository processRoleRepository;
     protected ActivityStateRepository activityStateRepository;
     protected SectionRepository sectionRepository;
@@ -120,6 +140,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     protected BankDetailsService bankDetailsService;
     protected ProjectFinanceService projectFinanceService;
     protected FinanceCheckService financeCheckService;
+    protected RejectionReasonService rejectionReasonService;
+    protected UserProfileService userProfileService;
 
     public BaseDataBuilder(List<BiConsumer<Integer, T>> newActions, ServiceLocator serviceLocator) {
         super(newActions);
@@ -160,6 +182,8 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.competitionInviteService = serviceLocator.getBean(CompetitionInviteService.class);
         this.testService = serviceLocator.getBean(TestService.class);
         this.assessmentRepository = serviceLocator.getBean(AssessmentRepository.class);
+        this.assessmentService = serviceLocator.getBean(AssessmentService.class);
+        this.assessmentWorkflowHandler = serviceLocator.getBean(AssessmentWorkflowHandler.class);
         this.processRoleRepository = serviceLocator.getBean(ProcessRoleRepository.class);
         this.activityStateRepository = serviceLocator.getBean(ActivityStateRepository.class);
         this.sectionRepository = serviceLocator.getBean(SectionRepository.class);
@@ -171,6 +195,19 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
         this.bankDetailsService = serviceLocator.getBean(BankDetailsService.class);
         this.projectFinanceService = serviceLocator.getBean(ProjectFinanceService.class);
         this.financeCheckService = serviceLocator.getBean(FinanceCheckService.class);
+        this.competitionFunderRepository = serviceLocator.getBean(CompetitionFunderRepository.class);
+        this.innovationAreaRepository = serviceLocator.getBean(InnovationAreaRepository.class);
+        this.innovationSectorRepository = serviceLocator.getBean(InnovationSectorRepository.class);
+        this.researchCategoryRepository = serviceLocator.getBean(ResearchCategoryRepository.class);
+        this.rejectionReasonService = serviceLocator.getBean(RejectionReasonService.class);
+        this.userProfileService = serviceLocator.getBean(UserProfileService.class);
+        this.baseUserService = serviceLocator.getBean(BaseUserService.class);
+        this.profileRepository = serviceLocator.getBean(ProfileRepository.class);
+        this.publicContentService = serviceLocator.getBean(PublicContentService.class);
+        this.publicContentRepository = serviceLocator.getBean(PublicContentRepository.class);
+        this.contentEventRepository = serviceLocator.getBean(ContentEventRepository.class);
+        this.contentGroupRepository = serviceLocator.getBean(ContentGroupRepository.class);
+
     }
 
     @Override
@@ -187,7 +224,7 @@ public abstract class BaseDataBuilder<T, S> extends BaseBuilder<T, S> {
     }
 
     protected UserResource retrieveUserById(Long id) {
-        return doAs(systemRegistrar(), () -> userService.getUserById(id).getSuccessObjectOrThrowException());
+        return doAs(systemRegistrar(), () -> baseUserService.getUserById(id).getSuccessObjectOrThrowException());
     }
 
     protected ProcessRoleResource retrieveApplicantByEmail(String emailAddress, Long applicationId) {

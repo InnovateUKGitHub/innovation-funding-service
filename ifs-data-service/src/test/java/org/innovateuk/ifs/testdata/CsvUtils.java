@@ -1,32 +1,40 @@
 package org.innovateuk.ifs.testdata;
 
 import au.com.bytecode.opencsv.CSVReader;
+import com.google.common.base.Splitter;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import org.innovateuk.ifs.address.resource.OrganisationAddressType;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.assessment.resource.AssessmentRejectOutcomeValue;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
 import org.innovateuk.ifs.invite.constant.InviteStatus;
+import org.innovateuk.ifs.user.resource.BusinessType;
 import org.innovateuk.ifs.user.resource.Disability;
 import org.innovateuk.ifs.user.resource.Gender;
 import org.innovateuk.ifs.user.resource.UserStatus;
-import org.apache.commons.lang3.tuple.Pair;
-import org.apache.commons.lang3.tuple.Triple;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-import static org.innovateuk.ifs.util.CollectionFunctions.*;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.innovateuk.ifs.util.CollectionFunctions.*;
 
 /**
  * Helper class to read from csvs in src/test/resources/testdata into basic structures for the purposes of generating
@@ -55,6 +63,18 @@ class CsvUtils {
 
     static List<CompetitionLine> readCompetitions() {
         return simpleMap(readCsvLines("competitions"), CompetitionLine::new);
+    }
+
+    static List<CompetitionFunderLine> readCompetitionFunders() {
+        return simpleMap(readCsvLines("competition-funders"), CompetitionFunderLine::new);
+    }
+
+    static List<PublicContentGroupLine> readPublicContentGroups() {
+        return simpleMap(readCsvLines("public-content-groups"), PublicContentGroupLine::new);
+    }
+
+    static List<PublicContentDateLine> readPublicContentDates() {
+        return simpleMap(readCsvLines("public-content-dates"), PublicContentDateLine::new);
     }
 
     static List<ApplicationLine> readApplications() {
@@ -220,6 +240,8 @@ class CsvUtils {
         String targetName;
         String ownerName;
         String innovationAreaName;
+        String sentByEmail;
+        LocalDateTime sentOn;
 
         private InviteLine(List<String> line) {
             int i = 0;
@@ -231,6 +253,8 @@ class CsvUtils {
             targetName = line.get(i++);
             ownerName = line.get(i++);
             innovationAreaName = line.get(i++);
+            sentByEmail = nullable(line.get(i++));
+            sentOn = nullableDateTime(line.get(i++));
         }
     }
 
@@ -320,6 +344,8 @@ class CsvUtils {
 
         String assessorEmail;
         String applicationName;
+        AssessmentRejectOutcomeValue rejectReason;
+        String rejectComment;
         AssessmentStates state;
 
         private AssessmentLine(List<String> line) {
@@ -327,6 +353,9 @@ class CsvUtils {
             int i = 0;
             assessorEmail = line.get(i++);
             applicationName = line.get(i++);
+            String rejectReasonString = nullable(line.get(i++));
+            rejectReason = rejectReasonString != null ? AssessmentRejectOutcomeValue.valueOf(rejectReasonString) : null;
+            rejectComment = nullable(line.get(i++));
             state = AssessmentStates.valueOf(line.get(i++));
         }
     }
@@ -339,18 +368,44 @@ class CsvUtils {
         String innovationArea;
         String innovationSector;
         String researchCategory;
+        String collaborationLevel;
+        String leadApplicantType;
+        Integer researchRatio;
+        Boolean resubmission;
+        Boolean multiStream;
         LocalDateTime openDate;
+        LocalDateTime briefingDate;
         LocalDateTime submissionDate;
-        LocalDateTime fundersPanelDate;
-        LocalDateTime fundersPanelEndDate;
+        LocalDateTime allocateAssessorDate;
         LocalDateTime assessorBriefingDate;
-        LocalDateTime assessorAcceptsDate;
         LocalDateTime assessorsNotifiedDate;
+        LocalDateTime assessorAcceptsDate;
         LocalDateTime assessorEndDate;
         LocalDateTime assessmentClosedDate;
+        LocalDateTime drawLineDate;
+        LocalDateTime assessmentPanelDate;
+        LocalDateTime panelDate;
+        LocalDateTime fundersPanelDate;
+        LocalDateTime fundersPanelEndDate;
+        LocalDateTime releaseFeedback;
         String leadTechnologist;
         String compExecutive;
         boolean setupComplete;
+        String budgetCode;
+        String code;
+        String pafCode;
+        String activityCode;
+        Integer assessorCount;
+        BigDecimal assessorPay;
+        boolean published;
+        String shortDescription;
+        String fundingRange;
+        String eligibilitySummary;
+        String competitionDescription;
+        FundingType fundingType;
+        String projectSize;
+        List<String> keywords;
+
 
         private CompetitionLine(List<String> line) {
 
@@ -361,20 +416,89 @@ class CsvUtils {
             innovationArea = nullable(line.get(i++));
             innovationSector = nullable(line.get(i++));
             researchCategory = nullable(line.get(i++));
+            collaborationLevel = nullable(line.get(i++));
+            leadApplicantType = nullable(line.get(i++));
+            researchRatio = nullableInteger(line.get(i++));
+            resubmission = nullableBoolean(line.get(i++));
+            multiStream = nullableBoolean(line.get(i++));
             openDate = nullableDateTime(line.get(i++));
+            briefingDate = nullableDateTime(line.get(i++));
             submissionDate = nullableDateTime(line.get(i++));
-            fundersPanelDate = nullableDateTime(line.get(i++));
-            fundersPanelEndDate = nullableDateTime(line.get(i++));
+            allocateAssessorDate = nullableDateTime(line.get(i++));
             assessorBriefingDate = nullableDateTime(line.get(i++));
             assessorsNotifiedDate = nullableDateTime(line.get(i++));
             assessorAcceptsDate = nullableDateTime(line.get(i++));
             assessorEndDate = nullableDateTime(line.get(i++));
             assessmentClosedDate = nullableDateTime(line.get(i++));
+            drawLineDate = nullableDateTime(line.get(i++));
+            assessmentPanelDate = nullableDateTime(line.get(i++));
+            panelDate = nullableDateTime(line.get(i++));
+            fundersPanelDate = nullableDateTime(line.get(i++));
+            fundersPanelEndDate = nullableDateTime(line.get(i++));
+            releaseFeedback = nullableDateTime(line.get(i++));
             leadTechnologist = nullable((line.get(i++)));
             compExecutive = nullable((line.get(i++)));
             setupComplete = nullableBoolean(line.get(i++));
+            pafCode = nullable(line.get(i++));
+            budgetCode = nullable(line.get(i++));
+            activityCode = nullable(line.get(i++));
+            code = nullable(line.get(i++));
+            assessorCount = nullableInteger(line.get(i++));
+            assessorPay = nullableBigDecimal(line.get(i++));
+            published = nullableBoolean(line.get(i++));
+            shortDescription = nullable(line.get(i++));
+            fundingRange = nullable(line.get(i++));
+            eligibilitySummary = nullable(line.get(i++));
+            competitionDescription = nullable(line.get(i++));
+            fundingType = nullableEnum(line.get(i++), FundingType::valueOf);
+            projectSize = nullable(line.get(i++));
+            keywords = nullableSplittableString(line.get(i++));
         }
     }
+
+    static class CompetitionFunderLine {
+        String competitionName;
+        String funder;
+        BigInteger funder_budget;
+        boolean co_funder;
+
+        private CompetitionFunderLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            funder = nullable(line.get(i++));
+            funder_budget = nullableBigInteger(line.get(i++));
+            co_funder = nullableBoolean(line.get(i++));
+        }
+    }
+
+    static class PublicContentGroupLine {
+        String competitionName;
+        PublicContentSectionType section;
+        String heading;
+        String content;
+
+        private PublicContentGroupLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            section = nullableEnum(line.get(i++), PublicContentSectionType::valueOf);
+            heading = nullable(line.get(i++));
+            content = nullable(line.get(i++));
+        }
+    }
+
+    static class PublicContentDateLine {
+        String competitionName;
+        LocalDateTime date;
+        String content;
+
+        private PublicContentDateLine(List<String> line) {
+            int i = 0;
+            competitionName = nullable(line.get(i++));
+            date = nullableDateTime(line.get(i++));
+            content = nullable(line.get(i++));
+        }
+    }
+
 
     static abstract class UserLine {
 
@@ -437,17 +561,68 @@ class CsvUtils {
         String competitionName;
         String hash;
         InviteStatus inviteStatus;
+        String rejectionReason;
+        String rejectionComment;
+        String skillAreas;
+        BusinessType businessType;
+        List<String> innovationAreas;
+        String principalEmployer;
+        String role;
+        String professionalAffiliations;
+        List<Map<String, String>> appointments;
+        String financialInterests;
+        List<Map<String, String>> familyAffiliations;
+        String familyFinancialInterests;
+        boolean contractSigned;
 
         private AssessorUserLine(List<String> line) {
 
             super(line);
-            int i = line.size() - 6;
+            int i = line.size() - 19;
             disability = Disability.fromDisplayName(line.get(i++));
             ethnicity = line.get(i++);
             gender = Gender.fromDisplayName(line.get(i++));
             competitionName = line.get(i++);
             hash = nullable(line.get(i++));
             inviteStatus = InviteStatus.valueOf(line.get(i++));
+            rejectionReason = line.get(i++);
+            rejectionComment = line.get(i++);
+            skillAreas = line.get(i++);
+
+            String businessTypeString = line.get(i++);
+            businessType = !businessTypeString.isEmpty() ? BusinessType.valueOf(businessTypeString) : null;
+
+            innovationAreas = simpleMap(line.get(i++).split("\n"), String::trim);
+            principalEmployer = line.get(i++);
+            role = line.get(i++);
+            professionalAffiliations = line.get(i++);
+            appointments = extractListOfMaps(line.get(i++));
+            financialInterests = line.get(i++);
+            familyAffiliations = extractListOfMaps(line.get(i++));
+            familyFinancialInterests = line.get(i++);
+            contractSigned = Boolean.valueOf(line.get(i++));
+        }
+
+        private List<Map<String, String>> extractListOfMaps(String column) {
+            if (column.isEmpty()) {
+                return emptyList();
+            }
+
+            List<String> rows = asList(column.split("\n"));
+
+            return simpleMap(rows, row -> {
+                List<String> pairs = asList(row.split("\\|"));
+
+                Map<String, String> kvMap = new HashMap<>();
+
+                pairs.forEach(pair -> {
+                    String[] keyValue = pair.split(":");
+
+                    kvMap.put(keyValue[0].trim(), keyValue[1].trim());
+                });
+
+                return kvMap;
+            });
         }
     }
 
@@ -484,6 +659,10 @@ class CsvUtils {
         return isBlank(s) || "N".equals(s) ? null : s;
     }
 
+    private static <T> T nullableEnum(String s, Function<String, T> valueOf) {
+        return nullable(s) == null ? null : valueOf.apply(s);
+    }
+
     private static LocalDate nullableDate(String s) {
         String value = nullable(s);
 
@@ -514,6 +693,26 @@ class CsvUtils {
         return Integer.valueOf(s);
     }
 
+    private static BigDecimal nullableBigDecimal(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return new BigDecimal(s);
+    }
+
+    private static BigInteger nullableBigInteger(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return null;
+        }
+
+        return new BigInteger(s);
+    }
+
     private static boolean nullableBoolean(String s) {
         String value = nullable(s);
 
@@ -534,6 +733,17 @@ class CsvUtils {
         }
 
         return Boolean.parseBoolean(s);
+    }
+
+    private static List<String> nullableSplittableString(String s) {
+        String value = nullable(s);
+
+        if (value == null) {
+            return Collections.emptyList();
+        }
+
+        return Splitter.on("!").trimResults().omitEmptyStrings().splitToList(s)
+                .stream().map(StringUtils::normalizeSpace).collect(Collectors.toList());
     }
 
 }

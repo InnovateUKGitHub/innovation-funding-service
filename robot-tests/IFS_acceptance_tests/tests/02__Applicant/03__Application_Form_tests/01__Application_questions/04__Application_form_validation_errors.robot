@@ -1,5 +1,9 @@
 *** Settings ***
-Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question \ INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
+Documentation     INFUND-43 As an applicant and I am on the application form on an open application, I will receive feedback if I my input is invalid, so I know how I should enter the question
+...
+...               INFUND-4694 As an applicant I want to be able to provide details of my previous submission if I am allowed to resubmit my project in the current competition so that I comply with Innovate UK competition eligibility criteria
+...
+...               INFUND-6823 As an Applicant I want to be invited to select the primary 'Research area' for my project
 Suite Setup       Run keywords    log in and create new application if there is not one already
 ...               AND    Applicant goes to the application details page of the Robot application
 Suite Teardown    TestTeardown User closes the browser
@@ -23,16 +27,15 @@ Day field client side
     [Tags]    HappyPath
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_day    32
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_day    0
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_day    -1
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
-    #TODO this test case fails when running the HappyPath.
 
 Month field client side
     [Documentation]    INFUND-43
@@ -41,13 +44,13 @@ Month field client side
     [Tags]
     [Setup]    The applicant inserts a valid date
     When the user enters text to a text field    id=application_details-startdate_month    0
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_month    13
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_month    -1
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
-    Then the user should see an error    Please enter a valid date
+    Then the user should see an error    Please enter a valid date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -58,11 +61,11 @@ Year field client side
     [Tags]    HappyPath
     [Setup]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
     ...    AND    the user enters text to a text field    id=application_details-duration    15
-    ...    AND    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
+    ...    AND    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
     When the applicant inserts an invalid date
-    Then the user should see an error    Please enter a future date
+    Then the user should see an error    Please enter a future date.
     When the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
-    Then the user should see an error    Please enter a future date
+    Then the user should see an error    Please enter a future date.
     When the applicant inserts a valid date
     Then the applicant should not see the validation error any more
 
@@ -78,7 +81,7 @@ Duration field client side
     When the user enters text to a text field    id=application_details-duration    -1
     Then the user should see an error    Your project should last between 1 and 36 months.
     When the user enters text to a text field    id=application_details-duration    ${EMPTY}
-    Then the user should see an error    This field cannot be left blank
+    Then the user should see an error    This field cannot be left blank.
     And the user enters text to a text field    id=application_details-duration    15
     And the applicant should not see the validation error of the duration any more
 
@@ -86,39 +89,43 @@ Application details server side
     [Documentation]    INFUND-2843
     ...
     ...    INFUND-4694
-    [Tags]  HappyPath
-
+    ...
+    ...    INFUND-6823
+    [Tags]
     Given the user should see the text in the page    Application details
-    When the user clicks the button/link    jQuery=label:contains(Yes) input
+    When the user clicks the button/link    jQuery=label:contains(Yes)
     And the user enters text to a text field    id=application_details-title    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_day    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_month    ${EMPTY}
     And the user enters text to a text field    id=application_details-startdate_year    ${EMPTY}
     And the user enters text to a text field    id=application_details-duration    ${EMPTY}
     And the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then The user should see an error    Please enter the full title of the project
-    And the user should see an error    Please enter a future date
-    And the user should see an error    This field cannot be left blank
-    And the user should see an error    Please enter the previous application number
-    And the user should see an error    Please enter the previous application title
+    Then The user should see an error    Please enter the full title of the project.
+    And the user should see an error    Please enter a future date.
+    And the user should see an error    This field cannot be left blank.
+    And the user should see an error    Please enter the previous application number.
+    And the user should see an error    Please select a research category.
+    And the user should see an error    Please enter the previous application title.
+    And the user should see an error    Please enter the full title of the project.
     And the user should see the element    css=.error-summary-list
-    [Teardown]   Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
-                     ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
+    [Teardown]    Run keywords    the user enters text to a text field    id=application_details-title    Robot test application
+    ...    AND    Focus    jQuery=button:contains("Save and return to application overview")
+
 Empty text area
     [Documentation]    INFUND-43
     [Tags]
     Given the user clicks the button/link    css=.pagination-part-title
     When the applicant clears the text area of the "Project Summary"
     When the user clicks the button/link    jQuery=Button:contains("Mark as complete")
-    Then the user should see an error    Please enter some text
+    Then the user should see an error    Please enter some text.
     When The user enters text to a text field    css=#form-input-11 .editor    Test 123
     Then the applicant should not see the validation error any more
 
 *** Keywords ***
 the applicant should not see the validation error any more
-    Run Keyword And Ignore Error    Mouse Out    css=input
-    Run Keyword And Ignore Error    Focus    jQuery=Button:contains("Mark as complete")
-    sleep    300ms
+    Run Keyword And Ignore Error Without Screenshots    Mouse Out    css=input
+    Run Keyword And Ignore Error Without Screenshots    Focus    jQuery=Button:contains("Mark as complete")
+    wait for autosave
     the user should not see the element    css=.error-message
 
 the applicant inserts a valid date
@@ -141,7 +148,7 @@ the applicant clears the text area of the "Project Summary"
     Clear Element Text    css=#form-input-11 .editor
     Press Key    css=#form-input-11 .editor    \\8
     Focus    css=.app-submit-btn
-    Sleep    300ms
+    wait for autosave
 
 Applicant goes to the application details page of the Robot application
     Given the user navigates to the page    ${DASHBOARD_URL}
@@ -150,8 +157,8 @@ Applicant goes to the application details page of the Robot application
 
 the applicant should not see the validation error of the duration any more
     Focus    css=.app-submit-btn
-    run keyword and ignore error    mouse out    css=input
-    Run Keyword And Ignore Error    mouse out    css=.editor
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=input
+    Run Keyword And Ignore Error Without Screenshots    mouse out    css=.editor
     Focus    css=.app-submit-btn
-    sleep    300ms
+    wait for autosave
     The user should not see the text in the page    Your project should last between 1 and 36 months

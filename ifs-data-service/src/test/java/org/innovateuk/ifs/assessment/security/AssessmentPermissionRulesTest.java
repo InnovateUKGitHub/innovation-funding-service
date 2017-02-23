@@ -16,6 +16,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.EnumSet;
 import java.util.Map;
 
+import static java.util.Arrays.asList;
+import static java.util.function.Function.identity;
+import static java.util.stream.Collectors.toMap;
 import static org.innovateuk.ifs.assessment.builder.AssessmentBuilder.newAssessment;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentSubmissionsResourceBuilder.newAssessmentSubmissionsResource;
@@ -25,9 +28,6 @@ import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
 import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.innovateuk.ifs.workflow.domain.ActivityType.APPLICATION_ASSESSMENT;
-import static java.util.Arrays.asList;
-import static java.util.function.Function.identity;
-import static java.util.stream.Collectors.toMap;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
@@ -81,7 +81,7 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
 
     @Test
     public void ownersCanReadAssessmentsNonDashboard() {
-        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        EnumSet<AssessmentStates> allowedStates = EnumSet.of(ACCEPTED, OPEN, READY_TO_SUBMIT);
 
         allowedStates.forEach(state ->
                 assertTrue("the owner of an assessment should be able to read that assessment",
@@ -120,8 +120,49 @@ public class AssessmentPermissionRulesTest extends BasePermissionRulesTest<Asses
     }
 
     @Test
+    public void ownersCanReadPendingAssessmentsToRespond() {
+        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING);
+        allowedStates.forEach(state ->
+                assertTrue("the owner of a pending assessment should be able to read it in order to respond to their" +
+                                " invitation",
+                        rules.userCanReadToAssign(assessments.get(state), assessorUser)));
+
+        EnumSet.complementOf(allowedStates).forEach(state ->
+                assertFalse("the owner of an assessment should not be able to read it in order to respond to" +
+                                " their invitation if the assessment is not pending",
+                        rules.userCanReadToAssign(assessments.get(state), assessorUser)));
+    }
+
+    @Test
+    public void otherUsersCanNotReadPendingAssessmentsToRespond() {
+        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+            assertFalse("other users should not be able to read assessments in order to respond to invitations",
+                    rules.userCanReadToAssign(assessments.get(state), otherUser)));
+    }
+ @Test
+    public void ownersCanReadAssessmentsToReject() {
+        EnumSet<AssessmentStates> allowedStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        allowedStates.forEach(state ->
+                assertTrue("the owner of a pending assessment should be able to read it in order to respond to their" +
+                                " invitation",
+                        rules.userCanReadToReject(assessments.get(state), assessorUser)));
+
+        EnumSet.complementOf(allowedStates).forEach(state ->
+                assertFalse("the owner of an assessment should not be able to read it in order to respond to" +
+                                " their invitation if the assessment is not pending, accepted, open, or ready to submit",
+                        rules.userCanReadToReject(assessments.get(state), assessorUser)));
+    }
+
+    @Test
+    public void otherUsersCanNotReadAssessmentsToReject() {
+        EnumSet.allOf(AssessmentStates.class).forEach(state ->
+            assertFalse("other users should not be able to read assessments in order to respond to invitations",
+                    rules.userCanReadToReject(assessments.get(state), otherUser)));
+    }
+
+    @Test
     public void ownersCanUpdateAssessments() {
-        EnumSet<AssessmentStates> updatableStates = EnumSet.of(PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
+        EnumSet<AssessmentStates> updatableStates = EnumSet.of(CREATED, PENDING, ACCEPTED, OPEN, READY_TO_SUBMIT);
 
         updatableStates.forEach(state ->
                 assertTrue("the owner of an assessment should able to update that assessment",

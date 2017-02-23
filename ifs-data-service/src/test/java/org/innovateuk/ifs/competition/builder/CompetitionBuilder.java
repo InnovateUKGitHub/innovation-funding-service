@@ -12,11 +12,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.setField;
-import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
-import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 import static java.util.Collections.emptyList;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.*;
+import static org.innovateuk.ifs.competition.resource.CompetitionStatus.*;
 
 public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuilder> {
 
@@ -53,6 +51,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
         return with(competition -> setField("assessorDeadlineDate", assessorDeadlineDate, competition));
     }
 
+    public CompetitionBuilder withReleaseFeedbackDate(LocalDateTime releaseFeedbackDate) {
+        return with(competition -> setField("releaseFeedbackDate", releaseFeedbackDate, competition));
+    }
+
     public CompetitionBuilder withFundersPanelDate(LocalDateTime fundersPanelDate) {
         return with(competition -> setField("fundersPanelDate", fundersPanelDate, competition));
     }
@@ -71,6 +73,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withActitiyCode(String activityCode) {
         return with(competition -> setField("activitiyCode", activityCode, competition));
+    }
+
+    public CompetitionBuilder withFullFinance(boolean fullFinance) {
+        return with(competition -> setField("fullApplicationFinance", fullFinance, competition));
     }
 
     public CompetitionBuilder withInnovateBudget(String innovateBudget) {
@@ -95,6 +101,10 @@ public class CompetitionBuilder extends BaseBuilder<Competition, CompetitionBuil
 
     public CompetitionBuilder withAssessmentClosedDate(LocalDateTime... dates) {
         return withArray((date, competition) -> competition.closeAssessment(date), dates);
+    }
+
+    public CompetitionBuilder withAssessorCount(Integer... assessorCounts) {
+        return withArraySetFieldByReflection("assessorCount", assessorCounts);
     }
 
     public CompetitionBuilder withCompetitionStatus(CompetitionStatus status) {

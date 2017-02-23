@@ -15,6 +15,7 @@ import java.util.List;
 public interface FormInputRepository extends PagingAndSortingRepository<FormInput, Long> {
     List<FormInput> findAll();
     List<FormInput> findByCompetitionId(Long competitionId);
+    List<FormInput> findByCompetitionIdAndTypeIn(Long competitionId, List<FormInputType> type);
     FormInput findByQuestionIdAndScopeAndType(Long questionId, FormInputScope scope, FormInputType type);
 
     //Return only active form inputs for FormInputService.

@@ -13,12 +13,16 @@ import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.aff
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.userListType;
 import static org.innovateuk.ifs.user.builder.AffiliationResourceBuilder.newAffiliationResource;
 import static org.innovateuk.ifs.user.builder.ProfileContractResourceBuilder.newProfileContractResource;
+import static org.innovateuk.ifs.user.builder.ProfileSkillsEditResourceBuilder.newProfileSkillsEditResource;
 import static org.innovateuk.ifs.user.builder.ProfileSkillsResourceBuilder.newProfileSkillsResource;
 import static org.innovateuk.ifs.user.builder.UserProfileResourceBuilder.newUserProfileResource;
 import static org.innovateuk.ifs.user.builder.UserProfileStatusResourceBuilder.newUserProfileStatusResource;
 import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static java.lang.String.format;
 import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.user.resource.Title.Miss;
+import static org.innovateuk.ifs.user.resource.Title.Mr;
+import static org.innovateuk.ifs.user.resource.Title.Mrs;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.springframework.http.HttpStatus.OK;
@@ -28,6 +32,7 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestServiceImpl> {
 
     private static final String usersUrl = "/user";
+    private static final String processRoleRestURL = "/processrole";
     @Override
     protected UserRestServiceImpl registerRestServiceUnderTest() {
         UserRestServiceImpl userRestService = new UserRestServiceImpl();
@@ -87,13 +92,11 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle("testTitle")
+                .withTitle(Mr)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withEthnicity(null)
-                .withDisability(null)
                 .build();
 
         Long organisationId = 1L;
@@ -104,7 +107,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle(),
+                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
@@ -123,7 +126,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle("testTitle")
+                .withTitle(Mr)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
@@ -141,7 +144,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle(),
+                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
                 userResource.getGender() != null ? userResource.getGender().toString() : null,
                 userResource.getEthnicity(),
@@ -159,13 +162,11 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle("testTitle")
+                .withTitle(Mrs)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
                 .withPhoneNumber("1234567890")
-                .withEthnicity(null)
-                .withDisability(null)
                 .build();
 
         Long organisationId = 1L;
@@ -177,7 +178,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle(),
+                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
                 userResource.getGender() != null ? userResource.getGender().toString() : "",
                 userResource.getEthnicity(),
@@ -197,7 +198,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         UserResource userResource = newUserResource()
                 .with(id(null))
                 .withEmail("testemail@test.test")
-                .withTitle("testTitle")
+                .withTitle(Miss)
                 .withFirstName("testFirstName")
                 .withLastName("testLastName")
                 .withPassword("testPassword")
@@ -216,7 +217,7 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
                 userResource.getLastName(),
                 userResource.getPassword(),
                 userResource.getEmail(),
-                userResource.getTitle(),
+                userResource.getTitle() != null ? userResource.getTitle().toString() : null,
                 userResource.getPhoneNumber(),
                 userResource.getGender() != null ? userResource.getGender().toString() : "",
                 userResource.getEthnicity(),
@@ -252,11 +253,11 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
     @Test
     public void updateProfileSkills() {
         Long userId = 1L;
-        ProfileSkillsResource profileSkills = newProfileSkillsResource().build();
+        ProfileSkillsEditResource profileSkillsEditResource = newProfileSkillsEditResource().build();
 
-        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkills, OK);
+        setupPutWithRestResultExpectations(format("%s/id/%s/updateProfileSkills", usersUrl, userId), profileSkillsEditResource, OK);
 
-        RestResult<Void> response = service.updateProfileSkills(userId, profileSkills);
+        RestResult<Void> response = service.updateProfileSkills(userId, profileSkillsEditResource);
         assertTrue(response.isSuccess());
     }
 
@@ -334,6 +335,19 @@ public class UserRestServiceMocksTest extends BaseRestServiceUnitTest<UserRestSe
         setupGetWithRestResultExpectations(format("%s/id/%s/profileStatus", usersUrl, userId), UserProfileStatusResource.class, expected, OK);
 
         UserProfileStatusResource response = service.getUserProfileStatus(userId).getSuccessObjectOrThrowException();
+        assertEquals(expected, response);
+    }
+
+
+    @Test
+    public void userHasApplicationForCompetition() {
+        Long userId = 1L;
+        Long competitionId = 2L;
+        Boolean expected = true;
+
+        setupGetWithRestResultExpectations(format("%s/userHasApplicationForCompetition/%s/%s", processRoleRestURL, userId, competitionId), Boolean.class, expected, OK);
+
+        Boolean response = service.userHasApplicationForCompetition(userId, competitionId).getSuccessObjectOrThrowException();
         assertEquals(expected, response);
     }
 }

@@ -2,8 +2,10 @@ package org.innovateuk.ifs.invite.resource;
 
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.innovateuk.ifs.category.resource.CategoryResource;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
 import org.innovateuk.ifs.user.resource.BusinessType;
+
+import java.util.List;
 
 /**
  * DTO for an assessor that is available to be invited.
@@ -17,8 +19,8 @@ public class AvailableAssessorResource extends AssessorInviteResource {
     public AvailableAssessorResource() {
     }
 
-    public AvailableAssessorResource(String name, CategoryResource innovationArea, boolean compliant, String email, BusinessType businessType, boolean added) {
-        super(name, innovationArea, compliant);
+    public AvailableAssessorResource(Long id, String name, List<InnovationAreaResource> innovationAreas, boolean compliant, String email, BusinessType businessType, boolean added) {
+        super(id, name, innovationAreas, compliant);
         this.email = email;
         this.businessType = businessType;
         this.added = added;

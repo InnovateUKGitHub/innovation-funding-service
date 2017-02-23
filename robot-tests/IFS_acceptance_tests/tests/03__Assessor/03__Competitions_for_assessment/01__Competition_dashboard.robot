@@ -38,8 +38,8 @@ Details of the competition are visible
     And the user should see the text in the page    Ian Cooper
     And the user should see the text in the page    Accept applications deadline
     And the user should see the text in the page    Submit applications deadline
-    And the user should see the text in the page    12:00am Tuesday 12 January 2016
-    And the user should see the text in the page    12:00am Saturday 28 January 2017
+    And the user should see the text in the page    12:00am Thursday 12 January 2068
+    And the user should see the text in the page    12:00am Saturday 28 January 2068
 
 Applications should have correct status and order
     [Documentation]    INFUND-6040
@@ -57,12 +57,12 @@ Accept an application for assessment
     ...
     ...    INFUND-4128
     [Tags]    HappyPath
-    Given the user should see the text in the page    Pending
-    When The user clicks the button/link    jQuery=li:nth-child(1) a:contains("accept / reject assessment")
+    Then the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
+    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
-    And The user should not see the text in the page    Pending
+    And the user should see the element    jQuery=.in-progress li:nth-child(3):contains("Intelligent water system"):contains("Accepted")
 
 Reject an application for assessment
     [Documentation]    INFUND-1180
@@ -73,24 +73,31 @@ Reject an application for assessment
     [Tags]
     [Setup]    Log in as a different user    paul.plum@gmail.com    Passw0rd
     Given The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user should see the text in the page    Pending
-    When The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
+    And the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Park living"):contains("Pending")
+    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")
-    Then the user should see an error    Please enter a reason
+    Then the user should see an error    Please enter a reason.
     And the assessor fills all fields with valid inputs
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     And the application for assessment should be removed
 
-Assessor can only make selection once
-    [Documentation]    INFUND-1180
-    [Tags]
-    Then The user should not see the element    jQuery=a:contains("accept / reject assessment")
-
 Applications should not have a check-box when the status is Open
     [Documentation]    INFUND-3726
     Then The user should not see the element    css=.assessment-submit-checkbox
+
+Check the comp admin see the assessor has rejected the application
+    [Documentation]
+    [Tags]
+    [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
+    Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
+    And the user clicks the button/link    jQuery=.button:contains("Manage applications")
+    And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(2):contains("Park living")
+    And the user clicks the button/link    jQuery=tr:nth-child(4) a:contains(View progress)
+    And the user should see the text in the page    Rejected (1)
+    And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Not my area of expertise")
+    And the user should see the element    jQuery=.assessors-rejected td:nth-child(6):contains("Unable to assess the application as i'm on holiday.")
 
 *** Keywords ***
 the assessor fills all fields with valid inputs
@@ -106,6 +113,8 @@ the application for assessment should be removed
 
 The order of the applications should be correct according to the status
     element should contain    css=li:nth-child(1) .grid-row    Pending
-    element should contain    css=.boxed-list li:nth-child(2)    Accepted
-    element should contain    css=.boxed-list li:nth-child(3)    Accepted
+    element should contain    css=li:nth-child(2) .grid-row    Pending
+    element should contain    css=li:nth-child(3) .grid-row    Pending
     element should contain    css=.boxed-list li:nth-child(4)    Accepted
+    element should contain    css=.boxed-list li:nth-child(5)    Accepted
+    element should contain    css=.boxed-list li:nth-child(6)    Accepted

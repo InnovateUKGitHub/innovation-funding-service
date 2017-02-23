@@ -2,7 +2,12 @@ package org.innovateuk.ifs.form.resource;
 
 import org.innovateuk.ifs.util.enums.Identifiable;
 
+import java.util.List;
+
+import static java.util.Arrays.asList;
 import static java.util.Arrays.stream;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.util.CollectionFunctions.combineLists;
 
 /**
  * FormInputType is used to identify what response a FormInput needs.
@@ -33,7 +38,23 @@ public enum FormInputType implements Identifiable {
     FINANCE_UPLOAD(20),
     ASSESSOR_RESEARCH_CATEGORY(21),
     ASSESSOR_APPLICATION_IN_SCOPE(22),
-    ASSESSOR_SCORE(23);
+    ASSESSOR_SCORE(23),
+    STAFF_TURNOVER(24),
+    STAFF_COUNT(25),
+    FINANCIAL_YEAR_END(26),
+    FINANCIAL_OVERVIEW_ROW(27),
+    FINANCIAL_STAFF_COUNT(28);
+
+    private static List<FormInputType> COST_CATEGORIES =
+            asList(LABOUR, OVERHEADS, MATERIALS, CAPITAL_USAGE, SUBCONTRACTING, TRAVEL, OTHER_COSTS);
+
+    private static List<FormInputType> FINANCE_TYPES = combineLists(COST_CATEGORIES, FINANCE, YOUR_FINANCE, OTHER_FUNDING, ORGANISATION_SIZE, STAFF_COUNT, STAFF_TURNOVER, FINANCIAL_YEAR_END, FINANCIAL_OVERVIEW_ROW, FINANCIAL_STAFF_COUNT);
+
+    private static List<FormInputType> ACADEMIC_FINANCE_TYPES = asList(YOUR_FINANCE, FINANCE_UPLOAD);
+
+    private static List<FormInputType> FINANCIAL_SUMMARY_TYPES = singletonList(FINANCIAL_SUMMARY);
+
+    private static List<FormInputType> PRINT_TYPES = asList(APPLICATION_DETAILS, TEXTAREA);
 
     private long id;
 
@@ -48,6 +69,35 @@ public enum FormInputType implements Identifiable {
 
     public String getNameLower() {
         return this.name().toLowerCase();
+    }
+
+    public boolean isDisplayableQuestionType() {
+        return !combineLists(FINANCE_TYPES, ACADEMIC_FINANCE_TYPES, FINANCIAL_SUMMARY_TYPES).contains(this);
+    }
+
+    public boolean isDisplayableFinanceType() {
+        return FINANCE_TYPES.contains(this);
+    }
+
+    public boolean isDisplayableAcademicFinanceType() {
+        return ACADEMIC_FINANCE_TYPES.contains(this);
+    }
+
+    public boolean isDisplayableFinancialSummaryType() {
+        return FINANCIAL_SUMMARY_TYPES.contains(this);
+    }
+
+    public boolean isDisplayableFinanceType(String financeView) {
+
+        switch (financeView) {
+            case "finance": return isDisplayableFinanceType();
+            case "academic-finance": return isDisplayableAcademicFinanceType();
+            default: throw new IllegalArgumentException("Don't know how to filter financial fields based on view " + financeView);
+        }
+    }
+
+    public boolean isDisplayablePrintType() {
+        return PRINT_TYPES.contains(this);
     }
 
     public static FormInputType findByName(String name) {

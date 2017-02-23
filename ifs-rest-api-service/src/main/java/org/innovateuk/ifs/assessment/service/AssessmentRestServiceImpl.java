@@ -25,37 +25,62 @@ public class AssessmentRestServiceImpl extends BaseRestService implements Assess
     }
 
     @Override
-    public RestResult<AssessmentResource> getById(final Long id) {
+    public RestResult<AssessmentResource> getById(final long id) {
         return getWithRestResult(format("%s/%s", assessmentRestURL, id), AssessmentResource.class);
     }
 
     @Override
-    public RestResult<List<AssessmentResource>> getByUserAndCompetition(Long userId, Long competitionId) {
+    public RestResult<AssessmentResource> getAssignableById(long id) {
+        return getWithRestResult(format("%s/%s/assign", assessmentRestURL, id), AssessmentResource.class);
+    }
+
+    @Override
+    public RestResult<AssessmentResource> getRejectableById(long id) {
+        return getWithRestResult(format("%s/%s/rejectable", assessmentRestURL, id), AssessmentResource.class);
+    }
+
+    @Override
+    public RestResult<List<AssessmentResource>> getByUserAndCompetition(long userId, long competitionId) {
         return getWithRestResult(format("%s/user/%s/competition/%s", assessmentRestURL, userId, competitionId), ParameterizedTypeReferences.assessmentResourceListType());
     }
 
     @Override
-    public RestResult<AssessmentTotalScoreResource> getTotalScore(Long id) {
+    public RestResult<Long> countByStateAndCompetition(AssessmentStates state, long competitionId) {
+        return getWithRestResult(format("%s/state/%s/competition/%s/count", assessmentRestURL, state.getStateName(), competitionId), Long.TYPE);
+    }
+
+    @Override
+    public RestResult<AssessmentTotalScoreResource> getTotalScore(long id) {
         return getWithRestResult(format("%s/%s/score", assessmentRestURL, id), AssessmentTotalScoreResource.class);
     }
 
     @Override
-    public RestResult<Void> recommend(Long id, AssessmentFundingDecisionResource assessmentFundingDecision) {
+    public RestResult<Void> recommend(long id, AssessmentFundingDecisionOutcomeResource assessmentFundingDecision) {
         return putWithRestResult(format("%s/%s/recommend", assessmentRestURL, id), assessmentFundingDecision, Void.class);
     }
 
     @Override
-    public RestResult<Void> rejectInvitation(Long id, ApplicationRejectionResource applicationRejection) {
-        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), applicationRejection, Void.class);
+    public RestResult<Void> rejectInvitation(long id, AssessmentRejectOutcomeResource assessmentRejectOutcomeResource) {
+        return putWithRestResult(format("%s/%s/rejectInvitation", assessmentRestURL, id), assessmentRejectOutcomeResource, Void.class);
     }
 
     @Override
-    public RestResult<Void> acceptInvitation(Long id) {
+    public RestResult<Void> withdrawAssessment(long id) {
+        return putWithRestResult(format("%s/%s/withdraw", assessmentRestURL, id), Void.class);
+    }
+
+    @Override
+    public RestResult<Void> acceptInvitation(long id) {
         return putWithRestResult(format("%s/%s/acceptInvitation", assessmentRestURL, id), Void.class);
     }
 
     @Override
     public RestResult<Void> submitAssessments(AssessmentSubmissionsResource assessmentSubmissions) {
         return putWithRestResult(format("%s/submitAssessments", assessmentRestURL), assessmentSubmissions, Void.class);
+    }
+
+    @Override
+    public RestResult<AssessmentResource> createAssessment(AssessmentCreateResource assessmentCreateResource) {
+        return postWithRestResult(format("%s", assessmentRestURL), assessmentCreateResource, AssessmentResource.class);
     }
 }

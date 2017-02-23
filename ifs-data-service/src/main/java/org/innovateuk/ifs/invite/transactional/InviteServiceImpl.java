@@ -23,6 +23,7 @@ import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.invite.resource.InviteResultsResource;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
+import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
@@ -104,6 +105,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     @Autowired
     private FormInputResponseRepository formInputResponseRepository;
 
+    @Autowired
+    private LoggedInUserSupplier loggedInUserSupplier;
+
     LocalValidatorFactoryBean validator;
 
     public InviteServiceImpl() {
@@ -150,7 +154,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
     }
 
     private boolean handleInviteSuccess(ApplicationInvite i) {
-        applicationInviteRepository.save(i.send());
+        applicationInviteRepository.save(i.send(loggedInUserSupplier.get(), LocalDateTime.now()));
         return true;
     }
 
@@ -179,7 +183,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         } else {
             notificationArguments.put("inviteOrganisationName", invite.getInviteOrganisation().getOrganisationName());
         }
-        notificationArguments.put("leadOrganisation", invite.getTarget().getLeadOrganisation().getName());
+        ProcessRole leadRole = invite.getTarget().getLeadApplicantProcessRole();
+        Organisation organisation = organisationRepository.findOne(leadRole.getOrganisationId());
+        notificationArguments.put("leadOrganisation", organisation.getName());
         notificationArguments.put("leadApplicant", invite.getTarget().getLeadApplicant().getName());
 
         if (invite.getTarget().getLeadApplicant().getTitle() != null) {
@@ -259,8 +265,9 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         return find(invite(inviteHash), user(userId)).andOnSuccess((invite, user) -> {
             if (invite.getEmail().equalsIgnoreCase(user.getEmail())) {
                 invite.open();
-                if (invite.getInviteOrganisation().getOrganisation() == null && !user.getOrganisations().isEmpty()) {
-                    invite.getInviteOrganisation().setOrganisation(user.getOrganisations().get(0));
+                List<Organisation> usersOrganisations = organisationRepository.findByUsers(user);
+                if (invite.getInviteOrganisation().getOrganisation() == null && !usersOrganisations.isEmpty()) {
+                    invite.getInviteOrganisation().setOrganisation(usersOrganisations.get(0));
                 }
                 invite = applicationInviteRepository.save(invite);
                 initializeInvitee(invite, user);
@@ -277,14 +284,20 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
         Application application = invite.getTarget();
         Role role = roleRepository.findOneByName(COLLABORATOR.getName());
         Organisation organisation = invite.getInviteOrganisation().getOrganisation();
-        ProcessRole processRole = new ProcessRole(user, application, role, organisation);
+        ProcessRole processRole = new ProcessRole(user, application.getId(), role, organisation.getId());
         processRoleRepository.save(processRole);
     }
 
+    private ApplicationInviteResource mapInviteToInviteResource(ApplicationInvite invite) {
+        ApplicationInviteResource inviteResource = applicationInviteMapper.mapToResource(invite);
+        Organisation organisation = organisationRepository.findOne(inviteResource.getLeadOrganisationId());
+        inviteResource.setLeadOrganisation(organisation.getName());
+        return inviteResource;
+    }
 
     @Override
     public ServiceResult<ApplicationInviteResource> getInviteByHash(String hash) {
-        return getByHash(hash).andOnSuccessReturn(applicationInviteMapper::mapToResource);
+        return getByHash(hash).andOnSuccessReturn(this::mapInviteToInviteResource);
     }
 
     @Override
@@ -314,7 +327,7 @@ public class InviteServiceImpl extends BaseTransactionalService implements Invit
             ProcessRole leadApplicantProcessRole = applicationInvite.getTarget().getLeadApplicantProcessRole();
             Long applicationId = applicationInvite.getTarget().getId();
 
-            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplication(applicationInvite.getUser(), applicationInvite.getTarget());
+            List<ProcessRole> processRoles = processRoleRepository.findByUserAndApplicationId(applicationInvite.getUser(), applicationInvite.getTarget().getId());
 
             setAssignedQuestionsToLeadApplicant(leadApplicantProcessRole, processRoles);
             setMarkedAsCompleteQuestionStatusesToLeadApplicant(leadApplicantProcessRole, applicationId, processRoles);

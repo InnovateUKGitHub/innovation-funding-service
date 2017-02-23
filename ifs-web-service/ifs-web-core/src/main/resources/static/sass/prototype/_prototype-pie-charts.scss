@@ -1,0 +1,26 @@
+//Extend pie charts to cover medium
+
+.pie.medium {
+  width: 70px;
+  height: 70px;
+  + .pie-overlay {
+    width: 66px;
+    height: 66px;
+    top:2px;
+    left:2px;
+  }
+  + .pie-overlay {
+    > span {
+      font-size: 13px;
+      font-weight: 700;
+      line-height: 20px;
+      margin-top: 0;
+    }
+    .day {
+      font-size: 26px;
+      margin-top: 15px;
+    }
+
+  }
+
+}

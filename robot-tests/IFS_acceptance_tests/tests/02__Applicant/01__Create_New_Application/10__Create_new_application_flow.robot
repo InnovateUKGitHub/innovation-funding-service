@@ -32,7 +32,7 @@ Non registered users CH route
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    LINK=INNOVATE LTD
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user enters the details and clicks the create account    ${test_mailbox_one}+${unique_email_number}@gmail.com
@@ -69,7 +69,7 @@ The email address does not stay in the cookie
     And the user enters text to a text field    id=organisationSearchName    Innovate
     And the user clicks the button/link    id=org-search
     And the user clicks the button/link    link=INNOVATE LTD
-    And the user selects the checkbox    id=address-same
+    And the user selects the checkbox    address-same
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     Then the user should not see the text in the page    ${test_mailbox_one}+1@gmail.com
@@ -135,16 +135,16 @@ Special Project Finance role
     And the user clicks the button/link    jQuery=.button:contains("Create")
     And the user clicks the Not on company house link
     And the user clicks the button/link    jQuery=.button:contains("Save")
-    And the user enters the details and clicks the create account    worth.email.test+project.finance1@gmail.com
+    And the user enters the details and clicks the create account    ${test_mailbox_one}+project.finance1@gmail.com
     And the user should be redirected to the correct page    ${REGISTRATION_SUCCESS}
 
 Special Project Finance role (email step)
     [Documentation]    INFUND-2609
     [Tags]    Email
     [Setup]    The guest user opens the browser
-    Given the user reads his email from the default mailbox and clicks the link    worth.email.test+project.finance1@gmail.com    Please verify your email address    If you did not request an account with us
+    Given the user reads his email from the default mailbox and clicks the link    ${test_mailbox_one}+project.finance1@gmail.com    Please verify your email address    If you did not request an account with us
     When the user clicks the button/link    jQuery=.button:contains("Sign in")
-    And the guest user inserts user email & password    worth.email.test+project.finance1@gmail.com    Passw0rd123
+    And the guest user inserts user email & password    ${test_mailbox_one}+project.finance1@gmail.com    Passw0rd123
     And the guest user clicks the log-in button
     Then the user should be redirected to the correct page without error checking    ${COMP_ADMINISTRATOR_DASHBOARD}/live
     [Teardown]    Logout as user
@@ -152,7 +152,6 @@ Special Project Finance role (email step)
 *** Keywords ***
 the new application should be visible in the dashboard page
     the user clicks the button/link    link= My dashboard
-    sleep    500ms
     the user should see the text in the page    ${test_title}
     the user should see the text in the page    Application number: 0000
 

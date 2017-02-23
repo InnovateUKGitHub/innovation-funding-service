@@ -3,15 +3,16 @@ package org.innovateuk.ifs.testdata.builders;
 import org.apache.commons.lang3.tuple.Pair;
 import org.innovateuk.ifs.application.domain.Application;
 import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.category.resource.CategoryType;
 import org.innovateuk.ifs.competition.domain.CompetitionType;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
+import org.innovateuk.ifs.competition.publiccontent.resource.FundingType;
+import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
+import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.testdata.builders.data.CompetitionData;
 import org.innovateuk.ifs.user.domain.User;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.resource.UserRoleType;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -21,10 +22,11 @@ import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
 import static java.util.Arrays.asList;
+import static java.util.Arrays.stream;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.innovateuk.ifs.category.resource.CategoryType.*;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.resource.MilestoneType.*;
 import static org.innovateuk.ifs.testdata.builders.ApplicationDataBuilder.newApplicationData;
 import static org.innovateuk.ifs.util.CollectionFunctions.*;
@@ -51,23 +53,30 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return asCompAdmin(data -> {
             CompetitionResource existingCompetition = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
             updateCompetitionInCompetitionData(data, existingCompetition.getId());
+            publicContentService.initialiseByCompetitionId(competitionId).getSuccessObjectOrThrowException();
         });
     }
 
-    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName, String innovationSectorName, String researchCategoryName, String leadTechnologist, String compExecutive) {
+    public CompetitionDataBuilder withBasicData(String name, String description, String competitionTypeName, String innovationAreaName,
+                                                String innovationSectorName, String researchCategoryName, String leadTechnologist,
+                                                String compExecutive, String budgetCode, String pafCode, String code, String activityCode, Integer assessorCount, BigDecimal assessorPay,
+                                                Boolean multiStream, String collaborationLevelCode, String leadApplicantTypeCode, Integer researchRatio, Boolean resubmission) {
 
         return asCompAdmin(data -> {
 
             doCompetitionDetailsUpdate(data, competition -> {
 
                 CompetitionType competitionType = competitionTypeRepository.findByName(competitionTypeName).get(0);
-                Long innovationArea = getCategoryIdOrNull(INNOVATION_AREA, innovationAreaName);
-                Long innovationSector = getCategoryIdOrNull(INNOVATION_SECTOR, innovationSectorName);
-                Long researchCategory = getCategoryIdOrNull(RESEARCH_CATEGORY, researchCategoryName);
+                Long innovationArea = getInnovationAreaIdOrNull(innovationAreaName);
+                Long innovationSector = getInnovationSectorIdOrNull(innovationSectorName);
+                Long researchCategory = getResearchCategoryIdOrNull(researchCategoryName);
+
+                CollaborationLevel collaborationLevel = CollaborationLevel.fromCode(collaborationLevelCode);
+                LeadApplicantType leadApplicantType = LeadApplicantType.BUSINESS.fromCode(leadApplicantTypeCode);
 
                 competition.setName(name);
                 competition.setDescription(description);
-                competition.setInnovationArea(innovationArea);
+                competition.setInnovationAreas(singleton(innovationArea));
                 competition.setInnovationSector(innovationSector);
                 competition.setResearchCategories(singleton(researchCategory));
                 competition.setMaxResearchRatio(30);
@@ -75,12 +84,31 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
                 competition.setCompetitionType(competitionType.getId());
                 competition.setLeadTechnologist(userRepository.findByEmail(leadTechnologist).map(User::getId).orElse(null));
                 competition.setExecutive(userRepository.findByEmail(compExecutive).map(User::getId).orElse(null));
+                competition.setPafCode(pafCode);
+                competition.setCode(code);
+                competition.setBudgetCode(budgetCode);
+                competition.setActivityCode(activityCode);
+                competition.setCollaborationLevel(collaborationLevel);
+                competition.setLeadApplicantType(leadApplicantType);
+                competition.setMaxResearchRatio(researchRatio);
+                competition.setResubmission(resubmission);
+                competition.setMultiStream(multiStream);
+                competition.setAssessorPay(assessorPay);
+                competition.setAssessorCount(assessorCount);
             });
         });
     }
 
-    private Long getCategoryIdOrNull(CategoryType type, String name) {
-        return !isBlank(name) ? simpleFindFirst(categoryRepository.findByType(type), c -> name.equals(c.getName())).get().getId() : null;
+    private Long getInnovationAreaIdOrNull(String name) {
+        return !isBlank(name) ? simpleFindFirst(innovationAreaRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
+    }
+
+    private Long getInnovationSectorIdOrNull(String name) {
+        return !isBlank(name) ? simpleFindFirst(innovationSectorRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
+    }
+
+    private Long getResearchCategoryIdOrNull(String name) {
+        return !isBlank(name) ? simpleFindFirst(researchCategoryRepository.findAll(), c -> name.equals(c.getName())).get().getId() : null;
     }
 
     private void doCompetitionDetailsUpdate(CompetitionData data, Consumer<CompetitionResource> updateFn) {
@@ -118,7 +146,10 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     }
 
     public CompetitionDataBuilder moveCompetitionIntoOpenStatus() {
-        return asCompAdmin(data -> shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE));
+        return asCompAdmin(data -> {
+            shiftMilestoneToTomorrow(data, MilestoneType.SUBMISSION_DATE);
+
+        });
     }
 
     public CompetitionDataBuilder moveCompetitionIntoFundersPanelStatus() {
@@ -141,8 +172,15 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
             applicationFundingService.makeFundingDecision(data.getCompetition().getId(), pairsToMap(applicationIdAndDecisions)).
                     getSuccessObjectOrThrowException();
 
-            projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions));
+            doAs(anyProjectFinanceUser(),
+                    () -> projectService.createProjectsFromFundingDecisions(pairsToMap(applicationIdAndDecisions)).getSuccessObjectOrThrowException());
+
         });
+    }
+
+    private UserResource anyProjectFinanceUser() {
+        List<User> projectFinanceUsers = userRepository.findByRoles_Name(UserRoleType.PROJECT_FINANCE.getName());
+        return retrieveUserById(projectFinanceUsers.get(0).getId());
     }
 
     private void shiftMilestoneToTomorrow(CompetitionData data, MilestoneType milestoneType) {
@@ -177,12 +215,17 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         });
     }
 
-            public CompetitionDataBuilder withNewMilestones() {
+    public CompetitionDataBuilder withNewMilestones() {
 
         return asCompAdmin(data -> {
-
             Stream.of(MilestoneType.presetValues()).forEach(type -> {
-                milestoneService.create(type, data.getCompetition().getId());
+                milestoneService.getMilestoneByTypeAndCompetitionId(type, data.getCompetition().getId()).
+                        andOnSuccess((milestoneResource) -> {
+                            if (milestoneResource.getId() == null) {
+                                milestoneService.create(type, data.getCompetition().getId());
+                            }
+                            return serviceSuccess();
+                        });
             });
         });
     }
@@ -191,24 +234,28 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, OPEN_DATE);
     }
 
+    public CompetitionDataBuilder withBriefingDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, BRIEFING_EVENT);
+    }
+
     public CompetitionDataBuilder withSubmissionDate(LocalDateTime date) {
         return withMilestoneUpdate(date, SUBMISSION_DATE);
     }
 
-    public CompetitionDataBuilder withFundersPanelDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, FUNDERS_PANEL);
+    public CompetitionDataBuilder withAllocateAssesorsDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ALLOCATE_ASSESSORS);
     }
 
-    public CompetitionDataBuilder withFundersPanelEndDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, NOTIFICATIONS);
-    }
-
-    public CompetitionDataBuilder withAssessorAcceptsDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
+    public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
     }
 
     public CompetitionDataBuilder withAssessorsNotifiedDate(LocalDateTime date) {
         return withMilestoneUpdate(date, ASSESSORS_NOTIFIED);
+    }
+
+    public CompetitionDataBuilder withAssessorAcceptsDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSOR_ACCEPTS);
     }
 
     public CompetitionDataBuilder withAssessorEndDate(LocalDateTime date) {
@@ -219,8 +266,27 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return withMilestoneUpdate(date, ASSESSMENT_CLOSED);
     }
 
-    public CompetitionDataBuilder withAssessorBriefingDate(LocalDateTime date) {
-        return withMilestoneUpdate(date, ASSESSOR_BRIEFING);
+    public CompetitionDataBuilder withLineDrawDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, LINE_DRAW);
+    }
+
+    public CompetitionDataBuilder withAsessmentPanelDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, ASSESSMENT_PANEL);
+    }
+
+    public CompetitionDataBuilder withPanelDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, PANEL_DATE);
+    }
+
+    public CompetitionDataBuilder withFundersPanelDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, FUNDERS_PANEL);
+    }
+
+    public CompetitionDataBuilder withFundersPanelEndDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, NOTIFICATIONS);
+    }
+    public CompetitionDataBuilder withReleaseFeedbackDate(LocalDateTime date) {
+        return withMilestoneUpdate(date, RELEASE_FEEDBACK);
     }
 
     private CompetitionDataBuilder withMilestoneUpdate(LocalDateTime date, MilestoneType milestoneType) {
@@ -253,6 +319,25 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
         return with(data -> applicationDataBuilders.forEach(fn -> fn.apply(newApplicationData(serviceLocator).withCompetition(data.getCompetition())).build()));
     }
 
+    public CompetitionDataBuilder withPublicContent(boolean published, String shortDescription, String fundingRange, String eligibilitySummary, String competitionDescription, FundingType fundingType, String projectSize, List<String> keywords) {
+        return asCompAdmin(data -> publicContentService.findByCompetitionId(data.getCompetition().getId()).andOnSuccessReturnVoid(publicContent -> {
+
+            if (published) {
+                publicContent.setShortDescription(shortDescription);
+                publicContent.setProjectFundingRange(fundingRange);
+                publicContent.setEligibilitySummary(eligibilitySummary);
+                publicContent.setSummary(competitionDescription);
+                publicContent.setFundingType(fundingType);
+                publicContent.setProjectSize(projectSize);
+                publicContent.setKeywords(keywords);
+
+                stream(PublicContentSectionType.values()).forEach(type -> publicContentService.markSectionAsComplete(publicContent, type).getSuccessObjectOrThrowException());
+
+                publicContentService.publishByCompetitionId(data.getCompetition().getId()).getSuccessObjectOrThrowException();
+            }
+
+        }));
+    }
 
     private void updateCompetitionInCompetitionData(CompetitionData competitionData, Long competitionId) {
         CompetitionResource newCompetitionSaved = competitionService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
@@ -283,6 +368,4 @@ public class CompetitionDataBuilder extends BaseDataBuilder<CompetitionData, Com
     protected CompetitionData createInitial() {
         return new CompetitionData();
     }
-
-
 }

@@ -16,6 +16,7 @@ public class FinanceCheckDocs {
 
     public static final FieldDescriptor[] financeCheckSummaryResourceFields = {
             fieldWithPath("projectId").description("Id or project that the status is from"),
+            fieldWithPath("projectName").description("Name of project that the status is from"),
             fieldWithPath("competitionId").description("Id of competition that the project is from"),
             fieldWithPath("competitionName").description("Name of competition that the project is from"),
             fieldWithPath("projectStartDate").description("Expected start date of project"),
@@ -29,6 +30,17 @@ public class FinanceCheckDocs {
             fieldWithPath("spendProfileGeneratedBy").description("Name of internal IFS user who generated spend profile"),
             fieldWithPath("spendProfileGeneratedDate").description("Date when internal user generated spend profile from finance checks"),
             fieldWithPath("partnerStatusResources").description("List of statuses for all partners")
+    };
+
+    public static final FieldDescriptor[] financeCheckEligibilityResourceFields = {
+            fieldWithPath("projectId").description("Id or project that the eligibility is from"),
+            fieldWithPath("organisationId").description("Id of organisation that the eligibility is from"),
+            fieldWithPath("durationInMonths").description("Total expected project duration in months"),
+            fieldWithPath("totalCost").description("Total cost of project for the organisation"),
+            fieldWithPath("percentageGrant").description("The percentage of funding of the project through grant for the organisation"),
+            fieldWithPath("fundingSought").description("The funding sought for the organisation for the project"),
+            fieldWithPath("otherPublicSectorFunding").description("Other public sector funding available for the organisation for the project"),
+            fieldWithPath("contributionToProject").description("The contribution that the organisation is  making to the project")
     };
 
     public static final FieldDescriptor[] financeCheckResourceFields = {

@@ -121,7 +121,7 @@
      left:-28px;
   }
   .ifs-progress-list li  .progress-status {
-    @include background-size(auto 50%);
+    background-size: auto 50%;
   }
 
 }

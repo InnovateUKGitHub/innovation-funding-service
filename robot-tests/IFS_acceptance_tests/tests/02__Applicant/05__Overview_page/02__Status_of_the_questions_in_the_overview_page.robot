@@ -34,7 +34,7 @@ the Applicant edits the Project summary
     Clear Element Text    css=#form-input-11 .editor
     The user enters text to a text field    css=#form-input-11 .editor    Check last updated date@#$
     Focus    css=.app-submit-btn
-    Sleep    1s
+    wait for autosave
 
 the assign status should be correct for the Project Summary
     the user navigates to the page    ${DASHBOARD_URL}
@@ -54,7 +54,7 @@ the applicant assigns the Project Summary
     the user clicks the button/link    jQuery=button:contains("${assignee_name}")
 
 a blue flag should be visible for the Project Summary in overview page
-    Wait Until Page Does Not Contain    Assigning to Steve Smith...    10s
+    Wait Until Page Does Not Contain Without Screenshots    Assigning to Steve Smith...    10s
     The user should see the element    jQuery=#section-1 .section:nth-child(2) .assigned
 
 the blue flag should not be visible

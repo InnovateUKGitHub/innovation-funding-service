@@ -48,7 +48,7 @@ public class ProjectSetupSectionInternalUser {
 
     public SectionAccess canAccessBankDetailsSection(UserResource userResource) {
 
-        if (!userResource.hasRole(PROJECT_FINANCE)) {
+        if (!userResource.hasRole(PROJECT_FINANCE) || !projectSetupProgressChecker.isBankDetailsAccessible()) {
             return NOT_ACCESSIBLE;
         }
 
@@ -91,6 +91,16 @@ public class ProjectSetupSectionInternalUser {
 
         return NOT_ACCESSIBLE;
     }
+
+    public SectionAccess canAccessFinanceChecksQueriesSection(UserResource userResource) {
+        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
+    }
+
+    public SectionAccess canAccessFinanceChecksNotesSection(UserResource userResource) {
+        return userResource.hasRole(PROJECT_FINANCE) ? ACCESSIBLE : NOT_ACCESSIBLE;
+    }
+
+
     private SectionAccess fail(String message) {
         LOG.info(message);
         return NOT_ACCESSIBLE;

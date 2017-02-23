@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
+</head>
+<body>
+
+<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
+<div th:include="fragments/layout :: body-start" th:remove="tag" />
+<div th:include="fragments/layout :: global-header" th:remove="tag" />
+
+
+<main id="content">
+	<div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${param.status != null and param.status[0] == 'edit' ? 'Your address' : 'Assessor dashboard'}, ${param.status != null and param.status[0] == 'edit' ? '?' : '/prototypes/865-assessor-dashboard-invites'})" th:remove="tag" />
+
+
+	<!-- HARDCODED PROTOTYPE HTML -->
+
+	<h1 class="heading-large" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Edit your address' : 'Your address')}">Your address</h1>
+
+	<th:block th:unless="${(param.status != null and param.status[0] == 'edit')}">
+		<p>These details will be used for all accounts linked to your email address.</p>
+
+		<h2 class="heading-small">Address</h2>
+		<p>
+			4 Station Road<br />
+			Swindon <br />
+			Wiltshire <br />
+			SN1 2BD
+		</p>
+	</th:block>
+	<th:block th:if="${(param.status != null and param.status[0] == 'edit')}">
+		<form>
+			<fieldset class="extra-margin">
+				<legend class="heading-medium visuallyhidden">Your address</legend>
+				<div class="form-group">
+					<label class="form-label" for="street">
+						<span class="form-label-bold">Street</span>
+					</label>
+					<input class="form-control" id="street" name="street" type="text" th:value="${(param.edit == null ? '':'4 Station Road')}"/>
+				</div>
+				<div class="form-group">
+					<label class="form-label visuallyhidden" for="street-2">
+						<span class="form-label-bold">Street line 2</span>
+					</label>
+					<input class="form-control" id="street-2" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="street-2">
+						<span class="form-label-bold visuallyhidden">Street line 3</span>
+					</label>
+					<input class="form-control" id="street-3" name="street-2" type="text" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="town">
+						<span class="form-label-bold">Town</span>
+					</label>
+					<input class="form-control" id="town" name="town" type="text" th:value="${(param.edit == null ? '':'Swindon')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="county">
+						<span class="form-label-bold">County</span>
+					</label>
+					<input class="form-control" id="county" name="county" type="text" th:value="${(param.edit == null ? '':'Wiltshire')}" />
+				</div>
+				<div class="form-group">
+					<label class="form-label" for="postcode">
+						<span class="form-label-bold">Postcode</span>
+					</label>
+					<input class="form-control" id="postcode" name="postcode" type="text" th:value="${(param.edit == null ? '':'SN1 2BD')}" />
+				</div>
+			</fieldset>
+		</form>
+	</th:block>
+
+
+	<div class="extra-margin-top">
+		<a th:href="${(param.status != null and param.status[0] == 'edit' ? '?' : '/prototypes/865-assessor-dashboard-invites')}" class="button" th:text="${(param.status != null and param.status[0] == 'edit' ? 'Save and return to your address' : 'Return to assessor dashboard')}">Return to assessor dashboard</a>
+		<a th:unless="${(param.status != null and param.status[0] == 'edit')}" href="?status=edit" class="button-secondary button-right">Edit</a>
+		<a th:if="${(param.status != null and param.status[0] == 'edit')}" href="?">Cancel</a>
+	</div>
+	<hr />
+
+	<!-- END OFHARDCODED PROTOTYPE HTML -->
+
+    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+</main>
+
+<div th:include="fragments/layout :: footer" th:remove="tag" />
+<div th:include="fragments/layout :: body-end" th:remove="tag" />
+</body>
+</html>

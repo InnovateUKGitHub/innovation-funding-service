@@ -3,10 +3,7 @@ package org.innovateuk.ifs.assessment.builder;
 import org.innovateuk.ifs.BaseBuilder;
 import org.innovateuk.ifs.Builder;
 import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.invite.domain.CompetitionInvite;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipant;
-import org.innovateuk.ifs.invite.domain.CompetitionParticipantRole;
-import org.innovateuk.ifs.invite.domain.ParticipantStatus;
+import org.innovateuk.ifs.invite.domain.*;
 import org.innovateuk.ifs.user.domain.User;
 
 import java.lang.reflect.Constructor;
@@ -85,4 +82,15 @@ public class CompetitionParticipantBuilder extends BaseBuilder<CompetitionPartic
         return withUser(user.build());
     }
 
+    public CompetitionParticipantBuilder withRejectionReason(RejectionReason... rejectionReasons) {
+        return withArray((rejectionReason, r) -> setField("rejectionReason", rejectionReason, r), rejectionReasons);
+    }
+
+    public CompetitionParticipantBuilder withRejectionReason(Builder<RejectionReason, ?> rejectionReason) {
+        return withRejectionReason(rejectionReason.build());
+    }
+
+    public CompetitionParticipantBuilder withRejectionComment(String... rejectionReasonComments) {
+        return withArray((rejectionComment, r) -> setField("rejectionReasonComment", rejectionComment, r), rejectionReasonComments);
+    }
 }

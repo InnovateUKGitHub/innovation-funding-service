@@ -104,9 +104,22 @@ include::{snippets}/competitioninvite/get-invitation-overview/response-fields.ad
 ==== Curl Example
 include::{snippets}/competitioninvite/get-invitation-overview/curl-request.adoc[]
 
+=== Get the invite statistics by competition
+==== Request
+include::{snippets}/competitioninvite/get-invite-statistics/http-request.adoc[]
+include::{snippets}/competitioninvite/get-invite-statistics/path-parameters.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/get-invite-statistics/http-response.adoc[]
+include::{snippets}/competitioninvite/get-invite-statistics/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/get-invite-statistics/curl-request.adoc[]
+
 === Add a user to the assessor invite list for a competition
 ==== Request
 include::{snippets}/competitioninvite/invite-user/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-user/request-fields.adoc[]
 
 ==== Response
 include::{snippets}/competitioninvite/invite-user/http-response.adoc[]
@@ -114,6 +127,30 @@ include::{snippets}/competitioninvite/invite-user/response-fields.adoc[]
 
 ==== Curl Example
 include::{snippets}/competitioninvite/invite-user/curl-request.adoc[]
+
+=== Add a new user to the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/invite-new-user/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-new-user/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/invite-new-user/http-response.adoc[]
+include::{snippets}/competitioninvite/invite-new-user/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/invite-new-user/curl-request.adoc[]
+
+=== Add new users to the assessor invite list for a competition
+==== Request
+include::{snippets}/competitioninvite/invite-new-users/http-request.adoc[]
+include::{snippets}/competitioninvite/invite-new-users/path-parameters.adoc[]
+include::{snippets}/competitioninvite/invite-new-users/request-fields.adoc[]
+
+==== Response
+include::{snippets}/competitioninvite/invite-new-users/http-response.adoc[]
+
+==== Curl Example
+include::{snippets}/competitioninvite/invite-new-users/curl-request.adoc[]
 
 === Delete a user from the assessor invite list for a competition
 ==== Request

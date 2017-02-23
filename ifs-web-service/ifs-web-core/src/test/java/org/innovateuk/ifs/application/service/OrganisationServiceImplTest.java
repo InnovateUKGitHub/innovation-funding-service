@@ -118,7 +118,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         Long organisationId = 4L;
         String organisationType = "Type";
         ProcessRoleResource processRole = new ProcessRoleResource();
-        processRole.setOrganisation(organisationId);
+        processRole.setOrganisationId(organisationId);
         OrganisationResource organisation = new OrganisationResource();
         organisation.setOrganisationTypeName(organisationType);
         when(processRoleService.findProcessRole(userId, applicationId)).thenReturn(processRole);
@@ -135,7 +135,7 @@ public class OrganisationServiceImplTest extends BaseServiceUnitTest<Organisatio
         Long organisationId = 4L;
         ProcessRoleResource roleWithUser = new ProcessRoleResource();
         roleWithUser.setUser(userId);
-        roleWithUser.setOrganisation(organisationId);
+        roleWithUser.setOrganisationId(organisationId);
         ProcessRoleResource roleWithoutUser = new ProcessRoleResource();
         roleWithoutUser.setUser(3L);
         OrganisationResource organisation = new OrganisationResource();

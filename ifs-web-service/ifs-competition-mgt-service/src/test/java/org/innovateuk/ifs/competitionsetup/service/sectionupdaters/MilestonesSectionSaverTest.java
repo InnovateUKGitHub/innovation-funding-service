@@ -88,6 +88,8 @@ public class MilestonesSectionSaverTest {
         CompetitionResource competition = newCompetitionResource()
                 .withMilestones(Arrays.asList(1L, 2L))
                 .withSetupComplete(true)
+                .withStartDate(LocalDateTime.now().minusDays(1))
+                .withFundersPanelDate(LocalDateTime.now().plusDays(1))
                 .withId(1L).build();
 
         MilestoneResource milestonePast = newMilestoneResource()

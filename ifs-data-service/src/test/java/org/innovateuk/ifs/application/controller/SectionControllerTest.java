@@ -69,7 +69,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         mockMvc.perform(post("/section/getCompletedSections/" + application.getId() + "/" + organisationId)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(completedSectionIds)))
+                .andExpect(content().string(objectMapper.writeValueAsString(completedSectionIds)))
                 .andExpect(status().isOk());
     }
 
@@ -90,7 +90,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
         mockMvc.perform(post("/section/getIncompleteSections/" + application.getId())
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(incompleteSectionIds)))
+                .andExpect(content().string(objectMapper.writeValueAsString(incompleteSectionIds)))
                 .andExpect(status().isOk());
     }
 
@@ -104,7 +104,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(nextSection)));
+                .andExpect(content().string(objectMapper.writeValueAsString(nextSection)));
     }
 
     @Test
@@ -117,7 +117,7 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(new ObjectMapper().writeValueAsString(previousSection)));
+                .andExpect(content().string(objectMapper.writeValueAsString(previousSection)));
     }
 
     @Test
@@ -161,8 +161,32 @@ public class SectionControllerTest extends BaseControllerMockMVCTest<SectionCont
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 pathParameters(
-                                        parameterWithName("sectionId").description("id of section to mark as complete"),
-                                        parameterWithName("applicationId").description("id of the application to mark the section as complete on"),
+                                        parameterWithName("sectionId").description("id of section to mark as incomplete"),
+                                        parameterWithName("applicationId").description("id of the application to mark the section as incomplete on"),
+                                        parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
+                                )
+                        )
+                );
+    }
+
+    @Test
+    public void markSectionAsNotRequired() throws Exception {
+        Section section = newSection().withId(7L).withCompetitionAndPriority(newCompetition().build(), 1).build();
+        Long processRoleId = 1L;
+        Long applicationId = 1L;
+
+        when(sectionService.markSectionAsNotRequired(section.getId(), applicationId, processRoleId)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(RestDocumentationRequestBuilders.post("/section/markAsNotRequired/{sectionId}/{applicationId}/{processRoleId}", section.getId(), applicationId, processRoleId))
+                .andExpect(status().isOk())
+                .andDo(
+                        document(
+                                "section/mark-as-not-required",
+                                preprocessRequest(prettyPrint()),
+                                preprocessResponse(prettyPrint()),
+                                pathParameters(
+                                        parameterWithName("sectionId").description("id of section to mark as not required"),
+                                        parameterWithName("applicationId").description("id of the application to mark the section as not required"),
                                         parameterWithName("processRoleId").description("id of ProcessRole of the current user, (for user specific sections, finance sections)")
                                 )
                         )

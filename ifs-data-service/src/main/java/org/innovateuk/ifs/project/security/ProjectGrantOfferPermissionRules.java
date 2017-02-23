@@ -14,14 +14,14 @@ import org.springframework.stereotype.Component;
 public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
 
     @PermissionRule(
-            value = "DOWNLOAD_GRANT_OFFER_PARTNER",
+            value = "DOWNLOAD_GRANT_OFFER",
             description = "Partners can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean partnersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
         return isPartner(project.getId(), user.getId());
     }
 
     @PermissionRule(
-            value = "DOWNLOAD_GRANT_OFFER_INTERNAL_USER",
+            value = "DOWNLOAD_GRANT_OFFER",
             description = "Competitions team & Project Finance can download grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean internalUsersCanDownloadGrantOfferLetter(ProjectResource project, UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);
@@ -36,7 +36,7 @@ public class ProjectGrantOfferPermissionRules extends BasePermissionRules {
     }
 
     @PermissionRule(
-            value = "VIEW_GRANT_OFFER_INTERNAL_USER",
+            value = "VIEW_GRANT_OFFER",
             description = "Competitions team & Project Finance can view grant offer documents (Unsigned grant offer, signed grant offer, Additional contract)")
     public boolean internalUsersCanViewGrantOfferLetter(ProjectResource project, UserResource user) {
         return user.hasRole(UserRoleType.COMP_ADMIN) || user.hasRole(UserRoleType.PROJECT_FINANCE);

@@ -30,7 +30,7 @@ public class EligibilitySectionSaver extends AbstractSectionSaver implements Com
 	}
 
 	@Override
-	public ServiceResult<Void> saveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
+	protected ServiceResult<Void> doSaveSection(CompetitionResource competition, CompetitionSetupForm competitionSetupForm) {
 		
 		EligibilityForm eligibilityForm = (EligibilityForm) competitionSetupForm;
 		
