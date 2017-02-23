@@ -2,7 +2,7 @@ version: '2'
 services:
 
   shib:
-    image: innovateuk/ifs-shib-sp:0.3.1
+    image: innovateuk/ifs-shib-sp:0.4.0
     ports:
       - "443:443"
     environment:
@@ -16,7 +16,7 @@ services:
           - ifs.local-dev
 
   idp:
-    image: innovateuk/ifs-shib-idp:0.3.1
+    image: innovateuk/ifs-shib-idp:0.4.1
     ports:
       - "9443:9443"
     environment:
@@ -31,7 +31,7 @@ services:
           - iuk-auth-localdev
 
   ldap:
-    image: innovateuk/ifs-ldap:0.2.1
+    image: innovateuk/ifs-ldap:0.4.0
     ports:
       - "389:389"
     environment:
