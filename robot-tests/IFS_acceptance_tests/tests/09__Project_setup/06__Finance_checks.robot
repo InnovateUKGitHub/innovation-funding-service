@@ -343,12 +343,12 @@ Finance checks eligibility validations
 Project finance user can amend all sections of eligibility
     [Documentation]    INFUND-4834
     [Tags]
-    When Project finance user amends labour details in eligibility
-    And Project finance user amends materials details in eligibility
-    And Project finance user amends capital usage details in eligibility
-    And Project finance user amends subcontracting usage details in eligibility
-    And Project finance user amends travel details in eligibility
-    And Project finance user amends other costs details in eligibility
+    When Project finance user amends labour details in eligibility for lead
+    And Project finance user amends materials details in eligibility for lead
+    And Project finance user amends capital usage details in eligibility for lead
+    And Project finance user amends subcontracting usage details in eligibility for lead
+    And Project finance user amends travel details in eligibility for lead
+    And Project finance user amends other costs details in eligibility for lead
 
 Checking the approve eligibility checkbox enables RAG selection but not Approve eligibility button
     [Documentation]    INFUND-4839
@@ -400,7 +400,7 @@ Project finance user can see updated finance overview after lead changes to elig
     [Documentation]    INFUND-5508
     [Tags]
     When the user navigates to the page    ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check
-    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 307,072
+    Then the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(3)    £ 402,797
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(4)    £ 87,878
     And the user should see the text in the element    jQuery=.table-overview tr:nth-child(1) td:nth-child(6)    29%
 
@@ -427,12 +427,12 @@ Project finance user can see the partner's information about eligibility
 Project finance user can amend all sections of eligibility for partner
     [Documentation]    INFUND-4834
     [Tags]
-    When Project finance user amends labour details in eligibility
-    And Project finance user amends materials details in eligibility
-    And Project finance user amends capital usage details in eligibility
-    And Project finance user amends subcontracting usage details in eligibility
-    And Project finance user amends travel details in eligibility
-    And Project finance user amends other costs details in eligibility
+    When Project finance user amends labour details in eligibility for partner
+    And Project finance user amends materials details in eligibility for partner
+    And Project finance user amends capital usage details in eligibility for partner
+    And Project finance user amends subcontracting usage details in eligibility for partner
+    And Project finance user amends travel details in eligibility for partner
+    And Project finance user amends other costs details in eligibility for partner
 
 Project finance user can see the eligibility checks for the industrial partner
     [Documentation]    INFUND-4823
@@ -608,6 +608,8 @@ the table row has expected values
 Moving ${FUNDERS_PANEL_COMPETITION_NAME} into project setup
     the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     the users fill out project details
+    bank details are approved for all businesses
+
 
 the project finance user moves ${FUNDERS_PANEL_COMPETITION_NAME} into project setup if it isn't already
     guest user log-in    lee.bowman@innovateuk.test    Passw0rd
@@ -676,6 +678,41 @@ the user fills in project costs
     the user moves focus to the element    css=[for="costs-reviewed"]
     the user sees the text in the element    css=#content tfoot td    £ 60,000
     the user should see that the element is disabled    jQuery=.button:contains("Approve eligible costs")
+
+bank details are approved for all businesses
+    partners submit bank details
+    the project finance user has approved bank details
+
+partners submit bank details
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_LEAD_PARTNER_EMAIL}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_PARTNER_EMAIL}
+    partner submits his bank details  ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_EMAIL}
+
+partner submits his bank details
+    [Arguments]  ${email}
+    log in as a different user            ${email}    ${short_password}
+    the user navigates to the page        ${server}/project-setup/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/bank-details
+    the user enters text to a text field  id=bank-acc-number  51406795
+    the user enters text to a text field  id=bank-sort-code  404745
+    the user selects the radio button     addressType    REGISTERED
+    the user clicks the button/link       jQuery=.button:contains("Submit bank account details")
+    the user clicks the button/link       jQuery=.button:contains("Submit")
+
+the project finance user has approved bank details
+    Guest user log-in  &{internal_finance_credentials}
+    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_LEAD_ORGANISATION_NAME}
+    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_PARTNER_NAME}
+    the project finance user approves bank details for    ${PROJECT_SETUP_APPLICATION_1_ACADEMIC_PARTNER_NAME}
+
+the project finance user approves bank details for
+    [Arguments]    ${org_name}
+    the user navigates to the page            ${server}/project-setup-management/project/${FUNDERS_PANEL_APPLICATION_1_PROJECT}/review-all-bank-details
+    the user clicks the button/link           link=${org_name}
+    the user should see the text in the page  ${org_name}
+    the user clicks the button/link           jQuery=.button:contains("Approve bank account details")
+    the user clicks the button/link           jQuery=.button:contains("Approve account")
+    the user should not see the element       jQuery=.button:contains("Approve bank account details")
+    the user should see the text in the page  The bank details provided have been approved.
 
 project finance approves Viability for
     [Arguments]  ${partner}
@@ -768,7 +805,7 @@ the user adds travel data into row
     the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(${row_number}) td:nth-of-type(2) input    ${number_of_times}
     the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(${row_number}) td:nth-of-type(3) input    ${cost}
 
-Project finance user amends labour details in eligibility
+Project finance user amends labour details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(1) button:contains("Labour")
     Then the user should see the element            jQuery=section:nth-of-type(1) button span:contains("2%")
     When the user clicks the button/link            jQuery=section:nth-of-type(1) a:contains("Edit")
@@ -788,7 +825,7 @@ Project finance user amends labour details in eligibility
     And the user should not see the element         jQuery=section:nth-of-type(1) button[name=save-eligibility]
 
 
-Project finance user amends materials details in eligibility
+Project finance user amends materials details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(3) button:contains("Materials")
     Then verify percentage and total                3  39%  100200
     When the user clicks the button/link            jQuery=section:nth-of-type(3) a:contains("Edit")
@@ -804,7 +841,7 @@ Project finance user amends materials details in eligibility
     And the user should see the element            jQuery=section:nth-of-type(1) a:contains("Edit")
     And the user should not see the element        jQuery=section:nth-of-type(3) button[name=save-eligibility]
 
-Project finance user amends capital usage details in eligibility
+Project finance user amends capital usage details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(4) button:contains("Capital usage")
     Then the user should see the element            jQuery=section:nth-of-type(4) button span:contains("0%")
     And the user should see the element            jQuery=section:nth-of-type(4) input[value*='552']
@@ -822,7 +859,7 @@ Project finance user amends capital usage details in eligibility
     And the user should not see the element       jQuery=section:nth-of-type(4) button[name=save-eligibility]
 
 
-Project finance user amends subcontracting usage details in eligibility
+Project finance user amends subcontracting usage details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(5) button:contains("Subcontracting costs")
     Then the user should see the element            jQuery=section:nth-of-type(5) button span:contains("53%")
     And the user should see the element            jQuery=section:nth-of-type(5) input[value*='90,000']
@@ -839,7 +876,7 @@ Project finance user amends subcontracting usage details in eligibility
     And the user should see the element           jQuery=section:nth-of-type(5) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(5) button[name=save-eligibility]
 
-Project finance user amends travel details in eligibility
+Project finance user amends travel details in eligibility for partner
     Given the user clicks the button/link           jQuery=section:nth-of-type(6) button:contains("Travel and subsistence")
     Then the user should see the element            jQuery=section:nth-of-type(6) button span:contains("6%")
     And the user should see the element            jQuery=section:nth-of-type(6) input[value*='5,970']
@@ -856,7 +893,7 @@ Project finance user amends travel details in eligibility
     And the user should see the element           jQuery=section:nth-of-type(6) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(6) button[name=save-eligibility]
 
-Project finance user amends other costs details in eligibility
+Project finance user amends other costs details in eligibility for partner
     When the user clicks the button/link            jQuery=section:nth-of-type(7) button:contains("Other costs")
     Then the user should see the element            jQuery=section:nth-of-type(7) button span:contains("1%")
     And the user should see the element            jQuery=section:nth-of-type(7) input[value*='1,100']
@@ -871,5 +908,111 @@ Project finance user amends other costs details in eligibility
     When the user should see the element           css=#other-costs-table tr:nth-of-type(2) td:nth-of-type(3) button
     When the user clicks the button/link           jQuery=section:nth-of-type(7) button[name=save-eligibility]
     Then verify total costs of project            £ 105,178
+    And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
+    And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
+
+
+Project finance user amends labour details in eligibility for lead
+    When the user clicks the button/link            jQuery=section:nth-of-type(1) button:contains("Labour")
+    Then the user should see the element            jQuery=section:nth-of-type(1) button span:contains("2%")
+    When the user clicks the button/link            jQuery=section:nth-of-type(1) a:contains("Edit")
+    Then the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
+    When the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
+    And the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    230
+    And the user adds data into labour row          1  test  120000  100
+    Then verify percentage and total                1  16%  5455
+    When the user clicks the button/link            jQuery=section:nth-of-type(1) button:contains("Add another role")
+    And the user adds data into labour row          19  test  14500  100
+    Then verify percentage and total                1  17%  60863
+    When the user clicks the button/link            css=.labour-costs-table tr:nth-of-type(3) td:nth-of-type(5) button
+    Then verify percentage and total                1  17%  60602
+    When the user clicks the button/link            jQuery=section:nth-of-type(1) button[name=save-eligibility]
+    Then verify total costs of project              £ 372,486
+    And the user should see the element             jQuery=section:nth-of-type(1) a:contains("Edit")
+    And the user should not see the element         jQuery=section:nth-of-type(1) button[name=save-eligibility]
+
+Project finance user amends materials details in eligibility for lead
+    When the user clicks the button/link            jQuery=section:nth-of-type(3) button:contains("Materials")
+    Then verify percentage and total                3  40%  150300
+    When the user clicks the button/link            jQuery=section:nth-of-type(3) a:contains("Edit")
+    And the user adds data into materials row       1  test  10  100
+    Then verify percentage and total                3  33%  101200
+    When the user clicks the button/link            jQuery=section:nth-of-type(3) button[name=add_cost]
+    And the user adds data into materials row       4  test  10  100
+    Then verify percentage and total                3  33%  102200
+    When the user clicks the button/link            css=#material-costs-table tbody tr:nth-of-type(2) td:nth-of-type(5) button
+    Then verify percentage and total                3  20%  52100
+    When the user clicks the button/link            jQuery=section:nth-of-type(3) button[name=save-eligibility]
+    Then verify total costs of project              £ 274,286
+    And the user should see the element            jQuery=section:nth-of-type(1) a:contains("Edit")
+    And the user should not see the element        jQuery=section:nth-of-type(3) button[name=save-eligibility]
+
+Project finance user amends capital usage details in eligibility for lead
+    When the user clicks the button/link            jQuery=section:nth-of-type(4) button:contains("Capital usage")
+    Then the user should see the element            jQuery=section:nth-of-type(4) button span:contains("0%")
+    And the user should see the element            jQuery=section:nth-of-type(4) input[value*='828']
+    When the user clicks the button/link            jQuery=section:nth-of-type(4) a:contains("Edit")
+    And the user adds capital usage data into row   1  test  10600  500  50
+    Then verify percentage and total                4  2%  5602
+    When the user clicks the button/link            jQuery=section:nth-of-type(4) button[name=add_cost]
+    And the user adds capital usage data into row   4  test  10600  500  50
+    Then verify percentage and total                4  4%  10652
+    When the user clicks the button/link            css=section:nth-of-type(4) #capital_usage div:nth-child(2) button
+    Then verify percentage and total                 4  4%  10376
+    When the user clicks the button/link           jQuery=section:nth-of-type(4) button[name=save-eligibility]
+    Then verify total costs of project             £ 283,834
+    And the user should see the element           jQuery=section:nth-of-type(4) a:contains("Edit")
+    And the user should not see the element       jQuery=section:nth-of-type(4) button[name=save-eligibility]
+
+
+Project finance user amends subcontracting usage details in eligibility for lead
+    When the user clicks the button/link            jQuery=section:nth-of-type(5) button:contains("Subcontracting costs")
+    Then the user should see the element            jQuery=section:nth-of-type(5) button span:contains("48%")
+    And the user should see the element            jQuery=section:nth-of-type(5) input[value*='135,000']
+    When the user clicks the button/link            jQuery=section:nth-of-type(5) a:contains("Edit")
+    And the user adds subcontracting data into row   1  test  10600
+    Then verify percentage and total                 5  43%  100600
+    When the user clicks the button/link            jQuery=section:nth-of-type(5) button[name=add_cost]
+    And the user adds subcontracting data into row   4  test  9400
+    Then verify percentage and total                 5  45%  110000
+    When the user clicks the button/link            css=section:nth-of-type(5) #subcontracting div:nth-child(2) button
+    Then verify percentage and total                 5  33%  65000
+    When the user clicks the button/link           jQuery=section:nth-of-type(5) button[name=save-eligibility]
+    Then verify total costs of project              £ 213,834
+    And the user should see the element           jQuery=section:nth-of-type(5) a:contains("Edit")
+    And the user should not see the element       jQuery=section:nth-of-type(5) button[name=save-eligibility]
+
+Project finance user amends travel details in eligibility for lead
+    Given the user clicks the button/link           jQuery=section:nth-of-type(6) button:contains("Travel and subsistence")
+    Then the user should see the element            jQuery=section:nth-of-type(6) button span:contains("4%")
+    And the user should see the element            jQuery=section:nth-of-type(6) input[value*='8,955']
+    When the user clicks the button/link            jQuery=section:nth-of-type(6) a:contains("Edit")
+    And the user adds travel data into row          1  test  10  100
+    Then verify percentage and total                 6  4%  6970
+    When the user clicks the button/link            jQuery=section:nth-of-type(6) button[name=add_cost]
+    And the user adds travel data into row          4  test  10  100
+    Then verify percentage and total                 6  4%  7970
+    When the user clicks the button/link            css=#travel-costs-table tbody tr:nth-of-type(2) td:nth-of-type(5) button
+    Then verify percentage and total                 6  3%  4985
+    When the user clicks the button/link           jQuery=section:nth-of-type(6) button[name=save-eligibility]
+    Then verify total costs of project            £ 209,864
+    And the user should see the element           jQuery=section:nth-of-type(6) a:contains("Edit")
+    And the user should not see the element       jQuery=section:nth-of-type(6) button[name=save-eligibility]
+
+Project finance user amends other costs details in eligibility for lead
+    When the user clicks the button/link            jQuery=section:nth-of-type(7) button:contains("Other costs")
+    Then the user should see the element            jQuery=section:nth-of-type(7) button span:contains("1%")
+    And the user should see the element            jQuery=section:nth-of-type(7) input[value*='1,650']
+    When the user clicks the button/link            jQuery=section:nth-of-type(7) a:contains("Edit")
+    And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(1) td:nth-child(1) textarea  some other costs
+    And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(1) td:nth-child(2) input  5000
+    Then verify percentage and total                 7  3%  6100
+    When the user clicks the button/link            jQuery=section:nth-of-type(7) button[name=add_cost]
+    And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(4) td:nth-child(1) textarea  some other costs
+    And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(4) td:nth-child(2) input  5750
+    Then verify percentage and total                 7  6%  11850
+    When the user should see the element           css=#other-costs-table tr:nth-of-type(2) td:nth-of-type(3) button
+    When the user clicks the button/link           jQuery=section:nth-of-type(7) button[name=save-eligibility]
+    Then verify total costs of project            £ 220,064
     And the user should see the element           jQuery=section:nth-of-type(7) a:contains("Edit")
     And the user should not see the element       jQuery=section:nth-of-type(7) button[name=save-eligibility]
