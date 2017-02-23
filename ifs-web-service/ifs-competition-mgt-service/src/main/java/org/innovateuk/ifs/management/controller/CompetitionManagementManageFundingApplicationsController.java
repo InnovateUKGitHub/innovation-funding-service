@@ -14,6 +14,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -41,17 +42,30 @@ public class CompetitionManagementManageFundingApplicationsController {
     @GetMapping(value = "/funding/send")
     public String sendNotifications(Model model,
                                @PathVariable("competitionId") Long competitionId,
-                               @ModelAttribute @Valid ManageFundingApplicationsQueryForm query,
-                               @RequestParam("application_ids") List<Long> applicationIds,
-                               BindingResult bindingResult,
-                               ValidationHandler validationHandler) {
-        return validationHandler.failNowOrSucceedWith(queryFailureView(competitionId), () -> {
-                    model.addAttribute("model", sendNotificationsModelPopulator.populate(query, competitionId, applicationIds));
-                    model.addAttribute("form", new NotificationEmailsForm());
-                    return MANAGE_FUNDING_SEND_VIEW;
-                }
-        );
+                               @RequestParam("application_ids") List<Long> applicationIds) {
+        NotificationEmailsForm form = new NotificationEmailsForm();
+        form.setIds(applicationIds);
 
+        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, applicationIds));
+        model.addAttribute("form", form);
+        return MANAGE_FUNDING_SEND_VIEW;
+
+    }
+
+    @PostMapping(value = "/funding/send")
+    public String sendNotificationsSubmit(Model model,
+                                    @PathVariable("competitionId") Long competitionId,
+                                    @RequestParam("application_ids") List<Long> applicationIds,
+                                    @ModelAttribute("form") @Valid NotificationEmailsForm form,
+                                    BindingResult bindingResult,
+                                    ValidationHandler validationHandler) {
+
+        form.setIds(Arrays.asList(27L, 28L));  //TODO: fix so these values come back in the form from the submit
+
+        // failure view... (temporary - for testing purposes)
+        model.addAttribute("model", sendNotificationsModelPopulator.populate(competitionId, form.getIds()));
+        model.addAttribute("form", form);
+        return MANAGE_FUNDING_SEND_VIEW;
     }
 
     @GetMapping(value = "/manage-funding-applications")

@@ -60,50 +60,47 @@
         </div>
     </details>
 
-    <th:block>
-        <fieldset class="extra-margin-top">
+    <form th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}"
+          th:object="${form}"
+          method="POST">
+        <div class="form-group extra-margin-top">
+            <label class="form-label-bold" for="subject">
+                Subject
+            </label>
 
-            <div class="form-group">
-                <label class="form-label-bold" for="subject">
-                    Subject
-                </label>
+            <input class="form-control"
+                   id="subject"
+                   type="text"
+                   th:field="${form.summary}"
+                   required="required"
+                   th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
+        </div>
 
-                <input class="form-control"
-                       id="subject"
-                       type="text"
-                       th:field="${form.summary}"
-                       required="required"
-                       th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}" />
+        <div class="form-group">
+            <label class="form-label-bold" for="message">
+                Message
+            </label>
+            <div class="textarea-wrapped">
+                    <textarea id="message"
+                              th:field="${form.message}"
+                              th:errorclass="field-error"
+                              ifs:utext="${form.message}"
+                              class="form-control width-full"
+                              data-editor="html"
+                              maxlength="5000"
+                              rows="4"
+                              required="required"
+                              th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}">
+                    </textarea>
             </div>
+        </div>
 
-            <div class="form-group">
-                <label class="form-label-bold" for="message">
-                    Message
-                </label>
-                <div class="textarea-wrapped">
-                        <textarea id="message"
-                                  th:field="${form.message}"
-                                  th:errorclass="field-error"
-                                  ifs:utext="${form.message}"
-                                  class="form-control width-full"
-                                  data-editor="html"
-                                  maxlength="5000"
-                                  rows="4"
-                                  required="required"
-                                  th:attr="data-required-errormessage=#{validation.field.must.not.be.blank}">
-                        </textarea>
-                </div>
-            </div>
+        <button name="send-emails" class="button">Send email to all applicants</button>
 
-        </fieldset>
-    </th:block>
-
-    <!--- TODO: Make this button a form input type button to POST the 'send email' command --->
-    <button class="button" formaction="/prototypes/1561-funding-notifications" >Send email to all applicants</button>
-
-    <a th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
-        Cancel
-    </a>
+        <a th:href="@{/competition/{competitionId}/manage-funding-applications(competitionId=${model.competitionId})}">
+            Cancel
+        </a>
+    </form>
 
     <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
