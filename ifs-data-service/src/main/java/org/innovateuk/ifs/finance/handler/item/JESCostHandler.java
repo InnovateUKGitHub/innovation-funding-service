@@ -16,12 +16,19 @@ import javax.validation.constraints.NotNull;
 public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
 
     @Override
+    public void validate(@NotNull AcademicCost academicCost, @NotNull BindingResult bindingResult) {
+        super.validate(academicCost, bindingResult);
+        AcademicValidator academicValidator = new AcademicValidator();
+        academicValidator.validate(academicCost, bindingResult);
+    }
+
+   /* @Override
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
         AcademicCost academicCost = (AcademicCost) costItem;
         super.validate(academicCost, bindingResult);
         AcademicValidator academicValidator = new AcademicValidator();
         academicValidator.validate(academicCost, bindingResult);
-    }
+    }*/
 
     @Override
     public ApplicationFinanceRow toCost(AcademicCost academicCostItem) {

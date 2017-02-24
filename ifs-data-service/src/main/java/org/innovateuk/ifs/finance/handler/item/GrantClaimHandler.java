@@ -28,11 +28,17 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
     private  GrantClaimValidator grantClaimValidator;
 
     @Override
+    public void validate(GrantClaim grantClaim, BindingResult bindingResult) {
+        super.validate(grantClaim, bindingResult, Default.class);
+        grantClaimValidator.validate(grantClaim, bindingResult);
+    }
+
+   /* @Override
     public void validate(FinanceRowItem costItem, BindingResult bindingResult) {
         GrantClaim grantClaim = (GrantClaim) costItem;
         super.validate(grantClaim, bindingResult, Default.class);
         grantClaimValidator.validate(grantClaim, bindingResult);
-    }
+    }*/
 
     @Override
     public ApplicationFinanceRow toCost(GrantClaim grantClaim) {

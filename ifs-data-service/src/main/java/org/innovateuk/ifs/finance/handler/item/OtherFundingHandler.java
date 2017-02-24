@@ -26,10 +26,16 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
     OtherFundingValidator validator;
 
     @Override
+    public void validate(@NotNull OtherFunding otherFunding, @NotNull BindingResult bindingResult) {
+        super.validate(otherFunding, bindingResult);
+        validator.validate(otherFunding, bindingResult);
+    }
+
+    /*@Override
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
         super.validate(costItem, bindingResult);
         validator.validate(costItem, bindingResult);
-    }
+    }*/
 
     @Override
     public ApplicationFinanceRow toCost(OtherFunding otherFunding) {

@@ -20,9 +20,14 @@ public class MaterialsHandler extends FinanceRowHandler<Materials> {
     public static final String COST_KEY = "materials";
 
     @Override
+    public void validate(@NotNull Materials materials, @NotNull BindingResult bindingResult) {
+        super.validate(materials, bindingResult);
+    }
+
+   /* @Override
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
         super.validate(costItem, bindingResult);
-    }
+    }*/
 
     @Override
     public ApplicationFinanceRow toCost(Materials materials) {

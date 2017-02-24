@@ -24,6 +24,15 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
     public static final Integer DEFAULT_WORKING_DAYS = 232;
 
     @Override
+    public void validate(LabourCost labourCost, BindingResult bindingResult) {
+        if (StringUtils.isNotEmpty(labourCost.getName()) && (labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_KEY) || labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_PER_YEAR))) {
+            super.validate(labourCost, bindingResult, LabourCost.YearlyWorkingDays.class);
+        } else {
+            super.validate(labourCost, bindingResult);
+        }
+    }
+
+   /* @Override
     public void validate(FinanceRowItem costItem, BindingResult bindingResult) {
         LabourCost labourCost = (LabourCost) costItem;
         if(StringUtils.isNotEmpty(labourCost.getName()) && (labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_KEY) || labourCost.getName().equals(LabourCostCategory.WORKING_DAYS_PER_YEAR))){
@@ -31,7 +40,7 @@ public class LabourCostHandler extends FinanceRowHandler<LabourCost> {
         }else{
             super.validate(costItem, bindingResult);
         }
-    }
+    }*/
 
     @Override
     public ApplicationFinanceRow toCost(LabourCost labourCostItem) {

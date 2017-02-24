@@ -27,7 +27,7 @@ public abstract class FinanceRowHandler<T> {
 
     public abstract FinanceRowItem toCostItem(ProjectFinanceRow cost);
 
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
+    public void validate(@NotNull T costItem, @NotNull BindingResult bindingResult) {
         ValidationUtil.isValid(bindingResult, costItem, (Class<?>[]) null);
     }
 

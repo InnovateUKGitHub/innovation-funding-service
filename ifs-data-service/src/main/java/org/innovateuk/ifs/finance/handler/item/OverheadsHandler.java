@@ -30,6 +30,23 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     private FileEntryService fileEntryService;
 
     @Override
+    public void validate(@NotNull Overhead overhead, @NotNull BindingResult bindingResult) {
+
+        switch (overhead.getRateType()) {
+            case DEFAULT_PERCENTAGE:
+            case CUSTOM_RATE:
+                super.validate(overhead, bindingResult, Overhead.RateNotZero.class);
+                break;
+            case TOTAL:
+                super.validate(overhead, bindingResult, Overhead.TotalCost.class);
+                break;
+            case NONE:
+                super.validate(overhead, bindingResult);
+                break;
+        }
+    }
+
+   /* @Override
     public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
 
         Overhead overhead = (Overhead) costItem;
@@ -45,7 +62,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
                 super.validate(costItem, bindingResult);
                 break;
         }
-    }
+    }*/
 
     @Override
     public ApplicationFinanceRow toCost(Overhead overhead) {
