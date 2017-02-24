@@ -730,7 +730,7 @@ verify total costs of project
 
 verify percentage and total
     [Arguments]  ${section}  ${percentage}  ${total}
-    the user should see the element           jQuery=section:nth-of-type(${section}) button span:contains("${percentage}")
+    the user should see the element           jQuery=section:nth-of-type(${section}) h3 span:contains("${percentage}")
     the user should see the element            jQuery=section:nth-of-type(${section}) input[data-calculation-rawvalue^='${total}']
 
 the user adds data into labour row
