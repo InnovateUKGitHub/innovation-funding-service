@@ -170,6 +170,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
         publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
         publicContentItemResource.setCompetitionTitle(competition.getName());
+        if (competition.isNonIfs()) {
+            publicContentItemResource.setNonIfsUrl(competition.getNonIfsUrl());
+        }
 
         return publicContentItemResource;
     }
@@ -181,13 +184,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
         competitionList.getContent().forEach(competition -> {
             PublicContent publicContent = publicContentRepository.findByCompetitionId(competition.getId());
-
-            PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
-            publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
-            publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
-            publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
-            publicContentItemResource.setCompetitionTitle(competition.getName());
-
+            PublicContentItemResource publicContentItemResource = mapPublicContentToPublicContentItemResource(publicContent, competition);
             publicContentItemResources.add(publicContentItemResource);
         });
 
