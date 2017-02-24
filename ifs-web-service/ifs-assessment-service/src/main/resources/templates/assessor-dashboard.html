@@ -33,79 +33,92 @@
             </div>
 
             <div class="invite-to-assess" th:unless="${#lists.isEmpty(model.pendingInvites)}">
-                <h2 class="heading-large">Invitations to assess (<span th:text="${#lists.size(model.pendingInvites)}" />)</h2>
-                <ul class="boxed-list">
-                    <li th:each="pendingInvite : ${model.pendingInvites}">
-                        <div class="grid-row">
-                            <div class="column-two-thirds">
-                                <h3 class="heading-medium"><a th:href="@{/invite/competition/{hash}(hash=${pendingInvite.hash})}" th:text="${pendingInvite.displayLabel}">Technology inspired</a></h3>
-                                <p>You have been asked to assess this competition. Please respond.</p>
+                <div class="progress-list">
+                    <h2 class="heading-medium">Invitations to assess (<span
+                        th:text="${#lists.size(model.pendingInvites)}"/>)</h2>
+                    <ul>
+                        <li th:each="pendingInvite : ${model.pendingInvites}" class="status-2-col">
+                            <div class="task">
+                                <h3 class="heading-small"><a
+                                    th:href="@{/invite/competition/{hash}(hash=${pendingInvite.hash})}"
+                                    th:text="${pendingInvite.displayLabel}">Technology inspired</a></h3>
+                                    <p class="no-margin">You have been asked to assess this competition. Please respond.</p>
                             </div>
-                            <div class="column-third">
-                                <h3 class="heading-medium">Assessment period</h3>
+                            <div class="assessment-period">
+                                <h3 class="heading-small no-margin">Assessment period</h3>
                                 <dl class="standard-definition-list reduced-width">
-                                  <dt>Begins</dt>
-                                  <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateFrom, 'd MMMM yyyy')}">15 November 2017</dd>
-
-                                  <dt>Ends</dt>
-                                  <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateTo, 'd MMMM yyyy')}">25 December 2017</dd>
+                                    <dt>Begins</dt>
+                                    <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateFrom, 'd MMMM yyyy')}">
+                                        15 November 2017
+                                    </dd>
+                                    <dt>Ends</dt>
+                                    <dd th:text="${#temporals.format(pendingInvite.assessmentPeriodDateTo, 'd MMMM yyyy')}">
+                                        25 December 2017
+                                    </dd>
                                 </dl>
-                            </div>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="my-applications">
-                <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
-                    <h2 class="heading-large">Competitions for assessment (<span th:text="${#lists.size(model.activeCompetitions)}" />)</h2>
-                    <ul class="boxed-list">
-                        <li th:each="activeCompetition : ${model.activeCompetitions}">
-                            <div class="grid-row">
-                                <div class="column-half">
-                                    <h3 class="heading-medium"><a th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}" th:text="${activeCompetition.displayLabel}" /></h3>
-                                    <p class="form-hint">Assessment progress:</p>
-                                    <p class="greentext"><strong><span th:text="${activeCompetition.progressAssessed}" />/<span th:text="${activeCompetition.progressTotal}" /> Assessed</strong></p>
-                                </div>
-
-                                <div class="column-half">
-                                    <div class="competition-deadline">
-                                        <div class="day" th:text="${#temporals.day(activeCompetition.submitDeadline)}" />
-                                        <div class="month" th:text="|${#temporals.monthName(activeCompetition.submitDeadline)} deadline|" />
-                                    </div>
-
-                                    <th:block th:insert="fragments/elements :: pie" th:with="daysPercentage=${activeCompetition.daysLeftPercentage},daysLeft=${activeCompetition.daysLeft}" />
-                                </div>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
 
-            <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
-                <h2 class="heading-large">Upcoming competitions to assess (<span th:text="${#lists.size(model.upcomingCompetitions)}" />)</h2>
-                <ul class="boxed-list">
-                    <li th:each="upcomingCompetition : ${model.upcomingCompetitions}">
-                        <div class="grid-row">
-                            <div class="column-assessment-details">
-                                <h3 class="heading-medium">
-                                <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}" th:text="${upcomingCompetition.displayLabel}"/>
-                                </h3>
-                                <p class="form-hint">Upcoming competition</p>
-                            </div>
-                            <div class="column-assessment-status navigation-right">
-                                <div class="application-status invite">
-                                    <p class="subtitle no-margin">Assessment period:</p>
-                                    <p class="heading-small no-margin">
-                                        <span th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateFrom)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateFrom)}|" th:remove="tag" />
-                                        to
-                                        <span th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateTo)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateTo)}|" th:remove="tag" />
-                                    </p>
+            <div class="my-applications">
+                <div th:unless="${#lists.isEmpty(model.activeCompetitions)}" th:remove="tag">
+
+                    <div class="progress-list">
+                        <h2 class="heading-medium no-margin-top">Competitions for assessment (<span
+                            th:text="${#lists.size(model.activeCompetitions)}"/>)</h2>
+                        <ul>
+                            <li th:each="activeCompetition : ${model.activeCompetitions}">
+                                <div class="task">
+                                    <h3 class="heading-small"><a
+                                        th:href="@{/assessor/dashboard/competition/{competitionId}(competitionId=${activeCompetition.competitionId})}"
+                                        th:text="${activeCompetition.displayLabel}"/></h3>
+                                    <div class="action-required">
+                                        <strong th:text="|${activeCompetition.progressTotal - activeCompetition.progressAssessed} applications to assess|"></strong>
+                                    </div>
                                 </div>
+                                <div class="status">
+                                    <div class="status-msg msg-deadline">
+                                        <strong class="bold-medium days-remaining" th:text="${activeCompetition.daysLeft}"></strong>
+                                        <br />
+                                        days left <br />
+                                        Deadline
+                                        <span class="day" th:text="${#temporals.day(activeCompetition.submitDeadline)}">END DAY</span>
+                                        <span class="month" th:text="${#temporals.monthName(activeCompetition.submitDeadline)}">END MONTH</span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="upcoming-to-assess" th:unless="${#lists.isEmpty(model.upcomingCompetitions)}">
+                <div class="progress-list"><h2 class="heading-medium">Upcoming competitions to assess (<span
+                    th:text="${#lists.size(model.upcomingCompetitions)}"/>)</h2>
+                    <ul>
+                        <li th:each="upcomingCompetition : ${model.upcomingCompetitions}" class="status-2-col">
+                            <div class="task">
+                                <h3 class="heading-small">
+                                    <a th:href="@{/competition/{competitionId}/upcoming(competitionId=${upcomingCompetition.competitionId})}"
+                                       th:text="${upcomingCompetition.displayLabel}"/>
+                                </h3>
+                                <p class="no-margin">Upcoming competition</p>
                             </div>
-                        </div>
-                    </li>
-                </ul>
+                            <div class="assessment-period">
+                                <h3 class="heading-small no-margin">Assessment period</h3>
+                                <dl class="standard-definition-list reduced-width">
+                                    <dt>Begins</dt>
+                                    <dd th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateFrom)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateFrom)}|">15 November 2017</dd>
+                                    <dt>Ends</dt>
+                                    <dd th:text="|${#temporals.day(upcomingCompetition.assessmentPeriodDateTo)} ${#temporals.monthName(upcomingCompetition.assessmentPeriodDateTo)}|">25 December 2017</dd>
+                                </dl>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
             </div>
 
             <h2 class="heading-medium">Your contract</h2>
