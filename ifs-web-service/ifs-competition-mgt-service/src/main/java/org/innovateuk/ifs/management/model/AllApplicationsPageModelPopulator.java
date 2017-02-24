@@ -5,8 +5,10 @@ import org.innovateuk.ifs.application.resource.CompetitionSummaryResource;
 import org.innovateuk.ifs.application.service.ApplicationSummaryRestService;
 import org.innovateuk.ifs.management.viewmodel.AllApplicationsRowViewModel;
 import org.innovateuk.ifs.management.viewmodel.AllApplicationsViewModel;
+import org.innovateuk.ifs.management.viewmodel.PaginationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.MultiValueMap;
 
 import java.util.List;
 
@@ -21,9 +23,13 @@ public class AllApplicationsPageModelPopulator {
     @Autowired
     private ApplicationSummaryRestService applicationSummaryRestService;
 
-    public AllApplicationsViewModel populateModel(long competitionId) {
+    public AllApplicationsViewModel populateModel(long competitionId, String origin, int page, String sorting, String filter) {
         CompetitionSummaryResource competitionSummaryResource = applicationSummaryRestService
                 .getCompetitionSummary(competitionId)
+                .getSuccessObjectOrThrowException();
+
+        ApplicationSummaryPageResource applicationSummaryPageResource = applicationSummaryRestService
+                .getAllApplications(competitionId, sorting, page, 20, filter)
                 .getSuccessObjectOrThrowException();
 
         return new AllApplicationsViewModel(
@@ -33,18 +39,14 @@ public class AllApplicationsPageModelPopulator {
                 competitionSummaryResource.getApplicationsStarted(),
                 competitionSummaryResource.getApplicationsInProgress(),
                 competitionSummaryResource.getApplicationsSubmitted(),
-                getApplications(competitionId)
+                sorting,
+                filter,
+                getApplications(applicationSummaryPageResource),
+                new PaginationViewModel(applicationSummaryPageResource, origin)
         );
     }
 
-    private List<AllApplicationsRowViewModel> getApplications(long competitionId) {
-        // TODO: Implement sorting - INFUND-8054
-        // TODO: Implement filtering - INFUND-8010
-        // TODO: Pagination required - INFUND-8067
-
-        ApplicationSummaryPageResource applicationSummaryPageResource = applicationSummaryRestService
-                .getAllApplications(competitionId, "", 0, Integer.MAX_VALUE)
-                .getSuccessObjectOrThrowException();
+    private List<AllApplicationsRowViewModel> getApplications(ApplicationSummaryPageResource applicationSummaryPageResource) {
 
         return simpleMap(
                 applicationSummaryPageResource.getContent(),
