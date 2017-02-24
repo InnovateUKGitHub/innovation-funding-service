@@ -12,7 +12,9 @@
 
 <main id="content">
     <th:block th:insert="fragments/layout :: main-content-start" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
+
+    <div th:if="${summaryModel.isReadOnly()}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})},currentCompetition=null" />
+    <div th:unless="${summaryModel.isReadOnly()}" th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${summaryModel.projectId})},currentCompetition=null" />
 
     <div class="page-title">
         <th:block th:insert="fragments/elements :: project-title (projectId=${summaryModel.projectId}, projectName=${summaryModel.projectName})" />
