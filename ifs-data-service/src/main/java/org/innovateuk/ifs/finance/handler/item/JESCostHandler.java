@@ -22,14 +22,6 @@ public class JESCostHandler extends FinanceRowHandler<AcademicCost> {
         academicValidator.validate(academicCost, bindingResult);
     }
 
-   /* @Override
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
-        AcademicCost academicCost = (AcademicCost) costItem;
-        super.validate(academicCost, bindingResult);
-        AcademicValidator academicValidator = new AcademicValidator();
-        academicValidator.validate(academicCost, bindingResult);
-    }*/
-
     @Override
     public ApplicationFinanceRow toCost(AcademicCost academicCostItem) {
         return academicCostItem != null ?

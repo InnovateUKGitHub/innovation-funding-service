@@ -45,25 +45,7 @@ public class OverheadsHandler extends FinanceRowHandler<Overhead> {
                 break;
         }
     }
-
-   /* @Override
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
-
-        Overhead overhead = (Overhead) costItem;
-        switch (overhead.getRateType()) {
-            case DEFAULT_PERCENTAGE:
-            case CUSTOM_RATE:
-                super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
-                break;
-            case TOTAL:
-                super.validate(costItem, bindingResult, Overhead.TotalCost.class);
-                break;
-            case NONE:
-                super.validate(costItem, bindingResult);
-                break;
-        }
-    }*/
-
+    
     @Override
     public ApplicationFinanceRow toCost(Overhead overhead) {
         final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;

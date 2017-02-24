@@ -24,11 +24,6 @@ public class MaterialsHandler extends FinanceRowHandler<Materials> {
         super.validate(materials, bindingResult);
     }
 
-   /* @Override
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
-        super.validate(costItem, bindingResult);
-    }*/
-
     @Override
     public ApplicationFinanceRow toCost(Materials materials) {
         return new ApplicationFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);

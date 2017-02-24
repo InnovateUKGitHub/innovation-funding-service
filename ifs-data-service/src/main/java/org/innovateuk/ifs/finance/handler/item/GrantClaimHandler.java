@@ -33,13 +33,6 @@ public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
         grantClaimValidator.validate(grantClaim, bindingResult);
     }
 
-   /* @Override
-    public void validate(FinanceRowItem costItem, BindingResult bindingResult) {
-        GrantClaim grantClaim = (GrantClaim) costItem;
-        super.validate(grantClaim, bindingResult, Default.class);
-        grantClaimValidator.validate(grantClaim, bindingResult);
-    }*/
-
     @Override
     public ApplicationFinanceRow toCost(GrantClaim grantClaim) {
         return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);

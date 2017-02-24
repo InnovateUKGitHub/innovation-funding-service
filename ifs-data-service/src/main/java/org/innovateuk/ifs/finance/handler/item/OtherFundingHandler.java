@@ -30,13 +30,7 @@ public class OtherFundingHandler extends FinanceRowHandler<OtherFunding> {
         super.validate(otherFunding, bindingResult);
         validator.validate(otherFunding, bindingResult);
     }
-
-    /*@Override
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
-        super.validate(costItem, bindingResult);
-        validator.validate(costItem, bindingResult);
-    }*/
-
+    
     @Override
     public ApplicationFinanceRow toCost(OtherFunding otherFunding) {
         return otherFunding != null ? mapOtherFunding(otherFunding) : null;
