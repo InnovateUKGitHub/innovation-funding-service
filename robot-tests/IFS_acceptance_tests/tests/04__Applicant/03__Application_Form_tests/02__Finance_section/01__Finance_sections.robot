@@ -119,7 +119,7 @@ Academic partner can upload file for field J-es PDF
     and the user should see the text in the page    ${valid_pdf}
 
 Academic partner's Your funding section is read only once marked as complete
-    [Documentation]
+    [Documentation]     INFUND-7405
     [Tags]    HappyPath
     When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
     and the user clicks the button/link     jQuery=button:contains("Mark as complete")
