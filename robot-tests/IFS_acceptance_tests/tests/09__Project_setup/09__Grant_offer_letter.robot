@@ -157,11 +157,7 @@ PM can view the grant offer letter page
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     Then the user should see the element     jQuery=li.require-action:last-of-type
     When the user clicks the button/link     link=Grant offer letter
-<<<<<<< HEAD
     Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK.
-=======
-    # Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.
->>>>>>> 3f777db1e403b1fbd426a1174ce2fa8b6bcf929b
     And the user should see the element    jQuery=label:contains(+ Upload)
     And the user goes back to the previous page
     When the user clicks the button/link    link=status of my partners
