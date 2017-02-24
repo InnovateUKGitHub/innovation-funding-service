@@ -39,7 +39,7 @@ Overhead costs
     # Check for No overheads costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And The user clicks the button/link     jQuery=label:contains("No overhead costs")
-    then the user should see the element     jquery=h3:contains("NO overhead costs")
+    then the user should see the element     jquery=h3:contains("No overhead costs")
     # Check for Calculate overheads option
     When the user clicks the button/link     jQuery=label:contains("Calculate overheads")
     then the user should see the element     jQuery=h3:contains("Calculate overheads")
