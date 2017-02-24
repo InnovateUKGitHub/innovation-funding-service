@@ -89,7 +89,7 @@ Applicant fills in the Application Details
     And the user enters text to a text field    css=#application_details-duration    24
     When The user clicks the button/link    jQuery=button[name="mark_as_complete"]
     Then the user clicks the button/link    link=Application Overview
-    And the user should see the element    jQuery=img.complete[alt*="Application details"]
+    And the user should see the element    jQuery=#section-1 li:nth-child(1) .task-status-complete
 
 Turnover and Staff count fields
     [Documentation]    INFUND-6393
@@ -166,7 +166,7 @@ Mark Organisation as complete when no
     And the user enters text to a text field    jQuery=label:contains("Turnover") + input    17506
     And the user selects medium organisation size
     When the user clicks the button/link    jQuery=button:contains("Mark as complete")
-    Then the user should see the element    jQuery=img.complete[alt*="Your organisation"]
+    Then the user should see the element    jQuery=div.task-status-complete span:contains("Your organisation")
     When the user clicks the button/link    link=Your organisation
     # Then the user should see the fields in readonly mode, but currently they are missing this attribute
     # TODO INFUND-8071
@@ -178,7 +178,7 @@ Funding subsection opens when Appl details and organisation info are provided
     [Tags]    HappyPath
     [Setup]    the user navigates to the page    ${dashboard_url}
     And the user clicks the button/link    link=${applicationTitle}
-    When the user should see the element    jQuery=img.complete[alt*="Application details"]
+    When the user should see the element    jQuery=.task-status-complete span:contains("Project details")
     And the user clicks the button/link    link=Your finances
     And the user should see the element    jQuery=img.complete[alt*="Your organisation"]
     Then the user should see the element    jQuery=img.assigned[alt*="Your funding"]

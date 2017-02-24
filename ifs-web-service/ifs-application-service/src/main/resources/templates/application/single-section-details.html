@@ -19,7 +19,10 @@
         <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to" />
       </th:block>
       <div class="task-status-complete"
-           th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}"><span>Completed</span></div>
+           th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}">
+          <span class="visuallyhidden" th:text="${section.getName()}"></span>
+          <span>Completed</span>
+      </div>
     </li>
   </th:block>
 

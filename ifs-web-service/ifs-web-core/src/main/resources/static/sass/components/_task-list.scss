@@ -57,11 +57,13 @@
         }
         .assign-container{
             width: 30%;
-            .action-required{
+            .action-required,
+            .secondary-notification{
                 display: inline;
                 width: 100%;
                 background: none;
                 padding-left: 0;
+                color: $link-colour;
             }
             @include media-down(mobile) {
                 display: block;

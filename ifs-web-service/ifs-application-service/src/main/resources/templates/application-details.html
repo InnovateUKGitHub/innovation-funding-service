@@ -64,20 +64,6 @@
                     <th:block th:if="${subSections.get(section.id).size() ==0}">
                         <div th:replace="application/single-section-details :: sectionDetails (question=${question}, questionAssignee=${questionAssignee}, questionAssignees=${questionAssignees}, responses=${responses}, currentUser=${currentUser}, userIsLeadApplicant=${userIsLeadApplicant}, leadApplicant=${leadApplicant}, section=${section}, currentApplication=${currentApplication})"></div>
                     </th:block>
-                    <!--/* sections with children like the finance */-->
-                    <!--<li th:each="childSection : ${subSections.get(section.id)}">-->
-                        <!--<div class="task">-->
-                            <!--<h3 class="heading-small">-->
-                                <!--<a th:href="''/application/'+${currentApplication.getId()}+'/form/section/'+${childSection.getId()}"-->
-                                   <!--th:text="${childSection.getName()}" />-->
-                            <!--</h3>-->
-                        <!--</div>-->
-                        <!--<th:block th:if="${childSection.getId().equals(financeSectionId)}">-->
-                            <!--<th:block th:insert="question-type/form-elements :: assigned-to" />-->
-                            <!--<div class="task-status-complete"-->
-                                 <!--th:if="${userFinanceSectionCompleted}"><span>Completed</span></div>-->
-                        <!--</th:block>-->
-                    <!--</li>-->
                     <th:block th:unless="${subSections.get(section.id).size() ==0 }">
                         <li th:each="childSection : ${subSections.get(section.id)}">
                             <div class="task">
@@ -89,7 +75,10 @@
                             <th:block th:if="${childSection.getId().equals(financeSectionId)}">
                                 <th:block th:insert="question-type/form-elements :: assigned-to" />
                                     <div class="task-status-complete"
-                                         th:if="${userFinanceSectionCompleted}"><span>Completed</span></div>
+                                         th:if="${userFinanceSectionCompleted}">
+                                        <span class="visuallyhidden" th:text="${childSection.getName()}"></span>
+                                        <span>Completed</span>
+                                    </div>
                             </th:block>
                         </li>
                         <!--<li class="grid-row" th:classappend="section" th:each="childSection : ${subSections.get(section.id)}">-->

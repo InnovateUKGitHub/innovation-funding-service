@@ -60,7 +60,7 @@ The question is enabled for the assignee
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test  #Application Title
     Then the user should see the browser notification    Stuart ANDERSON has assigned a question to you
-    And the question should contain the correct status/name    jQuery=#section-1 .section:nth-child(3) .assign-container    You
+    And the question should contain the correct status/name    jQuery=#section-1 li:nth-child(3) .assign-container    You
     And the user clicks the button/link    link= Public description
     And the user should see the element    css=#form-input-12 .editor
     And the user should not see the element    css=#form-input-12 .readonly
@@ -155,7 +155,7 @@ The question should be reassigned to the lead applicant
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link= Assign test
     Then the user should see the browser notification    Dennis Bergkamp has assigned a question to you
-    And the question should contain the correct status/name    jQuery=#section-1 .section:nth-child(3) .assign-container    You
+    And the question should contain the correct status/name    jQuery=#section-1 li:nth-child(3) .assign-container    You
     And the user clicks the button/link    link= Public description
     And the user should see the element    css=#form-input-12 .editor
     And the user should not see the element    css=#form-input-12 .readonly
