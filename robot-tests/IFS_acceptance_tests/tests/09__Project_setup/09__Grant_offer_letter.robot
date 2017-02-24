@@ -26,6 +26,8 @@ Documentation     INFUND-4851 As a project manager I want to be able to submit a
 ...               INFUND-6048 As the contracts team I can have access to a generated Grant Offer Letter so that I can send it to the partners
 ...
 ...               INFUND-7170 Approved signed-GOL cannot be seen/downloaded by external users
+...
+...               INFUND-6780 As a project manager, I have the option to remove an uploaded signed GOL before submitting it, so that an can upload a different file if required
 Suite Setup       all the other sections of the project are completed (except spend profile approval)
 Suite Teardown    the user closes the browser
 Force Tags        Project Setup    Upload
@@ -155,7 +157,11 @@ PM can view the grant offer letter page
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     Then the user should see the element     jQuery=li.require-action:last-of-type
     When the user clicks the button/link     link=Grant offer letter
+<<<<<<< HEAD
     Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK.
+=======
+    # Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.
+>>>>>>> 3f777db1e403b1fbd426a1174ce2fa8b6bcf929b
     And the user should see the element    jQuery=label:contains(+ Upload)
     And the user goes back to the previous page
     When the user clicks the button/link    link=status of my partners
@@ -298,6 +304,24 @@ PM can download the annex
     Then the user downloads the file        ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/additional-contract  ${DOWNLOAD_FOLDER}/annex.pdf
     [Teardown]    remove the file from the operating system    annex.pdf
 
+PM can remove the signed grant offer letter
+    [Documentation]    INFUND-6780
+    [Tags]
+
+    When the user clicks the button/link    name=removeSignedGrantOfferLetterClicked
+    Then the user should not see the text in the page    Remove
+    And the user should not see the text in the page    jQuery=.upload-section a:contains("${valid_pdf}")
+
+
+PM can upload new signed grant offer letter
+    [Documentation]    INFUND-6780
+    [Tags]  
+    When the user uploads a file    signedGrantOfferLetter    ${valid_pdf}
+    And the user reloads the page
+    Then the user should see the element    jQuery=.button:contains("Send to Innovate UK")
+    And the user should not see the element    jQuery=[disabled='disabled'].button:contains(Send signed offer letter)
+
+
 PM Sends the Grant Offer letter
     [Documentation]    INFUND-4851, INFUND-6091, INFUND-5998
     [Tags]    HappyPath
@@ -314,6 +338,11 @@ PM can download the signed grant offer letter
     Then the user should see the text in the page   Signed grant offer letter
     And the user downloads the file        ${PS_GOL_APPLICATION_PM_EMAIL}    ${server}/project-setup/project/${PS_GOL_APPLICATION_PROJECT}/offer/signed-grant-offer-letter  ${DOWNLOAD_FOLDER}/signedGOL.pdf
     [Teardown]    remove the file from the operating system    signedGOL.pdf
+
+PM cannot remove the signed grant offer letter after submission
+    [Documentation]    INFUND-6780
+    When the user should not see the element    name=removeSignedGrantOfferLetterClicked
+    Then the user should not see the text in the page    Remove
 
 
 PM's status should be updated
