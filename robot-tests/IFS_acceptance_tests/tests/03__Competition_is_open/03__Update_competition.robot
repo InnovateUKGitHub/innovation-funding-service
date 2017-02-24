@@ -16,6 +16,8 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               INFUND-7083 As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
 ...
 ...               INFUND-6695 As a Competitions team member I want to be able to update the number of Assessors required per applicationthroughout the life of the competition
+...
+...               INFUND-6694 As a Competitions team member I want to be able to update Milestones throughout the life of the competition
 Suite Setup       Custom suite setup
 Suite Teardown    the user moves the competition back again
 Force Tags        CompAdmin    MySQL
@@ -115,9 +117,8 @@ Funding Information is editable (Open)
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Milestones are editable (Open)
-    [Documentation]
+    [Documentation]    INFUND-6694
     [Tags]
-    [Setup]
     When the user clicks the button/link    link=Milestones
     And the user clicks the button/link    jQuery=button:contains(Edit)
     Then the user should see that the element is disabled    jQuery=tr:nth-child(1) .year input
