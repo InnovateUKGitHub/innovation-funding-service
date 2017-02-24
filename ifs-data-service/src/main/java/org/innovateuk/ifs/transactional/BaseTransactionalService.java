@@ -194,5 +194,4 @@ public abstract class BaseTransactionalService  {
     protected ServiceResult<Question> getQuestion(Long questionId) {
         return find(questionRepository.findOne(questionId), notFoundError(Question.class));
     }
-
 }

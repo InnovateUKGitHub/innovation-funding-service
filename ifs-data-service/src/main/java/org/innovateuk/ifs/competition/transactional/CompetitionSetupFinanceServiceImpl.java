@@ -37,12 +37,12 @@ public class CompetitionSetupFinanceServiceImpl extends CompetitionSetupTransact
                     compSetupFinanceRes.setIncludeGrowthTable(isIncludeGrowthTable);
                     compSetupFinanceRes.setFullApplicationFinance(competition.isFullApplicationFinance());
                     compSetupFinanceRes.setCompetitionId(compId);
-
                     return serviceSuccess(compSetupFinanceRes);
                 });
         return compSetupFinanceResResult;
     }
 
+    
     private ServiceResult<Void> saveCountAndTurnover(CompetitionSetupFinanceResource compSetupFinanceRes) {
         Long compId = compSetupFinanceRes.getCompetitionId();
 

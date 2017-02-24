@@ -70,12 +70,12 @@ import static org.mockito.Mockito.*;
 /**
  * Tests for {@link ApplicationServiceImpl}
  */
-public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationServiceImpl> {
+public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<ApplicationService> {
 
     private Application openApplication;
 
     @Override
-    protected ApplicationServiceImpl supplyServiceUnderTest() {
+    protected ApplicationService supplyServiceUnderTest() {
         return new ApplicationServiceImpl();
     }
 
