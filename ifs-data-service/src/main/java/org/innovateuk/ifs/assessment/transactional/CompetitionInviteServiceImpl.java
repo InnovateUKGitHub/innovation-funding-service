@@ -189,19 +189,19 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
 
     @Override
     public ServiceResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, Pageable pageable, Optional<Long> innovationArea) {
-        Page<User> pagedAssessors;
+        Page<User> pagedResult;
 
         if (innovationArea.isPresent()) {
-            pagedAssessors = userRepository.findAssessorsByCompetitionAndInnovationArea(
+            pagedResult = userRepository.findAssessorsByCompetitionAndInnovationArea(
                     competitionId,
                     innovationArea.orElse(null),
                     pageable
             );
         } else {
-            pagedAssessors = userRepository.findAssessorsByCompetition(competitionId, pageable);
+            pagedResult = userRepository.findAssessorsByCompetition(competitionId, pageable);
         }
 
-        List<AvailableAssessorResource> availableAssessors = simpleMap(pagedAssessors.getContent(), assessor -> {
+        List<AvailableAssessorResource> availableAssessors = simpleMap(pagedResult.getContent(), assessor -> {
             Profile profile = profileRepository.findOne(assessor.getProfileId());
 
             AvailableAssessorResource availableAssessor = new AvailableAssessorResource();
@@ -216,11 +216,11 @@ public class CompetitionInviteServiceImpl implements CompetitionInviteService {
         });
 
         return serviceSuccess(new AvailableAssessorPageResource(
-                pagedAssessors.getTotalElements(),
-                pagedAssessors.getTotalPages(),
+                pagedResult.getTotalElements(),
+                pagedResult.getTotalPages(),
                 availableAssessors,
-                pagedAssessors.getNumber(),
-                pagedAssessors.getSize()
+                pagedResult.getNumber(),
+                pagedResult.getSize()
         ));
     }
 

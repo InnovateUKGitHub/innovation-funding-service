@@ -61,7 +61,8 @@ public class CompetitionInviteController {
     public RestResult<AvailableAssessorPageResource> getAvailableAssessors(
             @PathVariable long competitionId,
             @PageableDefault(size = 20, sort = "firstName", direction = Sort.Direction.ASC) Pageable pageable,
-            @RequestParam Optional<Long> innovationArea) {
+            @RequestParam Optional<Long> innovationArea
+    ) {
         return competitionInviteService.getAvailableAssessors(competitionId, pageable, innovationArea).toGetResponse();
     }
 
