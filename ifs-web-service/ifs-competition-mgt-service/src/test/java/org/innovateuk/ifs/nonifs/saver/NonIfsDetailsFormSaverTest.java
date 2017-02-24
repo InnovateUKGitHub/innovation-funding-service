@@ -102,8 +102,8 @@ public class NonIfsDetailsFormSaverTest {
         NonIfsDetailsForm form = new NonIfsDetailsForm();
         form.setTitle(COMPETITION_NAME);
         form.setUrl(COMPETITION_URL);
-        form.setInnovationSector(INNOVATION_SECTOR);
-        form.setInnovationArea(INNOVATION_AREA);
+        form.setInnovationSectorCategoryId(INNOVATION_SECTOR);
+        form.setInnovationAreaCategoryId(INNOVATION_AREA);
         form.setOpenDate(new MilestoneRowForm(MilestoneType.OPEN_DATE, OPEN));
         form.setCloseDate(new MilestoneRowForm(MilestoneType.SUBMISSION_DATE, CLOSE));
         form.setApplicantNotifiedDate(new MilestoneRowForm(MilestoneType.RELEASE_FEEDBACK, NOTIFIED));

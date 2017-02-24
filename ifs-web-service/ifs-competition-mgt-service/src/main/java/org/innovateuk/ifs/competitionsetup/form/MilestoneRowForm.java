@@ -18,10 +18,7 @@ public class MilestoneRowForm {
     private Integer month;
     @Range(min = 2016, max = 9000)
     private Integer year;
-    private Integer hour;
-    private Integer minute;
-    private Boolean am;
-
+    private MilestoneTime time;
 
     private MilestoneType milestoneType;
     private String dayOfWeek;
@@ -40,10 +37,7 @@ public class MilestoneRowForm {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
-            this.setHour(dateTime.getHour() == 0 ? 12 : dateTime.getHour() > 12 ? dateTime.getHour() - 12 : dateTime.getHour());
-            this.setMinute(dateTime.getMinute());
-            this.setAm(dateTime.getHour() < 12);
-
+            this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             this.setDate(dateTime);
             this.editable = LocalDateTime.now().isBefore(dateTime);
         } else {
@@ -111,28 +105,12 @@ public class MilestoneRowForm {
         this.date = date;
     }
 
-    public Integer getHour() {
-        return hour;
+    public MilestoneTime getTime() {
+        return time;
     }
 
-    public void setHour(Integer hour) {
-        this.hour = hour;
-    }
-
-    public Integer getMinute() {
-        return minute;
-    }
-
-    public void setMinute(Integer minute) {
-        this.minute = minute;
-    }
-
-    public Boolean getAm() {
-        return am;
-    }
-
-    public void setAm(Boolean am) {
-        this.am = am;
+    public void setTime(MilestoneTime time) {
+        this.time = time;
     }
 
     private String getNameOfDay() {
@@ -165,9 +143,8 @@ public class MilestoneRowForm {
 
     public LocalDateTime getMilestoneAsDateTime(){
         if (day != null && month != null && year != null){
-            if ( hour != null && minute != null && am != null) {
-                int zeroBaseHour = hour == 12 ? 0 : hour;
-                return LocalDateTime.of(year, month, day, am ? zeroBaseHour : zeroBaseHour + 12, minute);
+            if ( time != null) {
+                return LocalDateTime.of(year, month, day, time.getHour(), 0);
             } else {
                 return LocalDateTime.of(year, month, day, 0, 0);
             }

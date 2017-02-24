@@ -42,38 +42,38 @@
                        th:attr="data-required-errormessage=#{validation.standard.title.required}" />
             </div>
 
-            <div th:class="${#fields.hasErrors('innovationSector')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('innovationSectorCategoryId')}? 'form-group error':'form-group'">
                 <label class="form-label" for="innovationSector">
                     <span class="form-label-bold">Innovation sector</span>
-                    <span th:if="${#fields.hasErrors('innovationSector')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSector')}" th:text="${err}" />
+                    <span th:if="${#fields.hasErrors('innovationSectorCategoryId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationSectorCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
 
                 <select class="form-control width-x-large"
                         id="innovationSector"
-                        th:field="${form.innovationSector}"
+                        th:field="${form.innovationSectorCategoryId}"
                         required="required"
                         th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationsectorcategoryid.required}" >
-                    <option value="" disabled="disabled" th:selected="${form.innovationSector == null}">Please select &hellip;</option>
-                    <option th:each="(innovationSector : ${model.innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${form.innovationSector == innovationSector.id}">Innovation Sector</option>
+                    <option value="" disabled="disabled" th:selected="${form.innovationSectorCategoryId == null}">Please select &hellip;</option>
+                    <option th:each="(innovationSector : ${model.innovationSectors})" th:text="${innovationSector.name}" th:value="${innovationSector.id}" th:selected="${form.innovationSectorCategoryId == innovationSector.id}">Innovation Sector</option>
                 </select>
             </div>
 
-            <div th:class="${#fields.hasErrors('innovationArea')}? 'form-group error':'form-group'">
+            <div th:class="${#fields.hasErrors('innovationAreaCategoryId')}? 'form-group error':'form-group'">
                 <label class="form-label" for="innovationArea">
                     <span class="form-label-bold">Innovation area</span>
-                    <span th:if="${#fields.hasErrors('innovationArea')}" th:remove="tag">
-                          <span class="error-message"  th:each="err : ${#fields.errors('innovationArea')}" th:text="${err}" />
+                    <span th:if="${#fields.hasErrors('innovationAreaCategoryId')}" th:remove="tag">
+                          <span class="error-message"  th:each="err : ${#fields.errors('innovationAreaCategoryId')}" th:text="${err}" />
                     </span>
                 </label>
                 <select class="form-control width-x-large"
-                        th:field="${form.innovationArea}"
+                        th:field="${form.innovationAreaCategoryId}"
                         id="innovationArea"
                         required="required"
                         th:attr="data-required-errormessage=#{validation.initialdetailsform.innovationareacategoryid.required}">
-                    <option value="" disabled="disabled" th:selected="${form.innovationArea == null}">Please select &hellip;</option>
-                    <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${form.innovationArea == innovationArea.id}">Innovation Area</option>
+                    <option value="" disabled="disabled" th:selected="${form.innovationAreaCategoryId == null}">Please select &hellip;</option>
+                    <option th:each="(innovationArea : ${model.innovationAreas})" th:text="${innovationArea.name}" th:value="${innovationArea.id}" th:selected="${form.innovationAreaCategoryId == innovationArea.id}">Innovation Area</option>
                 </select>
             </div>
 
@@ -188,48 +188,20 @@
                         </div>
                     </div>
                     <div class="date-group">
-                        <div class="hour">
-                            <label class="form-label" for="closeDate-hour">
-                                <div>Hour</div>
-                            </label>
-                            <input id="closeDate-hour"
-                                   th:class="${#fields.hasErrors('closeDate.hour') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
-                                   type="number"
-                                   placeholder="DD"
-                                   required="required"
-                                   th:readonly="${!form.closeDate.editable}"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateday.required}"
-                                   th:field="${form.closeDate.hour}" />
-                        </div>
-                        <div class="month">
-                            <label class="form-label" for="closeDate-minute">
-                                <span>Month</span>
-                            </label>
-                            <input th:class="${#fields.hasErrors('closeDate.minute') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
-                                   type="number"
-                                   placeholder="MM"
-                                   required="required"
-                                   id="closeDate-minute"
-                                   th:readonly="${!form.closeDate.editable}"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdatemonth.required}"
-                                   th:field="${form.closeDate.minute}" />
-                        </div>
-                        <div class="year">
-                            <label class="form-label" for="closeDate-am">
-                                <span>am/pm</span>
-                            </label>
-                            <select th:class="${#fields.hasErrors('closeDate.am') ? 'form-control field-error width-extra-small' : 'form-control width-extra-small'}"
-                                   id="closeDate-am"
-                                   type="number"
-                                   placeholder="YYYY"
-                                   required="required"
-                                    th:readonly="${!form.closeDate.editable}"
-                                   th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
-                                   th:field="${form.closeDate.am}" >
-                                <option th:selected="${form.closeDate.am}" value="1">am</option>
-                                <option th:selected="${!form.closeDate.am}" value="0">pm</option>
-                            </select>
-                        </div>
+                        <label class="form-label" for="closeDate-time">
+                            <span>Time</span>
+                        </label>
+                        <select th:class="${#fields.hasErrors('closeDate.time') ? 'form-control field-error' : 'form-control'}"
+                                id="closeDate-time"
+                                type="number"
+                                placeholder="YYYY"
+                                required="required"
+                                th:readonly="${!form.closeDate.editable}"
+                                th:attr="data-required-errormessage=#{validation.initialdetailsform.openingdateyear.required}"
+                                th:field="${form.closeDate.time}" >
+                            <option th:each="time : ${T(org.innovateuk.ifs.competitionsetup.form.MilestoneTime).values()}"
+                                    th:text="${time.display}" th:value="${time}" th:selected="${time == form.closeDate.time}"></option>
+                        </select>
                     </div>
                 </div>
             </fieldset>

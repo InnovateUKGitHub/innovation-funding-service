@@ -41,8 +41,8 @@ public class NonIfsDetailsFormPopulatorTest {
 
         assertThat(form.getTitle(), equalTo(COMPETITION_NAME));
         assertThat(form.getUrl(), equalTo(COMPETITION_URL));
-        assertThat(form.getInnovationSector(), equalTo(INNOVATION_SECTOR));
-        assertThat(form.getInnovationArea(), equalTo(INNOVATION_AREA));
+        assertThat(form.getInnovationSectorCategoryId(), equalTo(INNOVATION_SECTOR));
+        assertThat(form.getInnovationAreaCategoryId(), equalTo(INNOVATION_AREA));
         assertThat(form.getApplicantNotifiedDate().getDate(), equalTo(NOTIFIED));
         assertThat(form.getOpenDate().getDate(), equalTo(OPEN));
         assertThat(form.getCloseDate().getDate(), equalTo(CLOSE));

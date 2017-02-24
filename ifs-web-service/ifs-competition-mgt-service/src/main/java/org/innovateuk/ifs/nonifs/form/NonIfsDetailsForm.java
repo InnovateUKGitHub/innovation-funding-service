@@ -15,14 +15,17 @@ public class NonIfsDetailsForm {
     @NotNull
     private String title;
     @NotNull
-    private Long innovationSector;
+    private Long innovationSectorCategoryId;
     @NotNull
-    private Long innovationArea;
+    private Long innovationAreaCategoryId;
     @Valid
+    @NotNull
     private MilestoneRowForm openDate;
     @Valid
+    @NotNull
     private MilestoneRowForm closeDate;
     @Valid
+    @NotNull
     private MilestoneRowForm applicantNotifiedDate;
     @NotNull
     private String url;
@@ -35,20 +38,20 @@ public class NonIfsDetailsForm {
         this.title = title;
     }
 
-    public Long getInnovationSector() {
-        return innovationSector;
+    public Long getInnovationSectorCategoryId() {
+        return innovationSectorCategoryId;
     }
 
-    public void setInnovationSector(Long innovationSector) {
-        this.innovationSector = innovationSector;
+    public void setInnovationSectorCategoryId(Long innovationSectorCategoryId) {
+        this.innovationSectorCategoryId = innovationSectorCategoryId;
     }
 
-    public Long getInnovationArea() {
-        return innovationArea;
+    public Long getInnovationAreaCategoryId() {
+        return innovationAreaCategoryId;
     }
 
-    public void setInnovationArea(Long innovationArea) {
-        this.innovationArea = innovationArea;
+    public void setInnovationAreaCategoryId(Long innovationAreaCategoryId) {
+        this.innovationAreaCategoryId = innovationAreaCategoryId;
     }
 
     public MilestoneRowForm getOpenDate() {
@@ -93,8 +96,8 @@ public class NonIfsDetailsForm {
 
         return new EqualsBuilder()
                 .append(title, that.title)
-                .append(innovationSector, that.innovationSector)
-                .append(innovationArea, that.innovationArea)
+                .append(innovationSectorCategoryId, that.innovationSectorCategoryId)
+                .append(innovationAreaCategoryId, that.innovationAreaCategoryId)
                 .append(openDate, that.openDate)
                 .append(closeDate, that.closeDate)
                 .append(applicantNotifiedDate, that.applicantNotifiedDate)
@@ -106,8 +109,8 @@ public class NonIfsDetailsForm {
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
                 .append(title)
-                .append(innovationSector)
-                .append(innovationArea)
+                .append(innovationSectorCategoryId)
+                .append(innovationAreaCategoryId)
                 .append(openDate)
                 .append(closeDate)
                 .append(applicantNotifiedDate)
