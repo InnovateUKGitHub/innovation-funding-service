@@ -126,8 +126,6 @@ Alert should not show If research participation is below the maximum level
     Then the user should see the text in the page    The participation levels of this project are within the required range
     [Teardown]
 
-
-
 *** Keywords ***
 
 the finance Project cost breakdown calculations should be correct
