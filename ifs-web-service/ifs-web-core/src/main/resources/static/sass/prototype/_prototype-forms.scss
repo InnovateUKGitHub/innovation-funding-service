@@ -271,5 +271,17 @@ select[disabled]{
       margin-top: 0.5em;
     }
   }
+}
 
+/*----- Toggle password text ----*/
+.password-toggle-container{
+  display: inline-block;
+  position: relative;
+  width: 50%;
+}
+
+.password-toggle{
+  position: absolute;
+  top: 0.36em;
+  right: 0.3em;
 }
