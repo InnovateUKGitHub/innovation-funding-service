@@ -31,5 +31,7 @@ public interface CompetitionsRestService {
     RestResult<Void> returnToSetup(Long competitionId);
     RestResult<Void> closeAssessment(Long competitionId);
     RestResult<Void> notifyAssessors(Long competitionId);
+
+    RestResult<Void> releaseFeedback(Long competitionId);
     RestResult<CompetitionResource> createNonIfs();
 }

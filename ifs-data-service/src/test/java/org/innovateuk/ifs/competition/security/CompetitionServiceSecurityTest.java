@@ -46,7 +46,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testFindAll() {
+    public void findAll() {
         setLoggedInUser(null);
 
         ServiceResult<List<CompetitionResource>> results = classUnderTest.findAll();
@@ -58,7 +58,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testGetCompetitionById() {
+    public void getCompetitionById() {
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.getCompetitionById(1L), () -> {
@@ -69,7 +69,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testFindLiveCompetitions() {
+    public void findLiveCompetitions() {
         setLoggedInUser(null);
 
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findLiveCompetitions();
@@ -80,7 +80,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testFindProjectSetupCompetitions() {
+    public void findProjectSetupCompetitions() {
         setLoggedInUser(null);
 
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findProjectSetupCompetitions();
@@ -91,7 +91,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testFindUpcomingCompetitions() {
+    public void findUpcomingCompetitions() {
         setLoggedInUser(null);
 
         ServiceResult<List<CompetitionSearchResultItem>> results = classUnderTest.findUpcomingCompetitions();
@@ -102,7 +102,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testCountCompetitions() {
+    public void countCompetitions() {
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.countCompetitions(), () -> {
@@ -111,7 +111,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testSearchCompetitions() {
+    public void searchCompetitions() {
         setLoggedInUser(null);
 
         assertAccessDenied(() -> classUnderTest.searchCompetitions("string", 1, 1), () -> {
@@ -120,13 +120,18 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
     }
 
     @Test
-    public void testCloseAssessment() {
+    public void closeAssessment() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessors(1L), PROJECT_FINANCE, COMP_ADMIN);
     }
 
     @Test
-    public void testNotifyAssessors() {
+    public void notifyAssessors() {
         testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.notifyAssessors(1L), PROJECT_FINANCE, COMP_ADMIN);
+    }
+
+    @Test
+    public void releaseFeedback() {
+        testOnlyAUserWithOneOfTheGlobalRolesCan(() -> classUnderTest.releaseFeedback(1L), PROJECT_FINANCE, COMP_ADMIN);
     }
 
     /**
@@ -182,6 +187,11 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
 
         @Override
         public ServiceResult<Void> notifyAssessors(Long competitionId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<Void> releaseFeedback(Long competitionId) {
             return null;
         }
 

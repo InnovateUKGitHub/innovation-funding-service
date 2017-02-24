@@ -214,6 +214,7 @@
                                 <button type="submit"
                                         th:case="'RELEASE_FEEDBACK'"
                                         th:if="${model.competitionStatus.name() == 'ASSESSOR_FEEDBACK'}"
+                                        th:formaction="@{/competition/{competitionId}/release-feedback(competitionId=${model.competitionId})}"
                                         class="button button-large">Release feedback
                                 </button>
                             </th:block>

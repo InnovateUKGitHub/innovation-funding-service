@@ -26,7 +26,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static java.util.Optional.ofNullable;
-import static org.innovateuk.ifs.category.resource.CategoryType.*;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -141,6 +140,13 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     public ServiceResult<Void> notifyAssessors(Long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.notifyAssessors(LocalDateTime.now());
+        return serviceSuccess();
+    }
+
+    @Override
+    public ServiceResult<Void> releaseFeedback(Long competitionId) {
+        Competition competition = competitionRepository.findById(competitionId);
+        competition.releaseFeedback(LocalDateTime.now());
         return serviceSuccess();
     }
 }
