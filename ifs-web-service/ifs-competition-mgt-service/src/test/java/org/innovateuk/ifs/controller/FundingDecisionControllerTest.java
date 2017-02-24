@@ -45,7 +45,7 @@ public class FundingDecisionControllerTest extends BaseControllerMockMVCTest<Fun
         ApplicationSummaryResource app9 = app(9L);
         ApplicationSummaryResource app10 = app(10L);
         applicationSummaries.setContent(asList(app8, app9, app10));
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(123L, null, 0, Integer.MAX_VALUE)).thenReturn(applicationSummaries);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(123L, null, 0, Integer.MAX_VALUE, null)).thenReturn(applicationSummaries);
     }
     
     private ApplicationSummaryResource app(Long id) {
