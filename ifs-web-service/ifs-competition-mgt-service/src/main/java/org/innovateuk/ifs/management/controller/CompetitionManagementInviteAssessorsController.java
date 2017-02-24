@@ -13,7 +13,6 @@ import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
-import org.innovateuk.ifs.management.model.AssessorProfileModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsInviteModelPopulator;
 import org.innovateuk.ifs.management.model.InviteAssessorsOverviewModelPopulator;
@@ -27,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.lang.String.format;
@@ -57,9 +57,6 @@ public class CompetitionManagementInviteAssessorsController {
     @Autowired
     private InviteAssessorsOverviewModelPopulator inviteAssessorsOverviewModelPopulator;
 
-    @Autowired
-    private AssessorProfileModelPopulator assessorProfileModelPopulator;
-
     @RequestMapping(method = RequestMethod.GET)
     public String assessors(@PathVariable("competitionId") Long competitionId) {
         return format("redirect:/competition/%s/assessors/find", competitionId);
@@ -68,35 +65,40 @@ public class CompetitionManagementInviteAssessorsController {
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public String find(Model model,
                        @PathVariable("competitionId") Long competitionId,
+                       @RequestParam(defaultValue = "0") int page,
+                       @RequestParam Optional<Long> innovationArea,
                        @RequestParam MultiValueMap<String, String> queryParams) {
-
-        return doViewFind(model, competitionId, queryParams);
+        return doViewFind(model, competitionId, page, innovationArea, queryParams);
     }
 
     @RequestMapping(value = "/find", params = {"add"}, method = RequestMethod.POST)
     public String addInviteFromFindView(Model model,
                                         @PathVariable("competitionId") Long competitionId,
-                                        @RequestParam(name = "add") String email,
+                                        @RequestParam("add") String email,
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam Optional<Long> innovationArea,
                                         @RequestParam MultiValueMap<String, String> queryParams) {
         inviteUser(email, competitionId).getSuccessObjectOrThrowException();
-        return doViewFind(model, competitionId, queryParams);
+        return doViewFind(model, competitionId, page, innovationArea, queryParams);
     }
 
     @RequestMapping(value = "/find", params = {"remove"}, method = RequestMethod.POST)
     public String removeInviteFromFindView(Model model,
                                            @PathVariable("competitionId") Long competitionId,
-                                           @RequestParam(name = "remove") String email,
+                                           @RequestParam("remove") String email,
+                                           @RequestParam(defaultValue = "0") int page,
+                                           @RequestParam Optional<Long> innovationArea,
                                            @RequestParam MultiValueMap<String, String> queryParams) {
         deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
-        return doViewFind(model, competitionId, queryParams);
+        return doViewFind(model, competitionId, page, innovationArea, queryParams);
     }
 
     @RequestMapping(value = "/invite", method = RequestMethod.GET)
     public String invite(Model model,
                          @PathVariable("competitionId") Long competitionId,
-                         @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
+                         @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form,
                          @RequestParam MultiValueMap<String, String> queryParams
-                         ) {
+    ) {
         if (form.getInvites().isEmpty()) {
             form.getInvites().add(new InviteNewAssessorsRowForm());
         }
@@ -109,7 +111,7 @@ public class CompetitionManagementInviteAssessorsController {
                                              @PathVariable("competitionId") Long competitionId,
                                              @RequestParam(name = "remove") String email,
                                              @RequestParam MultiValueMap<String, String> queryParams,
-                                             @SuppressWarnings("unused") @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
+                                             @ModelAttribute(FORM_ATTR_NAME) InviteNewAssessorsForm form) {
         deleteInvite(email, competitionId);
         return invite(model, competitionId, form, queryParams);
     }
@@ -181,10 +183,17 @@ public class CompetitionManagementInviteAssessorsController {
         return competitionInviteRestService.deleteInvite(email, competitionId).toServiceResult();
     }
 
-    private String doViewFind(Model model, Long competitionId, MultiValueMap<String, String> queryParams) {
+    private String doViewFind(Model model,
+                              Long competitionId,
+                              int page,
+                              Optional<Long> innovationArea,
+                              MultiValueMap<String, String> queryParams) {
         CompetitionResource competition = competitionService.getById(competitionId);
-        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition));
-        model.addAttribute("originQuery", buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams));
+
+        String originQuery = buildOriginQueryString(AssessorProfileOrigin.ASSESSOR_FIND, queryParams);
+
+        model.addAttribute("model", inviteAssessorsFindModelPopulator.populateModel(competition, page, innovationArea, originQuery));
+        model.addAttribute("originQuery", originQuery);
 
         return "assessors/find";
     }

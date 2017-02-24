@@ -25,6 +25,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.validation.BindingResult;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
@@ -32,6 +33,8 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static java.util.stream.Collectors.joining;
 import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
@@ -122,11 +125,42 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Test
     public void find() throws Exception {
+        int page = 2;
+        Optional<Long> innovationArea = of(3L);
+
         AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
                 .withContent(setUpAvailableAssessorResources())
                 .build();
 
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId())).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
+
+        MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId())
+                .param("page", "2")
+                .param("innovationArea", "3"))
+                .andExpect(status().isOk())
+                .andExpect(model().attributeExists("model"))
+                .andExpect(view().name("assessors/find"))
+                .andReturn();
+
+        assertCompetitionDetails(competition, result);
+        assertAvailableAssessors(availableAssessorPageResource.getContent(), result);
+
+        InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
+        inOrder.verify(competitionService).getById(competition.getId());
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
+        inOrder.verifyNoMoreInteractions();
+    }
+
+    @Test
+    public void find_defaultParams() throws Exception {
+        int page = 0;
+        Optional<Long> innovationArea = empty();
+
+        AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
+                .withContent(emptyList())
+                .build();
+
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(get("/competition/{competitionId}/assessors/find", competition.getId()))
                 .andExpect(status().isOk())
@@ -139,7 +173,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId());
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
@@ -196,6 +230,8 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
 
     @Test
     public void addInviteFromFindView() throws Exception {
+        int page = 1;
+        Optional<Long> innovationArea = of(4L);
         String email = "firstname.lastname@example.com";
 
         AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
@@ -203,11 +239,15 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         ExistingUserStagedInviteResource expectedExistingUserStagedInviteResource = new ExistingUserStagedInviteResource(email, competition.getId());
-        when(competitionInviteRestService.inviteUser(expectedExistingUserStagedInviteResource)).thenReturn(restSuccess(newCompetitionInviteResource().build()));
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId())).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.inviteUser(expectedExistingUserStagedInviteResource))
+                .thenReturn(restSuccess(newCompetitionInviteResource().build()));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea))
+                .thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("add", email))
+                .param("add", email)
+                .param("page", "1")
+                .param("innovationArea", "4"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/find"))
@@ -219,12 +259,14 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
         inOrder.verify(competitionInviteRestService).inviteUser(expectedExistingUserStagedInviteResource);
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId());
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 
     @Test
     public void removeInviteFromFindView() throws Exception {
+        int page = 1;
+        Optional<Long> innovationArea = of(4L);
         String email = "firstname.lastname@example.com";
 
         AvailableAssessorPageResource availableAssessorPageResource = newAvailableAssessorPageResource()
@@ -232,10 +274,12 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
                 .build();
 
         when(competitionInviteRestService.deleteInvite(email, competition.getId())).thenReturn(restSuccess());
-        when(competitionInviteRestService.getAvailableAssessors(competition.getId())).thenReturn(restSuccess(availableAssessorPageResource));
+        when(competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)).thenReturn(restSuccess(availableAssessorPageResource));
 
         MvcResult result = mockMvc.perform(post("/competition/{competitionId}/assessors/find", competition.getId())
-                .param("remove", email))
+                .param("remove", email)
+                .param("page", "1")
+                .param("innovationArea", "4"))
                 .andExpect(status().isOk())
                 .andExpect(model().attributeExists("model"))
                 .andExpect(view().name("assessors/find"))
@@ -247,7 +291,7 @@ public class CompetitionManagementInviteAssessorsControllerTest extends BaseCont
         InOrder inOrder = inOrder(competitionService, competitionInviteRestService);
         inOrder.verify(competitionInviteRestService).deleteInvite(email, competition.getId());
         inOrder.verify(competitionService).getById(competition.getId());
-        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId());
+        inOrder.verify(competitionInviteRestService).getAvailableAssessors(competition.getId(), page, innovationArea);
         inOrder.verifyNoMoreInteractions();
     }
 

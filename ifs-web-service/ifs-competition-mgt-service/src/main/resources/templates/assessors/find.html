@@ -77,10 +77,10 @@
                 </div>
             </div>
 
-            <!--/* TODO INFUND-6403
-            <form>
+            <form action="GET">
                 <div class="search-filters">
                     <div class="grid-row">
+                        <!--/*
                         <div class="column-half">
                             <div class="form-group">
                                 <label for="filterInnovationType">Type</label>
@@ -89,11 +89,12 @@
                                 </select>
                             </div>
                         </div>
+                        */-->
 
                         <div class="column-half">
                             <div class="form-group">
                                 <label for="filterInnovationArea">Innovation area</label>
-                                <select name="filterInnovationArea" id="filterInnovationArea" class="form-control">
+                                <select name="innovationArea" id="filterInnovationArea" class="form-control">
                                     <option selected="selected">Any</option>
                                 </select>
                             </div>
@@ -101,6 +102,7 @@
                     </div>
 
                     <div class="grid-row">
+                        <!--/*
                         <div class="column-half">
                              <div class="form-group">
                                  <label class="form-label" for="filterSearch">Keyword</label>
@@ -114,6 +116,7 @@
                                  <option value="Show all">Show all</option>
                              </select>
                         </div>
+                        */-->
 
                         <div class="column-quarter alignright">
                             <button class="button button-clear">Clear filters</button>
@@ -123,6 +126,7 @@
                 </div>
             </form>
 
+            <!-- /*
             <div class="grid-row sorting">
                 <div class="column-half">
                     <span class="heading-large">20</span> assessors
@@ -165,9 +169,8 @@
                             </td>
                             <td class="alignright">
                                 <button class="button button-secondary" name="add"
-                                        th:value="${assessor.email}"
-                                        th:unless="${assessor.added}">
-                                    Add<span class="hidden" th:text="${assessor.name}"> John Barnes</span>
+                                        th:value="${assessor.email}">
+                                    Add <span class="hidden" th:text="${assessor.name}">John Barnes</span>
                                 </button>
                             </td>
                         </tr>
@@ -177,6 +180,8 @@
                     </tbody>
                 </table>
             </form>
+
+            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
             <th:block th:insert="fragments/layout :: main-content-end" />
         </main>

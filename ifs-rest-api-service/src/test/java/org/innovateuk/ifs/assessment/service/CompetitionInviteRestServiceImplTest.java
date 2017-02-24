@@ -7,8 +7,11 @@ import org.innovateuk.ifs.invite.resource.*;
 import org.junit.Test;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.lang.String.format;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
@@ -97,15 +100,44 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getAvailableAssessors() throws Exception {
         long competitionId = 1L;
+        int page = 1;
+        Optional<Long> innovationArea = of(2L);
+
         List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
 
         AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
                 .withContent(assessorItems)
                 .build();
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getAvailableAssessors", competitionId), AvailableAssessorPageResource.class, expected);
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?page=1&innovationArea=2", restUrl, "getAvailableAssessors", competitionId),
+                AvailableAssessorPageResource.class,
+                expected
+        );
 
-        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId).getSuccessObject();
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, innovationArea).getSuccessObject();
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getAvailableAssessors_noInnovationArea() throws Exception {
+        long competitionId = 1L;
+        int page = 1;
+        Optional<Long> innovationArea = empty();
+
+        List<AvailableAssessorResource> assessorItems = newAvailableAssessorResource().build(2);
+
+        AvailableAssessorPageResource expected = newAvailableAssessorPageResource()
+                .withContent(assessorItems)
+                .build();
+
+        setupGetWithRestResultExpectations(
+                format("%s/%s/%s?page=1", restUrl, "getAvailableAssessors", competitionId),
+                AvailableAssessorPageResource.class,
+                expected
+        );
+
+        AvailableAssessorPageResource actual = service.getAvailableAssessors(competitionId, page, innovationArea).getSuccessObject();
         assertEquals(expected, actual);
     }
 

@@ -5,6 +5,7 @@ import org.innovateuk.ifs.email.resource.EmailContent;
 import org.innovateuk.ifs.invite.resource.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * REST service for managing {@link org.innovateuk.ifs.invite.resource.InviteResource} to {@link org.innovateuk.ifs.competition.resource.CompetitionResource }
@@ -23,7 +24,7 @@ public interface CompetitionInviteRestService {
 
     RestResult<Boolean> checkExistingUser(String inviteHash);
 
-    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId);
+    RestResult<AvailableAssessorPageResource> getAvailableAssessors(long competitionId, int page, Optional<Long> innovationArea);
 
     RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(long competitionId);
 
