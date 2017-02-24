@@ -78,6 +78,19 @@ public class FreemarkerNotificationTemplateRendererIntegrationTest extends BaseI
     }
 
     @Test
+    public void testFundingApplicationEmail() throws URISyntaxException, IOException {
+
+        Map<String, Object> templateArguments = asMap(
+                "subject", "Subject of message",
+                "message", "Body of message."
+        );
+
+        assertRenderedEmailTemplateContainsExpectedLines("application_funding_subject.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("application_funding_text_plain.txt", templateArguments);
+        assertRenderedEmailTemplateContainsExpectedLines("application_funding_text_html.html", templateArguments);
+    }
+
+    @Test
     public void testFundedApplicationAssessorFeedbackAvailableEmail() throws URISyntaxException, IOException {
 
         Map<String, Object> templateArguments = asMap(
