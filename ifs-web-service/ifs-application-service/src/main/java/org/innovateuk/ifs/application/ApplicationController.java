@@ -14,6 +14,7 @@ import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.SectionResource;
 import org.innovateuk.ifs.application.service.*;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.file.controller.viewmodel.OptionalFileDetailsViewModel;
@@ -42,6 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.innovateuk.ifs.commons.rest.ValidationMessages.collectValidationMessages;
 import static org.innovateuk.ifs.competition.resource.CompetitionStatus.PROJECT_SETUP;
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
@@ -208,7 +210,11 @@ public class ApplicationController {
 
             if (markQuestionCompleteId != null && StringUtils.isNotEmpty(questionFormInputValue)) {
                 ProcessRoleResource processRole = processRoleService.findProcessRole(user.getId(), applicationId);
-                questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
+                List<ValidationMessages> markAsCompleteErrors = questionService.markAsComplete(markQuestionCompleteId, applicationId, processRole.getId());
+
+                if (collectValidationMessages(markAsCompleteErrors).hasErrors()) {
+                    questionService.markAsInComplete(markQuestionCompleteId, applicationId, processRole.getId());
+                }
             }
         }
 
