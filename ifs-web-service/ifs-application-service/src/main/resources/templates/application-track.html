@@ -22,13 +22,13 @@
           <div class="progress-info">
                 <h2 class="heading-medium">Submitted application</h2>
                 <p>Your application '<strong th:text="${currentApplication.name}" />' was submitted into the competition '<strong th:text="${currentCompetition.name}"/>'
-                    <div th:remove="tag" th:if="${currentApplication.submittedDate != null}">
+                    <th:block th:if="${currentApplication.submittedDate != null}">
                       on
-                      <div th:remove="tag" th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
+                      <th:block th:text="${#temporals.monthName(currentApplication.submittedDate)}" />
                       <th:block th:insert="fragments/elements :: ordinal-day (date=${currentApplication.submittedDate})" />
                       at
-                      <div th:remove="tag" th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
-                    </div>
+                      <th:block th:text="${#strings.toLowerCase(#temporals.format(currentApplication.submittedDate, 'hh:mma'))}" />.
+                    </th:block>
                 </p>
                 <p class="linkbar">
                   <a th:href="@{/application/{id}/summary(id=${currentApplication.getId()})}">View application</a>
@@ -54,10 +54,10 @@
         <div class="progress-info">
     				<h2 class="heading-medium">Decision notification</h2>
     				<p>You will be notified of our decision by
-            <strong>
+            <strong th:if="${currentCompetition.fundersPanelDate != null}">
               <th:block th:insert="fragments/elements :: ordinal-day (date=${currentCompetition.fundersPanelDate})" />
-              <div th:remove="tag" th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
-              <div th:remove="tag" th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" />
+              <th:block th:text="${#temporals.monthName(currentCompetition.fundersPanelDate)}" />
+              <th:block th:text="${#temporals.year(currentCompetition.fundersPanelDate)}" />
             </strong>.
           </p>
 <p>We will email you and your project partners to tell you our decision.</p>

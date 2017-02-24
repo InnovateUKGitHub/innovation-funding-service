@@ -1,7 +1,7 @@
 package org.innovateuk.ifs.competition.populator;
 
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.category.resource.InnovationAreaResource;
-import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemResource;
@@ -19,7 +19,7 @@ import java.util.Optional;
 import static org.innovateuk.ifs.category.builder.InnovationAreaResourceBuilder.newInnovationAreaResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemPageResourceBuilder.newPublicContentItemPageResource;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentItemResourceBuilder.newPublicContentItemResource;
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -32,7 +32,7 @@ public class CompetitionSearchPopulatorTest {
     private PublicContentItemRestServiceImpl publicContentItemRestService;
 
     @Mock
-    private CategoryRestService categoryRestService;
+    private CategoryService categoryService;
 
     @Test
     public void createItemSearchViewModel() throws Exception {
@@ -49,17 +49,16 @@ public class CompetitionSearchPopulatorTest {
         RestResult<PublicContentItemPageResource> restResult = RestResult.restSuccess(publicContentItemPageResourceList);
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource().build(2);
-        RestResult<List<InnovationAreaResource>> categories = RestResult.restSuccess(innovationAreaResources);
 
         when(publicContentItemRestService.getByFilterValues(expectedInnovationAreaId,
                 expectedKeywords, expectedPageNumber, CompetitionSearchViewModel.PAGE_SIZE)).thenReturn(restResult);
-        when(categoryRestService.getInnovationAreas()).thenReturn(categories);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
 
         verify(publicContentItemRestService, times(1)).getByFilterValues(expectedInnovationAreaId,expectedKeywords, expectedPageNumber,CompetitionSearchViewModel.PAGE_SIZE);
-        verify(categoryRestService, times(1)).getInnovationAreas();
+        verify(categoryService, times(1)).getInnovationAreas();
 
         assertEquals(publicContentItemResources, viewModel.getPublicContentItems());
         assertEquals(publicContentItemPageResourceList.getTotalElements(), (long) viewModel.getTotalResults());
@@ -81,11 +80,10 @@ public class CompetitionSearchPopulatorTest {
         RestResult<PublicContentItemPageResource> restResult = RestResult.restSuccess(publicContentItemPageResourceList);
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource().build(2);
-        RestResult<List<InnovationAreaResource>> categories = RestResult.restSuccess(innovationAreaResources);
 
         when(publicContentItemRestService.getByFilterValues(expectedInnovationAreaId,
                 expectedKeywords, expectedPageNumber, CompetitionSearchViewModel.PAGE_SIZE)).thenReturn(restResult);
-        when(categoryRestService.getInnovationAreas()).thenReturn(categories);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
@@ -110,11 +108,10 @@ public class CompetitionSearchPopulatorTest {
         RestResult<PublicContentItemPageResource> restResult = RestResult.restSuccess(publicContentItemPageResourceList);
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource().build(2);
-        RestResult<List<InnovationAreaResource>> categories = RestResult.restSuccess(innovationAreaResources);
 
         when(publicContentItemRestService.getByFilterValues(expectedInnovationAreaId,
                 expectedKeywords, expectedPageNumber, CompetitionSearchViewModel.PAGE_SIZE)).thenReturn(restResult);
-        when(categoryRestService.getInnovationAreas()).thenReturn(categories);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
@@ -145,11 +142,10 @@ public class CompetitionSearchPopulatorTest {
         RestResult<PublicContentItemPageResource> restResult = RestResult.restSuccess(publicContentItemPageResourceList);
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource().build(2);
-        RestResult<List<InnovationAreaResource>> categories = RestResult.restSuccess(innovationAreaResources);
 
         when(publicContentItemRestService.getByFilterValues(expectedInnovationAreaId,
                 expectedKeywords, expectedPageNumber, CompetitionSearchViewModel.PAGE_SIZE)).thenReturn(restResult);
-        when(categoryRestService.getInnovationAreas()).thenReturn(categories);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
@@ -185,11 +181,10 @@ public class CompetitionSearchPopulatorTest {
         RestResult<PublicContentItemPageResource> restResult = RestResult.restSuccess(publicContentItemPageResourceList);
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource().build(2);
-        RestResult<List<InnovationAreaResource>> categories = RestResult.restSuccess(innovationAreaResources);
 
         when(publicContentItemRestService.getByFilterValues(expectedInnovationAreaId,
                 expectedKeywords, expectedPageNumber, CompetitionSearchViewModel.PAGE_SIZE)).thenReturn(restResult);
-        when(categoryRestService.getInnovationAreas()).thenReturn(categories);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
@@ -219,11 +214,10 @@ public class CompetitionSearchPopulatorTest {
         RestResult<PublicContentItemPageResource> restResult = RestResult.restSuccess(publicContentItemPageResourceList);
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource().build(2);
-        RestResult<List<InnovationAreaResource>> categories = RestResult.restSuccess(innovationAreaResources);
 
         when(publicContentItemRestService.getByFilterValues(expectedInnovationAreaId,
                 expectedKeywords, expectedPageNumber, CompetitionSearchViewModel.PAGE_SIZE)).thenReturn(restResult);
-        when(categoryRestService.getInnovationAreas()).thenReturn(categories);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
@@ -244,11 +238,10 @@ public class CompetitionSearchPopulatorTest {
         RestResult<PublicContentItemPageResource> restResult = RestResult.restSuccess(publicContentItemPageResourceList);
 
         List<InnovationAreaResource> innovationAreaResources = newInnovationAreaResource().build(2);
-        RestResult<List<InnovationAreaResource>> categories = RestResult.restSuccess(innovationAreaResources);
 
         when(publicContentItemRestService.getByFilterValues(expectedInnovationAreaId,
                 expectedKeywords, expectedPageNumber, CompetitionSearchViewModel.PAGE_SIZE)).thenReturn(restResult);
-        when(categoryRestService.getInnovationAreas()).thenReturn(categories);
+        when(categoryService.getInnovationAreas()).thenReturn(innovationAreaResources);
 
         CompetitionSearchViewModel viewModel = competitionSearchPopulator.createItemSearchViewModel(expectedInnovationAreaId, expectedKeywords, expectedPageNumber);
 
