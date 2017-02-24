@@ -111,8 +111,7 @@
             <a th:if="${model.collaborationAgreementFileDetails}"
                th:href="@{/project/{id}/partner/documents/collaboration-agreement(id=${model.projectId})}"
                class="uploaded-file" th:text="${model.collaborationAgreementFileDetails.filename}">The-uploaded-file-example.pdf</a>
-            <p th:unless="${model.collaborationAgreementFileDetails}" class="uploaded-file">Awaiting upload by lead
-                partner</p>
+            <p th:unless="${model.collaborationAgreementFileDetails}" class="uploaded-file">Awaiting upload by the Project Manager</p>
         </th:block>
     </div>
 
@@ -174,8 +173,7 @@
             <a th:if="${model.exploitationPlanFileDetails}"
                th:href="@{/project/{id}/partner/documents/exploitation-plan(id=${model.projectId})}"
                class="uploaded-file" th:text="${model.exploitationPlanFileDetails.filename}">The-uploaded-file-example.pdf</a>
-            <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by lead
-                partner</p>
+            <p th:unless="${model.exploitationPlanFileDetails}" class="uploaded-file">Awaiting upload by the Project Manager</p>
         </th:block>
     </div>
     <p>Once the documents are uploaded they must be sent to Innovate UK.</p>
