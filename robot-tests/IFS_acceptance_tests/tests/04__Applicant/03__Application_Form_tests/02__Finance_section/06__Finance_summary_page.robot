@@ -97,7 +97,7 @@ Green check should show when the finances are complete
 Alert shows If the academic research participation is too high
     [Documentation]    INFUND-1436
     [Tags]    Email
-    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their project
+    [Setup]    Login new application invite academic    ${test_mailbox_one}+academictest@gmail.com    Invitation to collaborate in ${OPEN_COMPETITION_NAME}    participate in their application
     Given guest user log-in    ${test_mailbox_one}+academictest@gmail.com    Passw0rd123
     And The user navigates to the academic application finances
     And The user clicks the button/link       link=Your project costs
@@ -131,31 +131,31 @@ Alert should not show If research participation is below the maximum level
 *** Keywords ***
 
 the finance Project cost breakdown calculations should be correct
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £385
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £202,169
-    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £100,837
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(1) td:nth-of-type(3)    £0
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(4) td:nth-of-type(1)    £201,398
+    the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(2) td:nth-of-type(1)    £100,452
     the user sees the text in the element    css=.project-cost-breakdown tr:nth-of-type(3) td:nth-of-type(1)    £495
 
 the finance summary calculations should be correct
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £202,169
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(1)    £201,398
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(1) td:nth-of-type(2)    30%
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(2) td:nth-of-type(2)    30%
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(3) td:nth-of-type(2)    100%
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £58,529
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(3)    £58,298
     the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(4)    £2,468
-    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £141,172
+    the user sees the text in the element    css=.finance-summary tr:nth-of-type(4) td:nth-of-type(5)    £140,632
 
 the finance summary table in Your Finances has correct values for lead
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(1)    Total project costs
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    £100,837
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(1)    £100,452
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(2)    % Grant
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(2)    30%
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(3)    Funding sought
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(3)    £29,017
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(3)    £28,901
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(4)    Other public sector funding
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(4)    £1,234
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(5)    Contribution to project
-    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £70,586
+    the user sees the text in the element    css=.form-group tr:nth-of-type(1) td:nth-of-type(5)    £70,316
 
 the finance summary table in Your Finances has correct values for collaborator
     the user sees the text in the element    css=.form-group tr:nth-of-type(1) th:nth-of-type(1)    Total project costs
