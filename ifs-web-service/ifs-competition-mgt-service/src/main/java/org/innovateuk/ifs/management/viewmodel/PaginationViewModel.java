@@ -17,7 +17,7 @@ public class PaginationViewModel {
     private long totalCount;
     private List<PaginationLinkViewModel> pageNames;
 
-    public PaginationViewModel(PageResource pageResource, String rootPath) {
+    public PaginationViewModel(PageResource pageResource, String existingQuery) {
         this.totalCount = pageResource.getTotalElements();
         this.hasPrevious = pageResource.hasPrevious();
         this.hasNext = pageResource.hasNext();
@@ -25,7 +25,7 @@ public class PaginationViewModel {
         this.currentPage = pageResource.getNumber();
         this.pageSize = pageResource.getSize();
         this.pageNames = IntStream.range(0,totalPages)
-                .mapToObj(i -> new PaginationLinkViewModel(i, pageSize, totalCount, rootPath))
+                .mapToObj(i -> new PaginationLinkViewModel(i, pageSize, totalCount, existingQuery))
                 .collect(toList());
     }
 
