@@ -388,13 +388,13 @@ the user populates the project growth table
 the user should view the project growth table
     the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(1)    Section
     the user should see the text in the element    css=table.extra-margin-bottom tr:nth-of-type(1) th:nth-of-type(2)    Last financial year (£)
-    the user should see the text in the element    jQuery=label[for="input-1182"]    Annual turnover
+    the user should see the text in the element    jQuery=tr:nth-child(1) td:nth-child(1) span    Annual turnover
     the user should see the element    jQuery=td input[value="65000"]
-    the user should see the text in the element    jQuery=label[for="input-1183"]    Annual profits
+    the user should see the text in the element    jQuery=tr:nth-child(2) td:nth-child(1) span    Annual profits
     the user should see the element    jQuery=td input[value="2000"]
-    the user should see the text in the element    jQuery=label[for="input-1184"]    Annual export
+    the user should see the text in the element    jQuery=tr:nth-child(3) td:nth-child(1) span    Annual export
     the user should see the element    jQuery=td input[value="3000"]
-    the user should see the text in the element    jQuery=label[for="input-1185"]    Research and development spend
+    the user should see the text in the element    jQuery=tr:nth-child(4) td:nth-child(1) span    Research and development spend
     the user should see the element    jQuery=td input[value="15000"]
 
 the user can edit the project growth table
