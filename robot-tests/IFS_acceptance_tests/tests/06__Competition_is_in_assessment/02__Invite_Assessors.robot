@@ -42,6 +42,7 @@ The User can Add and Remove Assessors
     [Documentation]    INFUND-6602 INFUND-6604 INFUND-6392 INFUND-6412 INFUND-6388
     [Tags]
     Given The user clicks the button/link    link=Find
+    And the user clicks the button/link    jQuery=a:contains(41 to)
     When The user clicks the button/link    jQuery=td:contains("Will Smith") ~ td .button:contains("Add")
     And The user clicks the button/link    link=Invite
     Then The user should see the text in the page    will.smith@gmail.com
@@ -57,6 +58,7 @@ The User can Add and Remove Assessors
 The user can select the profile link
     [Documentation]    INFUND-6669
     [Tags]
+    [Setup]  the user clicks the button/link    jQuery=a:contains(41 to)
     When the user clicks the button/link    link=Will Smith
     Then the user should see the text in the page    will.smith@gmail.com
     And the user should see the text in the page    028572565937
