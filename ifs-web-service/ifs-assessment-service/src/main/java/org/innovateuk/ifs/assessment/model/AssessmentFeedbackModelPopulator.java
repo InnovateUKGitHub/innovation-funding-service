@@ -23,11 +23,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 import java.util.Map;
 
+import static java.util.stream.Collectors.toList;
 import static org.innovateuk.ifs.commons.rest.RestResult.aggregate;
 import static org.innovateuk.ifs.form.resource.FormInputType.*;
 import static org.innovateuk.ifs.util.CollectionFunctions.flattenLists;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleToMap;
-import static java.util.stream.Collectors.toList;
 
 /**
  * Build the model for Assessment Feedback view.
