@@ -103,7 +103,7 @@ the user fills in the project costs
 
 the user has read only view once section is marked complete
     the user should not see the element   css=input
-    the user clicks the button/link     jQuery=button:contains("Return to finances")
+    the user clicks the button/link     jQuery=a:contains("Return to finances")
 
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
