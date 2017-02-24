@@ -308,11 +308,11 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
 
             ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem> updatedPair;
             if(isNew(applicationCost)){
-                updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.ADD);
+                updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.NEW);
             } else if(isRemoved(applicationCost, projectCost)){
                 updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.REMOVE);
             } else if(isUpdate(applicationCost, projectCost)) {
-                updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.UPDATE);
+                updatedPair = buildPairWithTypeOfChange(applicationCost, projectCost, costType, TypeOfChange.CHANGE);
             } else {
                 continue;
             }

@@ -37,7 +37,6 @@ import org.innovateuk.ifs.project.financecheck.eligibility.form.FinanceChecksEli
 import org.innovateuk.ifs.project.financecheck.eligibility.viewmodel.FinanceChecksEligibilityViewModel;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryConstraints;
 import org.innovateuk.ifs.project.financechecks.form.FinanceChecksQueryResponseForm;
-import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.project.financechecks.viewmodel.ProjectFinanceChecksViewModel;
 import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.project.resource.ProjectPartnerStatusResource;

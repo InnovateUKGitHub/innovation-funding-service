@@ -64,4 +64,13 @@ public enum FinanceRowType implements CostCategoryGenerator<FinanceRowType> {
     public String getName() {
         return name;
     }
+
+    public static FinanceRowType getByTypeName(String typeName){
+        for(FinanceRowType t : FinanceRowType.values()){
+            if(t.getType().equals(typeName)){
+                return t;
+            }
+        }
+        return null;
+    }
 }

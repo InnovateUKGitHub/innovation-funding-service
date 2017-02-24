@@ -2,8 +2,6 @@ package org.innovateuk.ifs.finance.resource.category;
 
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 
-import static org.innovateuk.ifs.finance.resource.category.TypeOfChange.UNKNOWN;
-
 /**
  * Used for returning a pair of rows that can be used to display how application finances were changed by project finance updates.
  * INFUND-4837
