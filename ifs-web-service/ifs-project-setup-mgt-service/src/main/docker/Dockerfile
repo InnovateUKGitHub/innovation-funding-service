@@ -9,6 +9,6 @@ VOLUME /tmp
 RUN sh -c 'touch /app.jar'
 ADD project-setup-management-1.0-SNAPSHOT.jar app.jar
 ENTRYPOINT exec java $JAVA_OPTS -jar app.jar
-HEALTHCHECK --interval=10s --timeout=5s \
+HEALTHCHECK --interval=15s --timeout=8s \
   CMD curl -f --connect-timeout 5 -m 5  http://localhost:8080/project-setup-management/health || exit 1
 
