@@ -67,8 +67,11 @@ public class CompetitionInviteController {
     }
 
     @RequestMapping(value = "/getCreatedInvites/{competitionId}", method = RequestMethod.GET)
-    public RestResult<List<AssessorCreatedInviteResource>> getCreatedInvites(@PathVariable Long competitionId) {
-        return competitionInviteService.getCreatedInvites(competitionId).toGetResponse();
+    public RestResult<AssessorCreatedInvitePageResource> getCreatedInvites(
+            @PathVariable long competitionId,
+            @PageableDefault(size = 20, sort = "firstName", direction = Sort.Direction.ASC) Pageable pageable
+    ) {
+        return competitionInviteService.getCreatedInvites(competitionId, pageable).toGetResponse();
     }
 
     @RequestMapping(value = "/getInvitationOverview/{competitionId}", method = RequestMethod.GET)

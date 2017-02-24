@@ -28,6 +28,7 @@ import static org.innovateuk.ifs.commons.error.Error.fieldError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AvailableAssessorPageResourceBuilder.newAvailableAssessorPageResource;
@@ -407,15 +408,28 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
+        int page = 0;
+        int pageSize = 20;
+
         List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource().build(2);
 
-        when(competitionInviteServiceMock.getCreatedInvites(competitionId)).thenReturn(serviceSuccess(expectedAssessorCreatedInviteResources));
+        AssessorCreatedInvitePageResource expectedPageResource = newAssessorCreatedInvitePageResource()
+                .withContent(expectedAssessorCreatedInviteResources)
+                .withNumber(page)
+                .withTotalElements(200L)
+                .withTotalPages(10)
+                .withSize(pageSize)
+                .build();
+
+        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+
+        when(competitionInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(content().json(toJson(expectedAssessorCreatedInviteResources)));
 
-        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId);
+        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }
 
     @Test
