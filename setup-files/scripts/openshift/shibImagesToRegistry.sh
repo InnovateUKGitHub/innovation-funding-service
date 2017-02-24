@@ -1,14 +1,15 @@
 #!/bin/bash
+set -e
 
 LDAP_VERSION=0.4.0
-IDP_VERSION=0.4.1
+IDP_VERSION=0.4.3
 SP_VERSION=0.4.0
 
 REGISTRY=docker-registry-default.apps.prod.ifs-test-clusters.com
 
 BASEDIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 cd $BASEDIR
-if [ -z shibImages ]; then
+if [ ! -d shibImages ]; then
     mkdir shibImages
 fi
 cd shibImages
