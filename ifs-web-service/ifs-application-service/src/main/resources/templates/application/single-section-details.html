@@ -3,7 +3,6 @@
 <body>
 
 <ul th:fragment="sectionDetails (question, questionAssignee, questionAssignees, responses, currentUser, userIsLeadApplicant, leadApplicant , section, currentApplication)" th:remove="tag">
-  <!--<li><div class="task"><h4 class="heading-small"><a href="#">Task 2</a></h4></div><div class="task-status-complete"><span>Completed</span></div></li>-->
   <th:block th:each="question : ${sectionQuestions.get(section.id)}">
     <li th:with="questionAssignee=(${questionAssignees.get(question.getId())})"
         th:id="'form-input-'+${question.getId()}">
@@ -18,12 +17,9 @@
         <th:block th:if="${userIsLeadApplicant}" th:insert="question-type/form-elements :: assign-buttons"  />
         <!--/* collabr */-->
         <th:block th:if="${!userIsLeadApplicant}" th:insert="question-type/form-elements :: assigned-to" />
-
       </th:block>
-
       <div class="task-status-complete"
            th:if="${(question.isMarkAsCompletedEnabled() and markedAsComplete.contains(question.id)) or completedSections.contains(section.id)}"><span>Completed</span></div>
-
     </li>
   </th:block>
 
