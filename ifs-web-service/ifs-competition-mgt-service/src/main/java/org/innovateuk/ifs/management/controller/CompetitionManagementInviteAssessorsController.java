@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.management.controller;
 
+import com.google.common.net.InetAddresses;
 import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
 import org.innovateuk.ifs.commons.rest.RestResult;
@@ -11,6 +12,7 @@ import org.innovateuk.ifs.invite.resource.ExistingUserStagedInviteResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteListResource;
 import org.innovateuk.ifs.invite.resource.NewUserStagedInviteResource;
 import org.innovateuk.ifs.management.controller.CompetitionManagementAssessorProfileController.AssessorProfileOrigin;
+import org.innovateuk.ifs.management.form.FindAssessorsFilterForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsForm;
 import org.innovateuk.ifs.management.form.InviteNewAssessorsRowForm;
 import org.innovateuk.ifs.management.model.InviteAssessorsFindModelPopulator;
@@ -23,6 +25,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.MultiValueMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -31,6 +34,7 @@ import java.util.stream.Collectors;
 
 import static java.lang.String.format;
 import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
 
 /**
  * This controller will handle all Competition Management requests related to inviting assessors to a Competition.
@@ -40,6 +44,7 @@ import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 @PreAuthorize("hasAnyAuthority('comp_admin','project_finance')")
 public class CompetitionManagementInviteAssessorsController {
 
+    private static final String FILTER_FORM_ATTR_NAME = "filterForm";
     private static final String FORM_ATTR_NAME = "form";
 
     @Autowired
@@ -64,11 +69,12 @@ public class CompetitionManagementInviteAssessorsController {
 
     @RequestMapping(value = "/find", method = RequestMethod.GET)
     public String find(Model model,
+                       @Valid @ModelAttribute(FILTER_FORM_ATTR_NAME) FindAssessorsFilterForm filterForm,
+                       @SuppressWarnings("unused") BindingResult bindingResult,
                        @PathVariable("competitionId") Long competitionId,
                        @RequestParam(defaultValue = "0") int page,
-                       @RequestParam Optional<Long> innovationArea,
                        @RequestParam MultiValueMap<String, String> queryParams) {
-        return doViewFind(model, competitionId, page, innovationArea, queryParams);
+        return doViewFind(model, competitionId, page, filterForm.getInnovationArea(), queryParams);
     }
 
     @RequestMapping(value = "/find", params = {"add"}, method = RequestMethod.POST)
@@ -76,10 +82,10 @@ public class CompetitionManagementInviteAssessorsController {
                                         @PathVariable("competitionId") Long competitionId,
                                         @RequestParam("add") String email,
                                         @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam Optional<Long> innovationArea,
-                                        @RequestParam MultiValueMap<String, String> queryParams) {
+                                        @RequestParam Optional<Long> innovationArea) {
         inviteUser(email, competitionId).getSuccessObjectOrThrowException();
-        return doViewFind(model, competitionId, page, innovationArea, queryParams);
+
+        return redirectToFind(competitionId, page, innovationArea);
     }
 
     @RequestMapping(value = "/find", params = {"remove"}, method = RequestMethod.POST)
@@ -87,10 +93,20 @@ public class CompetitionManagementInviteAssessorsController {
                                            @PathVariable("competitionId") Long competitionId,
                                            @RequestParam("remove") String email,
                                            @RequestParam(defaultValue = "0") int page,
-                                           @RequestParam Optional<Long> innovationArea,
-                                           @RequestParam MultiValueMap<String, String> queryParams) {
+                                           @RequestParam Optional<Long> innovationArea) {
         deleteInvite(email, competitionId).getSuccessObjectOrThrowException();
-        return doViewFind(model, competitionId, page, innovationArea, queryParams);
+
+        return redirectToFind(competitionId, page, innovationArea);
+    }
+
+    private String redirectToFind(Long competitionId, int page, Optional<Long> innovationArea) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("/competition/{competitionId}/assessors/find")
+                .queryParam("page", page);
+
+        innovationArea.ifPresent(innovationAreaId -> builder.queryParam("innovationArea", innovationAreaId));
+
+        return "redirect:" + builder.buildAndExpand(asMap("competitionId", competitionId))
+                .toUriString();
     }
 
     @RequestMapping(value = "/invite", method = RequestMethod.GET)

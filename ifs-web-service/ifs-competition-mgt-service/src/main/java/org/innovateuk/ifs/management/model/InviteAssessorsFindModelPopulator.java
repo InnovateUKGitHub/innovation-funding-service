@@ -1,6 +1,8 @@
 package org.innovateuk.ifs.management.model;
 
 import org.innovateuk.ifs.assessment.service.CompetitionInviteRestService;
+import org.innovateuk.ifs.category.resource.InnovationAreaResource;
+import org.innovateuk.ifs.category.service.CategoryRestService;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorPageResource;
 import org.innovateuk.ifs.invite.resource.AvailableAssessorResource;
@@ -24,17 +26,24 @@ public class InviteAssessorsFindModelPopulator extends InviteAssessorsModelPopul
     @Autowired
     private CompetitionInviteRestService competitionInviteRestService;
 
+    @Autowired
+    private CategoryRestService categoryRestService;
+
     public InviteAssessorsFindViewModel populateModel(CompetitionResource competition,
                                                       int page,
                                                       Optional<Long> innovationArea,
                                                       String originQuery) {
         InviteAssessorsFindViewModel model = super.populateModel(competition);
 
+        List<InnovationAreaResource> innovationAreas = categoryRestService.getInnovationAreas()
+                .getSuccessObjectOrThrowException();
+
         AvailableAssessorPageResource pageResource = competitionInviteRestService.getAvailableAssessors(competition.getId(), page, innovationArea)
                 .getSuccessObjectOrThrowException();
 
         List<AvailableAssessorRowViewModel> assessors = simpleMap(pageResource.getContent(), this::getRowViewModel);
 
+        model.setInnovationAreaOptions(innovationAreas);
         model.setAssessors(assessors);
         model.setPagination(new PaginationViewModel(pageResource, originQuery));
 

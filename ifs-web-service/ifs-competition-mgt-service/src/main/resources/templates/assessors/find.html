@@ -77,7 +77,7 @@
                 </div>
             </div>
 
-            <form action="GET">
+            <form method="GET" th:object="${filterForm}">
                 <div class="search-filters">
                     <div class="grid-row">
                         <!--/*
@@ -94,8 +94,13 @@
                         <div class="column-half">
                             <div class="form-group">
                                 <label for="filterInnovationArea">Innovation area</label>
-                                <select name="innovationArea" id="filterInnovationArea" class="form-control">
-                                    <option selected="selected">Any</option>
+                                <select name="innovationArea"
+                                        id="filterInnovationArea" class="form-control"
+                                        th:field="*{innovationArea}">
+                                    <option value="">Any</option>
+                                    <option th:each="innovationArea : ${model.innovationAreaOptions}"
+                                            th:value="${innovationArea.id}"
+                                            th:text="${innovationArea.name}"></option>
                                 </select>
                             </div>
                         </div>
@@ -119,7 +124,7 @@
                         */-->
 
                         <div class="column-quarter alignright">
-                            <button class="button button-clear">Clear filters</button>
+                            <a href="?">Clear all filters</a>
                             <button class="button">Filter</button>
                         </div>
                     </div>
@@ -143,7 +148,7 @@
             </div>
             */-->
 
-            <form method="POST" th:action="@{/competition/{competitionId}/assessors/find(competitionId=${model.competitionId})}">
+            <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
                 <table>
                     <thead>
                         <tr>
