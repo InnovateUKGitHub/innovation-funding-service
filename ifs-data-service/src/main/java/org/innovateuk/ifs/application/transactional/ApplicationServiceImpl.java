@@ -16,6 +16,7 @@ import org.innovateuk.ifs.application.resource.CompletedPercentageResource;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryId;
 import org.innovateuk.ifs.application.resource.FormInputResponseFileEntryResource;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
+import org.innovateuk.ifs.commons.competitionsetup.CompetitionSetupTransactionalService;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
@@ -27,19 +28,16 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.domain.FormInputResponse;
-import org.innovateuk.ifs.form.repository.FormInputRepository;
 import org.innovateuk.ifs.form.repository.FormInputResponseRepository;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.notifications.resource.*;
 import org.innovateuk.ifs.notifications.service.NotificationService;
-import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.ProcessRole;
 import org.innovateuk.ifs.user.domain.Role;
 import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
@@ -72,7 +70,7 @@ import static org.innovateuk.ifs.util.MathFunctions.percentage;
  * Transactional and secured service focused around the processing of Applications
  */
 @Service
-public class ApplicationServiceImpl extends BaseTransactionalService implements ApplicationService {
+public class ApplicationServiceImpl extends CompetitionSetupTransactionalService implements ApplicationService {
     enum Notifications {
         APPLICATION_SUBMITTED
     }
@@ -104,8 +102,6 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
     private ApplicationMapper applicationMapper;
     @Autowired
     private ResearchCategoryMapper researchCategoryMapper;
-    @Autowired
-    protected FormInputRepository formInputRepository;
 
     @Override
     public ServiceResult<ApplicationResource> createApplicationByApplicationNameForUserIdAndCompetitionId(String applicationName, Long competitionId, Long userId) {
@@ -595,67 +591,4 @@ public class ApplicationServiceImpl extends BaseTransactionalService implements 
         return true;
     }
 
-    private ServiceResult<FormInput> countInput(Long competitionId) {
-        return getOnlyForCompetition(competitionId, STAFF_COUNT);
-    }
-
-    private ServiceResult<FormInput> turnoverInput(Long competitionId) {
-        return getOnlyForCompetition(competitionId, STAFF_TURNOVER);
-    }
-
-    private ServiceResult<FormInput> getOnlyForCompetition(Long competitionId, FormInputType formInputType) {
-        List<FormInput> all = formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(formInputType));
-        return getOnlyElementOrFail(all);
-    }
-
-    private ServiceResult<FormInput> financeCount(Long competitionId) {
-        return getOnlyForCompetition(competitionId, FINANCIAL_STAFF_COUNT);
-    }
-
-    private ServiceResult<FormInput> financeYearEnd(Long competitionId) {
-        return getOnlyForCompetition(competitionId, FINANCIAL_YEAR_END);
-    }
-
-    private ServiceResult<List<FormInput>> financeOverviewRow(Long competitionId) {
-        return serviceSuccess(formInputRepository.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW)));
-    }
-
-    private ServiceResult<Boolean> isIncludeGrowthTable(Long compId) {
-        ServiceResult<Boolean> isIncludeGrowthTableByCountAndTurnover = find(countInput(compId), turnoverInput(compId)).andOnSuccess(this::isIncludeGrowthTableByCountAndTurnover);
-        ServiceResult<Boolean> isIncludeGrowthTableByFinance = find(financeYearEnd(compId), financeOverviewRow(compId), financeCount(compId)).andOnSuccess(this::isIncludeGrowthTableByFinance);
-        ServiceResult<Boolean> isIncludeGrowthTable = find(isIncludeGrowthTableByCountAndTurnover, isIncludeGrowthTableByFinance).andOnSuccess(this::isIncludeGrowthTableByCountTurnoverAndFinance);
-        return isIncludeGrowthTable;
-    }
-
-    protected ServiceResult<Boolean> isIncludeGrowthTableByCountTurnoverAndFinance(boolean byCountAndTurnover, boolean byFinance) {
-        boolean isConsistent = byCountAndTurnover == byFinance;
-        if (isConsistent) {
-            return serviceSuccess(byCountAndTurnover);
-        } else {
-            return serviceFailure(new Error("include.growth.table.count.turnover.finance.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
-        }
-    }
-
-
-    protected ServiceResult<Boolean> isIncludeGrowthTableByCountAndTurnover(FormInput count, FormInput turnover) {
-        boolean isConsistent = count.getActive() == turnover.getActive();
-        if (isConsistent) {
-            return serviceSuccess(!count.getActive());
-        } else {
-            return serviceFailure(new Error("include.growth.table.count.turnover.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
-        }
-    }
-
-    protected ServiceResult<Boolean> isIncludeGrowthTableByFinance(FormInput yearEnd, List<FormInput> overviewRows, FormInput count) {
-        // Check the active boolean is the same across all of the fields
-        List<Boolean> overviewRowsActive = simpleMap(overviewRows, FormInput::getActive);
-        boolean isConsistent =
-                (count.getActive() && yearEnd.getActive() && !overviewRowsActive.contains(false))
-                        || (!count.getActive() && !yearEnd.getActive() && !overviewRowsActive.contains(true));
-        if (isConsistent) {
-            return serviceSuccess(count.getActive());
-        } else {
-            return serviceFailure(new Error("include.growth.table.finance.input.active.not.consistent", HttpStatus.INTERNAL_SERVER_ERROR));
-        }
-    }
 }
