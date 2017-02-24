@@ -46,7 +46,7 @@ public class ProjectFinanceFormHandler extends BaseFinanceFormHandler implements
             projectFinanceResource = projectFinanceService.addProjectFinance(projectId, organisationId);
         }
 
-        ValidationMessages errors = getAndStoreCostitems(request, projectFinanceResource.getId());
+        ValidationMessages errors = getAndStoreCostitems(request, projectFinanceResource.getId(), financeRowItem -> projectFinanceRowService.update(financeRowItem));
         addRemoveCostRows(request, projectId, organisationId);
 
         return errors;

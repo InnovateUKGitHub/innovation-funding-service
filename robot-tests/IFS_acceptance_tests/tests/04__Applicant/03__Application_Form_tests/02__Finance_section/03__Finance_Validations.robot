@@ -230,7 +230,7 @@ Travel and subsistence server side
 
 Other costs client side
     [Documentation]    INFUND-844
-    Given the user clicks the button/link    jQuery=button:contains("Other Costs")
+    Given the user clicks the button/link    jQuery=button:contains("Other costs")
     When the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(2) input    ${EMPTY}
     And the user enters text to a text field    css=#other-costs-table tbody tr:nth-of-type(1) td:nth-of-type(1) textarea    ${EMPTY}
     Then the user gets the expected validation errors    This field cannot be left blank.    This field should be 1 or higher.
@@ -253,7 +253,7 @@ Other costs server side
     Then the user should see an error    This field should be 1 or higher.
     And the user should see an error    This field cannot be left blank.
     And the user should see the element    css=.error-summary
-    [Teardown]    Remove row    jQuery=button:contains("Other Costs")    jQuery=#other-costs-table button:contains("Remove")
+    [Teardown]    Remove row    jQuery=button:contains("Other costs")    jQuery=#other-costs-table button:contains("Remove")
 
 #Funding level client side is covered in 02__Org_size_validation.robot
 

@@ -298,8 +298,15 @@
       _checkModified: function(event) {
         var widget;
         widget = event.data;
-        if (widget.isModified()) {
-          return widget.setModified();
+        switch (event.type) {
+          case "paste":
+            return setTimeout((function() {
+              return jQuery(widget.element).trigger("change");
+            }), 600);
+          default:
+            if (widget.isModified()) {
+              return widget.setModified();
+            }
         }
       },
       _keys: function(event) {

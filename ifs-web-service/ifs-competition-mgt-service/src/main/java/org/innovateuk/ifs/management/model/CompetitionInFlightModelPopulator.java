@@ -54,6 +54,7 @@ public class CompetitionInFlightModelPopulator {
             case IN_ASSESSMENT:
                 return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getInAssessmentKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
             case FUNDERS_PANEL:
+                return new CompetitionInFlightStatsViewModel(competitionKeyStatisticsRestService.getFundedKeyStatisticsByCompetition(competitionResource.getId()).getSuccessObjectOrThrowException());
             case ASSESSOR_FEEDBACK:
                 break;
         }

@@ -7,6 +7,27 @@ Force Tags        Assessor
 Resource          ../../../resources/defaultResources.robot
 
 *** Test Cases ***
+
+Cancel button returns to read only view
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains(Cancel)
+    Then the user should be redirected to the correct page    ${assessment_details_url}
+
+Back button returns to assessor dashboard
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link  link=Assessor dashboard
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    [Teardown]    user opens the edit details form
+
+Back button from edit returns to read only view
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link  link=Your details
+    Then the user should be redirected to the correct page    ${assessment_details_url}
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("Edit")
+
 Validations for invalid inputs
     [Documentation]    INFUND-1480
     [Tags]

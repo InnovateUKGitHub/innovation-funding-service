@@ -72,6 +72,9 @@ Existing assessor: Reject invitation from Dashboard
     And the user should see the text in the page    Invitation to assess '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user should see the text in the page    You are invited to assess the competition '${READY_TO_OPEN_COMPETITION_NAME}'
     And the user clicks the button/link    css=form a
+    And the user clicks the button/link    jQuery=button:contains(Cancel)
+    And the user should not see the element    id=rejectComment
+    And the user clicks the button/link    css=form a
     And The user enters text to a text field    id=rejectComment    a a a a a a a a \\ a a a a \\ a a a a a a \\ a a a a a \\ a a a a \\ a a a a \\ a a a a a a a a a a a \\ a a \\ a a a a a a a a a a \\ a a a a a a a a a a a a a a a a a a a \\ a a a a a a a \\ a a a \\ a a \\ aa \\ a a a a a a a a a a a a a a \\ a
     And the user clicks the button/link    jQuery=button:contains("Reject")
     Then the user should see an error    The reason cannot be blank.
