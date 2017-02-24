@@ -2,115 +2,74 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <th:block th:fragment="labour">
     <th:block th:if="${typeOfChange == 'Change'}">
-
-        <!--<th:block th:if="${changePair.submitted.workingDaysPerYearCostItem != null}">
-            <tr>
-                <td rowspan="4" th:text="${typeOfChange}">Change</td>
-                <td rowspan="4" th:text="${rowTypeName}">Labour</td>
-                <th scope="row" th:text="${changePair.submitted.role}">Role</th>
-        </th:block>-->
-
         <th:block th:unless="${changePair.submitted.name == T(org.innovateuk.ifs.finance.resource.category.LabourCostCategory).WORKING_DAYS_KEY}">
-            <tr>
+            <tr th:class="${changePair.submitted.role != changePair.changed.role} ? 'item-changed' : ''">
                 <td rowspan="4" th:text="${typeOfChange}"></td>
                 <td rowspan="4" th:text="${rowTypeName}"></td>
 
                 <th scope="row">Role</th>
                 <td th:text="${changePair.submitted.role}"></td>
-                <td colspan="2" th:text="${changePair.changed.role}"></td>
+                <td colspan="2" th:text="${changePair.changed.role}" th:class="${changePair.submitted.role != changePair.changed.role} ? 'item-changed' : ''"></td>
             </tr>
 
-            <tr>
+            <tr th:class="${changePair.submitted.grossAnnualSalary != changePair.changed.grossAnnualSalary} ? 'item-changed' : ''">
                 <th scope="row">Gross annual salary</th>
                 <td th:text="${changePair.submitted.grossAnnualSalary}"></td>
-                <td th:text="${changePair.changed.grossAnnualSalary}" colspan="2"></td>
+                <td th:text="${changePair.changed.grossAnnualSalary}" colspan="2" th:class="${changePair.submitted.grossAnnualSalary != changePair.changed.grossAnnualSalary} ? 'item-changed' : ''"></td>
             </tr>
 
-            <tr>
-                <th scope="row">Rate</th>
-                <td th:text="${changePair.submitted.getCalculatedRate()}"></td>
-                <td th:text="${changePair.changed.getCalculatedRate()}" colspan="2"></td>
-            </tr>
-
-            <tr class="item-changed">
+            <tr th:class="${changePair.submitted.labourDays != changePair.changed.labourDays} ? 'item-changed' : ''">
                 <th scope="row">Days to be spent</th>
-                <td th:text="${changePair.submitted.labourDays}">258</td>
-                <td th:text="${changePair.changed.labourDays}" colspan="2" class="item-changed">189</td>
+                <td th:text="${changePair.submitted.labourDays}"></td>
+                <td th:text="${changePair.changed.labourDays}" colspan="2" th:class="${changePair.submitted.labourDays != changePair.changed.labourDays} ? 'item-changed' : ''"></td>
             </tr>
-            <!--<tr class="change-row">-->
-            <!--<td colspan="6" class="numeric">-->
-            <!-- -&pound;50,000-->
-            <!--</td>-->
-            <!--</tr>-->
         </th:block>
     </th:block>
 
     <th:block th:if="${typeOfChange == 'New'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}">Change</td>
-            <td rowspan="4" th:text="${rowTypeName}">Labour</td>
+            <td rowspan="4" th:text="${typeOfChange}"></td>
+            <td rowspan="4" th:text="${rowTypeName}"></td>
 
             <th scope="row">Role</th>
             <td></td>
-            <td colspan="2" th:text="${changePair.changed.role}">Programmer</td>
+            <td colspan="2" th:text="${changePair.changed.role}"></td>
         </tr>
 
         <tr>
             <th scope="row">Gross annual salary</th>
-            <td>&pound;25,000</td>
-            <td th:text="${changePair.changed.grossAnnualSalary}" colspan="2">&pound;25,000</td>
+            <td></td>
+            <td th:text="${changePair.changed.grossAnnualSalary}" colspan="2"></td>
         </tr>
 
         <tr>
-            <th scope="row">Rate</th>
-            <td>24</td>
-            <td th:text="${changePair.changed.rate}" colspan="2">24</td>
-        </tr>
-
-        <tr class="item-changed">
             <th scope="row">Days to be spent</th>
-            <td>258</td>
-            <td th:text="${changePair.changed.labourDays}" colspan="2" class="item-changed">189</td>
+            <td></td>
+            <td th:text="${changePair.changed.labourDays}" colspan="2"></td>
         </tr>
-        <!--<tr class="change-row">-->
-        <!--<td colspan="6" class="numeric">-->
-        <!-- -&pound;50,000-->
-        <!--</td>-->
-        <!--</tr>-->
     </th:block>
 
     <th:block th:if="${typeOfChange == 'Remove'}">
         <tr>
-            <td rowspan="4" th:text="${typeOfChange}">Change</td>
-            <td rowspan="4" th:text="${rowTypeName}">Labour</td>
+            <td rowspan="4" th:text="${typeOfChange}"></td>
+            <td rowspan="4" th:text="${rowTypeName}"></td>
 
             <th scope="row">Role</th>
-            <td th:text="${changePair.submitted.role}">Programmer</td>
+            <td th:text="${changePair.submitted.role}"></td>
             <td colspan="2"></td>
         </tr>
 
         <tr>
             <th scope="row">Gross annual salary</th>
-            <td th:text="${changePair.submitted.grossAnnualSalary}">&pound;25,000</td>
+            <td th:text="${changePair.submitted.grossAnnualSalary}"></td>
             <td colspan="2"></td>
         </tr>
 
         <tr>
-            <th scope="row">Rate</th>
-            <td th:text="${changePair.submitted.rate}">24</td>
-            <td></td>
-        </tr>
-
-        <tr class="item-changed">
             <th scope="row">Days to be spent</th>
-            <td th:text="${changePair.submitted.labourDays}">258</td>
-            <td colspan="2" class="item-changed"></td>
+            <td th:text="${changePair.submitted.labourDays}"></td>
+            <td colspan="2"></td>
         </tr>
-        <!--<tr class="change-row">-->
-        <!--<td colspan="6" class="numeric">-->
-        <!-- -&pound;50,000-->
-        <!--</td>-->
-        <!--</tr>-->
     </th:block>
 </th:block>
 </html>

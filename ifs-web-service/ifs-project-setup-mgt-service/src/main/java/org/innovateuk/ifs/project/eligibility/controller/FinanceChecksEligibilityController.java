@@ -365,7 +365,7 @@ public class FinanceChecksEligibilityController {
         ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(project.getId(), organisation.getId());
         ApplicationFinanceResource appFinanceResource = applicationFinanceService.getApplicationFinanceDetails(userId, project.getApplication(), organisation.getId());
         Map<FinanceRowType, BigDecimal> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
-        return new ProjectFinanceChangesViewModel(organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview, sectionDifferencesMap, projectFinanceResource.getCostChanges());
+        return new ProjectFinanceChangesViewModel(organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview, sectionDifferencesMap, projectFinanceResource.getCostChanges(), appFinanceResource.getTotal(), projectFinanceResource.getTotal());
     }
 
     private Map<FinanceRowType, BigDecimal> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
@@ -375,7 +375,7 @@ public class FinanceChecksEligibilityController {
         for(FinanceRowType rowType : organisationProjectFinances.keySet()){
             FinanceRowCostCategory financeRowProjectCostCategory = organisationProjectFinances.get(rowType);
             FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
-            sectionDifferencesMap.put(rowType, financeRowAppCostCategory.getTotal().subtract(financeRowProjectCostCategory.getTotal()));
+            sectionDifferencesMap.put(rowType, financeRowProjectCostCategory.getTotal().subtract(financeRowAppCostCategory.getTotal()));
         }
         return sectionDifferencesMap;
     }

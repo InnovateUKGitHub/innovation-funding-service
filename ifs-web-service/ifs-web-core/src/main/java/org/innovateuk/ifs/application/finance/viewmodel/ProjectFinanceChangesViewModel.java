@@ -23,8 +23,10 @@ public class ProjectFinanceChangesViewModel {
     private FinanceCheckEligibilityResource financeCheckEligibility;
     private Map<FinanceRowType, BigDecimal> sectionDifferences;
     private Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes;
+    private BigDecimal totalApplicationCosts;
+    private BigDecimal totalProjectCostsAfterChanges;
 
-    public ProjectFinanceChangesViewModel(String organisationName, Long organisationId, String projectName, Long applicationId, Long projectId, FinanceCheckEligibilityResource financeCheckEligibilityResource, Map<FinanceRowType, BigDecimal> sectionDifferences, Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes) {
+    public ProjectFinanceChangesViewModel(String organisationName, Long organisationId, String projectName, Long applicationId, Long projectId, FinanceCheckEligibilityResource financeCheckEligibilityResource, Map<FinanceRowType, BigDecimal> sectionDifferences, Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes, BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges) {
         this.organisationName = organisationName;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -33,6 +35,8 @@ public class ProjectFinanceChangesViewModel {
         this.financeCheckEligibility = financeCheckEligibilityResource;
         this.sectionDifferences = sectionDifferences;
         this.changes = changes;
+        this.totalApplicationCosts = totalApplicationCosts;
+        this.totalProjectCostsAfterChanges = totalProjectCostsAfterChanges;
     }
 
     public Map<FinanceRowType, BigDecimal> getSectionDifferences() {
@@ -97,5 +101,29 @@ public class ProjectFinanceChangesViewModel {
 
     public void setFinanceCheckEligibility(FinanceCheckEligibilityResource financeCheckEligibilityResource) {
         this.financeCheckEligibility = financeCheckEligibilityResource;
+    }
+
+    public BigDecimal getTotalApplicationCosts() {
+        return totalApplicationCosts;
+    }
+
+    public void setTotalApplicationCosts(BigDecimal totalApplicationCosts) {
+        this.totalApplicationCosts = totalApplicationCosts;
+    }
+
+    public BigDecimal getTotalProjectCostsAfterChanges() {
+        return totalProjectCostsAfterChanges;
+    }
+
+    public void setTotalProjectCostsAfterChanges(BigDecimal totalProjectCostsAfterChanges) {
+        this.totalProjectCostsAfterChanges = totalProjectCostsAfterChanges;
+    }
+
+    public BigDecimal getDifferenceInTotalCostsAfterChanges(){
+        if(totalProjectCostsAfterChanges == null || totalApplicationCosts == null)
+            return null;
+        else {
+            return totalProjectCostsAfterChanges.subtract(totalApplicationCosts);
+        }
     }
 }

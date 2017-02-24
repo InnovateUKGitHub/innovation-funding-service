@@ -11,7 +11,7 @@
     <th:block th:insert="fragments/layout :: main-content-start"/>
 
     <div th:include="fragments/layout :: header-sub"
-         th:with="linkTitle='Project setup status',linkClass='link-back',linkUrl=@{/project/{id}(id=${model.projectId})}"
+         th:with="linkTitle='Eligibility',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}"
          th:remove="tag"></div>
 
 
@@ -99,7 +99,7 @@
                 <tfoot>
                 <tr>
                     <th>Overall</th>
-                    <th colspan="5" class="numeric">-&pound;60,045</th>
+                    <th colspan="5" class="numeric" th:text="${#numbers.formatInteger(model.getDifferenceInTotalCostsAfterChanges(),1,'COMMA')}"></th>
                 </tr>
                 </tfoot>
                 <tbody>
@@ -122,7 +122,7 @@
     <hr/>
 
     <a class="button button-secondary"
-       th:href="@{/project/{projectId}/partner-organisation/{orgId}/finance-checks/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return
+       th:href="@{/project/{projectId}/finance-check/organisation/{orgId}/eligibility(projectId=${model.projectId},orgId=${model.organisationId})}">Return
         to eligibility</a>
 
     <th:block th:insert="fragments/layout :: main-content-end"/>
