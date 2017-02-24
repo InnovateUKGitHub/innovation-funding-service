@@ -15,19 +15,19 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public abstract class FinanceRowHandler {
+public abstract class FinanceRowHandler<T> {
 
     Map<String, FinanceRowMetaField> costFields = new HashMap<>();
 
-    public abstract ApplicationFinanceRow toCost(FinanceRowItem costItem);
+    public abstract ApplicationFinanceRow toCost(T costItem);
 
-    public abstract ProjectFinanceRow toProjectCost(FinanceRowItem costItem);
+    public abstract ProjectFinanceRow toProjectCost(T costItem);
 
     public abstract FinanceRowItem toCostItem(ApplicationFinanceRow cost);
 
     public abstract FinanceRowItem toCostItem(ProjectFinanceRow cost);
 
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
+    public void validate(@NotNull T costItem, @NotNull BindingResult bindingResult) {
         ValidationUtil.isValid(bindingResult, costItem, (Class<?>[]) null);
     }
 
