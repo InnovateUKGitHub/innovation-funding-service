@@ -49,27 +49,27 @@
                             <ul>
                                 <li th:each="app,iterStat : ${model.outstanding}"
                                     th:with="assignmentUrl=@{/{assessmentId}/assignment(assessmentId=${app.assessmentId})}"
-                                    th:class="${(app.pending or app.readyToSubmit ? 'status-2-col' : '')}"
-                                    th:classappend="${app.readyToSubmit and app.recommended} ? 'positive' : ''">
+                                    th:class="${(app.pending or app.readyToSubmit ? 'status-2-col' : '')}">
 
-                                        <div class="task">
+                                    <div class="task">
 
-                                            <th:block th:if="${app.readyToSubmit}">
-                                                <div class="label-holder">
-                                                    <label class="block-label selection-button-checkbox">
-                                                    <span class="visuallyhidden">Mark assessment for submission</span>
-                                                    <input class="assessment-submit-checkbox" type="checkbox"
-                                                           th:field="*{assessmentIds}" th:value="${app.assessmentId}"/>
-                                                    </label>
-                                                </div>
-                                            </th:block>
+                                        <th:block th:if="${app.readyToSubmit}">
+                                            <div class="label-holder">
+                                                <label class="block-label selection-button-checkbox">
+                                                <span class="visuallyhidden">Mark assessment for submission</span>
+                                                <input class="assessment-submit-checkbox" type="checkbox"
+                                                       th:field="*{assessmentIds}" th:value="${app.assessmentId}"/>
+                                                </label>
+                                            </div>
+                                        </th:block>
 
-                                            <h3 class="heading-small"><a
-                                                th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}"
-                                                th:text="${app.displayLabel}"/></h3>
-                                            <p th:text="${app.leadOrganisation}" class="no-margin"/>
-                                        </div>
+                                        <h3 class="heading-small"><a
+                                            th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}"
+                                            th:text="${app.displayLabel}"/></h3>
+                                        <p th:text="${app.leadOrganisation}" class="no-margin"/>
+                                    </div>
 
+                                    <th:block th:unless="${app.readyToSubmit}">
                                         <div class="status">
 
                                             <th:block th:if="${app.pending}">
@@ -89,24 +89,28 @@
                                                 In progress
                                             </strong>
 
-                                            <th:block th:if="${app.readyToSubmit}">
+                                        </div>
+                                    </th:block>
 
-                                                <div class="status-msg score">
+                                    <th:block th:if="${app.readyToSubmit}">
 
-                                                    <strong class="percent" th:text="|${app.overallScore} %|">PERCENTAGE</strong>
-                                                    <span>Overall score</span>
-                                                    <strong th:text="${app.recommended} ? 'Recommended' : 'Not recommended'">TEST</strong>
+                                        <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">
 
-                                                </div>
+                                            <div class="status-msg score">
 
-                                                <div class="status-msg msg-progress">
-                                                    <strong>Assessed</strong>
-                                                </div>
+                                                <strong class="percent" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
+                                                <span>Overall score</span><br />
+                                                <strong th:text="${app.recommended} ? 'Recommended' : 'Not recommended'">VERDICT</strong>
 
-                                            </th:block>
+                                            </div>
+
+                                            <div class="status-msg msg-progress">
+                                                <strong>Assessed</strong>
+                                            </div>
 
                                         </div>
 
+                                    </th:block>
 
                                 </li>
                             </ul>
