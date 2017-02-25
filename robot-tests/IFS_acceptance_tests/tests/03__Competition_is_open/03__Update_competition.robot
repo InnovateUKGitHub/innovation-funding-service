@@ -125,7 +125,9 @@ Milestones are editable (Open)
     And the user should see that the element is disabled    jQuery=tr:nth-child(2) .year input
     And the user fills in the milestone data with valid information
     And the user clicks the button/link    jQuery=button:contains(Done)
-    Then The user should see the element    jQuery=.button:contains("Edit")
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
+    And the user resets the milestone data
+    And the user clicks the button/link    jQuery=button:contains(Done)
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Application details are not editable (Open)
@@ -332,3 +334,38 @@ the user fills in the milestone data with valid information
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    22
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
     The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+
+the user resets the milestone data
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    09
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    09
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2067
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    10
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    09
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2067
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    09
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2067
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    12
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2068
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    29
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2068
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    20
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    02
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2068
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    20
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    3
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2068
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    20
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    4
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2068
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    20
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    5
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2068
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    20
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    6
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2068
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    20
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    7
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2068
