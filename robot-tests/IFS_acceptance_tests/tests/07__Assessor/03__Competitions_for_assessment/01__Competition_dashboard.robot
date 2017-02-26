@@ -67,7 +67,7 @@ Accept an application for assessment
     ...    INFUND-4128
     [Tags]    HappyPath
     Then the user should see the element    jQuery=.in-progress li:nth-child(1):contains("Intelligent water system"):contains("Pending")
-    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("accept / reject assessment")
+    When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("Accept or reject")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=button:contains("Accept")
     Then the user should be redirected to the correct page    ${Assessor_application_dashboard}
@@ -124,9 +124,9 @@ the application for assessment should be removed
     The user should not see the element    link=Park living
 
 The order of the applications should be correct according to the status
-    element should contain    css=li:nth-child(1) .progress-list .msg-deadline-waiting    Pending
-    element should contain    css=li:nth-child(2) .progress-list .msg-deadline-waiting    Pending
-    element should contain    css=li:nth-child(3) .progress-list .msg-deadline-waiting    Pending
-    element should contain    css=.progress-list .msg-deadline-waiting li:nth-child(4)    Accepted
-    element should contain    css=.progress-list .msg-deadline-waiting li:nth-child(5)    Accepted
-    element should contain    css=.progress-list .msg-deadline-waiting li:nth-child(6)    Accepted
+    element should contain    css=li:nth-child(1) .msg-deadline-waiting    Pending
+    element should contain    css=li:nth-child(2) .msg-deadline-waiting    Pending
+    element should contain    css=li:nth-child(3) .msg-deadline-waiting    Pending
+    element should contain    css=.progress-list  li:nth-child(4) .msg-deadline-waiting    Accepted
+    element should contain    css=.progress-list  li:nth-child(5) .msg-deadline-waiting    Accepted
+    element should contain    css=.progress-list  li:nth-child(6) .msg-deadline-waiting    Accepted

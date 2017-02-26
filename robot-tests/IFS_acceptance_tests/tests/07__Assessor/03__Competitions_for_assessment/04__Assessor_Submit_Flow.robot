@@ -395,7 +395,7 @@ the total scores should be correct
 
 The user accepts the juggling is word that sound funny application
     The user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    The user clicks the button/link    jQuery=a:contains("accept / reject assessment")
+    The user clicks the button/link    jQuery=a:contains("Accept or reject")
     The user should see the text in the page    Accept application
     The user clicks the button/link    jQuery=button:contains("Accept")
     The user should be redirected to the correct page    ${Assessor_application_dashboard}
