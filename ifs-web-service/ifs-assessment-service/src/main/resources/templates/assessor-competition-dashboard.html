@@ -71,7 +71,7 @@
                                         <div class="status">
 
                                             <th:block th:if="${app.pending}">
-                                                <div class="status-msg msg-deadline-waitng">
+                                                <div class="status-msg msg-deadline-waiting">
                                                     Pending
                                                 </div>
                                                 <div class="status-msg msg-progress">
@@ -119,12 +119,12 @@
                     </form>
                 </div>
 
-                <div class="submitted progress-list" th:unless="${#lists.isEmpty(model.submitted)}">
-                    <h3 class="heading-medium">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
+                <div class="submitted progress-list extra-margin-top" th:unless="${#lists.isEmpty(model.submitted)}">
+                    <h3 class="heading-medium no-margin">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
                     <ul>
                         <li th:each="app : ${model.submitted}" class="status-2-col">
                             <div class="task">
-                                <h4 class="heading-medium" th:text="${app.displayLabel}" />
+                                <h4 class="heading-small" th:text="${app.displayLabel}" />
                                 <p th:text="${app.leadOrganisation}" />
                             </div>
                             <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">

@@ -37,6 +37,8 @@ ${Invitation_for_upcoming_comp_assessor1}    ${server}/assessment/invite/competi
 ${Invitation_nonexisting_assessor2}    ${server}/assessment/invite/competition/396d0782-01d9-48d0-97ce-ff729eb555b0 #invitation for assessor:${test_mailbox_one}+david.peters@gmail.com
 ${ASSESSOR_DASHBOARD}    ${server}/assessment/assessor/dashboard
 ${Correct_date}    12 January to 29 January
+${Correct_date_start}   12 January
+${Correct_date_end}    29 January
 
 *** Test Cases ***
 Assessor dashboard contains the correct competitions
@@ -193,11 +195,11 @@ the assessor fills all fields with valid inputs
     The user enters text to a text field    id=rejectComment    Unable to assess this application.
 
 the assessor should see the date for submission of assessment
-    the user should see the element    css=.my-applications div:nth-child(2) .competition-deadline .day
-    the user should see the element    css=.my-applications div:nth-child(2) .competition-deadline .month
+    the user should see the element    css=.my-applications .msg-deadline .day
+    the user should see the element    css=.my-applications .msg-deadline .month
 
 the assessor should see the number of days remaining
-    the user should see the element    css=.my-applications div:nth-child(2) .pie-container .pie-overlay .day
+    the user should see the element    css=.my-applications .msg-deadline .days-remaining
 
 the assessor shouldn't be able to accept the rejected competition
     When the user navigates to the page    ${Invitation_existing_assessor1}
@@ -220,8 +222,10 @@ The assessor is unable to see the invitation
     The user should see the text in the page    You have already accepted or rejected this invitation.
 
 the assessor should see the correct date
-    ${Assessment_period}=    Get Text    css=.upcoming-to-assess .column-assessment-status.navigation-right .heading-small.no-margin
-    Should Be Equal    ${Assessment_period}    ${Correct_date}
+    ${Assessment_period_start}=    Get Text    css=.upcoming-to-assess .standard-definition-list dd:nth-child(2)
+    ${Assessment_period_end}=    Get Text    css=.upcoming-to-assess .standard-definition-list dd:nth-child(4)
+    Should Be Equal    ${Assessment_period_start}    ${Correct_date_start}
+    Should Be Equal    ${Assessment_period_end}    ${Correct_date_end}
 
 Close the competition in assessment
     Log in as a different user    &{Comp_admin1_credentials}

@@ -221,9 +221,9 @@ User Saves the Assessment as Recommended
     When The user clicks the button/link    jQuery=.button:contains(Save assessment)
     Then The user should not see the text in the page    Please enter your feedback
     And The user should see the text in the page    Assessed
-    And the user should see the element    css=li:nth-child(6) .recommend.yes
+    And the user should see the element    css=li:nth-child(6) .positive
     And the user should see the element    css=li:nth-child(6) .assessment-submit-checkbox
-    And the application should have the correct status    css=.boxed-list li:nth-child(6)    Assessed
+    And the application should have the correct status    css=.progress-list li:nth-child(6)    Assessed
 
 User Saves the Assessment as Not Recommended
     [Documentation]    INFUND-5712
@@ -241,10 +241,10 @@ User Saves the Assessment as Not Recommended
     When the user selects the radio button    fundingConfirmation    false
     And the user enters text to a text field    id=feedback    Negative feedback
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
-    And The user should see the element    css=li:nth-child(5) .recommend.no
+    And The user should see the element    css=li:nth-child(5) .negative
     And The user should see the element    css=li:nth-child(5) .assessment-submit-checkbox
-    And the application should have the correct status    css=.boxed-list li:nth-child(5)    Assessed
-    And the application should have the correct status    css=.boxed-list li:nth-child(6)    Assessed
+    And the application should have the correct status    css=.progress-list li:nth-child(5)    Assessed
+    And the application should have the correct status    css=.progress-list li:nth-child(6)    Assessed
 
 Submit Validation
     [Documentation]    INFUND-5739
