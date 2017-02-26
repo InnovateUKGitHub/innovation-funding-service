@@ -31,7 +31,7 @@
             <div class="my-applications">
                 <div class="in-progress" th:unless="${#lists.isEmpty(model.outstanding)}">
 
-                    <form class="bulk-select" method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
+                    <form method="post" th:object="${form}" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
 
                         <div class="progress-list">
                             <h2 class="heading-medium no-margin">Applications for assessment (<span
@@ -52,7 +52,6 @@
                                     th:class="${(app.pending or app.readyToSubmit ? 'status-2-col' : '')}">
 
                                     <div class="task">
-
                                         <th:block th:if="${app.readyToSubmit}">
                                             <div class="label-holder">
                                                 <label class="block-label selection-button-checkbox">
@@ -62,7 +61,6 @@
                                                 </label>
                                             </div>
                                         </th:block>
-
                                         <h3 class="heading-small"><a
                                             th:href="${app.pending} ? ${assignmentUrl} : @{/{assessmentId}(assessmentId=${app.assessmentId})}"
                                             th:text="${app.displayLabel}"/></h3>
@@ -93,23 +91,16 @@
                                     </th:block>
 
                                     <th:block th:if="${app.readyToSubmit}">
-
                                         <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">
-
                                             <div class="status-msg score">
-
-                                                <strong class="percent" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
+                                                <strong class="bold-large" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
                                                 <span>Overall score</span><br />
                                                 <strong th:text="${app.recommended} ? 'Recommended' : 'Not recommended'">VERDICT</strong>
-
                                             </div>
-
                                             <div class="status-msg msg-progress">
                                                 <strong>Assessed</strong>
                                             </div>
-
                                         </div>
-
                                     </th:block>
 
                                 </li>
@@ -128,27 +119,21 @@
                     </form>
                 </div>
 
-                <div class="submitted" th:unless="${#lists.isEmpty(model.submitted)}">
+                <div class="submitted progress-list" th:unless="${#lists.isEmpty(model.submitted)}">
                     <h3 class="heading-medium">Submitted assessment (<span th:text="${#lists.size(model.submitted)}" />)</h3>
-                    <ul class="boxed-list bulk-select">
-                        <li th:each="app : ${model.submitted}">
-                            <div class="grid-row">
-                                <div class="column-assessment-details">
-                                    <h4 class="heading-medium" th:text="${app.displayLabel}" />
-                                    <p th:text="${app.leadOrganisation}" />
+                    <ul>
+                        <li th:each="app : ${model.submitted}" class="status-2-col">
+                            <div class="task">
+                                <h4 class="heading-medium" th:text="${app.displayLabel}" />
+                                <p th:text="${app.leadOrganisation}" />
+                            </div>
+                            <div class="status" th:classappend="${app.recommended} ? 'positive' : 'negative'">
+                                <div class="status-msg score">
+                                    <strong class="bold-large" th:text="|${app.overallScore} %|">PERCENTAGE</strong><br />
+                                    <span>Overall score</span>
                                 </div>
-                                <div class="column-assessment-status navigation-right">
-                                    <div class="application-status submitted">
-                                        <p>Submitted</p>
-                                        <h3 class="score"><span th:text="${app.overallScore}">51.0</span>%</h3>
-                                        <small>Overall score</small>
-
-                                        <div class="recommend-container">
-                                            <p class="recommend" th:classappend="${app.recommended} ? 'yes' : 'no'">
-                                                <span th:text="${app.recommended} ? 'Recommended' : 'Not recommended'"/>
-                                            </p>
-                                        </div>
-                                    </div>
+                                <div class="status-msg msg-progress">
+                                    <strong th:text="${app.recommended} ? 'Recommended' : 'Not recommended'">VERDICT</strong>
                                 </div>
                             </div>
                         </li>
