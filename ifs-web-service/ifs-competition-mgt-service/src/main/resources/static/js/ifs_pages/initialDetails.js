@@ -57,7 +57,7 @@ IFS.competitionManagement.initialDetails = (function () {
       }
     },
     enableDisableMultipleInnovationAreas: function (el) {
-      var isSectorCompetition = (jQuery(el).val() === 5)
+      var isSectorCompetition = (jQuery(el).val() === '5')
       if (isSectorCompetition) {
         jQuery('[data-add-row="innovationArea"]').attr('aria-hidden', 'false')
       } else {
