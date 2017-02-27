@@ -74,7 +74,6 @@ function deploy() {
     then
         oc create -f os-files-tmp/
         oc create -f os-files-tmp/shib/5-shib.yml
-        oc create -f os-files-tmp/shib/55-ldap.yml
         oc create -f os-files-tmp/shib/56-idp.yml
     else
         oc create -f os-files-tmp/imap/
@@ -144,5 +143,8 @@ fi
 
 deploy
 blockUntilServiceIsUp
-shibInit
+if [[ ${TARGET} != "production" ]]
+then
+    shibInit
+fi
 cleanUp
