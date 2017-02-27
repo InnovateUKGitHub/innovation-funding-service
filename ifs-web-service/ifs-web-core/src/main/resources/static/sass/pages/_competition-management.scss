@@ -139,3 +139,22 @@
   margin-bottom: 30px;
   border-bottom: 1px solid $border-colour;
 }
+
+
+.select-all {
+  .form-hint {
+    display:inline-block;
+    margin: 8 10px;;
+  }
+}
+.mark-applications {
+  h3 {
+    display: inline-block;
+    padding-right: 10px;
+    font-weight: bold;
+    margin: 10px 8px;
+  }
+  button {
+   margin: 0 0 10px;
+  }
+}
