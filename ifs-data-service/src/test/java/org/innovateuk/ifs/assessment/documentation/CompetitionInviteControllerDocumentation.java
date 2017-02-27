@@ -216,7 +216,7 @@ public class CompetitionInviteControllerDocumentation extends BaseControllerMock
                                 parameterWithName("page").optional()
                                         .description("Page number of the paginated data. Starts at 0. Defaults to 0."),
                                 parameterWithName("sort").optional()
-                                        .description("The property to sort the elements on. For example `sort=firstName,asc`. Defaults to `firstName,asc`")
+                                        .description("The property to sort the elements on. For example `sort=name,asc`. Defaults to `name,asc`")
                         ),
                         responseFields(assessorCreatedInvitePageResourceFields)
                                 .andWithPrefix("content[]", assessorCreatedInviteResourceFields)
