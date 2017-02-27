@@ -20,7 +20,7 @@ import java.util.List;
  * or for sending it over.
  */
 @Component
-public class GrantClaimHandler extends FinanceRowHandler {
+public class GrantClaimHandler extends FinanceRowHandler<GrantClaim> {
     public static final String GRANT_CLAIM = "Grant Claim";
     public static final String COST_KEY = "grant-claim";
 
@@ -28,31 +28,19 @@ public class GrantClaimHandler extends FinanceRowHandler {
     private  GrantClaimValidator grantClaimValidator;
 
     @Override
-    public void validate(FinanceRowItem costItem, BindingResult bindingResult) {
-        GrantClaim grantClaim = (GrantClaim) costItem;
+    public void validate(GrantClaim grantClaim, BindingResult bindingResult) {
         super.validate(grantClaim, bindingResult, Default.class);
         grantClaimValidator.validate(grantClaim, bindingResult);
     }
 
-
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof GrantClaim) {
-            GrantClaim grantClaim = (GrantClaim) costItem;
-            return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
-        }
-        return cost;
+    public ApplicationFinanceRow toCost(GrantClaim grantClaim) {
+        return new ApplicationFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof GrantClaim) {
-            GrantClaim grantClaim = (GrantClaim) costItem;
-            return new ProjectFinanceRow(grantClaim.getId(), COST_KEY, "", GRANT_CLAIM, grantClaim.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(GrantClaim costItem) {
+        return new ProjectFinanceRow(costItem.getId(), COST_KEY, "", GRANT_CLAIM, costItem.getGrantClaimPercentage(), BigDecimal.ZERO, null,null);
     }
 
     @Override

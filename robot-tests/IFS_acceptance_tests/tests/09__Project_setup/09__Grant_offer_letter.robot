@@ -157,7 +157,7 @@ PM can view the grant offer letter page
     Given the user clicks the button/link    link=${PS_GOL_APPLICATION_HEADER}
     Then the user should see the element     jQuery=li.require-action:last-of-type
     When the user clicks the button/link     link=Grant offer letter
-    Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK. It has been created using the information provided during project setup.
+    Then the user should see the text in the page    The grant offer letter has been provided by Innovate UK.
     And the user should see the element    jQuery=label:contains(+ Upload)
     And the user goes back to the previous page
     When the user clicks the button/link    link=status of my partners
@@ -311,10 +311,10 @@ PM can remove the signed grant offer letter
 
 PM can upload new signed grant offer letter
     [Documentation]    INFUND-6780
-    [Tags]
+    [Tags]  
     When the user uploads a file    signedGrantOfferLetter    ${valid_pdf}
     And the user reloads the page
-    Then the user should see the element    jQuery=.button:contains("Send signed offer letter")
+    Then the user should see the element    jQuery=.button:contains("Send to Innovate UK")
     And the user should not see the element    jQuery=[disabled='disabled'].button:contains(Send signed offer letter)
 
 
