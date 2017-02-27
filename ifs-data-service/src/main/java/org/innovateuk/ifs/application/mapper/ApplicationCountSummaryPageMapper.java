@@ -1,17 +1,22 @@
 package org.innovateuk.ifs.application.mapper;
 
+import org.apache.poi.openxml4j.util.Nullable;
 import org.aspectj.weaver.ast.Or;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
 import org.innovateuk.ifs.commons.mapper.GlobalMapperConfig;
 import org.innovateuk.ifs.user.domain.Organisation;
+import org.innovateuk.ifs.user.repository.OrganisationRepository;
 import org.mapstruct.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
+
+import static java.util.Optional.ofNullable;
 
 @Mapper(
         config = GlobalMapperConfig.class
@@ -21,10 +26,10 @@ public class ApplicationCountSummaryPageMapper extends PageResourceMapper<Applic
     @Autowired
     private ApplicationCountSummaryMapper applicationCountSummaryMapper;
 
-    private List<Organisation> organisations;
+    @Autowired
+    private OrganisationRepository organisationRepository;
 
-    public ApplicationCountSummaryPageResource mapToResource(Page<ApplicationStatistics> source, List<Organisation> organisations) {
-        this.organisations = organisations;
+    public ApplicationCountSummaryPageResource mapToResource(Page<ApplicationStatistics> source) {
         ApplicationCountSummaryPageResource result = new ApplicationCountSummaryPageResource();
         return mapFields(source, result);
     }
@@ -33,13 +38,8 @@ public class ApplicationCountSummaryPageMapper extends PageResourceMapper<Applic
     protected Function<ApplicationStatistics, ApplicationCountSummaryResource> contentElementConverter() {
         return as -> {
             ApplicationCountSummaryResource resource = applicationCountSummaryMapper.mapToResource(as);
-            resource.setLeadOrganisation(
-                    organisations.stream()
-                    .filter(org -> org.getId().equals(as.getLeadOrganisationId()))
-                    .findFirst()
-                    .map(Organisation::getName)
-                    .orElse("")
-            );
+            Optional<Organisation> organisation = ofNullable(organisationRepository.findOne(as.getLeadOrganisationId()));
+            resource.setLeadOrganisation(organisation.map(Organisation::getName).orElse(""));
             return resource;
         };
     }

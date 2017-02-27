@@ -47,8 +47,6 @@ public class ApplicationCountSummaryServiceImpl extends BaseTransactionalService
         Pageable pageable = new PageRequest(pageIndex, pageSize);
         Page<ApplicationStatistics> applicationStatistics = applicationStatisticsRepository.findByCompetition(competitionId, filterStr, pageable);
 
-        List<Organisation> organisations = organisationRepository.findAll(simpleMap(applicationStatistics.getContent(), ApplicationStatistics::getLeadOrganisationId));
-
-        return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats, organisations));
+        return find(applicationStatistics, notFoundError(Page.class)).andOnSuccessReturn(stats -> applicationCountSummaryPageMapper.mapToResource(stats));
     }
 }

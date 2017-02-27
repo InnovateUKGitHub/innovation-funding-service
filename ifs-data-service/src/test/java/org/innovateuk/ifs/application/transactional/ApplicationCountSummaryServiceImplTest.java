@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.transactional;
 
 import org.innovateuk.ifs.BaseServiceUnitTest;
+import org.innovateuk.ifs.PageableMatcher;
 import org.innovateuk.ifs.application.domain.ApplicationStatistics;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryPageResource;
 import org.innovateuk.ifs.application.resource.ApplicationCountSummaryResource;
@@ -43,30 +44,6 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         return new ApplicationCountSummaryServiceImpl();
     }
 
-    private static class PageableMatcher extends ArgumentMatcher<Pageable> {
-        private int expectedPage;
-        private int expectedPageSize;
-
-        public PageableMatcher(int expectedPage, int expectedPageSize) {
-            this.expectedPage = expectedPage;
-            this.expectedPageSize = expectedPageSize;
-        }
-
-        @Override
-        public boolean matches(Object argument) {
-            Pageable arg = (Pageable) argument;
-            if (!(expectedPage == arg.getPageNumber())) {
-                return false;
-            }
-
-            if (!(expectedPageSize == arg.getPageSize())) {
-                return false;
-            }
-
-            return true;
-        }
-    }
-
     @Test
     public void getApplicationCountSummariesByCompetitionId() {
         Long competitionId = 1L;
@@ -77,20 +54,13 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
                 .withType(APPLICANT)
                 .build();
 
-        List<Organisation> leadOrganisations = newOrganisation()
-                .withId(1L, 2L)
-                .withName("Lead Org 1", "Lead Org 2")
-                .build(2);
-
         List<ApplicationStatistics> applicationStatistics = newApplicationStatistics()
                 .withProcessRoles(
                         newProcessRole()
                                 .withRole(applicantRole, leadApplicationRole)
-                                .withOrganisationId(2L, 1L)
                                 .build(2),
                         newProcessRole()
                                 .withRole(leadApplicationRole, applicantRole)
-                                .withOrganisationId(2L, 3L)
                                 .build(2)
                 )
                 .build(2);
@@ -101,8 +71,7 @@ public class ApplicationCountSummaryServiceImplTest extends BaseServiceUnitTest<
         ApplicationCountSummaryPageResource resource = mock(ApplicationCountSummaryPageResource.class);
 
         when(applicationStatisticsRepositoryMock.findByCompetition(eq(competitionId),eq("filter"),argThat(new PageableMatcher(0,20)))).thenReturn(page);
-        when(organisationRepositoryMock.findAll(asList(1L, 2L))).thenReturn(leadOrganisations);
-        when(applicationCountSummaryPageMapperMock.mapToResource(page, leadOrganisations)).thenReturn(resource);
+        when(applicationCountSummaryPageMapperMock.mapToResource(page)).thenReturn(resource);
 
         ServiceResult<ApplicationCountSummaryPageResource> result = service.getApplicationCountSummariesByCompetitionId(competitionId,0,20, ofNullable("filter"));
 
