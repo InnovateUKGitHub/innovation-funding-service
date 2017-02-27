@@ -15,6 +15,7 @@ import static java.util.Optional.of;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
 import static org.innovateuk.ifs.commons.service.ParameterizedTypeReferences.*;
 import static org.innovateuk.ifs.email.builders.EmailContentResourceBuilder.newEmailContentResource;
+import static org.innovateuk.ifs.invite.builder.AssessorCreatedInvitePageResourceBuilder.newAssessorCreatedInvitePageResource;
 import static org.innovateuk.ifs.invite.builder.AssessorCreatedInviteResourceBuilder.newAssessorCreatedInviteResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteOverviewResourceBuilder.newAssessorInviteOverviewResource;
 import static org.innovateuk.ifs.invite.builder.AssessorInviteToSendResourceBuilder.newAssessorInviteToSendResource;
@@ -144,11 +145,14 @@ public class CompetitionInviteRestServiceImplTest extends BaseRestServiceUnitTes
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
-        List<AssessorCreatedInviteResource> expected = newAssessorCreatedInviteResource().build(2);
+        int page = 1;
+        AssessorCreatedInvitePageResource expected = newAssessorCreatedInvitePageResource()
+                .withContent(newAssessorCreatedInviteResource().build(2))
+                .build();
 
-        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreatedInvites", competitionId), assessorCreatedInviteResourceListType(), expected);
+        setupGetWithRestResultExpectations(format("%s/%s/%s", restUrl, "getCreatedInvites", competitionId), AssessorCreatedInvitePageResource.class, expected);
 
-        List<AssessorCreatedInviteResource> actual = service.getCreatedInvites(competitionId).getSuccessObject();
+        AssessorCreatedInvitePageResource actual = service.getCreatedInvites(competitionId, page).getSuccessObject();
         assertEquals(expected, actual);
     }
 
