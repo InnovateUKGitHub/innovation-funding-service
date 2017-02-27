@@ -481,23 +481,14 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
 
     private ServiceResult<Long> getByApplicationId(Long applicationId, FormInputType financeType, FormInputType nonFinanceType) {
         Application app = applicationRepository.findOne(applicationId);
-        ServiceResult<Boolean> isIncludeGrowthTableResult = isIncludeGrowthTable(app.getCompetition().getId());
-        ServiceResult<Long> valueResult = find(isIncludeGrowthTableResult).
+        return isIncludeGrowthTable(app.getCompetition().getId()).
                 andOnSuccess((isIncludeGrowthTable) -> {
-                    Long value = null;
-                    ServiceResult<FormInputResponse> result;
                     if (isIncludeGrowthTable) {
-                        result = getOnlyForApplication(applicationId, financeType);
+                        return getOnlyForApplication(applicationId, financeType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
                     } else {
-                        result = getOnlyForApplication(applicationId, nonFinanceType);
+                        return getOnlyForApplication(applicationId, nonFinanceType).andOnSuccessReturn(result -> Long.parseLong(result.getValue()));
                     }
-                    if (result.isSuccess()) {
-                        value = (Long.parseLong(result.getSuccessObject().getValue()));
-                    }
-
-                    return serviceSuccess(value);
                 });
-        return valueResult;
     }
 
     private ServiceResult<FormInputResponse> getOnlyForApplication(Long applicationId, FormInputType formInputType) {
