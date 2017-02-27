@@ -1,29 +1,27 @@
 package org.innovateuk.ifs.competition.security;
 
-import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
-import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
-import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
-import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static java.util.stream.Collectors.toList;
-import static org.mockito.Mockito.verifyNoMoreInteractions;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.time.LocalDateTime;
-import java.util.List;
-
-import org.innovateuk.ifs.competition.domain.Competition;
-import org.innovateuk.ifs.user.resource.UserRoleType;
-import org.junit.Before;
-import org.junit.Test;
-
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionSetupSection;
 import org.innovateuk.ifs.competition.resource.CompetitionTypeResource;
 import org.innovateuk.ifs.competition.transactional.CompetitionSetupService;
+import org.innovateuk.ifs.user.resource.UserRoleType;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.time.LocalDateTime;
+import java.util.List;
+
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static java.util.stream.Collectors.toList;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.COMP_ADMIN;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PROJECT_FINANCE;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 /**
  * Testing the permission rules applied to the secured methods in OrganisationService.  This set of tests tests for the
@@ -61,6 +59,9 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
             assertAccessDenied(() -> classUnderTest.create(), () -> {
                 verifyNoMoreInteractions(rules);
             });
+            assertAccessDenied(() -> classUnderTest.createNonIfs(), () -> {
+                verifyNoMoreInteractions(rules);
+            });
             assertAccessDenied(() -> classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS), () -> {
                 verifyNoMoreInteractions(rules);
             });
@@ -80,6 +81,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.findAllTypes();
         Long competitionId = 2L;
         classUnderTest.create();
+        classUnderTest.createNonIfs();
         Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
@@ -91,6 +93,7 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
         classUnderTest.findAllTypes();
         Long competitionId = 2L;
         classUnderTest.create();
+        classUnderTest.createNonIfs();
         Long sectionId = 3L;
         classUnderTest.markSectionComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
         classUnderTest.markSectionInComplete(competitionId, CompetitionSetupSection.INITIAL_DETAILS);
@@ -129,6 +132,11 @@ public class CompetitionSetupServiceSecurityTest extends BaseServiceSecurityTest
 
         @Override
         public ServiceResult<Void> copyFromCompetitionTemplate(Long competitionId, Long templateId) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<CompetitionResource> createNonIfs() {
             return null;
         }
 

@@ -1,27 +1,27 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="assessment-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content" th:with="score=${param.unsuccessful} ? 3 : 7">
 
 
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Dashboard'}, ${'/prototypes/675-dashboard'})" />
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'10294855: Mobile Phone Data for Logistics Analytics'}, ${'Feedback overview'})" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-assessor-page-title(${'10294855: Mobile Phone Data for Logistics Analytics'}, ${'Feedback overview'})" />
 
-	
+
 	<div th:if="${param.internal == null}" th:remove="tag">
 
 		<div th:if="${param.unsuccessful == null}" th:remove="tag">
@@ -76,7 +76,7 @@
 
 	</div>
 
-	
+
 	<div th:if="${param.internal != null}" th:remove="tag">
 
 	<h2 class="heading-medium">Average scores</h2>
@@ -221,7 +221,7 @@
 	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application details</h2>
 	<p class="form-hint" th:unless="${param.internal != null}">Assessors do not provide scores on these sections of the application.</p>
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-application-details-panel" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-application-details-panel" />
 
 
 	<ul class="list-overview extra-margin">
@@ -266,7 +266,7 @@
 			</div>
 		</li>
 	</ul>
-	
+
 	<h2 th:class="(${param.internal != null} ? 'heading-medium' : 'heading-medium no-margin-bottom')">Application questions</h2>
 	<p class="form-hint" th:unless="${param.internal != null}">Each question has been assessed by several independent assessors. They have given a score out of 10 and written feedback.</p>
 	<ul class="list-overview">
@@ -275,7 +275,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">1. Business opportunity</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -283,7 +283,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">2. Potential market</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -291,7 +291,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">3. Project exploitation</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -299,7 +299,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">4. Economic benefit</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -307,7 +307,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">5. Technical approach</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -315,12 +315,12 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">6. Innovation</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}"  th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
 			<div class="grid-row">
-				
+
 
 
 				<div class="column-two-thirds" th:with="link=${param.unsuccessful} ? '/prototypes/545-application-feedback-question7?unsuccessful' : '/prototypes/545-application-feedback-question7'" th:unless="${param.internal != null}">
@@ -332,7 +332,7 @@
 				</div>
 
 
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -340,7 +340,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">8. Project team</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}"  th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -348,7 +348,7 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">9. Funding</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 		<li class="section-status">
@@ -356,11 +356,11 @@
 				<div class="column-two-thirds">
 					<h3 class="heading-small">10. Adding value</h3>
 				</div>
-				<div th:include="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}"  th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-feedback-score" th:with="score=${score}" />
 			</div>
 		</li>
 	</ul>
-	
+
 	<div class="grid-row extra-margin">
 		<div class="column-two-thirds">
 			&nbsp;
@@ -368,7 +368,7 @@
 		<div class="column-third">
 			<p>
 				Average overall: <strong th:text="${score}+'0%'" class="heading-">SCORE</strong>
-			</p>	
+			</p>
 		</div>
 	</div>
 
@@ -383,9 +383,9 @@
 
 			<div class="question">
 
-				<div th:include="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-finances-summary" th:with="hideText='hide'" />
 
-				<div th:include="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" th:remove="tag" />
+				<th:block th:insert="prototypes/fragments/applicant-view :: prototype-project-cost-breakdown" />
 			</div>
 
 		</div>
@@ -402,7 +402,7 @@
 			<h4 class="heading-small" th:text="${(param.internal != null ? 'Ray Browne':'Assessor 1')}">Assessor 1</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-			
+
 			<div th:unless="${param.internal == null}" th:remove="tag">
 				<h5 class="heading-small">Other comments</h5>
 				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
@@ -423,7 +423,7 @@
 			<h4 class="heading-small" th:text="${(param.internal != null ? 'Colin Seabrook':'Assessor 1')}">Assessor 4</h4>
 			<p>Recommend: <span th:text="${recommend}">Yes</span></p>
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
-			
+
 			<div th:unless="${param.internal == null}" th:remove="tag">
 				<h5 class="heading-small">Other comments</h5>
 				<p>Facilis possimus iure, natus delectus voluptatum quaerat inventore molestias maiores perferendis, suscipit quo placeat libero sapiente consequatur reiciendis tenetur aliquam, ipsa porro. Lorem ipsum dolor sit amet, consectetur adipisicing elit. Velit, magni ab. Molestias nisi quisquam aspernatur ullam ut placeat consequuntur voluptates nemo voluptatem, magni deleniti voluptate ipsum adipisci sapiente, minima amet!</p>
@@ -435,17 +435,17 @@
 			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ea eaque itaque quis vel quod sapiente ex minus doloribus, iure corporis sint non fugit unde repellendus iusto hic saepe voluptate asperiores!</p>
 		</li>
 	</ul>
-	
-	<div th:include="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" th:remove="tag" />
+
+	<th:block th:insert="prototypes/fragments/assessor-view :: prototype-modal-reject" th:with="backTo='/prototypes/871-assessor-comp-dashboard'" />
 
 
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

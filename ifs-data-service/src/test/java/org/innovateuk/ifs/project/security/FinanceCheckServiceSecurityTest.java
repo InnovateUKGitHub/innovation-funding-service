@@ -74,10 +74,6 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         );
     }
 
-    private void assertInternalRolesCanPerform(Runnable actionFn) {
-        assertRolesCanPerform(actionFn, COMP_ADMIN, PROJECT_FINANCE);
-    }
-
     private void assertRolesCanPerform(Runnable actionFn, UserRoleType... supportedRoles) {
         asList(UserRoleType.values()).forEach(role -> {
             RoleResource roleResource = newRoleResource().withType(role).build();
@@ -127,7 +123,13 @@ public class FinanceCheckServiceSecurityTest extends BaseServiceSecurityTest<Fin
         }
 
         @Override
+        public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
+            return null;
+        }
+
+        @Override
         public ServiceResult<FinanceCheckEligibilityResource> getFinanceCheckEligibilityDetails(Long projectId, Long organisationId) { return serviceSuccess(newFinanceCheckEligibilityResource().build()); }
+
     }
 }
 

@@ -68,6 +68,7 @@ public class ProfileControllerTest extends BaseUnitTest {
                 .withEthnicity(2L)
                 .build();
         when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class))).thenReturn(user);
+        when(userAuthenticationService.getAuthenticatedUser(isA(HttpServletRequest.class), eq(true))).thenReturn(user);
         when(ethnicityRestService.findAllActive()).thenReturn(restSuccess(newEthnicityResource().build(4)));
     }
 

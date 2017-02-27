@@ -3,14 +3,9 @@ package org.innovateuk.threads.resource;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.innovateuk.ifs.address.resource.AddressResource;
 
 import java.time.LocalDateTime;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Optional.ofNullable;
 
 public class QueryResource {
     public final Long id;
@@ -34,6 +29,7 @@ public class QueryResource {
         this.awaitingResponse = awaitingResponse;
         this.createdOn = createdOn;
     }
+
 
     @Override
     public boolean equals(Object o) {

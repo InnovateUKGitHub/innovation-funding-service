@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Queries'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Queries'" />
 </head>
 
 <body th:with="context='project-management'" class="query-form">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content" th:with="baseUrl=@{${model.baseUrl}(projectId=${model.projectId},organisationId=${model.organisationId})}">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Finance checks',linkClass='link-back',linkUrl=@{/project/{projectId}/finance-check(projectId=${model.projectId})},currentCompetition=null"  />
 
     <div class="page-title">
-        <div th:include="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" th:remove="tag" />
+        <th:block th:insert="fragments/elements :: project-title (projectId=${model.projectId}, projectName=${model.projectName})" />
         <h1 class="heading-xlarge">
             <th:block th:text="${model.organisationName}" />
             <small th:if="${model.leadPartnerOrganisation}">(Lead Partner)</small>
@@ -69,7 +69,7 @@
                     <th:block th:each="section_type : ${T(org.innovateuk.threads.resource.FinanceChecksSectionType).values()}">
                         <th:block th:if="*{section}">
                             <option th:value="${section_type.name()}"
-                                    th:selected="${#strings.toLowerCase(section_type.name())} == *{section}"
+                                    th:selected="${#strings.toUpperCase(section_type.name())} == ${#strings.toUpperCase(form.section)}"
                                     th:text="${#strings.capitalize(#strings.toLowerCase(section_type.name()))}">option</option>
                         </th:block>
                         <th:block th:unless="*{section}">
@@ -109,7 +109,7 @@
                       data-required-errormessage=#{validation.notesandqueries.query.required}"
                               th:classappend="${#fields.hasErrors('query') ? 'form-control field-error' : 'form-control'}"></textarea>
                     <div class="textarea-footer" th:with="query=*{query}">
-                        <div th:include="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" th:remove="tag" />
+                        <th:block th:insert="question-type/form-elements :: form-word-count (maxWords=${model.maxQueryWords}, currentWordsLeft=${#ifsUtil.wordsRemaining(model.maxQueryWords, content)})" />
                     </div>
                 </div>
             </div>

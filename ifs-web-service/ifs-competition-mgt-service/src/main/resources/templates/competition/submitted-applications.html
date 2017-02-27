@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle=|Submitted applications - ${model.competitionName}|"  th:remove="tag" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Submitted applications - ${model.competitionName}|" />
     </head>
 
     <body class="dashboard-internal full-width">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: body-start" />
+       <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div th:include="fragments/layout :: header-sub"
                  th:with="linkTitle='Applications',linkClass='link-back',linkUrl=@{/competition/{competitionId}/applications(competitionId=${model.competitionId})}"
@@ -41,15 +41,39 @@
                 </li>
             </ul>
 
-            <div class="grid-row sorting">
-                <div class="column-two-thirds">
-                    <p><span class="heading-xlarge no-margin" th:text="${model.applicationsSubmitted}">22</span> <span class="heading-small">applications</span></p>
-
-                    <!--/* TODO: Implement sort dropdown for the table - INFUND-8058 */-->
+            <form method="GET">
+                <div class="search-filters extra-margin">
+                    <fieldset>
+                        <legend class="heading-medium">Filter applications</legend>
+                        <div class="grid-row">
+                            <div class="column-two-thirds">
+                                <label class="form-label" for="filterSearch">Search by application number</label>
+                                <input type="text" class="form-control" id="filterSearch" name="filterSearch" th:value="${model.filter}"/>
+                                <a href="?" th:href="'?sort=' + ${model.sorting}">Clear all filters</a>
+                            </div>
+                            <div class="column-third">
+                                <button class="button">Filter</button>
+                            </div>
+                        </div>
+                    </fieldset>
 
                 </div>
-            </div>
-
+                <div class="grid-row sorting">
+                    <div class="column-half">
+                        <p><span class="heading-xlarge no-margin" th:text="${model.pagination.totalCount}">22</span>
+                            <span class="heading-small">applications</span>
+                        </p>
+                    </div>
+                    <div class="column-half alignright">
+                        <label for="sort-by">Sort by</label>
+                        <select id="sort-by" name="sort" class="js-auto-submit form-control">
+                            <option value="id" th:selected="${(model.sorting == 'id')}">Application no.</option>
+                            <option value="lead" th:selected="${(model.sorting == 'lead')}">Lead</option>
+                        </select>
+                        <button type="submit" class="button button-secondary no-margin js-hidden">Sort</button>
+                    </div>
+                </div>
+            </form>
             <div class="table-overflow">
                 <table id="application-list">
                     <thead>
@@ -82,11 +106,12 @@
                     </tbody>
                 </table>
             </div>
+            <div th:include="fragments/elements :: general-pagination(pagination=${model.pagination})" th:remove="tag"/>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

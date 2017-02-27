@@ -19,32 +19,37 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     public static final String LIVE_QUERY = "SELECT c FROM Competition c WHERE CURRENT_TIMESTAMP BETWEEN " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' AND m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE";
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     public static final String LIVE_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE CURRENT_TIMESTAMP BETWEEN " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' AND m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE";
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     public static final String PROJECT_SETUP_QUERY = "SELECT c FROM Competition c WHERE CURRENT_TIMESTAMP >= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' and m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE";
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     public static final String PROJECT_SETUP_COUNT_QUERY = "SELECT COUNT(c) FROM Competition c WHERE " +
             "CURRENT_TIMESTAMP >= (SELECT m.date FROM Milestone m WHERE m.type = 'RELEASE_FEEDBACK' and m.competition.id = c.id) AND " +
-            "c.setupComplete = TRUE AND c.template = FALSE";
+            "c.setupComplete = TRUE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     public static final String UPCOMING_QUERY = "SELECT c FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
-            "c.setupComplete = FALSE AND c.template = FALSE";
+            "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     public static final String UPCOMING_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE (CURRENT_TIMESTAMP <= " +
             "(SELECT m.date FROM Milestone m WHERE m.type = 'OPEN_DATE' AND m.competition.id = c.id) AND c.setupComplete = TRUE) OR " +
-            "c.setupComplete = FALSE AND c.template = FALSE";
+            "c.setupComplete = FALSE AND c.template = FALSE AND c.nonIfs = FALSE";
 
     public static final String SEARCH_QUERY = "SELECT c FROM Competition c LEFT JOIN c.milestones m LEFT JOIN c.competitionType ct " +
-            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE " +
+            "WHERE (m.type = 'OPEN_DATE' OR m.type IS NULL) AND (c.name LIKE :searchQuery OR ct.name LIKE :searchQuery) AND c.template = FALSE AND c.nonIfs = FALSE " +
             "ORDER BY m.date";
+
+    public static final String NON_IFS_QUERY = "SELECT c FROM Competition c WHERE nonIfs = TRUE";
+
+    public static final String NON_IFS_COUNT_QUERY = "SELECT count(c) FROM Competition c WHERE nonIfs = TRUE";
+
 
     @Query(LIVE_QUERY)
     List<Competition> findLive();
@@ -64,6 +69,12 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     @Query(UPCOMING_COUNT_QUERY)
     Long countUpcoming();
 
+    @Query(NON_IFS_QUERY)
+    List<Competition> findNonIfs();
+
+    @Query(NON_IFS_COUNT_QUERY)
+    Long countNonIfs();
+
     @Query(SEARCH_QUERY)
     Page<Competition> search(@Param("searchQuery") String searchQuery, Pageable pageable);
 
@@ -77,4 +88,6 @@ public interface CompetitionRepository extends PagingAndSortingRepository<Compet
     List<Competition> findByCodeLike(String code);
 
     Competition findByTemplateForTypeId(Long id);
+
+    List<Competition> findByInnovationSectorCategoryId(Long id);
 }

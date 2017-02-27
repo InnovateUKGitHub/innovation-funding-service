@@ -36,6 +36,7 @@ import java.util.*;
 
 import static org.innovateuk.ifs.application.builder.ApplicationBuilder.newApplication;
 import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
+import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
@@ -312,6 +313,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         ViabilityResource viability1 = new ViabilityResource(Viability.APPROVED, ViabilityRagStatus.AMBER);
         ViabilityResource viability2 = new ViabilityResource(Viability.NOT_APPLICABLE, ViabilityRagStatus.UNSET);
         ViabilityResource viability3 = new ViabilityResource(Viability.REVIEW, ViabilityRagStatus.UNSET);
+        EligibilityResource eligibility1 = new EligibilityResource(Eligibility.APPROVED, EligibilityRagStatus.AMBER);
+        EligibilityResource eligibility2 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
+        EligibilityResource eligibility3 = new EligibilityResource(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
         when(projectRepositoryMock.findOne(projectId)).thenReturn(project);
         when(partnerOrganisationRepositoryMock.findByProjectId(projectId)).thenReturn(partnerOrganisations);
@@ -327,9 +331,15 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(viability1));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(viability2));
         when(projectFinanceServiceMock.getViability(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(viability3));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[0].getId()))).thenReturn(serviceSuccess(eligibility1));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[1].getId()))).thenReturn(serviceSuccess(eligibility2));
+        when(projectFinanceServiceMock.getEligibility(new ProjectOrganisationCompositeId(projectId, organisations[2].getId()))).thenReturn(serviceSuccess(eligibility3));
 
         ProjectFinanceResource[] projectFinanceResources = newProjectFinanceResource().withId(234L, 345L, 456L).withOrganisation(organisations[0].getId(), organisations[1].getId(), organisations[2].getId()).buildArray(3, ProjectFinanceResource.class);
-        when(projectFinanceServiceMock.getProjectFinances(projectId)).thenReturn(ServiceResult.serviceSuccess(Arrays.asList(projectFinanceResources)));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[0].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[0]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[1].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[1]));
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisations[2].getId())).thenReturn(ServiceResult.serviceSuccess(projectFinanceResources[2]));
+
         QueryResource queryResource1 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , true, LocalDateTime.now());
         QueryResource queryResource2 = new QueryResource(12L, 23L, new ArrayList<>(), FinanceChecksSectionType.ELIGIBILITY, "Title" , false, LocalDateTime.now());
         when(projectFinanceQueriesService.findAll(234L)).thenReturn(serviceSuccess(Arrays.asList(queryResource1)));
@@ -357,6 +367,8 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
         assertEquals(viability3.getViabilityRagStatus(), organisation3Results.getViabilityRagStatus());
         assertFalse(organisation3Results.isAwaitingResponse());
     }
+
+
 
     @Test
     public void testGetFinanceCheckEligibility(){
@@ -451,6 +463,151 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
     }
 
     @Test
+    public void testQueryActionRequired() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", true, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertTrue(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryNoActionRequired() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceSuccess(resource));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithNoProjectFinance() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        QueryResource fakeQuery = new QueryResource(1L, 1L, Collections.emptyList(), FinanceChecksSectionType.ELIGIBILITY, "", false, LocalDateTime.now());
+        List<QueryResource> queries = Collections.singletonList(fakeQuery);
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithNoQueries() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+        List<QueryResource> queries = Collections.emptyList();
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(queries));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithQueriesFailure() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceFailure(internalServerErrorError()));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
+    public void testQueryWithNullQueries() {
+
+        Long projectId = 123L;
+        Long applicationId = 456L;
+        Long organisationId = 789L;
+
+        Competition competition = newCompetition().build();
+        Application application = newApplication().withId(applicationId).withCompetition(competition).withDurationInMonths(5L).build();
+        Project project = newProject().withId(projectId).withApplication(application).withDuration(6L).withName("Project1").build();
+
+        Organisation organisation = newOrganisation().
+                withOrganisationType(OrganisationTypeEnum.BUSINESS).withId(organisationId, organisationId + 1L).withName("Organisation1").build();
+        ProjectFinanceResource resource = newProjectFinanceResource().build();
+
+        when(projectFinanceRowServiceMock.financeChecksDetails(projectId, organisationId)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(projectFinanceQueriesService.findAll(resource.getId())).thenReturn(serviceSuccess(null));
+
+        ServiceResult<Boolean> result = service.isQueryActionRequired(project.getId(), organisation.getId());
+        assertTrue(result.isSuccess());
+        assertFalse(result.getSuccessObject());
+    }
+
+    @Test
     public void testGetFinanceCheckEligibilityNoApplicationFinances(){
 
         Long projectId = 123L;
@@ -483,7 +640,9 @@ public class FinanceCheckServiceImplTest extends BaseServiceUnitTest<FinanceChec
 
     @Override
     protected FinanceCheckServiceImpl supplyServiceUnderTest() {
-        return new FinanceCheckServiceImpl();
+
+        FinanceCheckServiceImpl impl = new FinanceCheckServiceImpl();
+        return impl;
     }
 
     private Map<FinanceRowType, FinanceRowCostCategory> createProjectFinance() {

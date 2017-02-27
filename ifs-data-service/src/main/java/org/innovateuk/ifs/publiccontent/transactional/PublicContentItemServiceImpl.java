@@ -1,10 +1,8 @@
 package org.innovateuk.ifs.publiccontent.transactional;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.innovateuk.ifs.category.domain.InnovationArea;
-import org.innovateuk.ifs.category.repository.CompetitionCategoryLinkRepository;
 import org.innovateuk.ifs.category.repository.InnovationAreaRepository;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.ServiceResult;
@@ -28,10 +26,10 @@ import org.springframework.web.util.UriUtils;
 
 import java.io.UnsupportedEncodingException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
+import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
 
 /**
  * Service for operations around the usage and processing of Competitions
@@ -41,9 +39,6 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private InnovationAreaRepository innovationAreaRepository;
-
-    @Autowired
-    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
 
     @Autowired
     private KeywordRepository keywordRepository;
@@ -122,10 +117,12 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
         innovationAreaId.ifPresent(id -> {
             InnovationArea innovationArea = innovationAreaRepository.findOne(id);
-            if(null != innovationArea) {
-                competitionIds.addAll(competitionCategoryLinkRepository.findByCategoryId(innovationArea.getSector().getId()).stream()
-                        .map(competitionCategoryLink -> competitionCategoryLink.getEntity().getId())
-                        .collect(Collectors.toList()));
+
+            if (innovationArea != null) {
+                competitionIds.addAll(simpleMap(
+                        competitionRepository.findByInnovationSectorCategoryId(innovationArea.getSector().getId()),
+                        Competition::getId
+                ));
             }
         });
 
@@ -173,6 +170,9 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
         publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
         publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
         publicContentItemResource.setCompetitionTitle(competition.getName());
+        if (competition.isNonIfs()) {
+            publicContentItemResource.setNonIfsUrl(competition.getNonIfsUrl());
+        }
 
         return publicContentItemResource;
     }
@@ -184,13 +184,7 @@ public class PublicContentItemServiceImpl extends BaseTransactionalService imple
 
         competitionList.getContent().forEach(competition -> {
             PublicContent publicContent = publicContentRepository.findByCompetitionId(competition.getId());
-
-            PublicContentItemResource publicContentItemResource = new PublicContentItemResource();
-            publicContentItemResource.setPublicContentResource(publicContentMapper.mapToResource(publicContent));
-            publicContentItemResource.setCompetitionOpenDate(competition.getStartDate());
-            publicContentItemResource.setCompetitionCloseDate(competition.getEndDate());
-            publicContentItemResource.setCompetitionTitle(competition.getName());
-
+            PublicContentItemResource publicContentItemResource = mapPublicContentToPublicContentItemResource(publicContent, competition);
             publicContentItemResources.add(publicContentItemResource);
         });
 

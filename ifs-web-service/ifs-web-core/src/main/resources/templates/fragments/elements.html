@@ -1,46 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:ifs="http://www.w3.org/1999/xhtml">
+
 <!-- ===========================Element: Skip-content=========================== -->
 
-<div th:fragment="skiplink-container">
+<th:block th:fragment="skiplink-container">
     <div id="skiplink-container">
       <div>
         <a href="#content" class="skiplink">Skip to main content</a>
       </div>
     </div>
-</div>
+</th:block>
 
 <!-- ===========================Element: cookie message=========================== -->
 
-<div th:fragment="global-cookie-message">
+<th:block th:fragment="global-cookie-message">
     <div id="global-cookie-message">
         <p>GOV.UK uses cookies to make the site simpler. <a href="/info/cookies">Find out more about cookies</a></p>
     </div>
-</div>
+</th:block>
 
 <!-- ===========================Element: alert message=========================== -->
 
-<div th:fragment="global-alert-message">
+<th:block th:fragment="global-alert-message">
     <div th:if="${alertMessages}" id="global-alert-message">
-        <div th:remove="tag" th:each="alertMessage : ${alertMessages}">
+        <div th:each="alertMessage : ${alertMessages}">
             <div class="event-alert event-warning no-animation">
                 <p><span ifs:utext="${alertMessage.message}"></span></p>
             </div>
         </div>
     </div>
-</div>
+</th:block>
 
 
 <!-- ===========================Element: Header logo =========================== -->
 
-<div th:fragment="header-logo">
+<th:block th:fragment="header-logo">
     <div class="header-logo">
         <a href="https://www.gov.uk/" title="Go to the GOV.UK homepage" id="logo" class="content">
           <img th:src="${@mvcResourceUrlProvider.getForLookupPath('/images/gov.uk_logotype_crown_invert_trans.png')}" src="/images/gov.uk_logotype_crown_invert_trans.png?0.19.2" alt="" width="36" height="32" /> GOV.UK
         </a>
     </div>
-</div>
+</th:block>
 
 <!-- ===========================Element: Header links =========================== -->
-<div th:fragment="header-links">
+<th:block th:fragment="header-links">
     <a href="/"  id="proposition-name">Innovation Funding Service</a>
     <ul th:if="${#authentication} ? ${#authorization.expression('isAuthenticated()')} : ${false}" id="proposition-links">
         <li th:unless="${hideDashboardLink} == 'true'">
@@ -50,48 +53,48 @@
             <a th:href="${logoutUrl}">Sign out</a>
         </li>
     </ul>
-</div>
+</th:block>
 <!-- =========================== Element: Competition Deadline =========================== -->
-<div th:fragment="competition-deadline">
+<th:block th:fragment="competition-deadline">
     <div class="competition-deadline" th:if="${endDate != null}">
         <div class="day">
-            <div th:include="fragments/elements :: ordinal-day (date=${endDate})" th:remove="tag" />
+            <th:block th:insert="fragments/elements :: ordinal-day (date=${endDate})" />
         </div>
         <div class="month" th:text="${#temporals.monthName(endDate)}+' deadline'" />
     </div>
-</div>
+</th:block>
 
 <!-- =========================== Element: simple ordinal day =========================== -->
 
-<div th:fragment="ordinal-day (date)">
-    <span th:remove="tag" th:text="${#temporals.day(date)}" />
-</div>
+<th:block th:fragment="ordinal-day (date)">
+    <th:block th:text="${#temporals.day(date)}" />
+</th:block>
 
 <!-- =========================== Element: Application Title =========================== -->
-<div th:fragment="application-title (applicationId, applicationName) ">
+<th:block th:fragment="application-title (applicationId, applicationName) ">
     <p class="subtitle" th:text="${#numbers.formatInteger(applicationId,8)} + ': ' + ${applicationName} "/>
-</div>
+</th:block>
 
 <!-- =========================== Element: Competition Title =========================== -->
-<div th:fragment="competition-title (competition) ">
+<th:block th:fragment="competition-title (competition) ">
     <p class="subtitle" th:text="${#numbers.formatInteger(competition.id,8)} + ': ' + ${competition.name == null ? 'No competition title defined' : competition.name} "/>
-</div>
+</th:block>
 
 <!-- =========================== Element: Project Title =========================== -->
-<div th:fragment="project-title (projectId, projectName) ">
+<th:block th:fragment="project-title (projectId, projectName) ">
     <p class="subtitle" th:text="${#numbers.formatInteger(projectId,8)} + ': ' + ${projectName} "/>
-</div>
+</th:block>
 
 <!-- =========================== Element: Competition Closing soon? =========================== -->
-<div th:fragment="competition-closing-warning (competition) ">
-    <div th:if="${competition.isClosingSoon()}" th:remove="tag">
+<th:block th:fragment="competition-closing-warning (competition) ">
+    <th:block th:if="${competition.isClosingSoon()}">
         <div class="warning-alert">
             Please note that this competition will close shortly. You will not be able to submit after the competition closes and any edits you make will not be saved.
         </div>
-    </div>
-</div>
+    </th:block>
+</th:block>
 <!-- =========================== Element: Pie chart =========================== -->
-<div th:fragment="pie-small">
+<th:block th:fragment="pie-small">
     <div class="pie-container" th:if="${daysLeft != null}">
         <div class="pie small" th:text="${daysPercentage}+'%'"></div>
         <div class="pie-overlay">
@@ -99,8 +102,8 @@
             <span class="visuallyhidden">Days left</span>
         </div>
     </div>
-</div>
-<div th:fragment="pie">
+</th:block>
+<th:block th:fragment="pie">
     <div class="pie-container">
         <div class="pie" th:text="${daysPercentage}+'%'">10%</div>
         <div class="pie-overlay">
@@ -108,24 +111,24 @@
             <span>Days left</span>
         </div>
     </div>
-</div>
+</th:block>
 
 <!-- =========================== Element: Progress indicator =========================== -->
-<div th:fragment="progress-indicator">
+<th:block th:fragment="progress-indicator">
     <div th:class="*{size != null} ? 'progress-container '+${size} : 'progress-container'">
         <div class="progress-indicator">
             <div class="progress" th:attr="aria-valuenow=${percentage}" aria-valuemin="0" aria-valuemax="100" role="progressbar" th:style="'width:'+${percentage}+'%'">
                 <div>
-                    <span th:text="${percentage}+'%'" th:remove="tag"/>
+                    <th:block th:text="${percentage}+'%'" />
                     <span class="visuallyhidden"> Complete</span>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</th:block>
 
 <!-- =========================== Element: Notification / event =========================== -->
-<div th:fragment="notification">
+<th:block th:fragment="notification">
     <div class="event-alert" th:if="${notifications} and ${!notifications.isEmpty()}" th:with="notification=${notifications.get(0)}, questions=${notifications?.size()>1 ? 'questions' : 'a question'}">
         <p><span th:text="${notification?.assignedByName + ' has assigned ' + questions + ' to you'}"></span></p>
     </div>
@@ -158,10 +161,10 @@
         <p><span>File has been removed successfully</span></p>
     </div>
 
-</div>
+</th:block>
 
 <!-- =========================== Element: Formatted Date =========================== -->
-<div  th:fragment="pretty-date (date)" >
+<th:block th:fragment="pretty-date (date)">
     <th:block th:with="today=(${#temporals.createToday()})">
         <th:block th:if="${date.toLocalDate().equals(today)}" th:text="Today" />
         <th:block th:if="${date.toLocalDate().equals(today.minusDays(1))}" th:text="Yesterday" />
@@ -169,49 +172,46 @@
           <th:block th:text="${#temporals.format(date, 'dd MMMM')}"/> <th:block th:text="${#strings.toLowerCase(#temporals.format(date, 'hh:mma'))}"/>
         </th:block>
     </th:block>
-</div>
+</th:block>
 
 <!--  ========================== Element: Agree to application terms =============== -->
-<div th:fragment="application-agree-to-terms">
+<th:block th:fragment="application-agree-to-terms">
  	<div th:class="${#fields.hasErrors('termsAgreed')}? 'form-block error':'form-block'">
-        <span th:if="${#fields.hasErrors('termsAgreed')}" th:remove="tag">
+        <th:block th:if="${#fields.hasErrors('termsAgreed')}">
             <span class="error-message"  th:each="err : ${#fields.errors('termsAgreed')}" th:text="${err}" />
-        </span>
+        </th:block>
 		<label class="block-label selection-button-checkbox" for="agree-terms-page">
         	<input id="agree-terms-page" th:field="${form.termsAgreed}" type="checkbox" value="yes" data-disable-button-until-checked="#mark-all-as-complete" />
             As a member of this consortium I agree to the funding <a target="_blank" th:href="@{/application/terms-and-conditions}">terms and conditions</a> set out by Innovate UK.
 		</label>
 	</div>
-</div>
+</th:block>
 
 <!--  ========================== Element: Agree to application terms =============== -->
-<div th:fragment="application-agree-to-state-aid">
+<th:block th:fragment="application-agree-to-state-aid">
     <div  th:class="${#fields.hasErrors('stateAidAgreed')}? 'form-block error':'form-block'">
-        <span th:if="${#fields.hasErrors('stateAidAgreed')}" th:remove="tag">
+        <th:block th:if="${#fields.hasErrors('stateAidAgreed')}">
             <span class="error-message"  th:each="err : ${#fields.errors('stateAidAgreed')}" th:text="${err}" />
-        </span>
+        </th:block>
         <label class="block-label selection-button-checkbox" for="agree-state-aid-page">
             <input id="agree-state-aid-page" th:field="${form.stateAidAgreed}" type="checkbox" value="yes" data-disable-button-until-checked="#mark-all-as-complete" />
-            I confirm that the project costs entered for my organisation are all eligible.
+            By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
+            <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Project Costs guidance</a>
         </label>
     </div>
-    <span class="form-hint">
-        By ticking this box you are accepting that the project costs for your organisation are eligible as defined in the
-        <a href="https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance">Project Costs guidance</a>
-    </span>
-</div>
+</th:block>
 
 <!-- =========================== Element: Competition status warning ================ -->
-<div th:fragment="competition-status-message (app, competition)">
+<th:block th:fragment="competition-status-message (app, competition)">
 		<div class="warning-alert"  th:if="${(app.applicationStatusName == 'created' or app.applicationStatusName == 'open') and competition.competitionStatus.name() != 'OPEN'}">
         <h2 class="heading-small no-margin">Application not submitted</h2>
-        <p>This application has not been entered into the competition <span th:text="${competition.name}" th:remove="tag"/> as it was not submitted before the competition deadline.</p>
+        <p>This application has not been entered into the competition <th:block th:text="${competition.name}" /> as it was not submitted before the competition deadline.</p>
     </div>
 		<div class="success-alert" th:if="${(app.applicationStatusName == 'approved')}">
 	        <h2 class="heading-small no-margin">Congratulations, your application has been successful</h2>
 	        <p>
             You have been successful in this round of funding.
-            <span th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" th:remove="tag" />
+            <th:block th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}" th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'd MMMM yyyy')+'.'}" />
           </p>
           <p th:if="${currentProject}">
             <a th:href="@{/project-setup/project/{projectId}(projectId=${currentProject.id})}">Start to plan your project</a>
@@ -220,7 +220,32 @@
 	  <div class="warning-alert" th:if="${(app.applicationStatusName == 'rejected')}">
         <h2 class="heading-small no-margin">Your application has not been successful in this competition.</h2>
         <p th:if="${(competition.assessorFeedbackDate != null) and (competition.competitionStatus.name() == 'ASSESSOR_FEEDBACK')}">
-          <span th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" th:remove="tag" />.
+          <th:block th:text="${'Assessor feedback on your application will be available here on '+ #temporals.format(competition.assessorFeedbackDate, 'dd/MM/yyyy')}" />.
         </p>
     </div>
+</th:block>
+
+</html>
+
+<!-- global pagination -->
+<div th:fragment="general-pagination(pagination)" th:remove="tag">
+    <ul class="pagination" th:if="${pagination.totalPages > 1}">
+        <li class="prev" th:if="${pagination.hasPrevious}">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage - 1].path}" rel="prev" title="Navigate to previous page">
+                <span class="pagination-label">Previous</span>
+                <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage - 1].title}">1 to 20</span>
+            </a>
+        </li>
+        <li class="next" th:if="${pagination.hasNext}">
+            <a href="#" th:href="${pagination.pageNames[pagination.currentPage + 1].path}" rel="next" title="Navitate to next page">
+                <span class="pagination-label">Next</span>
+                <span class="pagination-part-title" th:text="${pagination.pageNames[pagination.currentPage + 1].title}">21 to 40</span>
+            </a>
+        </li>
+    </ul>
+    <ul class="pagination-index" th:if="${pagination.totalPages > 1}">
+        <li th:each="page : ${pagination.pageNames}">
+            <a href="#" th:href="${page.path}" th:text="${page.title}">1 to 20</a>
+        </li>
+    </ul>
 </div>

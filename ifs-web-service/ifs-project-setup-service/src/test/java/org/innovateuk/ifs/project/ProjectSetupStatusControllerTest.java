@@ -10,6 +10,8 @@ import org.innovateuk.ifs.project.builder.ProjectResourceBuilder;
 import org.innovateuk.ifs.project.resource.MonitoringOfficerResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
+import org.innovateuk.ifs.project.resource.ProjectUserResource;
+import org.innovateuk.ifs.project.sections.SectionAccess;
 import org.innovateuk.ifs.project.sections.SectionStatus;
 import org.innovateuk.ifs.project.viewmodel.ProjectSetupStatusViewModel;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
@@ -17,7 +19,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -26,6 +31,7 @@ import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.project.bankdetails.builder.BankDetailsResourceBuilder.newBankDetailsResource;
 import static org.innovateuk.ifs.project.builder.MonitoringOfficerResourceBuilder.newMonitoringOfficerResource;
@@ -36,9 +42,12 @@ import static org.innovateuk.ifs.project.builder.ProjectTeamStatusResourceBuilde
 import static org.innovateuk.ifs.project.builder.ProjectUserResourceBuilder.newProjectUserResource;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.*;
 import static org.innovateuk.ifs.user.builder.OrganisationResourceBuilder.newOrganisationResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
 import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -181,6 +190,77 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
     }
 
     @Test
+    public void testViewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedNotFinanceContact() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectLeadStatusResource()
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .build(1)).
+                        build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerNotFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
+                Pair.of("financeChecksStatus", SectionStatus.EMPTY));
+        assertEquals(viewModel.getFinanceChecksSection(), SectionAccess.NOT_ACCESSIBLE);
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithProjectDetailsSubmittedAndFinanceContactSubmittedAsFinanceContact() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectLeadStatusResource()
+                        .withBankDetailsStatus(COMPLETE)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(PENDING)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .build(1)).
+                        build();
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(projectService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerNotFoundResult);
+        when(projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
+                        .withUser(loggedInUser.getId())
+                        .withOrganisation(organisationResource.getId())
+                        .withRoleName(FINANCE_CONTACT).build(),
+                newProjectUserResource()
+                        .withUser(loggedInUser.getId())
+                        .withOrganisation(organisationResource.getId())
+                        .withRoleName(PARTNER).build()));
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerNotExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.HOURGLASS),
+                Pair.of("bankDetailsStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+        assertEquals(SectionAccess.ACCESSIBLE, viewModel.getFinanceChecksSection());
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    @Test
     public void testViewProjectSetupStatusWhenAwaitingProjectDetailsActionFromOtherPartners() throws Exception {
 
         ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
@@ -233,6 +313,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         build()).
@@ -257,6 +338,7 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 withProjectLeadStatus(newProjectLeadStatusResource().
                         withProjectDetailsStatus(COMPLETE).
                         withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(PENDING).
                         withSpendProfileStatus(NOT_REQUIRED).
                         withOrganisationId(organisationResource.getId()).
                         build()).
@@ -274,6 +356,78 @@ public class ProjectSetupStatusControllerTest extends BaseControllerMockMVCTest<
                 Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
                 Pair.of("bankDetailsStatus", SectionStatus.TICK),
                 Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithQueryAwaitingResponseNonFinanceContact() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource().
+                withProjectLeadStatus(newProjectLeadStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(COMPLETE).
+                        withFinanceChecksStatus(ACTION_REQUIRED).
+                        withSpendProfileStatus(NOT_REQUIRED).
+                        withOrganisationId(organisationResource.getId()).
+                        build()).
+                withPartnerStatuses(newProjectPartnerStatusResource().
+                        withProjectDetailsStatus(COMPLETE).
+                        withBankDetailsStatus(NOT_REQUIRED).
+                        build(1)).
+                build();
+
+        setupLookupProjectDetailsExpectations(monitoringOfficerFoundResult, bankDetailsNotFoundResult, teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
+                Pair.of("bankDetailsStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.HOURGLASS));
+
+        assertFalse(viewModel.isProjectComplete());
+    }
+
+    @Test
+    public void testViewProjectSetupStatusWithQueryAwaitingResponseAsFinanceContact() throws Exception {
+
+        ProjectTeamStatusResource teamStatus = newProjectTeamStatusResource()
+                .withProjectLeadStatus(newProjectLeadStatusResource()
+                        .withBankDetailsStatus(COMPLETE)
+                        .withProjectDetailsStatus(COMPLETE)
+                        .withFinanceContactStatus(COMPLETE)
+                        .withFinanceChecksStatus(ACTION_REQUIRED)
+                        .withSpendProfileStatus(NOT_REQUIRED)
+                        .withOrganisationId(organisationResource.getId())
+                        .build())
+                .withPartnerStatuses(newProjectPartnerStatusResource()
+                        .withFinanceContactStatus(COMPLETE)
+                        .build(1)).
+                        build();
+
+        when(applicationService.getById(application.getId())).thenReturn(application);
+        when(projectService.getById(project.getId())).thenReturn(project);
+        when(competitionService.getById(application.getCompetition())).thenReturn(competition);
+        when(projectService.getMonitoringOfficerForProject(project.getId())).thenReturn(monitoringOfficerFoundResult);
+        when(projectService.getOrganisationByProjectAndUser(project.getId(), loggedInUser.getId())).thenReturn(organisationResource);
+        when(projectService.getProjectUsersForProject(project.getId())).thenReturn(Arrays.asList(newProjectUserResource()
+                        .withUser(loggedInUser.getId())
+                        .withOrganisation(organisationResource.getId())
+                        .withRoleName(FINANCE_CONTACT).build(),
+                newProjectUserResource()
+                        .withUser(loggedInUser.getId())
+                        .withOrganisation(organisationResource.getId())
+                        .withRoleName(PARTNER).build()));
+        when(bankDetailsRestService.getBankDetailsByProjectAndOrganisation(project.getId(), organisationResource.getId())).thenReturn(bankDetailsFoundResult);
+        when(projectService.getProjectTeamStatus(project.getId(), Optional.empty())).thenReturn(teamStatus);
+
+        ProjectSetupStatusViewModel viewModel = performViewProjectStatusCallAndAssertBasicDetails(monitoringOfficerExpected);
+        assertPartnerStatusFlagsCorrect(viewModel,
+                Pair.of("projectDetailsStatus", SectionStatus.TICK),
+                Pair.of("monitoringOfficerStatus", SectionStatus.TICK),
+                Pair.of("bankDetailsStatus", SectionStatus.TICK),
+                Pair.of("financeChecksStatus", SectionStatus.FLAG));
 
         assertFalse(viewModel.isProjectComplete());
     }

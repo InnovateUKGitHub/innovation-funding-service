@@ -11,13 +11,12 @@ import org.innovateuk.ifs.exception.BigDecimalNumberFormatException;
 import org.innovateuk.ifs.exception.IntegerNumberFormatException;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
-import org.innovateuk.ifs.project.finance.service.ProjectFinanceRowService;
 import org.innovateuk.ifs.util.Either;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.singletonList;
@@ -30,10 +29,10 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleMap;
  * Base methods for all FinanceFormHandlers. For example methods that handle exceptions or errors that are possibly occurring in all FinanceFormHandlers.
  */
 public abstract class BaseFinanceFormHandler {
-    private static final Log LOG = LogFactory.getLog(BaseFinanceFormHandler.class);
 
-    @Autowired
-    private ProjectFinanceRowService financeRowService;
+    private static final String UNSPECIFIED_AMOUNT_STR = "£ 0";
+
+    private static final Log LOG = LogFactory.getLog(BaseFinanceFormHandler.class);
 
     protected ValidationMessages getValidationMessageFromException(Map.Entry<Long, List<FinanceFormField>> entry, NumberFormatException e) {
         ValidationMessages validationMessages = new ValidationMessages();
@@ -48,7 +47,7 @@ public abstract class BaseFinanceFormHandler {
         return validationMessages;
     }
 
-    protected ValidationMessages getAndStoreCostitems(HttpServletRequest request, Long financeId) {
+    protected ValidationMessages getAndStoreCostitems(HttpServletRequest request, Long financeId, Function<FinanceRowItem, RestResult<ValidationMessages>> updatingFunction) {
 
         ValidationMessages errors = new ValidationMessages();
 
@@ -67,7 +66,7 @@ public abstract class BaseFinanceFormHandler {
         errors.addErrors(getFinanceRowItemErrors);
 
         List<FinanceRowItem> validItems = costItems.stream().filter(e -> e.isLeft()).map(e -> e.getLeft()).collect(Collectors.toList());
-        Map<Long, ValidationMessages> storedItemErrors = storeFinanceRowItems(validItems);
+        Map<Long, ValidationMessages> storedItemErrors = storeFinanceRowItems(validItems, updatingFunction);
         storedItemErrors.forEach((costId, validationMessages) ->
                 validationMessages.getErrors().stream().forEach(e -> {
                     if(StringUtils.hasText(e.getErrorKey())){
@@ -117,7 +116,7 @@ public abstract class BaseFinanceFormHandler {
             if (financeFormField.getId() != null && !"null".equals(financeFormField.getId()) && !financeFormField.getId().startsWith("unsaved")) {
                 id = Long.valueOf(financeFormField.getId());
             } else {
-                if(StringUtils.isEmpty(financeFormField.getValue())) {
+                if(StringUtils.isEmpty(financeFormField.getValue()) || financeFormField.getValue().equals(UNSPECIFIED_AMOUNT_STR)) {
                     continue;
                 }
                 id = -1L;
@@ -144,10 +143,10 @@ public abstract class BaseFinanceFormHandler {
         return null;
     }
 
-    Map<Long, ValidationMessages> storeFinanceRowItems(List<FinanceRowItem> costItems) {
+    Map<Long, ValidationMessages> storeFinanceRowItems(List<FinanceRowItem> costItems, Function<FinanceRowItem, RestResult<ValidationMessages>> updatingFunction) {
         Map<Long, ValidationMessages> validationMessagesMap = new HashMap<>();
         costItems.stream().forEach(c -> {
-            RestResult<ValidationMessages> messages = financeRowService.update(c);
+            RestResult<ValidationMessages> messages = updatingFunction.apply(c);
             Optional<ValidationMessages> successObject = messages.getOptionalSuccessObject();
             if (successObject.isPresent() && successObject.get() != null &&
                     messages.getSuccessObject().getErrors() != null &&

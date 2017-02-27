@@ -1,197 +1,287 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application Overview'}, ${'/prototypes/635-application-overview'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Application overview'}, ${'/prototypes/635-application-overview'})" />
 
 
 
 	<!-- HARDCODED PROTOTYPE HTML -->
-	<div th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Application details')" th:remove="tag" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Application details')" />
 
 	<form>
-        <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
-            <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
-            <div class="question" id="form-input-9">
-                <div class="form-group">
-                    <label class="form-label form-label-bold" for="application_details-title">
-                        <span class="heading-medium">Project title</span>
-                        <span class="form-hint">Enter the full title of your project</span>
-                    </label>
-                    <input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
-                </div>
-                <fieldset>
+    <th:block th:unless="${param.status != null and param.status[0] == 'readOnly'}">
+      <button class="hidden-save" type="submit" name="submit-section" tabindex="-1" aria-hidden="true">Save the form</button>
 
-                    <legend>
-                        <span class="heading-medium">Estimated timescales</span>
-                    </legend>
-                    <h2 class="heading-small">Project start date</h2>
-                    <p class="form-hint" id="project-start-hint">For example: 31 12 2015</p>
+        <div class="form-group">
+            <label class="form-label form-label-bold" for="application_details-title">
+                <span class="heading-medium">Project title</span>
+                <span class="form-hint">Enter the full title of your project</span>
+            </label>
+            <input class="form-control width-full" type="text" id="application_details-title" required="required" data-required-errormessage="Please enter the full title of the project" name="application.name" value="A novel solution to an old problem" />
+        </div>
+        <fieldset>
+          <legend>
+              <span class="heading-medium">Estimated timescales</span>
+          </legend>
+          <h2 class="heading-small">When do you wish to start your project?</h2>
+          <p class="form-hint" id="project-start-hint">For example: 31 12 2015</p>
 
-                    <div class="form-date">
-                      <div class="form-group form-group-day">
-                        <label class="form-label-bold" for="application_details-startdate_day">Day</label>
-                        <input class="form-control" id="application_details-startdate_day" name="project-start-day" type="number" pattern="[0-9]*" min="0" max="31" aria-describedby="project-start-hint" />
-                      </div>
-
-                      <div class="form-group form-group-month">
-                        <label class="form-label-bold" for="application_details-startdate_month">Month</label>
-                        <input class="form-control" id="application_details-startdate_month" name="project-start-month" type="number" pattern="[0-9]*" min="0" max="12" aria-describedby="project-start-hint" />
-                      </div>
-
-                      <div class="form-group form-group-year">
-                        <label class="form-label-bold" for="application_details-startdate_year">Year</label>
-                        <input class="form-control" id="application_details-startdate_year" name="project-start-year" type="number" pattern="[0-9]*" min="2016" max="2050" />
-                      </div>
-                    </div>
-
-                    <div class="form-group form-group-month">
-                        <label class="form-label-bold" for="application_details-duration">Duration in months</label>
-                        <input class="form-control width-small" id="application_details-duration" name="application.durationInMonths" type="number" pattern="[0-9]*" min="0" value="51" />
-                    </div>
-
-                </fieldset>
-                <fieldset>
-                    <div class="message-alert extra-margin-bottom">
-                        <h2 class="heading-small no-margin">Research area determines funding</h2>
-                        <p>The research area is used to calculate the funding for all collaborators in the application.</p>
-                        <p>Changing this selection will reset the funding level for all collaborators that have completed their funding section.</p>
-                    </div>
-                    <div class="form-group">
-                        <legend>
-                            <span class="heading-medium">Research area</span>
-                            <span class="form-hint">Please confirm the research area for your project, further guidance is available from the <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#funding-rules">Innovate UK funding rules</a>.</span>
-                        </legend>
-                        <label data-target="resubmission-details" class="block-label selected selection-button-radio" for="feasibility-studies">
-                            <input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
-                            Feasibility studies
-                        </label>
-                        <label class="block-label selection-button-radio" for="industrial-research">
-                            <input type="radio" value="industrial-research" required="required" id="industrial-research" name="researchArea" />
-                            Industrial research
-                        </label>
-                        <label class="block-label selection-button-radio" for="experimental-development">
-                            <input type="radio" value="experimental-development" required="required" id="experimental-development" name="researchArea" />
-                            Experimental development
-                        </label>
-                    </div>
-                </fieldset>
-                <fieldset>
-                    <div class="form-group">
-                        <legend>
-                            <span class="heading-medium">Is this application a resubmission of a previous application?</span>
-                            <span class="form-hint">Let us know if this is an application you have previously submitted to Innovate UK in another competition.</span>
-                        </legend>
-                        <label data-target="resubmission-details" class="block-label selection-button-radio" for="resubmission-yes">
-                            <input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
-                            Yes
-                        </label>
-                        <label class="block-label selection-button-radio selected" for="resubmission-no">
-                            <input type="radio" value="false" required="required" id="resubmission-no" checked="checked" name="application.resubmission" />
-                            No
-                        </label>
-                    </div>
-                </fieldset>
-                <div id="resubmission-details">
-                    <div class="form-group">
-                        <h2 class="heading-medium no-margin">Please provide the details of this previous application</h2>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label form-label-bold" for="application_details-previousapplicationnumber">
-                            <span>Previous application number</span>
-                        </label>
-                        <input class="form-control width-full" type="text" id="application_details-previousapplicationnumber" name="application.previousApplicationNumber" value="" />
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label form-label-bold" for="application_details-previousapplicationtitle">
-                            <span>Previous application title</span>
-                        </label>
-                        <input class="form-control width-full" type="text" id="application_details-previousapplicationtitle" name="application.previousApplicationTitle" value="" />
-                    </div>
-                </div>
-
-
-                <div class="form-group">
-                    <h2 class="heading-small no-margin">Lead organisation</h2>
-                    <div>Empire Ltd</div>
-                </div>
-                <div class="form-group">
-                    <h2 class="heading-small no-margin">Partners</h2>
-                    <ul class="list list-bullet">
-                        <li>
-                            <span>Ludlow</span>
-                        </li>
-                        <li>
-                            <span>EGGS</span>
-                        </li>
-                        <li>
-                            <span>HIVE IT LIMITED</span>
-                        </li>
-                        <li>
-                            <span>Worth Internet Systems</span>
-                            <small>(pending)</small>
-                        </li>
-                    </ul>
-                </div>
-
+          <div class="form-date">
+            <div class="form-group form-group-day">
+              <label class="form-label-bold" for="application_details-startdate_day">Day</label>
+              <input class="form-control" id="application_details-startdate_day" name="project-start-day" type="number" pattern="[0-9]*" min="0" max="31" aria-describedby="project-start-hint" />
             </div>
-        </th:block>
+
+            <div class="form-group form-group-month">
+              <label class="form-label-bold" for="application_details-startdate_month">Month</label>
+              <input class="form-control" id="application_details-startdate_month" name="project-start-month" type="number" pattern="[0-9]*" min="0" max="12" aria-describedby="project-start-hint" />
+            </div>
+
+            <div class="form-group form-group-year">
+              <label class="form-label-bold" for="application_details-startdate_year">Year</label>
+              <input class="form-control" id="application_details-startdate_year" name="project-start-year" type="number" pattern="[0-9]*" min="2016" max="2050" />
+            </div>
+          </div>
+
+          <div class="form-group form-group-month">
+              <label class="form-label-bold" for="application_details-duration">Duration in months</label>
+              <input class="form-control width-small" id="application_details-duration" name="application.durationInMonths" type="number" pattern="[0-9]*" min="0" value="51" />
+          </div>
+        </fieldset>
+
+        <!-- <fieldset>
+            <legend class="visuallyhidden">Type of research</legend>
+            <div class="message-alert extra-margin-bottom">
+              <h2 class="heading-small no-margin">What type of research are you undertaking in this project? </h2>
+              <p>The type of research affects the level of funding a business can receive under UK state aid rules. Changing the research category will reset the funding level for all business participants.</p>
+            </div>
+            <div class="form-group">
+              <legend>
+                  <span class="heading-medium">Research category</span>
+                  <span class="form-hint">What type of research is your project undertaking? Further guidance is available from <a href="https://www.gov.uk/guidance/innovate-uk-funding-general-guidance-for-applicants#categories-of-research-and-development" target="_blank">Innovate UK funding rules</a>.</span>
+              </legend>
+              <label class="block-label selected selection-button-radio" for="feasibility-studies">
+                  <input type="radio" value="feasibility-studies" required="required" id="feasibility-studies" checked="checked" name="researchArea" />
+                  Feasibility studies
+              </label>
+              <label class="block-label selection-button-radio" for="industrial-research">
+                  <input type="radio" value="industrial-research" required="required" id="industrial-research" name="researchArea" />
+                  Industrial research
+              </label>
+              <label class="block-label selection-button-radio" for="experimental-development">
+                  <input type="radio" value="experimental-development" required="required" id="experimental-development" name="researchArea" />
+                  Experimental development
+              </label>
+            </div>
+        </fieldset> -->
+
+        <div class="extra-margin-bottom">
+            <h2 class="heading-medium no-margin">Research category </h2>
+            <p class="form-hint">The type of research affects the level of funding a business can receive under UK state
+                aid rules. Changing the research category will reset the funding level for all business
+                participants.</p>
+
+            <th:block th:if="${param.researchCategoryGroup != null}">
+                <dl class="extra-margin-bottom">
+                    <dt>Chosen research category</dt>
+                    <dd th:text="${param.researchCategoryGroup[0]}"></dd>
+                </dl>
+                <a href="/prototypes/8398-research-category">Change your research category</a>
+            </th:block>
+
+            <th:block th:if="${param.researchCategoryGroup == null}">
+                <a href="/prototypes/8398-research-category">Choose your research category</a>
+            </th:block>
+        </div>
+
+      <!-- <div class="form-group">
+          <h2 class="heading-small no-margin">Lead organisation</h2>
+          <div>Empire Ltd</div>
+      </div>
+      <div class="form-group">
+          <h2 class="heading-small no-margin">Partners</h2>
+          <ul class="list list-bullet">
+              <li>
+                  <span>Ludlow</span>
+              </li>
+              <li>
+                  <span>EGGS</span>
+              </li>
+              <li>
+                  <span>HIVE IT LIMITED</span>
+              </li>
+              <li>
+                  <span>Worth Internet Systems</span>
+                <small>(pending)</small>
+            </li>
+        </ul>
+    </div> -->
+
+    <div class="extra-margin-bottom">
+      <h2 class="heading-medium">Innovation area</h2>
+        <p class="form-hint">This is the primary innovation area for your project. This will help Innovate UK select
+            suitable assessors for your application.</p>
+
+      <th:block th:if="${param.categoryGroup != null}">
+        <dl class="extra-margin-bottom">
+          <dt>Chosen innovation area</dt>
+          <dd th:text="${param.categoryGroup[0]}"></dd>
+        </dl>
+        <a href="/prototypes/8128-innovation-areas">Change your innovation area</a>
+      </th:block>
+
+      <th:block th:if="${param.categoryGroup == null}">
+        <a href="/prototypes/8128-innovation-areas">Choose your innovation area</a>
+      </th:block>
+
+    </div>
+
+      <fieldset>
+        <legend class="visuallyhidden">Application resubmission?</legend>
+          <div class="form-group">
+              <legend>
+                  <span class="heading-medium">Is this application a resubmission of a previous application?</span>
+                  <span class="form-hint">Let us know if this application has been previously submitted to Innovate UK.</span>
+              </legend>
+              <label data-target="resubmission-details" class="block-label selection-button-radio" for="resubmission-yes">
+                  <input type="radio" value="true" required="required" id="resubmission-yes" name="application.resubmission" />
+                  Yes
+              </label>
+              <label class="block-label selection-button-radio selected" for="resubmission-no">
+                  <input type="radio" value="false" required="required" id="resubmission-no" checked="checked" name="application.resubmission" />
+                  No
+              </label>
+          </div>
+      </fieldset>
+
+
+    <div id="resubmission-details" class="cf">
+      <fieldset>
+        <legend class="visuallyhidden">Previous application details</legend>
+        <div class="form-group">
+            <h2 class="heading-medium no-margin">Please provide the details of this previous application</h2>
+        </div>
+        <div class="form-group">
+            <label class="form-label form-label-bold" for="application_details-previousapplicationnumber">
+                <span>Previous application number</span>
+            </label>
+            <input class="form-control" type="text" id="application_details-previousapplicationnumber" name="application.previousApplicationNumber" value="" />
+        </div>
+        <div class="form-group">
+            <label class="form-label form-label-bold" for="application_details-previousapplicationtitle">
+                <span>Previous application title</span>
+            </label>
+            <input class="form-control width-full" type="text" id="application_details-previousapplicationtitle" name="application.previousApplicationTitle" value="" />
+        </div>
+      </fieldset>
+    </div>
+
+
+  </th:block>
+
         <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+
+            <div class="success-alert extra-margin-bottom">
+              Application details is marked as complete
+            </div>
+
             <dl class="readonly-data">
                 <dt>Project title</dt>
                 <dd>A novel solution to an old problem</dd>
-                <dt>Research area</dt>
-                <dd>Feasibility Studies</dd>
-                <dt>Is this application a resubmission of a previous application?</dt>
-                <dd>No</dd>
-                <dt>Project start date</dt>
-                <dd>16 January 2017</dd>
-                <dt>Duration in months</dt>
-                <dd>22 months</dd>
-                <dt>Lead organisation</dt>
+                <!-- <dt>Lead organisation</dt>
                 <dd>Empire Ltd</dd>
                 <dt>Partners</dt>
                 <dd>Ludlow</dd>
                 <dd>EGGS</dd>
                 <dd>HIVE IT LIMITED</dd>
-                <dd>Worth Internet Systems<small>(pending)</small></dd>
+                <dd>Worth Internet Systems<small>(pending)</small></dd> -->
             </dl>
+            <h2 class="heading-medium">Estimated timescales</h2>
+            <dl class="readonly-data">
+              <dt>When do you wish to start your project?</dt>
+              <dd>16 January 2017</dd>
+            </dl>
+
+            <dl class="readonly-data extra-margin-top">
+              <dt>Duration in months</dt>
+              <dd>22 months</dd>
+              <dt>Research category</dt>
+              <dd>Feasibility Studies</dd>
+              <dt>Innovation area</dt>
+              <dd th:text="${(param.categoryGroup != null ? param.categoryGroup[0] : 'Not set')}"></dd>
+              <dt>Is this application a resubmission of a previous application?</dt>
+              <dd>No</dd>
+            </dl>
+
         </th:block>
-        <div class="extra-margin extra-margin-bottom">
-            <!--<button type="submit" name="mark_as_complete" class="buttonlink" value="9">Mark as complete</button>-->
-            <a th:href="${param.status != null and param.status[0] == 'readOnly' ? '/prototypes/5452-application-details' : '/prototypes/5452-application-details?status=readOnly'}" th:text="${param.status != null and param.status[0] == 'readOnly' ? 'Edit application details' : 'Mark application details as complete'}"></a>
+
+        <div class="grid-row form-footer extra-margin-top">
+          <div class="column-half">
+
+            <th:block th:if="${param.status == null and param.categoryGroup == null}">
+              <a href="/prototypes/5452-application-details?status=readOnly">Mark application details as complete</a>
+            </th:block>
+
+            <th:block th:if="${param.status == null and param.categoryGroup != null}">
+              <a th:href="${'/prototypes/5452-application-details?status=readOnly&#38;categoryGroup='+ param.categoryGroup[0]}">Mark application details as complete</a>
+            </th:block>
+
+            <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+              <a th:href="${(param.categoryGroup != null ? '/prototypes/5452-application-details?categoryGroup='+ param.categoryGroup[0] : '/prototypes/5452-application-details')}">Edit application details</a>
+            </th:block>
+
+          </div>
+          <div class="column-half alignright">
+            <span th:text="${(param.status != null and param.status[0] == 'readOnly' ? 'Marked as complete' : 'Last saved')}">Last saved</span> 15 January 03:34 by you
+          </div>
         </div>
 
         <input type="hidden" id="application_id" value="1" />
-		<button type="submit" class="button-secondary app-submit-btn" name="submit-section">Save and return to application overview</button>
-	</form>
 
-	<ul class="pagination">
+        <th:block th:if="${param.status != null and param.status[0] == 'readOnly'}">
+          <div class="extra-margin-top">
+            <a href="/prototypes/635-application-overview" class="button-secondary">Return to application overview</a>
+          </div>
+        </th:block>
+
+        <button type="submit" class="button app-submit-btn extra-margin-top" name="submit-section"
+                formaction="/prototypes/635-application-overview"
+                th:unless="${param.status != null and param.status[0] == 'readOnly'}">Save and return to application
+            overview
+        </button>
+
+
+
+    </form>
+
+	<!-- <ul class="pagination">
 		<li class="next">
 			<a rel="next" title="Navigate to next part" href="#">
 				<span class="pagination-label">Next</span>
 				<span class="pagination-part-title">Project summary</span>
 			</a>
 		</li>
-	</ul>
+	</ul> -->
+
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

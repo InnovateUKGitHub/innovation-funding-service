@@ -1,22 +1,22 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile Summary'" />
 </head>
 <body th:with="context='project-management'" class="competition-management finance-checks-overview">
-<div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
+<th:block th:insert="fragments/modals :: modal-overlay" />
 
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-  <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-  <div th:include="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}" th:remove="tag" />
+  <th:block th:insert="fragments/layout :: main-content-start" />
+  <th:block th:insert="fragments/layout :: header-sub" th:with="linkTitle='Projects in setup',linkClass='link-back',linkUrl=@{/competition/{competitionId}/status(competitionId=${model.financeCheckSummaryResource.competitionId})}" />
 
   <div class="grid-row">
       <div class="column-two-thirds">
           <div class="page-title">
-              <div th:include="fragments/competition-management :: competition-id-and-name(${model.financeCheckSummaryResource.competitionId}, ${model.financeCheckSummaryResource.competitionName})" th:remove="tag" />
+              <th:block th:insert="fragments/competition-management :: competition-id-and-name(${model.financeCheckSummaryResource.competitionId}, ${model.financeCheckSummaryResource.competitionName})" />
               <h1 class="heading-xlarge">Finance checks</h1>
           </div>
       </div>
@@ -64,7 +64,9 @@
           <th scope="col" class="aligncentre">Viability</th>
           <th scope="col" class="aligncentre cell-border-right">RAG</th>
           <th scope="col" class="aligncentre">Eligibility</th>
+          <th scope="col" class="aligncentre">RAG</th>
           <th scope="col" class="aligncentre">Queries raised</th>
+          <th scope="col" class="aligncentre">Notes</th>
         </tr>
       </thead>
       <tbody>
@@ -88,12 +90,21 @@
                       th:classappend="${'viability-rag-' + status.index}">Green</span>
             </td>
             <td class="aligncentre">
+                <!--/*TODO INFUND-6716 redirect to eligibility page*/-->
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${#messages.msg('ifs.project.setup.eligibility.' + orgDetails.eligibility)}"
-                   th:classappend="${'eligibility-' + status.index}"/></td>
+                   th:classappend="${'eligibility-' + status.index}"/>
+            </td>
+            <td class="aligncentre cell-border-right">
+                <span th:text="${#messages.msg('ifs.project.setup.rag.' + orgDetails.eligibilityRagStatus)}"
+                      th:classappend="${'eligibility-rag-' + status.index}">Green</span>
+            </td>
             <td class="aligncentre">
                 <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/query(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}"
                    th:text="${orgDetails.isAwaitingResponse() ? 'Awaiting response' : 'View'}"/>
+            </td>
+            <td class="aligncentre">
+                <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/note(projectId=${model.financeCheckSummaryResource.projectId},organisationId=${orgDetails.id})}">View</a>
             </td>
         </tr>
       </tbody>
@@ -109,11 +120,11 @@
         <th:block th:unless="${model.showDisabledGenerateSpendProfilesButton}"  th:include="fragments/modals :: generate-spend-profile" />
     </form>
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

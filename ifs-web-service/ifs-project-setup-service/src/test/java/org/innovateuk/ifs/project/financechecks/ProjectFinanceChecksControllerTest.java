@@ -27,6 +27,7 @@ import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectTeamStatusResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.OrganisationSize;
+import org.innovateuk.threads.resource.QueryResource;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -36,6 +37,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.ui.Model;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -179,7 +181,10 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         assertEquals(model.getOrganisationId(), partnerOrganisation.getId());
         assertEquals(model.getProjectName(), projectName);
         assertFalse(model.isApproved());
+    }
 
+    private QueryResource sampleQuery() {
+        return new QueryResource(null, null, Collections.emptyList(), null, null, false, LocalDateTime.now());
     }
 
     @Test
@@ -200,7 +205,7 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(organisationService.getOrganisationById(organisationId)).thenReturn(partnerOrganisation);
         when(projectService.getProjectTeamStatus(projectId, Optional.empty())).thenReturn(expectedProjectTeamStatusResource);
         when(projectFinanceService.getProjectFinance(projectId, organisationId)).thenReturn(projectFinanceResource);
-        when(financeCheckServiceMock.loadQueries(any())).thenReturn(ServiceResult.serviceSuccess(Collections.emptyList()));
+        when(financeCheckServiceMock.loadQueries(projectFinanceResource.getId())).thenReturn(ServiceResult.serviceSuccess(Collections.singletonList(sampleQuery())));
 
         MvcResult result = mockMvc.perform(get("/project/123/partner-organisation/234/finance-checks")).
                 andExpect(view().name("project/finance-checks")).

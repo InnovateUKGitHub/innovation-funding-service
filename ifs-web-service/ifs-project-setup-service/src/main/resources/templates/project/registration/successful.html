@@ -1,24 +1,24 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Verification email sent'" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Verification email sent'" />
 </head>
 <body th:with="context='applicant'" class="create-application-eligibility">
 
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
-    <h1 class="heading-large">Verification email sent</h1>
+    <h1 class="heading-large">Please verify your email address</h1>
 
-    <p>To keep your account and application secure, we need you to confirm your email address. You can do this by visiting your email inbox and following the link provided.</p>
-    <p> You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag"/>
+    <p>To keep your account and application secure click on the link in the email we have sent you to verify your email address.</p>
+    <p>You can contact customer services with any queries regarding your account. This includes requests to change your registered email address. Please contact them at <a href="mailto:support@innovateuk.gov.uk">support@innovateuk.gov.uk</a></p>
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 </body>
 </html>

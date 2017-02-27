@@ -3,7 +3,7 @@
 
 <!-- ===========================Application Details =========================== -->
 
-<div th:fragment="application_details" th:remove="tag">
+<th:block th:fragment="application_details">
 
     <h2 class="heading-small">Project title</h2>
     <div class="textarea-wrapped">
@@ -17,10 +17,10 @@
 
     <h2 class="heading-small">Estimated timescales</h2>
     <p>Project start date :<br/>
-        <span th:text="${application_startdate_day}" th:remove="tag" />-<span th:remove="tag" th:text="${application_startdate_month}" />-<span th:remove="tag" th:text="${application_startdate_year}" />
+        <th:block th:text="${application_startdate_day}" />-<th:block th:text="${application_startdate_month}" />-<th:block th:text="${application_startdate_year}" />
     </p>
     <p>Duration in months :<br/>
-      <span th:text="${application_duration}" th:remove="tag" />
+      <th:block th:text="${application_duration}" />
     </p>
 
     <h2 class="heading-small">Lead organisation</h2>
@@ -32,10 +32,10 @@
             <span th:text="${organisation.getName()}"></span>
         </li>
     </ul>
-</div>
+</th:block>
 
 <!-- ===================== Textarea ======================!-->
-<div th:fragment="textarea" th:remove="tag">
+<th:block th:fragment="textarea">
 
     <h2 class="heading-small" th:if="${question.getName()}" th:text="${question.questionNumber!=null ? question.questionNumber + '. ' : '' } + ${question.name}" />
     <div class="textarea-wrapped">
@@ -43,7 +43,7 @@
             <p th:text="${response?.value}" data-md-to-html=""></p>
         </div>
     </div>
-</div>
+</th:block>
 
 <!-- ===========================Form: funding breakdown =========================== -->
 <div th:fragment="application_finances_summary" th:if="${financeTotalPerType}">
@@ -72,7 +72,7 @@
                         </div>
                     </div>
                 </th>
-                <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                <th:block th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                     <td class="numeric">
                         <strong th:text="'£'+${#numbers.formatDecimal(organisationFinance.total, 0, 'COMMA', 0, 'POINT')}" />
                     </td>
@@ -80,8 +80,8 @@
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalFundingSought, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalOtherFunding, 0, 'COMMA', 0, 'POINT')}"/>
                     <td class="numeric" th:text="'£'+${#numbers.formatDecimal(organisationFinance.totalContribution, 0, 'COMMA', 0, 'POINT')}"/>
-                </div>
-                <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                </th:block>
+                <th:block th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
                   <td class="numeric">
                       <strong>&pound;0</strong>
                   </td>
@@ -89,7 +89,7 @@
                   <td class="numeric">&pound;0</td>
                   <td class="numeric">&pound;0</td>
                   <td class="numeric">&pound;0</td>
-                </div>
+                </th:block>
             </tr>
             <tr>
                 <th scope="row">Total</th>
@@ -135,28 +135,26 @@
                     <td class="numeric" th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">
                         <strong>&pound;0</strong>
                     </td>
-                    <div th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}" th:remove="tag">
-                        <div th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
+                    <th:block th:each="financeSubSection : ${financeSectionChildren}" th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}">
+                        <th:block th:with="organisationFinance= ${organisationFinances.get(applicationOrganisation.id)}" th:if="${organisationFinances.containsKey(applicationOrganisation.id)}">
                             <td class="numeric"
                                 th:with="category = ${organisationFinance.getFinanceOrganisationDetails(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                                 th:text="'£'+${#numbers.formatDecimal(category.total, 0, 'COMMA', 0, 'POINT')}">
                             </td>
-                        </div>
-                        <div th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}" th:remove="tag">
-                            <td class="numeric">&pound;0</td>
-                        </div>
-                    </div>
+                        </th:block>
+                        <td class="numeric" th:unless="${organisationFinances.containsKey(applicationOrganisation.id)}">&pound;0</td>
+                    </th:block>
                 </tr>
                 <tr>
                     <th scope="row">Total</th>
                     <td class="numeric">
                         <strong  th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
                     </td>
-                    <div th:remove="tag" th:each="financeSubSection : ${financeSectionChildren}"
+                    <th:block th:each="financeSubSection : ${financeSectionChildren}"
                          th:with="question=${financeSectionChildrenQuestionsMap.get(financeSubSection.id).get(0)},formInput=${financeSectionChildrenQuestionFormInputs?.get(question?.id).get(0)}">
                         <td class="numeric" th:each="financeTotal: ${financeTotalPerType.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).fromType(formInput.type))}"
                             th:text="'£'+${#numbers.formatDecimal(financeTotal, 0, 'COMMA', 0, 'POINT')}" />
-                    </div>
+                    </th:block>
                 </tr>
                 </tbody>
             </table>

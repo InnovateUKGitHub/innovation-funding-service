@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Spend Profile'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Spend Profile'" />
 </head>
 <body class="spend-profile">
-<div th:include="fragments/layout :: body-start" th:remove="tag"/>
-<div th:include="fragments/layout :: global-header" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content" class="no-grid" th:with="project=${model.project}">
     <div class="grid-container">
-        <div th:include="fragments/layout :: main-content-start" th:remove="tag"/>
+        <th:block th:insert="fragments/layout :: main-content-start" />
 
 
         <div class="page-title">
-                <div th:include="fragments/elements :: project-title (projectId=${project.application}, projectName=${project.name})"
-                 th:remove="tag"/>
+                <th:block th:insert="fragments/elements :: project-title (projectId=${project.application}, projectName=${project.name})"                   />
             <h1 class="heading-xlarge">Spend profile</h1>
         </div>
 
@@ -29,8 +28,8 @@
                     <li th:each="err : ${#fields.allErrors()}" th:text="${err}"></li>
                 </ul>
             </div>
-            <div th:include="fragments/modals :: modal-overlay" th:remove="tag"/>
-            <div th:include="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" th:remove="tag"/>
+            <th:block th:insert="fragments/modals :: modal-overlay" />
+            <th:block th:insert="fragments/modals :: modal-confirm-spend-profile-totals (projectId=${model.project.id})" />
         </form>
         <div class="centralise">
             <dl class="standard-definition-list">
@@ -54,6 +53,7 @@
                         <col th:class="${#temporals.month(month.localDate) == 3 ? 'year':''}" />
                     </th:block>
                     <col class="total" />
+                    <col class="total"/>
                 </colgroup>
                 <thead>
                 <tr>
@@ -129,8 +129,8 @@
     </div>
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag"/>
-<div th:include="fragments/layout :: body-end" th:remove="tag"/>
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 
 </body>
 </html>

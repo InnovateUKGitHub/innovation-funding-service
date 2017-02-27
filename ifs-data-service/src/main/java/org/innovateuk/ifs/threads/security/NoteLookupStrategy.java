@@ -19,8 +19,8 @@ public class NoteLookupStrategy {
     private NoteMapper mapper;
 
     @PermissionEntityLookupStrategy
-    public NoteResource findById(final Long id) {
-        return mapper.mapToResource(repository.findOne(id));
+    public NoteResource findById(final Long noteId) {
+        return mapper.mapToResource(repository.findOne(noteId));
     }
 
 }

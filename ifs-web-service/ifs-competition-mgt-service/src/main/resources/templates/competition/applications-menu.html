@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html  class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <div th:include="fragments/layout :: head" th:with="pageTitle=|Applications - ${model.competitionName}|"  th:remove="tag" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=|Applications - ${model.competitionName}|" />
     </head>
 
     <body class="dashboard-internal full-width">
-        <div th:include="fragments/layout :: body-start" th:remove="tag" />
-        <div th:include="fragments/layout :: global-header" th:remove="tag" />
+       <th:block th:insert="fragments/layout :: body-start" />
+       <th:block th:insert="fragments/layout :: global-header" />
 
         <main id="content">
-            <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-start" />
 
             <div th:include="fragments/layout :: header-sub"
                  th:with="linkTitle='Competition',linkClass='link-back',linkUrl=@{/competition/{competitionId}(competitionId=${model.competitionId})}"
@@ -32,16 +32,16 @@
                     </div>
                 </li>
 
-                <li class="column-quarter highlight-panel-padded">
-                    <div class="highlight-panel">
+                <li class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.applicationsInProgress}">6</span>
                         <br />
                         <small>Applications (Beyond 50%)</small>
                     </div>
                 </li>
 
-                <li class="column-quarter highlight-panel-padded">
-                    <div class="highlight-panel">
+                <li class="column-quarter">
+                    <div class="highlight-panel highlight-panel-padded">
                         <span class="heading-large" th:text="${model.applicationsSubmitted}">4</span>
                         <br />
                         <small>Applications submitted</small>
@@ -60,39 +60,39 @@
                 */-->
             </ul>
 
-            <h2 class="heading-medium">View</h2>
+            <h2 class="heading-medium">Applications navigation</h2>
 
-            <ul class="grid-row">
+            <ul class="link-list">
 
-                <li class="column-quarter dashboard-actions">
-                    <a class="button" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
+                <li>
+                    <a class="" th:href="@{/competition/{cid}/applications/all(cid=${model.competitionId})}">All applications</a>
                 </li>
 
-                <li class="column-quarter dashboard-actions">
-                    <a class="button" th:href="@{/competition/{cid}/applications/submitted(cid=${model.competitionId})}">Submitted applications</a>
+                <li>
+                    <a class="" th:href="@{/competition/{cid}/applications/submitted(cid=${model.competitionId})}">Submitted applications</a>
                 </li>
 
                 <!--/* TODO: Implement non submitted applications - INFUND-7372
 
-                <li class="column-quarter dashboard-actions">
-                    <a class="button" href="#">Non submitted applications</a>
+                <li>
+                    <a class="" href="#">Non submitted applications</a>
                 </li>
 
                 */-->
 
                 <!--/* TODO: Implement ineligible applications - INFUND-7373
 
-                <li class="column-quarter dashboard-actions">
-                    <a class="button" href="#">Ineligible applications</a>
+                <li>
+                    <a class="" href="#">Ineligible applications</a>
                 </li>
 
                 */-->
             </ul>
 
-            <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
         </main>
 
-        <div th:include="fragments/layout :: footer" th:remove="tag" />
-        <div th:include="fragments/layout :: body-end" th:remove="tag" />
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
     </body>
 </html>

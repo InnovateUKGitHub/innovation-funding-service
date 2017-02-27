@@ -1,8 +1,8 @@
 package org.innovateuk.ifs.assessment.model;
 
+import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.assessment.viewmodel.UpcomingCompetitionViewModel;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
-import org.innovateuk.ifs.competition.service.CompetitionsRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Component;
 public class UpcomingCompetitionModelPopulator {
 
     @Autowired
-    private CompetitionsRestService competitionsRestService;
+    private CompetitionService competitionService;
 
     public UpcomingCompetitionViewModel populateModel(Long competitionId) {
-        CompetitionResource competition = competitionsRestService.getCompetitionById(competitionId).getSuccessObjectOrThrowException();
+        CompetitionResource competition = competitionService.getById(competitionId);
         return new UpcomingCompetitionViewModel(competition);
     }
 }

@@ -1,28 +1,28 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
 
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your details')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})" th:remove="tag" th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your details')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start' : '/prototypes/1178-assessor-profile-details')})"  th:unless="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}" /> 
 	<th:block th:if="${param.version != null and param.version[0] == 'v2' or param.version != null and param.version[0] == 'v3'}">
-		<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your details')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" th:remove="tag" />
+		<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${(param.edit == null ? 'Back':'Your details')}, ${(param.edit == null ? '/prototypes/1360-assessor-invite-start?version=v2' : '/prototypes/1178-assessor-profile-details?version=v2')})" />
 	</th:block>
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
 	<h1 class="heading-xlarge" th:text="${(param.edit == null ? 'Create assessor account':'Edit your details')}">Create assessor account</h1>
-  
+
 	<!-- <p class="form-hint icon-info-small-blue">Your organisation must be UK based to receive funding from Innovate UK</p> -->
 
 	<form>
@@ -54,13 +54,13 @@
 			</div>
     </fieldset>
 
-		<div th:include="prototypes/fragments/diversity :: diversity-questions" th:remove="tag" />
+		<th:block th:insert="prototypes/fragments/diversity :: diversity-questions" />
 
     <fieldset>
 			<div class="form-group extra-margin-top" th:unless="${param.edit != null}">
 				<label class="form-label" for="postcode-check">
 					<span class="form-label-bold">Postcode</span>
-          <span class="form-hint">Please provide your postal address for our records. As you will be invoicing us for assessments, we need this for your remittance advice</span>
+          <span class="form-hint">Please provide your postal address for our records.</span>
 				</label>
 				<input class="form-control width-medium" id="postcode-check" name="postcode-check" type="text" />
 				<button type="submit" id="postcode-lookup" class="button">Find UK address</button>
@@ -86,7 +86,7 @@
 			<div class="form-group extra-margin">
 				<label class="form-label" for="phone-number">
 					<span class="form-label-bold">Phone number</span>
-					<span class="form-hint">We may use this to contact you about the application</span>
+					<span class="form-hint">We may use this to contact you about the application.</span>
 				</label>
 				<input class="form-control" id="phone-number" name="phone-number" type="text" th:value="${(param.edit == null ? '':'01234 567891')}" />
 			</div>
@@ -193,11 +193,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
 
 	jQuery('#postcode-lookup').on('click',function(e){

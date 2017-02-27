@@ -38,7 +38,6 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.requestF
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -152,7 +151,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
         Long projectId = 123L;
         Long competitionId = 456L;
 
-        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L).withName("Organisation A", "Organisation B", "Organisation C").withEligibility(FinanceCheckPartnerStatusResource.Eligibility.REVIEW, FinanceCheckPartnerStatusResource.Eligibility.APPROVED, FinanceCheckPartnerStatusResource.Eligibility.APPROVED).build(3);
+        List<FinanceCheckPartnerStatusResource> partnerStatusResources = newFinanceCheckPartnerStatusResource().withId(1L, 2L, 3L).withName("Organisation A", "Organisation B", "Organisation C").withEligibility(Eligibility.REVIEW, Eligibility.APPROVED, Eligibility.APPROVED).build(3);
 
         FinanceCheckSummaryResource expected = newFinanceCheckSummaryResource().
                 withProjectId(projectId).
@@ -218,6 +217,7 @@ public class FinanceCheckControllerDocumentation extends BaseControllerMockMVCTe
 
         verify(financeCheckServiceMock).getFinanceCheckEligibilityDetails(123L, 456L);
     }
+
     @Override
     protected FinanceCheckController supplyControllerUnderTest() {
         return new FinanceCheckController();

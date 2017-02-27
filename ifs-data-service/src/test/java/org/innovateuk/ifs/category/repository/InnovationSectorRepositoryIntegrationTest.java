@@ -20,13 +20,8 @@ public class InnovationSectorRepositoryIntegrationTest extends BaseRepositoryInt
         this.repository = repository;
     }
 
-    @Autowired
-    private CompetitionCategoryLinkRepository competitionCategoryLinkRepository;
-
-
     @Before
     public void setup() {
-        competitionCategoryLinkRepository.deleteAll();
         repository.deleteAll();
     }
 
@@ -34,6 +29,7 @@ public class InnovationSectorRepositoryIntegrationTest extends BaseRepositoryInt
     public void findAllByOrderByNameAsc() {
         List<InnovationSector> innovationSectors = newInnovationSector()
                 .withName("bbb", "aaa", "ccc")
+                .withPriority(2, 1, 3)
                 .withChildren(
                         newInnovationArea().withName("b").build(1),
                         newInnovationArea().withName("a").build(1),
@@ -53,7 +49,7 @@ public class InnovationSectorRepositoryIntegrationTest extends BaseRepositoryInt
         repository.save(innovationSectors);
         flushAndClearSession();
 
-        List<InnovationSector> actual = repository.findAllByOrderByNameAsc();
+        List<InnovationSector> actual = repository.findAllByOrderByPriorityAsc();
 
         assertEquals(expectedInnovationSectors, actual);
     }

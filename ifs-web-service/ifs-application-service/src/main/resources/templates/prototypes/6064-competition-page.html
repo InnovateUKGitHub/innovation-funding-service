@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Emerging &amp; enabling technologies round 1'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Emerging &amp; enabling technologies round 1'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body>
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="prototypes/fragments/front-door :: prototype-front-door-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="prototypes/fragments/front-door :: prototype-front-door-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-	<div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to all competitions'}, ${'/prototypes/6064-competition-listings'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+	<th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back to all competitions'}, ${'/prototypes/6064-competition-listings'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -31,10 +31,11 @@
 
 	<p class="extra-margin">
 		<a href="/application/create/check-eligibility/1" class="button">Start new application</a>
-    <span class="button-link-style">or</span>
-    <a href="#" class="button">Continue your application</a>
 	</p>
-	<ul class="inline-nav hide-mobile">
+
+    <p>Or <a href="#">Sign in</a> to continue an existing application</p>
+
+    <ul class="inline-nav hide-mobile">
 		<li th:class="${(param.tab == null or param.tab[0] == 'summary' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=summary'}"><strong>Summary</strong></a></h2></li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'eligibility' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=eligibility'}"><strong>Eligibility</strong></a></h2></li>
 		<li th:class="${(param.tab != null and param.tab[0] == 'scope' ? 'selected' : 'not-selected' )}"><h2><a th:href="@{'?tab=scope'}"><strong>Scope</strong></a></h2></li>
@@ -44,7 +45,7 @@
 	</ul>
 
 
-	<th:block th:include="prototypes/fragments/front-door :: prototype-front-door-competition-content" />
+	<th:block th:insert="prototypes/fragments/front-door :: prototype-front-door-competition-content" />
 
 	<hr />
 
@@ -66,11 +67,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script src="/js/ifs_prototype/jquery.waypoints.min.js" type="text/javascript"></script>
 <script src="/js/ifs_prototype/prototype.js" type="text/javascript"></script>
 </body>

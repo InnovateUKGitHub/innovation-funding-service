@@ -113,3 +113,13 @@ Next and previous page navigation
         font-size:18px;
     }
 }
+
+.pagination-index {
+  text-align: center;
+
+  li {
+    display: inline;
+    list-style: none;
+    margin: 0 15px;
+  }
+}

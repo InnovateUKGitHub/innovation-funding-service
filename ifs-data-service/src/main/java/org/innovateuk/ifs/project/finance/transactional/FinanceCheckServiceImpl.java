@@ -198,43 +198,58 @@ public class FinanceCheckServiceImpl extends AbstractProjectServiceImpl implemen
             FinanceCheckProcessResource financeCheckStatus = getFinanceCheckApprovalStatus(org).getSuccessObjectOrThrowException();
             boolean financeChecksApproved = APPROVED.equals(financeCheckStatus.getCurrentState());
 
-            Pair<Viability, ViabilityRagStatus> viability = getViability(org);
+            ProjectOrganisationCompositeId compositeId = getCompositeId(org);
+            Pair<Viability, ViabilityRagStatus> viability = getViability(compositeId);
+//            Pair<Eligibility, EligibilityRagStatus> eligibility = getEligibility(compositeId);
 
-            FinanceCheckPartnerStatusResource.Eligibility eligibilityStatus = financeChecksApproved ?
-                    FinanceCheckPartnerStatusResource.Eligibility.APPROVED :
-                    FinanceCheckPartnerStatusResource.Eligibility.REVIEW;
+            //TODO INFUND-6716 remove and use above.
+            Pair<Eligibility, EligibilityRagStatus> eligibility = financeChecksApproved ?
+                    Pair.of(Eligibility.APPROVED, EligibilityRagStatus.UNSET) :
+                    Pair.of(Eligibility.REVIEW, EligibilityRagStatus.UNSET);
 
-            ServiceResult<List<ProjectFinanceResource>> projectFinanceResources = projectFinanceService.getProjectFinances(projectId);
-            boolean anyQueryAwaitingResponse = false;
-
-            if(projectFinanceResources.isSuccess()) {
-                Optional<ProjectFinanceResource> projectFinanceResource = projectFinanceResources.getSuccessObject().stream().filter(pf ->  pf.getOrganisation().longValue() == org.getOrganisation().getId()).findFirst();
-                if(projectFinanceResource.isPresent()) {
-                    ServiceResult<List<QueryResource>> queries = projectFinanceQueriesService.findAll(projectFinanceResource.get().getId());
-                    if (queries.isSuccess()) {
-                        anyQueryAwaitingResponse |= queries.getSuccessObject().stream().anyMatch(f -> f.awaitingResponse);
-                    }
-                }
-            }
+            boolean anyQueryAwaitingResponse = isQueryActionRequired(projectId, org.getOrganisation().getId()).getSuccessObject();
 
             return new FinanceCheckPartnerStatusResource(
                 org.getOrganisation().getId(),
                 org.getOrganisation().getName(),
                 viability.getLeft(), viability.getRight(),
-                eligibilityStatus,
+                eligibility.getLeft(), eligibility.getRight(),
                 anyQueryAwaitingResponse);
         });
     }
 
-    private Pair<Viability, ViabilityRagStatus> getViability(PartnerOrganisation org) {
+    @Override
+    public ServiceResult<Boolean> isQueryActionRequired(Long projectId, Long organisationId) {
+        boolean actionRequired = false;
 
-        ProjectOrganisationCompositeId viabilityId = new ProjectOrganisationCompositeId(
-                org.getProject().getId(), org.getOrganisation().getId());
+        ServiceResult<ProjectFinanceResource> resource = projectFinanceRowService.financeChecksDetails(projectId, organisationId);
+        if(resource.isSuccess()) {
+                ServiceResult<List<QueryResource>> queries = projectFinanceQueriesService.findAll(resource.getSuccessObject().getId());
+                if(queries.isSuccess()) {
+                    actionRequired |= queries.getSuccessObject().stream().anyMatch(q -> q.awaitingResponse);
+                }
+        }
 
-        ViabilityResource viabilityDetails = projectFinanceService.getViability(viabilityId).getSuccessObjectOrThrowException();
+        return serviceSuccess(actionRequired);
+    }
+
+    private ProjectOrganisationCompositeId getCompositeId(PartnerOrganisation org)  {
+        return new ProjectOrganisationCompositeId(org.getProject().getId(), org.getOrganisation().getId());
+    }
+
+    private Pair<Viability, ViabilityRagStatus> getViability(ProjectOrganisationCompositeId compositeId) {
+
+        ViabilityResource viabilityDetails = projectFinanceService.getViability(compositeId).getSuccessObjectOrThrowException();
 
         return Pair.of(viabilityDetails.getViability(), viabilityDetails.getViabilityRagStatus());
 
+    }
+
+    private Pair<Eligibility, EligibilityRagStatus> getEligibility(ProjectOrganisationCompositeId compositeId) {
+
+        EligibilityResource eligibilityDetails = projectFinanceService.getEligibility(compositeId).getSuccessObjectOrThrowException();
+
+        return Pair.of(eligibilityDetails.getEligibility(), eligibilityDetails.getEligibilityRagStatus());
     }
 
     private FinanceCheck mapToDomain(FinanceCheckResource financeCheckResource) {

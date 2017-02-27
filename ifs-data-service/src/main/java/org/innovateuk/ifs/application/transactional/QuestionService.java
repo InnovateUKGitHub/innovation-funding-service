@@ -91,11 +91,12 @@ public interface QuestionService {
     @PostFilter("hasPermission(filterObject, 'READ')")
     ServiceResult<List<QuestionResource>> getQuestionsBySectionIdAndType(Long sectionId, QuestionType type);
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update a question")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<QuestionResource> save(QuestionResource questionResource);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ')")
+    @PostAuthorize("hasPermission(returnObject, 'ASSESS')")
     ServiceResult<QuestionResource> getQuestionByIdAndAssessmentId(Long questionId, Long assessmentId);
 
     @PreAuthorize("hasPermission(#assessmentId, 'org.innovateuk.ifs.assessment.resource.AssessmentResource', 'READ')")

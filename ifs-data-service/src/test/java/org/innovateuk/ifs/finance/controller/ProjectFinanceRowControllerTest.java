@@ -2,6 +2,7 @@ package org.innovateuk.ifs.finance.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
+import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.finance.domain.FinanceRowMetaField;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.GrantClaim;
@@ -14,10 +15,7 @@ import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
 import static org.mockito.Mockito.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<ProjectFinanceRowController> {
@@ -32,6 +30,8 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
 
     @Test
     public void addShouldCreateNewCost() throws Exception{
+
+        when(validationUtil.validateProjectCostItem(any(FinanceRowItem.class))).thenReturn(new ValidationMessages());
 
         when(projectFinanceRowServiceMock.addCost(123L, 456L, null)).thenReturn(serviceSuccess(new GrantClaim()));
 
@@ -88,7 +88,7 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
 
     @Test
     public void updateShouldReturnEmptyResponseOnWrongId() throws Exception {
-
+        when(validationUtil.validateProjectCostItem(isA(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         GrantClaim costItem = new GrantClaim();
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceFailure(notFoundError(FinanceRowMetaField.class, 123L)));
 
@@ -104,6 +104,7 @@ public class ProjectFinanceRowControllerTest extends BaseControllerMockMVCTest<P
     @Test
     public void updateShouldReturnIsCorrectOnCorrectValues() throws Exception {
 
+        when(validationUtil.validateProjectCostItem(isA(FinanceRowItem.class))).thenReturn(new ValidationMessages());
         GrantClaim costItem = new GrantClaim();
         when(projectFinanceRowServiceMock.updateCost(eq(123L), isA(FinanceRowItem.class))).thenReturn(serviceSuccess(costItem));
 

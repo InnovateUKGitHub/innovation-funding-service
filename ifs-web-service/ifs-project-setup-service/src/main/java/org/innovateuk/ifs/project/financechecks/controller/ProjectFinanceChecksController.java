@@ -215,7 +215,7 @@ public class ProjectFinanceChecksController {
                         PostResource post = new PostResource(null, loggedInUser, form.getResponse(), attachmentResources, LocalDateTime.now());
 
                         ValidationMessages errors = new ValidationMessages();
-                        ServiceResult<Void> saveResult = financeCheckService.savePost(post, queryId);
+                        ServiceResult<Void> saveResult = financeCheckService.saveQueryPost(post, queryId);
                         if (saveResult.isFailure()) {
                             errors.addError(fieldError("saveError", null, "validation.notesandqueries.query.response.save.failed"));
                             validationHandler.addAnyErrors(errors);

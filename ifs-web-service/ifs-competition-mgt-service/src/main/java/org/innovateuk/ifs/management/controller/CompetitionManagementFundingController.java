@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
-import static org.innovateuk.ifs.management.controller.CompetitionManagementApplicationController.buildOriginQueryString;
+import static org.innovateuk.ifs.util.BackLinkUtil.buildOriginQueryString;
 
 /**
  * Handles the Competition Management Funding decision views.
@@ -95,7 +95,11 @@ public class CompetitionManagementFundingController {
 
     private void populateNotSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm) {
         String sort = applicationSummarySortFieldService.sortFieldForNotSubmittedApplications(queryForm.getSort());
-        ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(competitionSummary.getCompetitionId(), sort, queryForm.getPage() - 1, PAGE_SIZE);
+        ApplicationSummaryPageResource results = applicationSummaryService.getNotSubmittedApplicationSummariesByCompetitionId(
+                competitionSummary.getCompetitionId(),
+                sort, queryForm.getPage() - 1,
+                PAGE_SIZE,
+                null);
         model.addAttribute("results", results);
         model.addAttribute("activeTab", "notSubmitted");
         model.addAttribute("activeSortField", sort);
@@ -115,7 +119,12 @@ public class CompetitionManagementFundingController {
 
     private void populateSubmittedModel(Model model, CompetitionSummaryResource competitionSummary, ApplicationSummaryQueryForm queryForm, Integer pageSize) {
         String sort = applicationSummarySortFieldService.sortFieldForSubmittedApplications(queryForm.getSort());
-        ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionSummary.getCompetitionId(), sort, queryForm.getPage() - 1, pageSize);
+        ApplicationSummaryPageResource results = applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(
+                competitionSummary.getCompetitionId(),
+                sort,
+                queryForm.getPage() - 1,
+                pageSize,
+                null);
         model.addAttribute("results", results);
         model.addAttribute("activeTab", "submitted");
         model.addAttribute("activeSortField", sort);

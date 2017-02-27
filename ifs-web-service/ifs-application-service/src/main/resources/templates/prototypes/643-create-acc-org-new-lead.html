@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <div th:include="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 <body class="app-overview">
 
-<div th:include="prototypes/fragments/layout :: prototype-nav" th:remove="tag" />
-<div th:include="fragments/layout :: body-start" th:remove="tag" />
-<div th:include="fragments/layout :: global-header" th:remove="tag" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
+<th:block th:insert="fragments/layout :: body-start" />
+<th:block th:insert="fragments/layout :: global-header" />
 
 
 <main id="content">
-    <div th:include="fragments/layout :: main-content-start" th:remove="tag" />
-    <div th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/643-org-selected-from-companies-house-lead'})" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-start" />
+    <th:block th:insert="prototypes/fragments/applicant-view :: prototype-subheader(${'Back'}, ${'/prototypes/643-org-selected-from-companies-house-lead'})" />
 
 	<!-- HARDCODED PROTOTYPE HTML -->
 
@@ -75,18 +75,18 @@
 					<span class="form-hint">
 						Your password is case-sensitive and needs to:<br />
 						<ul class="list list-bullet">
-							<li>be between 10 and 30 characters long</li>
+							<li>be at least 8 characters</li>
 							<li>contain at least 1 capital letter</li>
-							<li>contain at least 1 number</li>
+							<li>contain at least 1 number </li>
 						</ul>
 					</span>
 					<span class="form-hint">Your password can include spaces to make a phrase.
 </span>
 
-          <div style="display: inline-block; position: relative; width: 50%">
+          <div class="password-toggle-container">
             <input class="form-control width-full" id="password" name="password" type="password" />
             <th:block th:if="${param.action != null and param.action[0] == 'toggle'}">
-              <a th:href="@{?action=password}" class="password-toggle" style="position: absolute; top: 0.36em; right: 0.3em;">Show</a>
+              <a th:href="@{?action=password}" class="password-toggle">Show <span class='visually-hidden'>password</span></a>
             </th:block>
           </div>
 
@@ -110,11 +110,11 @@
 
 	<!-- END OFHARDCODED PROTOTYPE HTML -->
 
-    <div th:include="fragments/layout :: main-content-end" th:remove="tag" />
+    <th:block th:insert="fragments/layout :: main-content-end" />
 </main>
 
-<div th:include="fragments/layout :: footer" th:remove="tag" />
-<div th:include="fragments/layout :: body-end" th:remove="tag" />
+<th:block th:insert="fragments/layout :: footer" />
+<th:block th:insert="fragments/layout :: body-end" />
 <script type="text/javascript">
 	// <![CDATA[
   jQuery(document).ready(function(){
@@ -128,10 +128,10 @@
 
         if (inputType == 'password'){
             jQuery('#password').attr('type', 'text');
-            jQuery(this).text('Hide');
+            jQuery(this).html("Hide <span class='visually-hidden'>password</span>");
         }else{
             jQuery('#password').attr('type', 'password');
-            jQuery(this).text('Show');
+            jQuery(this).html("Show <span class='visually-hidden'>password</span>");
         }
 
       });

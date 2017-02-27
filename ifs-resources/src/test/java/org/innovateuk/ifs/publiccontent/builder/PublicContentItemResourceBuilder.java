@@ -37,6 +37,10 @@ public class PublicContentItemResourceBuilder extends BaseBuilder<PublicContentI
         return with(publicContentItem -> setField("competitionCloseDate", competitionCloseDate, publicContentItem));
     }
 
+    public PublicContentItemResourceBuilder withNonIfsUrl(String nonIfsUrl) {
+        return with(publicContentItem -> setField("nonIfsUrl", nonIfsUrl, publicContentItem));
+    }
+
     @Override
     protected PublicContentItemResourceBuilder createNewBuilderWithActions(List<BiConsumer<Integer, PublicContentItemResource>> actions) {
         return new PublicContentItemResourceBuilder(actions);
