@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
     <head>
-        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${selectedOrganisation != null ? 'Update ' + selectedOrganisation.name : 'Add organisation'}" />
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle=${model.selectedOrganisation != null ? 'Update ' + model.selectedOrganisation.name : 'Add organisation'}" />
     </head>
 
     <body class="app-dashboard">
@@ -15,25 +15,25 @@
             <!-- <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application team',linkClass='link-back',linkUrl=@{'/#'}" /> -->
 
             <div class="page-title">
-                <th:block th:insert="fragments/elements :: application-title (applicationId=${currentApplication.id},applicationName=${currentApplication.applicationDisplayName})" />
-                <h1 class="heading-xlarge"  th:text="${selectedOrganisation != null ? 'Update ' + selectedOrganisation.name : 'Add organisation'}">Update Empire Ltd</h1>
+                <th:block th:insert="fragments/elements :: application-title (applicationId=${model.applicationId},applicationName=${model.applicationName})" />
+                <h1 class="heading-xlarge"  th:text="${model.selectedOrganisation != null ? 'Update ' + model.selectedOrganisation.name : 'Add organisation'}">Update Empire Ltd</h1>
             </div>
 
-            <th:block th:if="${selectedOrganisation}">
-            <p th:if="${authenticatedUser.id == leadApplicant.id and selectedOrganisation.id == leadOrganisation.id}">From this page you are able to invite and remove contributors from the lead organisation. This organisation and the lead applicant cannot be removed from the application.</p>
+            <th:block th:if="${model.selectedOrganisation}">
+            <p th:if="${model.authenticatedUser.id == model.leadApplicant.id and model.selectedOrganisation.id == model.leadOrganisation.id}">From this page you are able to invite and remove contributors from the lead organisation. This organisation and the lead applicant cannot be removed from the application.</p>
 
             <!-- INFUND-7975 -->
-            <p th:if="${authenticatedUser.id == leadApplicant.id and selectedOrganisation.id != leadOrganisation.id}">From this page you are able to invite and remove applicants from a partner organisation.</p>
+            <p th:if="${model.authenticatedUser.id == model.leadApplicant.id and model.selectedOrganisation.id != model.leadOrganisation.id}">From this page you are able to invite and remove applicants from a partner organisation.</p>
 
             <!-- INFUND-7977 -->
-            <p th:if="${authenticatedUser.id != leadApplicant.id}">From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners</p>
+            <p th:if="${model.authenticatedUser.id != model.leadApplicant.id}">From this page you are able to invite and remove applicants from your organisation. Only the lead applicant can remove partners</p>
             </th:block>
 
             <!-- INFUND-7979 -->
-            <p th:if="${authenticatedUser.id != leadApplicant.id and selectedOrganisation == null}">Add applicants or organisations to your application. Before you can invite an organisation you will need to add at least one individual from that organisation. If an organisation only has one individual you wish to remove, you must add a replacement
+            <p th:if="${model.authenticatedUser.id != model.leadApplicant.id and model.selectedOrganisation == null}">Add applicants or organisations to your application. Before you can invite an organisation you will need to add at least one individual from that organisation. If an organisation only has one individual you wish to remove, you must add a replacement
                 individual before you can remove the first one.</p>
 
-            <th:block th:if="${selectedOrganisation}">
+            <th:block th:if="${model.selectedOrganisation}">
                 <form action="#" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" method="POST" class="contributorsForm">
 
                     <div class="error-summary" th:if="${#fields.hasErrors('*')}">
@@ -45,13 +45,41 @@
                         </ul>
                     </div>
 
+                    <th:block th:each="organisation : ${model.organisations}">
+                        <h2 class="heading-medium">
+                            <th:block th:text="${organisation.lead} ? ${organisation.name} + ', Lead organisation' : ${organisation.name}"></th:block>
+                        </h2>
+
+                        <table class="table-overflow">
+                            <thead>
+                            <tr>
+                                <th class="width-30-percent" scope="col">Applicant</th>
+                                <th class="width-50-percent" scope="col">Email</th>
+                                <th scope="col">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="applicant : ${organisation.applicants}">
+                                <td th:text="${applicant.name}">Steve Smith</td>
+                                <td th:text="${applicant.email}">steve.smith@empire.com</td>
+                                <td th:text="${applicant.lead} ? 'Lead' : (${applicant.pending} ? 'Pending' : '')">Lead</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        <p>
+                            <a th:href="@{/application/{applicationId}/update(applicationId=${model.applicationId},organisation=${organisation.id})}"
+                               th:text="|Update ${organisation.name}|">Update Empire Ltd</a>
+                        </p>
+                    </th:block>
+
                     <th:block th:each="organisationInviteForm, organisationStats: ${contributorsForm.organisations}" th:attr="data-invite-org=${organisationStats.index}">
 
-                        <th:block th:if="${organisationInviteForm.organisationId == selectedOrganisation.id}">
+                        <th:block th:if="${organisationInviteForm.organisationId == model.selectedOrganisation.id}">
                             <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationId}" />
                             <input type="hidden" class="form-control width-full" th:field="*{organisations[__${organisationStats.index}__].organisationInviteId}" />
 
-                            <h2 class="heading-medium" th:text="${selectedOrganisation.name} + (${selectedOrganisation.id == leadOrganisation.id}? ', Lead organisation' : '')">Empire Ltd, Lead organisation</h2>
+                            <h2 class="heading-medium" th:text="${model.selectedOrganisation.name} + (${model.selectedOrganisation.id == model.leadOrganisation.id}? ', Lead organisation' : '')">Empire Ltd, Lead organisation</h2>
 
                             <table class="table-overflow">
                                 <thead>
@@ -63,9 +91,9 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:if="${selectedOrganisation.id == leadOrganisation.id}">
-                                        <td th:text="${leadApplicant.name}">Steve Smith</td>
-                                        <td th:text="${leadApplicant.email}">steve.smith@empire.com</td>
+                                    <tr th:if="${model.selectedOrganisation.id == model.leadOrganisation.id}">
+                                        <td th:text="${model.leadApplicant.name}">Steve Smith</td>
+                                        <td th:text="${model.leadApplicant.email}">steve.smith@empire.com</td>
                                         <td>Lead</td>
                                         <td class="alignright"></td>
                                     </tr>
@@ -123,7 +151,7 @@
                                             </td>
                                             <td></td>
                                             <td class="alignright">
-                                                <span th:if="${user.userId == authenticatedUser.id}">That's you!</span>
+                                                <span th:if="${user.userId == model.authenticatedUser.id}">That's you!</span>
                                                 <button class="remove-another-row buttonlink" type="submit" name="remove_person" th:value="${organisationStats.index + '_' + userStats.index}">Remove</button>
                                             </td>
                                         </tr>
@@ -132,7 +160,7 @@
                             </th:block>
 
                             <p>
-                                <button th:if="${leadApplicant.id == authenticatedUser.id || organisationInviteForm.organisationId == authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add new applicant</button>
+                                <button th:if="${model.leadApplicant.id == model.authenticatedUser.id || organisationInviteForm.organisationId == model.authenticatedUserOrganisation}" class="add-another-row buttonlink" type="submit" name="add_person" th:value="${organisationStats.index}">Add new applicant</button>
                             </p>
                         </th:block>
                     </th:block>
@@ -140,7 +168,7 @@
             </th:block>
 
             <!-- INFUND-7979 (lead applicant adds new partner org) -->
-            <th:block th:if="${leadApplicant.id == authenticatedUser.id and selectedOrganisation == null}">
+            <th:block th:if="${model.leadApplicant.id == model.authenticatedUser.id and model.selectedOrganisation == null}">
                 <form action="#" method="POST">
                     <div class="form-group">
                         <label class="form-label-bold" for="new-org-name">Organisation name</label>
@@ -175,21 +203,21 @@
                 </form>
             </th:block>
 
-            <th:block th:if="${selectedOrganisation != null and authenticatedUser.id == leadApplicant.id}">
+            <th:block th:if="${model.selectedOrganisation != null and model.authenticatedUser.id == model.leadApplicant.id}">
                 <!-- INFUND-7975 (lead applicant edits partner org) -->
-                <div class="alignright extra-margin-top" th:unless="${selectedOrganisation == null or selectedOrganisation.id == leadOrganisation.id}">
-                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
+                <div class="alignright extra-margin-top" th:unless="${model.selectedOrganisation == null or model.selectedOrganisation.id == model.leadOrganisation.id}">
+                    <a th:href="'/application/' + ${model.applicationId} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-delete-organisation" class="button-secondary">Delete organisation</a>
                     <hr />
                 </div>
 
-                <p class="extra-margin-top" th:unless="${selectedOrganisation == null}">Updating the organisation will notify applicants of changes to their position on the project.</p>
+                <p class="extra-margin-top" th:unless="${model.selectedOrganisation == null}">Updating the organisation will notify applicants of changes to their position on the project.</p>
 
                 <th:block th:insert="fragments/modals :: modal-delete-organisation" />
             </th:block>
 
-            <th:block th:unless="${selectedOrganisation == null}">
+            <th:block th:unless="${model.selectedOrganisation == null}">
                 <p class="extra-margin-top">
-                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
+                    <a th:href="'/application/' + ${model.applicationId} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-update-organisation" class="button">Update organisation</a>
                     <a href="#" class="button button-clear">Cancel</a>
                 </p>
 
@@ -197,9 +225,9 @@
             </th:block>
 
             <!-- INFUND-7979 (lead applicant adds new partner org) -->
-            <th:block th:if="${selectedOrganisation == null}">
+            <th:block th:if="${model.selectedOrganisation == null}">
                 <p>
-                    <a th:href="'/application/' + ${currentApplication.getId()} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
+                    <a th:href="'/application/' + ${model.applicationId} + '/update'" th:attr="name='save_contributors'" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
                     <a href="#" class="button button-clear">Cancel</a>
                 </p>
 

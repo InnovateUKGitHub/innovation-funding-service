@@ -5,6 +5,7 @@ import org.innovateuk.ifs.application.form.ContributorsForm;
 import org.innovateuk.ifs.application.form.InviteeForm;
 import org.innovateuk.ifs.application.form.OrganisationInviteForm;
 import org.innovateuk.ifs.application.form.RemoveContributorsForm;
+import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.service.CompetitionService;
@@ -64,6 +65,9 @@ public class ApplicationTeamManagementController {
     private CookieUtil cookieUtil;
 
     @Autowired
+    private ApplicationTeamManagementModelPopulator applicationTeamManagementModelPopulator;
+
+    @Autowired
     @Qualifier("mvcValidator")
     private Validator validator;
 
@@ -73,45 +77,44 @@ public class ApplicationTeamManagementController {
     private static final String INVITES_SEND = "invitesSend";
 
 
-    @RequestMapping(value = "/update", method = RequestMethod.GET)
-    public String update(@PathVariable("applicationId") final Long applicationId,
-                         @RequestParam(name = "organisation", required = false) final Long organisationId,
-                                     @ModelAttribute ContributorsForm contributorsForm,
-                                     BindingResult bindingResult,
-                                     HttpServletResponse response,
-                                     HttpServletRequest request,
-                                     Model model) {
-        UserResource user = userAuthenticationService.getAuthenticatedUser(request);
+    @RequestMapping(value = "team/update", method = RequestMethod.GET)
+    public String update(@PathVariable("applicationId") Long applicationId,
+                         @RequestParam(name = "organisation", required = false) Long organisationId,
+                         @ModelAttribute ContributorsForm contributorsForm,
+                         @ModelAttribute("loggedInUser") UserResource user,
+                         BindingResult bindingResult,
+                         HttpServletResponse response,
+                         HttpServletRequest request,
+                         Model model) {
+
         ApplicationResource application = applicationService.getById(applicationId);
-        CompetitionResource competition = competitionService.getById(application.getCompetition());
         ProcessRoleResource leadApplicantProcessRole = userService.getLeadApplicantProcessRoleOrNull(application);
         OrganisationResource leadOrganisation = organisationService.getOrganisationById(leadApplicantProcessRole.getOrganisationId());
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
 
         List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
-        Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));
-
         Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
         addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
-
         mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
 
-        model.addAttribute("authenticatedUser", user);
-        model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
-        model.addAttribute("currentApplication", application);
-        model.addAttribute("currentCompetition", competition);
-        model.addAttribute("leadApplicant", leadApplicant);
-        model.addAttribute("leadOrganisation", leadOrganisation);
-        model.addAttribute("organisationInvites", organisationInvites);
-        if (organisationId != null) {
-            OrganisationResource selectedOrganisation = organisationService.getOrganisationById(organisationId);
-            model.addAttribute("selectedOrganisation", selectedOrganisation);
-        }
+//        model.addAttribute("authenticatedUser", user);
+//        model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
+//        model.addAttribute("currentApplication", application);
+//        model.addAttribute("currentCompetition", competition);
+//        model.addAttribute("leadApplicant", leadApplicant);
+//        model.addAttribute("leadOrganisation", leadOrganisation);
+//        model.addAttribute("organisationInvites", organisationInvites);
+//        if (organisationId != null) {
+//            OrganisationResource selectedOrganisation = organisationService.getOrganisationById(organisationId);
+//            model.addAttribute("selectedOrganisation", selectedOrganisation);
+//        }
+
+        model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationId, user, authenticatedUserOrganisationId));
 
         return APPLICATION_CONTRIBUTORS_UPDATE;
     }
 
-    @RequestMapping(value = "update/remove/{inviteId}/confirm", method = RequestMethod.GET)
+    @RequestMapping(value = "team/update/remove/{inviteId}/confirm", method = RequestMethod.GET)
     public String deleteContributorConfirmation(@PathVariable("applicationId") final Long applicationId,
                                                 @PathVariable("inviteId") final Long inviteId,
                                                 Model model) {
@@ -122,7 +125,7 @@ public class ApplicationTeamManagementController {
         return APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM;
     }
 
-    @RequestMapping(value = "update/remove", method = RequestMethod.POST)
+    @RequestMapping(value = "team/update/remove", method = RequestMethod.POST)
     public String deleteContributor(@PathVariable("applicationId") Long applicationId,
                                     @Valid @ModelAttribute RemoveContributorsForm removeContributorsForm) {
         applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId());
@@ -133,7 +136,7 @@ public class ApplicationTeamManagementController {
     /**
      * Handle form POST, manage ContributorsForm object, save to cookie, and redirect to the GET handler.
      */
-    @RequestMapping(value = "/update", method = RequestMethod.POST)
+    @RequestMapping(value = "team/update", method = RequestMethod.POST)
     public String inviteContributors(@PathVariable("applicationId") Long applicationId,
                                      @RequestParam(name = "organisation", required = false) Long organisationId,
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
@@ -189,9 +192,9 @@ public class ApplicationTeamManagementController {
         }
 
         if (newApplication != null) {
-            return String.format("redirect:/application/%d/update/?newApplication", applicationId);
+            return String.format("redirect:/application/%d/team/update/?newApplication", applicationId);
         }
-        return String.format("redirect:/application/%d/update?organisation=%d", applicationId, organisationId);
+        return String.format("redirect:/application/%d/team/update?organisation=%d", applicationId, organisationId);
     }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
