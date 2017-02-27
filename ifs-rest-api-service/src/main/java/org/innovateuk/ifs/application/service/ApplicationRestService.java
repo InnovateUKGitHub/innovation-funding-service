@@ -21,5 +21,5 @@ public interface ApplicationRestService {
     RestResult<Integer> getAssignedQuestionsCount(Long applicationId, Long assigneeId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     RestResult<Long> getTurnover(Long applicationId);
-    RestResult<Long> getHeadcount(Long applicationId);
+    RestResult<Long> getHeadCount(Long applicationId);
 }

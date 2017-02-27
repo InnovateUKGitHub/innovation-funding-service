@@ -25,5 +25,5 @@ public interface ApplicationService {
     OrganisationResource getLeadOrganisation(Long applicationId);
     void removeCollaborator(Long applicationInviteId);
     RestResult<Long> getTurnover(Long applicationId);
-    RestResult<Long> getHeadcount(Long applicationId);
+    RestResult<Long> getHeadCount(Long applicationId);
 }

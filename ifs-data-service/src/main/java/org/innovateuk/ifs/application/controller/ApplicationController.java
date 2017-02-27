@@ -96,13 +96,11 @@ public class ApplicationController {
 
     @RequestMapping("/turnover/{applicationId}")
     public RestResult<Long> getTurnoverByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-
         return applicationService.getTurnoverByApplicationId(applicationId).toGetResponse();
     }
 
     @RequestMapping("/headcount/{applicationId}")
-    public RestResult<Long> getHeadcountByApplicationId(@PathVariable("applicationId") final Long applicationId) {
-
-        return applicationService.getHeadcountByApplicationId(applicationId).toGetResponse();
+    public RestResult<Long> getHeadCountByApplicationId(@PathVariable("applicationId") final Long applicationId) {
+        return applicationService.getHeadCountByApplicationId(applicationId).toGetResponse();
     }
 }

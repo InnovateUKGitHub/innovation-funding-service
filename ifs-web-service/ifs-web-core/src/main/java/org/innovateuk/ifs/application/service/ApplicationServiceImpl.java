@@ -196,7 +196,7 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public RestResult<Long> getHeadcount(Long applicationId) {
-        return applicationRestService.getHeadcount(applicationId);
+    public RestResult<Long> getHeadCount(Long applicationId) {
+        return applicationRestService.getHeadCount(applicationId);
     }
 }

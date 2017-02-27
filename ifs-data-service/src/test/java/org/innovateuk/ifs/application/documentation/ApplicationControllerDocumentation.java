@@ -250,7 +250,7 @@ public class ApplicationControllerDocumentation extends BaseControllerMockMVCTes
         Long applicationId = 1L;
 
 
-        when(applicationServiceMock.getHeadcountByApplicationId(applicationId)).thenReturn(serviceSuccess(2L));
+        when(applicationServiceMock.getHeadCountByApplicationId(applicationId)).thenReturn(serviceSuccess(2L));
 
         MvcResult mvcResult = mockMvc.perform(get("/application/headcount/{applicationId}", applicationId))
                 .andDo(this.document.snippets(

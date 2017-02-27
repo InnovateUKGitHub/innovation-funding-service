@@ -97,7 +97,7 @@ public class ApplicationRestServiceImpl extends BaseRestService implements Appli
     }
 
     @Override
-    public RestResult<Long> getHeadcount(Long applicationId) {
+    public RestResult<Long> getHeadCount(Long applicationId) {
         return getWithRestResult(applicationRestURL + "/headcount/" + applicationId, Long.TYPE);
     }
 }

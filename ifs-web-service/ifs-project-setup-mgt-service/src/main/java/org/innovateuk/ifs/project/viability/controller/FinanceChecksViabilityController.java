@@ -150,7 +150,7 @@ public class FinanceChecksViabilityController {
         String companyRegistrationNumber = organisation.getCompanyHouseNumber();
 
         Long headCount = null;
-        RestResult<Long> headCountResult = applicationService.getHeadcount(projectService.getById(projectId).getApplication());
+        RestResult<Long> headCountResult = applicationService.getHeadCount(projectService.getById(projectId).getApplication());
         if (headCountResult.isSuccess()) {
             headCount = headCountResult.getSuccessObject();
         }

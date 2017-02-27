@@ -736,7 +736,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
 
-        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
 
         assertTrue(result.isSuccess());
         assertEquals(1L, result.getSuccessObject().longValue());
@@ -803,7 +803,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, headcountFormInputId)).thenReturn(asList(headcount));
 
-        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
 
         assertTrue(result.isSuccess());
         assertEquals(1L, result.getSuccessObject().longValue());
@@ -837,7 +837,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(asList(financialCount));
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(applicationId, headcountFormInputId)).thenReturn(emptyList());
 
-        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
 
         assertTrue(result.isSuccess());
         assertNull(result.getSuccessObject());
@@ -867,7 +867,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_OVERVIEW_ROW))).thenReturn(financialOverviewRows);
         when(formInputRepositoryMock.findByCompetitionIdAndTypeIn(competitionId, asList(FINANCIAL_STAFF_COUNT))).thenReturn(emptyList());
 
-        ServiceResult<Long> result = service.getHeadcountByApplicationId(applicationId);
+        ServiceResult<Long> result = service.getHeadCountByApplicationId(applicationId);
 
         assertTrue(result.isFailure());
     }

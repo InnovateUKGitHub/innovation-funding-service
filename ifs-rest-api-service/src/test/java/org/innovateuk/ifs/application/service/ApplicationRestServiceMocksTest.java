@@ -168,7 +168,7 @@ public class ApplicationRestServiceMocksTest extends BaseRestServiceUnitTest<App
         setupGetWithRestResultExpectations(expectedUrl, Long.TYPE, count);
 
         // now run the method under test
-        Long actualCount = service.getHeadcount(applicationId).getSuccessObject();
+        Long actualCount = service.getHeadCount(applicationId).getSuccessObject();
         assertEquals(actualCount, Long.valueOf(count));
     }
 

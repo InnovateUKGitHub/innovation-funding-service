@@ -97,5 +97,5 @@ public interface ApplicationService {
     ServiceResult<Long> getTurnoverByApplicationId(Long applicationId);
 
     @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
-    ServiceResult<Long> getHeadcountByApplicationId(Long applicationId);
+    ServiceResult<Long> getHeadCountByApplicationId(Long applicationId);
 }

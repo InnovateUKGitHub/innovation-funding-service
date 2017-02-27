@@ -471,55 +471,33 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
 
     @Override
     public ServiceResult<Long> getTurnoverByApplicationId(Long applicationId) {
-        Application app = applicationRepository.findOne(applicationId);
-        ServiceResult<Boolean> isIncludeGrowthTableResult = isIncludeGrowthTable(app.getCompetition().getId());
-        ServiceResult<Long> turnoverResult = find(isIncludeGrowthTableResult).
-                andOnSuccess((isIncludeGrowthTable) -> {
-                    Long turnover = null;
-                    ServiceResult<FormInputResponse> turnOverResult;
-                    if (isIncludeGrowthTable) {
-                        turnOverResult = financeTurnoverFromApplication(applicationId);
-                    } else {
-                        turnOverResult = turnoverInputFromApplication(applicationId);
-                    }
-                    if (turnOverResult.isSuccess()) {
-                        turnover = (Long.parseLong(turnOverResult.getSuccessObject().getValue()));
-                    }
-
-                    return serviceSuccess(turnover);
-                });
-        return turnoverResult;
+        return getByApplicationId(applicationId, FINANCIAL_YEAR_END, STAFF_TURNOVER);
     }
 
     @Override
-    public ServiceResult<Long> getHeadcountByApplicationId(Long applicationId) {
+    public ServiceResult<Long> getHeadCountByApplicationId(Long applicationId) {
+        return getByApplicationId(applicationId, FINANCIAL_STAFF_COUNT, STAFF_COUNT);
+    }
 
+    private ServiceResult<Long> getByApplicationId(Long applicationId, FormInputType financeType, FormInputType nonFinanceType) {
         Application app = applicationRepository.findOne(applicationId);
         ServiceResult<Boolean> isIncludeGrowthTableResult = isIncludeGrowthTable(app.getCompetition().getId());
-        ServiceResult<Long> turnoverResult = find(isIncludeGrowthTableResult).
+        ServiceResult<Long> valueResult = find(isIncludeGrowthTableResult).
                 andOnSuccess((isIncludeGrowthTable) -> {
-                    Long headcount = null;
-                    ServiceResult<FormInputResponse> turnOverResult;
+                    Long value = null;
+                    ServiceResult<FormInputResponse> result;
                     if (isIncludeGrowthTable) {
-                        turnOverResult = financeHeadcountFromApplication(applicationId);
+                        result = getOnlyForApplication(applicationId, financeType);
                     } else {
-                        turnOverResult = headcountInputFromApplication(applicationId);
+                        result = getOnlyForApplication(applicationId, nonFinanceType);
                     }
-                    if (turnOverResult.isSuccess()) {
-                        headcount = (Long.parseLong(turnOverResult.getSuccessObject().getValue()));
+                    if (result.isSuccess()) {
+                        value = (Long.parseLong(result.getSuccessObject().getValue()));
                     }
 
-                    return serviceSuccess(headcount);
+                    return serviceSuccess(value);
                 });
-        return turnoverResult;
-    }
-
-    private ServiceResult<FormInputResponse> headcountInputFromApplication(Long competitionId) {
-        return getOnlyForApplication(competitionId, STAFF_COUNT);
-    }
-
-    private ServiceResult<FormInputResponse> turnoverInputFromApplication(Long applicationId) {
-        return getOnlyForApplication(applicationId, STAFF_TURNOVER);
+        return valueResult;
     }
 
     private ServiceResult<FormInputResponse> getOnlyForApplication(Long applicationId, FormInputType formInputType) {
@@ -529,15 +507,6 @@ public class ApplicationServiceImpl extends CompetitionSetupTransactionalService
             return getOnlyElementOrFail(all);
         });
     }
-
-    private ServiceResult<FormInputResponse> financeHeadcountFromApplication(Long applicationId) {
-        return getOnlyForApplication(applicationId, FINANCIAL_STAFF_COUNT);
-    }
-
-    private ServiceResult<FormInputResponse> financeTurnoverFromApplication(Long applicationId) {
-        return getOnlyForApplication(applicationId, FINANCIAL_YEAR_END);
-    }
-
 
     private BigDecimal progressPercentageForApplication(Application application) {
         List<Section> sections = application.getCompetition().getSections();
