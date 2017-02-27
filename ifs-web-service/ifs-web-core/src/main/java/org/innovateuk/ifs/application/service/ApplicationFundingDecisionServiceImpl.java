@@ -76,7 +76,7 @@ public class ApplicationFundingDecisionServiceImpl implements ApplicationFunding
 	}
 
 	private List<Long> submittedApplicationIdsForCompetition(Long competitionId) {
-		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE).getContent()
+		return applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(competitionId, null, 0, Integer.MAX_VALUE, null).getContent()
 				.stream().map(summaryResource -> summaryResource.getId()).collect(Collectors.toList());
 	}
 
