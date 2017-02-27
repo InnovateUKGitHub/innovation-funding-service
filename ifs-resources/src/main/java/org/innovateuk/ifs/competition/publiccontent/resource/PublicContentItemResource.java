@@ -8,6 +8,7 @@ public class PublicContentItemResource {
     private String competitionTitle;
     private LocalDateTime competitionOpenDate;
     private LocalDateTime competitionCloseDate;
+    private String nonIfsUrl;
 
     public PublicContentItemResource() {
     }
@@ -49,5 +50,13 @@ public class PublicContentItemResource {
 
     public void setCompetitionCloseDate(LocalDateTime competitionCloseDate) {
         this.competitionCloseDate = competitionCloseDate;
+    }
+
+    public String getNonIfsUrl() {
+        return nonIfsUrl;
+    }
+
+    public void setNonIfsUrl(String nonIfsUrl) {
+        this.nonIfsUrl = nonIfsUrl;
     }
 }

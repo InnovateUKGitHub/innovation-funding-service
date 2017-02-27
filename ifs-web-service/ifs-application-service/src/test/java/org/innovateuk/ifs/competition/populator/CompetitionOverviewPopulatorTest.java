@@ -36,6 +36,7 @@ public class CompetitionOverviewPopulatorTest {
     final LocalDateTime openDate = LocalDateTime.of(2017,1,1,0,0);
     final LocalDateTime closeDate = LocalDateTime.of(2017,1,1,0,0);
     final String competitionTitle = "Title of competition";
+    final String nonIfsUrl = "www.google.co.uk";
 
     @Mock
     private AbstractPublicSectionContentViewModel sectionContentViewModel;
@@ -59,6 +60,7 @@ public class CompetitionOverviewPopulatorTest {
         assertEquals(openDate, viewModel.getCompetitionOpenDate());
         assertEquals(closeDate, viewModel.getCompetitionCloseDate());
         assertEquals(competitionTitle, viewModel.getCompetitionTitle());
+        assertEquals(nonIfsUrl, viewModel.getNonIfsUrl());
     }
 
     @Test
@@ -92,6 +94,7 @@ public class CompetitionOverviewPopulatorTest {
                 .withCompetitionCloseDate(closeDate)
                 .withCompetitionTitle(competitionTitle)
                 .withContentSection(publicContentResource)
+                .withNonIfsUrl(nonIfsUrl)
                 .build();
 
         return publicContentItem;

@@ -23,60 +23,41 @@ import java.util.Optional;
  * Handles the overheads, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class OverheadsHandler extends FinanceRowHandler {
+public class OverheadsHandler extends FinanceRowHandler<Overhead> {
     public static final String COST_KEY = "overhead";
 
     @Autowired
     private FileEntryService fileEntryService;
 
     @Override
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
+    public void validate(@NotNull Overhead overhead, @NotNull BindingResult bindingResult) {
 
-        Overhead overhead = (Overhead) costItem;
         switch (overhead.getRateType()) {
             case DEFAULT_PERCENTAGE:
             case CUSTOM_RATE:
-                super.validate(costItem, bindingResult, Overhead.RateNotZero.class);
+                super.validate(overhead, bindingResult, Overhead.RateNotZero.class);
                 break;
             case TOTAL:
-                super.validate(costItem, bindingResult, Overhead.TotalCost.class);
+                super.validate(overhead, bindingResult, Overhead.TotalCost.class);
                 break;
             case NONE:
-                super.validate(costItem, bindingResult);
+                super.validate(overhead, bindingResult);
                 break;
         }
     }
-
+    
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof Overhead) {
-            Overhead overhead = (Overhead) costItem;
-            Integer rate = overhead.getRate();
-            String rateType = null;
-
-            if (overhead.getRateType() != null) {
-                rateType = overhead.getRateType().toString();
-            }
-            cost = new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
-        }
-        return cost;
+    public ApplicationFinanceRow toCost(Overhead overhead) {
+        final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;
+        return overhead != null ?
+                new ApplicationFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, null) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof Overhead) {
-            Overhead overhead = (Overhead) costItem;
-            Integer rate = overhead.getRate();
-            String rateType = null;
-
-            if (overhead.getRateType() != null) {
-                rateType = overhead.getRateType().toString();
-            }
-            cost = new ProjectFinanceRow(overhead.getId(), COST_KEY, rateType, "", rate, null, null, null);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(Overhead overhead) {
+        final String rateType = overhead.getRateType() != null ? overhead.getRateType().toString() : null;
+        return overhead != null ?
+                new ProjectFinanceRow(overhead.getId(), COST_KEY, rateType, "", overhead.getRate(), null, null, null) : null;
     }
 
     @Override

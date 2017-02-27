@@ -180,9 +180,6 @@ public class AbstractProjectServiceImpl extends BaseTransactionalService {
     protected ProjectActivityStates createSpendProfileStatus(final ProjectActivityStates financeCheckStatus, final Optional<SpendProfile> spendProfile) {
         if (spendProfile != null && spendProfile.isPresent() && financeCheckStatus.equals(COMPLETE)) {
             if (spendProfile.get().isMarkedAsComplete()) {
-                if (spendProfile.get().getApproval().equals(ApprovalType.REJECTED)) {
-                    return PENDING;
-                }
                 return COMPLETE;
             } else {
                 return ACTION_REQUIRED;
