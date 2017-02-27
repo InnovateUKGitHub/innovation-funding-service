@@ -78,9 +78,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		String url = applicationRestUrl + "/download/downloadByCompetition/" + competitionId;
 		return getWithRestResult(url, ByteArrayResource.class);
 	}
-
-
-
+	
 	@Override
 	public RestResult<CompetitionSummaryResource> getCompetitionSummary(long competitionId) {
 		return getWithRestResult(applicationSummaryRestUrl + "/getCompetitionSummary/" + competitionId, CompetitionSummaryResource.class);
