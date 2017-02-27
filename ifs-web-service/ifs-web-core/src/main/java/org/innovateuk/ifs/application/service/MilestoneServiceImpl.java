@@ -1,14 +1,12 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.commons.error.Error;
-import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.service.MilestoneRestService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,21 +35,13 @@ public class MilestoneServiceImpl implements MilestoneService{
     }
 
     @Override
-    public List<Error> updateMilestones(List<MilestoneResource> milestones) {
-       RestResult<Void> result = milestoneRestService.updateMilestones(milestones);
-       if(result.isFailure()) {
-    	   return result.getFailure().getErrors();
-       }
-       return new ArrayList<>();
+    public ServiceResult<Void> updateMilestones(List<MilestoneResource> milestones) {
+       return milestoneRestService.updateMilestones(milestones).toServiceResult();
     }
 
     @Override
-    public List<Error> updateMilestone(MilestoneResource milestone) {
-        RestResult<Void> result = milestoneRestService.updateMilestone(milestone);
-        if(result.isFailure()) {
-            return result.getFailure().getErrors();
-        }
-        return new ArrayList<>();
+    public ServiceResult<Void> updateMilestone(MilestoneResource milestone) {
+        return milestoneRestService.updateMilestone(milestone).toServiceResult();
     }
 
     @Override

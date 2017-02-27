@@ -3,6 +3,7 @@ package org.innovateuk.ifs.competitionsetup.service;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.innovateuk.ifs.application.service.MilestoneService;
 import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competitionsetup.form.MilestonesForm;
@@ -37,7 +38,7 @@ public class CompetitionSetupMilestoneServiceImpl implements CompetitionSetupMil
     }
 
     @Override
-    public List<Error> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, MilestoneRowForm> milestoneEntries, Long competitionId) {
+    public ServiceResult<Void> updateMilestonesForCompetition(List<MilestoneResource> milestones, Map<String, MilestoneRowForm> milestoneEntries, Long competitionId) {
         List<MilestoneResource> updatedMilestones = new ArrayList();
 
         milestones.forEach(milestoneResource -> {

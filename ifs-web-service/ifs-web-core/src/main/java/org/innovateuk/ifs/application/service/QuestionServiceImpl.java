@@ -3,8 +3,8 @@ package org.innovateuk.ifs.application.service;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.resource.ProcessRoleResource;
 import org.apache.commons.logging.Log;
@@ -120,8 +120,8 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public RestResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
-        return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType);
+    public ServiceResult<QuestionResource> getQuestionByCompetitionIdAndFormInputType(Long competitionId, FormInputType formInputType) {
+        return questionRestService.getQuestionByCompetitionIdAndFormInputType(competitionId, formInputType).toServiceResult();
     }
 
     @Override

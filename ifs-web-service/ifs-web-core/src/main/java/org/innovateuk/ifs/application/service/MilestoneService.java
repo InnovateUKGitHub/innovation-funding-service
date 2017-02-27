@@ -1,6 +1,6 @@
 package org.innovateuk.ifs.application.service;
 
-import org.innovateuk.ifs.commons.error.Error;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.MilestoneResource;
 import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ public interface MilestoneService {
 
     MilestoneResource getMilestoneByTypeAndCompetitionId(MilestoneType type, Long competitionId);
 
-    List<Error> updateMilestones(List<MilestoneResource> milestones);
+    ServiceResult<Void> updateMilestones(List<MilestoneResource> milestones);
 
-    List<Error> updateMilestone(MilestoneResource milestone);
+    ServiceResult<Void> updateMilestone(MilestoneResource milestone);
 
     MilestoneResource create(MilestoneType type, Long competitionId);
 }

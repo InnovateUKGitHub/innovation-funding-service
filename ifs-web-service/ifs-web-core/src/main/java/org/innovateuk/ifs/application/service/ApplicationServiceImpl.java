@@ -2,7 +2,6 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -175,8 +174,8 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
-    public RestResult<ApplicationResource> findByProcessRoleId(Long id) {
-        return applicationRestService.findByProcessRoleId(id);
+    public ServiceResult<ApplicationResource> findByProcessRoleId(Long id) {
+        return applicationRestService.findByProcessRoleId(id).toServiceResult();
     }
 
     @Override

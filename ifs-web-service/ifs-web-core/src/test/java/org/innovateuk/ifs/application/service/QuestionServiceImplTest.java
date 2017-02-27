@@ -6,8 +6,8 @@ import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.application.resource.QuestionResource;
 import org.innovateuk.ifs.application.resource.QuestionStatusResource;
 import org.innovateuk.ifs.application.resource.QuestionType;
-import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -15,9 +15,9 @@ import org.mockito.Mock;
 import java.util.*;
 import java.util.concurrent.Future;
 
+import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.application.builder.QuestionResourceBuilder.newQuestionResource;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.*;
@@ -220,7 +220,7 @@ public class QuestionServiceImplTest extends BaseServiceUnitTest<QuestionService
         QuestionResource question = new QuestionResource();
         when(questionRestService.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA)).thenReturn(restSuccess(question));
 
-        RestResult<QuestionResource> result =  service.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA);
+        ServiceResult<QuestionResource> result = service.getQuestionByCompetitionIdAndFormInputType(123L, FormInputType.TEXTAREA);
 
         assertTrue(result.isSuccess());
         assertEquals(question, result.getSuccessObject());
