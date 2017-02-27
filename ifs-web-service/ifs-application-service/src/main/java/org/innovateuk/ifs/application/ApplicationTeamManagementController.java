@@ -8,10 +8,8 @@ import org.innovateuk.ifs.application.form.RemoveContributorsForm;
 import org.innovateuk.ifs.application.populator.ApplicationTeamManagementModelPopulator;
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
-import org.innovateuk.ifs.application.service.CompetitionService;
 import org.innovateuk.ifs.application.service.OrganisationService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
-import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.filter.CookieFlashMessageFilter;
 import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
@@ -36,14 +34,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
+
+import static java.lang.String.format;
 
 /**
  * This controller will handle all requests that are related to the management of application participants
  */
 @Controller
-@RequestMapping("/application/{applicationId}")
+@RequestMapping("/application/{applicationId}/team")
 @PreAuthorize("hasAuthority('applicant')")
 public class ApplicationTeamManagementController {
 
@@ -53,8 +51,6 @@ public class ApplicationTeamManagementController {
     private UserAuthenticationService userAuthenticationService;
     @Autowired
     private ApplicationService applicationService;
-    @Autowired
-    private CompetitionService competitionService;
     @Autowired
     private UserService userService;
     @Autowired
@@ -71,13 +67,13 @@ public class ApplicationTeamManagementController {
     @Qualifier("mvcValidator")
     private Validator validator;
 
-    public static final String APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM = "application-contributors/update-remove-confirm";
-    public static final String APPLICATION_CONTRIBUTORS_UPDATE = "application-contributors/edit-org";
+    public static final String APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM = "application-team/update-remove-confirm";
+    public static final String APPLICATION_CONTRIBUTORS_UPDATE = "application-team/edit-org";
     private static final String CONTRIBUTORS_COOKIE = "contributor_invite_state";
     private static final String INVITES_SEND = "invitesSend";
 
 
-    @RequestMapping(value = "team/update", method = RequestMethod.GET)
+    @RequestMapping(value = "update", method = RequestMethod.GET)
     public String update(@PathVariable("applicationId") Long applicationId,
                          @RequestParam(name = "organisation", required = false) Long organisationId,
                          @ModelAttribute ContributorsForm contributorsForm,
@@ -97,18 +93,6 @@ public class ApplicationTeamManagementController {
         addSavedInvitesToForm(contributorsForm, leadOrganisation, savedInvites);
         mergeAndValidateCookieData(request, response, bindingResult, contributorsForm, applicationId, application, leadApplicant);
 
-//        model.addAttribute("authenticatedUser", user);
-//        model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
-//        model.addAttribute("currentApplication", application);
-//        model.addAttribute("currentCompetition", competition);
-//        model.addAttribute("leadApplicant", leadApplicant);
-//        model.addAttribute("leadOrganisation", leadOrganisation);
-//        model.addAttribute("organisationInvites", organisationInvites);
-//        if (organisationId != null) {
-//            OrganisationResource selectedOrganisation = organisationService.getOrganisationById(organisationId);
-//            model.addAttribute("selectedOrganisation", selectedOrganisation);
-//        }
-
         model.addAttribute("model", applicationTeamManagementModelPopulator.populateModel(applicationId, organisationId, user, authenticatedUserOrganisationId));
 
         return APPLICATION_CONTRIBUTORS_UPDATE;
@@ -125,7 +109,7 @@ public class ApplicationTeamManagementController {
         return APPLICATION_CONTRIBUTORS_UPDATE_REMOVE_CONFIRM;
     }
 
-    @RequestMapping(value = "team/update/remove", method = RequestMethod.POST)
+    @RequestMapping(value = "update/remove", method = RequestMethod.POST)
     public String deleteContributor(@PathVariable("applicationId") Long applicationId,
                                     @Valid @ModelAttribute RemoveContributorsForm removeContributorsForm) {
         applicationService.removeCollaborator(removeContributorsForm.getApplicationInviteId());
@@ -136,7 +120,7 @@ public class ApplicationTeamManagementController {
     /**
      * Handle form POST, manage ContributorsForm object, save to cookie, and redirect to the GET handler.
      */
-    @RequestMapping(value = "team/update", method = RequestMethod.POST)
+    @RequestMapping(value = "update", method = RequestMethod.POST)
     public String inviteContributors(@PathVariable("applicationId") Long applicationId,
                                      @RequestParam(name = "organisation", required = false) Long organisationId,
                                      @RequestParam(name = "add_person", required = false) String organisationIndex,
@@ -182,7 +166,7 @@ public class ApplicationTeamManagementController {
                     applicationService.updateStatus(application.getId(), ApplicationStatusConstants.OPEN.getId());
                     return ApplicationController.redirectToApplication(application);
                 }
-                return String.format("redirect:/application/%d/contributors", applicationId);
+                return format("redirect:/application/%d/contributors", applicationId);
             } else {
                 saveFormValuesToCookie(response, contributorsForm, applicationId);
             }
@@ -192,9 +176,9 @@ public class ApplicationTeamManagementController {
         }
 
         if (newApplication != null) {
-            return String.format("redirect:/application/%d/team/update/?newApplication", applicationId);
+            return format("redirect:/application/%d/team/update/?newApplication", applicationId);
         }
-        return String.format("redirect:/application/%d/team/update?organisation=%d", applicationId, organisationId);
+        return format("redirect:/application/%d/team/update?organisation=%d", applicationId, organisationId);
     }
 
     private void saveContributors(@PathVariable("applicationId") Long applicationId, @ModelAttribute ContributorsForm contributorsForm, HttpServletResponse response) {
@@ -217,7 +201,7 @@ public class ApplicationTeamManagementController {
             invites.add(inviteResource);
         });
 
-        if(!invites.isEmpty()) {
+        if (!invites.isEmpty()) {
             // save new invites, to InviteOrganisation that already is saved.
             if (organisationInvite.getOrganisationInviteId() != null && !organisationInvite.getOrganisationInviteId().equals(Long.valueOf(0))) {
                 inviteRestService.saveInvites(invites);
@@ -256,16 +240,16 @@ public class ApplicationTeamManagementController {
 
         UserResource authenticatedUser = userAuthenticationService.getAuthenticatedUser(request);
 
-        if(leadApplicant!=null && leadApplicant.getId().equals(authenticatedUser.getId())){
+        if (leadApplicant != null && leadApplicant.getId().equals(authenticatedUser.getId())) {
             return;
         }
 
         Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(authenticatedUser, getSavedInviteOrganisations(application));
 
         contributorsForm.getOrganisations().forEach(invite -> {
-            if(invite.getInvites() != null && !invite.getInvites().isEmpty() && (invite.getOrganisationId() == null || !invite.getOrganisationId().equals(authenticatedUserOrganisationId))) {
+            if (invite.getInvites() != null && !invite.getInvites().isEmpty() && (invite.getOrganisationId() == null || !invite.getOrganisationId().equals(authenticatedUserOrganisationId))) {
                 // Could not add the element, so its a duplicate.
-                FieldError fieldError = new FieldError("contributorsForm", String.format("organisations[%d].organisationName", contributorsForm.getOrganisations().indexOf(invite), 0), null, false, new String[]{"CannotInviteOrganisation"}, null, "As you are not the lead applicant, you cannot invite people from organisations other than your own.");
+                FieldError fieldError = new FieldError("contributorsForm", format("organisations[%d].organisationName", contributorsForm.getOrganisations().indexOf(invite), 0), null, false, new String[]{"CannotInviteOrganisation"}, null, "As you are not the lead applicant, you cannot invite people from organisations other than your own.");
                 bindingResult.addError(fieldError);
             }
         });
@@ -302,7 +286,7 @@ public class ApplicationTeamManagementController {
         contributorsForm.getOrganisations().add(leadOrganisationInviteForm);
 
         savedInvites.stream()
-                .filter(inviteOrg -> inviteOrg.getOrganisation()==null || !inviteOrg.getOrganisation().equals(leadOrganisation.getId()))
+                .filter(inviteOrg -> inviteOrg.getOrganisation() == null || !inviteOrg.getOrganisation().equals(leadOrganisation.getId()))
                 .forEach(inviteOrg -> {
                     OrganisationInviteForm invitedOrgForm = new OrganisationInviteForm();
                     invitedOrgForm.setOrganisationName(inviteOrg.getOrganisationName());
@@ -394,7 +378,7 @@ public class ApplicationTeamManagementController {
         if (!savedNames.add(invitee.getPersonName())) {
             bindingResult.addError(
                     createNotUniqueFieldError(
-                            String.format("organisations[%d].invites[%d].personName", organisationIndex, inviteIndex),
+                            format("organisations[%d].invites[%d].personName", organisationIndex, inviteIndex),
                             invitee.getPersonName(),
                             "You have already added this applicant name.")
             );
@@ -405,7 +389,7 @@ public class ApplicationTeamManagementController {
         if (!savedEmails.add(invitee.getEmail())) {
             bindingResult.addError(
                     createNotUniqueFieldError(
-                            String.format("organisations[%d].invites[%d].email", organisationIndex, inviteIndex),
+                            format("organisations[%d].invites[%d].email", organisationIndex, inviteIndex),
                             invitee.getEmail(),
                             "You have already added this email address.")
             );

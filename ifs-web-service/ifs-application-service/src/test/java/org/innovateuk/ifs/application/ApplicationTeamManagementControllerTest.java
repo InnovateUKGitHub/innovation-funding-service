@@ -9,6 +9,7 @@ import org.innovateuk.ifs.invite.resource.ApplicationInviteResource;
 import org.innovateuk.ifs.invite.resource.InviteOrganisationResource;
 import org.innovateuk.ifs.user.resource.UserResource;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -441,6 +442,7 @@ public class ApplicationTeamManagementControllerTest extends BaseControllerMockM
     }
 
     @Test
+    @Ignore("INFUND-7974")
     public void whenUserHasNoJSUserMustConfirm() throws Exception {
         Long inviteId = 2314L;
 
