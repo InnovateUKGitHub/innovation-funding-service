@@ -107,8 +107,8 @@ public class PublicContentServiceImpl extends BaseTransactionalService implement
     }
 
     private ServiceResult<Void> requiredMilestonesArePopulated(PublicContent publicContent) {
-        return milestoneService.getAllPublicMilestonesByCompetitionId(publicContent.getCompetitionId()).andOnSuccess(milestones -> {
-            if (milestones.size() == 3 && milestones.stream().noneMatch(milestone -> milestone.getDate() == null)) {
+        return milestoneService.allPublicDatesComplete(publicContent.getCompetitionId()).andOnSuccess(success -> {
+            if (success) {
                 return serviceSuccess();
             } else {
                 return serviceFailure(PUBLIC_CONTENT_MILESTONES_NOT_COMPLETE_TO_PUBLISH);

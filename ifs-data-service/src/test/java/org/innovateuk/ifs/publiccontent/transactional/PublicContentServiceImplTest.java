@@ -3,8 +3,6 @@ package org.innovateuk.ifs.publiccontent.transactional;
 import org.innovateuk.ifs.BaseServiceUnitTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.*;
-import org.innovateuk.ifs.competition.resource.MilestoneResource;
-import org.innovateuk.ifs.competition.resource.MilestoneType;
 import org.innovateuk.ifs.competition.transactional.MilestoneService;
 import org.innovateuk.ifs.publiccontent.domain.ContentSection;
 import org.innovateuk.ifs.publiccontent.domain.Keyword;
@@ -27,7 +25,6 @@ import static java.util.Arrays.stream;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.LambdaMatcher.createLambdaMatcher;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
-import static org.innovateuk.ifs.competition.builder.MilestoneResourceBuilder.newMilestoneResource;
 import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.COMPLETE;
 import static org.innovateuk.ifs.competition.publiccontent.resource.PublicContentStatus.IN_PROGRESS;
 import static org.innovateuk.ifs.publiccontent.builder.ContentEventResourceBuilder.newContentEventResource;
@@ -127,7 +124,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
                 newContentSection().withStatus(IN_PROGRESS).build(2)
         ).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
-        mockPublicMilestonesWithDate(LocalDateTime.now());
+        mockPublicMilestonesValid(true);
 
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
 
@@ -140,7 +137,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
                 newContentSection().withStatus(PublicContentStatus.COMPLETE).build(2)
         ).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
-        mockPublicMilestonesWithDate(null);
+        mockPublicMilestonesValid(false);
 
 
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
@@ -155,7 +152,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
                 newContentSection().withStatus(PublicContentStatus.COMPLETE).build(2)
         ).build();
         when(publicContentRepository.findByCompetitionId(COMPETITION_ID)).thenReturn(publicContent);
-        mockPublicMilestonesWithDate(LocalDateTime.now());
+        mockPublicMilestonesValid(true);
 
         ServiceResult<Void> result = service.publishByCompetitionId(COMPETITION_ID);
 
@@ -174,7 +171,7 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         when(publicContent.getId()).thenReturn(1L);
         when(publicContent.getCompetitionId()).thenReturn(COMPETITION_ID);
         when(publicContent.getPublishDate()).thenReturn(LocalDateTime.now());
-        mockPublicMilestonesWithDate(LocalDateTime.now());
+        mockPublicMilestonesValid(true);
 
         ServiceResult<Void> result = service.updateSection(publicContentResource, PublicContentSectionType.SEARCH);
 
@@ -307,14 +304,8 @@ public class PublicContentServiceImplTest extends BaseServiceUnitTest<PublicCont
         });
     }
 
-    private void mockPublicMilestonesWithDate(LocalDateTime date) {
-        MilestoneResource openMilestone = newMilestoneResource()
-                .withType(MilestoneType.OPEN_DATE).withDate(date).build();
-        MilestoneResource submissionDeadline = newMilestoneResource()
-                .withType(MilestoneType.SUBMISSION_DATE).withDate(date).build();
-        MilestoneResource releaseFeedback = newMilestoneResource()
-                .withType(MilestoneType.RELEASE_FEEDBACK).withDate(date).build();
-        when(milestoneService.getAllPublicMilestonesByCompetitionId(COMPETITION_ID))
-                .thenReturn(serviceSuccess(asList(openMilestone, submissionDeadline, releaseFeedback)));
+    private void mockPublicMilestonesValid(boolean valid) {
+        when(milestoneService.allPublicDatesComplete(COMPETITION_ID))
+                .thenReturn(serviceSuccess(valid));
     }
 }

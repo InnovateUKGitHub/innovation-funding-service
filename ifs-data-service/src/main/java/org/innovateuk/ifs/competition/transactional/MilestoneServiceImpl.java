@@ -34,7 +34,7 @@ import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
 public class MilestoneServiceImpl extends BaseTransactionalService implements MilestoneService {
 
     private static final Log LOG = LogFactory.getLog(MilestoneServiceImpl.class);
-
+    private static final List<MilestoneType> PUBLIC_MILESTONES = asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE);
     @Autowired
     private MilestoneRepository milestoneRepository;
     
@@ -48,8 +48,15 @@ public class MilestoneServiceImpl extends BaseTransactionalService implements Mi
     public ServiceResult<List<MilestoneResource>> getAllPublicMilestonesByCompetitionId(Long id) {
         return serviceSuccess ((List<MilestoneResource>)
                 milestoneMapper.mapToResource(milestoneRepository
-                        .findByCompetitionIdAndTypeIn(id,
-                                asList(MilestoneType.OPEN_DATE, MilestoneType.RELEASE_FEEDBACK, MilestoneType.SUBMISSION_DATE))));
+                        .findByCompetitionIdAndTypeIn(id, PUBLIC_MILESTONES)));
+    }
+
+    @Override
+    public ServiceResult<Boolean> allPublicDatesComplete(Long id) {
+        List<Milestone> milestones = milestoneRepository
+                .findByCompetitionIdAndTypeIn(id, PUBLIC_MILESTONES);
+
+        return serviceSuccess(milestones.size() == PUBLIC_MILESTONES.size() && milestones.stream().noneMatch(milestone -> milestone.getDate() == null));
     }
 
     @Override
