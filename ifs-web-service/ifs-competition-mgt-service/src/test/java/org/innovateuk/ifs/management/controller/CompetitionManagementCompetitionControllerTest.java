@@ -2,6 +2,7 @@ package org.innovateuk.ifs.management.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
@@ -176,6 +177,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void closeAssessment() throws Exception {
         Long competitionId = 1L;
+        when(competitionService.closeAssessment(competitionId)).thenReturn(ServiceResult.serviceSuccess());
+
         mockMvc.perform(post("/competition/{competitionId}/close-assessment", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + competitionId));
@@ -185,6 +188,8 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Test
     public void notifyAssessors() throws Exception {
         Long competitionId = 1L;
+        when(competitionService.notifyAssessors(competitionId)).thenReturn(ServiceResult.serviceSuccess());
+
         mockMvc.perform(post("/competition/{competitionId}/notify-assessors", competitionId))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/competition/" + competitionId));
