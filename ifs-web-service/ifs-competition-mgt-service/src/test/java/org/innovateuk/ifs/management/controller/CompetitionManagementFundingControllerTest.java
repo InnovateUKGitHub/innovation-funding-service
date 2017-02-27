@@ -79,9 +79,9 @@ public class CompetitionManagementFundingControllerTest {
         when(applicationSummarySortFieldService.sortFieldForSubmittedApplications(null)).thenReturn("sortfield");
 
         ApplicationSummaryPageResource summary = new ApplicationSummaryPageResource();
-        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE, null)).thenReturn(summary);
+        when(applicationSummaryService.getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null)).thenReturn(summary);
 
-        mockMvc.perform(get("/competition/{competitionId}/funding?tab=notSubmitted", COMPETITION_ID))
+        mockMvc.perform(get("/competition/{competitionId}/funding?tab=submitted", COMPETITION_ID))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-funders-panel"))
                 .andExpect(model().attribute("competitionSummary", competitionSummaryResource))
@@ -89,7 +89,7 @@ public class CompetitionManagementFundingControllerTest {
                 .andExpect(model().attribute("activeSortField", "sortfield"));
 
 
-        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, Integer.MAX_VALUE, null);
+        verify(applicationSummaryService).getSubmittedApplicationSummariesByCompetitionId(COMPETITION_ID, "sortfield", 0, 20, null);
         verify(applicationSummaryService).getCompetitionSummaryByCompetitionId(COMPETITION_ID);
     }
 
