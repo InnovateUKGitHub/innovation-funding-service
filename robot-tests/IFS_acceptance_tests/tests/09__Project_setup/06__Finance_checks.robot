@@ -300,42 +300,42 @@ Project finance user can see the lead partner's information about eligibility
 Finance checks eligibility validations
     [Documentation]    INFUND-4833
     [Tags]
-    When the user clicks the button/link             jQuery=section:nth-of-type(1) button:contains("Labour")
+    When the user clicks the button/link             jQuery=section:nth-of-type(1) h3:contains("Labour")
     And the user clicks the button/link              jQuery=section:nth-of-type(1) a:contains("Edit")
     When the user enters text to a text field        css=[name^="labour-labourDaysYearly"]    -230
     Then the user should see the text in the page    This field should be 1 or higher
     When the user clicks the button/link             jQuery=section:nth-of-type(1) button[name=save-eligibility]
     Then the user should see the text in the page    This field should be 1 or higher
-    And the user clicks the button/link             jQuery=section:nth-of-type(1) button:contains("Labour")
+    And the user clicks the button/link             jQuery=section:nth-of-type(1) h3:contains("Labour")
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(3) button:contains("Materials")
+    When the user clicks the button/link             jQuery=section:nth-of-type(3) h3:contains("Materials")
     And the user clicks the button/link              jQuery=section:nth-of-type(3) a:contains("Edit")
     When the user clicks the button/link             jQuery=section:nth-of-type(3) button[name=add_cost]
     When the user enters text to a text field        css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    100
     And the user clicks the button/link              jQuery=section:nth-of-type(3) button[name=save-eligibility]
     Then the user should see the text in the page    This field cannot be left blank
-    And the user clicks the button/link             jQuery=section:nth-of-type(3) button:contains("Materials")
+    And the user clicks the button/link             jQuery=section:nth-of-type(3) h3:contains("Materials")
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(4) button:contains("Capital usage")
+    When the user clicks the button/link             jQuery=section:nth-of-type(4) h3:contains("Capital usage")
     And the user clicks the button/link              jQuery=section:nth-of-type(4) a:contains("Edit")
     When the user enters text to a text field        css=section:nth-of-type(4) #capital_usage div:nth-child(1) div:nth-of-type(6) input   200
     Then the user should see the text in the page    This field should be 100 or lower
-    And the user clicks the button/link             jQuery=section:nth-of-type(4) button:contains("Capital usage")
+    And the user clicks the button/link             jQuery=section:nth-of-type(4) h3:contains("Capital usage")
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(6) button:contains("Travel and subsistence")
+    When the user clicks the button/link             jQuery=section:nth-of-type(6) h3:contains("Travel and subsistence")
     And the user clicks the button/link              jQuery=section:nth-of-type(6) a:contains("Edit")
     When the user clicks the button/link            jQuery=section:nth-of-type(6) button[name=add_cost]
     And the user enters text to a text field         css=#travel-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input    123
     When the user clicks the button/link             jQuery=section:nth-of-type(6) button[name=save-eligibility]
     Then the user should see the text in the page     This field cannot be left blank
-    And the user clicks the button/link             jQuery=section:nth-of-type(6) button:contains("Travel and subsistence")
+    And the user clicks the button/link             jQuery=section:nth-of-type(6) h3:contains("Travel and subsistence")
     And the user reloads the page
-    When the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other costs")
+    When the user clicks the button/link             jQuery=section:nth-of-type(7) h3:contains("Other costs")
     And the user clicks the button/link              jQuery=section:nth-of-type(7) a:contains("Edit")
     When the user clicks the button/link            jQuery=section:nth-of-type(7) button[name=add_cost]
     And the user enters text to a text field        jQuery=#other-costs-table tr:nth-child(2) td:nth-child(2) input  5000
     Then the user should see the text in the page    This field cannot be left blank
-    And the user clicks the button/link             jQuery=section:nth-of-type(7) button:contains("Other costs")
+    And the user clicks the button/link             jQuery=section:nth-of-type(7) h3:contains("Other costs")
     When the user clicks the button/link             link=Finance checks
   #  When the user clicks the button/link             jQuery=table.table-progress tr:nth-child(1) td:nth-child(4) a:contains("Review")    # TODO this is to be uncommented once the switch to new eligibility page is done with 4823
     And the user navigates to the page               ${server}/project-setup-management/project/${PROJECT_SETUP_APPLICATION_1_PROJECT}/finance-check/organisation/22/eligibility   # TODO to delete this when the new eligibility page is switched to
@@ -730,7 +730,7 @@ verify total costs of project
 
 verify percentage and total
     [Arguments]  ${section}  ${percentage}  ${total}
-    the user should see the element           jQuery=section:nth-of-type(${section}) button span:contains("${percentage}")
+    the user should see the element           jQuery=section:nth-of-type(${section}) h3 span:contains("${percentage}")
     the user should see the element            jQuery=section:nth-of-type(${section}) input[data-calculation-rawvalue^='${total}']
 
 the user adds data into labour row
@@ -769,8 +769,8 @@ the user adds travel data into row
     the user enters text to a text field        css=#travel-costs-table tbody tr:nth-of-type(${row_number}) td:nth-of-type(3) input    ${cost}
 
 Project finance user amends labour details in eligibility
-    When the user clicks the button/link            jQuery=section:nth-of-type(1) button:contains("Labour")
-    Then the user should see the element            jQuery=section:nth-of-type(1) button span:contains("2%")
+    When the user clicks the button/link            jQuery=section:nth-of-type(1) h3:contains("Labour")
+    Then the user should see the element            jQuery=section:nth-of-type(1) h3 span:contains("2%")
     When the user clicks the button/link            jQuery=section:nth-of-type(1) a:contains("Edit")
     Then the user should see the element            css=.labour-costs-table tr:nth-of-type(1) td:nth-of-type(2) input
     When the user clears the text from the element  css=[name^="labour-labourDaysYearly"]
