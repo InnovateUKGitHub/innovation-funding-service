@@ -1,29 +1,23 @@
 package org.innovateuk.ifs.application.service;
 
-import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.innovateuk.ifs.util.MapFunctions.asMap;
-import static java.util.Arrays.asList;
-
-
-import java.util.List;
-import java.util.Map;
-
+import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.commons.error.CommonErrors;
+import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import org.innovateuk.ifs.application.resource.FundingDecision;
-import org.innovateuk.ifs.commons.error.CommonErrors;
-import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import java.util.List;
+import java.util.Map;
+
+import static java.util.Arrays.asList;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
+import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
+import static org.innovateuk.ifs.util.MapFunctions.asMap;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationFundingDecisionServiceImplTest {
@@ -76,7 +70,7 @@ public class ApplicationFundingDecisionServiceImplTest {
 		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
 		
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision)).thenReturn(restFailure(CommonErrors.internalServerErrorError()));
-		service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+		service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
 	}
 	
 	@Test
