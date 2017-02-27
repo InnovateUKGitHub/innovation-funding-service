@@ -13,11 +13,16 @@ public class ApplicationTeamViewModel {
     private long applicationId;
     private String applicationName;
     private List<ApplicationTeamOrganisationRowViewModel> organisations;
+    private boolean userLeadApplicant;
 
-    public ApplicationTeamViewModel(long applicationId, String applicationName, List<ApplicationTeamOrganisationRowViewModel> organisations) {
+    public ApplicationTeamViewModel(long applicationId,
+                                    String applicationName,
+                                    List<ApplicationTeamOrganisationRowViewModel> organisations,
+                                    boolean userLeadApplicant) {
         this.applicationId = applicationId;
         this.applicationName = applicationName;
         this.organisations = organisations;
+        this.userLeadApplicant = userLeadApplicant;
     }
 
     public long getApplicationId() {
@@ -30,6 +35,10 @@ public class ApplicationTeamViewModel {
 
     public List<ApplicationTeamOrganisationRowViewModel> getOrganisations() {
         return organisations;
+    }
+
+    public boolean isUserLeadApplicant() {
+        return userLeadApplicant;
     }
 
     @Override
@@ -46,6 +55,7 @@ public class ApplicationTeamViewModel {
 
         return new EqualsBuilder()
                 .append(applicationId, that.applicationId)
+                .append(userLeadApplicant, that.userLeadApplicant)
                 .append(applicationName, that.applicationName)
                 .append(organisations, that.organisations)
                 .isEquals();
@@ -57,6 +67,7 @@ public class ApplicationTeamViewModel {
                 .append(applicationId)
                 .append(applicationName)
                 .append(organisations)
+                .append(userLeadApplicant)
                 .toHashCode();
     }
 }

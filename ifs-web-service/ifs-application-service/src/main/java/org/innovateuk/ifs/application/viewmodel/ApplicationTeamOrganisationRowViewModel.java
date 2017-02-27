@@ -14,12 +14,18 @@ public class ApplicationTeamOrganisationRowViewModel {
     private String name;
     private boolean lead;
     private List<ApplicationTeamApplicantRowViewModel> applicants;
+    private boolean editable;
 
-    public ApplicationTeamOrganisationRowViewModel(long id, String name, boolean lead, List<ApplicationTeamApplicantRowViewModel> applicants) {
+    public ApplicationTeamOrganisationRowViewModel(long id,
+                                                   String name,
+                                                   boolean lead,
+                                                   List<ApplicationTeamApplicantRowViewModel> applicants,
+                                                   boolean editable) {
         this.id = id;
         this.name = name;
         this.lead = lead;
         this.applicants = applicants;
+        this.editable = editable;
     }
 
     public long getId() {
@@ -38,6 +44,10 @@ public class ApplicationTeamOrganisationRowViewModel {
         return applicants;
     }
 
+    public boolean isEditable() {
+        return editable;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -53,6 +63,7 @@ public class ApplicationTeamOrganisationRowViewModel {
         return new EqualsBuilder()
                 .append(id, that.id)
                 .append(lead, that.lead)
+                .append(editable, that.editable)
                 .append(name, that.name)
                 .append(applicants, that.applicants)
                 .isEquals();
@@ -65,6 +76,7 @@ public class ApplicationTeamOrganisationRowViewModel {
                 .append(name)
                 .append(lead)
                 .append(applicants)
+                .append(editable)
                 .toHashCode();
     }
 }

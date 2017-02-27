@@ -18,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 /**
@@ -39,56 +39,63 @@ public class ApplicationTeamModelPopulator {
     @Autowired
     private UserService userService;
 
-    public ApplicationTeamViewModel populateModel(long applicationId) {
+    public ApplicationTeamViewModel populateModel(long applicationId, long loggedInUserId) {
         ApplicationResource applicationResource = applicationService.getById(applicationId);
+        UserResource leadApplicant = getLeadApplicant(applicationResource);
         return new ApplicationTeamViewModel(applicationResource.getId(), applicationResource.getApplicationDisplayName(),
-                getOrganisationViewModels(applicationResource));
+                getOrganisationViewModels(applicationResource.getId(), loggedInUserId, leadApplicant),
+                isUserLeadApplicant(loggedInUserId, leadApplicant));
     }
 
-    private List<ApplicationTeamOrganisationRowViewModel> getOrganisationViewModels(ApplicationResource applicationResource) {
-        OrganisationResource leadOrganisation = getLeadOrganisation(applicationResource.getId());
+    private List<ApplicationTeamOrganisationRowViewModel> getOrganisationViewModels(long applicationId, long loggedInUserId,
+                                                                                    UserResource leadApplicant) {
+        OrganisationResource leadOrganisation = getLeadOrganisation(applicationId);
 
-        List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(
-                applicationResource, leadOrganisation.getId());
+        List<InviteOrganisationResource> inviteOrganisationResources = getOrganisationInvites(applicationId, leadOrganisation.getId());
+
+        boolean userLeadApplicant = isUserLeadApplicant(loggedInUserId, leadApplicant);
 
         List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModelsForInvites = inviteOrganisationResources
                 .stream().map(inviteOrganisationResource -> getOrganisationViewModel(inviteOrganisationResource,
-                        leadOrganisation.getId())).collect(toList());
+                        leadOrganisation.getId(), loggedInUserId, userLeadApplicant)).collect(toList());
 
-        if (!organisationInvitesContainsLeadOrganisation(
-                inviteOrganisationResources, leadOrganisation.getId())) {
-            organisationRowViewModelsForInvites = appendLeadOrganisation(organisationRowViewModelsForInvites, leadOrganisation);
+        if (isNoInvitesForLeadOrganisation(inviteOrganisationResources, leadOrganisation.getId())) {
+            organisationRowViewModelsForInvites = appendLeadOrganisation(organisationRowViewModelsForInvites, leadOrganisation, userLeadApplicant);
         }
 
-        return appendLeadApplicant(organisationRowViewModelsForInvites, applicationResource);
+        return appendLeadApplicant(organisationRowViewModelsForInvites, leadApplicant);
     }
 
-    private boolean organisationInvitesContainsLeadOrganisation(List<InviteOrganisationResource> inviteOrganisationResources,
-                                                                long leadOrganisationId) {
-        return inviteOrganisationResources.stream().anyMatch(inviteOrganisationResource ->
+    private boolean isNoInvitesForLeadOrganisation(List<InviteOrganisationResource> inviteOrganisationResources,
+                                                   long leadOrganisationId) {
+        return inviteOrganisationResources.stream().noneMatch(inviteOrganisationResource ->
                 inviteOrganisationResource.getOrganisation() == leadOrganisationId);
     }
 
     private List<ApplicationTeamOrganisationRowViewModel> appendLeadOrganisation(
-            List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModels, OrganisationResource leadOrganisation) {
+            List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModels, OrganisationResource leadOrganisation,
+            boolean editable) {
         organisationRowViewModels.add(0, new ApplicationTeamOrganisationRowViewModel(leadOrganisation.getId(),
-                leadOrganisation.getName(), true, new ArrayList<>()));
+                leadOrganisation.getName(), true, new ArrayList<>(), editable));
         return organisationRowViewModels;
     }
 
     private List<ApplicationTeamOrganisationRowViewModel> appendLeadApplicant(
-            List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModels, ApplicationResource applicationResource) {
+            List<ApplicationTeamOrganisationRowViewModel> organisationRowViewModels, UserResource leadApplicant) {
         organisationRowViewModels.stream().filter(ApplicationTeamOrganisationRowViewModel::isLead).findFirst().ifPresent(
                 applicationTeamOrganisationRowViewModel -> applicationTeamOrganisationRowViewModel.getApplicants().add(0,
-                        getLeadApplicantViewModel(getLeadApplicant(applicationResource))));
+                        getLeadApplicantViewModel(leadApplicant)));
         return organisationRowViewModels;
     }
 
-    private ApplicationTeamOrganisationRowViewModel getOrganisationViewModel(InviteOrganisationResource inviteOrganisationResource, long leadOrganisationId) {
-        boolean lead = leadOrganisationId == inviteOrganisationResource.getOrganisation();
+    private ApplicationTeamOrganisationRowViewModel getOrganisationViewModel(InviteOrganisationResource inviteOrganisationResource,
+                                                                             long leadOrganisationId, long loggedInUserId,
+                                                                             boolean userLeadApplicant) {
+        boolean leadOrganisation = leadOrganisationId == inviteOrganisationResource.getOrganisation();
+        boolean editable = userLeadApplicant || isUserMemberOfOrganisation(loggedInUserId, inviteOrganisationResource);
         return new ApplicationTeamOrganisationRowViewModel(inviteOrganisationResource.getOrganisation(),
-                getOrganisationName(inviteOrganisationResource), lead, inviteOrganisationResource.getInviteResources()
-                .stream().map(this::getApplicantViewModel).collect(toList()));
+                getOrganisationName(inviteOrganisationResource), leadOrganisation, inviteOrganisationResource.getInviteResources()
+                .stream().map(this::getApplicantViewModel).collect(toList()), editable);
     }
 
     private ApplicationTeamApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource) {
@@ -110,9 +117,9 @@ public class ApplicationTeamModelPopulator {
         return applicationService.getLeadOrganisation(applicationId);
     }
 
-    private List<InviteOrganisationResource> getOrganisationInvites(ApplicationResource applicationResource, long leadOrganisationId) {
+    private List<InviteOrganisationResource> getOrganisationInvites(long applicationId, long leadOrganisationId) {
         List<InviteOrganisationResource> inviteOrganisationResources = inviteRestService.getInvitesByApplication(
-                applicationResource.getId()).handleSuccessOrFailure(failure -> Collections.emptyList(), success -> success);
+                applicationId).handleSuccessOrFailure(failure -> emptyList(), success -> success);
         inviteOrganisationResources.sort(compareByLeadOrganisationThenById(leadOrganisationId));
         return inviteOrganisationResources;
     }
@@ -125,6 +132,15 @@ public class ApplicationTeamModelPopulator {
     private String getApplicantName(ApplicationInviteResource applicationInviteResource) {
         return StringUtils.isNotBlank(applicationInviteResource.getNameConfirmed()) ?
                 applicationInviteResource.getNameConfirmed() : applicationInviteResource.getName();
+    }
+
+    private boolean isUserLeadApplicant(long userId, UserResource leadApplicant) {
+        return userId == leadApplicant.getId();
+    }
+
+    private boolean isUserMemberOfOrganisation(long userId, InviteOrganisationResource inviteOrganisationResource) {
+        return inviteOrganisationResource.getInviteResources().stream().anyMatch(applicationInviteResource ->
+                applicationInviteResource.getUser() != null && userId == applicationInviteResource.getUser());
     }
 
     private static Comparator<? super InviteOrganisationResource> compareByLeadOrganisationThenById(long leadOrganisationId) {
