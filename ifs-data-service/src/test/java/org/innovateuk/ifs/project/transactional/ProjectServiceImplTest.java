@@ -1532,6 +1532,10 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(financeCheckWorkflowHandlerMock.isApproved(partnerOrganisations.get(1))).thenReturn(false);
         when(financeCheckWorkflowHandlerMock.isApproved(partnerOrganisations.get(2))).thenReturn(true);
 
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(0).getProject().getId(), partnerOrganisations.get(0).getOrganisation().getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(1).getProject().getId(), partnerOrganisations.get(1).getOrganisation().getId())).thenReturn(serviceSuccess(Boolean.FALSE));
+        when(financeCheckServiceMock.isQueryActionRequired(partnerOrganisations.get(2).getProject().getId(), partnerOrganisations.get(2).getOrganisation().getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+
         ProjectLeadStatusResource expectedLeadPartnerOrganisationStatus = newProjectLeadStatusResource().
                 withName(organisations.get(0).getName()).
                 withOrganisationType(
@@ -1555,8 +1559,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED, ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withBankDetailsStatus(NOT_REQUIRED, NOT_STARTED).
-                withFinanceChecksStatus(PENDING, COMPLETE).
-                withSpendProfileStatus(NOT_STARTED, ACTION_REQUIRED).
+                withFinanceChecksStatus(PENDING, NOT_STARTED).
+                withSpendProfileStatus(NOT_STARTED, NOT_STARTED).
                 withOtherDocumentsStatus(NOT_REQUIRED, NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED, NOT_REQUIRED).
                 build(2);
@@ -1579,8 +1583,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
                 withProjectDetailsStatus(ACTION_REQUIRED).
                 withMonitoringOfficerStatus(NOT_REQUIRED).
                 withBankDetailsStatus(NOT_STARTED).
-                withFinanceChecksStatus(COMPLETE).
-                withSpendProfileStatus(ACTION_REQUIRED).
+                withFinanceChecksStatus(NOT_STARTED).
+                withSpendProfileStatus(NOT_STARTED).
                 withOtherDocumentsStatus(NOT_REQUIRED).
                 withGrantOfferStatus(NOT_REQUIRED).
                 build(1);
@@ -1790,6 +1794,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -1818,6 +1823,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.FALSE);
 
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsNotSent = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -1861,7 +1867,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(projectUserMapperMock.mapToResource(pu.get(0))).thenReturn(puResource.get(0));
         when(organisationRepositoryMock.findOne(o.getId())).thenReturn(o);
         when(partnerOrganisationRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(po.get(0));
-        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
+        when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(anyLong(), anyLong())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), nonLeadOrg.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
@@ -1871,6 +1877,8 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
 
         when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), o.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
         when(financeRowServiceMock.organisationSeeksFunding(p.getId(), p.getApplication().getId(), nonLeadOrg.getId())).thenReturn(serviceSuccess(Boolean.TRUE));
+        when(financeCheckServiceMock.isQueryActionRequired(anyLong(),anyLong())).thenReturn(serviceSuccess(Boolean.FALSE));
+
 
         // Call the service again
         ServiceResult<ProjectTeamStatusResource> resultWhenGolIsReadyToApprove = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
@@ -1902,6 +1910,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(golWorkflowHandlerMock.isAlreadySent(p)).thenReturn(Boolean.TRUE);
         when(golWorkflowHandlerMock.isReadyToApprove(p)).thenReturn(Boolean.TRUE);
         when(golWorkflowHandlerMock.isApproved(p)).thenReturn(Boolean.TRUE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2204,6 +2213,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2223,6 +2233,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2240,6 +2251,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 
@@ -2259,6 +2271,7 @@ public class ProjectServiceImplTest extends BaseServiceUnitTest<ProjectService> 
         when(bankDetailsRepositoryMock.findByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(bankDetails);
         when(spendProfileRepositoryMock.findOneByProjectIdAndOrganisationId(p.getId(), o.getId())).thenReturn(Optional.ofNullable(spendProfile));
         when(financeCheckWorkflowHandlerMock.isApproved(po.get(0))).thenReturn(Boolean.TRUE);
+        when(financeCheckServiceMock.isQueryActionRequired(p.getId(),o.getId())).thenReturn(serviceSuccess(Boolean.FALSE));
 
         ServiceResult<ProjectTeamStatusResource> result = service.getProjectTeamStatus(p.getId(), Optional.ofNullable(pu.get(0).getId()));
 

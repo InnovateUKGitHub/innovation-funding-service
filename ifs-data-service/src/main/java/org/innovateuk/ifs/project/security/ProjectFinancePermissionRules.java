@@ -9,6 +9,7 @@ import org.innovateuk.ifs.project.resource.ProjectOrganisationCompositeId;
 import org.innovateuk.ifs.security.BasePermissionRules;
 import org.innovateuk.ifs.user.resource.UserResource;
 
+import static org.innovateuk.ifs.security.SecurityRuleUtil.isCompAdmin;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isInternal;
 import static org.innovateuk.ifs.security.SecurityRuleUtil.isProjectFinanceUser;
 
@@ -37,6 +38,30 @@ public class ProjectFinancePermissionRules extends BasePermissionRules {
     public boolean leadPartnerCanViewAnySpendProfileData(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
 
         return isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Partners and Comp Admin can view their own Spend Profile data")
+    public boolean partnersAndCompAdminCanViewTheirOwnSpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return isCompAdmin(user) || partnerBelongsToOrganisation(projectOrganisationCompositeId.getProjectId(), user.getId(), projectOrganisationCompositeId.getOrganisationId());
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Project Finance and Comp Admin Users can view their own Spend Profile data")
+    public boolean projectFinanceUserAndCompAdminCanViewAnySpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return isCompAdmin(user) || isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(
+            value = "VIEW_SPEND_PROFILE_CSV",
+            description = "Lead partner and Comp Admin view Spend Profile data")
+    public boolean leadPartnerAndCompAdminCanViewAnySpendProfileCsv(ProjectOrganisationCompositeId projectOrganisationCompositeId, UserResource user) {
+
+        return isCompAdmin(user) || isLeadPartner(projectOrganisationCompositeId.getProjectId(), user.getId());
     }
 
     @PermissionRule(
