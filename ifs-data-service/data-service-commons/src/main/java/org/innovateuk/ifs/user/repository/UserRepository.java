@@ -68,7 +68,6 @@ public interface UserRepository extends PagingAndSortingRepository<User, Long> {
             "AND user.id NOT IN (" + USERS_WITH_COMPETITION_INVITE + ") " +
             "AND roles.name = 'assessor' "+
             "GROUP BY user.id")
-
     Page<User> findAssessorsByCompetitionAndInnovationArea(@Param("competitionId") long competitionId,
                                                            @Param("innovationArea") Long innovationArea,
                                                            Pageable pageable);
