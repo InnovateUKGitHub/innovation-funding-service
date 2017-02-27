@@ -296,7 +296,7 @@
         <hr/>
         <div class="grid-row extra-margin">
             <form method="post"
-                  th:action="@{/application/{appId}/contributors/remove(appId = ${currentApplication.getId()})}"
+                  th:action="@{/application/{appId}/update/remove(appId = ${currentApplication.getId()})}"
                   th:object="${removeContributorForm}" id="submit-remove-collaborator-form">
                 <input type="hidden" value="" name="applicationInviteId"/>
                 <div class="column-half">
