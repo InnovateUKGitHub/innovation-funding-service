@@ -28,7 +28,7 @@
     <div class="grid-row sorting">
         <h3><span class="heading-xlarge no-margin" th:text="${results.totalElements}" /> applications</h3>
     </div>
-    <form method="POST">
+    <form method="POST" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}">
         <div class="grid-row sorting">
             <div class="column-half">
                 <div class="select-all">
