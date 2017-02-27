@@ -757,6 +757,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         List<AvailableAssessorResource> availableAssessorResources = availableAssessorPageResource.getContent();
 
+        assertEquals(4, availableAssessorResources.size());
         assertEquals("Andrew Marr", availableAssessorResources.get(0).getName());
         assertEquals("James Blake", availableAssessorResources.get(1).getName());
         assertEquals("Jessica Alba", availableAssessorResources.get(2).getName());
@@ -783,6 +784,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
 
         List<AvailableAssessorResource> availableAssessorResources = availableAssessorPageResource.getContent();
 
+        assertEquals(2, availableAssessorResources.size());
         assertEquals("Jessica Alba", availableAssessorResources.get(0).getName());
         assertEquals("Victoria Beckham", availableAssessorResources.get(1).getName());
     }
@@ -803,6 +805,7 @@ public class CompetitionInviteControllerIntegrationTest extends BaseControllerIn
         assertEquals(0, availableAssessorPageResource.getNumber());
         assertEquals(1, availableAssessorPageResource.getTotalPages());
         assertEquals(6, availableAssessorPageResource.getTotalElements());
+        assertEquals(6, availableAssessorPageResource.getContent().size());
     }
 
     private void addTestAssessors() {
