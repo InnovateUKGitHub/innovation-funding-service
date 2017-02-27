@@ -634,6 +634,10 @@ public class Competition implements ProcessActivity {
         setMilestoneDate(MilestoneType.ASSESSORS_NOTIFIED, date);
     }
 
+    public void releaseFeedback(LocalDateTime date) {
+        setMilestoneDate(MilestoneType.RELEASE_FEEDBACK, date);
+    }
+
     public void closeAssessment(LocalDateTime date) {
         setMilestoneDate(MilestoneType.ASSESSMENT_CLOSED, date);
     }

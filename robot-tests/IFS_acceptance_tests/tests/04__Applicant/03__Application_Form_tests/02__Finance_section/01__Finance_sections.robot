@@ -114,11 +114,18 @@ Academic partner can upload file for field J-es PDF
     # Note the Jes form is already uploaded
     Then the user should see the element     css=a.uploaded-file
     When The user clicks the button/link       jQuery=button:contains("Remove")
-    then the user should see the element       jQuery=label[for="42"]
+    then the user should see the element       jQuery=label[class="button-secondary extra-margin"]
     and the user uploads the file   name=jes-upload   ${valid_pdf}
     and the user should see the text in the page    ${valid_pdf}
 
-File upload mandatory for Academic parter to mark section as complete
+Academic partner's Your funding section is read only once marked as complete
+    [Documentation]     INFUND-7405
+    [Tags]    HappyPath
+    When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
+    and the user clicks the button/link     jQuery=button:contains("Mark as complete")
+    then the user should not see the element   css=input
+
+File upload mandatory for Academic partner to mark section as complete
     [Documentation]    INFUND-8469
     [Tags]    HappyPath    Pending
     #TODO pending due to INFUND-8469

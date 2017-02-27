@@ -1,0 +1,13 @@
+=== Get applications with a funding decision
+==== Request
+include::{snippets}/application-summary/get-with-funding-decision-application-summaries-by-competition-id/http-request.adoc[]
+include::{snippets}/application-summary/get-with-funding-decision-application-summaries-by-competition-id/path-parameters.adoc[]
+include::{snippets}/application-summary/get-with-funding-decision-application-summaries-by-competition-id/request-parameters.adoc[]
+
+
+==== Response
+include::{snippets}/application-summary/get-with-funding-decision-application-summaries-by-competition-id/http-response.adoc[]
+include::{snippets}/application-summary/get-with-funding-decision-application-summaries-by-competition-id/response-fields.adoc[]
+
+==== Curl Example
+include::{snippets}/application-summary/get-with-funding-decision-application-summaries-by-competition-id/curl-request.adoc[]
