@@ -67,7 +67,6 @@ public class QuestionServiceSecurityTest extends BaseServiceSecurityTest<Questio
         );
     }
 
-
     @Test
     public void testGetNextQuestion() {
         final Long questionId = 1L;
