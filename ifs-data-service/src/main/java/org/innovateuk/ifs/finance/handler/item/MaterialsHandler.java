@@ -15,33 +15,23 @@ import javax.validation.constraints.NotNull;
  * Handles the material costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class MaterialsHandler extends FinanceRowHandler {
+public class MaterialsHandler extends FinanceRowHandler<Materials> {
     private static final Log LOG = LogFactory.getLog(MaterialsHandler.class);
     public static final String COST_KEY = "materials";
 
     @Override
-    public void validate(@NotNull FinanceRowItem costItem, @NotNull BindingResult bindingResult) {
-        super.validate(costItem, bindingResult);
+    public void validate(@NotNull Materials materials, @NotNull BindingResult bindingResult) {
+        super.validate(materials, bindingResult);
     }
 
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof Materials) {
-            Materials materials = (Materials) costItem;
-            cost = new ApplicationFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
-        }
-        return cost;
+    public ApplicationFinanceRow toCost(Materials materials) {
+        return new ApplicationFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof Materials) {
-            Materials materials = (Materials) costItem;
-            cost = new ProjectFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(Materials materials) {
+        return new ProjectFinanceRow(materials.getId(), COST_KEY, materials.getItem(), "", materials.getQuantity(), materials.getCost(),null, null);
     }
 
     @Override

@@ -12,7 +12,8 @@ import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.id;
 import static org.innovateuk.ifs.category.builder.ResearchCategoryBuilder.newResearchCategory;
 import static org.junit.Assert.assertEquals;
 
-public class ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryIntegrationTest<ResearchCategoryRepository> {
+public class ResearchCategoryRepositoryIntegrationTest
+        extends BaseRepositoryIntegrationTest<ResearchCategoryRepository> {
 
     @Autowired
     @Override
@@ -36,6 +37,19 @@ public class ResearchCategoryRepositoryIntegrationTest extends BaseRepositoryInt
         ResearchCategory actual = repository.findById(researchCategory.getId());
         assertEquals(researchCategory, actual);
     }
+
+    @Test
+    public void findByName() {
+        ResearchCategory researchCategory = repository.save(newResearchCategory()
+                .with(id(null))
+                .withName("Category Name")
+                .build());
+        flushAndClearSession();
+
+        ResearchCategory actual = repository.findByName(researchCategory.getName());
+        assertEquals(researchCategory, actual);
+    }
+
 
     @Test
     public void findAll() {

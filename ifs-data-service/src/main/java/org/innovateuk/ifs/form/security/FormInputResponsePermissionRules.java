@@ -78,7 +78,6 @@ public class FormInputResponsePermissionRules {
 
         List<QuestionStatus> questionStatuses = getQuestionStatuses(response);
 
-
         // There is no question status yet, so only check for roles
         if (questionStatuses.isEmpty()) {
             return isLead || isCollaborator;
@@ -86,7 +85,17 @@ public class FormInputResponsePermissionRules {
 
         return (isLead || isCollaborator)
                 && checkIfAssignedToQuestion(questionStatuses, user)
-                && !checkIfQuestionIsMarked(questionStatuses);
+                && checkQuestionStatuses(questionStatuses, user);
+
+    }
+
+    private boolean checkQuestionStatuses(List<QuestionStatus> questionStatuses, UserResource user) {
+        Question question = questionStatuses.get(0).getQuestion();
+        if (question.getMultipleStatuses()) {
+            return checkIfQuestionIsMarkedByUser(questionStatuses, user);
+        } else {
+            return !checkIfQuestionIsMarked(questionStatuses);
+        }
     }
 
     private List<QuestionStatus> getQuestionStatuses(FormInputResponseCommand responseCommand) {
@@ -108,9 +117,18 @@ public class FormInputResponsePermissionRules {
 
     private boolean checkIfQuestionIsMarked(List<QuestionStatus> questionStatuses) {
         boolean isMarked = questionStatuses.stream()
-                .anyMatch(questionStatus -> questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true));
+                .anyMatch(this::isMarkedAsComplete);
 
         return isMarked;
+    }
+
+    private boolean checkIfQuestionIsMarkedByUser(List<QuestionStatus> questionStatuses, UserResource user) {
+        return questionStatuses.stream()
+                .anyMatch(questionStatus -> isMarkedAsComplete(questionStatus) && questionStatus.getMarkedAsCompleteBy().getUser().getId().equals(user.getId()));
+    }
+
+    private boolean isMarkedAsComplete(QuestionStatus questionStatus) {
+        return questionStatus.getMarkedAsComplete() != null && questionStatus.getMarkedAsComplete().equals(true);
     }
 
     private boolean checkRoleForApplicationAndOrganisation(UserResource user, FormInputResponseResource response, UserRoleType userRoleType) {
