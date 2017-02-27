@@ -14,6 +14,8 @@ Documentation     INFUND-1987
 ...               INFUND-7696 Competition management: View in progress/completed applications
 ...
 ...               INFUND-8012 Filter, sorting and pagination on 'Submitted applications' dashboard
+...
+...               INFUND-8010 Filter, sorting and pagination on 'All applications' dashboard
 Suite Setup       Log in as user    &{Comp_admin1_credentials}
 Suite Teardown    the user closes the browser
 Force Tags        CompAdmin
@@ -100,10 +102,29 @@ Next/Previous pagination on submitted applications
     And the user should not see the element    jQuery=.pagination-label:contains(Previous)
     And the user should not see the element    jQuery=.pagination-part-title:contains(41 to 41)
 
-Page list pagination
+Page list pagination on submitted applications
     [Documentation]    INFUND-8012
     [Tags]    HappyPath
     When the user clicks the button/link    jQuery=a:contains(41 to 41)
+    Then the user should see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains(Next)
+    [Teardown]    the user clicks the button/link    link=Applications
+
+Next/Previous pagination on all applications
+    [Documentation]    INFUND-8010
+    [Tags]
+    [Setup]    the user clicks the button/link    link=All applications
+    When the user clicks the button/link    jQuery=.pagination-label:contains(Next)
+    Then the user should see the element    jQuery=.pagination-part-title:contains(1 to 20)
+    And the user should see the element    jQuery=.pagination-part-title:contains(41 to 46)
+    And the user clicks the button/link    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-label:contains(Previous)
+    And the user should not see the element    jQuery=.pagination-part-title:contains(41 to 46)
+
+Page list pagination on all applications
+    [Documentation]    INFUND-8010
+    [Tags]    HappyPath
+    When the user clicks the button/link    jQuery=a:contains(41 to 46)
     Then the user should see the element    jQuery=.pagination-label:contains(Previous)
     And the user should not see the element    jQuery=.pagination-label:contains(Next)
 
