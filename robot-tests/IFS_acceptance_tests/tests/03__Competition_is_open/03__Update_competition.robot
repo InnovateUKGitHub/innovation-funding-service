@@ -99,7 +99,7 @@ Eligibility is editable (Ready to Open)
 
 Funding Information is editable (Open)
     [Documentation]    INFUND-7083
-    [Tags]
+    [Tags]    HappyPath
     [Setup]    The user clicks the button/link    jQuery=a:contains(My dashboard)
     Given the user clicks the button/link    link=${open_competition_link_2}
     And the user clicks the button/link    jQuery=a:contains(and update competition setup)
