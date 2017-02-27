@@ -250,7 +250,7 @@ Mark Organisation as complete when yes
 
 Applicant can view and edit project growth table
     [Documentation]    INFUND-6395
-    [Tags]    HappyPath
+    [Tags]
     Given the user navigates to Your-finances page    ${compWITHGrowth}
     When the user clicks the button/link    link=Your organisation
     Then the user should view the project growth table
@@ -288,7 +288,7 @@ Collaborator can accept the invitation
 
 Non-lead applicant can view and edit project growth table
     [Documentation]    INFUND-6395
-    [Tags]    HappyPath    Pending
+    [Tags]   Pending
     # TODO Pending due to INFUND-8426
     Given the user clicks the button/link    jQuery=.button:contains("Sign in")
     When guest user log-in    ${TEST_MAILBOX_ONE}+invitepartner@gmail.com    ${correct_password}
