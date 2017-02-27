@@ -3,9 +3,9 @@ package org.innovateuk.ifs.competition.populator;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.message.BasicNameValuePair;
-import org.innovateuk.ifs.category.service.CategoryRestService;
-import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
+import org.innovateuk.ifs.application.service.CategoryService;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentItemPageResource;
+import org.innovateuk.ifs.competition.viewmodel.CompetitionSearchViewModel;
 import org.innovateuk.ifs.publiccontent.service.PublicContentItemRestServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -13,8 +13,6 @@ import org.springframework.stereotype.Component;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 
 /**
  * Populator for retrieving and filling the viewmodel for public content competition search page.
@@ -26,20 +24,20 @@ public class CompetitionSearchPopulator {
     private PublicContentItemRestServiceImpl publicContentItemRestService;
 
     @Autowired
-    private CategoryRestService categoryRestService;
+    private CategoryService categoryService;
 
     public CompetitionSearchViewModel createItemSearchViewModel(Optional<Long> innovationAreaId, Optional<String> keywords, Optional<Integer> pageNumber) {
         CompetitionSearchViewModel viewModel = new CompetitionSearchViewModel();
+        viewModel.setInnovationAreas(categoryService.getInnovationAreas());
 
-        categoryRestService.getInnovationAreas().andOnSuccess(innovationAreas -> { viewModel.setInnovationAreas(innovationAreas); return restSuccess();});
         Optional<PublicContentItemPageResource> pageResource = publicContentItemRestService.getByFilterValues(
                 innovationAreaId,
                 keywords,
                 pageNumber,
                 CompetitionSearchViewModel.PAGE_SIZE).getOptionalSuccessObject();
 
-        innovationAreaId.ifPresent(id -> viewModel.setSelectedInnovationAreaId(id));
-        keywords.ifPresent(words -> viewModel.setSearchKeywords(words));
+        innovationAreaId.ifPresent(viewModel::setSelectedInnovationAreaId);
+        keywords.ifPresent(viewModel::setSearchKeywords);
 
         if(pageNumber.isPresent()) {
             viewModel.setPageNumber(pageNumber.get());

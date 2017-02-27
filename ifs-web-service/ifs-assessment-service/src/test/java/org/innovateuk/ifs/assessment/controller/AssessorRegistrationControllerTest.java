@@ -37,7 +37,9 @@ import static java.lang.String.format;
 import static java.util.Arrays.asList;
 import static org.innovateuk.ifs.address.builder.AddressResourceBuilder.newAddressResource;
 import static org.innovateuk.ifs.assessment.builder.CompetitionInviteResourceBuilder.newCompetitionInviteResource;
+import static org.innovateuk.ifs.commons.error.CommonFailureKeys.GENERAL_NOT_FOUND;
 import static org.innovateuk.ifs.commons.error.Error.fieldError;
+import static org.innovateuk.ifs.commons.rest.RestResult.restFailure;
 import static org.innovateuk.ifs.commons.rest.RestResult.restSuccess;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceFailure;
 import static org.innovateuk.ifs.commons.service.ServiceResult.serviceSuccess;
@@ -173,7 +175,7 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .param("addressForm.selectedPostcode.postcode", postcode))
                 .andExpect(status().is3xxRedirection())
                 .andExpect(model().attribute("form", expectedForm))
-                .andExpect(redirectedUrl(format("/invite-accept/competition/%s/accept", inviteHash)));
+                .andExpect(redirectedUrl(format("/registration/%s/register/account-created", inviteHash)));
 
         verify(assessorService).createAssessorByInviteHash(inviteHash, expectedForm);
     }
@@ -440,5 +442,59 @@ public class AssessorRegistrationControllerTest extends BaseControllerMockMVCTes
                 .andExpect(model().attributeHasFieldErrorCode("form", "addressForm.postcodeOptions", "validation.standard.postcodeoptions.required"));
 
         verifyZeroInteractions(assessorService);
+    }
+
+    @Test
+    public void accountCreated() throws Exception {
+        String inviteHash = "hash";
+
+        setLoggedInUser(null);
+        when(competitionInviteRestService.checkExistingUser(inviteHash)).thenReturn(restSuccess(true));
+
+        mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
+                .andExpect(status().isOk())
+                .andExpect(model().attribute("competitionInviteHash", inviteHash))
+                .andExpect(view().name("registration/account-created"));
+
+        verify(competitionInviteRestService, only()).checkExistingUser(inviteHash);
+    }
+
+    @Test
+    public void accountCreated_loggedIn() throws Exception {
+        String inviteHash = "hash";
+
+        setLoggedInUser(assessor);
+
+        mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl(format("/invite/competition/%s", inviteHash)));
+
+        verifyZeroInteractions(competitionInviteRestService);
+    }
+
+    @Test
+    public void accountCreated_accountNotCreated() throws Exception {
+        String inviteHash = "hash";
+
+        setLoggedInUser(null);
+        when(competitionInviteRestService.checkExistingUser(inviteHash)).thenReturn(restSuccess(false));
+
+        mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
+                .andExpect(redirectedUrl(format("/invite/competition/%s", inviteHash)));
+
+        verify(competitionInviteRestService, only()).checkExistingUser(inviteHash);
+    }
+
+    @Test
+    public void accountCreated_hashNotExists() throws Exception {
+        String inviteHash = "hash";
+
+        setLoggedInUser(null);
+        when(competitionInviteRestService.checkExistingUser(inviteHash)).thenReturn(restFailure(GENERAL_NOT_FOUND));
+
+        mockMvc.perform(get("/registration/{inviteHash}/register/account-created", inviteHash))
+                .andExpect(status().isNotFound());
+
+        verify(competitionInviteRestService, only()).checkExistingUser(inviteHash);
     }
 }

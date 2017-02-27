@@ -14,8 +14,8 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 	private ApplicationSummaryRestService applicationSummaryRestService;
 	
 	@Override
-	public ApplicationSummaryPageResource findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
-		return applicationSummaryRestService.getAllApplications(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
+	public ApplicationSummaryPageResource findByCompetitionId(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+		return applicationSummaryRestService.getAllApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
 	}
 
 	@Override
@@ -25,25 +25,25 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 
 	@Override
 	public ApplicationSummaryPageResource getSubmittedApplicationSummariesByCompetitionId(
-			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
-		return applicationSummaryRestService.getSubmittedApplications(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
+			Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+		return applicationSummaryRestService.getSubmittedApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
 	}
 
 	@Override
 	public ApplicationSummaryPageResource getNotSubmittedApplicationSummariesByCompetitionId(
-			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
-		return applicationSummaryRestService.getNonSubmittedApplications(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
+			Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+		return applicationSummaryRestService.getNonSubmittedApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
 	}
 	
 	@Override
 	public ApplicationSummaryPageResource getApplicationsRequiringFeedbackByCompetitionId(
-			Long competitionId, String sortField, Integer pageNumber, Integer pageSize) {
-		return applicationSummaryRestService.getFeedbackRequiredApplications(competitionId, sortField, pageNumber, pageSize).getSuccessObjectOrThrowException();
+			Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+		return applicationSummaryRestService.getFeedbackRequiredApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
 	}
 	
 	@Override
 	public Long getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId) {
-		ApplicationSummaryPageResource page = applicationSummaryRestService.getFeedbackRequiredApplications(competitionId, null, 0, 1).getSuccessObjectOrThrowException();
+		ApplicationSummaryPageResource page = applicationSummaryRestService.getFeedbackRequiredApplications(competitionId, null, 0, 1, null).getSuccessObjectOrThrowException();
 		return page.getTotalElements();
 	}
 	
