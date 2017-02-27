@@ -58,9 +58,9 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         when(attachmentMapperMock.mapToResource(attachment)).thenReturn(attachmentResource);
         when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(attachment);
         when(fileEntryRepositoryMock.findOne(attachmentsFileEntryId)).thenReturn(attachmentsFileEntry);
-        final FileEntryResource fileEntryResource = newFileEntryResource().withName(attachment.fileName())
-                .withMediaType(attachment.mediaType())
-                .withFilesizeBytes(attachment.sizeInBytes()).build();
+        final FileEntryResource fileEntryResource = new FileEntryResource(attachment.fileId(), attachment.fileName(),
+                attachment.mediaType(), attachment.sizeInBytes());
+
         when(fileEntryServiceMock.findOne(attachmentsFileEntryId))
                 .thenReturn(ServiceResult.serviceSuccess(fileEntryResource));
 
@@ -68,7 +68,7 @@ public class ProjectFinanceAttachmentServiceTest extends BaseUnitTestMocksTest {
         final Supplier<InputStream> contentSupplier = () -> null;
         FileAndContents fileAndContents = new BasicFileAndContents(fileEntryResource, contentSupplier);
 
-        when(fileServiceMock.getFileByFileEntryId(2L)).thenReturn(ServiceResult.serviceSuccess(contentSupplier));
+        when(fileServiceMock.getFileByFileEntryId(attachment.fileId())).thenReturn(ServiceResult.serviceSuccess(contentSupplier));
         ServiceResult<FileAndContents> response = service.attachmentFileAndContents(attachmentId);
 
         assert(response.isSuccess());
