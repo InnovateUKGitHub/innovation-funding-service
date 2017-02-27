@@ -13,12 +13,10 @@ import java.io.IOException;
 public interface ProjectFinanceAttachmentService extends AttachmentsService<AttachmentResource> {
 
     @Override
-//    @PostFilter("hasPermission(filterObject, 'PF_ATTACHMENT_READ')")
     @PostAuthorize("hasPermission(returnObject, 'PF_ATTACHMENT_READ')")
     ServiceResult<AttachmentResource> findOne(Long attachmentId);
 
     @Override
-//    @PostFilter("hasPermission(filterObject, 'PF_ATTACHMENT_UPLOAD')")
     @PostAuthorize("hasPermission(returnObject, 'PF_ATTACHMENT_UPLOAD')")
     ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request);
 
