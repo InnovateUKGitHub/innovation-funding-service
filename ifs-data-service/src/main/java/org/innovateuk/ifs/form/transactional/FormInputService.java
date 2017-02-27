@@ -42,11 +42,11 @@ public interface FormInputService {
     @PreAuthorize("hasPermission(#formInputResponseCommand, 'SAVE')")
     ServiceResult<FormInputResponse> saveQuestionResponse(@P("formInputResponseCommand")FormInputResponseCommand formInputResponseCommand);
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "UPDATE", description = "Only those with either comp admin or project finance roles can update form inputs")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<FormInputResource> save(FormInputResource formInputResource);
 
-    @SecuredBySpring(value = "TODO", description = "TODO")
+    @SecuredBySpring(value = "DELETE", description = "Only those with either comp admin or project finance roles can delete form inputs")
     @PreAuthorize("hasAnyAuthority('comp_admin' , 'project_finance')")
     ServiceResult<Void> delete(Long id);
 }

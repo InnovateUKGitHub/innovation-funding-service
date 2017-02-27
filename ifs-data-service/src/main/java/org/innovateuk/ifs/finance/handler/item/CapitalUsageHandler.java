@@ -14,29 +14,20 @@ import java.util.List;
  * Handles the capital usage costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class CapitalUsageHandler extends FinanceRowHandler {
+public class CapitalUsageHandler extends FinanceRowHandler<CapitalUsage> {
     public static final String COST_FIELD_EXISTING = "existing";
     public static final String COST_FIELD_RESIDUAL_VALUE = "residual_value";
     public static final String COST_FIELD_UTILISATION = "utilisation";
     public static final String COST_KEY = "capital-usage";
 
-
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
-        if (costItem instanceof CapitalUsage) {
-            return mapCapitalUsage(costItem);
-        }
-        return cost;
+    public ApplicationFinanceRow toCost(CapitalUsage costItem) {
+        return costItem != null ? mapCapitalUsage(costItem) : null;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        if (costItem instanceof CapitalUsage) {
-            return mapCapitalUsageToProjectCost((CapitalUsage)costItem);
-        }
-        return cost;
+    public ProjectFinanceRow toProjectCost(CapitalUsage costItem) {
+        return costItem != null ? mapCapitalUsageToProjectCost(costItem) : null;
     }
 
     @Override

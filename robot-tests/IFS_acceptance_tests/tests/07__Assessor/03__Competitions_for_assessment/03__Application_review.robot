@@ -207,20 +207,20 @@ the user clicks previous and goes to the page
     the user should see the text in the page    ${page_content}
 
 the finance summary total should be correct
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £100,837
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(2)    £100,452
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(3)    30%
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £29,017
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(4)    £28,901
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(5)    £1,234
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £70,586
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £100,837
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £29,017
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(1) td:nth-child(6)    £70,316
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(2)    £100,452
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(4)    £28,901
     Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(5)    £1,234
-    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £70,586
+    Element Should Contain    css=.form-group.finances-summary tbody tr:nth-child(2) td:nth-child(6)    £70,316
 
 the project cost breakdown total should be correct
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £100,837
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(2)    £100,452
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(3)    £1,541
-    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £385
+    Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(4)    £0
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(5)    £50,100
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(6)    £276
     Element Should Contain    css=.form-group.project-cost-breakdown tbody tr:nth-child(1) td:nth-child(7)    £45,000

@@ -25,7 +25,7 @@ import java.util.*;
 import static org.hamcrest.CoreMatchers.is;
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.competition.builder.CompetitionSearchResultItemBuilder.newCompetitionSearchResultItem;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -150,6 +150,23 @@ public class CompetitionManagementDashboardControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.view().name("dashboard/search"))
                 .andExpect(MockMvcResultMatchers.model().attribute("results", is(searchResult)));
+    }
+
+    @Test
+    public void searchDashboardWithExtraWhitesapce() throws Exception {
+        CompetitionSearchResult searchResult = new CompetitionSearchResult();
+        String searchQuery = "  search  term  ";
+        String trimmedQuery = "search term";
+        int defaultPage = 0;
+
+        Mockito.when(competitionDashboardSearchService.searchCompetitions(trimmedQuery, defaultPage)).thenReturn(searchResult);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/dashboard/search?searchQuery=" + searchQuery))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.view().name("dashboard/search"))
+                .andExpect(MockMvcResultMatchers.model().attribute("results", is(searchResult)));
+
+        verify(competitionDashboardSearchService, times(1)).searchCompetitions(trimmedQuery, defaultPage);
     }
 
     @Test

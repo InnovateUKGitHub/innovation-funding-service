@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.publiccontent.formsaver.section;
 
+import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentResource;
 import org.innovateuk.ifs.competition.publiccontent.resource.PublicContentSectionType;
@@ -19,6 +20,7 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyZeroInteractions;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchInformationFormSaverTest {
@@ -53,6 +55,22 @@ public class SearchInformationFormSaverTest {
         KEYWORDS.forEach(keyword -> assertTrue(resource.getKeywords().contains(keyword)));
 
         verify(publicContentService).updateSection(resource, PublicContentSectionType.SEARCH);
+
+    }
+
+    @Test
+    public void testSaveWithInvalidKeywords() {
+        SearchInformationForm form = new SearchInformationForm();
+        form.setKeywords("keywordTooLongThisIsReallyTooLongToBeOneWordAndItsStillGoing");
+        PublicContentResource resource = newPublicContentResource().build();
+
+        ServiceResult<Void> result = target.save(form, resource);
+
+        assertThat(result.isFailure(), equalTo(true));
+        assertThat(result.getErrors().size(), equalTo(1));
+        assertThat(result.getErrors().get(0).getErrorKey(), equalTo(CommonFailureKeys.PUBLIC_CONTENT_KEYWORD_TOO_LONG.name()));
+
+        verifyZeroInteractions(publicContentService);
 
     }
 }

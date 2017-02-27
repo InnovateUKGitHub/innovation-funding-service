@@ -54,6 +54,10 @@
         <p th:unless="${#strings.isEmpty(model.leadTechnologist)}" th:text="${model.leadTechnologist}" >
             Innovation Lead
         </p>
+        <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
+            <p>The spend profile must be sent to Innovate UK for their review and approval.</p>
+        </div>
+
         <h2 class="heading-medium">Project spend profile</h2>
 
         <ul>
@@ -65,13 +69,13 @@
         </ul>
 
         <div th:if="${model.notApprovedOrRejected}" th:remove="tag">
-            <h2 class="heading-medium">Approved by Innovation Lead</h2>
-            <p>The spend profile must be sent to the Innovation Lead for their review and approval.</p>
+            <h2 class="heading-medium">Approved by Innovate UK</h2>
             <div class="form-group">
-            <label class="block-label selection-button-checkbox" for="approvedByLeadTechnologist" >
-                <input id="approvedByLeadTechnologist" value="yes" type="checkbox" data-disable-button-until-checked="#accept-profile"/>
-                The spend profile has been approved by the Innovation Lead
-            </label>
+                <label class="block-label selection-button-checkbox" for="approvedByLeadTechnologist">
+                    <input id="approvedByLeadTechnologist" value="yes" type="checkbox"
+                           data-disable-button-until-checked="#accept-profile"/>
+                    The spend profile has been approved by Innovate UK.
+                </label>
             </div>
             <button data-js-modal="modal-accept-profile" id="accept-profile" class="button large">
                 Approved
