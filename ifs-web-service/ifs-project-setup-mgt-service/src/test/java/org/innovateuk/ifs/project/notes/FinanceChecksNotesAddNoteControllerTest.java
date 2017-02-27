@@ -15,6 +15,7 @@ import org.innovateuk.ifs.project.resource.ProjectUserResource;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.innovateuk.ifs.util.JsonUtil;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.NoteResource;
 import org.junit.Before;
 import org.junit.Test;
@@ -214,10 +215,10 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     public void testSaveNewQueryAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(fileEntry));
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(attachment));
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(
                 fileUpload("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note").
@@ -274,8 +275,8 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
     @Test
     public void testViewNewQueryWithAttachments() throws Exception {
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -343,9 +344,9 @@ public class FinanceChecksNotesAddNoteControllerTest extends BaseControllerMockM
         attachmentIds.add(1L);
         Cookie ck = createAttachmentsCookie(attachmentIds);
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         MvcResult result = mockMvc.perform(post("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/note/new-note")
                 .param("removeAttachment", "2")

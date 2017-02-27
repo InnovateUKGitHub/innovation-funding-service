@@ -9,6 +9,7 @@ import org.innovateuk.ifs.commons.error.CommonFailureKeys;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.file.resource.FileEntryResource;
 import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.innovateuk.threads.resource.FinanceChecksSectionType;
 import org.innovateuk.threads.resource.QueryResource;
 import org.innovateuk.ifs.project.queries.controller.FinanceChecksQueriesController;
@@ -118,7 +119,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
 
         UserResource user1 = new UserResource();
         user1.setId(18L);
-        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new FileEntryResource(23L, "file1.txt", "txt", 1L)), LocalDateTime.now().plusMinutes(10L));
+        PostResource firstPost = new PostResource(null, user1, "Question", Arrays.asList(new AttachmentResource(23L, "file1.txt", "txt", 1L)), LocalDateTime.now().plusMinutes(10L));
         UserResource user2 = new UserResource();
         user2.setId(55L);
         PostResource firstResponse = new PostResource(null, user2, "Response", new ArrayList<>(), LocalDateTime.now().plusMinutes(20L));
@@ -169,8 +170,8 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         assertEquals("A Z - Innovate (Finance team)", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).getUsername());
         assertTrue(LocalDateTime.now().plusMinutes(10L).isAfter(queryViewModel.getQueries().get(0).getViewModelPosts().get(0).createdOn));
         assertEquals(1, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.size());
-        assertEquals(23L, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).getId().longValue());
-        assertEquals("file1.txt", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).getName());
+        assertEquals(23L, queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).id.longValue());
+        assertEquals("file1.txt", queryViewModel.getQueries().get(0).getViewModelPosts().get(0).attachments.get(0).name);
         assertEquals("Response", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).body);
         assertEquals(applicantFinanceContactUserId, queryViewModel.getQueries().get(0).getViewModelPosts().get(1).author.getId());
         assertEquals("B Z - Org1", queryViewModel.getQueries().get(0).getViewModelPosts().get(1).getUsername());
@@ -214,7 +215,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
 
         when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -233,7 +234,7 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         ByteArrayResource bytes = new ByteArrayResource("File contents".getBytes());
 
         when(financeCheckServiceMock.downloadFile(1L)).thenReturn(ServiceResult.serviceSuccess(Optional.of(bytes)));
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
+        when(financeCheckServiceMock.getAttachmentInfo(1L)).thenReturn(ServiceResult.serviceFailure(CommonFailureKeys.GENERAL_NOT_FOUND));
         MvcResult result = mockMvc.perform(get("/project/" + projectId + "/finance-check/organisation/" + applicantOrganisationId + "/query/attachment/1?query_section=Eligibility"))
                 .andExpect(status().isNoContent())
                 .andReturn();
@@ -385,10 +386,11 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     public void testSaveNewResponseAttachment() throws Exception {
 
         MockMultipartFile uploadedFile = new MockMultipartFile("attachment", "testFile.pdf", "application/pdf", "My content!".getBytes());
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes())).thenReturn(ServiceResult.serviceSuccess(fileEntry));
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.uploadFile("application/pdf", 11, "testFile.pdf", "My content!".getBytes()))
+                .thenReturn(ServiceResult.serviceSuccess(attachment));
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
@@ -451,13 +453,13 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
     @Test
     public void testViewNewResponseWithAttachments() throws Exception {
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
         ProjectFinanceResource projectFinanceResource = newProjectFinanceResource().withProject(projectId).withOrganisation(applicantOrganisationId).withId(projectFinanceId).build();
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
@@ -530,9 +532,9 @@ public class FinanceChecksQueriesControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getProjectFinance(projectId, applicantOrganisationId)).thenReturn(projectFinanceResource);
         when(financeCheckServiceMock.loadQueries(projectFinanceId)).thenReturn(ServiceResult.serviceSuccess(queries));
 
-        FileEntryResource fileEntry = new FileEntryResource(1L, "name", "mediaType", 2L);
+        AttachmentResource attachment = new AttachmentResource(1L, "name", "mediaType", 2L);
 
-        when(financeCheckServiceMock.getFileInfo(1L)).thenReturn(ServiceResult.serviceSuccess(fileEntry));
+        when(financeCheckServiceMock.getAttachment(1L)).thenReturn(ServiceResult.serviceSuccess(attachment));
 
         List<Long> attachmentIds = new ArrayList<>();
         attachmentIds.add(1L);
