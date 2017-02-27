@@ -6,9 +6,9 @@
         <th:block th:if="${model.currentSection.type == T(org.innovateuk.ifs.application.resource.SectionType).FINANCE}">
             <div class="your-finances">
                 <h2 class="heading-medium no-margin-bottom">Finances</h2>
-                <p>Each partner should submit their own project finances and funding rates. The overall project costs for all partners can be seen in the 'finances overview' section.</p>
+                <p>Please complete your project finances.</p>
 
-                <details class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
+                <details th:unless="${readonly}" class="extra-margin-bottom" th:attr="open=${model.notRequestingFunding ? 'open' : null}">
                     <summary><span class="summary">Not requesting funding</span></summary>
                     <div class="panel-indent">
                         <p>If your organisation is not funded by Innovate UK then you do not need to submit organisational or funding details. <span th:unless="${model.notRequestingFunding}">Please confirm below.</span></p>
@@ -110,7 +110,7 @@
     <!-- ===========================Subsection buttons =========================== -->
     <th:block th:fragment="subsection_buttons">
         <th:block th:if="${model.subFinanceSection}">
-            <div>
+            <div th:unless="${readonly}">
                 <button id="mark-all-as-complete" th:unless="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_complete" class="button">Mark as complete</button>
                 <button th:if="${model.sectionsMarkedAsComplete.contains(model.currentSection.id)}" type="submit" name="mark_section_as_incomplete" class="extra-margin buttonlink"
                         th:text="${'Edit ' + #strings.toLowerCase(model.currentSection.name)}">Edit</button>

@@ -7,8 +7,8 @@
             <th:block th:unless="${readonly}">
                 <div th:class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +'-grantClaimPercentage]}') or #fields.hasErrors('${form.formInput[cost-'+ organisationGrantClaimPercentageId +']}')}? 'error'">
                     <label class="form-label form-label-bold" for="cost-financegrantclaim">
-                        <div th:text="${question.name}" />
-                        <span class="form-hint" th:text="${question.description}" />
+                        <div th:text="'Enter your funding level (maximum ' + ${organisationFinanceSize?.getMaxGrantClaimPercentage()} + '%).'" />
+                        <span class="form-hint" th:text="'Based on the project research area and your organisation size your maximum funding level is ' + ${organisationFinanceSize?.getMaxGrantClaimPercentage()} + '%.'" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId+'-grantClaimPercentage'})" />
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+organisationGrantClaimPercentageId})" />
                     </label>
@@ -254,6 +254,7 @@
                 <dt>Working days per year</dt>
                 <dd th:text="${costCategory.workingDaysPerYear}">232</dd>
             </dl>
+            <h3>Number of staff and roles within the project</h3>
             <table class="labour-costs-table">
                 <thead>
                     <tr>
@@ -305,12 +306,13 @@
                            max="365"
                            required="required" />
                 </div>
+                <h3>Number of staff and roles within the project</h3>
                 <div class="form-group">
                     <table class="labour-costs-table">
                         <thead>
                         <tr>
                             <th id="labour-role" scope="col" class="width-medium">Role within project</th>
-                            <th id="labour-salary" scope="col" class="numeric">Gross Annual Salary</th>
+                            <th id="labour-salary" scope="col" class="numeric">Gross annual salary</th>
                             <th id="labour-rate" scope="col" class="numeric">Rate (£/day)</th>
                             <th id="labour-days" scope="col" class="numeric width-medium">Days to be spent by all staff at this grade</th>
                             <th scope="col"  th:if="${viewmode == 'edit'}">
@@ -365,7 +367,7 @@
                 </td>
                 <td class="numeric form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-grossAnnualSalary]}')} ? 'error' : ''">
                     <label th:for="${'cost-labour-'+costIdentifier+'-labourGrossSalary'}">
-                        <span class="visuallyhidden">Gross Annual Salary</span>
+                        <span class="visuallyhidden">Gross annual salary</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-grossAnnualSalary'})" />
                     </label>
                     <input type="number"
@@ -684,7 +686,7 @@
                 <tr>
                     <th id="materials-item" scope="col">Item</th>
                     <th id="materials-quantity" scope="col" class="numeric">Quantity</th>
-                    <th id="materials-cost" scope="col" class="numeric">Cost Per Item</th>
+                    <th id="materials-cost" scope="col" class="numeric">Cost per item</th>
                     <th id="materials-total" scope="col" class="numeric">Total</th>
                     <th scope="col" th:if="${viewmode == 'edit'}">
                         <span class="visuallyhidden">Actions</span>
@@ -717,7 +719,7 @@
                         <tr>
                             <th id="materials-item" scope="col">Item</th>
                             <th id="materials-quantity" scope="col" class="numeric">Quantity</th>
-                            <th id="materials-cost" scope="col" class="numeric">Cost Per Item</th>
+                            <th id="materials-cost" scope="col" class="numeric">Cost per item</th>
                             <th id="materials-total" scope="col" class="numeric">Total</th>
                             <th scope="col" th:if="${viewmode == 'edit'}">
                                 <span class="visuallyhidden">Actions</span>
@@ -790,7 +792,7 @@
                 </td>
                 <td class="form-group"  th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-cost]}')} ? 'error' : ''">
                     <label th:for="${'cost-materials-'+costIdentifier+'-cost'}">
-                        <span class="visuallyhidden">Cost Per Item</span>
+                        <span class="visuallyhidden">Cost per item</span>
                         <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-cost'})" />
                     </label>
                     <input type="number"
@@ -1008,7 +1010,7 @@
 
                 <div class="form-group" th:classappend="${#fields.hasErrors('${form.formInput[cost-'+ costIdentifier +'-netCost]}')} ? 'error' : ''">
                     <label th:for="${'cost-capital_usage-'+costIdentifier+'-netCost'}" class="form-label">
-                       <span>Net Cost</span>
+                       <span>Net cost</span>
                        <th:block th:insert="question-type/form-elements :: form-validation-messages (id=${'cost-'+costIdentifier+'-netCost'})" />
                     </label>
                     <input type="text"

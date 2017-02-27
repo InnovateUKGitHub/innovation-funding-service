@@ -81,4 +81,8 @@ public class FinanceViewModel extends BaseFinanceViewModel {
     public Boolean getHasOrganisationFinance(){
         return null != organisationFinance;
     }
+
+    public String getFilename() {
+        return null;
+    }
 }

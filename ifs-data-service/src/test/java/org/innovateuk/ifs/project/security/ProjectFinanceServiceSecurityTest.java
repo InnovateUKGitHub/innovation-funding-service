@@ -89,9 +89,9 @@ public class ProjectFinanceServiceSecurityTest extends BaseServiceSecurityTest<P
 
         assertAccessDenied(() -> classUnderTest.getSpendProfileCSV(projectOrganisationCompositeId),
                 () -> {
-                    verify(projectFinancePermissionRules).partnersCanViewTheirOwnSpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).projectFinanceUserCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
-                    verify(projectFinancePermissionRules).leadPartnerCanViewAnySpendProfileData(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).partnersAndCompAdminCanViewTheirOwnSpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).projectFinanceUserAndCompAdminCanViewAnySpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
+                    verify(projectFinancePermissionRules).leadPartnerAndCompAdminCanViewAnySpendProfileCsv(projectOrganisationCompositeId, getLoggedInUser());
                     verifyNoMoreInteractions(projectFinancePermissionRules);
                 });
     }

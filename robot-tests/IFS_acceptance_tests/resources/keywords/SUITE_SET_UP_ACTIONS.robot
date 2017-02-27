@@ -124,8 +124,8 @@ Invite and accept the invitation
     [Arguments]    ${recipient}    ${subject}    ${pattern}
     Given the user navigates to the page    ${DASHBOARD_URL}
     And the user clicks the button/link    link=Academic robot test application
-    And the user should see the text in the page    view team members and add collaborators
-    When the user clicks the button/link    link=view team members and add collaborators
+    And the user should see the text in the page    view and add participants to your application
+    When the user clicks the button/link    link=view and add participants to your application
     And the user clicks the button/link    jQuery=.button:contains("Invite new contributors")
     And the user clicks the button/link    jquery=li:nth-last-child(1) button:contains('Add additional partner organisation')
     Input Text    name=organisations[1].organisationName    Academic Test
@@ -154,7 +154,7 @@ Invite and accept the invitation
     And the user clicks the button/link    jQuery=.button:contains("Save organisation and continue")
     And the user clicks the button/link    jQuery=.button:contains("Save")
     And the user fills the create account form    Arsene    Wenger
-    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    If you did not request an account with us
+    And the user reads his email and clicks the link    ${test_mailbox_one}+academictest@gmail.com    Please verify your email address    Verify account
     And the user clicks the button/link    jQuery=.button:contains("Sign in")
     And guest user log-in    ${test_mailbox_one}+academictest@gmail.com  ${correct_password}
 

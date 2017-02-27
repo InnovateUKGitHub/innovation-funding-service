@@ -11,8 +11,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-
 /**
  * organisation defines database relations and a model to use client side and server side.
  */
@@ -24,6 +22,7 @@ public class Organisation {
     private Long id;
     private String name;
     private String companyHouseNumber; // might start with zero, so use a string.
+
     @Enumerated(EnumType.STRING)
     private OrganisationSize organisationSize;
 
@@ -47,7 +46,6 @@ public class Organisation {
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
     public Organisation() {
-    	// no-arg constructor
     }
 
     public Organisation(Long id, String name) {
@@ -138,11 +136,5 @@ public class Organisation {
 
     public void setOrganisationType(OrganisationType organisationType) {
         this.organisationType = organisationType;
-    }
-
-    public boolean isFinanceContact(Long userId) {
-        return getUsers().stream()
-                .filter(u -> u.hasRole(FINANCE_CONTACT))
-                .anyMatch(u -> u.getId().equals(userId));
     }
 }

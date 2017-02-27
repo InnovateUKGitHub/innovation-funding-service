@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Details'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Manage contributors'"/>
 </head>
 <body th:with="context='applicant'" class="app-invite">
 
@@ -105,7 +105,7 @@
                     <tr>
                         <th>Applicant name</th>
                         <th>Email</th>
-                        <th>&nbsp;</th>
+                        <th><span class="visually-hidden">Actions</span></th>
                     </tr>
                     </thead>
                     <tbody>

@@ -23,28 +23,28 @@ Notify applicants should be disabled
 User should be able to Notify applicants when the fund project have chosen
     [Documentation]    INFUND-2601
     [Tags]    HappyPath
-    When the user selects the option from the drop-down menu    Yes    id=fund28
-    And the user selects the option from the drop-down menu    No    id=fund29
+    When the user selects the option from the drop-down menu    Yes    id=fund63
+    And the user selects the option from the drop-down menu    No    id=fund64
     Then the option to notify applicants is enabled
 
 Autosave of the page should work
     [Documentation]    INFUND-2885
     [Tags]
     When the user reloads the page
-    Then the user should see the dropdown option selected    Yes    id=fund28
-    And the user should see the dropdown option selected    No    id=fund29
+    Then the user should see the dropdown option selected    Yes    id=fund63
+    And the user should see the dropdown option selected    No    id=fund64
     And the option to notify applicants is enabled
 
 When a Fund Project option is unselected the Notify button become disabled
     [Documentation]    INFUND-2601
     [Tags]
-    When the user selects the option from the drop-down menu    -    id=fund28
+    When the user selects the option from the drop-down menu    -    id=fund63
     Then the option to notify applicants is disabled
 
 Pushing the notify applicants button brings up a warning dialogue
     [Documentation]    INFUND-2646
     [Tags]    HappyPath
-    [Setup]    The user selects the option from the drop-down menu    Yes    id=fund28
+    [Setup]    The user selects the option from the drop-down menu    Yes    id=fund63
     When the user clicks the button/link    jQuery=.button:contains("Notify applicants")
     Then the user should see the text in the page    ${dialogue_warning_message}
     And the user should see the element    jQuery=button:contains("Cancel")
@@ -86,7 +86,7 @@ Successful applicants can see the assessment outcome on the dashboard page
     [Tags]    HappyPath
     [Setup]    Log in as a different user    &{successful_applicant_credentials}
     When the user navigates to the page    ${server}
-    Then the user should see the text in the page    Projects in setup
+    Then the user should see the text in the page    Set up your project
     And the successful application shows in the project setup section
     And the successful application shows in the previous applications section
 
@@ -102,7 +102,7 @@ Unsuccessful applicants can see the assessment outcome on the dashboard page
     [Tags]
     [Setup]    Log in as a different user    &{unsuccessful_applicant_credentials}
     When the user navigates to the page    ${server}
-    Then the user should not see the text in the page    Projects in setup
+    Then the user should not see the text in the page    Set up your project
     And the unsuccessful application shows in the previous applications section
 
 Unsuccessful applicants can see the assessment outcome on the overview page

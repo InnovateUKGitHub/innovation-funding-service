@@ -8,12 +8,17 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWit
 
 public class ApplicationCountDocs {
     public static final FieldDescriptor[] applicationCountSummaryResourcesFields = {
-            fieldWithPath("[].id").description("ID of the application"),
-            fieldWithPath("[].name").description("Name of the application"),
-            fieldWithPath("[].leadOrganisation").description("The lead organisation name"),
-            fieldWithPath("[].assessors").description("Count of assessors"),
-            fieldWithPath("[].accepted").description("Count of accepted assessments"),
-            fieldWithPath("[].submitted").description("Count of submitted assessments")
+            fieldWithPath("totalElements").description("The total number of application counts"),
+            fieldWithPath("totalPages").description("The total number of pages of application counts"),
+            fieldWithPath("number").description("Current page number"),
+            fieldWithPath("size").description("The size of a page"),
+            fieldWithPath("content").description("The list of application counts"),
+            fieldWithPath("content.[].id").description("ID of the application"),
+            fieldWithPath("content.[].name").description("Name of the application"),
+            fieldWithPath("content.[].leadOrganisation").description("The lead organisation name"),
+            fieldWithPath("content.[].assessors").description("Count of assessors"),
+            fieldWithPath("content.[].accepted").description("Count of accepted assessments"),
+            fieldWithPath("content.[].submitted").description("Count of submitted assessments")
     };
 
     public static final ApplicationCountSummaryResourceBuilder applicationCountSummaryResourceBuilder = newApplicationCountSummaryResource()

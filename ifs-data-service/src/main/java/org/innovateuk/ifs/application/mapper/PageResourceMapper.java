@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.data.domain.Page;
 
-import org.innovateuk.ifs.application.resource.PageResource;
+import org.innovateuk.ifs.commons.resource.PageResource;
 
 public abstract class PageResourceMapper<V, T> {
 

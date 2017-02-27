@@ -42,6 +42,8 @@ public class Application implements ProcessActivity {
     private Boolean resubmission;
     private String previousApplicationNumber;
     private String previousApplicationTitle;
+    private LocalDateTime manageFundingEmailDate;
+
     @Min(0)
     private Long durationInMonths; // in months
     @Min(0)
@@ -180,6 +182,14 @@ public class Application implements ProcessActivity {
                 this.processRoles.add(processRole);
             }
         }
+    }
+
+    public LocalDateTime getManageFundingEmailDate() {
+        return manageFundingEmailDate;
+    }
+
+    public void setManageFundingEmailDate(LocalDateTime manageFundingEmailDate) {
+        this.manageFundingEmailDate = manageFundingEmailDate;
     }
 
     public LocalDate getStartDate() {

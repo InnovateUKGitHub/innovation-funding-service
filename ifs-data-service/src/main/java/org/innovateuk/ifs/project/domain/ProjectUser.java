@@ -1,12 +1,12 @@
 package org.innovateuk.ifs.project.domain;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.innovateuk.ifs.invite.domain.Participant;
 import org.innovateuk.ifs.invite.domain.ProjectInvite;
 import org.innovateuk.ifs.invite.domain.ProjectParticipantRole;
 import org.innovateuk.ifs.user.domain.Organisation;
 import org.innovateuk.ifs.user.domain.User;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import javax.persistence.*;
 
@@ -116,6 +116,10 @@ public class ProjectUser extends Participant<Project, ProjectInvite, ProjectPart
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public boolean isUser(Long userId) {
+        return this.user.hasId(userId);
     }
 
     public boolean isPartner() {

@@ -7,6 +7,7 @@ import org.innovateuk.ifs.application.domain.Question;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.finance.domain.*;
 import org.innovateuk.ifs.finance.handler.ApplicationFinanceHandler;
+import org.innovateuk.ifs.finance.handler.OrganisationFinanceDefaultHandler;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceDelegate;
 import org.innovateuk.ifs.finance.handler.OrganisationFinanceHandler;
 import org.innovateuk.ifs.finance.handler.item.FinanceRowHandler;
@@ -62,6 +63,9 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
 
     @Autowired
     private ProjectFinanceRowMapper projectFinanceRowMapper;
+
+    @Autowired
+    OrganisationFinanceDefaultHandler organisationFinanceDefaultHandler;
 
     @Override
     public ServiceResult<List<? extends FinanceRow>> getCosts(Long projectFinanceId, String costTypeName, Long questionId) {
@@ -158,12 +162,8 @@ public class ProjectFinanceRowServiceImpl extends BaseTransactionalService imple
     }
 
     @Override
-    public FinanceRowHandler getCostHandler(Long costItemId) {
-        FinanceRow cost = projectFinanceRowMapper.mapIdToDomain(costItemId);
-        OrganisationFinanceHandler organisationFinanceHandler = organisationFinanceDelegate.getOrganisationFinanceHandler(((ProjectFinanceRow)cost).getTarget().getOrganisation().getOrganisationType().getName());
-        FinanceRowItem costItem = organisationFinanceHandler.costToCostItem((ProjectFinanceRow)cost);
-        FinanceRowHandler financeRowHandler = organisationFinanceHandler.getCostHandler(costItem.getCostType());
-        return financeRowHandler;
+    public FinanceRowHandler getCostHandler(FinanceRowItem costItem) {
+        return organisationFinanceDefaultHandler.getCostHandler(costItem.getCostType());
     }
 
     private Supplier<ServiceResult<ProjectFinance>> projectFinance(Long projectFinanceId) {

@@ -9,6 +9,9 @@ The user downloads the file
     Run and Return RC    ./download.py ${user} ${short_password} ${url} ${filename}
     Wait Until Keyword Succeeds Without Screenshots    30s    200ms    Download should be done
 
+the user uploads the file
+    [Arguments]  ${selector}  ${file}
+    Choose File  ${selector}  ${UPLOAD_FOLDER}/${file}
 
 Download should be done
     [Documentation]    Verifies that the directory has only one file
@@ -48,3 +51,5 @@ the user can remove the uploaded file
     Wait Until Page Does Not Contain Without Screenshots    Remove
     Page Should Contain    Upload
     Page Should Not Contain    ${file_name}
+
+

@@ -2,6 +2,7 @@
 Resource    ../../resources/defaultResources.robot
 
 *** Variables ***
+${project_guidance}    https://www.gov.uk/government/publications/innovate-uk-completing-your-application-project-costs-guidance
 
 *** Keywords ***
 the user should see all the Your-Finances Sections
@@ -75,6 +76,7 @@ the applicant completes the application details
     The user enters text to a text field  id=application_details-startdate_month  11
     The user enters text to a text field  id=application_details-duration  20
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
+    the user should not see the element     css=input
 
 the user marks the finances as complete
     [Arguments]  ${Application}
@@ -93,9 +95,15 @@ the user fills in the project costs
     the user fills in Capital usage
     the user fills in Subcontracting costs
     the user fills in Travel and subsistence
-    the user fills in Other Costs
+    the user fills in Other costs
     the user selects the checkbox    agree-state-aid-page
     the user clicks the button/link  jQuery=button:contains("Mark as complete")
+    the user clicks the button/link  link=Your project costs
+    the user has read only view once section is marked complete
+
+the user has read only view once section is marked complete
+    the user should not see the element   css=input
+    the user clicks the button/link     jQuery=a:contains("Return to finances")
 
 the user fills in Labour
     the user clicks the button/link            jQuery=#form-input-20 button:contains("Labour")
@@ -158,14 +166,14 @@ the user fills in Travel and subsistence
     textfield should contain              css=#section-total-14[readonly]  £ 1,000
     the user clicks the button/link       jQuery=#form-input-20 button:contains("Travel and subsistence")
 
-the user fills in Other Costs
-    the user clicks the button/link       jQuery=#form-input-20 button:contains("Other Costs")
+the user fills in Other costs
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Other costs")
     the user removes prev costs if there are any
     the user enters text to a text field  jQuery=textarea.form-control[name^=other_costs-description]  some other costs
     the user enters text to a text field  jQuery=input.form-control[name^=other_costs-otherCost]  50
     #focus                                 css=#section-total-15./   # commented as this section can be used and the values will differ with runs. Would like to romove it after review.
     #textfield should contain              css=#section-total-15  £ 50  #This is commented out because the value in the field differs in full run vs run only the suite.
-    the user clicks the button/link       jQuery=#form-input-20 button:contains("Other Costs")
+    the user clicks the button/link       jQuery=#form-input-20 button:contains("Other costs")
 
 the user removes prev costs if there are any
     ${STATUS}    ${VALUE}=  Run Keyword And Ignore Error Without Screenshots  page should contain element  jQuery=table[id="other-costs-table"] tr:contains("Remove")
@@ -179,6 +187,8 @@ the user fills in the organisation information
     Run Keyword If    '${status}' == 'PASS'    the user clicks the button/link  jQuery=button:contains("Edit your organisation")
     the user selects the radio button  financePosition-organisationSize  financePosition-organisationSize-SMALL
     the user clicks the button/link    jQuery=button:contains("Mark as complete")
+    the user clicks the button/link  link=Your organisation
+    the user has read only view once section is marked complete
 
 the user checks Your Funding section
     [Arguments]  ${Application}
@@ -199,6 +209,8 @@ the user fills in the funding information
     click element                         jQuery=label:contains("No")
     the user selects the checkbox         agree-terms-page
     the user clicks the button/link       jQuery=button:contains("Mark as complete")
+    the user clicks the button/link  link=Your funding
+    the user has read only view once section is marked complete
 
 the user should see all finance subsections complete
     the user should see the element  jQuery=li.grid-row.section:nth-of-type(1) img.section-status.complete

@@ -13,31 +13,29 @@ import org.innovateuk.ifs.finance.resource.cost.TravelCost;
  * Handles the travel costs, i.e. converts the costs to be stored into the database
  * or for sending it over.
  */
-public class TravelCostHandler extends FinanceRowHandler {
+public class TravelCostHandler extends FinanceRowHandler<TravelCost> {
     private static final Log LOG = LogFactory.getLog(TravelCostHandler.class);
 
     public static final String COST_KEY = "travel";
 
     @Override
-    public ApplicationFinanceRow toCost(FinanceRowItem costItem) {
-        ApplicationFinanceRow cost = null;
+    public ApplicationFinanceRow toCost(TravelCost travel) {
         LOG.info("COST TRAVEL UPDATE");
-        if (costItem.getCostType().equals(FinanceRowType.TRAVEL)) {
-            TravelCost travel = (TravelCost) costItem;
-            cost = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+        ApplicationFinanceRow applicationFinanceRow = null;
+        if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
+            applicationFinanceRow = new ApplicationFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
         }
-        return cost;
+        return applicationFinanceRow;
     }
 
     @Override
-    public ProjectFinanceRow toProjectCost(FinanceRowItem costItem) {
-        ProjectFinanceRow cost = null;
-        LOG.info("COST TRAVEL UPDATE");
-        if (costItem.getCostType().equals(FinanceRowType.TRAVEL)) {
-            TravelCost travel = (TravelCost) costItem;
-            cost = new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
+    public ProjectFinanceRow toProjectCost(TravelCost travel) {
+        LOG.info("PROJECT COST TRAVEL UPDATE");
+        ProjectFinanceRow projectFinanceRow = null;
+        if (travel != null && travel.getCostType() != null && travel.getCostType().equals(FinanceRowType.TRAVEL)) {
+            projectFinanceRow =  new ProjectFinanceRow(travel.getId(), COST_KEY, travel.getItem(), "", travel.getQuantity(), travel.getCost(), null, null);
         }
-        return cost;
+        return projectFinanceRow;
     }
 
     @Override

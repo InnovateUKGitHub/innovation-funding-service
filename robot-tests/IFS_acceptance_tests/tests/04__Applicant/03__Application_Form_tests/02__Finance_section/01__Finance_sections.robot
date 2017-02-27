@@ -8,7 +8,10 @@ Documentation     INFUND-45: As an applicant and I am on the application form on
 ...
 ...               INFUND-2051: Remove the '0' in finance fields
 ...
-...               INFUND-2961: ‘Working Days Per Year’ in Labour Costs do not default to 232.
+...               INFUND-2961: ‘Working days per year’ in Labour Costs do not default to 232.
+...
+...               INFUND-7522:  Create 'Your finances' view excluding 'Your organisation' page where 'Organisation type' is 'Research' and sub category is 'Academic'
+...
 Suite Setup       Custom Suite Setup
 Suite Teardown    TestTeardown User closes the browser
 Force Tags        Applicant
@@ -77,10 +80,63 @@ User pressing back button should get the correct version of the page
     And the user clicks the button/link  link=Your project costs
     Given The user adds three material rows
     When the user navigates to another page
-    And the user should see the text in the page    Guide on eligible project costs and completing the finance form
+    And the user should be redirected to the correct page without the usual headers    ${project_guidance}
     And the user goes back to the previous page
     Then the user should see the element    css=#material-costs-table tbody tr:nth-of-type(3) td:nth-of-type(2) input
     [Teardown]    the user removes the materials rows
+
+Non-academic partner finance section
+    [Documentation]    INFUND-7522
+    [Tags]    HappyPath
+    [Setup]  Log in as a different user     &{collaborator1_credentials}
+    Given the user navigates to Your-finances page     Providing sustainable childcare
+    Then The user should see the element      JQuery=span.summary:contains("Not requesting funding")
+    and the user should see the element     link=Your project costs
+    and the user should see the element     link=Your organisation
+    and the user should not see the element     link=Your funding
+
+Academic partner finance section
+    [Documentation]    INFUND-7522
+    [Tags]    HappyPath
+    [Setup]  Log in as a different user       &{collaborator2_credentials}
+    Given the user navigates to Your-finances page     Providing sustainable childcare
+    Then The user should not see the element      link=Not requesting funding
+    and the user should see the element       link=Your project costs
+    and the user should not see the element     link=Your organisation
+    and the user should see the element        link=Your funding
+    and the user should not see the element     link=application details
+
+Academic partner can upload file for field J-es PDF
+    [Documentation]    INFUND-7522
+    [Tags]    HappyPath
+    Given the user navigates to Your-finances page     Providing sustainable childcare
+    and the user clicks the button/link         link=Your funding
+    # Note the Jes form is already uploaded
+    Then the user should see the element     css=a.uploaded-file
+    When The user clicks the button/link       jQuery=button:contains("Remove")
+    then the user should see the element       jQuery=label[class="button-secondary extra-margin"]
+    and the user uploads the file   name=jes-upload   ${valid_pdf}
+    and the user should see the text in the page    ${valid_pdf}
+
+Academic partner's Your funding section is read only once marked as complete
+    [Documentation]     INFUND-7405
+    [Tags]    HappyPath
+    When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
+    and the user clicks the button/link     jQuery=button:contains("Mark as complete")
+    then the user should not see the element   css=input
+
+File upload mandatory for Academic partner to mark section as complete
+    [Documentation]    INFUND-8469
+    [Tags]    HappyPath    Pending
+    #TODO pending due to INFUND-8469
+    # This will also check the auto-save as we hvaen't marked finances as complete yet
+    Given the user navigates to Your-finances page      Providing sustainable childcare
+    and the user clicks the button/link          link=Your funding
+    and the user clicks the button/link       jQuery=button:contains("Remove")
+    When the user selects the checkbox      jQuery=label[for="agree-terms-page"]
+    and the user clicks the button/link     jQuery=button:contains("Mark as complete")
+    then the user should see a field error     css=a.uploaded-file
+
 
 *** Keywords ***
 Custom Suite Setup

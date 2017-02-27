@@ -152,7 +152,7 @@ public class ProjectFinanceRowPermissionRulesTest extends BaseServiceSecurityTes
         }
 
         @Override
-        public FinanceRowHandler getCostHandler(Long costItemId) {
+        public FinanceRowHandler getCostHandler(FinanceRowItem costItemId) {
             return null;
         }
     }

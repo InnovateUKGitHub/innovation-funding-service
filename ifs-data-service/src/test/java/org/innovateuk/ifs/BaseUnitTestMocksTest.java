@@ -8,10 +8,7 @@ import org.innovateuk.ifs.address.transactional.AddressService;
 import org.innovateuk.ifs.alert.mapper.AlertMapper;
 import org.innovateuk.ifs.alert.repository.AlertRepository;
 import org.innovateuk.ifs.alert.transactional.AlertService;
-import org.innovateuk.ifs.application.mapper.ApplicationCountSummaryMapper;
-import org.innovateuk.ifs.application.mapper.ApplicationMapper;
-import org.innovateuk.ifs.application.mapper.QuestionMapper;
-import org.innovateuk.ifs.application.mapper.SectionMapper;
+import org.innovateuk.ifs.application.mapper.*;
 import org.innovateuk.ifs.application.repository.*;
 import org.innovateuk.ifs.application.transactional.*;
 import org.innovateuk.ifs.assessment.mapper.*;
@@ -25,7 +22,6 @@ import org.innovateuk.ifs.category.mapper.InnovationSectorMapper;
 import org.innovateuk.ifs.category.mapper.ResearchCategoryMapper;
 import org.innovateuk.ifs.category.repository.*;
 import org.innovateuk.ifs.category.transactional.CategoryService;
-import org.innovateuk.ifs.category.transactional.CompetitionCategoryLinkService;
 import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.test.BaseTest;
 import org.innovateuk.ifs.competition.mapper.AssessorCountOptionMapper;
@@ -211,6 +207,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ApplicationCountSummaryMapper applicationCountSummaryMapperMock;
+
+    @Mock
+    protected ApplicationCountSummaryPageMapper applicationCountSummaryPageMapperMock;
 
     @Mock
     protected FormInputRepository formInputRepositoryMock;
@@ -436,12 +435,6 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ResearchCategoryMapper researchCategoryMapperMock;
-
-    @Mock
-    protected CompetitionCategoryLinkService competitionCategoryLinkServiceMock;
-
-    @Mock
-    protected CompetitionCategoryLinkRepository competitionCategoryLinkRepositoryMock;
 
     @Mock
     protected BankDetailsMapper bankDetailsMapperMock;

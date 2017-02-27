@@ -141,7 +141,7 @@ Non-lead partner can click the Dashboard link
     [Setup]    the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
-    And the user should see the text in the page    Projects in setup
+    And the user should see the text in the page    Set up your project
     [Teardown]    the user goes back to the previous page
 
 Non-lead partner can see the application overview
@@ -183,7 +183,7 @@ Lead partner can click the Dashboard link
     [Setup]    the user navigates to the page    ${project_in_setup_page}
     When the user clicks the button/link    link=Dashboard
     Then the user should not see an error in the page
-    And the user should see the text in the page    Projects in setup
+    And the user should see the text in the page    Set up your project
     [Teardown]    the user goes back to the previous page
 
 Lead partner can see the application overview

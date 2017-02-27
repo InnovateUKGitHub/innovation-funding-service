@@ -86,6 +86,9 @@ Reject an application for assessment
     When The user clicks the button/link    jQuery=.in-progress li:nth-child(1) a:contains("accept / reject assessment")
     And the user should see the text in the page    Accept application
     And The user clicks the button/link    jQuery=a:contains("Reject")
+    And the user clicks the button/link    jQuery=button:contains(Cancel)
+    And the user should not see the element    id=rejectComment
+    And The user clicks the button/link    jQuery=a:contains("Reject")
     And the user clicks the button/link    jQuery=.button:contains("Reject")
     Then the user should see an error    Please enter a reason.
     And the assessor fills all fields with valid inputs
@@ -101,7 +104,7 @@ Check the comp admin see the assessor has rejected the application
     [Tags]
     [Setup]    Log in as a different user    john.doe@innovateuk.test    Passw0rd
     Given the user clicks the button/link    link=${IN_ASSESSMENT_COMPETITION_NAME}
-    And the user clicks the button/link    jQuery=.button:contains("Manage applications")
+    And the user clicks the button/link    jQuery=a:contains("Assessor management - assignment to applications")
     And the user should see the element    jQuery=tr:nth-child(4) td:nth-child(2):contains("Park living")
     And the user clicks the button/link    jQuery=tr:nth-child(4) a:contains(View progress)
     And the user should see the text in the page    Rejected (1)

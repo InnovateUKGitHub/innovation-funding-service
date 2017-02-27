@@ -14,12 +14,14 @@ public class Milestone {
     @Id
     @GeneratedValue
     private Long id;
+
     @Enumerated(EnumType.STRING)
     private MilestoneType type;
+
     private LocalDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="competitionId", referencedColumnName="id")
+    @JoinColumn(name="competition_id", referencedColumnName="id")
     private Competition competition;
 
     // TODO INFUND-5908 make this package protected
