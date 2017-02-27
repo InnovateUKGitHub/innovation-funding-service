@@ -2,25 +2,27 @@
 <html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 
 <head>
-    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'" />
+    <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Application Dashboard'"/>
     <link href="/css/prototype.css" media="screen" rel="stylesheet" type="text/css" />
 </head>
 
 <body class="app-overview">
 
-    <th:block th:insert="prototypes/fragments/layout :: prototype-nav" />
-    <th:block th:insert="fragments/layout :: body-start" />
-    <th:block th:insert="fragments/layout :: global-header" />
+<th:block th:insert="prototypes/fragments/layout :: prototype-nav"/>
+<th:block th:insert="fragments/layout :: body-start"/>
+<th:block th:insert="fragments/layout :: global-header"/>
 
 
     <main id="content">
-        <th:block th:include="fragments/layout :: main-content-start" />
-        <th:block th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application details'}, ${'/prototypes/5452-application-details'})" />
+        <th:block th:include="fragments/layout :: main-content-start"/>
+        <th:block
+            th:include="prototypes/fragments/applicant-view :: prototype-subheader(${'Application details'}, ${'/prototypes/5452-application-details'})"/>
 
 
 
         <!-- HARDCODED PROTOTYPE HTML -->
-        <th:block th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Innovation area')" />
+        <th:block
+            th:include="prototypes/fragments/applicant-view :: prototype-applicant-page-title(${'Technology inspired'}, 'Innovation area')"/>
 
         <form action="#">
             <fieldset>
@@ -82,11 +84,11 @@
 
         <!-- END OFHARDCODED PROTOTYPE HTML -->
 
-        <th:block th:include="fragments/layout :: main-content-end" />
+        <th:block th:include="fragments/layout :: main-content-end"/>
     </main>
 
-    <th:block th:insert="fragments/layout :: footer" />
-    <th:block th:insert="fragments/layout :: body-end" />
+<th:block th:insert="fragments/layout :: footer"/>
+<th:block th:insert="fragments/layout :: body-end"/>
 
 </body>
 

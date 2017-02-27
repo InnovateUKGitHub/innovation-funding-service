@@ -124,7 +124,7 @@ public class FormInputResponsePermissionRules {
 
     private boolean checkIfQuestionIsMarkedByUser(List<QuestionStatus> questionStatuses, UserResource user) {
         return questionStatuses.stream()
-            .anyMatch(questionStatus -> isMarkedAsComplete(questionStatus) && questionStatus.getMarkedAsCompleteBy().getUser().getId().equals(user.getId()));
+                .anyMatch(questionStatus -> isMarkedAsComplete(questionStatus) && questionStatus.getMarkedAsCompleteBy().getUser().getId().equals(user.getId()));
     }
 
     private boolean isMarkedAsComplete(QuestionStatus questionStatus) {

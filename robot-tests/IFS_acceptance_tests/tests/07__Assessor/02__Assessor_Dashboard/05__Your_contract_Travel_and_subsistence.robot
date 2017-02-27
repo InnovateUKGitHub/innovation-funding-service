@@ -21,7 +21,6 @@ Travel and Subsisdence
     When the user clicks the button/link    jQuery=a:contains("travel and subsistence rates")
     Then the user should see the text in the page    Day subsistence
     And the user should see the text in the page    24 hour / overnight subsistence
-    And the user should see the text in the page    Meals and refreshments
     And the user should see the text in the page    Public transport
     And the user should see the text in the page    Mileage rates
     And the user should see the text in the page    Please make sure your travel claims, receipts and tickets are all submitted.
@@ -36,6 +35,20 @@ Server-side validations
     And the user clicks the button/link    jQuery=a:contains("your contract")
     When the user clicks the button/link    jQuery=button:contains("Save and return to assessor dashboard")
     Then the user should see an error    Please agree to the terms and conditions.
+
+Cancel returns you back to the dashboard
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link    jQuery=a:contains(Cancel)
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("your contract")
+
+Back button takes you to the previous page
+    [Documentation]    INFUND-8009
+    [Tags]
+    Given the user clicks the button/link    link=Assessor dashboard
+    Then the user should be redirected to the correct page    ${assessor_dashboard_url}
+    [Teardown]    the user clicks the button/link    jQuery=a:contains("your contract")
 
 Terms and Conditions
     [Documentation]    INFUND-1481
@@ -73,4 +86,3 @@ Agreement Confirmation
     [Documentation]    INFUND-5628
     Then the user clicks the button/link    jQuery=a:contains("your contract")
     And the user should see the text in the page    You signed the contract on
-

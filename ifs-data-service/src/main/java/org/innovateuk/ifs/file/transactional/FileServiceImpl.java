@@ -1,5 +1,6 @@
 package org.innovateuk.ifs.file.transactional;
 
+import org.apache.commons.io.FilenameUtils;
 import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.service.FailingOrSucceedingResult;
 import org.innovateuk.ifs.commons.service.ServiceFailure;
@@ -23,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.function.Supplier;
 
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.innovateuk.ifs.commons.error.CommonErrors.forbiddenError;
 import static org.innovateuk.ifs.commons.error.CommonErrors.notFoundError;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
@@ -61,7 +63,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     @Override
     public ServiceResult<Pair<File, FileEntry>> createFile(FileEntryResource resource, Supplier<InputStream> inputStreamSupplier) {
 
-        return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
+        return createTemporaryFileForValidation(resource.getName(), inputStreamSupplier).andOnSuccess(validationFile -> {
             try {
                 return find(
                         validateMediaType(validationFile, MediaType.parseMediaType(resource.getMediaType())),
@@ -90,7 +92,7 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
     }
 
     private FailingOrSucceedingResult<Pair<File, FileEntry>, ServiceFailure> doFileValidationAndUpdate(FileEntry updatedFile, Supplier<InputStream> inputStreamSupplier) {
-        return createTemporaryFileForValidation(inputStreamSupplier).andOnSuccess(validationFile -> {
+        return createTemporaryFileForValidation(updatedFile.getName(), inputStreamSupplier).andOnSuccess(validationFile -> {
             try {
                 return find(
                         validateMediaType(validationFile, MediaType.parseMediaType(updatedFile.getMediaType())),
@@ -137,9 +139,9 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         }
     }
 
-    private ServiceResult<File> createTemporaryFileForValidation(Supplier<InputStream> inputStreamSupplier) {
+    private ServiceResult<File> createTemporaryFileForValidation(String originalFilename, Supplier<InputStream> inputStreamSupplier) {
 
-        return createTemporaryFile("filevalidation", new Error(FILES_UNABLE_TO_CREATE_FILE)).
+        return createTemporaryFile("filevalidation", originalFilename, new Error(FILES_UNABLE_TO_CREATE_FILE)).
                 andOnSuccess(tempFile -> updateFileWithContents(tempFile, inputStreamSupplier)).
                 andOnSuccess(this::pathToFile);
     }
@@ -174,9 +176,10 @@ public class FileServiceImpl extends BaseTransactionalService implements FileSer
         }
     }
 
-    private ServiceResult<Path> createTemporaryFile(String prefix, Error errorMessage) {
+    private ServiceResult<Path> createTemporaryFile(String prefix, String filename, Error errorMessage) {
         try {
-            return serviceSuccess(Files.createTempFile(prefix, ""));
+            String extension = FilenameUtils.getExtension(filename);
+            return serviceSuccess(Files.createTempFile(prefix, !isBlank(extension) ? "." + extension : ""));
         } catch (IOException e) {
             LOG.error("Error creating temporary file for " + prefix, e);
             return serviceFailure(errorMessage);
