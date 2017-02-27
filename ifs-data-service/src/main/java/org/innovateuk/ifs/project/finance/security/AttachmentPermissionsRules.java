@@ -40,8 +40,8 @@ public class AttachmentPermissionsRules {
     private ProjectUserRepository projectUserRepository;
 
 
-    @PermissionRule(value = "PF_QUERY_ATTACHMENT_UPLOAD", description = "Only Project Finance Users or Finance Contacts can upload attachments")
-    public boolean upload(final AttachmentResource attachment, final UserResource user) {
+    @PermissionRule(value = "PF_QUERY_ATTACHMENT_UPLOAD", description = "Only Project Finance  Finance Contacts can upload attachments")
+    public boolean onlyProjectFinanceAndFinanceContactCanUploadAttachments(final AttachmentResource attachment, final UserResource user) {
         return isProjectFinanceUser(user) || isFinanceContactInAnyProject(user);
     }
 
@@ -55,15 +55,14 @@ public class AttachmentPermissionsRules {
     }
 
     @PermissionRule(value = "PF_QUERY_ATTACHMENT_READ", description = "Finance Contact users can only fetch an Attachment they are related to.")
-    public boolean financeContactUsersCanOnlyFetchAnAttachmentIfRelatedToItsQuery(AttachmentResource attachmentResource, UserResource user) {
+    public boolean financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(AttachmentResource attachmentResource, UserResource user) {
         return attachmentMapper.mapToDomain(attachmentResource).wasUploadedBy(user.getId())
                 || userCanAccessQueryLinkedToTheAttachment(user, attachmentResource);
     }
 
     private boolean userCanAccessQueryLinkedToTheAttachment(UserResource user, AttachmentResource attachment) {
         return findQueryTheAttachmentIsLinkedTo(attachment)
-                .map(query -> projectFinanceQueryPermissionRules
-                        .onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryMapper.mapToResource(query), user))
+                .map(query -> projectFinanceQueryPermissionRules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryMapper.mapToResource(query), user))
                 .orElse(false);
     }
 

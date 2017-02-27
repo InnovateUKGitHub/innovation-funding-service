@@ -1,0 +1,122 @@
+package org.innovateuk.ifs.thread.attachment.security;
+
+
+import org.innovateuk.ifs.BasePermissionRulesTest;
+import org.innovateuk.ifs.project.finance.security.AttachmentPermissionsRules;
+import org.innovateuk.ifs.threads.attachments.domain.Attachment;
+import org.innovateuk.ifs.threads.domain.Query;
+import org.innovateuk.ifs.threads.security.ProjectFinanceQueryPermissionRules;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.threads.attachment.resource.AttachmentResource;
+import org.innovateuk.threads.resource.QueryResource;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import java.time.LocalDateTime;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singletonList;
+import static org.innovateuk.ifs.file.builder.FileEntryBuilder.newFileEntry;
+import static org.innovateuk.ifs.invite.domain.ProjectParticipantRole.PROJECT_FINANCE_CONTACT;
+import static org.innovateuk.ifs.project.builder.ProjectUserBuilder.newProjectUser;
+import static org.innovateuk.ifs.thread.security.ProjectFinanceThreadsTestData.projectFinanceWithUserAsFinanceContact;
+import static org.innovateuk.ifs.user.builder.RoleResourceBuilder.newRoleResource;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
+import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
+import static org.innovateuk.ifs.user.resource.UserRoleType.PARTNER;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
+
+public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionRulesTest<AttachmentPermissionsRules> {
+    private AttachmentResource attachmentResource;
+    private UserResource projectFinanceUser;
+    private UserResource financeContactUser;
+    private UserResource intruder;
+
+    @Mock
+    private ProjectFinanceQueryPermissionRules queryPermissionRulesMock;
+
+    @Before
+    public void setUp() throws Exception {
+        attachmentResource = new AttachmentResource(9283L, "fileName", "application/json", 1024);
+        projectFinanceUser = projectFinanceUser();
+        financeContactUser = getUserWithRole(FINANCE_CONTACT);
+
+        intruder = newUserResource().withId(1993L).withRolesGlobal(newRoleResource()
+                .withType(PARTNER).build(1)).build();
+        intruder.setId(1993L);
+    }
+
+    @Override
+    protected AttachmentPermissionsRules supplyPermissionRulesUnderTest() {
+        return new AttachmentPermissionsRules();
+    }
+
+    @Test
+    public void testThatOnlyProjectFinanceAndFinanceContactUsersCanUploadAttachments() throws Exception {
+        assertTrue(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(attachmentResource, projectFinanceUser));
+        when(projectUserRepositoryMock.findByUserIdAndRole(financeContactUser.getId(), PROJECT_FINANCE_CONTACT))
+                .thenReturn(newProjectUser().withUser(newUser().withId(financeContactUser.getId()).build()).build(1));
+        assertTrue(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(attachmentResource, financeContactUser));
+    }
+
+    @Test
+    public void testThatANonProjectFinanceOrFinanceContactUserCanNotUploadAttachments() throws Exception {
+        when(projectUserRepositoryMock.findByUserIdAndRole(intruder.getId(), PROJECT_FINANCE_CONTACT)).thenReturn(emptyList());
+        assertFalse(rules.onlyProjectFinanceAndFinanceContactCanUploadAttachments(attachmentResource, intruder));
+    }
+
+    @Test
+    public void testThatProjectFinanceUsersCanFetchAnyAttachment() throws Exception {
+        assertTrue(rules.projectFinanceUsersCanFetchAnyAttachment(attachmentResource, projectFinanceUser));
+    }
+
+    @Test
+    public void testThatFinanceContactUsersCanAlwaysFetchTheAttachmentsTheyHaveUploaded() throws Exception {
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, financeContactUser.getId()));
+        assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, financeContactUser));
+    }
+
+    @Test
+    public void testThatFinanceContactUsersCanFetchAttachmentsOfQueriesTheyAreRelatedTo() throws Exception {
+        final Query query = query();
+        final QueryResource queryResource = toResource(query);
+        when(queryRepositoryMock.findOneThatHoldsAttachment(attachmentResource.id)).thenReturn(singletonList(query));
+        when(queryMapper.mapToResource(query)).thenReturn(queryResource);
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
+        when(queryPermissionRulesMock.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, financeContactUser)).thenReturn(true);
+        assertTrue(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, financeContactUser));
+    }
+
+    @Test
+    public void testThatFinanceContactUsersCannotFetchAttachmentsOfQueriesTheyAreNotRelatedTo() throws Exception {
+        final Query query = query();
+        final QueryResource queryResource = toResource(query);
+        when(queryRepositoryMock.findOneThatHoldsAttachment(attachmentResource.id)).thenReturn(singletonList(query()));
+        when(queryMapper.mapToResource(query)).thenReturn(queryResource);
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        final UserResource unrelatedFinanceContactUser = newUserResource().withId(financeContactUser.getId() * 7).build();
+        when(projectFinanceRepositoryMock.findOne(query.contextClassPk())).thenReturn(projectFinanceWithUserAsFinanceContact(financeContactUser));
+        when(queryPermissionRulesMock.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryResource, unrelatedFinanceContactUser)).thenReturn(false);
+        assertFalse(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, unrelatedFinanceContactUser));
+    }
+
+    private QueryResource toResource(Query query) {
+        return new QueryResource(query.id(), query.contextClassPk(), emptyList(),
+                query.section(), query.title(), query.isAwaitingResponse(), query.createdOn());
+    }
+
+    private Query query() {
+        return new Query(92L, 1993L, "", null, null, "", LocalDateTime.now());
+    }
+
+    private Attachment asDomain(AttachmentResource attachmentResource, Long uploaderId) {
+        return new Attachment(attachmentResource.id, newUser().withId(uploaderId).build(),
+                newFileEntry().withFilesizeBytes(attachmentResource.sizeInBytes).withMediaType(attachmentResource.mediaType).build());
+    }
+
+}

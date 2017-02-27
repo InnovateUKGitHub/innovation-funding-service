@@ -10,7 +10,7 @@ import org.innovateuk.ifs.file.transactional.FileService;
 import org.innovateuk.ifs.security.LoggedInUserSupplier;
 import org.innovateuk.ifs.threads.attachments.domain.Attachment;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
-import org.innovateuk.ifs.threads.attachments.repository.PostAttachmentRepository;
+import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,7 +37,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     private FileEntryService fileEntryService;
 
     @Autowired
-    private PostAttachmentRepository attachmentsRepository;
+    private AttachmentRepository attachmentsRepository;
 
     @Autowired
     @Qualifier("postAttachmentValidator")
