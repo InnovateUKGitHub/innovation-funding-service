@@ -244,6 +244,14 @@ public abstract class BaseDocumentingSecurityTest<T> extends BaseMockSecurityTes
                 // expected behaviour
             }
         });
+        // No roles should also fail
+        BaseIntegrationTest.setLoggedInUser(newUserResource().build());
+        try {
+            functionToCall.run();
+            fail("Should not have been able to run the function given no role");
+        } catch (AccessDeniedException e) {
+            // expected behaviour
+        }
         rolesThatShouldSucceed.forEach(role -> {
             BaseIntegrationTest.setLoggedInUser(newUserResource().withRolesGlobal(singletonList(newRoleResource().withType(role).build())).build());
             try {
