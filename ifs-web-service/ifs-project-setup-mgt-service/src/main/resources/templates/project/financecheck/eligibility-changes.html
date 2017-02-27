@@ -107,9 +107,7 @@
                 <th:block th:each="rowType : ${model.changes.keySet()}">
                     <th:block th:each="changePairLst : ${model.changes.get(T(org.innovateuk.ifs.finance.resource.cost.FinanceRowType).getByTypeName(rowType.type))}">
                         <th:block th:each="changePair : ${changePairLst}" th:with="typeOfChange=${changePair.typeOfChange.typeName},rowTypeName=${rowType.name}">
-                            <th:block th:if="${rowType.type == 'labour'}">
-                                <th:block th:insert="project/financecheck/change-fragments :: ${rowType.type}"/>
-                            </th:block>
+                            <th:block th:insert="project/financecheck/change-fragments :: ${rowType.type}"/>
                         </th:block>
                     </th:block>
                 </th:block>

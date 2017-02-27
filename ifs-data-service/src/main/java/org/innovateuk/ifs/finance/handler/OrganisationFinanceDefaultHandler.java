@@ -371,8 +371,6 @@ public class OrganisationFinanceDefaultHandler implements OrganisationFinanceHan
     private List<ImmutablePair<Optional<ApplicationFinanceRow>, Optional<ApplicationFinanceRow>>> getUpdateList(Long applicationId, Long organisationId, List<ProjectFinanceRow> projectCosts){
         return simpleMap(projectCosts, cost -> {
             ApplicationFinance applicationFinance = applicationFinanceRepository.findByApplicationIdAndOrganisationId(applicationId, organisationId);
-
-            ImmutablePair<Optional<ApplicationFinanceRow>, Optional<ApplicationFinanceRow>> updatePair;
             Optional<ApplicationFinanceRow> applicationFinanceRow;
             if(cost.getApplicationRowId() != null) {
                 applicationFinanceRow = Optional.ofNullable(applicationFinanceRowRepository.findOne(cost.getApplicationRowId()));
