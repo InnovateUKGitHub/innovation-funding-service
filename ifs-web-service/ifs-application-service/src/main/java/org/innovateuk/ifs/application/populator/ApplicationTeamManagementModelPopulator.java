@@ -52,22 +52,6 @@ public class ApplicationTeamManagementModelPopulator {
         UserResource leadApplicant = userService.findById(leadApplicantProcessRole.getUser());
         OrganisationResource selectedOrganisation = organisationId != null ? organisationService.getOrganisationById(organisationId) : null;
 
-    /*    List<InviteOrganisationResource> savedInvites = getSavedInviteOrganisations(application);
-        Map<Long, InviteOrganisationResource> organisationInvites = savedInvites.stream().collect(Collectors.toMap(InviteOrganisationResource::getId, Function.identity()));
-
-        Long authenticatedUserOrganisationId = getAuthenticatedUserOrganisationId(user, savedInvites);
-
-        model.addAttribute("authenticatedUser", user);
-        model.addAttribute("authenticatedUserOrganisation", authenticatedUserOrganisationId);
-        model.addAttribute("currentApplication", application);
-      //  model.addAttribute("leadApplicant", leadApplicant);
-        model.addAttribute("leadOrganisation", leadOrganisation);
-        model.addAttribute("organisationInvites", organisationInvites);
-        if (organisationId != null) {
-            OrganisationResource selectedOrganisation = organisationService.getOrganisationById(organisationId);
-            model.addAttribute("selectedOrganisation", selectedOrganisation);
-        }*/
-
         return new ApplicationTeamManagementViewModel(application.getId(), application.getApplicationDisplayName(), leadApplicant,
                 leadOrganisation, selectedOrganisation, user, authenticatedUserOrganisationId,
                 getOrganisationViewModels(application));
