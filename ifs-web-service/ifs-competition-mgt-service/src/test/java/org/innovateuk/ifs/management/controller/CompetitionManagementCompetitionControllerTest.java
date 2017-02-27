@@ -4,12 +4,14 @@ import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.assessment.resource.AssessmentStates;
 import org.innovateuk.ifs.competition.resource.*;
 import org.innovateuk.ifs.management.model.CompetitionInFlightModelPopulator;
+import org.innovateuk.ifs.management.model.CompetitionInFlightStatsModelPopulator;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightStatsViewModel;
 import org.innovateuk.ifs.management.viewmodel.CompetitionInFlightViewModel;
 import org.innovateuk.ifs.management.viewmodel.MilestonesRowViewModel;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.springframework.test.context.TestPropertySource;
@@ -46,6 +48,12 @@ public class CompetitionManagementCompetitionControllerTest extends BaseControll
     @Spy
     @InjectMocks
     private CompetitionInFlightModelPopulator competitionInFlightModelPopulator;
+
+    @Spy
+    @InjectMocks
+    private CompetitionInFlightStatsModelPopulator competitionInFlightStatsModelPopulator;
+
+
 
     @Override
     protected CompetitionManagementCompetitionController supplyControllerUnderTest() {
