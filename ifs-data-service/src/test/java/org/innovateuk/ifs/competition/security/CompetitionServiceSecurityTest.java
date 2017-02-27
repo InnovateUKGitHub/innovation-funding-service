@@ -181,12 +181,12 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<Void> closeAssessment(Long competitionId) {
+        public ServiceResult<Void> closeAssessment(long competitionId) {
             return null;
         }
 
         @Override
-        public ServiceResult<Void> notifyAssessors(Long competitionId) {
+        public ServiceResult<Void> notifyAssessors(long competitionId) {
             return null;
         }
 

@@ -61,12 +61,12 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<CompetitionResource> getCompetitionById(Long competitionId) {
+    public RestResult<CompetitionResource> getCompetitionById(long competitionId) {
         return getWithRestResult(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }
 
     @Override
-    public RestResult<CompetitionResource> getPublishedCompetitionById(Long competitionId) {
+    public RestResult<CompetitionResource> getPublishedCompetitionById(long competitionId) {
         return getWithRestResultAnonymous(competitionsRestURL + "/" + competitionId, CompetitionResource.class);
     }
 
@@ -87,42 +87,42 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<Void> markSectionComplete(Long competitionId, CompetitionSetupSection section) {
+    public RestResult<Void> markSectionComplete(long competitionId, CompetitionSetupSection section) {
         return getWithRestResult(String.format("%s/sectionStatus/complete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
     }
 
     @Override
-    public RestResult<Void> markSectionInComplete(Long competitionId, CompetitionSetupSection section) {
+    public RestResult<Void> markSectionInComplete(long competitionId, CompetitionSetupSection section) {
         return getWithRestResult(String.format("%s/sectionStatus/incomplete/%s/%s", competitionsRestURL, competitionId, section), Void.class);
     }
 
     @Override
-    public RestResult<String> generateCompetitionCode(Long competitionId, LocalDateTime openingDate) {
+    public RestResult<String> generateCompetitionCode(long competitionId, LocalDateTime openingDate) {
         return postWithRestResult(String.format("%s/generateCompetitionCode/%s", competitionsRestURL, competitionId), openingDate, String.class);
     }
 
     @Override
-    public RestResult<Void> initApplicationForm(Long competitionId, Long competitionTypeId) {
+    public RestResult<Void> initApplicationForm(long competitionId, long competitionTypeId) {
         return postWithRestResult(String.format("%s/%s/initialise-form/%s", competitionsRestURL, competitionId, competitionTypeId), Void.class);
     }
 
     @Override
-    public RestResult<Void> markAsSetup(Long competitionId) {
+    public RestResult<Void> markAsSetup(long competitionId) {
         return postWithRestResult(String.format("%s/%s/mark-as-setup", competitionsRestURL, competitionId), Void.class);
     }
 
     @Override
-    public RestResult<Void> returnToSetup(Long competitionId) {
+    public RestResult<Void> returnToSetup(long competitionId) {
         return postWithRestResult(String.format("%s/%s/return-to-setup", competitionsRestURL, competitionId), Void.class);
     }
 
     @Override
-    public RestResult<Void> closeAssessment(Long competitionId) {
+    public RestResult<Void> closeAssessment(long competitionId) {
         return putWithRestResult(String.format("%s/%s/close-assessment", competitionsRestURL, competitionId), Void.class);
     }
 
     @Override
-    public RestResult<Void> notifyAssessors(Long competitionId) {
+    public RestResult<Void> notifyAssessors(long competitionId) {
         return putWithRestResult(String.format("%s/%s/notify-assessors", competitionsRestURL, competitionId), Void.class);
     }
 

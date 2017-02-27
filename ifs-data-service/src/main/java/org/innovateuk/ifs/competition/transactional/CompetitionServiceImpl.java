@@ -130,14 +130,14 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> closeAssessment(Long competitionId) {
+    public ServiceResult<Void> closeAssessment(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.closeAssessment(LocalDateTime.now());
         return serviceSuccess();
     }
 
     @Override
-    public ServiceResult<Void> notifyAssessors(Long competitionId) {
+    public ServiceResult<Void> notifyAssessors(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.notifyAssessors(LocalDateTime.now());
         return serviceSuccess();
