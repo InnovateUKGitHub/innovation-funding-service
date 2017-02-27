@@ -515,14 +515,12 @@
         <p>All applicants that have been added to this organisation will be added at this point.</p>
         <hr />
 
-        <form method="post" th:action="@{${#ifsUtil.uriWithQueryString(#httpServletRequest)}}" th:object="${contributorsForm}" id="submit-add-organisation-form">
-            <div class="column-one-third">
-                <button type="button" class="js-close buttonlink large">Cancel</button>
-            </div>
-            <div class="column-two-thirds alignright-button">
-                <button class="button large" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
-            </div>
-        </form>
+        <div class="column-one-third">
+            <button type="button" class="js-close buttonlink large">Cancel</button>
+        </div>
+        <div class="column-two-thirds alignright-button">
+            <button class="button large" name="add_partner" value="add_partner" type="submit">Add organisation and invite applicants</button>
+        </div>
     </div>
 </th:block>
 

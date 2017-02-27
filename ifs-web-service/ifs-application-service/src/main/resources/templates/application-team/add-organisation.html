@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+    <head>
+        <th:block th:insert="fragments/layout :: head" th:with="pageTitle='Add organisation'" />
+    </head>
+
+    <body class="app-dashboard">
+        <th:block th:insert="fragments/modals :: modal-overlay" />
+        <th:block th:insert="fragments/modals :: modal-submit-remove-collaborator" />
+        <th:block th:insert="fragments/layout :: body-start" />
+        <th:block th:insert="fragments/layout :: global-header" />
+
+        <main id="content">
+            <th:block th:insert="fragments/layout :: main-content-start" />
+            <!-- TODO where is the back link going to? -->
+            <!-- <th:block th:insert="fragments/layout :: header-sub" th:with="currentApplication=${currentApplication},linkTitle='Application team',linkClass='link-back',linkUrl=@{'/#'}" /> -->
+
+            <h1 class="heading-xlarge">Add organisation</h1>
+
+            <p>Add applicants or organisations to your application. Before you can invite an organisation you will need to add at least one individual from that organisation.
+                If an organisation only has one individual you wish to remove, you must add a replacement individual before you can remove the first one.</p>
+
+            <form th:action="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}" th:object="${form}" method="POST">
+                <div class="form-group">
+                    <label class="form-label-bold" for="organisationName">Organisation name</label>
+                    <input class="form-control width-full" type="text" th:value="*{organisationName}" />
+                </div>
+
+                <fieldset class="extra-margin-top">
+                    <legend class="heading-medium">New applicant</legend>
+                    <table class="table-overflow">
+                        <thead>
+                            <tr>
+                                <th class="width-30-percent" id="new-applicant-name" scope="col">Applicant name</th>
+                                <th class="width-55-percent" id="new-applicant-email" scope="col">Email</th>
+                                <td class="width-15-percent alignright"></td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="applicant, applicantStat : *{applicants}">
+                                <td>
+                                    <input type="text"
+                                           id="applicant-name-1"
+                                           name="applicant-name-1"
+                                           aria-labelledby="new-applicant-name"
+                                           required="required"
+                                           class="form-control width-full">
+                                </td>
+                                <td>
+                                    <input type="text"
+                                           id="applicant-email-1"
+                                           name="applicant-emaile-1"
+                                           aria-labelledby="new-applicant-email"
+                                           required="required"
+                                           class="form-control width-full">
+                                </td>
+                                <td class="alignright"><button class="add-another-row buttonlink" th:value="${applicantStat.index}" type="removeApplicant">Remove</button></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </fieldset>
+
+                <p><button class="add-another-row buttonlink" type="addApplicant">Add new applicant</button></p>
+
+                <p>
+                    <!-- TODO need a non-js version of this confirmation page -->
+                    <a th:href="#" data-js-modal="modal-new-organisation" class="button">Add organisation and invite applicants</a>
+                    <!-- TODO Cancel needs to go to the same location as the back link -->
+                    <a href="#" class="button button-clear">Cancel</a>
+                </p>
+            </form>
+
+            <th:block th:insert="fragments/modals :: modal-new-organisation" />
+            <th:block th:insert="fragments/layout :: main-content-end" />
+        </main>
+
+        <th:block th:insert="fragments/layout :: footer" />
+        <th:block th:insert="fragments/layout :: body-end" />
+    </body>
+</html>
