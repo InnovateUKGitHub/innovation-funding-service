@@ -53,7 +53,7 @@
 
             <th:block th:if="${model.userLeadApplicant}">
                 <p class="extra-margin">Add any organisations participating with you on this project. They are responsible for creating their own account and submitting their finances.</p>
-                <p><a th:href="@{/application/{applicationId}/team/update(applicationId=${model.applicationId})}">Add partner organisation</a></p>
+                <p><a th:href="@{/application/{applicationId}/team/addOrganisation(applicationId=${model.applicationId})}">Add partner organisation</a></p>
             </th:block>
 
             <p class="extra-margin">
