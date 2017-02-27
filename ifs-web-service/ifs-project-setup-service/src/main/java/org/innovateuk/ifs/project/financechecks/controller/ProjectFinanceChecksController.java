@@ -83,8 +83,6 @@ import static org.innovateuk.ifs.controller.FileUploadControllerUtils.getMultipa
 import static org.innovateuk.ifs.file.controller.FileDownloadControllerUtils.getFileResponseEntity;
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 import static org.innovateuk.ifs.util.CollectionFunctions.simpleFilter;
-import static org.springframework.web.bind.annotation.RequestMethod.GET;
-import static org.springframework.web.bind.annotation.RequestMethod.POST;
 
 /**
  * This controller will handle requests related to finance checks
@@ -124,9 +122,6 @@ public class ProjectFinanceChecksController {
 
     @Autowired
     CompetitionService competitionService;
-
-    @Autowired
-    ProjectFinanceService financeService;
 
     @Autowired
     private ApplicationModelPopulator applicationModelPopulator;
@@ -497,7 +492,7 @@ public class ProjectFinanceChecksController {
 
         poulateProjectFinanceDetails(competition, application, project, organisation.getId(), allSections, user, form, bindingResult, model);
 
-        EligibilityResource eligibility = financeService.getEligibility(project.getId(), organisation.getId());
+        EligibilityResource eligibility = projectFinanceService.getEligibility(project.getId(), organisation.getId());
 
         if (eligibilityForm == null) {
             eligibilityForm = getEligibilityForm(eligibility);
