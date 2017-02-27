@@ -10,20 +10,19 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 public interface ProjectFinanceAttachmentService extends AttachmentsService<AttachmentResource> {
-
-    @Override
-    @PostFilter("hasPermission(filterObject, 'PF_QUERY_ATTACHMENT_READ')")
-    ServiceResult<AttachmentResource> findOne(Long attachmentId);
-
     @Override
     @PostFilter("hasPermission(filterObject, 'PF_ATTACHMENT_UPLOAD')")
     ServiceResult<AttachmentResource> upload(String contentType, String contentLength, String originalFilename, HttpServletRequest request);
 
     @Override
-    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_QUERY_ATTACHMENT_DELETE')")
-    ServiceResult<Void> delete(Long attachmentId);
+    @PostFilter("hasPermission(filterObject, 'PF_ATTACHMENT_READ')")
+    ServiceResult<AttachmentResource> findOne(Long attachmentId);
 
     @Override
-    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_QUERY_ATTACHMENT_DOWNLOAD')")
+    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_READ')")
     ResponseEntity<Object> download(Long attachmentId) throws IOException;
+
+    @Override
+    @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DELETE')")
+    ServiceResult<Void> delete(Long attachmentId);
 }

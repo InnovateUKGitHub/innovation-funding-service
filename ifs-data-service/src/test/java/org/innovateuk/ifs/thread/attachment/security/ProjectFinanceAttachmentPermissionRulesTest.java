@@ -105,6 +105,27 @@ public class ProjectFinanceAttachmentPermissionRulesTest extends BasePermissionR
         assertFalse(rules.financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(attachmentResource, unrelatedFinanceContactUser));
     }
 
+    @Test
+    public void testThatUserCanDeleteAttachmentWhenTheUploaderAndWhenTheAttachmentIsStillOrphan() {
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(queryRepositoryMock.findOneThatHoldsAttachment(attachmentResource.id)).thenReturn(emptyList());
+        assertTrue(rules.onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(attachmentResource, projectFinanceUser));
+    }
+
+    @Test
+    public void testThatUserCanNotDeleteAttachmentIfNotTheUploaderEvenIfAttachmentIsStillOrphan() {
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, projectFinanceUser.getId()));
+        when(queryRepositoryMock.findOneThatHoldsAttachment(attachmentResource.id)).thenReturn(emptyList());
+        assertFalse(rules.onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(attachmentResource, financeContactUser));
+    }
+
+    @Test
+    public void testThatUserCanNotDeleteAttachmentEvenIfUploaderOnceTheAttachmentIsNoLongerOrphan() {
+        when(attachmentMapperMock.mapToDomain(attachmentResource)).thenReturn(asDomain(attachmentResource, financeContactUser.getId()));
+        when(queryRepositoryMock.findOneThatHoldsAttachment(attachmentResource.id)).thenReturn(singletonList(query()));
+        assertFalse(rules.onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(attachmentResource, financeContactUser));
+    }
+
     private QueryResource toResource(Query query) {
         return new QueryResource(query.id(), query.contextClassPk(), emptyList(),
                 query.section(), query.title(), query.isAwaitingResponse(), query.createdOn());

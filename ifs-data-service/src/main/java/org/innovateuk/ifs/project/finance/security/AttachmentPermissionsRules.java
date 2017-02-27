@@ -40,7 +40,7 @@ public class AttachmentPermissionsRules {
     private ProjectUserRepository projectUserRepository;
 
 
-    @PermissionRule(value = "PF_QUERY_ATTACHMENT_UPLOAD", description = "Only Project Finance  Finance Contacts can upload attachments")
+    @PermissionRule(value = "PF_ATTACHMENT_UPLOAD", description = "Only Project Finance  Finance Contacts can upload attachments")
     public boolean onlyProjectFinanceAndFinanceContactCanUploadAttachments(final AttachmentResource attachment, final UserResource user) {
         return isProjectFinanceUser(user) || isFinanceContactInAnyProject(user);
     }
@@ -49,15 +49,14 @@ public class AttachmentPermissionsRules {
         return !projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_FINANCE_CONTACT).isEmpty();
     }
 
-    @PermissionRule(value = "PF_QUERY_ATTACHMENT_READ", description = "Project Finance users can fetch any Attachment")
+    @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Project Finance users can fetch any Attachment")
     public boolean projectFinanceUsersCanFetchAnyAttachment(AttachmentResource attachment, UserResource user) {
         return isProjectFinanceUser(user);
     }
 
-    @PermissionRule(value = "PF_QUERY_ATTACHMENT_READ", description = "Finance Contact users can only fetch an Attachment they are related to.")
-    public boolean financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(AttachmentResource attachmentResource, UserResource user) {
-        return attachmentMapper.mapToDomain(attachmentResource).wasUploadedBy(user.getId())
-                || userCanAccessQueryLinkedToTheAttachment(user, attachmentResource);
+    @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Finance Contact users can only fetch an Attachment they are related to.")
+    public boolean financeContactUsersCanOnlyFetchAnAttachmentIfUploaderOrIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
+        return financeContactUserIsAllowedToFetchAttachment(attachment, user);
     }
 
     private boolean userCanAccessQueryLinkedToTheAttachment(UserResource user, AttachmentResource attachment) {
@@ -66,18 +65,12 @@ public class AttachmentPermissionsRules {
                 .orElse(false);
     }
 
-    @PermissionRule(value = "PF_QUERY_ATTACHMENT_DOWNLOAD", description = "Project Finance users can download any Attachment")
-    public boolean projectFinanceUsersCanDownloadAnyAttachment(AttachmentResource attachment, UserResource user) {
-        return isProjectFinanceUser(user);
-    }
-
-    @PermissionRule(value = "PF_QUERY_ATTACHMENT_DOWNLOAD", description = "Finance Contact users can only download an Attachment they are related to.")
-    public boolean financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(AttachmentResource attachmentResource, UserResource user) {
+    private boolean financeContactUserIsAllowedToFetchAttachment(AttachmentResource attachmentResource, UserResource user) {
         return attachmentMapper.mapToDomain(attachmentResource).wasUploadedBy(user.getId())
                 || userCanAccessQueryLinkedToTheAttachment(user, attachmentResource);
     }
 
-    @PermissionRule(value = "PF_QUERY_ATTACHMENT_DELETE", description = "Project Finance users can download any Attachment")
+    @PermissionRule(value = "PF_ATTACHMENT_DELETE", description = "Project Finance users can download any Attachment")
     public boolean onlyTheUploaderOfAnAttachmentCanDeleteItIfStillOrphan(AttachmentResource attachment, UserResource user) {
         return attachmentMapper.mapToDomain(attachment).wasUploadedBy(user.getId()) && attachmentIsStillOrphan(attachment);
     }
