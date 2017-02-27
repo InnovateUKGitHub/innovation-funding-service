@@ -4,10 +4,12 @@ import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.application.service.ApplicationService;
 import org.innovateuk.ifs.application.viewmodel.ApplicationTeamAddOrganisationViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * TODO
  */
+@Component
 public class ApplicationTeamAddOrganisationModelPopulator {
 
     @Autowired
