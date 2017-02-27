@@ -46,10 +46,10 @@ public class ApplicationAssessmentSummaryServiceImpl extends BaseTransactionalSe
     private CompetitionParticipantRepository competitionParticipantRepository;
 
     @Autowired
-    ApplicationAssessorMapper applicationAssessorMapper;
+    private ApplicationAssessorMapper applicationAssessorMapper;
 
     @Autowired
-    ApplicationAssessorPageMapper applicationAssessorPageMapper;
+    private ApplicationAssessorPageMapper applicationAssessorPageMapper;
 
     @Override
     public ServiceResult<ApplicationAssessorPageResource> getAvailableAssessors(Long applicationId, int pageIndex, int pageSize, Long filterInnovationArea) {
