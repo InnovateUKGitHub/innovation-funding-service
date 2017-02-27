@@ -253,7 +253,16 @@ public class ProjectFinanceChecksControllerTest extends BaseControllerMockMVCTes
         when(projectFinanceService.getEligibility(project.getId(), industrialOrganisation.getId())).thenReturn(eligibility);
     }
 
-        @Override
+    @Test
+    public void testEligibiltiyChanges() throws Exception {
+        when(projectService.getLeadOrganisation(project.getId())).thenReturn(industrialOrganisation);
+        MvcResult result = mockMvc.perform(get("/project/" + project.getId() +" /partner-organisation/" + industrialOrganisation.getId() + "/finance-checks/eligibility/changes")).
+                andExpect(status().isOk()).
+                andExpect(view().name("project/financecheck/eligibility-changes")).
+                andReturn();
+    }
+
+    @Override
     protected ProjectFinanceChecksController supplyControllerUnderTest() {
         return new ProjectFinanceChecksController();
     }
