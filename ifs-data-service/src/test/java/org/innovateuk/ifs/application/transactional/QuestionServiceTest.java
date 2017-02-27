@@ -15,12 +15,14 @@ import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.junit.Test;
 import org.mockito.InOrder;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -42,6 +44,8 @@ import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompe
 import static org.innovateuk.ifs.competition.builder.CompetitionResourceBuilder.newCompetitionResource;
 import static org.innovateuk.ifs.form.builder.FormInputBuilder.newFormInput;
 import static org.innovateuk.ifs.user.builder.ProcessRoleBuilder.newProcessRole;
+import static org.innovateuk.ifs.user.builder.UserBuilder.newUser;
+import static org.innovateuk.ifs.user.builder.UserResourceBuilder.newUserResource;
 import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.same;
@@ -55,6 +59,8 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
     @Mock
     private SectionService sectionService;
 
+    @Mock
+    private UserService userService;
 
     @Test
     public void getNextQuestionTest() throws Exception {
@@ -211,12 +217,13 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
         QuestionApplicationCompositeId questionApplicationCompositeId = new QuestionApplicationCompositeId(questionId, applicationId);
 
         when(questionRepositoryMock.findOne(questionId)).thenReturn(newQuestion().build());
-        when(processRoleRepositoryMock.findOne(assigneeId)).thenReturn(newProcessRole().withApplication(newApplication().withId(applicationId).build()).build());
+        when(processRoleRepositoryMock.findOne(assigneeId)).thenReturn(newProcessRole().withUser(newUser().withId(assigneeId).build()).withApplication(newApplication().withId(applicationId).build()).build());
         when(processRoleRepositoryMock.findOne(assignedById)).thenReturn(newProcessRole().build());
         Competition competitionMock = mock(Competition.class);
         when(competitionMock.getCompetitionStatus()).thenReturn(CompetitionStatus.OPEN);
         Application application = newApplication().withCompetition(competitionMock).build();
         when(applicationRepositoryMock.findOne(applicationId)).thenReturn(application);
+        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(assigneeId).build(1))));
 
         ServiceResult<Void> result = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 
@@ -224,7 +231,9 @@ public class QuestionServiceTest extends BaseUnitTestMocksTest {
 
         Long differentApplicationId = 1233L;
         when(processRoleRepositoryMock.findOne(assigneeId))
-                .thenReturn(newProcessRole().withApplication(newApplication().withId(differentApplicationId).build()).build());
+                .thenReturn(newProcessRole().withUser(newUser().withId(2L).build()).withApplication(newApplication().withId(differentApplicationId).build()).build());
+
+        when(userService.findAssignableUsers(applicationId)).thenReturn(serviceSuccess(new HashSet(newUserResource().withId(1L).build(1))));
 
         ServiceResult<Void> resultTwo = questionService.assign(questionApplicationCompositeId, assigneeId, assignedById);
 

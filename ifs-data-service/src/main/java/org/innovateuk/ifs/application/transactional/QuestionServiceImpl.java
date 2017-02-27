@@ -12,16 +12,16 @@ import org.innovateuk.ifs.application.repository.QuestionStatusRepository;
 import org.innovateuk.ifs.application.resource.*;
 import org.innovateuk.ifs.assessment.domain.Assessment;
 import org.innovateuk.ifs.assessment.repository.AssessmentRepository;
-import org.innovateuk.ifs.commons.error.Error;
 import org.innovateuk.ifs.commons.rest.ValidationMessages;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.form.domain.FormInput;
 import org.innovateuk.ifs.form.resource.FormInputType;
 import org.innovateuk.ifs.transactional.BaseTransactionalService;
 import org.innovateuk.ifs.user.domain.ProcessRole;
+import org.innovateuk.ifs.user.resource.UserResource;
+import org.innovateuk.ifs.user.transactional.UserService;
 import org.innovateuk.ifs.validator.util.ValidationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -55,6 +55,9 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
 
     @Autowired
     private SectionService sectionService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ApplicationService applicationService;
@@ -96,8 +99,8 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
         return find(getQuestionSupplier(ids.questionId), openApplication(ids.applicationId), processRole(assigneeId), processRole(assignedById))
                 .andOnSuccess((question, application, assignee, assignedBy) -> {
 
-            if(!assignee.getApplicationId().equals(ids.applicationId)) {
-                return serviceFailure(new Error(ASSIGNEE_SHOULD_BE_APPLICANT, HttpStatus.BAD_REQUEST));
+            if(!isAssignableUser(ids.applicationId, assignee.getUser().getId())) {
+                return serviceFailure(ASSIGNEE_SHOULD_BE_APPLICANT);
             }
 
             QuestionStatus questionStatus = getQuestionStatusByApplicationIdAndAssigneeId(question, ids.applicationId, assigneeId);
@@ -110,6 +113,12 @@ public class QuestionServiceImpl extends BaseTransactionalService implements Que
             questionStatusRepository.save(questionStatus);
             return serviceSuccess();
         });
+    }
+
+    private Boolean isAssignableUser(Long applicationId, Long userId) {
+        return userService.findAssignableUsers(applicationId).getSuccessObjectOrThrowException().stream()
+                .map(UserResource::getId)
+                .anyMatch(allowedUserId -> allowedUserId.equals(userId));
     }
 
     @Override
