@@ -37,7 +37,7 @@ Competition link should navigate to the applications
     Then The user should see the text in the page    Applications for assessment
 
 Calculation of the applications for assessment should be correct
-    Then the total calculation in dashboard should be correct    Applications for assessment    //div/form/ul/li
+    Then the total calculation in dashboard should be correct    Applications for assessment    //div/form/div/ul/li
 
 Details of the competition are visible
     [Documentation]    INFUND-3723
@@ -127,6 +127,6 @@ The order of the applications should be correct according to the status
     element should contain    css=li:nth-child(1) .msg-deadline-waiting    Pending
     element should contain    css=li:nth-child(2) .msg-deadline-waiting    Pending
     element should contain    css=li:nth-child(3) .msg-deadline-waiting    Pending
-    element should contain    css=.progress-list  li:nth-child(4) .msg-deadline-waiting    Accepted
-    element should contain    css=.progress-list  li:nth-child(5) .msg-deadline-waiting    Accepted
-    element should contain    css=.progress-list  li:nth-child(6) .msg-deadline-waiting    Accepted
+    element should contain    css=.progress-list li:nth-child(4) .msg-progress    Accepted
+    element should contain    css=.progress-list li:nth-child(5) .msg-progress    Accepted
+    element should contain    css=.progress-list li:nth-child(6) .msg-progress    Accepted

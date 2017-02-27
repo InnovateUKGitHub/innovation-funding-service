@@ -222,7 +222,7 @@ User Saves the Assessment as Recommended
     Then The user should not see the text in the page    Please enter your feedback
     And The user should see the text in the page    Assessed
     And the user should see the element    css=li:nth-child(6) .positive
-    And the user should see the element    css=li:nth-child(6) .assessment-submit-checkbox
+    And the user should see the element    css=li:nth-child(6) .selection-button-checkbox
     And the application should have the correct status    css=.progress-list li:nth-child(6)    Assessed
 
 User Saves the Assessment as Not Recommended
@@ -242,7 +242,7 @@ User Saves the Assessment as Not Recommended
     And the user enters text to a text field    id=feedback    Negative feedback
     And The user clicks the button/link    jQuery=.button:contains(Save assessment)
     And The user should see the element    css=li:nth-child(5) .negative
-    And The user should see the element    css=li:nth-child(5) .assessment-submit-checkbox
+    And The user should see the element    css=li:nth-child(5) .selection-button-checkbox
     And the application should have the correct status    css=.progress-list li:nth-child(5)    Assessed
     And the application should have the correct status    css=.progress-list li:nth-child(6)    Assessed
 
@@ -260,13 +260,13 @@ Submit Assessments
     ...    INFUND-6358
     [Tags]    HappyPath
     Given the user should see the element    jQuery=.in-progress li:nth-child(6):contains("Intelligent Building")
-    When the user clicks the button/link    css=.in-progress li:nth-child(6) .assessment-submit-checkbox
+    When the user clicks the button/link    css=.in-progress li:nth-child(6) .selection-button-checkbox
     And the user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Cancel")
     And The user clicks the button/link    jQuery=button:contains("Submit assessments")
     And The user clicks the button/link    jQuery=button:contains("Yes I want to submit the assessments")
-    Then the application should have the correct status    css=div.submitted .boxed-list    Submitted
-    And the user should see the element    css=li:nth-child(5) .assessment-submit-checkbox    #This keyword verifies that only one applications has been submitted
+    Then the application should have the correct status    css=div.submitted    Submitted assessment
+    And the user should see the element    css=li:nth-child(5) .selection-button-checkbox    #This keyword verifies that only one applications has been submitted
     And The user should see the text in the page    Intelligent Building
     And The user should see the text in the page    98
     And The user should not see the element    link=Intelligent Building
@@ -410,6 +410,6 @@ the application should have the correct status
 
 the progress of the applications should be correct
     [Arguments]    ${EXPECTED_TOTAL_ACCEPTED}
-    element should contain    css=.greentext span:nth-child(1)    1
-    ${TOTAL_ACCEPTED}=    Get text    css=.greentext span+ span    #gets the total number
+    element should contain    css=.action-required .accepted-applications    3
+    ${TOTAL_ACCEPTED}=    Get text    css=.action-required .accepted-applications    #gets the total number
     Should Be Equal As Integers    ${TOTAL_ACCEPTED}    ${EXPECTED_TOTAL_ACCEPTED}
