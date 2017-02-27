@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
 import org.innovateuk.ifs.assessment.transactional.AssessorFormInputResponseService;
@@ -85,6 +86,11 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
 
         @Override
         public ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response) {
+            return null;
+        }
+
+        @Override
+        public ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId) {
             return null;
         }
     }

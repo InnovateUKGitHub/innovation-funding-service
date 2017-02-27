@@ -53,61 +53,47 @@
                 <div class="grid-row">
                     <div class="column-half">
                         <h3 class="heading-small">Project title</h3>
-                        <p>Machine learning in robots</p>
+                        <p th:text="${currentApplication.name}">Machine learning in robots</p>
 
                         <h3 class="heading-small">Lead organisation</h3>
-                        <p>Aptrans Ltd</p>
+                        <p th:text="${leadOrganisation.name}">Aptrans Ltd</p>
 
                         <h3 class="heading-small">Partners</h3>
                         <ul class="list list-bullet">
-                            <li>Biotech Corp</li>
-                            <li>University of Cardiff</li>
+                            <li th:each="organisation : ${applicationOrganisations}" th:unless="${organisation.equals(leadOrganisation)}" th:text="${organisation.name}">Biotech Corp</li>
                         </ul>
                     </div>
 
                     <div class="column-half">
                         <h3 class="heading-small">Project timescales</h3>
-                        <p>Project start date: <br />4 November 2016</p>
-                        <p>Duration: <br />51 months</p>
+                        <p>Project start date: <br /><span th:text="${#temporals.format(currentApplication.startDate, 'd MMMM yyyy')}" th:remove="tag">4 November 2016</span></p>
+                        <p>Duration: <br /><span th:text="${currentApplication.durationInMonths}" th:remove="tag">51</span> months</p>
 
                         <h3 class="heading-small extra-margin">Total project cost</h3>
-                        <p>£203,567</p>
+                        <p th:text="'£'+${#numbers.formatDecimal(totalFundingSought, 0, 'COMMA', 0, 'POINT')}">£203,567</p>
                     </div>
                 </div>
             </div>
 
-            <ul class="list-overview extra-margin">
-                <li class="section-status">
-                    <div class="grid-row">
-                        <div class="column-two-thirds">
-                            <h3 class="heading-small">Project summary</h3>
-                        </div>
-                        <div class="column-third">
-                            <p class="form-hint no-margin">No feedback provided</p>
-                        </div>
-                    </div>
-                </li>
-                <li class="section-status">
-                    <div class="grid-row">
-                        <div class="column-two-thirds">
-                            <h3 class="heading-small">Public description</h3>
-                        </div>
-                        <div class="column-third">
-                            <p class="form-hint no-margin">No feedback provided</p>
-                        </div>
-                    </div>
-                </li>
-                <li class="section-status">
-                    <div class="grid-row">
-                        <div class="column-two-thirds">
-                            <h3 class="heading-small">Scope</h3>
-                        </div>
-                        <div class="column-third">
-                            In scope? 4/5 Yes
-                        </div>
-                    </div>
-                </li>
-            </ul>
+            <th:block th:each="section : ${sections.values()}" th:if="${section.name.equals('Project details')}">
+                <ul class="list-overview extra-margin">
+                    <th:block th:each="question : ${sectionQuestions.get(section.id)}" th:unless="${question.shortName.equals('Application details')}">
+                        <li class="section-status">
+                            <div class="grid-row">
+                                <div class="column-two-thirds">
+                                    <h3 th:text="${question.shortName}" class="heading-small">Project summary</h3>
+                                </div>
+                                <div class="column-third">
+                                    <p th:unless=${question.shortName.equals('Scope')} class="form-hint no-margin">No feedback provided</p>
+                                    <p th:if=${question.shortName.equals('Scope')}>
+                                        In scope? <span th:text="${scores.inScope}">4</span>/<span th:text="${scores.totalScope}">5</span> Yes
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    </th:block>
+                </ul>
+            </th:block>
 
             <!--/* TODO INFUND-8168 & INFUND-8169
             <h2 class="heading-medium no-margin-bottom">Application questions</h2>
