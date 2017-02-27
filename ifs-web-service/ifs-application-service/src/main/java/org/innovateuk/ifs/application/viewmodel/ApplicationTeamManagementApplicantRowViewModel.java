@@ -8,48 +8,38 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class ApplicationTeamManagementApplicantRowViewModel {
 
+    private long id;
     private String name;
     private String email;
     private boolean lead;
     private boolean pending;
 
-    public ApplicationTeamManagementApplicantRowViewModel(String name, String email, boolean lead, boolean pending) {
+    public ApplicationTeamManagementApplicantRowViewModel(long id, String name, String email, boolean lead, boolean pending) {
+        this.id = id;
         this.name = name;
         this.email = email;
         this.lead = lead;
         this.pending = pending;
+    }
+
+    public long getId() {
+        return id;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getEmail() {
         return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public boolean isLead() {
         return lead;
     }
 
-    public void setLead(boolean lead) {
-        this.lead = lead;
-    }
-
     public boolean isPending() {
         return pending;
-    }
-
-    public void setPending(boolean pending) {
-        this.pending = pending;
     }
 
     @Override
@@ -61,6 +51,7 @@ public class ApplicationTeamManagementApplicantRowViewModel {
         ApplicationTeamManagementApplicantRowViewModel that = (ApplicationTeamManagementApplicantRowViewModel) o;
 
         return new EqualsBuilder()
+                .append(id, that.id)
                 .append(lead, that.lead)
                 .append(pending, that.pending)
                 .append(name, that.name)
@@ -71,6 +62,7 @@ public class ApplicationTeamManagementApplicantRowViewModel {
     @Override
     public int hashCode() {
         return new HashCodeBuilder(17, 37)
+                .append(id)
                 .append(name)
                 .append(email)
                 .append(lead)

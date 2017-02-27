@@ -21,8 +21,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static java.util.stream.Collectors.toList;
 
@@ -113,12 +111,12 @@ public class ApplicationTeamManagementModelPopulator {
 
     private ApplicationTeamManagementApplicantRowViewModel getApplicantViewModel(ApplicationInviteResource applicationInviteResource) {
         boolean pending = applicationInviteResource.getStatus() != InviteStatus.OPENED;
-        return new ApplicationTeamManagementApplicantRowViewModel(getApplicantName(applicationInviteResource),
+        return new ApplicationTeamManagementApplicantRowViewModel(applicationInviteResource.getUser(), getApplicantName(applicationInviteResource),
                 applicationInviteResource.getEmail(), false, pending);
     }
 
     private ApplicationTeamManagementApplicantRowViewModel getLeadApplicantViewModel(UserResource userResource) {
-        return new ApplicationTeamManagementApplicantRowViewModel(userResource.getName(), userResource.getEmail(), true, false);
+        return new ApplicationTeamManagementApplicantRowViewModel(userResource.getId(), userResource.getName(), userResource.getEmail(), true, false);
     }
 
     private String getOrganisationName(InviteOrganisationResource inviteOrganisationResource) {
