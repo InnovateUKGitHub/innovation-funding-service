@@ -60,8 +60,8 @@ Calculation of the Upcoming competitions and Invitations to assess should be cor
     ...
     ...    INFUND-6455
     [Tags]    HappyPath
-    Then the total calculation in dashboard should be correct    Upcoming competitions to assess    //*[@class="upcoming-to-assess"]/ul/li
-    And the total calculation in dashboard should be correct    Invitations to assess    //*[@class="invite-to-assess"]/ul/li
+    Then the total calculation in dashboard should be correct    Upcoming competitions to assess    //*[@class="upcoming-to-assess"]/div/ul/li
+    And the total calculation in dashboard should be correct    Invitations to assess    //*[@class="invite-to-assess"]/div/ul/li
 
 Existing assessor: Reject invitation from Dashboard
     [Documentation]    INFUND-4631
@@ -162,7 +162,7 @@ Number of days remaining until assessment submission
 Calculation of the Competitions for assessment should be correct
     [Documentation]    INFUND-3716
     [Tags]    MySQL    HappyPath
-    Then the total calculation in dashboard should be correct    Competitions for assessment    //div[3]/ul/li
+    Then the total calculation in dashboard should be correct    Competitions for assessment    //div[3]/div/ul/li
 
 Registered user should not allowed to accept other assessor invite
     [Documentation]    INFUND-4895
