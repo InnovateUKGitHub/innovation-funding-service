@@ -59,7 +59,7 @@
     <th:block th:if="${summaryModel.isReadOnly()}">
         <h2 class="heading-medium">Detailed finances</h2>
         <p>Changes made to your finances will be visible here. Please review this section carefully as you are responsible for the accuracy of any approved finances.</p>
-        <a th:href="@{/project/{projectId}/finance-check/organisation/{organisationId}/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
+        <a th:href="@{/project/{projectId}/partner-organisation/{organisationId}/finance-checks/eligibility/changes(projectId=${summaryModel.projectId},organisationId=${summaryModel.organisationId})}">View changes to finances</a>
     </th:block>
 
     <th:block th:unless="${summaryModel.isReadOnly()}">

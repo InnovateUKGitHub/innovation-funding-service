@@ -145,38 +145,4 @@ public class CapitalUsage implements FinanceRowItem {
     public void setExisting(String existing) {
         this.existing = existing;
     }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null || getClass() != o.getClass()) return false;
-
-        CapitalUsage that = (CapitalUsage) o;
-
-        return new EqualsBuilder()
-                .append(id, that.id)
-                .append(name, that.name)
-                .append(deprecation, that.deprecation)
-                .append(description, that.description)
-                .append(existing, that.existing)
-                .append(npv, that.npv)
-                .append(residualValue, that.residualValue)
-                .append(utilisation, that.utilisation)
-                .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-        return new HashCodeBuilder(17, 37)
-                .append(id)
-                .append(name)
-                .append(deprecation)
-                .append(description)
-                .append(existing)
-                .append(npv)
-                .append(residualValue)
-                .append(utilisation)
-                .toHashCode();
-    }
 }

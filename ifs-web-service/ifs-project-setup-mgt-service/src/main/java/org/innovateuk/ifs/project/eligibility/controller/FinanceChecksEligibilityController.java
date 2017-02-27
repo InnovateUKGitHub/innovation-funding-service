@@ -2,7 +2,7 @@ package org.innovateuk.ifs.project.eligibility.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.innovateuk.ifs.application.finance.service.FinanceService;
+import org.innovateuk.ifs.application.finance.view.DefaultProjectFinanceModelManager;
 import org.innovateuk.ifs.application.finance.view.FinanceHandler;
 import org.innovateuk.ifs.application.finance.viewmodel.ProjectFinanceChangesViewModel;
 import org.innovateuk.ifs.application.form.ApplicationForm;
@@ -21,9 +21,6 @@ import org.innovateuk.ifs.commons.security.UserAuthenticationService;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.resource.CompetitionResource;
 import org.innovateuk.ifs.controller.ValidationHandler;
-import org.innovateuk.ifs.finance.resource.ApplicationFinanceResource;
-import org.innovateuk.ifs.finance.resource.ProjectFinanceResource;
-import org.innovateuk.ifs.finance.resource.category.FinanceRowCostCategory;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.finance.resource.cost.FinanceRowType;
 import org.innovateuk.ifs.project.ProjectService;
@@ -50,8 +47,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.math.BigDecimal;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static java.util.stream.Collectors.toList;
@@ -99,9 +96,6 @@ public class FinanceChecksEligibilityController {
 
     @Autowired
     private ProjectFinanceService projectFinanceService;
-
-    @Autowired
-    private FinanceService applicationFinanceService;
 
     @Autowired
     private FinanceHandler financeHandler;
@@ -355,28 +349,8 @@ public class FinanceChecksEligibilityController {
     }
 
     private String doViewEligibilityChanges(ProjectResource project, OrganisationResource organisation, Long userId, Model model) {
-        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = getProjectFinanceChangesViewModel(project, organisation, userId);
+        ProjectFinanceChangesViewModel projectFinanceChangesViewModel = ((DefaultProjectFinanceModelManager)financeHandler.getProjectFinanceModelManager(organisation.getOrganisationTypeName())).getProjectFinanceChangesViewModel(true, project, organisation, userId);
         model.addAttribute("model", projectFinanceChangesViewModel);
         return "project/financecheck/eligibility-changes";
-    }
-
-    private ProjectFinanceChangesViewModel getProjectFinanceChangesViewModel(ProjectResource project, OrganisationResource organisation, Long userId){
-        FinanceCheckEligibilityResource eligibilityOverview = financeCheckService.getFinanceCheckEligibilityDetails(project.getId(), organisation.getId());
-        ProjectFinanceResource projectFinanceResource = projectFinanceService.getProjectFinance(project.getId(), organisation.getId());
-        ApplicationFinanceResource appFinanceResource = applicationFinanceService.getApplicationFinanceDetails(userId, project.getApplication(), organisation.getId());
-        Map<FinanceRowType, BigDecimal> sectionDifferencesMap = buildSectionDifferencesMap(appFinanceResource.getFinanceOrganisationDetails(), projectFinanceResource.getFinanceOrganisationDetails());
-        return new ProjectFinanceChangesViewModel(organisation.getName(), organisation.getId(), project.getName(), project.getApplication(), project.getId(), eligibilityOverview, sectionDifferencesMap, projectFinanceResource.getCostChanges(), appFinanceResource.getTotal(), projectFinanceResource.getTotal());
-    }
-
-    private Map<FinanceRowType, BigDecimal> buildSectionDifferencesMap(Map<FinanceRowType, FinanceRowCostCategory> organisationApplicationFinances,
-                                                                       Map<FinanceRowType, FinanceRowCostCategory> organisationProjectFinances){
-        Map<FinanceRowType, BigDecimal> sectionDifferencesMap = new LinkedHashMap<>();
-
-        for(FinanceRowType rowType : organisationProjectFinances.keySet()){
-            FinanceRowCostCategory financeRowProjectCostCategory = organisationProjectFinances.get(rowType);
-            FinanceRowCostCategory financeRowAppCostCategory = organisationApplicationFinances.get(rowType);
-            sectionDifferencesMap.put(rowType, financeRowProjectCostCategory.getTotal().subtract(financeRowAppCostCategory.getTotal()));
-        }
-        return sectionDifferencesMap;
     }
 }

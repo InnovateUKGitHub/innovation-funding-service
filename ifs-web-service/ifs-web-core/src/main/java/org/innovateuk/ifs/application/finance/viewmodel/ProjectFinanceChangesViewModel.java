@@ -15,6 +15,7 @@ import java.util.Map;
  * A view model for displaying project finance rows and changes made by internal project finance team
  */
 public class ProjectFinanceChangesViewModel {
+    private boolean isInternal;
     private String organisationName;
     private String projectName;
     private Long applicationId;
@@ -26,7 +27,8 @@ public class ProjectFinanceChangesViewModel {
     private BigDecimal totalApplicationCosts;
     private BigDecimal totalProjectCostsAfterChanges;
 
-    public ProjectFinanceChangesViewModel(String organisationName, Long organisationId, String projectName, Long applicationId, Long projectId, FinanceCheckEligibilityResource financeCheckEligibilityResource, Map<FinanceRowType, BigDecimal> sectionDifferences, Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes, BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges) {
+    public ProjectFinanceChangesViewModel(boolean isInternal, String organisationName, Long organisationId, String projectName, Long applicationId, Long projectId, FinanceCheckEligibilityResource financeCheckEligibilityResource, Map<FinanceRowType, BigDecimal> sectionDifferences, Map<FinanceRowType, List<ChangedFinanceRowPair<FinanceRowItem, FinanceRowItem>>> changes, BigDecimal totalApplicationCosts, BigDecimal totalProjectCostsAfterChanges) {
+        this.isInternal = isInternal;
         this.organisationName = organisationName;
         this.projectName = projectName;
         this.applicationId = applicationId;
@@ -125,5 +127,13 @@ public class ProjectFinanceChangesViewModel {
         else {
             return totalProjectCostsAfterChanges.subtract(totalApplicationCosts);
         }
+    }
+
+    public boolean isInternal() {
+        return isInternal;
+    }
+
+    public void setInternal(boolean internal) {
+        isInternal = internal;
     }
 }

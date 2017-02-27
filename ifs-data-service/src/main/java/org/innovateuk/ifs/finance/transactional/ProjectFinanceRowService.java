@@ -63,6 +63,4 @@ public interface ProjectFinanceRowService {
 
     @NotSecured(value = "This is not getting data from the database, just getting a FinanceRowHandler for project", mustBeSecuredByOtherServices = false)
     FinanceRowHandler getCostHandler(FinanceRowItem costItemId);
-
-
 }
