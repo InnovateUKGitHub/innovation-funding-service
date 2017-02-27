@@ -39,13 +39,14 @@ Overhead costs
     # Check for No overheads costs option
     When the user clicks the button/link    jQuery=button:contains("Overhead costs")
     And The user clicks the button/link     jQuery=label:contains("No overhead costs")
-    then the user should see the element     jquery=h3:contains("No overhead costs")
+    then the user should see the element     jQuery=h3:contains("No overhead costs")
     # Check for Calculate overheads option
     When the user clicks the button/link     jQuery=label:contains("Calculate overheads")
     then the user should see the element     jQuery=h3:contains("Calculate overheads")
-    and the user should see the element     jQuery=label[class="button-secondary extra-margin"]
-    and the user moves focus to the element     jQuery=label[for="overheadfile"]
+    and the user should see the element     css=.button-secondary
+    and the user moves focus to the element    id="overheadfile"
     and the user uploads the file       id=overheadfile   ${excel_file}
+    and the user enters text to a text field     id=section-total-10-calculate-formatted    4000
     # Check for 20% Labour costs option
     When the user clicks the button/link    jQuery=label:contains("20% of labour costs")
     Then admin costs total should be correct    id=section-total-10-default    £ 9,600
