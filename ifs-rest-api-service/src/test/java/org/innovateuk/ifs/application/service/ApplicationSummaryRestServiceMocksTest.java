@@ -184,4 +184,16 @@ public class ApplicationSummaryRestServiceMocksTest extends BaseRestServiceUnitT
         assertTrue(result.isSuccess());
         assertEquals(responseBody, result.getSuccessObject());
     }
+
+    @Test
+    public void testgetWithFundingDecisionApplications() {
+        ApplicationSummaryPageResource responseBody = new ApplicationSummaryPageResource();
+        setupGetWithRestResultExpectations(APPLICATION_SUMMARY_REST_URL + "/findByCompetition/123/with-funding-decision?page=6&size=20&sort=id", ApplicationSummaryPageResource.class, responseBody);
+
+        RestResult<ApplicationSummaryPageResource> result = service.getWithFundingDecisionApplications(Long.valueOf(123L), "id", 6, 20);
+
+        assertTrue(result.isSuccess());
+        Assert.assertEquals(responseBody, result.getSuccessObject());
+    }
+
 }

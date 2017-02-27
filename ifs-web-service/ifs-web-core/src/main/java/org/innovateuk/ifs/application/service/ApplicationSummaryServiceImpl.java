@@ -40,7 +40,12 @@ public class ApplicationSummaryServiceImpl implements ApplicationSummaryService 
 			Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
 		return applicationSummaryRestService.getFeedbackRequiredApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
 	}
-	
+
+	@Override
+	public ApplicationSummaryPageResource getWithFundingDecisionApplications(Long competitionId, String sortField, Integer pageNumber, Integer pageSize, String filter) {
+		return applicationSummaryRestService.getWithFundingDecisionApplications(competitionId, sortField, pageNumber, pageSize, filter).getSuccessObjectOrThrowException();
+	}
+
 	@Override
 	public Long getApplicationsRequiringFeedbackCountByCompetitionId(Long competitionId) {
 		ApplicationSummaryPageResource page = applicationSummaryRestService.getFeedbackRequiredApplications(competitionId, null, 0, 1, null).getSuccessObjectOrThrowException();
