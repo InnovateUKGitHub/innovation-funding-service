@@ -85,7 +85,7 @@ public class ApplicationSummaryRestServiceImpl extends BaseRestService implement
 		if (filter != null) {
 			params.put("filter", singletonList(filter));
 		}
-		return UriComponentsBuilder.fromPath(url).queryParams(params).build().toUriString();
+		return UriComponentsBuilder.fromPath(url).queryParams(params).toUriString();
 	}
 
 }

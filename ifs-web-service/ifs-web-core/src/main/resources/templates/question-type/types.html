@@ -61,15 +61,15 @@
     <!-- ===========================Form: Fileupload =========================== -->
     <div th:fragment="fileupload" class="upload-section" th:classappend="${#fields.hasErrors('formInput[__${formInput.getId()}__]')} ? error : ''"
          th:with="currentUser=${#authentication.getDetails()},validationId='formInput['+${question.getId()}+']',
-         noFileUploaded=${(#strings.isEmpty(response?.getFilename())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null)))},
-         downloadURL='/application/' + ${currentApplication.id} + '/form/question/' + ${question.id} + '/forminput/' + ${formInput.id} + '/download',
+         noFileUploaded=${noFileUploaded != false and ((#strings.isEmpty(response?.getFilename())) and (question.isMarkAsCompletedEnabled() and not markedAsComplete?.contains(question.id) and (questionAssignee?.assigneeUserId == currentUser?.getId() or (questionAssignee?.getAssignee() == null))))},
+         downloadURL=${downloadURL != null ? downloadURL : '/application/' + currentApplication.id + '/form/question/' + question.id + '/forminput/' + formInput.id + '/download'},
          compManagementDownloadURL=${currentApplication.id} + '/forminput/' + ${formInput.id} + '/download',
-         filename=${response?.getFilename()},
+         filename=${filename != null ? filename : response?.getFilename()},
          removeName=${removeName != null}? ${removeName} : 'remove_uploaded_file',
          readonly=${readonly} or
                 ${question.isMarkAsCompletedEnabled() and markedAsComplete?.contains(question.id)} or
                 ${(currentUser.getId() != questionAssignee?.assigneeUserId and  questionAssignee?.assignee!=null) or
-		 		(questionAssignee?.assignee==null and !userIsLeadApplicant)}">
+		 		(questionAssignee?.assignee==null and !userIsLeadApplicant and !subFinanceSection)}">
         <h3 class="heading-small no-margin" th:text="${formInput.getDescription()}">Project management appendix</h3>
 
         <th:block th:unless="${readonly}" th:insert="question-type/form-elements :: form-guidance (guidable=${formInput})" />

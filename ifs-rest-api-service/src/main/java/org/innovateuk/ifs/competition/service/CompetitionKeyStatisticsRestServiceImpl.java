@@ -38,4 +38,9 @@ public class CompetitionKeyStatisticsRestServiceImpl extends BaseRestService imp
         return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL,competitionId,"inAssessment"), CompetitionInAssessmentKeyStatisticsResource.class);
 
     }
+
+    @Override
+    public RestResult<CompetitionFundedKeyStatisticsResource> getFundedKeyStatisticsByCompetition(long competitionId) {
+        return getWithRestResult(format("%s/%s/%s",competitionKeyStatisticsRestURL,competitionId,"funded"), CompetitionFundedKeyStatisticsResource.class);
+    }
 }

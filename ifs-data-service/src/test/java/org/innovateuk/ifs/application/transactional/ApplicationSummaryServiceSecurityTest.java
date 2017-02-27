@@ -10,6 +10,7 @@ import static java.util.stream.Collectors.toList;
 import static org.junit.Assert.fail;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 import org.springframework.security.access.AccessDeniedException;
@@ -228,13 +229,13 @@ public class ApplicationSummaryServiceSecurityTest extends BaseServiceSecurityTe
 
 		@Override
 		public ServiceResult<ApplicationSummaryPageResource> getApplicationSummariesByCompetitionId(Long competitionId,
-				String sortBy, int pageIndex, int pageSize, String filter) {
+				String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
 			return null;
 		}
 
 		@Override
 		public ServiceResult<ApplicationSummaryPageResource> getSubmittedApplicationSummariesByCompetitionId(
-				Long competitionId, String sortBy, int pageIndex, int pageSize, String filter) {
+				Long competitionId, String sortBy, int pageIndex, int pageSize, Optional<String> filter) {
 			return null;
 		}
 

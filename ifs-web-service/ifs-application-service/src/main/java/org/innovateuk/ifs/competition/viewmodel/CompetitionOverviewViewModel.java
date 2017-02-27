@@ -15,6 +15,7 @@ public class CompetitionOverviewViewModel {
     private LocalDateTime competitionCloseDate;
     private Long competitionId;
     private String shortDescription;
+    private String nonIfsUrl;
     private List<SectionViewModel> allContentSections;
     private AbstractPublicSectionContentViewModel currentSection;
 
@@ -72,5 +73,13 @@ public class CompetitionOverviewViewModel {
 
     public AbstractPublicSectionContentViewModel getCurrentSection() {
         return currentSection;
+    }
+
+    public String getNonIfsUrl() {
+        return nonIfsUrl;
+    }
+
+    public void setNonIfsUrl(String nonIfsUrl) {
+        this.nonIfsUrl = nonIfsUrl;
     }
 }

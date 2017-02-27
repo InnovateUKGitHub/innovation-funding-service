@@ -11,8 +11,6 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.innovateuk.ifs.user.resource.UserRoleType.FINANCE_CONTACT;
-
 /**
  * organisation defines database relations and a model to use client side and server side.
  */
@@ -47,7 +45,8 @@ public class Organisation {
     @OneToMany(mappedBy="organisation")
     private List<InviteOrganisation> inviteOrganisations = new ArrayList<>();
 
-    public Organisation() {}
+    public Organisation() {
+    }
 
     public Organisation(Long id, String name) {
         this.id = id;
