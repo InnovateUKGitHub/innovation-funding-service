@@ -18,6 +18,8 @@ public class MilestoneRowForm {
     private Integer month;
     @Range(min = 2016, max = 9000)
     private Integer year;
+    private MilestoneTime time;
+
     private MilestoneType milestoneType;
     private String dayOfWeek;
     private boolean editable;
@@ -35,6 +37,7 @@ public class MilestoneRowForm {
             this.setDay(dateTime.getDayOfMonth());
             this.setMonth(dateTime.getMonth().getValue());
             this.setYear(dateTime.getYear());
+            this.setTime(MilestoneTime.fromLocalDateTime(dateTime));
             this.setDate(dateTime);
             this.editable = LocalDateTime.now().isBefore(dateTime);
         } else {
@@ -102,6 +105,14 @@ public class MilestoneRowForm {
         this.date = date;
     }
 
+    public MilestoneTime getTime() {
+        return time;
+    }
+
+    public void setTime(MilestoneTime time) {
+        this.time = time;
+    }
+
     private String getNameOfDay() {
         String dayName =  getMilestoneDate(day, month, year);
         if(dayName == null) {
@@ -132,7 +143,11 @@ public class MilestoneRowForm {
 
     public LocalDateTime getMilestoneAsDateTime(){
         if (day != null && month != null && year != null){
-            return LocalDateTime.of(year, month, day, 0, 0);
+            if ( time != null) {
+                return LocalDateTime.of(year, month, day, time.getHour(), 0);
+            } else {
+                return LocalDateTime.of(year, month, day, 0, 0);
+            }
         } else {
             return null;
         }
