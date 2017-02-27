@@ -16,6 +16,8 @@ Documentation     INFUND-6661 As a Competitions team member I want to be able to
 ...               INFUND-7083 As a Competitions team member I want to be able to update PAF number, budget and activity codes throughout the life of the competition
 ...
 ...               INFUND-6695 As a Competitions team member I want to be able to update the number of Assessors required per applicationthroughout the life of the competition
+...
+...               INFUND-6694 As a Competitions team member I want to be able to update Milestones throughout the life of the competition
 Suite Setup       Custom suite setup
 Suite Teardown    the user moves the competition back again
 Force Tags        CompAdmin    MySQL
@@ -112,6 +114,20 @@ Funding Information is editable (Open)
     And The user clicks the button/link    jQuery=.button:contains("Done")
     Then The user should see the element    jQuery=.button:contains("Edit")
     And The user should see the text in the page    Funders Edit test
+    [Teardown]    the user clicks the button/link    link=Competition setup
+
+Milestones are editable (Open)
+    [Documentation]    INFUND-6694
+    [Tags]
+    When the user clicks the button/link    link=Milestones
+    And the user clicks the button/link    jQuery=button:contains(Edit)
+    Then the user should see that the element is disabled    jQuery=tr:nth-child(1) .year input
+    And the user should see that the element is disabled    jQuery=tr:nth-child(2) .year input
+    And the user fills in the milestone data with valid information
+    And the user clicks the button/link    jQuery=button:contains(Done)
+    And the user clicks the button/link    jQuery=.button:contains("Edit")
+    And the user resets the milestone data
+    And the user clicks the button/link    jQuery=button:contains(Done)
     [Teardown]    the user clicks the button/link    link=Competition setup
 
 Application details are not editable (Open)
@@ -267,6 +283,10 @@ Custom suite setup
     ${tomorrow} =    Add time To Date    ${today}    1 day
     Set suite variable    ${tomorrow}
 
+The user moves the open date to the past
+    Connect to Database    @{database}
+    Change the open date of the Competition in the database to one day before    ${open_competition_link_2}
+
 there is a future Notifications date
     [Documentation]    There are no testing data for `milestone`.`type`="NOTIFICATIONS". So i am using MySQL to create a future date
     ...    I am updating Competition=1. Because is the Competition that remains in Open State.
@@ -279,3 +299,73 @@ the user moves the competition back again
     the user navigates to the page    ${server}/management/competition/setup/${READY_TO_OPEN_COMPETITION}
     Run Keyword And Ignore Error    the user clicks the button/link    jQuery=.button:contains("Save")
     the user closes the browser
+
+the user fills in the milestone data with valid information
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    12
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    13
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    1
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    14
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    15
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    16
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2019
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    17
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    1
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2019
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    18
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    19
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    1
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2019
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    20
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    1
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2019
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    21
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    1
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2019
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    22
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    1
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2019
+
+the user resets the milestone data
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].day    09
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].month    09
+    The user enters text to a text field    name=milestoneEntries[SUBMISSION_DATE].year    2067
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].day    10
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].month    09
+    The user enters text to a text field    name=milestoneEntries[ALLOCATE_ASSESSORS].year    2067
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].day    11
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].month    09
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_BRIEFING].year    2067
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].day    12
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_ACCEPTS].year    2068
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].day    29
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].month    1
+    The user enters text to a text field    name=milestoneEntries[ASSESSOR_DEADLINE].year    2068
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].day    20
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].month    02
+    The user enters text to a text field    name=milestoneEntries[LINE_DRAW].year    2068
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].day    20
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].month    3
+    The user enters text to a text field    name=milestoneEntries[ASSESSMENT_PANEL].year    2068
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].day    20
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].month    4
+    The user enters text to a text field    name=milestoneEntries[PANEL_DATE].year    2068
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].day    20
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].month    5
+    The user enters text to a text field    name=milestoneEntries[FUNDERS_PANEL].year    2068
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].day    20
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].month    6
+    The user enters text to a text field    name=milestoneEntries[NOTIFICATIONS].year    2068
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].day    20
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].month    7
+    The user enters text to a text field    name=milestoneEntries[RELEASE_FEEDBACK].year    2068

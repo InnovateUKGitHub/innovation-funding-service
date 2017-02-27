@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.util.Collections.singletonList;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.innovateuk.ifs.category.builder.InnovationAreaBuilder.newInnovationArea;
 import static org.innovateuk.ifs.category.builder.InnovationSectorBuilder.newInnovationSector;
 import static org.innovateuk.ifs.competition.builder.CompetitionBuilder.newCompetition;
@@ -32,11 +33,14 @@ import static org.innovateuk.ifs.publiccontent.builder.PublicContentBuilder.newP
 import static org.innovateuk.ifs.publiccontent.builder.PublicContentResourceBuilder.newPublicContentResource;
 import static org.innovateuk.ifs.publiccontent.transactional.PublicContentItemServiceImpl.MAX_ALLOWED_KEYWORDS;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<PublicContentItemServiceImpl> {
+
+    private static final String NON_IFS_URL = "www.google.co.uk";
 
     @Mock
     private InnovationAreaRepository innovationAreaRepository;
@@ -265,7 +269,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
     private Page<Competition> getCompetitionPage() {
         Page<Competition> expected = mock(Page.class);
 
-        List<Competition> competitions = newCompetition().withId(1L).build(40);
+        List<Competition> competitions = newCompetition().withId(1L).withNonIfs(true).withNonIfsUrl(NON_IFS_URL).build(40);
 
         when(expected.getContent()).thenReturn(competitions);
         when(expected.getTotalElements()).thenReturn(62L);
@@ -283,6 +287,7 @@ public class PublicContentItemServiceImplTest extends BaseServiceUnitTest<Public
         assertEquals(2, result.getSuccessObject().getTotalPages());
 
         assertEquals(40, result.getSuccessObject().getContent().size());
+        assertThat(NON_IFS_URL, equalTo(result.getSuccessObject().getContent().get(0).getNonIfsUrl()));
     }
 
     private void testResultEmpty(ServiceResult<PublicContentItemPageResource> result) {
