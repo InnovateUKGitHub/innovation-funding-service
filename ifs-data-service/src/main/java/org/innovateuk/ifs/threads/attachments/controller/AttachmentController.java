@@ -52,9 +52,7 @@ public abstract class AttachmentController<R> {
     }
 
     @RequestMapping(value = "/download/{attachmentId}", method = GET, produces = "application/json")
-    public
-    @ResponseBody
-    ResponseEntity<Object> downloadFile(@PathVariable("attachmentId") Long attachmentId) throws IOException {
-        return service.download(attachmentId);
+    public @ResponseBody ResponseEntity<Object> downloadFile(@PathVariable("attachmentId") Long attachmentId) throws IOException {
+        return handleFileDownload(() -> service.attachmentFileAndContents(attachmentId));
     }
 }

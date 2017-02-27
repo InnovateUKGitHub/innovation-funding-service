@@ -6,11 +6,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/project/finance/attachment")
-public class ProjectFinancePostAttachmentsController extends AttachmentController {
+@RequestMapping("/project/finance/attachments")
+public class ProjectFinanceAttachmentsController extends AttachmentController {
 
     @Autowired
-    public ProjectFinancePostAttachmentsController(ProjectFinanceAttachmentService service) {
+    public ProjectFinanceAttachmentsController(ProjectFinanceAttachmentService service) {
         super(service);
     }
 }

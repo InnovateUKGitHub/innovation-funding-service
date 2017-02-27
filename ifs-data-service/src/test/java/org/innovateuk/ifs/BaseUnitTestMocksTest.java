@@ -93,6 +93,7 @@ import org.innovateuk.ifs.sil.experian.service.SilExperianEndpoint;
 import org.innovateuk.ifs.threads.attachments.mapper.AttachmentMapper;
 import org.innovateuk.ifs.threads.attachments.repository.AttachmentRepository;
 import org.innovateuk.ifs.threads.attachments.service.AttachmentsService;
+import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
 import org.innovateuk.ifs.threads.mapper.NoteMapper;
 import org.innovateuk.ifs.threads.mapper.PostMapper;
 import org.innovateuk.ifs.threads.mapper.QueryMapper;
@@ -145,6 +146,8 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectFinanceMapper projectFinanceMapperMock;
+
+
 
     @Mock
     protected ApplicationFinanceRepository applicationFinanceRepositoryMock;
@@ -397,6 +400,9 @@ public abstract class BaseUnitTestMocksTest extends BaseTest {
 
     @Mock
     protected ProjectFinanceNotesService projectFinanceNotesService;
+
+    @Mock
+    protected ProjectFinanceAttachmentService projectFinanceAttachmentServiceMock;
 
     @Mock
     protected ProjectService projectServiceMock;

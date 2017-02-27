@@ -13,7 +13,7 @@ import java.util.Optional;
 @Service
 @Qualifier("projectFinance")
 public class ProjectFinancePostAttachmentRestService extends BaseRestService implements AttachmentRestService {
-    private final static String baseURL = "/project/finance/attachment";
+    private final static String baseURL = "/project/finance/attachments";
 
     @Override
     public RestResult<AttachmentResource> find(Long fileId) {

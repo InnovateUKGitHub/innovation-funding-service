@@ -77,10 +77,10 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     }
 
     @Override
-    public ResponseEntity<Object> download(Long attachmentId) {
-        return handleFileDownload(() -> findOne(attachmentId)
+    public ServiceResult<FileAndContents> attachmentFileAndContents(Long attachmentId) {
+        return findOne(attachmentId)
                 .andOnSuccessReturn(a -> mapper.mapToDomain(a))
-                .andOnSuccess(a -> fileEntryService.findOne(a.fileId()).andOnSuccess(this::getFileAndContents)));
+                .andOnSuccess(a -> fileEntryService.findOne(a.fileId()).andOnSuccess(this::getFileAndContents));
     }
 
 

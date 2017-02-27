@@ -2,6 +2,7 @@ package org.innovateuk.ifs.thread.attachment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.ifs.project.finance.security.AttachmentPermissionsRules;
 import org.innovateuk.ifs.threads.attachments.security.AttachmentLookupStrategy;
 import org.innovateuk.ifs.threads.attachments.service.ProjectFinanceAttachmentService;
@@ -62,7 +63,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
         when(attachmentLookupStrategy.findById(3L))
                 .thenReturn(new AttachmentResource(3L, "file", "application/pdf", 3456));
 
-        assertAccessDenied(() -> classUnderTest.download(3L), () -> {
+        assertAccessDenied(() -> classUnderTest.attachmentFileAndContents(3L), () -> {
             verify(attachmentPermissionsRules).projectFinanceUsersCanDownloadAnyAttachment(isA(AttachmentResource.class), isNull(UserResource.class));
             verify(attachmentPermissionsRules).financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(isA(AttachmentResource.class), isNull(UserResource.class));
             verifyNoMoreInteractions(attachmentPermissionsRules);
@@ -98,7 +99,7 @@ public class ProjectFinanceAttachmentServiceSecurityTest extends BaseServiceSecu
         }
 
         @Override
-        public ResponseEntity<Object> download(Long attachmentId) {
+        public ServiceResult<FileAndContents> attachmentFileAndContents(Long attachmentId) {
             return null;
         }
 

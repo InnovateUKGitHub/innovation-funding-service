@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.threads.attachments.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.innovateuk.threads.attachment.resource.AttachmentResource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -26,5 +27,5 @@ public interface ProjectFinanceAttachmentService extends AttachmentsService<Atta
 
     @Override
     @PreAuthorize("hasPermission(#attachmentId, 'org.innovateuk.threads.attachment.resource.AttachmentResource', 'PF_ATTACHMENT_DOWNLOAD')")
-    ResponseEntity<Object> download(Long attachmentId);
+    ServiceResult<FileAndContents> attachmentFileAndContents(Long attachmentId);
 }

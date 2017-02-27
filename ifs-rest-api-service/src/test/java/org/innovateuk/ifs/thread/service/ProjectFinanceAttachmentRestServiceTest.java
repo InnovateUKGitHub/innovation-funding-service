@@ -13,7 +13,7 @@ import static org.springframework.http.HttpStatus.CREATED;
 import static org.springframework.http.HttpStatus.OK;
 
 public class ProjectFinanceAttachmentRestServiceTest extends BaseRestServiceUnitTest<ProjectFinancePostAttachmentRestService> {
-    private final static String baseURL = "/project/finance/attachment";
+    private final static String baseURL = "/project/finance/attachments";
 
     @Override
     protected ProjectFinancePostAttachmentRestService registerRestServiceUnderTest() {

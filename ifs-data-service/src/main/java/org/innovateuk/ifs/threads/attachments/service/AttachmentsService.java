@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.threads.attachments.service;
 
 import org.innovateuk.ifs.commons.service.ServiceResult;
+import org.innovateuk.ifs.file.service.FileAndContents;
 import org.springframework.http.ResponseEntity;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,5 +15,5 @@ public interface AttachmentsService<T> {
 
     ServiceResult<Void> delete(Long attachmentId);
 
-    ResponseEntity<Object> download(Long attachmentId) throws IOException;
+    ServiceResult<FileAndContents> attachmentFileAndContents(Long attachmentId);
 }
