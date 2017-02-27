@@ -408,10 +408,11 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
     @Test
     public void getCreatedInvites() throws Exception {
         long competitionId = 1L;
-        int page = 0;
-        int pageSize = 20;
+        int page = 5;
+        int pageSize = 40;
 
-        List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource().build(2);
+        List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource()
+                .build(2);
 
         AssessorCreatedInvitePageResource expectedPageResource = newAssessorCreatedInvitePageResource()
                 .withContent(expectedAssessorCreatedInviteResources)
@@ -421,13 +422,44 @@ public class CompetitionInviteControllerTest extends BaseControllerMockMVCTest<C
                 .withSize(pageSize)
                 .build();
 
-        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "firstName"));
+        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "email"));
+
+        when(competitionInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(expectedPageResource));
+
+        mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", competitionId)
+                .param("page", String.valueOf(page))
+                .param("size", String.valueOf(pageSize))
+                .param("sort", "email,ASC"))
+                .andExpect(status().isOk())
+                .andExpect(content().json(toJson(expectedPageResource)));
+
+        verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
+    }
+
+    @Test
+    public void getCreatedInvites_defaultParameters() throws Exception {
+        long competitionId = 1L;
+        int page = 0;
+        int pageSize = 20;
+
+        List<AssessorCreatedInviteResource> expectedAssessorCreatedInviteResources = newAssessorCreatedInviteResource()
+                .build(2);
+
+        AssessorCreatedInvitePageResource expectedPageResource = newAssessorCreatedInvitePageResource()
+                .withContent(expectedAssessorCreatedInviteResources)
+                .withNumber(page)
+                .withTotalElements(200L)
+                .withTotalPages(10)
+                .withSize(pageSize)
+                .build();
+
+        Pageable pageable = new PageRequest(page, pageSize, new Sort(ASC, "name"));
 
         when(competitionInviteServiceMock.getCreatedInvites(competitionId, pageable)).thenReturn(serviceSuccess(expectedPageResource));
 
         mockMvc.perform(get("/competitioninvite/getCreatedInvites/{competitionId}", competitionId))
                 .andExpect(status().isOk())
-                .andExpect(content().json(toJson(expectedAssessorCreatedInviteResources)));
+                .andExpect(content().json(toJson(expectedPageResource)));
 
         verify(competitionInviteServiceMock, only()).getCreatedInvites(competitionId, pageable);
     }
