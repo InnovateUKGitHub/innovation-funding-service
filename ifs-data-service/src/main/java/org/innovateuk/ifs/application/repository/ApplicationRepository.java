@@ -70,6 +70,10 @@ public interface ApplicationRepository extends PagingAndSortingRepository<Applic
 	Page<Application> findByCompetitionIdAndFundingDecisionIsNotNull(Long competitionId, Pageable pageable);
 
 	List<Application> findByCompetitionIdAndFundingDecisionIsNotNull(Long competitionId);
+
+	int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNotNull(Long competitionId);
+
+	int countByCompetitionIdAndFundingDecisionIsNotNullAndManageFundingEmailDateIsNull(Long competitionId);
 	
 	List<Application> findByCompetitionIdAndApplicationStatusIdInAndAssessorFeedbackFileEntryIsNull(Long competitionId, Collection<Long> applicationStatusIds);
 
