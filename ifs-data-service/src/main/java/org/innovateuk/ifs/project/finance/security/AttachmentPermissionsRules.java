@@ -49,7 +49,7 @@ public class AttachmentPermissionsRules {
         return !projectUserRepository.findByUserIdAndRole(user.getId(), PROJECT_FINANCE_CONTACT).isEmpty();
     }
 
-    @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Project Finance users can fetch any Attachment")
+    @PermissionRule(value = "PF_ATTACHMENT_READ", description = "Project Finance users can fetch any Attachment.")
     public boolean projectFinanceUsersCanFetchAnyAttachment(AttachmentResource attachment, UserResource user) {
         return isProjectFinanceUser(user);
     }
@@ -63,6 +63,16 @@ public class AttachmentPermissionsRules {
         return findQueryTheAttachmentIsLinkedTo(attachment)
                 .map(query -> projectFinanceQueryPermissionRules.onlyProjectFinanceUsersOrFinanceContactCanViewTheirQueries(queryMapper.mapToResource(query), user))
                 .orElse(false);
+    }
+
+    @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Project Finance users can download any Attachment")
+    public boolean projectFinanceUsersCanDownloadAnyAttachment(AttachmentResource attachment, UserResource user) {
+        return isProjectFinanceUser(user);
+    }
+
+    @PermissionRule(value = "PF_ATTACHMENT_DOWNLOAD", description = "Finance Contact users can only download an Attachment they are related to.")
+    public boolean financeContactUsersCanOnlyDownloadAnAttachmentIfRelatedToItsQuery(AttachmentResource attachment, UserResource user) {
+        return financeContactUserIsAllowedToFetchAttachment(attachment, user);
     }
 
     private boolean financeContactUserIsAllowedToFetchAttachment(AttachmentResource attachmentResource, UserResource user) {

@@ -77,7 +77,7 @@ public class ProjectFinanceAttachmentsServiceImpl implements ProjectFinanceAttac
     }
 
     @Override
-    public ResponseEntity<Object> download(Long attachmentId) throws IOException {
+    public ResponseEntity<Object> download(Long attachmentId) {
         return handleFileDownload(() -> findOne(attachmentId)
                 .andOnSuccessReturn(a -> mapper.mapToDomain(a))
                 .andOnSuccess(a -> fileEntryService.findOne(a.fileId()).andOnSuccess(this::getFileAndContents)));
