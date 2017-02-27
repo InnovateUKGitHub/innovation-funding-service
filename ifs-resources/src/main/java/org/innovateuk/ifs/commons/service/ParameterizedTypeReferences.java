@@ -18,6 +18,7 @@ import org.innovateuk.ifs.finance.resource.cost.FinanceRowItem;
 import org.innovateuk.ifs.form.resource.FormInputResource;
 import org.innovateuk.ifs.form.resource.FormInputResponseResource;
 import org.innovateuk.ifs.invite.resource.*;
+import org.innovateuk.ifs.organisation.resource.OrganisationSearchResult;
 import org.innovateuk.ifs.project.resource.PartnerOrganisationResource;
 import org.innovateuk.ifs.project.resource.ProjectResource;
 import org.innovateuk.ifs.project.resource.ProjectUserResource;
@@ -89,6 +90,11 @@ public final class ParameterizedTypeReferences {
 
     public static ParameterizedTypeReference<List<AssessorFormInputResponseResource>> assessorFormInputResponseResourceListType() {
         return new ParameterizedTypeReference<List<AssessorFormInputResponseResource>>() {};
+    }
+
+    public static ParameterizedTypeReference<List<OrganisationSearchResult>> organisationSearchResultListType() {
+        return new ParameterizedTypeReference<List<OrganisationSearchResult>>() {
+        };
     }
 
     public static ParameterizedTypeReference<List<ProcessRoleResource>> processRoleResourceListType() {
