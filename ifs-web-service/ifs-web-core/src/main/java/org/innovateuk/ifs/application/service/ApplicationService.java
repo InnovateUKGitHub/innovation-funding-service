@@ -2,6 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.ApplicationResource;
 import org.innovateuk.ifs.commons.rest.RestResult;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.user.resource.OrganisationResource;
 
 import java.util.List;
@@ -15,13 +16,13 @@ public interface ApplicationService {
     List<ApplicationResource> getInProgress(Long userId);
     List<ApplicationResource> getFinished(Long userId);
     Boolean isApplicationReadyForSubmit(Long applicationId);
-    void updateStatus(Long applicationId, Long statusId);
+    ServiceResult<Void> updateStatus(Long applicationId, Long statusId);
     ApplicationResource createApplication(Long competitionId, Long userId, String applicationName);
     Integer getCompleteQuestionsPercentage(Long applicationId);
-    void save(ApplicationResource application);
+    ServiceResult<Void> save(ApplicationResource application);
     Map<Long, Integer> getProgress(Long userId);
     int getAssignedQuestionsCount(Long applicantId, Long processRoleId);
     RestResult<ApplicationResource> findByProcessRoleId(Long id);
     OrganisationResource getLeadOrganisation(Long applicationId);
-    void removeCollaborator(Long applicationInviteId);
+    ServiceResult<Void> removeCollaborator(Long applicationInviteId);
 }

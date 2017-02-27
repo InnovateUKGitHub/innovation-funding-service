@@ -2,7 +2,7 @@ package org.innovateuk.ifs.application.service;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.commons.error.CommonErrors;
-import org.innovateuk.ifs.commons.error.exception.GeneralUnexpectedErrorException;
+import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
@@ -26,7 +26,7 @@ public class ApplicationFundingDecisionServiceImplTest {
 	
 	@Mock
 	private ApplicationFundingDecisionRestService applicationFundingDecisionRestService;
-	
+
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testMakeFundingDecision() {
@@ -41,13 +41,14 @@ public class ApplicationFundingDecisionServiceImplTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected = GeneralUnexpectedErrorException.class)
+	@Test
 	public void testErrorMakingFundingDecision() {
 		Long competitionId = 123L;
 		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
 		
 		when(applicationFundingDecisionRestService.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision)).thenReturn(restFailure(CommonErrors.internalServerErrorError()));
-		service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
+		ServiceResult<Void> result = service.makeApplicationFundingDecision(competitionId, applicationIdToFundingDecision);
+		assertTrue(result.isFailure());
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -64,13 +65,14 @@ public class ApplicationFundingDecisionServiceImplTest {
 	}
 	
 	@SuppressWarnings("unchecked")
-	@Test(expected = GeneralUnexpectedErrorException.class)
+	@Test
 	public void testErrorSavingFundingDecisionData() {
 		Long competitionId = 123L;
 		Map<Long, FundingDecision> applicationIdToFundingDecision = mock(Map.class);
 		
 		when(applicationFundingDecisionRestService.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision)).thenReturn(restFailure(CommonErrors.internalServerErrorError()));
-		service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision).getSuccessObjectOrThrowException();
+		ServiceResult<Void> result = service.saveApplicationFundingDecisionData(competitionId, applicationIdToFundingDecision);
+		assertTrue(result.isFailure());
 	}
 	
 	@Test
