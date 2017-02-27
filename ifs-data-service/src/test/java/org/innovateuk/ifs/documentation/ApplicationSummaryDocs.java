@@ -1,7 +1,9 @@
 package org.innovateuk.ifs.documentation;
 
 import org.innovateuk.ifs.application.builder.ApplicationResourceBuilder;
+import org.innovateuk.ifs.application.builder.ApplicationSummaryResourceBuilder;
 import org.innovateuk.ifs.application.constant.ApplicationStatusConstants;
+import org.innovateuk.ifs.application.resource.FundingDecision;
 import org.innovateuk.ifs.category.resource.ResearchCategoryResource;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
 import org.springframework.restdocs.payload.FieldDescriptor;
@@ -12,40 +14,44 @@ import java.time.LocalDateTime;
 
 import static org.hibernate.validator.internal.util.CollectionHelper.asSet;
 import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.idBasedNames;
+import static org.innovateuk.ifs.base.amend.BaseBuilderAmendFunctions.uniqueIds;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 
-public class ApplicationDocs {
-    public static final FieldDescriptor[] applicationResourceFields = {
-            fieldWithPath("id").description("Id of the application"),
-            fieldWithPath("name").description("Name of the application"),
-            fieldWithPath("startDate").description("Estimated timescales: project start date"),
-            fieldWithPath("submittedDate").description("The date the applicant has submitted this application."),
-            fieldWithPath("durationInMonths").description("Estimated timescales: project duration in months"),
-            fieldWithPath("applicationStatus").description("ApplicationStatus Id"),
-            fieldWithPath("applicationStatusName").description("ApplicationStatus name"),
-            fieldWithPath("stateAidAgreed").description("Flag indicating if the user has accepted that they are eligible for state aid"),
-            fieldWithPath("competition").description("Competition Id"),
-            fieldWithPath("competitionName").description("Competition Name"),
-            fieldWithPath("competitionStatus").description("Competition Status"),
-            fieldWithPath("assessorFeedbackFileEntry").description("Uploaded Assessor Feedback for the Application"),
-            fieldWithPath("completion").description("percentage of completion of the application"),
-            fieldWithPath("resubmission").description("indicator that this application is a resubmission"),
-            fieldWithPath("previousApplicationNumber").description("the application number of the previous submission"),
-            fieldWithPath("previousApplicationTitle").description("the application title of the previous submission"),
-            fieldWithPath("researchCategories").description("list research categories")
+public class ApplicationSummaryDocs {
+
+    public static final FieldDescriptor[] APPLICATION_SUMMARY_RESOURCE_FIELDS = {
+            fieldWithPath("totalElements").description("Total size of the unpaged results set"),
+            fieldWithPath("totalPages").description("Total number of pages"),
+            fieldWithPath("number").description("Page number - zero indexed"),
+            fieldWithPath("size").description("Page size"),
+            fieldWithPath("content[].id").description("Application id"),
+            fieldWithPath("content[].name").description("Application name"),
+            fieldWithPath("content[].lead").description("Lead organisation"),
+            fieldWithPath("content[].leadApplicant").description("lead applicant"),
+            fieldWithPath("content[].status").description("Application status"),
+            fieldWithPath("content[].completedPercentage").description("Application completed percentage"),
+            fieldWithPath("content[].numberOfPartners").description("Number of partners on the application"),
+            fieldWithPath("content[].grantRequested").description("The grant requested on the application"),
+            fieldWithPath("content[].totalProjectCost").description("The total project cost of the application"),
+            fieldWithPath("content[].duration").description("Application duration in months"),
+            fieldWithPath("content[].fundingDecision").description("The funding decision for the application"),
+            fieldWithPath("content[].funded").description("Whether the application will be funded"),
+            fieldWithPath("content[].innovationArea").description("The innovation area of the application"),
+            fieldWithPath("content[].manageFundingEmailDate").description("The date of the last  manage funding email sent")
     };
 
-    public static final ApplicationResourceBuilder applicationResourceBuilder = newApplicationResource()
-            .withId(1L)
-            .withName("application name")
-            .withStartDate(LocalDate.now())
-            .withSubmittedDate(LocalDateTime.now())
-            .withDuration(1L)
-            .withApplicationStatus(ApplicationStatusConstants.OPEN)
-            .withCompetition(1L)
-            .withCompetitionName("competition name")
-            .withCompetitionStatus(CompetitionStatus.PROJECT_SETUP)
-            .withAssessorFeedbackFileEntry(123L)
-            .withCompletion(new BigDecimal(30L))
-            .withResearchCategories(asSet(new ResearchCategoryResource()));
+    public static final ApplicationSummaryResourceBuilder APPLICATION_SUMMARY_RESOURCE_BUILDER =
+            ApplicationSummaryResourceBuilder.newApplicationSummaryResource().
+                    with(uniqueIds()).
+                    with(idBasedNames("Application ")).
+                    withFundingDecision(FundingDecision.values()).
+                    withLead("A lead organisation").
+                    withCompletedPercentage(20, 40, 60, 80, 100).
+                    withDuration(2L, 4L, 6L, 8L, 10L).
+                    withGrantRequested(new BigDecimal("500"), new BigDecimal("1000"), new BigDecimal("1500"), new BigDecimal("2000"), new BigDecimal("2500")).
+                    withInnovationArea("Earth Observation", "Internet of Things", "Data", "Cyber Security", "User Experience").
+                    withLeadApplicant("A lead user").
+                    withManageFundingEmailDate(LocalDateTime.now()).
+                    withNumberOfPartners(1, 2, 3, 4, 5);
 }
