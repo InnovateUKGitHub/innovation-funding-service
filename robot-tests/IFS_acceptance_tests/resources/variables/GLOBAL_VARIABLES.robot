@@ -111,6 +111,7 @@ ${empty_field_warning_message}    This field cannot be left blank.
 ${valid_pdf}      testing.pdf
 ${too_large_pdf}    large.pdf
 ${text_file}      testing.txt
+${excel_file}     testing.xlsx
 ${valid_pdf excerpt}    Adobe PDF is an ideal format for electronic document distribution
 # Assessor variables
 ${IN_ASSESSMENT_APPLICATION_4_ASSESSMENT_1}    123
