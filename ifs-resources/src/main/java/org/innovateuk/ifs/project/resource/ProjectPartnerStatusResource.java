@@ -2,11 +2,11 @@ package org.innovateuk.ifs.project.resource;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.innovateuk.ifs.project.constant.ProjectActivityStates;
-import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.innovateuk.ifs.project.constant.ProjectActivityStates;
+import org.innovateuk.ifs.user.resource.OrganisationTypeEnum;
 
 import static org.innovateuk.ifs.project.constant.ProjectActivityStates.COMPLETE;
 
@@ -31,7 +31,6 @@ public class ProjectPartnerStatusResource {
     private ProjectActivityStates spendProfileStatus;
 
     private ProjectActivityStates financeContactStatus = COMPLETE;
-
     // TODO DW - INFUND-4915 - blocked until Companies House Project Setup work tackled
     private ProjectActivityStates companiesHouseStatus = COMPLETE;
 

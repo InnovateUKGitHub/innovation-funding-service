@@ -21,11 +21,13 @@ class SpendProfileCostCategorySummary {
         this.total = total;
 
         BigDecimal durationInMonths = BigDecimal.valueOf(projectDurationInMonths);
-        BigDecimal monthlyCost = total.divide(durationInMonths, 0, HALF_EVEN);
-        BigDecimal remainder = total.subtract(monthlyCost.multiply(durationInMonths)).setScale(0, HALF_EVEN);
+        BigDecimal remainder = total.remainder(durationInMonths);
 
-        this.firstMonthSpend = monthlyCost.add(remainder);
-        this.otherMonthsSpend = monthlyCost;
+        BigDecimal perfectlyDivisibleTotal = total.subtract(remainder);
+        BigDecimal costPerMonth = perfectlyDivisibleTotal.divide(durationInMonths, 0, HALF_EVEN);
+
+        this.firstMonthSpend = costPerMonth.add(remainder);
+        this.otherMonthsSpend = costPerMonth;
     }
 
     public CostCategory getCategory() {
