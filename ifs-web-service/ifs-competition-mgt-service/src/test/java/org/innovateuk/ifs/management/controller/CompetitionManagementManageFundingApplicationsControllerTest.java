@@ -78,15 +78,17 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
         when(assessmentRestService.countByStateAndCompetition(AssessmentStates.CREATED, competitionId)).thenReturn(restSuccess(changesSinceLastNotify));
 
         // Expected values to match against
-        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, filter, competitionId, competitionResource.getName());
         CompetitionInFlightStatsViewModel keyStatisticsModel = new CompetitionInFlightStatsViewModel(keyStatistics);
         CompetitionInFlightViewModel competitionInFlightViewModel = new CompetitionInFlightViewModel(competitionResource, emptyList(), changesSinceLastNotify, keyStatisticsModel);
+        ManageFundingApplicationViewModel model = new ManageFundingApplicationViewModel(applicationSummaryPageResource, competitionInFlightViewModel, new PaginationViewModel(applicationSummaryPageResource, queryParams), sortField, filter, competitionId, competitionResource.getName());
+
+
         // Method under test
         mockMvc.perform(get("/competition/{competitionId}/manage-funding-applications", competitionId))
                 .andExpect(status().isOk())
                 .andExpect(view().name("comp-mgt-manage-funding-applications"))
-                .andExpect(model().attribute("model", manageFundingApplicationViewModelMatcher(model)))
-                .andExpect(model().attribute("keyStatistics", competitionInFlightStatsViewModelMatcher(competitionInFlightViewModel)));
+                .andExpect(model().attribute("model", manageFundingApplicationViewModelMatcher(model)));
+
     }
 
     @Test
@@ -108,18 +110,14 @@ public class CompetitionManagementManageFundingApplicationsControllerTest extend
             assertEquals(toMatch.getCompetitionId(), match.getCompetitionId());
             assertEquals(toMatch.getResults().getSize(), match.getResults().getSize());
             assertEquals(toMatch.getResults().getContent().get(0).getId(), match.getResults().getContent().get(0).getId());
-            return true;
-        });
-    }
-
-    private Matcher<CompetitionInFlightViewModel> competitionInFlightStatsViewModelMatcher(CompetitionInFlightViewModel toMatch) {
-        return new LambdaMatcher<>(match -> {
-            assertEquals(toMatch.getKeyStatistics().getStatOne(), match.getKeyStatistics().getStatOne());
-            assertEquals(toMatch.getKeyStatistics().getStatTwo(), match.getKeyStatistics().getStatTwo());
-            assertEquals(toMatch.getKeyStatistics().getStatThree(), match.getKeyStatistics().getStatThree());
-            assertEquals(toMatch.getKeyStatistics().getStatFour(), match.getKeyStatistics().getStatFour());
-            assertEquals(toMatch.getKeyStatistics().getStatFive(), match.getKeyStatistics().getStatFive());
-            assertEquals(toMatch.getKeyStatistics().getCanManageFundingNotifications(), match.getKeyStatistics().getCanManageFundingNotifications());
+            CompetitionInFlightViewModel toMatchCompetitionInFlightViewModel = toMatch.getKeyStatistics();
+            CompetitionInFlightViewModel matchCompetitionInFlightViewModel = match.getKeyStatistics();
+            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatOne(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatOne());
+            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatTwo(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatTwo());
+            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatThree(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatThree());
+            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatFour(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatFour());
+            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getStatFive(), matchCompetitionInFlightViewModel.getKeyStatistics().getStatFive());
+            assertEquals(toMatchCompetitionInFlightViewModel.getKeyStatistics().getCanManageFundingNotifications(), matchCompetitionInFlightViewModel.getKeyStatistics().getCanManageFundingNotifications());
             return true;
         });
     }

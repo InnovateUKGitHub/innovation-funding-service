@@ -31,6 +31,6 @@ public class ManageFundingApplicationsModelPopulator {
         CompetitionResource competitionResource = competitionService.getById(competitionId);
         CompetitionInFlightViewModel keyStatistics = competitionInFlightModelPopulator.populateModel(competitionId);
         PaginationViewModel paginationViewModel = new PaginationViewModel(results, queryString);
-        return new ManageFundingApplicationViewModel(results, paginationViewModel, keyStatistics, queryForm.getSortField(), queryForm.getFilter(), competitionId, competitionResource.getName());
+        return new ManageFundingApplicationViewModel(results, keyStatistics, paginationViewModel, queryForm.getSortField(), queryForm.getFilter(), competitionId, competitionResource.getName());
     }
 }
