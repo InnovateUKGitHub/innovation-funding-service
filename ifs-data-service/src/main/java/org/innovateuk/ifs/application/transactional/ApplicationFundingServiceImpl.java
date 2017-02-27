@@ -6,6 +6,7 @@ import org.innovateuk.ifs.application.domain.ApplicationStatus;
 import org.innovateuk.ifs.application.domain.FundingDecisionStatus;
 import org.innovateuk.ifs.application.mapper.FundingDecisionMapper;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.service.ServiceResult;
 import org.innovateuk.ifs.competition.domain.Competition;
 import org.innovateuk.ifs.competition.resource.CompetitionStatus;
@@ -36,6 +37,7 @@ import static org.innovateuk.ifs.application.constant.ApplicationStatusConstants
 import static org.innovateuk.ifs.application.resource.FundingDecision.FUNDED;
 import static org.innovateuk.ifs.application.resource.FundingDecision.UNFUNDED;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDED;
+import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_FUNDING;
 import static org.innovateuk.ifs.application.transactional.ApplicationFundingServiceImpl.Notifications.APPLICATION_NOT_FUNDED;
 import static org.innovateuk.ifs.commons.error.CommonFailureKeys.*;
 import static org.innovateuk.ifs.commons.service.ServiceResult.*;
@@ -63,6 +65,7 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     enum Notifications {
         APPLICATION_FUNDED,
         APPLICATION_NOT_FUNDED,
+        APPLICATION_FUNDING,
     }
 
     private static final Log LOG = LogFactory.getLog(ApplicationFundingServiceImpl.class);
@@ -115,12 +118,31 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+    public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisions(NotificationResource notificationResource) {
 
-        return getCompetition(competitionId).andOnSuccess(competition -> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccess(competition, applicationFundingDecisions));
+        List<ServiceResult<Pair<Long, NotificationTarget>>> fundingNotificationTargets = getLeadApplicantNotificationTargets(notificationResource.getApplicationIds());
+        ServiceResult<List<Pair<Long, NotificationTarget>>> aggregatedFundingTargets = aggregate(fundingNotificationTargets);
+
+        if (aggregatedFundingTargets.isSuccess()) {
+
+            Notification fundingNotification = createFundingDecisionNotification(notificationResource, aggregatedFundingTargets.getSuccessObject(), APPLICATION_FUNDING);
+
+            ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundingNotification, EMAIL);
+
+            return processAnyFailuresOrSucceed(fundedEmailSendResult);
+        } else {
+            return serviceFailure(NOTIFICATIONS_UNABLE_TO_DETERMINE_NOTIFICATION_TARGETS);
+        }
     }
 
-    private ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccess(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions) {
+
+    @Override
+    public ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOld(Long competitionId, Map<Long, FundingDecision> applicationFundingDecisions) {
+
+        return getCompetition(competitionId).andOnSuccess(competition -> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccessOld(competition, applicationFundingDecisions));
+    }
+
+    private ServiceResult<Void> notifyLeadApplicantsOfFundingDecisionsOnCompetitionAndSuccessOld(Competition competition, Map<Long, FundingDecision> applicationFundingDecisions) {
 
         List<Pair<Long, FundingDecision>> decisions = toListOfPairs(applicationFundingDecisions);
         List<Pair<Long, FundingDecision>> fundedApplicationDecisions = simpleFilter(decisions, decision -> FUNDED.equals(decision.getValue()));
@@ -136,8 +158,8 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
 
         if (aggregatedFundedTargets.isSuccess() && aggregatedUnfundedTargets.isSuccess()) {
 
-            Notification fundedNotification = createFundingDecisionNotification(competition, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED);
-            Notification unfundedNotification = createFundingDecisionNotification(competition, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED);
+            Notification fundedNotification = createFundingDecisionNotificationOld(competition, aggregatedFundedTargets.getSuccessObject(), APPLICATION_FUNDED);
+            Notification unfundedNotification = createFundingDecisionNotificationOld(competition, aggregatedUnfundedTargets.getSuccessObject(), APPLICATION_NOT_FUNDED);
 
             ServiceResult<Void> fundedEmailSendResult = notificationService.sendNotification(fundedNotification, EMAIL);
             ServiceResult<Void> unfundedEmailSendResult = notificationService.sendNotification(unfundedNotification, EMAIL);
@@ -165,7 +187,17 @@ class ApplicationFundingServiceImpl extends BaseTransactionalService implements 
         return serviceSuccess();
     }
 
-    private Notification createFundingDecisionNotification(Competition competition, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
+    private Notification createFundingDecisionNotification(NotificationResource notificationResource, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
+
+        Map<String, Object> globalArguments = new HashMap<>();
+        globalArguments.put("subject", notificationResource.getSubject());
+        globalArguments.put("message",  notificationResource.getMessageBody());
+
+        List<NotificationTarget> notificationTargets = simpleMap(notificationTargetsByApplicationId, Pair::getValue);
+        return new Notification(systemNotificationSource, notificationTargets, notificationType, globalArguments);
+    }
+
+    private Notification createFundingDecisionNotificationOld(Competition competition, List<Pair<Long, NotificationTarget>> notificationTargetsByApplicationId, Notifications notificationType) {
 
         Map<String, Object> globalArguments = new HashMap<>();
         globalArguments.put("competitionName", competition.getName());

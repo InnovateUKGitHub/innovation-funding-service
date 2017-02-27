@@ -1,6 +1,5 @@
 package org.innovateuk.ifs.application.documentation;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.controller.ApplicationFundingDecisionController;
 import org.innovateuk.ifs.application.resource.FundingDecision;
@@ -41,7 +40,7 @@ public class ApplicationFundingDecisionControllerDocumentation extends BaseContr
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisionsOld(competitionId, decision)).thenReturn(serviceSuccess());
         when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/1/submit")

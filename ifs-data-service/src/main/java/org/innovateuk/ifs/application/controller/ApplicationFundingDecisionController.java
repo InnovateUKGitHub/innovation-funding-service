@@ -1,6 +1,7 @@
 package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.application.transactional.ApplicationFundingService;
 import org.innovateuk.ifs.commons.rest.RestResult;
 import org.innovateuk.ifs.project.transactional.ProjectService;
@@ -26,8 +27,14 @@ public class ApplicationFundingDecisionController {
     public RestResult<Void> makeFundingDecision(@PathVariable("competitionId") final Long competitionId, @RequestBody Map<Long, FundingDecision> applicationFundingDecisions) {
         return applicationFundingService.makeFundingDecision(competitionId, applicationFundingDecisions).
                 andOnSuccess(() -> projectService.createProjectsFromFundingDecisions(applicationFundingDecisions)
-                                    .andOnSuccess(() -> applicationFundingService.notifyLeadApplicantsOfFundingDecisions(competitionId, applicationFundingDecisions))
+                                    .andOnSuccess(() -> applicationFundingService.notifyLeadApplicantsOfFundingDecisionsOld(competitionId, applicationFundingDecisions))
                 ).toPostResponse();
+    }
+
+    @RequestMapping(value="/sendNotifications", method=RequestMethod.POST)
+    public RestResult<Void> sendFundingDecisions(@RequestBody NotificationResource notificationResource) {
+        return applicationFundingService.notifyLeadApplicantsOfFundingDecisions(notificationResource)
+            .toPostResponse();
     }
     
     @RequestMapping(value="/{competitionId}", method=RequestMethod.POST)

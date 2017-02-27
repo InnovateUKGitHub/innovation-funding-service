@@ -2,11 +2,14 @@ package org.innovateuk.ifs.application.controller;
 
 import org.innovateuk.ifs.BaseControllerMockMVCTest;
 import org.innovateuk.ifs.application.resource.FundingDecision;
+import org.innovateuk.ifs.application.resource.NotificationResource;
 import org.innovateuk.ifs.commons.rest.RestErrorResponse;
 import org.innovateuk.ifs.util.MapFunctions;
 import org.junit.Test;
 import org.springframework.http.MediaType;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import static org.innovateuk.ifs.commons.error.CommonErrors.internalServerErrorError;
@@ -31,7 +34,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceSuccess());
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisionsOld(competitionId, decision)).thenReturn(serviceSuccess());
         when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/1/submit")
@@ -47,7 +50,7 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
         Map<Long, FundingDecision> decision = MapFunctions.asMap(1L, FundingDecision.FUNDED, 2L, FundingDecision.UNFUNDED);
 
         when(applicationFundingServiceMock.makeFundingDecision(competitionId, decision)).thenReturn(serviceSuccess());
-        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(competitionId, decision)).thenReturn(serviceFailure(internalServerErrorError()));
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisionsOld(competitionId, decision)).thenReturn(serviceFailure(internalServerErrorError()));
         when(projectServiceMock.createProjectsFromFundingDecisions(decision)).thenReturn(serviceSuccess());
 
         mockMvc.perform(post("/applicationfunding/1/submit")
@@ -70,5 +73,19 @@ public class ApplicationFundingDecisionControllerTest extends BaseControllerMock
                 .andExpect(status().isOk())
                 .andExpect(content().string(""));
     }
-    
+
+    @Test
+    public void testSendNotifications() throws Exception {
+        List<Long> applicationIds = Arrays.asList(1L, 2L, 3L);
+        NotificationResource notification = new NotificationResource("Blah", "Blah", applicationIds);
+
+        when(applicationFundingServiceMock.notifyLeadApplicantsOfFundingDecisions(notification)).thenReturn(serviceSuccess());
+
+        mockMvc.perform(post("/applicationfunding/sendNotifications")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(notification)))
+                .andExpect(status().isOk())
+                .andExpect(content().string(""));
+    }
+
 }
