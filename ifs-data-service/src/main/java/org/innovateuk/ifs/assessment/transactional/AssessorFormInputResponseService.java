@@ -22,7 +22,7 @@ public interface AssessorFormInputResponseService {
     @PreAuthorize("hasPermission(#response, 'UPDATE')")
     ServiceResult<Void> updateFormInputResponse(AssessorFormInputResponseResource response);
 
-    @NotSecured(value = "TODO", mustBeSecuredByOtherServices = false)
+    @PreAuthorize("hasPermission(#applicationId, 'org.innovateuk.ifs.application.resource.ApplicationResource', 'READ')")
     ServiceResult<ApplicationAssessmentAggregateResource> getApplicationAggregateScores(long applicationId);
 }
 

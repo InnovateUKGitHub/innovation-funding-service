@@ -1,6 +1,9 @@
 package org.innovateuk.ifs.assessment.security;
 
 import org.innovateuk.ifs.BaseServiceSecurityTest;
+import org.innovateuk.ifs.application.resource.ApplicationResource;
+import org.innovateuk.ifs.application.security.ApplicationLookupStrategy;
+import org.innovateuk.ifs.application.security.ApplicationPermissionRules;
 import org.innovateuk.ifs.assessment.resource.ApplicationAssessmentAggregateResource;
 import org.innovateuk.ifs.assessment.resource.AssessmentResource;
 import org.innovateuk.ifs.assessment.resource.AssessorFormInputResponseResource;
@@ -12,6 +15,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.innovateuk.ifs.application.builder.ApplicationResourceBuilder.newApplicationResource;
 import static org.innovateuk.ifs.assessment.builder.AssessmentResourceBuilder.newAssessmentResource;
 import static org.innovateuk.ifs.assessment.builder.AssessorFormInputResponseResourceBuilder.newAssessorFormInputResponseResource;
 import static org.mockito.Matchers.isA;
@@ -24,6 +28,8 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
     private AssessorFormInputResponseLookupStrategy assessorFormInputResponseLookupStrategy;
     private AssessmentLookupStrategy assessmentLookupStrategy;
     private AssessmentPermissionRules assessmentPermissionRules;
+    private ApplicationLookupStrategy applicationLookupStrategy;
+    private ApplicationPermissionRules applicationPermissionRules;
 
     @Override
     protected Class<? extends AssessorFormInputResponseService> getClassUnderTest() {
@@ -36,6 +42,8 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         assessorFormInputResponseLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessorFormInputResponseLookupStrategy.class);
         assessmentLookupStrategy = getMockPermissionEntityLookupStrategiesBean(AssessmentLookupStrategy.class);
         assessmentPermissionRules = getMockPermissionRulesBean(AssessmentPermissionRules.class);
+        applicationLookupStrategy = getMockPermissionEntityLookupStrategiesBean(ApplicationLookupStrategy.class);
+        applicationPermissionRules = getMockPermissionRulesBean(ApplicationPermissionRules.class);
     }
 
     @Test
@@ -70,6 +78,17 @@ public class AssessorFormInputResponseServiceSecurityTest extends BaseServiceSec
         assertAccessDenied(
                 () -> classUnderTest.updateFormInputResponse(response),
                 () -> verify(assessorFormInputResponsePermissionRules).userCanUpdateAssessorFormInputResponse(isA(AssessorFormInputResponseResource.class), isA(UserResource.class))
+        );
+    }
+
+    @Test
+    public void getApplicationAggregateScores() {
+        long applicationId = 2;
+
+        when(applicationLookupStrategy.getApplicationResource(applicationId)).thenReturn(newApplicationResource().build());
+        assertAccessDenied(
+                () -> classUnderTest.getApplicationAggregateScores(applicationId),
+                () -> verify(applicationPermissionRules).usersConnectedToTheApplicationCanView(isA(ApplicationResource.class), isA(UserResource.class))
         );
     }
 
