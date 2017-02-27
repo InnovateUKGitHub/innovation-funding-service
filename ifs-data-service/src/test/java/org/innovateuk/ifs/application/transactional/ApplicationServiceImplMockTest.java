@@ -35,6 +35,7 @@ import org.innovateuk.ifs.user.domain.User;
 import org.innovateuk.ifs.user.resource.UserRoleType;
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Matchers;
 import org.mockito.Mock;
 
@@ -125,7 +126,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateApplicationByApplicationNameForUserIdAndCompetitionId() {
+    public void createApplicationByApplicationNameForUserIdAndCompetitionId() {
 
         Competition competition = newCompetition().build();
         User user = newUser().build();
@@ -183,7 +184,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUpload() {
+    public void createFormInputResponseFileUpload() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -211,7 +212,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButReplaceIfFileAlreadyExistsForFormInputResponse() {
+    public void createFormInputResponseFileUploadButReplaceIfFileAlreadyExistsForFormInputResponse() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(987L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -250,7 +251,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButFileServiceCallFails() {
+    public void createFormInputResponseFileUploadButFileServiceCallFails() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -267,7 +268,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadWithAlreadyExistingFormInputResponse() {
+    public void createFormInputResponseFileUploadWithAlreadyExistingFormInputResponse() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -293,7 +294,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButProcessRoleNotFound() {
+    public void createFormInputResponseFileUploadButProcessRoleNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -316,7 +317,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButFormInputNotFound() {
+    public void createFormInputResponseFileUploadButFormInputNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -340,7 +341,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testCreateFormInputResponseFileUploadButApplicationNotFound() {
+    public void createFormInputResponseFileUploadButApplicationNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -365,7 +366,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testUpdateFormInputResponseFileUpload() {
+    public void updateFormInputResponseFileUpload() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -400,7 +401,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testUpdateFormInputResponseFileUploadButFileServiceCallFails() {
+    public void updateFormInputResponseFileUploadButFileServiceCallFails() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().build();
         FormInputResponseFileEntryResource formInputFileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -432,7 +433,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUpload() {
+    public void deleteFormInputResponseFileUpload() {
 
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
@@ -453,7 +454,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUploadButFileServiceCallFails() {
+    public void deleteFormInputResponseFileUploadButFileServiceCallFails() {
         Supplier<InputStream> inputStreamSupplier = () -> null;
 
         //when(formInputResponseRepositoryMock.findByApplicationIdAndUpdatedByIdAndFormInputId(456L, 789L, 123L)).thenReturn(existingFormInputResponse);
@@ -470,7 +471,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
+    public void deleteFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         when(formInputResponseRepositoryMock.findByApplicationIdAndFormInputId(456L, 123L)).thenReturn(existingFormInputResponses);
         when(formInputRepositoryMock.findOne(formInputResponseFileEntryResource.getCompoundId().getFormInputId())).thenReturn(null);
         ServiceResult<FormInputResponse> result =
@@ -481,7 +482,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testDeleteFormInputResponseFileUploadButFileEntryNotFound() {
+    public void deleteFormInputResponseFileUploadButFileEntryNotFound() {
 
         FileEntryResource fileEntryResource = newFileEntryResource().with(id(999L)).build();
         FormInputResponseFileEntryResource fileEntry = new FormInputResponseFileEntryResource(fileEntryResource, 123L, 456L, 789L);
@@ -507,7 +508,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testGetFormInputResponseFileUpload() {
+    public void getFormInputResponseFileUpload() {
 
         FileEntry fileEntry = newFileEntry().with(id(321L)).build();
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
@@ -540,7 +541,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testGetFormInputResponseFileUploadButFileServiceCallFails() {
+    public void getFormInputResponseFileUploadButFileServiceCallFails() {
 
         FileEntry fileEntry = newFileEntry().build();
         FormInputResponse formInputResponse = newFormInputResponse().withFileEntry(fileEntry).build();
@@ -564,7 +565,7 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
     }
 
     @Test
-    public void testGetFormInputResponseFileUploadButUnableToFindFormInputResponse() {
+    public void getFormInputResponseFileUploadButUnableToFindFormInputResponse() {
         Question question = QuestionBuilder.newQuestion().build();
         question.setMultipleStatuses(true);
         FormInput formInputLocal = newFormInput().withType(formInputType).build();
@@ -791,19 +792,25 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        verify(applicationRepositoryMock).findByCompetitionId(competitionId);
-        verify(applicationRepositoryMock).findOne(applicationOneId);
-        verify(applicationRepositoryMock).findOne(applicationTwoId);
-        verify(applicationRepositoryMock).findOne(applicationThreeId);
-        verify(notificationSender).renderTemplates(notifications.get(0));
-        verify(notificationSender).renderTemplates(notifications.get(1));
-        verify(notificationSender).renderTemplates(notifications.get(2));
-        verify(notificationSender)
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
-        verify(notificationSender)
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
-        verify(notificationSender)
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
+
+        inOrder.verifyNoMoreInteractions();
 
         assertTrue(result.isSuccess());
     }
@@ -916,19 +923,25 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        verify(applicationRepositoryMock).findByCompetitionId(competitionId);
-        verify(applicationRepositoryMock).findOne(applicationOneId);
-        verify(applicationRepositoryMock).findOne(applicationTwoId);
-        verify(applicationRepositoryMock).findOne(applicationThreeId);
-        verify(notificationSender).renderTemplates(notifications.get(0));
-        verify(notificationSender).renderTemplates(notifications.get(1));
-        verify(notificationSender).renderTemplates(notifications.get(2));
-        verify(notificationSender)
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
-        verify(notificationSender)
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
-        verify(notificationSender)
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
+
+        inOrder.verifyNoMoreInteractions();
 
         assertTrue(result.isFailure());
         assertEquals(1, result.getErrors().size());
@@ -1042,19 +1055,25 @@ public class ApplicationServiceImplMockTest extends BaseServiceUnitTest<Applicat
 
         ServiceResult<Void> result = service.notifyApplicantsByCompetition(competitionId);
 
-        verify(applicationRepositoryMock).findByCompetitionId(competitionId);
-        verify(applicationRepositoryMock).findOne(applicationOneId);
-        verify(applicationRepositoryMock).findOne(applicationTwoId);
-        verify(applicationRepositoryMock).findOne(applicationThreeId);
-        verify(notificationSender).renderTemplates(notifications.get(0));
-        verify(notificationSender).renderTemplates(notifications.get(1));
-        verify(notificationSender).renderTemplates(notifications.get(2));
-        verify(notificationSender)
+        InOrder inOrder = inOrder(applicationRepositoryMock, notificationSender);
+        inOrder.verify(applicationRepositoryMock).findByCompetitionId(competitionId);
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationOneId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(0));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(0), notificationTargets.get(0), emailContents.get(0));
-        verify(notificationSender)
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationTwoId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(1));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(1), notificationTargets.get(1), emailContents.get(1));
-        verify(notificationSender)
+
+        inOrder.verify(applicationRepositoryMock).findOne(applicationThreeId);
+        inOrder.verify(notificationSender).renderTemplates(notifications.get(2));
+        inOrder.verify(notificationSender)
                 .sendEmailWithContent(notifications.get(2), notificationTargets.get(2), emailContents.get(2));
+
+        inOrder.verifyNoMoreInteractions();
 
         assertTrue(result.isFailure());
         assertEquals(3, result.getErrors().size());

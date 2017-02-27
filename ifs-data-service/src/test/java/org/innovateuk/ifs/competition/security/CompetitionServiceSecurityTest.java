@@ -191,7 +191,7 @@ public class CompetitionServiceSecurityTest extends BaseServiceSecurityTest<Comp
         }
 
         @Override
-        public ServiceResult<Void> releaseFeedback(Long competitionId) {
+        public ServiceResult<Void> releaseFeedback(long competitionId) {
             return null;
         }
 

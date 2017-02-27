@@ -127,7 +127,7 @@ public class CompetitionsRestServiceImpl extends BaseRestService implements Comp
     }
 
     @Override
-    public RestResult<Void> releaseFeedback(Long competitionId) {
+    public RestResult<Void> releaseFeedback(long competitionId) {
         return putWithRestResult(String.format("%s/%s/release-feedback", competitionsRestURL, competitionId), Void.class);
     }
 

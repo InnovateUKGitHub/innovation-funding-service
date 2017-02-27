@@ -144,7 +144,7 @@ public class CompetitionServiceImpl extends BaseTransactionalService implements 
     }
 
     @Override
-    public ServiceResult<Void> releaseFeedback(Long competitionId) {
+    public ServiceResult<Void> releaseFeedback(long competitionId) {
         Competition competition = competitionRepository.findById(competitionId);
         competition.releaseFeedback(LocalDateTime.now());
         return serviceSuccess();
