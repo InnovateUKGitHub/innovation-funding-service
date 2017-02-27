@@ -274,7 +274,7 @@ Submit Assessments
 Progress of the applications in Dashboard
     [Documentation]    INFUND-3719
     [Tags]    HappyPath
-    ${ACCEPTED_LIST}=    Get Webelements    jQuery=.my-applications li:not(:contains("Pending"))
+    ${ACCEPTED_LIST}=    Get Webelements    jQuery=.my-applications .in-progress li:not(:contains("Pending"))
     ${EXPECTED_TOTAL_ACCEPTED}=    Get Length    ${ACCEPTED_LIST}
     When The user navigates to the page    ${assessor_dashboard_url}
     Then the progress of the applications should be correct    ${EXPECTED_TOTAL_ACCEPTED}
